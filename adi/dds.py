@@ -21,7 +21,7 @@ class dds(attribute):
         for chan in self.txdac.channels:
             if not chan.name:
                 continue
-            if attr == 'raw':
+            if attr == "raw":
                 chan.attrs[attr].value = str(int(value[indx]))
             else:
                 chan.attrs[attr].value = str(value[indx])

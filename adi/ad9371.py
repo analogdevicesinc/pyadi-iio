@@ -1,13 +1,13 @@
-
 from adi.rx_tx import rx_tx
 from adi.context_manager import context_manager
 
 
 class ad9371(rx_tx, context_manager):
     """ AD9371 Transceiver """
+
     complex_data = True
-    rx_channel_names = ['voltage0_i', 'voltage0_q', 'voltage1_i', 'voltage1_q']
-    tx_channel_names = ['voltage0', 'voltage1', 'voltage2', 'voltage3']
+    rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
+    tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     device_name = ""
     rx_enabled_channels = [0, 1]
     tx_enabled_channels = [0, 1]
@@ -21,10 +21,7 @@ class ad9371(rx_tx, context_manager):
         self.rxobs = self.ctx.find_device("axi-ad9371-rx-obs-hpc")
         self.txdac = self.ctx.find_device("axi-ad9371-tx-hpc")
 
-        rx_tx.__init__(
-            self,
-            self.rx_enabled_channels,
-            self.tx_enabled_channels)
+        rx_tx.__init__(self, self.rx_enabled_channels, self.tx_enabled_channels)
 
     @property
     def gain_control_mode(self):
@@ -44,7 +41,7 @@ class ad9371(rx_tx, context_manager):
 
     @rx_hardwaregain.setter
     def rx_hardwaregain(self, value):
-        if self.gain_control_mode == 'manual':
+        if self.gain_control_mode == "manual":
             self.set_iio_attr("voltage0", "hardwaregain", False, value)
 
     @property
