@@ -2,7 +2,7 @@
 
 ## Still in beta and feedback is appreciated
 
-[Docs](pyadi-iio.readthedocs.io)
+[Docs](http://analogdevicesinc.github.io/pyadi-iio/)
 [Support](http://ez.analog.com)
 
 Currently supported hardware

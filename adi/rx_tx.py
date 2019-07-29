@@ -46,6 +46,7 @@ class phy(attribute):
 
 class rx(attribute):
     """ Buffer handling for receive devices """
+
     rxadc = []
     rx_channel_names = []
     rxbuf = None
@@ -109,7 +110,7 @@ class rx(attribute):
         sig = []
         l = len(self.rx_enabled_channels) * 2
         for c in range(l // 2):
-            sig.append(x[indx::l] + 1j * x[indx + 1::l])
+            sig.append(x[indx::l] + 1j * x[indx + 1 :: l])
             indx = indx + 2
         # Don't return list if a single channel
         if indx == 2:
@@ -141,6 +142,7 @@ class rx(attribute):
 
 class tx(dds, attribute):
     """ Buffer handling for receive devices """
+
     txdac = []
     tx_channel_names = []
     tx_buffer_size = 1024
@@ -185,20 +187,17 @@ class tx(dds, attribute):
     def init_channels(self):
         if self.complex_data:
             for map in self.tx_enabled_channels:
-                v = self.txdac.find_channel(
-                    self.tx_channel_names[map * 2], True)
+                v = self.txdac.find_channel(self.tx_channel_names[map * 2], True)
                 v.enabled = True
-                v = self.txdac.find_channel(
-                    self.tx_channel_names[map * 2 + 1], True)
+                v = self.txdac.find_channel(self.tx_channel_names[map * 2 + 1], True)
                 v.enabled = True
         else:
             for map in self.tx_enabled_channels:
                 v = self.txdac.find_channel(self.tx_channel_names[map])
                 v.enabled = True
         self.txbuf = iio.Buffer(
-            self.txdac,
-            self.tx_buffer_size,
-            self.__tx_cyclic_buffer)
+            self.txdac, self.tx_buffer_size, self.__tx_cyclic_buffer
+        )
 
     def tx(self, data_np):
         if self.complex_data:
@@ -215,7 +214,7 @@ class tx(dds, attribute):
                 i = np.real(chan)
                 q = np.imag(chan)
                 data[indx::l] = i.astype(int)
-                data[indx + 1::l] = q.astype(int)
+                data[indx + 1 :: l] = q.astype(int)
                 indx = indx + 2
         else:
             if self.num_tx_channels_enabled == 1:
