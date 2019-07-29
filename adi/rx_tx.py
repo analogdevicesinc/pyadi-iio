@@ -35,7 +35,6 @@ import numpy as np
 from adi.dds import dds
 from adi.attribute import attribute
 import iio
-import numpy as np
 
 class phy(attribute):
     ctrl = []
