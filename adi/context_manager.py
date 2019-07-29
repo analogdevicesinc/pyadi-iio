@@ -35,22 +35,22 @@ import iio
 
 
 class context_manager(object):
-    uri_auto = 'ip:analog'
+    uri_auto = "ip:analog"
     ctx = None
 
     def __init__(self, uri="", device_name=""):
         self.uri = uri
         try:
-            if self.uri == '':
+            if self.uri == "":
                 # Try USB contexts first
-                if device_name != '':
+                if device_name != "":
                     contexts = iio.scan_contexts()
                     for c in contexts:
                         if device_name in contexts[c]:
                             self.ctx = iio.Context(c)
                             break
                 # Try auto discover
-                if not self.ctx and self.uri_auto != '':
+                if not self.ctx and self.uri_auto != "":
                     self.ctx = iio.Context(self.uri_auto)
                 if not self.ctx:
                     raise
