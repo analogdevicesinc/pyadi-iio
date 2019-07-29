@@ -1,38 +1,43 @@
 language: python
 sudo: required
-
 python:
-  - "3.6"
-
+- '3.6'
 install:
-  # Install libiio
-  - sudo apt-get -qq update
-  - sudo apt-get install -y git cmake graphviz libaio-dev libavahi-client-dev libavahi-common-dev libusb-1.0-0-dev libxml2-dev rpm tar bzip2 gzip flex bison git
-  - git clone -b 'v0.18' --single-branch --depth 1 https://github.com/analogdevicesinc/libiio.git
-  - cd libiio
-  - cmake .
-  - make
-  - sudo make install
-  - cd ..
-  # Install doc requirements
-  - sudo pip install -r requirements.txt
-  - sudo pip install -r requirements_doc.txt
-
+- sudo apt-get -qq update
+- sudo apt-get install -y git cmake graphviz libaio-dev libavahi-client-dev libavahi-common-dev
+  libusb-1.0-0-dev libxml2-dev rpm tar bzip2 gzip flex bison git
+- git clone -b 'v0.18' --single-branch --depth 1 https://github.com/analogdevicesinc/libiio.git
+- cd libiio
+- cmake .
+- make
+- sudo make install
+- cd ..
+- sudo pip install -r requirements.txt
+- sudo pip install -r requirements_doc.txt
 script:
-  - export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
-  - python -m unittest
-
+- export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
+- python -m unittest
 after_success:
-  - export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
-  - cd doc && make html
-
+- export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
+- cd doc && make html
+- cd ..
 deploy:
-  provider: pages
+- provider: pypi
+  user:
+    secure: LUU+HfbP/4JDwZ/r2Kh712o2n+RTvO5Ny4+2GoTz3TuBBAbE7aBwM6KIZktKsoG1LeY3K/E28FsxoNrkVa3UlRPsbS+oMq5XKMJzDXsWsJVLvDcC40uAGzdPCiSAj55CJ+n3GSNHYTLNoxOgKARNxn/l2ekpgpnm2dHsl/mijtfwytpRsg9eiA1OtHiYUokUqwjj2SfqIf6AoX8kWb2buMQ+ZerKkj4OPO7wI2hUKLrwcJ3hgXkUIh4Cv5NWUmDn7EWtznpJoOrqqSdAOmJQ8ASGqji6H6p32QaxbhoU84+TSuLvT+yZN4l2MRl4bFWK9bGAA5tjzCyagBxWf3Xd0+wvbdenLsvMCKsuPAOoyj99HuPLMT2yzsh9wSmWNBOp47DJd0yL0zpyE2Ba3arw8zWbnfMM0rpwhmYzn0LEeSWhWr6t2LJ6JweuRhZG+4drcYTluo12sQ2//ZMEmcieQY1vko/FnhjrSHI7lzaW63kx7TRroPDZlHy4yWsPeVKQa6ug8V7Cr+uVODvH0ZeyqIQhObKvJz2yQJNboU3Rjc4bkAonDeS/DQL3B2nKkXyqhvI1x0TFRW62fIhcHcg/1ZNa8mhjdHL/IXrjddNxJmtdfemyAa75nnGuqfBFZh4WmUL1X7jfWo4T+dv5YnZ4f81GXZPar2PBiUb3GbnmbV8=
+  password:
+    secure: mYFbrG20nPSTMP2KXWG5FTDt0E1TopV5KB7goLQzVSICTsoUSD26fHfaUCpv77AHRfgd1TxfdUq+TJHBbC15TaBfWVvvipP7VO5EyniezVIwdAhXjEa/1YXTfVIOCE0CjBuhMIEs0UI/DpySLk2wBAAZlcVvtwagNvuYI1FTIXIV0DbWbLZ9QlZOIUmkw3sto67vkWNY0Ik/DvGQ65Wa1dwf29sg14woohDByDlWAtrkVvDMzjGnY1pZPkWHlAQzpwCtKPRmjVtNSmwuJf8EP4Qm2hdGIzqed4dSfSWemDUy9M7LoFQ55E5/9mLngOdL9//id/liRaj/iYxzF/NQfre82PKQyDWL62fGZniIRVKXnUw7ukxLWHdbTreFPbEUQ8FXh2UcftNahZXiG4ZwTLpU2sGJfNkINZzB2/QGa9O56nFfvkqsIsn/QqjllCIeBRHAS+WPksNotEDZ/HxSnJBIXpiVKndvMqe+EVrLo0Bs6BOtCAIkDr9qOCZmYdrfYxzcKyHimFMD/wz1LdTpxJI+Keo1YahMUVE3aVR0qQeSh6j/lrfgEyNGZ0er4mcdap5n8oiyN6a3XsZpADMBIuUVTmlrU14SxpOKKFkqqPfHKpWVfucO7mHkBFSIE0i1Blq0BBFuJCil85toFl9nSIH5wFlhS/UUPNL/S6JS9P0=
+  on:
+    branch: master
+  server: https://test.pypi.org/legacy/
+- provider: pages
   verbose: true
   skip-cleanup: true
   keep-history: true
   on:
     branch: master
+    tags: true
   github-token: $GITHUB_TOKEN
   local-dir: doc/build/html
   committer-from-gh: true
+

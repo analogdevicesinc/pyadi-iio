@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyadi-iio",
-    version="0.0.2",
+    version="0.0.3",
     author="Travis Collins",
     author_email="travis.collins@analog.com",
     description="Interfaces to stream data from ADI hardware",
@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/analogdevicesinc/pyadi-iio",
     packages=setuptools.find_packages(),
+    install_requires=['numpy'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: BSD License",
