@@ -1,13 +1,13 @@
-
 from adi.rx_tx import rx_tx
 from adi.context_manager import context_manager
 
 
 class ad9361(rx_tx, context_manager):
     """ AD9361 Transceiver """
+
     complex_data = True
-    rx_channel_names = ['voltage0', 'voltage1', 'voltage2', 'voltage3']
-    tx_channel_names = ['voltage0', 'voltage1', 'voltage2', 'voltage3']
+    rx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
+    tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     device_name = ""
     rx_enabled_channels = [0, 1]
     tx_enabled_channels = [0, 1]
@@ -20,10 +20,7 @@ class ad9361(rx_tx, context_manager):
         self.rxadc = self.ctx.find_device("cf-ad9361-lpc")
         self.txdac = self.ctx.find_device("cf-ad9361-dds-core-lpc")
 
-        rx_tx.__init__(
-            self,
-            self.rx_enabled_channels,
-            self.tx_enabled_channels)
+        rx_tx.__init__(self, self.rx_enabled_channels, self.tx_enabled_channels)
 
     @property
     def filter(self):
@@ -32,7 +29,7 @@ class ad9361(rx_tx, context_manager):
 
     @filter.setter
     def filter(self, value):
-        with open(value, 'r') as file:
+        with open(value, "r") as file:
             data = file.read()
         self.sample_rate = 3000000
         self.set_iio_attr_str("out", "voltage_filter_fir_en", False, 0)
@@ -57,7 +54,7 @@ class ad9361(rx_tx, context_manager):
 
     @rx_hardwaregain.setter
     def rx_hardwaregain(self, value):
-        if self.gain_control_mode == 'manual':
+        if self.gain_control_mode == "manual":
             self.set_iio_attr("voltage0", "hardwaregain", False, value)
 
     @property
@@ -117,19 +114,22 @@ class ad9361(rx_tx, context_manager):
 
 class ad9364(ad9361):
     """ AD9364 Transceiver """
-    rx_channel_names = ['voltage0', 'voltage1']
-    tx_channel_names = ['voltage0', 'voltage1']
+
+    rx_channel_names = ["voltage0", "voltage1"]
+    tx_channel_names = ["voltage0", "voltage1"]
     rx_enabled_channels = [0]
     tx_enabled_channels = [0]
 
 
 class ad9363(ad9361):
     """ AD9363 Transceiver """
+
     pass
 
 
 class Pluto(ad9364):
     """ PlutoSDR Evaluation Platform """
+
     device_name = "PlutoSDR"
     uri_auto = "ip:pluto.local"
     pass
