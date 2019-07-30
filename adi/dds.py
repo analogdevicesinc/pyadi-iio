@@ -34,6 +34,7 @@
 from adi.attribute import attribute
 import numpy as np
 
+
 class dds(attribute):
     """ DDS Signal generators: Each reference design contains two DDSs per channel.
         this allows for two complex tones to be generated per complex channel.

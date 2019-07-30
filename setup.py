@@ -3,17 +3,16 @@ import re
 
 # From: https://github.com/smartcar/python-sdk/blob/master/setup.py
 def _get_version():
-  """Extract version from package."""
-  with open('adi/__init__.py') as reader:
-    match = re.search(
-      r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-      reader.read(),
-      re.MULTILINE
-    )
-    if match:
-      return match.group(1)
-    else:
-      raise RuntimeError('Unable to extract version.')
+    """Extract version from package."""
+    with open("adi/__init__.py") as reader:
+        match = re.search(
+            r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', reader.read(), re.MULTILINE
+        )
+        if match:
+            return match.group(1)
+        else:
+            raise RuntimeError("Unable to extract version.")
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -28,7 +27,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/analogdevicesinc/pyadi-iio",
     packages=setuptools.find_packages(),
-    install_requires=['numpy'],
+    install_requires=["numpy"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: BSD License",
