@@ -126,7 +126,7 @@ class ad9371(rx_tx, context_manager):
 
     @property
     def sn_lo(self):
-        """tx_lo: Carrier frequency of TX path"""
+        """sn_lo: Carrier frequency of Sniffer/ORx path"""
         return self.get_iio_attr("altvoltage2", "RX_SN_LO_frequency", True)
 
     @sn_lo.setter

@@ -57,4 +57,5 @@ class ad9371(ad9371):
     pass
 
 
+__version__ = "0.0.1"
 name = "Analog Devices Hardware Interfaces"

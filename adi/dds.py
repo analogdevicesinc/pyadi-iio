@@ -34,6 +34,7 @@
 from adi.attribute import attribute
 import numpy as np
 
+
 class dds(attribute):
     """ DDS Signal generators: Each reference design contains two DDSs per channel.
         this allows for two complex tones to be generated per complex channel.
@@ -41,11 +42,13 @@ class dds(attribute):
 
     dds_frequencies = []
     dds_scales = []
+    dds_phases = []
     dds_enabled = []
 
     def __init__(self):
         self.dds_frequencies = np.zeros(self.num_tx_channels * 2)
         self.dds_scales = np.zeros(self.num_tx_channels * 2)
+        self.dds_phases = np.zeros(self.num_tx_channels * 2)
         self.dds_enabled = np.zeros(self.num_tx_channels * 2, dtype=bool)
 
     def update_dds(self, attr, value):
@@ -83,12 +86,25 @@ class dds(attribute):
 
     @property
     def dds_scales(self):
-        """ Scale of DDS signal generators"""
+        """ Scale of DDS signal generators
+            Ranges [0,1]
+        """
         return self.read_dds("scale")
 
     @dds_scales.setter
     def dds_scales(self, value):
         self.update_dds("scale", value)
+
+    @property
+    def dds_phases(self):
+        """ Phases of DDS signal generators.
+            Range in millidegrees [0,360000]
+        """
+        return self.read_dds("phase")
+
+    @dds_scales.setter
+    def dds_phases(self, value):
+        self.update_dds("phase", value)
 
     @property
     def dds_enabled(self):
