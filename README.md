@@ -23,5 +23,5 @@ tcollins@jeeves:~$ (sudo) python setup.py install
 ### Installing from pip
 
 ```
-tcollins@jeeves:~$ (sudo) pip install -i https://test.pypi.org/simple/ pyadi-iio
+tcollins@jeeves:~$ (sudo) pip install pyadi-iio
 ```
