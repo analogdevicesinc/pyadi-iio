@@ -29,7 +29,6 @@ deploy:
     secure: mYFbrG20nPSTMP2KXWG5FTDt0E1TopV5KB7goLQzVSICTsoUSD26fHfaUCpv77AHRfgd1TxfdUq+TJHBbC15TaBfWVvvipP7VO5EyniezVIwdAhXjEa/1YXTfVIOCE0CjBuhMIEs0UI/DpySLk2wBAAZlcVvtwagNvuYI1FTIXIV0DbWbLZ9QlZOIUmkw3sto67vkWNY0Ik/DvGQ65Wa1dwf29sg14woohDByDlWAtrkVvDMzjGnY1pZPkWHlAQzpwCtKPRmjVtNSmwuJf8EP4Qm2hdGIzqed4dSfSWemDUy9M7LoFQ55E5/9mLngOdL9//id/liRaj/iYxzF/NQfre82PKQyDWL62fGZniIRVKXnUw7ukxLWHdbTreFPbEUQ8FXh2UcftNahZXiG4ZwTLpU2sGJfNkINZzB2/QGa9O56nFfvkqsIsn/QqjllCIeBRHAS+WPksNotEDZ/HxSnJBIXpiVKndvMqe+EVrLo0Bs6BOtCAIkDr9qOCZmYdrfYxzcKyHimFMD/wz1LdTpxJI+Keo1YahMUVE3aVR0qQeSh6j/lrfgEyNGZ0er4mcdap5n8oiyN6a3XsZpADMBIuUVTmlrU14SxpOKKFkqqPfHKpWVfucO7mHkBFSIE0i1Blq0BBFuJCil85toFl9nSIH5wFlhS/UUPNL/S6JS9P0=
   on:
     branch: master
-  server: https://test.pypi.org/legacy/
 - provider: pages
   verbose: true
   skip-cleanup: true
