@@ -64,5 +64,12 @@ class adrv9009(adrv9009):
     pass
 
 
+from adi.adrv9009_zu11eg import *
+
+
+class adrv9009_zu11eg(adrv9009_zu11eg):
+    pass
+
+
 __version__ = "0.0.2"
 name = "Analog Devices Hardware Interfaces"
