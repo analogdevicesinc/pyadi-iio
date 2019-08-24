@@ -1,36 +1,156 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Analog Devices Hardware Python Interfaces &#8212; Analog Devices Hardware Python Interfaces 0.1 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Analog Devices Hardware Python Interfaces &mdash; Analog Devices Hardware Python Interfaces 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="#" class="icon icon-home"> Analog Devices Hardware Python Interfaces
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Analog Devices Hardware Python Interfaces</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#devices">Devices</a></li>
+<li><a class="reference internal" href="#module-adi.ad9361">AD936X Family</a></li>
+<li><a class="reference internal" href="#module-adi.ad9371">AD9371</a></li>
+<li><a class="reference internal" href="#module-adi.adrv9009">ADRV9009</a></li>
+<li><a class="reference internal" href="#module-adi.dds">FPGA Features</a></li>
+<li><a class="reference internal" href="#module-adi.rx_tx">Common</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Analog Devices Hardware Python Interfaces</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Analog Devices Hardware Python Interfaces</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="analog-devices-hardware-python-interfaces">
 <h1>Analog Devices Hardware Python Interfaces<a class="headerlink" href="#analog-devices-hardware-python-interfaces" title="Permalink to this headline">¶</a></h1>
@@ -53,31 +173,6 @@
 </div>
 <div class="section" id="devices">
 <h1>Devices<a class="headerlink" href="#devices" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">adi.</code><code class="descname">Pluto</code><span class="sig-paren">(</span><em>uri=''</em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">adi.</code><code class="descname">ad9361</code><span class="sig-paren">(</span><em>uri=''</em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">adi.</code><code class="descname">ad9363</code><span class="sig-paren">(</span><em>uri=''</em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">adi.</code><code class="descname">ad9364</code><span class="sig-paren">(</span><em>uri=''</em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
-
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">adi.</code><code class="descname">ad9371</code><span class="sig-paren">(</span><em>uri=''</em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
-
 </div>
 <div class="section" id="module-adi.ad9361">
 <span id="ad936x-family"></span><h1>AD936X Family<a class="headerlink" href="#module-adi.ad9361" title="Permalink to this headline">¶</a></h1>
@@ -233,6 +328,147 @@ gain_control_mode is set to ‘manual’</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-adi.adrv9009">
+<span id="adrv9009"></span><h1>ADRV9009<a class="headerlink" href="#module-adi.adrv9009" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="adi.adrv9009.adrv9009">
+<em class="property">class </em><code class="descclassname">adi.adrv9009.</code><code class="descname">adrv9009</code><span class="sig-paren">(</span><em>uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009.adrv9009" title="Permalink to this definition">¶</a></dt>
+<dd><p>ADRV9009 Transceiver</p>
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.gain_control_mode">
+<code class="descname">gain_control_mode</code><a class="headerlink" href="#adi.adrv9009.adrv9009.gain_control_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>gain_control_mode: Mode of receive path AGC. Options are:
+slow_attack, manual</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.rx_hardwaregain_chan0">
+<code class="descname">rx_hardwaregain_chan0</code><a class="headerlink" href="#adi.adrv9009.adrv9009.rx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.rx_hardwaregain_chan1">
+<code class="descname">rx_hardwaregain_chan1</code><a class="headerlink" href="#adi.adrv9009.adrv9009.rx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.rx_rf_bandwidth">
+<code class="descname">rx_rf_bandwidth</code><a class="headerlink" href="#adi.adrv9009.adrv9009.rx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.rx_sample_rate">
+<code class="descname">rx_sample_rate</code><a class="headerlink" href="#adi.adrv9009.adrv9009.rx_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_sample_rate: Sample rate RX path in samples per second</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.trx_lo">
+<code class="descname">trx_lo</code><a class="headerlink" href="#adi.adrv9009.adrv9009.trx_lo" title="Permalink to this definition">¶</a></dt>
+<dd><p>trx_lo: Carrier frequency of TX and RX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.tx_hardwaregain_chan0">
+<code class="descname">tx_hardwaregain_chan0</code><a class="headerlink" href="#adi.adrv9009.adrv9009.tx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path channel 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.tx_hardwaregain_chan1">
+<code class="descname">tx_hardwaregain_chan1</code><a class="headerlink" href="#adi.adrv9009.adrv9009.tx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path channel 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.tx_rf_bandwidth">
+<code class="descname">tx_rf_bandwidth</code><a class="headerlink" href="#adi.adrv9009.adrv9009.tx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009.adrv9009.tx_sample_rate">
+<code class="descname">tx_sample_rate</code><a class="headerlink" href="#adi.adrv9009.adrv9009.tx_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_sample_rate: Sample rate TX path in samples per second</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-adi.adrv9009_zu11eg"></span><dl class="class">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg">
+<em class="property">class </em><code class="descclassname">adi.adrv9009_zu11eg.</code><code class="descname">adrv9009_zu11eg</code><span class="sig-paren">(</span><em>uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg" title="Permalink to this definition">¶</a></dt>
+<dd><p>ADRV9009-ZU11EG System-On-Module</p>
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.gain_control_mode_chip_b">
+<code class="descname">gain_control_mode_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.gain_control_mode_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>gain_control_mode_chip_b: Mode of receive path AGC. Options are:
+slow_attack, manual</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.rx_hardwaregain_chan0_chip_b">
+<code class="descname">rx_hardwaregain_chan0_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.rx_hardwaregain_chan0_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.rx_hardwaregain_chan1_chip_b">
+<code class="descname">rx_hardwaregain_chan1_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.rx_hardwaregain_chan1_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.rx_rf_bandwidth_chip_b">
+<code class="descname">rx_rf_bandwidth_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.rx_rf_bandwidth_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.rx_sample_rate_chip_b">
+<code class="descname">rx_sample_rate_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.rx_sample_rate_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_sample_rate: Sample rate RX path in samples per second</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.trx_lo_chip_b">
+<code class="descname">trx_lo_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.trx_lo_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>trx_lo: Carrier frequency of TX and RX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_hardwaregain_chan0_chip_b">
+<code class="descname">tx_hardwaregain_chan0_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_hardwaregain_chan0_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path channel 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_hardwaregain_chan1_chip_b">
+<code class="descname">tx_hardwaregain_chan1_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_hardwaregain_chan1_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path channel 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_rf_bandwidth_chip_b">
+<code class="descname">tx_rf_bandwidth_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_rf_bandwidth_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_sample_rate_chip_b">
+<code class="descname">tx_sample_rate_chip_b</code><a class="headerlink" href="#adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_sample_rate_chip_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_sample_rate: Sample rate TX path in samples per second</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-adi.dds">
 <span id="fpga-features"></span><h1>FPGA Features<a class="headerlink" href="#module-adi.dds" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
@@ -310,68 +546,43 @@ Ranges [0,1]</p>
 <span class="target" id="module-adi.context_manager"></span><span class="target" id="module-adi.attribute"></span></div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">Analog Devices Hardware Python Interfaces</a></h1>
+          <footer>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Travis Collins
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Travis Collins.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

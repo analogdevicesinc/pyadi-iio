@@ -43,6 +43,13 @@ AD9371
 .. automodule:: adi.ad9371
    :members:
 
+ADRV9009
+===================
+.. automodule:: adi.adrv9009
+   :members:
+.. automodule:: adi.adrv9009_zu11eg
+   :members:
+
 FPGA Features
 ===================
 .. automodule:: adi.dds
