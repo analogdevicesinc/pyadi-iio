@@ -9,6 +9,7 @@
 ### Currently supported hardware
 - AD936X (Pluto, FMComms, ADRV936X)
 - AD9371
+- ADRV9009
 
 ### Dependencies
 - libiio with python bindings
