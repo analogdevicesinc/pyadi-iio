@@ -33,43 +33,11 @@
 
 from adi.ad9361 import *
 
-
-class ad9361(ad9361):
-    pass
-
-
-class ad9363(ad9363):
-    pass
-
-
-class ad9364(ad9364):
-    pass
-
-
-class Pluto(Pluto):
-    pass
-
-
 from adi.ad9371 import *
-
-
-class ad9371(ad9371):
-    pass
-
 
 from adi.adrv9009 import *
 
-
-class adrv9009(adrv9009):
-    pass
-
-
 from adi.adrv9009_zu11eg import *
-
-
-class adrv9009_zu11eg(adrv9009_zu11eg):
-    pass
-
 
 __version__ = "0.0.2"
 name = "Analog Devices Hardware Interfaces"
