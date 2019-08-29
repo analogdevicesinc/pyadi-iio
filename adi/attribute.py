@@ -33,44 +33,44 @@
 
 
 class attribute:
-    def set_iio_attr_str(self, channel_name, attr_name, output, value, ctrl=None):
-        if ctrl:
-            channel = ctrl.find_channel(channel_name, output)
+    def _set_iio_attr_str(self, channel_name, attr_name, output, value, _ctrl=None):
+        if _ctrl:
+            channel = _ctrl.find_channel(channel_name, output)
         else:
-            channel = self.ctrl.find_channel(channel_name, output)
+            channel = self._ctrl.find_channel(channel_name, output)
         try:
             channel.attrs[attr_name].value = str(value)
         except Exception as ex:
             raise ex
 
-    def set_iio_attr(self, channel_name, attr_name, output, value, ctrl=None):
-        if ctrl:
-            channel = ctrl.find_channel(channel_name, output)
+    def _set_iio_attr(self, channel_name, attr_name, output, value, _ctrl=None):
+        if _ctrl:
+            channel = _ctrl.find_channel(channel_name, output)
         else:
-            channel = self.ctrl.find_channel(channel_name, output)
+            channel = self._ctrl.find_channel(channel_name, output)
         try:
             channel.attrs[attr_name].value = str(int(value))
         except Exception as ex:
             raise ex
 
-    def get_iio_attr(self, channel_name, attr_name, output, ctrl=None):
-        if ctrl:
-            channel = ctrl.find_channel(channel_name, output)
+    def _get_iio_attr(self, channel_name, attr_name, output, _ctrl=None):
+        if _ctrl:
+            channel = _ctrl.find_channel(channel_name, output)
         else:
-            channel = self.ctrl.find_channel(channel_name, output)
+            channel = self._ctrl.find_channel(channel_name, output)
         return channel.attrs[attr_name].value
 
-    def set_iio_dev_attr_str(self, attr_name, value, ctrl=None):
+    def _set_iio_dev_attr_str(self, attr_name, value, _ctrl=None):
         try:
-            if ctrl:
-                ctrl.attrs[attr_name].value = str(value)
+            if _ctrl:
+                _ctrl.attrs[attr_name].value = str(value)
             else:
-                self.ctrl.attrs[attr_name].value = str(value)
+                self._ctrl.attrs[attr_name].value = str(value)
         except Exception as ex:
             raise ex
 
-    def get_iio_dev_attr(self, attr_name, ctrl=None):
-        if ctrl:
-            return ctrl.attrs[attr_name].value
+    def _get_iio_dev_attr(self, attr_name, _ctrl=None):
+        if _ctrl:
+            return _ctrl.attrs[attr_name].value
         else:
-            return self.ctrl.attrs[attr_name].value
+            return self._ctrl.attrs[attr_name].value

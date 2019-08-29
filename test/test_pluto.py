@@ -41,6 +41,21 @@ from adi import Pluto
 import iio
 
 
+def check_pluto():
+    # Try USB contexts first
+    contexts = iio.scan_contexts()
+    for c in contexts:
+        if "PlutoSDR" in contexts[c]:
+            return True
+    # Try auto discover
+    try:
+        iio.Context("ip:pluto.local")
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
 class TestPluto(unittest.TestCase):
 
     do_plots = False
@@ -61,11 +76,12 @@ class TestPluto(unittest.TestCase):
         return xf[indx]
 
     def setUp(self):
-        self.longMessage = True
+        pass
 
     def tearDown(self):
         pass
 
+    @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
     def testPlutoADC(self):
         # See if we can get non-zero data from Pluto
         sdr = Pluto()
@@ -73,6 +89,7 @@ class TestPluto(unittest.TestCase):
         s = np.sum(np.abs(data))
         self.assertGreater(s, 0, "check non-zero data")
 
+    @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
     def testPlutoDAC(self):
         # See if we can tone from Pluto using DMAs
         sdr = Pluto()
@@ -114,12 +131,4 @@ class TestPluto(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    from os import path
-    import sys
-
-    try:
-        iio.Context("ip:192.168.2.1")
-    except:
-        print("No Pluto found")
-        sys.exit(1)
     unittest.main()
