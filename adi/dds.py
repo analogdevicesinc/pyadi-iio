@@ -40,11 +40,6 @@ class dds(attribute):
         this allows for two complex tones to be generated per complex channel.
     """
 
-    dds_frequencies = []
-    dds_scales = []
-    dds_phases = []
-    dds_enabled = []
-
     def __init__(self):
         self.dds_frequencies = np.zeros(self.num_tx_channels * 2)
         self.dds_scales = np.zeros(self.num_tx_channels * 2)
