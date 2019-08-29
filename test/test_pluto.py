@@ -47,12 +47,12 @@ def check_pluto():
     for c in contexts:
         if "PlutoSDR" in contexts[c]:
             return True
-            break
     # Try auto discover
     try:
-        ctx = iio.Context("ip:pluto.local")
+        iio.Context("ip:pluto.local")
         return True
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 
