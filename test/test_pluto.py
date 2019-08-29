@@ -33,8 +33,6 @@
 
 from __future__ import print_function
 
-import logging
-
 import unittest
 import numpy as np
 from adi import Pluto
@@ -58,7 +56,7 @@ def check_pluto():
 
 class TestPluto(unittest.TestCase):
 
-    do_plots = False
+    # do_plots = False
 
     def freq_est(self, y, fs):
         N = len(y)
@@ -66,12 +64,12 @@ class TestPluto(unittest.TestCase):
         yf = np.fft.fft(y)
         yf = np.fft.fftshift(yf)
         xf = np.linspace(-1.0 / (2.0 * T), 1.0 / (2.0 * T), N)
-        if self.do_plots:
-            import matplotlib.pyplot as plt
-
-            fig, ax = plt.subplots()
-            ax.plot(xf, 2.0 / N * np.abs(yf))
-            plt.show()
+        # if self.do_plots:
+        #     import matplotlib.pyplot as plt
+        #
+        #     fig, ax = plt.subplots()
+        #     ax.plot(xf, 2.0 / N * np.abs(yf))
+        #     plt.show()
         indx = np.argmax(np.abs(yf))
         return xf[indx]
 
@@ -110,21 +108,21 @@ class TestPluto(unittest.TestCase):
         iq = i + 1j * q
         # Pass through SDR
         sdr.tx(iq)
-        for k in range(5):
+        for _ in range(5):
             data = sdr.rx()
 
         tone_freq = self.freq_est(data, RXFS)
 
-        if self.do_plots:
-            import matplotlib.pyplot as plt
-
-            reals = np.real(data)
-            plt.plot(reals)
-            imags = np.imag(data)
-            plt.plot(imags)
-            plt.xlabel("Samples")
-            plt.ylabel("Amplitude [dbFS]")
-            plt.show()
+        # if self.do_plots:
+        #     import matplotlib.pyplot as plt
+        #
+        #     reals = np.real(data)
+        #     plt.plot(reals)
+        #     imags = np.imag(data)
+        #     plt.plot(imags)
+        #     plt.xlabel("Samples")
+        #     plt.ylabel("Amplitude [dbFS]")
+        #     plt.show()
 
         diff = np.abs(tone_freq - fc)
         self.assertGreater(fc * 0.01, diff, "Frequency offset")
