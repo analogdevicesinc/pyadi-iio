@@ -51,9 +51,9 @@ class dds(attribute):
         self.dds_phases = np.zeros(self.num_tx_channels * 2)
         self.dds_enabled = np.zeros(self.num_tx_channels * 2, dtype=bool)
 
-    def update_dds(self, attr, value):
+    def __update_dds(self, attr, value):
         indx = 0
-        for chan in self.txdac.channels:
+        for chan in self._txdac.channels:
             if not chan.name:
                 continue
             if attr == "raw":
@@ -62,10 +62,10 @@ class dds(attribute):
                 chan.attrs[attr].value = str(value[indx])
             indx = indx + 1
 
-    def read_dds(self, attr):
+    def _read_dds(self, attr):
         values = []
         indx = 0
-        for chan in self.txdac.channels:
+        for chan in self._txdac.channels:
             if not chan.name:
                 continue
             values.append(chan.attrs[attr].value)
@@ -78,39 +78,39 @@ class dds(attribute):
     @property
     def dds_frequencies(self):
         """ Frequencies of DDSs in Hz"""
-        return self.read_dds("frequency")
+        return self._read_dds("frequency")
 
     @dds_frequencies.setter
     def dds_frequencies(self, value):
-        self.update_dds("frequency", value)
+        self.__update_dds("frequency", value)
 
     @property
     def dds_scales(self):
         """ Scale of DDS signal generators
             Ranges [0,1]
         """
-        return self.read_dds("scale")
+        return self._read_dds("scale")
 
     @dds_scales.setter
     def dds_scales(self, value):
-        self.update_dds("scale", value)
+        self.__update_dds("scale", value)
 
     @property
     def dds_phases(self):
         """ Phases of DDS signal generators.
             Range in millidegrees [0,360000]
         """
-        return self.read_dds("phase")
+        return self._read_dds("phase")
 
     @dds_scales.setter
     def dds_phases(self, value):
-        self.update_dds("phase", value)
+        self.__update_dds("phase", value)
 
     @property
     def dds_enabled(self):
         """ DDS generator enable state """
-        return self.read_dds("raw")
+        return self._read_dds("raw")
 
     @dds_enabled.setter
     def dds_enabled(self, value):
-        self.update_dds("raw", value)
+        self.__update_dds("raw", value)
