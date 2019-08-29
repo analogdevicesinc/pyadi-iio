@@ -50,7 +50,7 @@ sdr.tx_hardwaregain = -30
 sdr.gain_control_mode = "automatic"
 
 # Enable digital loopback
-# sdr.ctrl.debug_attrs['loopback_tx_rx'].value = '1'
+# sdr._ctrl.debug_attrs['loopback_tx_rx'].value = '1'
 
 # Read properties
 print("RX LO %s" % (sdr.rx_lo))

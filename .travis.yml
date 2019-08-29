@@ -16,7 +16,7 @@ install:
 - sudo pip install -r requirements_doc.txt
 script:
 - export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
-- python -m unittest
+- python -m unittest -v
 after_success:
 - export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
 - cd doc && make html
