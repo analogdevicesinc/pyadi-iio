@@ -5,7 +5,6 @@ import adi
 from matplotlib import mlab as mlab
 import numpy as np
 from PIL import Image
-import time
 import pygame
 
 DISPLAY_WIDTH = 256
@@ -94,4 +93,4 @@ try:
 except KeyboardInterrupt:
     pass
 finally:
-    sdr.close()
+    sdr = []
