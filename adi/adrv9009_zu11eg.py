@@ -37,7 +37,7 @@ from adi.adrv9009 import adrv9009
 class adrv9009_zu11eg(adrv9009):
     """ ADRV9009-ZU11EG System-On-Module """
 
-    rx_channel_names = [
+    _rx_channel_names = [
         "voltage0_i",
         "voltage0_q",
         "voltage1_i",
@@ -47,7 +47,7 @@ class adrv9009_zu11eg(adrv9009):
         "voltage3_i",
         "voltage3_q",
     ]
-    tx_channel_names = [
+    _tx_channel_names = [
         "voltage0",
         "voltage1",
         "voltage2",
@@ -57,91 +57,91 @@ class adrv9009_zu11eg(adrv9009):
         "voltage6",
         "voltage7",
     ]
-    device_name = ""
+    _device_name = ""
     rx_enabled_channels = [0, 1]
     tx_enabled_channels = [0, 1]
 
     def __init__(self, uri=""):
         adrv9009.__init__(self, uri=uri)
-        self.ctrl_b = self.ctx.find_device("adrv9009-phy-b")
+        self._ctrl_b = self._ctx.find_device("adrv9009-phy-b")
 
     @property
     def gain_control_mode_chip_b(self):
         """gain_control_mode_chip_b: Mode of receive path AGC. Options are:
         slow_attack, manual"""
-        return self.get_iio_attr("voltage0", "gain_control_mode", False, self.ctrl_b)
+        return self._get_iio_attr("voltage0", "gain_control_mode", False, self._ctrl_b)
 
     @gain_control_mode_chip_b.setter
     def gain_control_mode_chip_b(self, value):
-        self.set_iio_attr_str(
-            "voltage0", "gain_control_mode", False, value, self.ctrl_b
+        self._set_iio_attr_str(
+            "voltage0", "gain_control_mode", False, value, self._ctrl_b
         )
 
     @property
     def rx_hardwaregain_chan0_chip_b(self):
         """rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
         gain_control_mode is set to 'manual'"""
-        return self.get_iio_attr("voltage0", "hardwaregain", False, self.ctrl_b)
+        return self._get_iio_attr("voltage0", "hardwaregain", False, self._ctrl_b)
 
     @rx_hardwaregain_chan0_chip_b.setter
     def rx_hardwaregain_chan0_chip_b(self, value):
         if self.gain_control_mode_chip_b == "manual":
-            self.set_iio_attr("voltage0", "hardwaregain", False, value, self.ctrl_b)
+            self._set_iio_attr("voltage0", "hardwaregain", False, value, self._ctrl_b)
 
     @property
     def rx_hardwaregain_chan1_chip_b(self):
         """rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
         gain_control_mode is set to 'manual'"""
-        return self.get_iio_attr("voltage1", "hardwaregain", False, self.ctrl_b)
+        return self._get_iio_attr("voltage1", "hardwaregain", False, self._ctrl_b)
 
     @rx_hardwaregain_chan1_chip_b.setter
     def rx_hardwaregain_chan1_chip_b(self, value):
         if self.gain_control_mode_chip_b == "manual":
-            self.set_iio_attr("voltage1", "hardwaregain", False, value, self.ctrl_b)
+            self._set_iio_attr("voltage1", "hardwaregain", False, value, self._ctrl_b)
 
     @property
     def tx_hardwaregain_chan0_chip_b(self):
         """tx_hardwaregain: Attenuation applied to TX path channel 0"""
-        return self.get_iio_attr("voltage0", "hardwaregain", True, self.ctrl_b)
+        return self._get_iio_attr("voltage0", "hardwaregain", True, self._ctrl_b)
 
     @tx_hardwaregain_chan0_chip_b.setter
     def tx_hardwaregain_chan0_chip_b(self, value):
-        self.set_iio_attr("voltage0", "hardwaregain", True, value, self.ctrl_b)
+        self._set_iio_attr("voltage0", "hardwaregain", True, value, self._ctrl_b)
 
     @property
     def tx_hardwaregain_chan1_chip_b(self):
         """tx_hardwaregain: Attenuation applied to TX path channel 1"""
-        return self.get_iio_attr("voltage1", "hardwaregain", True, self.ctrl_b)
+        return self._get_iio_attr("voltage1", "hardwaregain", True, self._ctrl_b)
 
     @tx_hardwaregain_chan1_chip_b.setter
     def tx_hardwaregain_chan1_chip_b(self, value):
-        self.set_iio_attr("voltage1", "hardwaregain", True, value, self.ctrl_b)
+        self._set_iio_attr("voltage1", "hardwaregain", True, value, self._ctrl_b)
 
     @property
     def rx_rf_bandwidth_chip_b(self):
         """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path"""
-        return self.get_iio_attr("voltage0", "rf_bandwidth", False, self.ctrl_b)
+        return self._get_iio_attr("voltage0", "rf_bandwidth", False, self._ctrl_b)
 
     @property
     def tx_rf_bandwidth_chip_b(self):
         """tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path"""
-        return self.get_iio_attr("voltage0", "rf_bandwidth", True, self.ctrl_b)
+        return self._get_iio_attr("voltage0", "rf_bandwidth", True, self._ctrl_b)
 
     @property
     def rx_sample_rate_chip_b(self):
         """rx_sample_rate: Sample rate RX path in samples per second"""
-        return self.get_iio_attr("voltage0", "sampling_frequency", False, self.ctrl_b)
+        return self._get_iio_attr("voltage0", "sampling_frequency", False, self._ctrl_b)
 
     @property
     def tx_sample_rate_chip_b(self):
         """tx_sample_rate: Sample rate TX path in samples per second"""
-        return self.get_iio_attr("voltage0", "sampling_frequency", True, self.ctrl_b)
+        return self._get_iio_attr("voltage0", "sampling_frequency", True, self._ctrl_b)
 
     @property
     def trx_lo_chip_b(self):
         """trx_lo: Carrier frequency of TX and RX path"""
-        return self.get_iio_attr("altvoltage0", "frequency", True, self.ctrl_b)
+        return self._get_iio_attr("altvoltage0", "frequency", True, self._ctrl_b)
 
     @trx_lo_chip_b.setter
     def trx_lo_chip_b(self, value):
-        self.set_iio_attr("altvoltage0", "frequency", True, value, self.ctrl_b)
+        self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl_b)
