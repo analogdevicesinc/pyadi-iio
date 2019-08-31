@@ -8,16 +8,29 @@ Analog Devices Hardware Python Interfaces
 
 This module provides a convenient way to access and control ADI hardware from Python through existing IIO drivers.
 
+.. image:: https://secure.travis-ci.org/analogdevicesinc/pyadi-iio.png
+    :target: http://travis-ci.org/analogdevicesinc/pyadi-iio
+.. image:: https://badge.fury.io/py/pyadi-iio.svg
+    :target: https://badge.fury.io/py/pyadi-iio
+.. image:: https://api.codacy.com/project/badge/Grade/4bd027bfc5774029a30a9e1cedf5a434
+    :target: https://www.codacy.com/app/travis.collins/pyadi-iio?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade
+
 Requirements
-
+==================
 * `libiio <http://github.com/analogdevicesinc/libiio/>`_
-* `libad9361 for AD9361 specific devices <http://github.com/analogdevicesinc/libad9361/>`_
 
+.. * `libad9361 for AD9361 specific devices <http://github.com/analogdevicesinc/libad9361/>`_
+
+Sections
+==================
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-
+   guides/quick
+   guides/examples
+   devices/index
+   buffers/index
+   fpga/index
 
 Indices and tables
 ==================
@@ -25,43 +38,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-Devices
-===================
-.. automodule:: adi
-   :noindex:
-   :members:
-
-AD936X Family
-===================
-.. automodule:: adi.ad9361
-   :members:
-
-AD9371
-===================
-.. automodule:: adi.ad9371
-   :members:
-
-ADRV9009
-===================
-.. automodule:: adi.adrv9009
-   :members:
-.. automodule:: adi.adrv9009_zu11eg
-   :members:
-
-FPGA Features
-===================
-.. automodule:: adi.dds
-   :members:
-
-Common
-===================
-.. automodule:: adi.rx_tx
-   :members:
-
-.. automodule:: adi.context_manager
-   :members:
-
-.. automodule:: adi.attribute
-   :members:
