@@ -1,6 +1,8 @@
 FPGA Features
 ===================
-.. toctree::
-   :maxdepth: 1
 
-   dds
+
+Direct Digital Synthesizers
+---------------------------
+.. automodule:: adi.dds
+   :members:

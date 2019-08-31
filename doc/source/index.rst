@@ -18,7 +18,8 @@ This module provides a convenient way to access and control ADI hardware from Py
 Requirements
 ==================
 * `libiio <http://github.com/analogdevicesinc/libiio/>`_
-* `libad9361 for AD9361 specific devices <http://github.com/analogdevicesinc/libad9361/>`_
+
+.. * `libad9361 for AD9361 specific devices <http://github.com/analogdevicesinc/libad9361/>`_
 
 Sections
 ==================
