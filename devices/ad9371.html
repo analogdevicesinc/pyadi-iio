@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>AD9371 &mdash; Analog Devices Hardware Python Interfaces 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ADRV9009" href="adrv9009.html" />
+    <link rel="prev" title="AD936X Family" href="ad9361.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Analog Devices Hardware Python Interfaces
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Supported Devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ad9361.html">AD936X Family</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">AD9371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9009.html">ADRV9009</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Analog Devices Hardware Python Interfaces</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Supported Devices</a> &raquo;</li>
+        
+      <li>AD9371</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/devices/ad9371.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-adi.ad9371">
+<span id="ad9371"></span><h1>AD9371<a class="headerlink" href="#module-adi.ad9371" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="adi.ad9371.ad9371">
+<em class="property">class </em><code class="descclassname">adi.ad9371.</code><code class="descname">ad9371</code><span class="sig-paren">(</span><em>uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9371.ad9371" title="Permalink to this definition">¶</a></dt>
+<dd><p>AD9371 Transceiver</p>
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.gain_control_mode">
+<code class="descname">gain_control_mode</code><a class="headerlink" href="#adi.ad9371.ad9371.gain_control_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>gain_control_mode: Mode of receive path AGC. Options are:
+automatic, hybrid, manual</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.rx_hardwaregain">
+<code class="descname">rx_hardwaregain</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_hardwaregain" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.rx_lo">
+<code class="descname">rx_lo</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_lo" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_lo: Carrier frequency of RX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.rx_rf_bandwidth">
+<code class="descname">rx_rf_bandwidth</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.rx_sample_rate">
+<code class="descname">rx_sample_rate</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_sample_rate: Sample rate RX path in samples per second</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.sn_lo">
+<code class="descname">sn_lo</code><a class="headerlink" href="#adi.ad9371.ad9371.sn_lo" title="Permalink to this definition">¶</a></dt>
+<dd><p>sn_lo: Carrier frequency of Sniffer/ORx path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.tx_hardwaregain">
+<code class="descname">tx_hardwaregain</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_hardwaregain" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.tx_lo">
+<code class="descname">tx_lo</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_lo" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_lo: Carrier frequency of TX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.tx_rf_bandwidth">
+<code class="descname">tx_rf_bandwidth</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adi.ad9371.ad9371.tx_sample_rate">
+<code class="descname">tx_sample_rate</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_sample_rate: Sample rate TX path in samples per second</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="adrv9009.html" class="btn btn-neutral float-right" title="ADRV9009" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ad9361.html" class="btn btn-neutral float-left" title="AD936X Family" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Travis Collins
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
