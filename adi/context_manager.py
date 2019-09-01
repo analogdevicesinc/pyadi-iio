@@ -39,6 +39,8 @@ class context_manager(object):
     _ctx = None
 
     def __init__(self, uri="", _device_name=""):
+        if self._ctx:
+            return
         self.uri = uri
         try:
             if self.uri == "":

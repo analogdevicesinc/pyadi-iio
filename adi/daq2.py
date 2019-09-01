@@ -31,19 +31,13 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad9361 import *
+from adi import ad9144, ad9680
 
-from adi.ad9371 import *
 
-from adi.adrv9009 import *
+class daq2(ad9144, ad9680):
+    """ DAQ2 High-Speed Data Aquistion Device """
 
-from adi.adrv9009_zu11eg import *
+    def __init__(self, uri=""):
 
-from adi.ad9680 import *
-
-from adi.ad9144 import *
-
-from adi.daq2 import *
-
-__version__ = "0.0.2"
-name = "Analog Devices Hardware Interfaces"
+        ad9144.__init__(self, uri=uri)
+        ad9680.__init__(self, uri=uri)
