@@ -34,7 +34,7 @@
 from adi import ad9144, ad9680
 
 
-class daq2(ad9144, ad9680):
+class DAQ2(ad9144, ad9680):
     """ DAQ2 High-Speed Data Aquistion Device """
 
     def __init__(self, uri=""):

@@ -35,7 +35,7 @@ from __future__ import print_function
 
 import unittest
 import numpy as np
-from adi import daq2
+from adi import DAQ2
 import iio
 
 URI = "ip:analog"
@@ -79,7 +79,7 @@ class TestDAQ2(unittest.TestCase):
     @unittest.skipUnless(check_daq2(), "daq2 not attached")
     def testDAQ2ADC(self):
         # See if we can get non-zero data from ADC
-        adc = daq2(uri=URI)
+        adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [0]
         data = adc.rx()
         s = np.sum(np.abs(data))
@@ -88,7 +88,7 @@ class TestDAQ2(unittest.TestCase):
     @unittest.skipUnless(check_daq2(), "daq2 not attached")
     def testDAQ2ADC_p2(self):
         # See if we can get non-zero data from ADC
-        adc = daq2(uri=URI)
+        adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [1]
         data = adc.rx()
         s = np.sum(np.abs(data))
@@ -97,7 +97,7 @@ class TestDAQ2(unittest.TestCase):
     @unittest.skipUnless(check_daq2(), "daq2 not attached")
     def testDAQ2ADC_dual(self):
         # See if we can get non-zero data from ADC
-        adc = daq2(uri=URI)
+        adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [0, 1]
         data = adc.rx()
         s = np.sum(np.abs(data[0]))
@@ -108,7 +108,7 @@ class TestDAQ2(unittest.TestCase):
     @unittest.skipUnless(check_daq2(), "daq2 not attached")
     def testDAQ2ADC_dual_real(self):
         # See if we can get non-zero data from ADC
-        adc = daq2(uri=URI)
+        adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [0, 1]
         data = adc.rx()
         is_complex = False
@@ -122,7 +122,7 @@ class TestDAQ2(unittest.TestCase):
     @unittest.skipUnless(check_daq2(), "daq2 not attached")
     def testDAQ2DAC(self):
         # See if we tx data from DAC
-        dac = daq2(uri=URI)
+        dac = DAQ2(uri=URI)
         TXFS = dac.sample_rate
         dac.tx_enabled_channels = [0]
         N = 2 ** 15
@@ -136,7 +136,7 @@ class TestDAQ2(unittest.TestCase):
     @unittest.skipUnless(check_daq2(), "daq2 not attached")
     def testDAQ2DAC_p2(self):
         # See if we tx data from DAC
-        dac = daq2(uri=URI)
+        dac = DAQ2(uri=URI)
         TXFS = dac.sample_rate
         dac.tx_enabled_channels = [1]
         N = 2 ** 15
@@ -150,7 +150,7 @@ class TestDAQ2(unittest.TestCase):
     @unittest.skipUnless(check_daq2(), "daq2 not attached")
     def testDAQ2DAC_dual(self):
         # See if we tx data from DAC
-        dac = daq2(uri=URI)
+        dac = DAQ2(uri=URI)
         TXFS = dac.sample_rate
         dac.tx_enabled_channels = [0, 1]
         N = 2 ** 15
