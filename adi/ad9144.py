@@ -31,19 +31,31 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad9361 import *
+from adi.rx_tx import tx
+from adi.context_manager import context_manager
 
-from adi.ad9371 import *
 
-from adi.adrv9009 import *
+class ad9144(tx, context_manager):
+    """ AD9144 High-Speed DAC """
 
-from adi.adrv9009_zu11eg import *
+    _complex_data = False
+    _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
+    _device_name = ""
+    tx_enabled_channels = [0, 1]
 
-from adi.ad9680 import *
+    def __init__(self, uri=""):
 
-from adi.ad9144 import *
+        context_manager.__init__(self, uri, self._device_name)
 
-from adi.daq2 import *
+        self._txdac = self._ctx.find_device("axi-ad9144-hpc")
 
-__version__ = "0.0.2"
-name = "Analog Devices Hardware Interfaces"
+        tx.__init__(self, self.tx_enabled_channels)
+
+    @property
+    def sample_rate(self):
+        """sample_rate: Sample rate RX and TX paths in samples per second"""
+        return self._get_iio_attr("voltage0", "sampling_frequency", True, self._txdac)
+
+    @sample_rate.setter
+    def sample_rate(self, value):
+        self._set_iio_attr("voltage0", "sampling_frequency", True, value, self._txdac)
