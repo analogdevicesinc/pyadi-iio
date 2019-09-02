@@ -1,5 +1,7 @@
-import setuptools
 import re
+
+import setuptools
+
 
 # From: https://github.com/smartcar/python-sdk/blob/master/setup.py
 def _get_version():

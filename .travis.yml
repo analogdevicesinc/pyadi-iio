@@ -38,4 +38,3 @@ deploy:
   github-token: $GITHUB_TOKEN
   local-dir: doc/build/html
   committer-from-gh: true
-

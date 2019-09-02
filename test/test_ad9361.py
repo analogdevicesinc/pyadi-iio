@@ -34,9 +34,11 @@
 from __future__ import print_function
 
 import unittest
+
+import iio
+
 import numpy as np
 from adi import ad9361
-import iio
 
 URI = "ip:192.168.86.40"
 
