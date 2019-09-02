@@ -52,6 +52,7 @@ class rx(attribute):
     _rxadc = []
 
     def __init__(self, rx_enabled_channels, rx_buffer_size=1024):
+        self.num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
 
@@ -124,11 +125,11 @@ class rx(attribute):
         data = self.__rxbuf.read()
         x = np.frombuffer(data, dtype=np.int16)
         sig = []
-        l = len(self.__rx_enabled_channels)
+        l = len(self.rx_enabled_channels)
         for c in range(l):
             sig.append(x[c::l])
         # Don't return list if a single channel
-        if self.__rx_enabled_channels == 1:
+        if len(self.rx_enabled_channels) == 1:
             return sig[0]
         return sig
 
@@ -148,6 +149,7 @@ class tx(dds, attribute):
     __txbuf = None
 
     def __init__(self, tx_enabled_channels, tx_cyclic_buffer=False):
+        self.num_tx_channels = len(self._tx_channel_names)
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
@@ -192,7 +194,7 @@ class tx(dds, attribute):
                 v.enabled = True
         else:
             for m in self.tx_enabled_channels:
-                v = self._txdac.find_channel(self._tx_channel_names[m])
+                v = self._txdac.find_channel(self._tx_channel_names[m], True)
                 v.enabled = True
         self.__txbuf = iio.Buffer(
             self._txdac, self.tx_buffer_size, self.__tx_cyclic_buffer
@@ -220,7 +222,7 @@ class tx(dds, attribute):
                 data_np = [data_np]
             indx = 0
             l = self.num_tx_channels_enabled
-            data = np.empty(l * len(data_np), dtype=np.int16)
+            data = np.empty(l * len(data_np[0]), dtype=np.int16)
             for chan in data_np:
                 data[indx::l] = chan.astype(int)
                 indx = indx + 1
@@ -245,8 +247,6 @@ class rx_tx(rx, tx, phy):
     _complex_data = False
 
     def __init__(self, rx_enabled_channels, tx_enabled_channels):
-        self.num_rx_channels = len(self._rx_channel_names)
-        self.num_tx_channels = len(self._tx_channel_names)
         rx.__init__(self, rx_enabled_channels)
         tx.__init__(self, tx_enabled_channels)
 

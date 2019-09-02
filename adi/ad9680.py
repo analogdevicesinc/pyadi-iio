@@ -31,19 +31,32 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad9361 import *
+from adi.rx_tx import rx
+from adi.context_manager import context_manager
 
-from adi.ad9371 import *
 
-from adi.adrv9009 import *
+class ad9680(rx, context_manager):
+    """ AD9680 High-Speed ADC """
 
-from adi.adrv9009_zu11eg import *
+    _complex_data = False
+    _rx_channel_names = ["voltage0", "voltage1"]
+    _device_name = ""
+    rx_enabled_channels = [0, 1]
 
-from adi.ad9680 import *
+    def __init__(self, uri=""):
 
-from adi.ad9144 import *
+        context_manager.__init__(self, uri, self._device_name)
 
-from adi.daq2 import *
+        self._rxadc = self._ctx.find_device("axi-ad9680-hpc")
 
-__version__ = "0.0.2"
-name = "Analog Devices Hardware Interfaces"
+        rx.__init__(self, self.rx_enabled_channels)
+
+    @property
+    def test_mode(self):
+        """test_mode: Select Test Mode. Options are:
+        off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp"""
+        return self._get_iio_attr("voltage0", "test_mode", False)
+
+    @test_mode.setter
+    def test_mode(self, value):
+        self._set_iio_attr_str("voltage0", "test_mode", False, value, self._rxadc)
