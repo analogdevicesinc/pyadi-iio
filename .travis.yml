@@ -2,6 +2,7 @@ language: python
 sudo: required
 python:
 - '3.6'
+- '3.7'
 install:
 - sudo apt-get -qq update
 - sudo apt-get install -y git cmake graphviz libaio-dev libavahi-client-dev libavahi-common-dev
@@ -12,13 +13,17 @@ install:
 - make
 - sudo make install
 - cd ..
-- sudo pip install -r requirements.txt
-- sudo pip install -r requirements_doc.txt
+- sudo apt-get install -y python3-pip python3-setuptools
+- travis_retry pip install -r requirements.txt
+- travis_retry pip install -r requirements_dev.txt
+- travis_retry pip install -r requirements_doc.txt
 script:
-- export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
-- python -m unittest -v
+- if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'; fi
+- if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.7/site-packages'; fi
+- pytest -v
 after_success:
-- export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
+- if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'; fi
+- if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.7/site-packages'; fi
 - cd doc && make html
 - cd ..
 deploy:
