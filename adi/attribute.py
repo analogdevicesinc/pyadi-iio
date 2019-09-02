@@ -35,7 +35,7 @@ import re
 
 
 def get_numbers(s):
-    v = re.findall("[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?", s)
+    v = re.findall(r"[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?", s)
     v = [float(i) for i in v]
     if len(v) == 1:
         v = v[0]
