@@ -64,7 +64,7 @@ class ad9371(rx_tx, context_manager):
 
     @gain_control_mode.setter
     def gain_control_mode(self, value):
-        self._set_iio_attr_str("voltage0", "gain_control_mode", False, value)
+        self._set_iio_attr("voltage0", "gain_control_mode", False, value)
 
     @property
     def rx_hardwaregain(self):

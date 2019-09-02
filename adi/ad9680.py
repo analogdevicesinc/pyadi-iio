@@ -59,4 +59,4 @@ class ad9680(rx, context_manager):
 
     @test_mode.setter
     def test_mode(self, value):
-        self._set_iio_attr_str("voltage0", "test_mode", False, value, self._rxadc)
+        self._set_iio_attr("voltage0", "test_mode", False, value, self._rxadc)

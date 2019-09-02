@@ -31,9 +31,21 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import re
+
+
+def get_numbers(s):
+    v = re.findall("[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?", s)
+    v = [float(i) for i in v]
+    if len(v) == 1:
+        v = v[0]
+        if int(v) == v:
+            v = int(v)
+    return v
+
 
 class attribute:
-    def _set_iio_attr_str(self, channel_name, attr_name, output, value, _ctrl=None):
+    def _set_iio_attr(self, channel_name, attr_name, output, value, _ctrl=None):
         if _ctrl:
             channel = _ctrl.find_channel(channel_name, output)
         else:
@@ -43,22 +55,17 @@ class attribute:
         except Exception as ex:
             raise ex
 
-    def _set_iio_attr(self, channel_name, attr_name, output, value, _ctrl=None):
-        if _ctrl:
-            channel = _ctrl.find_channel(channel_name, output)
-        else:
-            channel = self._ctrl.find_channel(channel_name, output)
-        try:
-            channel.attrs[attr_name].value = str(int(value))
-        except Exception as ex:
-            raise ex
-
-    def _get_iio_attr(self, channel_name, attr_name, output, _ctrl=None):
+    def _get_iio_attr_str(self, channel_name, attr_name, output, _ctrl=None):
         if _ctrl:
             channel = _ctrl.find_channel(channel_name, output)
         else:
             channel = self._ctrl.find_channel(channel_name, output)
         return channel.attrs[attr_name].value
+
+    def _get_iio_attr(self, channel_name, attr_name, output, _ctrl=None):
+        return get_numbers(
+            self._get_iio_attr_str(channel_name, attr_name, output, _ctrl)
+        )
 
     def _set_iio_dev_attr_str(self, attr_name, value, _ctrl=None):
         try:
