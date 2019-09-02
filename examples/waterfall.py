@@ -2,10 +2,10 @@
 # Original code: https://hackaday.io/project/165403/logs
 
 import adi
-from matplotlib import mlab as mlab
 import numpy as np
-from PIL import Image
 import pygame
+from matplotlib import mlab as mlab
+from PIL import Image
 
 DISPLAY_WIDTH = 256
 DISPLAY_HEIGHT = 200

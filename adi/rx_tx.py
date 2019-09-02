@@ -31,10 +31,11 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import numpy as np
-from adi.dds import dds
-from adi.attribute import attribute
 import iio
+
+import numpy as np
+from adi.attribute import attribute
+from adi.dds import dds
 
 
 class phy(attribute):
@@ -109,9 +110,9 @@ class rx(attribute):
         x = np.frombuffer(data, dtype=np.int16)
         indx = 0
         sig = []
-        l = len(self.rx_enabled_channels) * 2
-        for _ in range(l // 2):
-            sig.append(x[indx::l] + 1j * x[indx + 1 :: l])
+        stride = len(self.rx_enabled_channels) * 2
+        for _ in range(stride // 2):
+            sig.append(x[indx::stride] + 1j * x[indx + 1 :: stride])
             indx = indx + 2
         # Don't return list if a single channel
         if indx == 2:
@@ -125,9 +126,9 @@ class rx(attribute):
         data = self.__rxbuf.read()
         x = np.frombuffer(data, dtype=np.int16)
         sig = []
-        l = len(self.rx_enabled_channels)
-        for c in range(l):
-            sig.append(x[c::l])
+        stride = len(self.rx_enabled_channels)
+        for c in range(stride):
+            sig.append(x[c::stride])
         # Don't return list if a single channel
         if len(self.rx_enabled_channels) == 1:
             return sig[0]
@@ -209,22 +210,22 @@ class tx(dds, attribute):
                 raise Exception("Not enough data provided for channel mapping")
 
             indx = 0
-            l = self.num_tx_channels_enabled * 2
-            data = np.empty(l * len(data_np[0]), dtype=np.int16)
+            stride = self.num_tx_channels_enabled * 2
+            data = np.empty(stride * len(data_np[0]), dtype=np.int16)
             for chan in data_np:
                 i = np.real(chan)
                 q = np.imag(chan)
-                data[indx::l] = i.astype(int)
-                data[indx + 1 :: l] = q.astype(int)
+                data[indx::stride] = i.astype(int)
+                data[indx + 1 :: stride] = q.astype(int)
                 indx = indx + 2
         else:
             if self.num_tx_channels_enabled == 1:
                 data_np = [data_np]
             indx = 0
-            l = self.num_tx_channels_enabled
-            data = np.empty(l * len(data_np[0]), dtype=np.int16)
+            stride = self.num_tx_channels_enabled
+            data = np.empty(stride * len(data_np[0]), dtype=np.int16)
             for chan in data_np:
-                data[indx::l] = chan.astype(int)
+                data[indx::stride] = chan.astype(int)
                 indx = indx + 1
 
         if not self.__txbuf:
