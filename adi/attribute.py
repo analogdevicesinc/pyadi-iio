@@ -81,3 +81,21 @@ class attribute:
             return _ctrl.attrs[attr_name].value
         else:
             return self._ctrl.attrs[attr_name].value
+
+    def _set_iio_debug_attr_str(self, attr_name, value, _ctrl=None):
+        try:
+            if _ctrl:
+                _ctrl.debug_attrs[attr_name].value = str(value)
+            else:
+                self._ctrl.debug_attrs[attr_name].value = str(value)
+        except Exception as ex:
+            raise ex
+
+    def _get_iio_debug_attr_str(self, attr_name, _ctrl=None):
+        if _ctrl:
+            return _ctrl.debug_attrs[attr_name].value
+        else:
+            return self._ctrl.debug_attrs[attr_name].value
+
+    def _get_iio_debug_attr(self, attr_name, _ctrl=None):
+        return get_numbers(self._get_iio_debug_attr_str(attr_name, _ctrl))
