@@ -1,0 +1,6 @@
+black
+codespell
+flake8
+pre-commit
+isort
+pytest

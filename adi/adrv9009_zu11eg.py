@@ -73,9 +73,7 @@ class adrv9009_zu11eg(adrv9009):
 
     @gain_control_mode_chip_b.setter
     def gain_control_mode_chip_b(self, value):
-        self._set_iio_attr_str(
-            "voltage0", "gain_control_mode", False, value, self._ctrl_b
-        )
+        self._set_iio_attr("voltage0", "gain_control_mode", False, value, self._ctrl_b)
 
     @property
     def rx_hardwaregain_chan0_chip_b(self):

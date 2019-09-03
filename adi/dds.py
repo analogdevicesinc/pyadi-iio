@@ -31,8 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.attribute import attribute
 import numpy as np
+from adi.attribute import attribute
 
 
 class dds(attribute):
@@ -97,7 +97,7 @@ class dds(attribute):
         """
         return self._read_dds("phase")
 
-    @dds_scales.setter
+    @dds_phases.setter
     def dds_phases(self, value):
         self.__update_dds("phase", value)
 

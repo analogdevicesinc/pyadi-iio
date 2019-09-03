@@ -27,6 +27,7 @@ Collect data from one channel
 .. code-block:: python
 
  import adi
+
  sdr = adi.ad9361()
  # Get both complex channel back
  sdr.rx_enabled_channels = [0]
@@ -37,9 +38,10 @@ Collect data from two channels
 .. code-block:: python
 
  import adi
+
  sdr = adi.ad9361()
  # Get both complex channel back
- sdr.rx_enabled_channels = [0 1]
+ sdr.rx_enabled_channels = [0, 1]
  data = sdr.rx()
  chan1 = data[0]
  chan2 = data[1]
@@ -50,6 +52,7 @@ Send data on two channels
 
  import adi
  import numpy as np
+
  # Create radio
  sdr = adi.ad9371()
  sdr.tx_enabled_channels = [0, 1]

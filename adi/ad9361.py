@@ -31,8 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.rx_tx import rx_tx
 from adi.context_manager import context_manager
+from adi.rx_tx import rx_tx
 
 
 class ad9361(rx_tx, context_manager):
@@ -65,9 +65,9 @@ class ad9361(rx_tx, context_manager):
         with open(value, "r") as file:
             data = file.read()
         self.sample_rate = 3000000
-        self._set_iio_attr_str("out", "voltage_filter_fir_en", False, 0)
+        self._set_iio_attr("out", "voltage_filter_fir_en", False, 0)
         self._set_iio_dev_attr_str("filter_fir_config", data)
-        self._set_iio_attr_str("out", "voltage_filter_fir_en", False, 1)
+        self._set_iio_attr("out", "voltage_filter_fir_en", False, 1)
 
     @property
     def gain_control_mode(self):
@@ -77,7 +77,7 @@ class ad9361(rx_tx, context_manager):
 
     @gain_control_mode.setter
     def gain_control_mode(self, value):
-        self._set_iio_attr_str("voltage0", "gain_control_mode", False, value)
+        self._set_iio_attr("voltage0", "gain_control_mode", False, value)
 
     @property
     def rx_hardwaregain(self):
