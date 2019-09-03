@@ -42,8 +42,6 @@ class ad9361(rx_tx, context_manager):
     _rx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _device_name = ""
-    rx_enabled_channels = [0, 1]
-    tx_enabled_channels = [0, 1]
 
     def __init__(self, uri=""):
 
@@ -53,7 +51,7 @@ class ad9361(rx_tx, context_manager):
         self._rxadc = self._ctx.find_device("cf-ad9361-lpc")
         self._txdac = self._ctx.find_device("cf-ad9361-dds-core-lpc")
 
-        rx_tx.__init__(self, self.rx_enabled_channels, self.tx_enabled_channels)
+        rx_tx.__init__(self)
 
     @property
     def filter(self):
@@ -160,8 +158,6 @@ class ad9364(ad9361):
 
     _rx_channel_names = ["voltage0", "voltage1"]
     _tx_channel_names = ["voltage0", "voltage1"]
-    rx_enabled_channels = [0]
-    tx_enabled_channels = [0]
 
 
 class ad9363(ad9361):

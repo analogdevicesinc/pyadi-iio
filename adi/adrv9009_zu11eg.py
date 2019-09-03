@@ -58,8 +58,6 @@ class adrv9009_zu11eg(adrv9009):
         "voltage7",
     ]
     _device_name = ""
-    rx_enabled_channels = [0, 1]
-    tx_enabled_channels = [0, 1]
 
     def __init__(self, uri=""):
         adrv9009.__init__(self, uri=uri)
