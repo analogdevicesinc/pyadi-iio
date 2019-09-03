@@ -12,9 +12,9 @@ DISPLAY_HEIGHT = 200
 
 sdr = adi.Pluto()
 # configure device
-sdr.sample_rate = 2.4e6  # Hz
-sdr.rx_lo = 1e9  # Hz
-sdr.tx_lo = 1e9  # Hz
+sdr.sample_rate = int(2.4e6)  # Hz
+sdr.rx_lo = int(1e9)  # Hz
+sdr.tx_lo = int(1e9)  # Hz
 sdr.gain_control_mode = "slow_attack"
 sdr.rx_buffer_size = 16 * 1024
 sdr.dds_enabled = [1, 1, 1, 1]
