@@ -34,7 +34,6 @@
 from typing import List
 
 import iio
-
 import numpy as np
 from adi.attribute import attribute
 from adi.dds import dds
@@ -50,12 +49,18 @@ class phy(attribute):
 class rx(attribute):
     """ Buffer handling for receive devices """
 
-    _rx_channel_names: List[str] = []
-    __rxbuf = None
     _rxadc: iio.Device = []
+    _rx_channel_names: List[str] = []
+    _complex_data = False
+    __rxbuf = None
 
-    def __init__(self, rx_enabled_channels, rx_buffer_size=1024):
-        self.num_rx_channels = len(self._rx_channel_names)
+    def __init__(self, rx_buffer_size=1024):
+        if self._complex_data:
+            N = 2
+        else:
+            N = 1
+        rx_enabled_channels = list(range(len(self._rx_channel_names) // N))
+        self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
 
@@ -76,15 +81,15 @@ class rx(attribute):
     @rx_enabled_channels.setter
     def rx_enabled_channels(self, value):
         if self._complex_data:
-            if max(value) > ((self.num_rx_channels) / 2 - 1):
+            if max(value) > ((self._num_rx_channels) / 2 - 1):
                 raise Exception("RX mapping exceeds available channels")
         else:
-            if max(value) > ((self.num_rx_channels) - 1):
+            if max(value) > ((self._num_rx_channels) - 1):
                 raise Exception("RX mapping exceeds available channels")
         self.__rx_enabled_channels = value
 
     @property
-    def num_rx_channels_enabled(self):
+    def _num_rx_channels_enabled(self):
         return len(self.__rx_enabled_channels)
 
     def __del__(self):
@@ -144,15 +149,21 @@ class rx(attribute):
 
 
 class tx(dds, attribute):
-    """ Buffer handling for receive devices """
+    """ Buffer handling for transmit devices """
 
+    _tx_buffer_size = 1024
     _txdac: iio.Device = []
     _tx_channel_names: List[str] = []
-    tx_buffer_size = 1024
+    _complex_data = False
     __txbuf = None
 
-    def __init__(self, tx_enabled_channels, tx_cyclic_buffer=False):
-        self.num_tx_channels = len(self._tx_channel_names)
+    def __init__(self, tx_cyclic_buffer=False):
+        if self._complex_data:
+            N = 2
+        else:
+            N = 1
+        tx_enabled_channels = list(range(len(self._tx_channel_names) // N))
+        self._num_tx_channels = len(self._tx_channel_names)
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
@@ -170,7 +181,7 @@ class tx(dds, attribute):
         self.__tx_cyclic_buffer = value
 
     @property
-    def num_tx_channels_enabled(self):
+    def _num_tx_channels_enabled(self):
         return len(self.tx_enabled_channels)
 
     @property
@@ -181,10 +192,10 @@ class tx(dds, attribute):
     @tx_enabled_channels.setter
     def tx_enabled_channels(self, value):
         if self._complex_data:
-            if max(value) > ((self.num_tx_channels) / 2 - 1):
+            if max(value) > ((self._num_tx_channels) / 2 - 1):
                 raise Exception("TX mapping exceeds available channels")
         else:
-            if max(value) > ((self.num_tx_channels) - 1):
+            if max(value) > ((self._num_tx_channels) - 1):
                 raise Exception("TX mapping exceeds available channels")
         self.__tx_enabled_channels = value
 
@@ -200,19 +211,19 @@ class tx(dds, attribute):
                 v = self._txdac.find_channel(self._tx_channel_names[m], True)
                 v.enabled = True
         self.__txbuf = iio.Buffer(
-            self._txdac, self.tx_buffer_size, self.__tx_cyclic_buffer
+            self._txdac, self._tx_buffer_size, self.__tx_cyclic_buffer
         )
 
     def tx(self, data_np):
         if self._complex_data:
-            if self.num_tx_channels_enabled == 1:
+            if self._num_tx_channels_enabled == 1:
                 data_np = [data_np]
 
-            if len(data_np) != self.num_tx_channels_enabled:
+            if len(data_np) != self._num_tx_channels_enabled:
                 raise Exception("Not enough data provided for channel mapping")
 
             indx = 0
-            stride = self.num_tx_channels_enabled * 2
+            stride = self._num_tx_channels_enabled * 2
             data = np.empty(stride * len(data_np[0]), dtype=np.int16)
             for chan in data_np:
                 i = np.real(chan)
@@ -221,10 +232,10 @@ class tx(dds, attribute):
                 data[indx + 1 :: stride] = q.astype(int)
                 indx = indx + 2
         else:
-            if self.num_tx_channels_enabled == 1:
+            if self._num_tx_channels_enabled == 1:
                 data_np = [data_np]
             indx = 0
-            stride = self.num_tx_channels_enabled
+            stride = self._num_tx_channels_enabled
             data = np.empty(stride * len(data_np[0]), dtype=np.int16)
             for chan in data_np:
                 data[indx::stride] = chan.astype(int)
@@ -232,10 +243,10 @@ class tx(dds, attribute):
 
         if not self.__txbuf:
             self.disable_dds()
-            self.tx_buff_length = len(data)
+            self._tx_buffer_size = len(data)
             self._tx_init_channels()
 
-        if len(data) != self.tx_buff_length:
+        if len(data) != self._tx_buffer_size:
             raise Exception(
                 "Buffer length different than data length. Cannot change buffer length on the fly"
             )
@@ -246,12 +257,9 @@ class tx(dds, attribute):
 
 
 class rx_tx(rx, tx, phy):
-
-    _complex_data = False
-
-    def __init__(self, rx_enabled_channels, tx_enabled_channels):
-        rx.__init__(self, rx_enabled_channels)
-        tx.__init__(self, tx_enabled_channels)
+    def __init__(self):
+        rx.__init__(self)
+        tx.__init__(self)
 
     def __del__(self):
         rx.__del__(self)

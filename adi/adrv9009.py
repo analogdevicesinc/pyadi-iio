@@ -42,8 +42,6 @@ class adrv9009(rx_tx, context_manager):
     _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _device_name = ""
-    rx_enabled_channels = [0, 1]
-    tx_enabled_channels = [0, 1]
 
     def __init__(self, uri=""):
 
@@ -54,7 +52,7 @@ class adrv9009(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
 
-        rx_tx.__init__(self, self.rx_enabled_channels, self.tx_enabled_channels)
+        rx_tx.__init__(self)
 
     # @property
     # def profile(self):

@@ -42,8 +42,6 @@ class ad9371(rx_tx, context_manager):
     _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _device_name = ""
-    rx_enabled_channels = [0, 1]
-    tx_enabled_channels = [0, 1]
 
     def __init__(self, uri=""):
 
@@ -54,7 +52,7 @@ class ad9371(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-ad9371-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-ad9371-tx-hpc")
 
-        rx_tx.__init__(self, self.rx_enabled_channels, self.tx_enabled_channels)
+        rx_tx.__init__(self)
 
     @property
     def gain_control_mode(self):

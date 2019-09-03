@@ -41,10 +41,10 @@ class dds(attribute):
     """
 
     def __init__(self):
-        self.dds_frequencies = np.zeros(self.num_tx_channels * 2)
-        self.dds_scales = np.zeros(self.num_tx_channels * 2)
-        self.dds_phases = np.zeros(self.num_tx_channels * 2)
-        self.dds_enabled = np.zeros(self.num_tx_channels * 2, dtype=bool)
+        self.dds_frequencies = np.zeros(self._num_tx_channels * 2)
+        self.dds_scales = np.zeros(self._num_tx_channels * 2)
+        self.dds_phases = np.zeros(self._num_tx_channels * 2)
+        self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
 
     def __update_dds(self, attr, value):
         indx = 0
@@ -68,7 +68,7 @@ class dds(attribute):
         return values
 
     def disable_dds(self):
-        self.dds_enabled = np.zeros(self.num_tx_channels * 2, dtype=bool)
+        self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
 
     @property
     def dds_frequencies(self):
