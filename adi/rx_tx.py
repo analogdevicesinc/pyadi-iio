@@ -149,9 +149,9 @@ class rx(attribute):
 
 
 class tx(dds, attribute):
-    """ Buffer handling for receive devices """
+    """ Buffer handling for transmit devices """
 
-    tx_buffer_size = 1024
+    _tx_buffer_size = 1024
     _txdac: iio.Device = []
     _tx_channel_names: List[str] = []
     _complex_data = False
@@ -211,7 +211,7 @@ class tx(dds, attribute):
                 v = self._txdac.find_channel(self._tx_channel_names[m], True)
                 v.enabled = True
         self.__txbuf = iio.Buffer(
-            self._txdac, self.tx_buffer_size, self.__tx_cyclic_buffer
+            self._txdac, self._tx_buffer_size, self.__tx_cyclic_buffer
         )
 
     def tx(self, data_np):
@@ -243,10 +243,10 @@ class tx(dds, attribute):
 
         if not self.__txbuf:
             self.disable_dds()
-            self.tx_buff_length = len(data)
+            self._tx_buffer_size = len(data)
             self._tx_init_channels()
 
-        if len(data) != self.tx_buff_length:
+        if len(data) != self._tx_buffer_size:
             raise Exception(
                 "Buffer length different than data length. Cannot change buffer length on the fly"
             )
