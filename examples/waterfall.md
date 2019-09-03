@@ -16,4 +16,3 @@ This example demonstrates a simple waterfall plot using ADALM-PLUTO and some sta
 
 with an SMA cable connecting TX and RX you should see something similar to the figure below:
 ![waterfall_plot](https://wiki.analog.com/_media/resources/tools-software/image.png?w=400&tok=87fadd)
-

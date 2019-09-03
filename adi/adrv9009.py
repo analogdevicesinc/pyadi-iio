@@ -31,8 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.rx_tx import rx_tx
 from adi.context_manager import context_manager
+from adi.rx_tx import rx_tx
 
 
 class adrv9009(rx_tx, context_manager):
@@ -75,7 +75,7 @@ class adrv9009(rx_tx, context_manager):
 
     @gain_control_mode.setter
     def gain_control_mode(self, value):
-        self._set_iio_attr_str("voltage0", "gain_control_mode", False, value)
+        self._set_iio_attr("voltage0", "gain_control_mode", False, value)
 
     @property
     def rx_hardwaregain_chan0(self):

@@ -15,4 +15,3 @@ AD9144
 .. automodule:: adi.daq2
    :members:
    :noindex:
-

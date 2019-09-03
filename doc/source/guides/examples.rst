@@ -8,6 +8,7 @@ Configuring hardware properties
 
   # Import the library
   import adi
+
   # Create a device interface
   sdr = adi.ad9361()
   # Configure properties
@@ -26,6 +27,7 @@ Send data to a device and receiving data from a device
 
   import adi
   import numpy as np
+
   sdr = adi.ad9361()
   data = np.arange(1, 10, 3)
   # Send
@@ -38,6 +40,7 @@ Using URIs to access specific devices
 .. code-block:: python
 
   import adi
+
   # Create device from specific uri address
   sdr = adi.ad9361(uri="ip:192.168.2.1")
   data = sdr.rx()
