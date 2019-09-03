@@ -41,7 +41,6 @@ class ad9680(rx, context_manager):
     _complex_data = False
     _rx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
-    rx_enabled_channels = [0, 1]
 
     def __init__(self, uri=""):
 
@@ -49,7 +48,7 @@ class ad9680(rx, context_manager):
 
         self._rxadc = self._ctx.find_device("axi-ad9680-hpc")
 
-        rx.__init__(self, self.rx_enabled_channels)
+        rx.__init__(self)
 
     @property
     def test_mode(self):

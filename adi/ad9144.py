@@ -41,7 +41,6 @@ class ad9144(tx, context_manager):
     _complex_data = False
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _device_name = ""
-    tx_enabled_channels = [0, 1]
 
     def __init__(self, uri=""):
 
@@ -49,7 +48,7 @@ class ad9144(tx, context_manager):
 
         self._txdac = self._ctx.find_device("axi-ad9144-hpc")
 
-        tx.__init__(self, self.tx_enabled_channels)
+        tx.__init__(self)
 
     @property
     def sample_rate(self):
