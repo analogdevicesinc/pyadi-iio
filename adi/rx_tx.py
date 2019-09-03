@@ -31,6 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from typing import List
+
 import iio
 
 import numpy as np
@@ -39,7 +41,7 @@ from adi.dds import dds
 
 
 class phy(attribute):
-    _ctrl = []
+    _ctrl: iio.Device = []
 
     def __del__(self):
         self._ctrl = []
@@ -48,9 +50,9 @@ class phy(attribute):
 class rx(attribute):
     """ Buffer handling for receive devices """
 
-    _rx_channel_names = []
+    _rx_channel_names: List[str] = []
     __rxbuf = None
-    _rxadc = []
+    _rxadc: iio.Device = []
 
     def __init__(self, rx_enabled_channels, rx_buffer_size=1024):
         self.num_rx_channels = len(self._rx_channel_names)
@@ -144,8 +146,8 @@ class rx(attribute):
 class tx(dds, attribute):
     """ Buffer handling for receive devices """
 
-    _txdac = []
-    _tx_channel_names = []
+    _txdac: iio.Device = []
+    _tx_channel_names: List[str] = []
     tx_buffer_size = 1024
     __txbuf = None
 

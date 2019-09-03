@@ -93,4 +93,4 @@ try:
 except KeyboardInterrupt:
     pass
 finally:
-    sdr = []
+    sdr = []  # type: ignore
