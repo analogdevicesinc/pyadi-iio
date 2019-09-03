@@ -2,4 +2,3 @@ AD936X Family
 ===================
 .. automodule:: adi.ad9361
    :members:
-
