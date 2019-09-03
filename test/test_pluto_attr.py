@@ -59,3 +59,21 @@ def test_pluto_attribute_single_value(attr, start, stop, step, tol):
         print("Set: " + str(val))
         print("Got: " + str(rval))
     assert abs(val - rval) <= tol
+
+
+string_properties = [("loopback", 2, 0), ("loopback", 1, 0), ("loopback", 0, 0)]
+
+
+@pytest.mark.skipif(not check_dev(), reason="PlutoSDR not connected")
+@pytest.mark.parametrize("attr,val,tol", string_properties)
+def test_pluto_attribute_single_value_str(attr, val, tol):
+    sdr = Pluto()
+    # Check hardware
+    setattr(sdr, attr, val)
+    rval = float(getattr(sdr, attr))
+    del sdr
+    if abs(val - rval) > tol:
+        print("Failed to set: " + attr)
+        print("Set: " + str(val))
+        print("Got: " + str(rval))
+    assert abs(val - rval) <= tol
