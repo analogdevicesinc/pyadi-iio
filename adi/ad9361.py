@@ -70,6 +70,16 @@ class ad9361(rx_tx, context_manager):
         self._set_iio_attr("out", "voltage_filter_fir_en", False, 1)
 
     @property
+    def loopback(self):
+        """loopback: Set loopback mode. Options are:
+        0 (Disable), 1 (Digital), 2 (RF)"""
+        return self._get_iio_debug_attr("loopback")
+
+    @loopback.setter
+    def loopback(self, value):
+        self._set_iio_debug_attr_str("loopback", value)
+
+    @property
     def gain_control_mode(self):
         """gain_control_mode: Mode of receive path AGC. Options are:
         slow_attack, fast_attack, manual"""
