@@ -70,7 +70,7 @@ class TestDAQ2(unittest.TestCase):
         #     ax.plot(xf, 2.0 / N * np.abs(yf))
         #     plt.show()
         indx = np.argmax(np.abs(yf))
-        return xf[indx]
+        return np.abs(xf[indx])
 
     def setUp(self):
         pass
@@ -162,6 +162,67 @@ class TestDAQ2(unittest.TestCase):
         d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
         dac.tx([d, d])
         self.assertEqual(True, True, "transmit data failed")
+
+    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    def testDAQ2DMA(self):
+        # Test DMA
+        daq = DAQ2(uri=URI)
+        daq.tx_cyclic_buffer = True
+        daq.tx_enabled_channels = [0, 1]
+        # Create signal
+        fs = int(daq.sample_rate)
+        fc1 = 30 * 1e6
+        fc2 = 100 * 1e6
+        N = 2 ** 14
+        ts = 1 / float(fs)
+        t = np.arange(0, N * ts, ts)
+        f1 = np.cos(2 * np.pi * t * fc1) * 2 ** 14
+        f2 = np.cos(2 * np.pi * t * fc2) * 2 ** 14
+
+        daq.rx_buffer_size = len(f1) * 2
+
+        daq.tx([f1, f2])
+        # Flush buffers
+        for _ in range(10):
+            data = daq.rx()
+        # Estimate frequency
+        fc1_est = self.freq_est(data[0], fs)
+        fc2_est = self.freq_est(data[1], fs)
+        # Check Data
+        diff = np.abs(fc1_est - fc1)
+        self.assertGreater(fc1 * 0.01, diff, "Frequency offset TX1")
+        diff = np.abs(fc2_est - fc2)
+        self.assertGreater(fc2 * 0.01, diff, "Frequency offset TX2")
+
+    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    def testDAQ2DDS(self):
+        # Test DMA
+        daq = DAQ2(uri=URI)
+        daq.tx_cyclic_buffer = True
+        daq.tx_enabled_channels = [0, 1]
+        daq.rx_buffer_size = 2 ** 14
+        # Enable DDSs
+        fs = int(daq.sample_rate)
+        fc1 = 20 * 1e6
+        fc2 = 70 * 1e6
+        daq.dds_enabled = [1, 1, 1, 1, 1, 1, 1, 1]
+        daq.dds_frequencies = [fc1, 0, fc2, 0, 0, 0, 0, 0]
+        daq.dds_scales = [1, 0, 1, 0, 0, 0, 0, 0]
+        daq.dds_phases = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        # Flush buffers
+        for _ in range(10):
+            data = daq.rx()
+
+        # Estimate frequency
+        fc1_est = self.freq_est(data[0], fs)
+        fc2_est = self.freq_est(data[1], fs)
+
+        # Check Data
+        diff = np.abs(fc1_est - fc1)
+        self.assertGreater(fc1 * 0.01, diff, "Frequency offset TX1")
+        diff = np.abs(fc2_est - fc2)
+        self.assertGreater(fc2 * 0.01, diff, "Frequency offset TX2")
 
 
 if __name__ == "__main__":

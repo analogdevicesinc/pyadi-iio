@@ -34,6 +34,7 @@
 from typing import List
 
 import iio
+
 import numpy as np
 from adi.attribute import attribute
 from adi.dds import dds
@@ -234,6 +235,10 @@ class tx(dds, attribute):
         else:
             if self._num_tx_channels_enabled == 1:
                 data_np = [data_np]
+
+            if len(data_np) != self._num_tx_channels_enabled:
+                raise Exception("Not enough data provided for channel mapping")
+
             indx = 0
             stride = self._num_tx_channels_enabled
             data = np.empty(stride * len(data_np[0]), dtype=np.int16)
@@ -243,10 +248,10 @@ class tx(dds, attribute):
 
         if not self.__txbuf:
             self.disable_dds()
-            self._tx_buffer_size = len(data)
+            self._tx_buffer_size = len(data) // stride
             self._tx_init_channels()
 
-        if len(data) != self._tx_buffer_size:
+        if len(data) // stride != self._tx_buffer_size:
             raise Exception(
                 "Buffer length different than data length. Cannot change buffer length on the fly"
             )
