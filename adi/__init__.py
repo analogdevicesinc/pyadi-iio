@@ -45,5 +45,5 @@ from adi.ad9144 import *
 
 from adi.daq2 import *
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 name = "Analog Devices Hardware Interfaces"
