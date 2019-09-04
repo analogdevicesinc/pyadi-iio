@@ -159,12 +159,12 @@
 <p>Using buffers or transmitting and receiving data is done through interacting with two methods.</p>
 <p>For receivers this is the <strong>rx</strong> method. How data is captured and therefore produced by this method is dependent on two main properties:</p>
 <ul class="simple">
-<li><p><strong>rx_enabled_channels</strong>: This is an array of integers and the number of elements in the array will determine the number of columns returned by <strong>rx</strong>.</p></li>
+<li><p><strong>rx_enabled_channels</strong>: This is an array of integers and the number of elements in the array will determine the number of list items returned by <strong>rx</strong>. For devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.</p></li>
 <li><p><strong>rx_buffer_size</strong>: This is the number of samples returned in each column. If the device produces complex data, like a transceiver, it will return complex data. This is defined by the author of each device specific class.</p></li>
 </ul>
 <p>For transmitters this is the <strong>tx</strong> method. How data is sent and therefore must be passed by this method is dependent on one main property:</p>
 <ul class="simple">
-<li><p><strong>tx_enabled_channels</strong>: This is an array of integers and the number of elements in the array will determine the number of columns to be submitted to <strong>tx</strong>.</p></li>
+<li><p><strong>tx_enabled_channels</strong>: This is an array of integers and the number of elements in the array will determine the number of items in list to be submitted to <strong>tx</strong>. Like for <strong>rx_enabled_channels</strong>, devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.</p></li>
 </ul>
 <div class="section" id="module-adi.rx_tx">
 <span id="members"></span><h2>Members<a class="headerlink" href="#module-adi.rx_tx" title="Permalink to this headline">¶</a></h2>
