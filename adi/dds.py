@@ -47,8 +47,7 @@ class dds(attribute):
         self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
 
     def __update_dds(self, attr, value):
-        indx = 0
-        for _ in range(len(self._txdac.channels)):
+        for indx in range(len(self._txdac.channels)):
             chan = self._txdac.find_channel("altvoltage" + str(indx), True)
             if not chan:
                 return
@@ -60,11 +59,10 @@ class dds(attribute):
 
     def _read_dds(self, attr):
         values = []
-        indx = 0
-        for _ in range(len(self._txdac.channels)):
+        for indx in range(len(self._txdac.channels)):
             chan = self._txdac.find_channel("altvoltage" + str(indx), True)
             if not chan:
-                return
+                return None
             values.append(chan.attrs[attr].value)
             indx = indx + 1
         return values
