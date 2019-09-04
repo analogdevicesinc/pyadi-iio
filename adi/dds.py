@@ -48,9 +48,10 @@ class dds(attribute):
 
     def __update_dds(self, attr, value):
         indx = 0
-        for chan in self._txdac.channels:
-            if not chan.name:
-                continue
+        for _ in range(len(self._txdac.channels)):
+            chan = self._txdac.find_channel("altvoltage" + str(indx), True)
+            if not chan:
+                return
             if attr == "raw":
                 chan.attrs[attr].value = str(int(value[indx]))
             else:
