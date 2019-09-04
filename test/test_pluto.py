@@ -129,6 +129,84 @@ class TestPluto(unittest.TestCase):
         diff = np.abs(tone_freq - fc)
         self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
+    @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
+    def testPlutoDDS(self):
+        # See if we can tone from Pluto using DMAs
+        sdr = Pluto()
+        sdr.tx_lo = 1000000000
+        sdr.rx_lo = 1000000000
+        sdr.tx_cyclic_buffer = True
+        sdr.tx_hardwaregain = -30
+        sdr.gain_control_mode = "slow_attack"
+        sdr.rx_buffer_size = 2 ** 20
+        sdr.sample_rate = 4000000
+        sdr.loopback = 1
+        # Create a sinewave waveform
+        RXFS = int(sdr.sample_rate)
+        sdr.dds_enabled = [1, 1, 1, 1]
+        fc = 2000
+        sdr.dds_frequencies = [fc, 0, fc, 0]
+        sdr.dds_scales = [1, 0, 1, 0]
+        sdr.dds_phases = [90000, 0, 0, 0]
+        # Pass through SDR
+        for _ in range(5):
+            data = sdr.rx()
+        # Turn off loopback (for other tests)
+        sdr.loopback = 0
+        tone_freq = self.freq_est(data, RXFS)
+
+        # if self.do_plots:
+        # import matplotlib.pyplot as plt
+        #
+        # reals = np.real(data)
+        # plt.plot(reals)
+        # imags = np.imag(data)
+        # plt.plot(imags)
+        # plt.xlabel("Samples")
+        # plt.ylabel("Amplitude [dbFS]")
+        # plt.show()
+
+        diff = np.abs(tone_freq - fc)
+        self.assertGreater(fc * 0.01, diff, "Frequency offset")
+
+    @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
+    def testPlutoDMA(self):
+        # Test DMA
+        sdr = Pluto()
+        sdr.loopback = 1
+        sdr.tx_cyclic_buffer = True
+        # Create a ramp signal with different values for I and Q
+        start = 0
+        tx_data = np.array(range(start, 2 ** 11), dtype=np.int16)
+        tx_data = tx_data << 4
+        tx_data = tx_data + 1j * (tx_data * -1 - 1)
+        sdr.rx_buffer_size = len(tx_data) * 2
+
+        sdr.tx(tx_data)
+        # Flush buffers
+        for _ in range(100):
+            data = sdr.rx()
+        # Turn off loopback (for other tests)
+        sdr.loopback = 0
+        # Check data
+        offset = 0
+        for i in range(len(data)):
+            if np.real(data[i]) == start:
+                for d in range(len(tx_data)):
+                    # print(str(data[i+offset])+" "+str(d+start))
+                    self.assertEqual(
+                        np.real(data[i + offset]),
+                        d + start,
+                        "Loopback validation failed for I",
+                    )
+                    self.assertEqual(
+                        np.imag(data[i + offset]),
+                        (d + start) * -1 - 1,
+                        "Loopback validation failed for Q",
+                    )
+                    offset = offset + 1
+                break
+
 
 if __name__ == "__main__":
     unittest.main()

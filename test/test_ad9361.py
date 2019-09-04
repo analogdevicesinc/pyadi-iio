@@ -40,7 +40,7 @@ import iio
 import numpy as np
 from adi import ad9361
 
-URI = "ip:192.168.86.40"
+URI = "ip:analog"
 
 
 def check_ad9361():
@@ -96,10 +96,11 @@ class TestAD9361(unittest.TestCase):
         sdr.tx_hardwaregain = -30
         sdr.gain_control_mode = "slow_attack"
         sdr.rx_buffer_size = 2 ** 20
+        sdr.sample_rate = 4000000
         # Create a sinewave waveform
         RXFS = int(sdr.sample_rate)
         fc = RXFS * 0.1
-        N = 2 ** 15
+        N = 2 ** 14
         ts = 1 / float(RXFS)
         t = np.arange(0, N * ts, ts)
         i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
@@ -107,7 +108,7 @@ class TestAD9361(unittest.TestCase):
         iq = i + 1j * q
         # Pass through SDR
         sdr.tx([iq, iq * 0.0])
-        for _ in range(5):
+        for _ in range(30):  # Wait for IQ correction to stabilize
             data = sdr.rx()
 
         tone_freq = self.freq_est(data[0], RXFS)
