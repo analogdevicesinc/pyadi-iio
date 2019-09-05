@@ -76,11 +76,14 @@ class attribute:
         except Exception as ex:
             raise ex
 
-    def _get_iio_dev_attr(self, attr_name, _ctrl=None):
+    def _get_iio_dev_attr_str(self, attr_name, _ctrl=None):
         if _ctrl:
             return _ctrl.attrs[attr_name].value
         else:
             return self._ctrl.attrs[attr_name].value
+
+    def _get_iio_dev_attr(self, attr_name, _ctrl=None):
+        return get_numbers(self._get_iio_dev_attr_str(attr_name, _ctrl))
 
     def _set_iio_debug_attr_str(self, attr_name, value, _ctrl=None):
         try:
