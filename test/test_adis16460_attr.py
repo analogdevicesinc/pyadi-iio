@@ -20,6 +20,7 @@ def check_adis16460():
         print(e)
         return False
 
+
 def check_dev():
     global dev_checked
     global found_dev
@@ -28,19 +29,18 @@ def check_dev():
         dev_checked = True
     return found_dev
 
+
 @pytest.mark.skipif(not check_dev(), reason="ADIS16460 not connected")
 def testADIS16460_SensorData():
     # See if we can get non-zero data from ADC
     s = adis16460(uri=URI)
-    s.rx_enabled_channels = [0, 1]
     data = s.rx()
     for k in data:
         s = np.sum(np.abs(k))
-        self.assertGreater(s, 0, "check non-zero data")
+        assert s > 0
 
-scalar_properties = [
-    ("sample_rate", 1, 4096, 0)
-]
+
+scalar_properties = [("sample_rate", 1, 4096, 0)]
 
 
 @pytest.mark.skipif(not check_dev(), reason="ADIS16460 not connected")
@@ -49,8 +49,8 @@ def test_adis16460_attribute_single_value(attr, start, stop, tol):
     sdr = adis16460(uri=URI)
     # Pick random number in operational range
     nums = []
-    for k in range(0,12):
-        nums.append(2**k)
+    for k in range(0, 12):
+        nums.append(2 ** k)
     ind = random.randint(0, len(nums))
     val = nums[ind]
     # Check hardware

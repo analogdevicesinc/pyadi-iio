@@ -31,9 +31,10 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.rx_tx import rx
-from adi.context_manager import context_manager
 import numpy as np
+from adi.context_manager import context_manager
+from adi.rx_tx import rx
+
 
 class adis16460(rx, context_manager):
     """ ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor """
@@ -57,7 +58,7 @@ class adis16460(rx, context_manager):
         self._ctrl = self._ctx.find_device("adis16460")
         self._rxadc = self._ctx.find_device("adis16460")
         rx.__init__(self)
-        self.rx_buffer_size = 16 # Make default buffer smaller
+        self.rx_buffer_size = 16  # Make default buffer smaller
 
     @property
     def sample_rate(self):
