@@ -53,6 +53,7 @@ class rx(attribute):
     _rxadc: iio.Device = []
     _rx_channel_names: List[str] = []
     _complex_data = False
+    _rx_data_type = np.int16
     __rxbuf = None
 
     def __init__(self, rx_buffer_size=1024):
@@ -115,7 +116,7 @@ class rx(attribute):
             self._rx_init_channels()
         self.__rxbuf.refill()
         data = self.__rxbuf.read()
-        x = np.frombuffer(data, dtype=np.int16)
+        x = np.frombuffer(data, dtype=self._rx_data_type)
         indx = 0
         sig = []
         stride = len(self.rx_enabled_channels) * 2
@@ -132,7 +133,7 @@ class rx(attribute):
             self._rx_init_channels()
         self.__rxbuf.refill()
         data = self.__rxbuf.read()
-        x = np.frombuffer(data, dtype=np.int16)
+        x = np.frombuffer(data, dtype=self._rx_data_type)
         sig = []
         stride = len(self.rx_enabled_channels)
         for c in range(stride):
