@@ -33,6 +33,7 @@
 
 from __future__ import print_function
 
+import test.iio_scanner as iio_scanner
 import unittest
 
 import iio
@@ -41,16 +42,20 @@ import numpy as np
 from adi import ad9144
 
 URI = "ip:analog"
+dev_checked = False
+found_dev = False
 
 
-def check_ad9144():
-    # Try auto discover
-    try:
-        iio.Context(URI)
-        return True
-    except Exception as e:
-        print(e)
-        return False
+def check_dev(name):
+    global dev_checked
+    global found_dev
+    if not dev_checked:
+        found_dev, board = iio_scanner.find_device(name)
+        if found_dev:
+            global URI
+            URI = board.uri
+        dev_checked = True
+    return found_dev
 
 
 class TestAD9144(unittest.TestCase):
@@ -78,8 +83,9 @@ class TestAD9144(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @unittest.skipUnless(check_ad9144(), "ad9144 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "ad9144 not attached")
     def testAD9144DAC(self):
+        global URI
         # See if we tx data from DAC
         dac = ad9144(uri=URI)
         TXFS = dac.sample_rate
@@ -92,8 +98,9 @@ class TestAD9144(unittest.TestCase):
         dac.tx(d)
         self.assertEqual(True, True, "transmit data failed")
 
-    @unittest.skipUnless(check_ad9144(), "ad9144 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "ad9144 not attached")
     def testAD9144DAC_p2(self):
+        global URI
         # See if we tx data from DAC
         dac = ad9144(uri=URI)
         TXFS = dac.sample_rate
@@ -106,8 +113,9 @@ class TestAD9144(unittest.TestCase):
         dac.tx(d)
         self.assertEqual(True, True, "transmit data failed")
 
-    @unittest.skipUnless(check_ad9144(), "ad9144 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "ad9144 not attached")
     def testAD9144DAC_dual(self):
+        global URI
         # See if we tx data from DAC
         dac = ad9144(uri=URI)
         TXFS = dac.sample_rate

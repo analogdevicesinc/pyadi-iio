@@ -33,6 +33,7 @@
 
 from __future__ import print_function
 
+import test.iio_scanner as iio_scanner
 import unittest
 
 import iio
@@ -41,16 +42,20 @@ import numpy as np
 from adi import ad9361
 
 URI = "ip:analog"
+dev_checked = False
+found_dev = False
 
 
-def check_ad9361():
-    # Try auto discover
-    try:
-        iio.Context(URI)
-        return True
-    except Exception as e:
-        print(e)
-        return False
+def check_dev(name):
+    global dev_checked
+    global found_dev
+    if not dev_checked:
+        found_dev, board = iio_scanner.find_device(name)
+        if found_dev:
+            global URI
+            URI = board.uri
+        dev_checked = True
+    return found_dev
 
 
 class TestAD9361(unittest.TestCase):
@@ -78,17 +83,19 @@ class TestAD9361(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @unittest.skipUnless(check_ad9361(), "AD9361SDR not attached")
+    @unittest.skipUnless(check_dev("packrf"), "AD9361SDR not attached")
     def testAD9361ADC(self):
         # See if we can get non-zero data from AD9361
+        global URI
         sdr = ad9361(uri=URI)
         data = sdr.rx()
         s = np.sum(np.abs(data))
         self.assertGreater(s, 0, "check non-zero data")
 
-    @unittest.skipUnless(check_ad9361(), "AD9361SDR not attached")
+    @unittest.skipUnless(check_dev("packrf"), "AD9361SDR not attached")
     def testAD9361DAC(self):
         # See if we can tone from AD9361 using DMAs
+        global URI
         sdr = ad9361(uri=URI)
         sdr.tx_lo = 1000000000
         sdr.rx_lo = 1000000000

@@ -33,6 +33,7 @@
 
 from __future__ import print_function
 
+import test.iio_scanner as iio_scanner
 import unittest
 
 import iio
@@ -41,16 +42,20 @@ import numpy as np
 from adi import DAQ2
 
 URI = "ip:analog"
+dev_checked = False
+found_dev = False
 
 
-def check_daq2():
-    # Try auto discover
-    try:
-        iio.Context(URI)
-        return True
-    except Exception as e:
-        print(e)
-        return False
+def check_dev(name):
+    global dev_checked
+    global found_dev
+    if not dev_checked:
+        found_dev, board = iio_scanner.find_device(name)
+        if found_dev:
+            global URI
+            URI = board.uri
+        dev_checked = True
+    return found_dev
 
 
 class TestDAQ2(unittest.TestCase):
@@ -78,8 +83,9 @@ class TestDAQ2(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2ADC(self):
+        global URI
         # See if we can get non-zero data from ADC
         adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [0]
@@ -87,8 +93,9 @@ class TestDAQ2(unittest.TestCase):
         s = np.sum(np.abs(data))
         self.assertGreater(s, 0, "check non-zero data")
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2ADC_p2(self):
+        global URI
         # See if we can get non-zero data from ADC
         adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [1]
@@ -96,8 +103,9 @@ class TestDAQ2(unittest.TestCase):
         s = np.sum(np.abs(data))
         self.assertGreater(s, 0, "check non-zero data")
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2ADC_dual(self):
+        global URI
         # See if we can get non-zero data from ADC
         adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [0, 1]
@@ -107,8 +115,9 @@ class TestDAQ2(unittest.TestCase):
         s = np.sum(np.abs(data[1]))
         self.assertGreater(s, 0, "check non-zero data")
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2ADC_dual_real(self):
+        global URI
         # See if we can get non-zero data from ADC
         adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [0, 1]
@@ -121,8 +130,9 @@ class TestDAQ2(unittest.TestCase):
 
         self.assertEqual(is_complex, False, "check real data")
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2DAC(self):
+        global URI
         # See if we tx data from DAC
         dac = DAQ2(uri=URI)
         TXFS = dac.sample_rate
@@ -135,8 +145,9 @@ class TestDAQ2(unittest.TestCase):
         dac.tx(d)
         self.assertEqual(True, True, "transmit data failed")
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2DAC_p2(self):
+        global URI
         # See if we tx data from DAC
         dac = DAQ2(uri=URI)
         TXFS = dac.sample_rate
@@ -149,8 +160,9 @@ class TestDAQ2(unittest.TestCase):
         dac.tx(d)
         self.assertEqual(True, True, "transmit data failed")
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2DAC_dual(self):
+        global URI
         # See if we tx data from DAC
         dac = DAQ2(uri=URI)
         TXFS = dac.sample_rate
@@ -163,8 +175,9 @@ class TestDAQ2(unittest.TestCase):
         dac.tx([d, d])
         self.assertEqual(True, True, "transmit data failed")
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2DMA(self):
+        global URI
         # Test DMA
         daq = DAQ2(uri=URI)
         daq.tx_cyclic_buffer = True
@@ -194,8 +207,9 @@ class TestDAQ2(unittest.TestCase):
         diff = np.abs(fc2_est - fc2)
         self.assertGreater(fc2 * 0.01, diff, "Frequency offset TX2")
 
-    @unittest.skipUnless(check_daq2(), "daq2 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
     def testDAQ2DDS(self):
+        global URI
         # Test DMA
         daq = DAQ2(uri=URI)
         daq.tx_cyclic_buffer = True
