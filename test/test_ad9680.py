@@ -33,6 +33,7 @@
 
 from __future__ import print_function
 
+import test.iio_scanner as iio_scanner
 import unittest
 
 import iio
@@ -41,16 +42,20 @@ import numpy as np
 from adi import ad9680
 
 URI = "ip:analog"
+dev_checked = False
+found_dev = False
 
 
-def check_ad9680():
-    # Try auto discover
-    try:
-        iio.Context(URI)
-        return True
-    except Exception as e:
-        print(e)
-        return False
+def check_dev(name):
+    global dev_checked
+    global found_dev
+    if not dev_checked:
+        found_dev, board = iio_scanner.find_device(name)
+        if found_dev:
+            global URI
+            URI = board.uri
+        dev_checked = True
+    return found_dev
 
 
 class TestAD9680(unittest.TestCase):
@@ -78,27 +83,30 @@ class TestAD9680(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @unittest.skipUnless(check_ad9680(), "ad9680 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "ad9680 not attached")
     def testAD9680ADC(self):
         # See if we can get non-zero data from ADC
+        global URI
         adc = ad9680(uri=URI)
         adc.rx_enabled_channels = [0]
         data = adc.rx()
         s = np.sum(np.abs(data))
         self.assertGreater(s, 0, "check non-zero data")
 
-    @unittest.skipUnless(check_ad9680(), "ad9680 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "ad9680 not attached")
     def testAD9680ADC_p2(self):
         # See if we can get non-zero data from ADC
+        global URI
         adc = ad9680(uri=URI)
         adc.rx_enabled_channels = [1]
         data = adc.rx()
         s = np.sum(np.abs(data))
         self.assertGreater(s, 0, "check non-zero data")
 
-    @unittest.skipUnless(check_ad9680(), "ad9680 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "ad9680 not attached")
     def testAD9680ADC_dual(self):
         # See if we can get non-zero data from ADC
+        global URI
         adc = ad9680(uri=URI)
         adc.rx_enabled_channels = [0, 1]
         data = adc.rx()
@@ -107,9 +115,10 @@ class TestAD9680(unittest.TestCase):
         s = np.sum(np.abs(data[1]))
         self.assertGreater(s, 0, "check non-zero data")
 
-    @unittest.skipUnless(check_ad9680(), "ad9680 not attached")
+    @unittest.skipUnless(check_dev("daq2"), "ad9680 not attached")
     def testAD9680ADC_dual_real(self):
         # See if we can get non-zero data from ADC
+        global URI
         adc = ad9680(uri=URI)
         adc.rx_enabled_channels = [0, 1]
         data = adc.rx()
