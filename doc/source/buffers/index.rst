@@ -29,7 +29,7 @@ Collect data from one channel
  import adi
 
  sdr = adi.ad9361()
- # Get both complex channel back
+ # Get complex data back
  sdr.rx_enabled_channels = [0]
  chan1 = sdr.rx()
 
