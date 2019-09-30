@@ -46,6 +46,7 @@ def get_numbers(s):
 
 class attribute:
     def _set_iio_attr(self, channel_name, attr_name, output, value, _ctrl=None):
+        """ Set channel attribute """
         if _ctrl:
             channel = _ctrl.find_channel(channel_name, output)
         else:
@@ -56,6 +57,7 @@ class attribute:
             raise ex
 
     def _get_iio_attr_str(self, channel_name, attr_name, output, _ctrl=None):
+        """ Get channel attribute as string """
         if _ctrl:
             channel = _ctrl.find_channel(channel_name, output)
         else:
@@ -63,11 +65,13 @@ class attribute:
         return channel.attrs[attr_name].value
 
     def _get_iio_attr(self, channel_name, attr_name, output, _ctrl=None):
+        """ Get channel attribute as number """
         return get_numbers(
             self._get_iio_attr_str(channel_name, attr_name, output, _ctrl)
         )
 
     def _set_iio_dev_attr_str(self, attr_name, value, _ctrl=None):
+        """ Set device attribute with string """
         try:
             if _ctrl:
                 _ctrl.attrs[attr_name].value = str(value)
@@ -77,15 +81,18 @@ class attribute:
             raise ex
 
     def _get_iio_dev_attr_str(self, attr_name, _ctrl=None):
+        """ Get device attribute as string """
         if _ctrl:
             return _ctrl.attrs[attr_name].value
         else:
             return self._ctrl.attrs[attr_name].value
 
     def _get_iio_dev_attr(self, attr_name, _ctrl=None):
+        """ Set device attribute as number """
         return get_numbers(self._get_iio_dev_attr_str(attr_name, _ctrl))
 
     def _set_iio_debug_attr_str(self, attr_name, value, _ctrl=None):
+        """ Set debug attribute with string """
         try:
             if _ctrl:
                 _ctrl.debug_attrs[attr_name].value = str(value)
@@ -95,10 +102,12 @@ class attribute:
             raise ex
 
     def _get_iio_debug_attr_str(self, attr_name, _ctrl=None):
+        """ Get debug attribute as string """
         if _ctrl:
             return _ctrl.debug_attrs[attr_name].value
         else:
             return self._ctrl.debug_attrs[attr_name].value
 
     def _get_iio_debug_attr(self, attr_name, _ctrl=None):
+        """ Set debug attribute as number """
         return get_numbers(self._get_iio_debug_attr_str(attr_name, _ctrl))
