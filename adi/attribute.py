@@ -56,6 +56,20 @@ class attribute:
         except Exception as ex:
             raise ex
 
+    def _set_iio_attr_float(self, channel_name, attr_name, output, value, _ctrl=None):
+        """ Set channel attribute with float """
+        if isinstance(value, int):
+            value = float(value)
+        if not isinstance(value, float):
+            raise Exception("Value must be a float")
+        self._set_iio_attr(channel_name, attr_name, output, value, _ctrl)
+
+    def _set_iio_attr_int(self, channel_name, attr_name, output, value, _ctrl=None):
+        """ Set channel attribute with int """
+        if not isinstance(value, int):
+            raise Exception("Value must be an int")
+        self._set_iio_attr(channel_name, attr_name, output, value, _ctrl)
+
     def _get_iio_attr_str(self, channel_name, attr_name, output, _ctrl=None):
         """ Get channel attribute as string """
         if _ctrl:
