@@ -1,16 +1,18 @@
+env:
+  global:
+    secure: LVozfPzxbvBFOG4ylXrm28nePGbqcT981Fx/9dEAG+FoMjbyMoXudm9hluctq4hZVFKCvyK62/Z1sOmJnuabersI3z8QjI2ZDWNyzqdmZ3OPkn+gEy4583EsI72M2b86GZiKwb7cS3eXbK6Jzbzd3N5pQuKbn4s+bwB72lmAncYl0DOnfraSsIFjBnsCTW5v4Z/W628ha0dMyU63iJ+ZXoFNkuFVGeJS7Z/HvrZUsY9q9YF07sidMdZnXlNIAj27x+LFtckVUF6F5n0VoKnRbQ8dMxKTBq28PahqQa+BZGzy/ECWKL3aj2NnpjBPHvLUgI7sa8oUNY/gGRQRgBDTzDFeR3/usN3vC7fDfdShjdYkZJjVbbfk9JBSBW+2Sy0CKBP2uMIuhkj1AUFVjJDOXLXNYt8MHmkrgCEqNoY925cXXiibvyIM5aB2icymV06cZGWJzG5E/y7BMRoJ2OoyUCLg6vzcTB01PNW3LQDvbwtrlkwSoWeuBupvdiWvHyF4lT7STedhfBHz3WVpWdSraq0z9Buj8QLAJZX4/l/4oouVmxpL+Du+/ljTVj2Q9993gqq38WCZjBB72EYPYFeikYC5TG6HKIlpoGHgDY2Lk2nEtsm1l1PmxgIUKWURQKtAu3gAqqe744pa+iaE8gNHnnRbkTzwhSxE/C3wLYBdXes=
 language: python
 sudo: required
 python:
 - '3.6'
 - '3.7'
-secure: "o2Dbxql870UJ4ajpUn30oy9kAu0eJYkZkEHzQp6UVogVpsxEHuZoOAwsTNtAwuBCFHIbJqymWsSvF0W7FivQ/wJvT3vq8cDIPWowv7zcUFSPrkPsSgQWkzibA0hDK8Y7r9RiR9GdKH8HbCb57X7eyRF4/E44CW5yOSCYV/xXx7qpSp2PUqTWvWgJX1lwp3p4fqK05TbsR3XE2zSy0wKpTMPZyb7MGhiOqjasvc6o5lLNSs/0IpOdYo5h9g8JaeO8ZXobQ6zsMfvTAB3PpW8Le/zQxN3SgGBif0oSLwmPD2BojpIVm23MrdrJwZWY+JKjV6z7KWV1iVMEMsxbsZCuYPUQahwRkzQKSMjmsuRSDG5u1wXC2KU7SGLJreVyZUBhrVRi1izYj4VYwVdy3s5UccBp0sadr0Nx46ugklNxHDA23pd5/OPQ+M2U18COFuL5wwhZVGOA45mmY/+HlDwGwMJ9deuQTRzAg9uZQn+iYFMYGLmwUzvsn/PUkespxbuW08k5pWlRBOFVN2yox2AAPnX6r561zBAi0dtMCR3VGmVHmAkh/HSRkJuWY120AgCGcftonXnZ6Nc7PZz/fD2FVceFWWYQv/Tyigq5RMI663f331KzZP8IuvJzo/7bLttUNKiJ3hzxBup7B1rCB4ApspirG5hnRq75TJI1HcL3mvU="
 before_install:
 - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 addons:
   coverity_scan:
     project:
-      name: "analogdevicesinc/pyadi-iio"
-      description: "Python interfaces for ADI hardware with IIO drivers"
+      name: analogdevicesinc/pyadi-iio
+      description: Python interfaces for ADI hardware with IIO drivers
     notification_email: travis.collins@analog.com
     branch_pattern: coverity
 install:
