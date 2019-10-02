@@ -3,6 +3,16 @@ sudo: required
 python:
 - '3.6'
 - '3.7'
+secure: "o2Dbxql870UJ4ajpUn30oy9kAu0eJYkZkEHzQp6UVogVpsxEHuZoOAwsTNtAwuBCFHIbJqymWsSvF0W7FivQ/wJvT3vq8cDIPWowv7zcUFSPrkPsSgQWkzibA0hDK8Y7r9RiR9GdKH8HbCb57X7eyRF4/E44CW5yOSCYV/xXx7qpSp2PUqTWvWgJX1lwp3p4fqK05TbsR3XE2zSy0wKpTMPZyb7MGhiOqjasvc6o5lLNSs/0IpOdYo5h9g8JaeO8ZXobQ6zsMfvTAB3PpW8Le/zQxN3SgGBif0oSLwmPD2BojpIVm23MrdrJwZWY+JKjV6z7KWV1iVMEMsxbsZCuYPUQahwRkzQKSMjmsuRSDG5u1wXC2KU7SGLJreVyZUBhrVRi1izYj4VYwVdy3s5UccBp0sadr0Nx46ugklNxHDA23pd5/OPQ+M2U18COFuL5wwhZVGOA45mmY/+HlDwGwMJ9deuQTRzAg9uZQn+iYFMYGLmwUzvsn/PUkespxbuW08k5pWlRBOFVN2yox2AAPnX6r561zBAi0dtMCR3VGmVHmAkh/HSRkJuWY120AgCGcftonXnZ6Nc7PZz/fD2FVceFWWYQv/Tyigq5RMI663f331KzZP8IuvJzo/7bLttUNKiJ3hzxBup7B1rCB4ApspirG5hnRq75TJI1HcL3mvU="
+before_install:
+- echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+addons:
+  coverity_scan:
+    project:
+      name: "analogdevicesinc/pyadi-iio"
+      description: "Python interfaces for ADI hardware with IIO drivers"
+    notification_email: travis.collins@analog.com
+    branch_pattern: coverity
 install:
 - sudo apt-get -qq update
 - sudo apt-get install -y git cmake graphviz libaio-dev libavahi-client-dev libavahi-common-dev
