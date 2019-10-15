@@ -32,7 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.adrv9009 import adrv9009
-
+import time
 
 class adrv9009_zu11eg(adrv9009):
     """ ADRV9009-ZU11EG System-On-Module """
@@ -62,6 +62,9 @@ class adrv9009_zu11eg(adrv9009):
     def __init__(self, uri=""):
         adrv9009.__init__(self, uri=uri)
         self._ctrl_b = self._ctx.find_device("adrv9009-phy-b")
+        self._clock_chip = self._ctx.find_device("hmc7044")
+        self._clock_chip_carrier = self._ctx.find_device("hmc7044-car")
+        self._clock_chip_ext = self._ctx.find_device("hmc7044-ext")
 
     @property
     def gain_control_mode_chip_b(self):
@@ -141,3 +144,51 @@ class adrv9009_zu11eg(adrv9009):
     @trx_lo_chip_b.setter
     def trx_lo_chip_b(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl_b)
+
+    def unsync(self):
+        self._clock_chip.reg_write(0x1, 0x62)
+        time.sleep(1)
+        self._clock_chip.reg_write(0x1, 0x60)
+
+    def sync(self):
+        self.ext_sysref()
+        time.sleep(1)
+        self.ext_sysref()
+        time.sleep(1)
+
+    def start_con_sysref(self):
+        self._clock_chip.reg_write(0x5a, 0x0)
+        self._clock_chip.reg_write(0x5, 0x43)
+        self._clock_chip_carrier.reg_write(0x5, 0x42)
+
+    def stop_con_sysref(self):
+        self._clock_chip.reg_write(0x5, 0x43)
+        self._clock_chip.reg_write(0x5a, 0x1)
+
+    def sync_pulse_gen(self):
+        self._clock_chip_carrier.reg_write(0x5, 0x83)
+        self._clock_chip.reg_write(0x5, 0x43)
+
+    def ext_sysref(self):
+        self._set_iio_dev_attr_str("sysref_request", "1", self._clock_chip_ext)
+
+    def mcs(self):
+        # Pulse sig gen
+        self._clock_chip.reg_write(0x5a, 4)
+        # Sync chips
+        for i in range(12):
+            self._set_iio_dev_attr_str("multichip_sync", str(i), self._ctrl)
+            self._set_iio_dev_attr_str("multichip_sync", str(i), self._ctrl_b)
+            #self._set_iio_dev_attr_str("multichip_sync ", "0", self._ctrl)
+            #self._set_iio_dev_attr_str("multichip_sync ", "0", self._ctrl_b)
+            #self._set_iio_dev_attr_str("multichip_sync ", "1", self._ctrl)
+            #self._set_iio_dev_attr_str("multichip_sync ", "1", self._ctrl_b)
+
+    def trigger_dma(self):
+        self._rxadc.reg_write(0x80000044,0x8)
+        print("Waiting for DMA sync")
+        while self._rxadc.reg_read(0x80000068)==0:
+            self._rxadc.reg_write(0x80000044,0x8)
+            print(self._rxadc.reg_read(0x80000068))
+            print(".")
+
