@@ -4,14 +4,14 @@ import adi
 #import matplotlib.pyplot as plt
 from scipy import signal
 import numpy as np
+import scipy.io as sio
 
 def measure_phase_and_delay(chan0, chan1):
     cor = np.correlate(chan0, chan1, "full")
     i = np.argmax(cor)
     m = cor[i]
-    sample_delay = len(white_noise) - i - 1
+    sample_delay = len(chan0) - i - 1
     return (np.angle(m)*180/np.pi, sample_delay)
-
 
 def measure_phase(chan0, chan1):
     errorV = np.angle(chan0 * np.conj(chan1)) * 180 / np.pi
@@ -20,12 +20,14 @@ def measure_phase(chan0, chan1):
 
 
 # Create radio
-uri1 = "ip:10.48.65.109"
+uri1 = "ip:10.48.65.100"
 uri2 = "ip:10.48.65.110"
 
 print("--Connecting to devices")
 master = adi.adrv9009_zu11eg(uri1)
 slave = adi.adrv9009_zu11eg(uri2)
+#master._ctx.set_timeout(10)
+#slave._ctx.set_timeout(10)
 
 # Desync both boards
 print("--Unsyncing")
@@ -87,31 +89,96 @@ slave.rx_hardwaregain_chan1_chip_b = 30
 slave.rx_buffer_size = 2 ** 17
 
 # Read properties
-print("TRX LO %s" % (master.trx_lo))
-print("TRX LO %s" % (master.trx_lo_chip_b))
+print("TRX LO1 %s" % (master.trx_lo))
+print("TRX LO2 %s" % (master.trx_lo_chip_b))
 
-print("TRX LO %s" % (slave.trx_lo))
-print("TRX LO %s" % (slave.trx_lo_chip_b))
+print("TRX LO3 %s" % (slave.trx_lo))
+print("TRX LO4 %s" % (slave.trx_lo_chip_b))
 
-# MCS
-slave.mcs()
-master.mcs()
+### MCS
+#slave.mcs()
+#master.mcs()
+slave._clock_chip.reg_write(0x5a, 4)
+slave.mcs_ind(0)
+slave.mcs_ind(1)
+master._clock_chip.reg_write(0x5a, 4)
+master.mcs_ind(0)
+master.mcs_ind(1)
+time.sleep(1)
+# Step 2
+master.ext_sysref()
+master.mcs_ind(11)
+slave.mcs_ind(11)
+# Step 3 & 4
+#master.mcs_ind(3)
+#master.mcs_ind(4)
+try:
+    slave.mcs_ind(3)
+except:
+    pass
+try:
+    slave.mcs_ind(4)
+except:
+    pass
 
+# Step 5
+master.ext_sysref()
+# Step 6
+master.mcs_ind(6)
+slave.mcs_ind(6)
+# Step 7
+master.ext_sysref()
+# Step 8 & 9
+master.mcs_ind(8)
+master.mcs_ind(9)
+slave.mcs_ind(8)
+slave.mcs_ind(9)
+# Step 10
+master.ext_sysref()
+# Step 11
+master.mcs_ind(11)
+# 8 pulse request
+master._clock_chip.reg_write(0x5a, 1)
+slave.mcs_ind(11)
+slave._clock_chip.reg_write(0x5a, 1)
+# cal RX phase correction
+slave.rx_phase_cal(1)
+master.rx_phase_cal(1)
+
+###
 # Start DMA
 print("--Triggering DMA")
 master.trigger_dma()
 slave.trigger_dma()
 
+# Set up buffers
+print("--Initializing Buffers")
+master._rx_init_channels()
+slave._rx_init_channels()
+
 # Collect data
-fsr = int(master.rx_sample_rate)
+#fsr = int(master.rx_sample_rate)
 for r in range(20):
+    # Pulse sysref
+    print("Pulsing sysref")
+    master.ext_sysref()
+    time.sleep(3)
+    # Collect data
+    print("Pulling buffers")
     x = master.rx()
     y = slave.rx()
     print("Same Chip", measure_phase(x[0], x[1]))
     print("Across Chip",measure_phase(x[0], x[2]))
     print("Same Chip (B)",measure_phase(y[0], y[1]))
     print("Across Chip (B)",measure_phase(y[0], y[2]))
+    print("Across Chip (AB)",measure_phase(x[0], y[0]))
+    (p, s) = measure_phase_and_delay(x[0], x[1])
+    print("###########")
+    print("Sample delay: ",s)
+    print("Phase delay: ",p)
     print("------------------")
+
+    sio.savemat('np_vector.mat', {'x':x,'y':y})
     #f, Pxx_den = signal.periodogram(x[0], fsr)
     #f2, Pxx_den2 = signal.periodogram(x[1], fsr)
     #plt.clf()

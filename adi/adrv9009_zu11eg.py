@@ -145,6 +145,12 @@ class adrv9009_zu11eg(adrv9009):
     def trx_lo_chip_b(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl_b)
 
+    def rx_phase_cal(self,i):
+        self._set_iio_dev_attr_str("calibrate_rx_phase_correction_en", str(i), self._ctrl)
+        self._set_iio_dev_attr_str("calibrate", str(i), self._ctrl)
+        self._set_iio_dev_attr_str("calibrate_rx_phase_correction_en", str(i), self._ctrl_b)
+        self._set_iio_dev_attr_str("calibrate", str(i), self._ctrl_b)
+
     def unsync(self):
         self._clock_chip.reg_write(0x1, 0x62)
         time.sleep(1)
@@ -171,6 +177,10 @@ class adrv9009_zu11eg(adrv9009):
 
     def ext_sysref(self):
         self._set_iio_dev_attr_str("sysref_request", "1", self._clock_chip_ext)
+
+    def mcs_ind(self,i):
+        self._set_iio_dev_attr_str("multichip_sync", str(i), self._ctrl)
+        self._set_iio_dev_attr_str("multichip_sync", str(i), self._ctrl_b)
 
     def mcs(self):
         # Pulse sig gen
