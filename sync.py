@@ -5,6 +5,13 @@ import adi
 from scipy import signal
 import numpy as np
 
+def measure_phase_and_delay(chan0, chan1):
+    cor = np.correlate(chan0, chan1, "full")
+    i = np.argmax(cor)
+    m = cor[i]
+    sample_delay = len(white_noise) - i - 1
+    return (np.angle(m)*180/np.pi, sample_delay)
+
 
 def measure_phase(chan0, chan1):
     errorV = np.angle(chan0 * np.conj(chan1)) * 180 / np.pi
