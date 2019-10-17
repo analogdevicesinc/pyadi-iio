@@ -163,7 +163,7 @@ class adrv9009_zu11eg(adrv9009):
         time.sleep(1)
 
     def start_con_sysref(self):
-        self._clock_chip.reg_write(0x5a, 0x0)
+        self._clock_chip.reg_write(0x5a, 7)
         self._clock_chip.reg_write(0x5, 0x43)
         self._clock_chip_carrier.reg_write(0x5, 0x42)
 
