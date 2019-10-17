@@ -167,13 +167,13 @@ class adrv9009_zu11eg(adrv9009):
         self._clock_chip.reg_write(0x5, 0x43)
         self._clock_chip_carrier.reg_write(0x5, 0x42)
 
-    def stop_con_sysref(self):
+    def stop_con_sysref1(self):
         self._clock_chip.reg_write(0x5, 0x43)
         self._clock_chip.reg_write(0x5a, 0x1)
 
-    def sync_pulse_gen(self):
-        self._clock_chip_carrier.reg_write(0x5, 0x83)
-        self._clock_chip.reg_write(0x5, 0x43)
+    def stop_con_sysref2(self):
+        self._clock_chip_carrier.reg_write(0x5, 0x82)
+        self._clock_chip.reg_write(0x5, 0x83)
 
     def ext_sysref(self):
         self._set_iio_dev_attr_str("sysref_request", "1", self._clock_chip_ext)
