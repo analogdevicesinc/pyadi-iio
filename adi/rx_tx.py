@@ -94,6 +94,10 @@ class rx(attribute):
     def _num_rx_channels_enabled(self):
         return len(self.__rx_enabled_channels)
 
+    def rx_destroy_buffer(self):
+        """rx_destroy_buffer: Clears RX buffer"""
+        self.__rxbuf = None
+
     def __del__(self):
         self.__rxbuf = []
         self._rxadc = []
@@ -180,6 +184,11 @@ class tx(dds, attribute):
 
     @tx_cyclic_buffer.setter
     def tx_cyclic_buffer(self, value):
+        if self.__txbuf:
+            raise Exception(
+                "TX buffer already created, buffer must be \
+                destroyed then recreated to modify tx_cyclic_buffer"
+            )
         self.__tx_cyclic_buffer = value
 
     @property
@@ -201,6 +210,10 @@ class tx(dds, attribute):
                 raise Exception("TX mapping exceeds available channels")
         self.__tx_enabled_channels = value
 
+    def tx_destroy_buffer(self):
+        """tx_destroy_buffer: Clears TX buffer"""
+        self.__txbuf = None
+
     def _tx_init_channels(self):
         if self._complex_data:
             for m in self.tx_enabled_channels:
@@ -217,6 +230,12 @@ class tx(dds, attribute):
         )
 
     def tx(self, data_np):
+        if self.__txbuf and self.tx_cyclic_buffer:
+            raise Exception(
+                "TX buffer has been submitted in cyclic mode. \
+                To push more data the tx buffer must be destroyed first."
+            )
+
         if self._complex_data:
             if self._num_tx_channels_enabled == 1:
                 data_np = [data_np]
@@ -254,7 +273,8 @@ class tx(dds, attribute):
 
         if len(data) // stride != self._tx_buffer_size:
             raise Exception(
-                "Buffer length different than data length. Cannot change buffer length on the fly"
+                "Buffer length different than data length. \
+                Cannot change buffer length on the fly"
             )
 
         # Send data to buffer
