@@ -90,6 +90,55 @@ class TestPluto(unittest.TestCase):
         self.assertGreater(s, 0, "check non-zero data")
 
     @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
+    def testPlutoCyclicBuffers(self):
+        sdr = Pluto()
+        fs = int(sdr.sample_rate)
+        fc = -3000000
+        N = 1024
+        ts = 1 / float(fs)
+        t = np.arange(0, N * ts, ts)
+        i = np.cos(2 * np.pi * t * fc) * 2 ** 14
+        q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+        iq = i + 1j * q
+        sdr.tx_cyclic_buffer = True
+        sdr.tx(iq)
+        sdr.tx_destroy_buffer()
+        sdr.tx(iq)
+
+    @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
+    def testPlutoCyclicBuffersException(self):
+        sdr = Pluto()
+        fs = int(sdr.sample_rate)
+        fc = -3000000
+        N = 1024
+        ts = 1 / float(fs)
+        t = np.arange(0, N * ts, ts)
+        i = np.cos(2 * np.pi * t * fc) * 2 ** 14
+        q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+        iq = i + 1j * q
+        sdr.tx_cyclic_buffer = True
+        try:
+            sdr.tx(iq)
+            sdr.tx(iq)
+        except Exception as e:
+            if (
+                "TX buffer has been submitted in cyclic mode. \
+                To push more data the tx buffer must be destroyed first."
+                not in str(e)
+            ):
+                fail = True
+                msg = "Wrong exception raised, message was: " + str(e)
+            else:
+                fail = False
+        else:
+            fail = True
+            msg = "ExpectedException not raised"
+        # Cleanly end
+        del sdr
+        if fail:
+            self.fail(msg)
+
+    @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
     def testPlutoDAC(self):
         # See if we can tone from Pluto using DMAs
         sdr = Pluto()
