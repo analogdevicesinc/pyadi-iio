@@ -7,17 +7,28 @@
 [[Support](http://ez.analog.com)]
 [[Wiki](https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio)]
 
+pyadi-iio is a python abstraction module for ADI hardware with IIO drivers to make them easier to use. The libIIO interface although extremely flexible can be cumbersome to use due to the amount of boilerplate code required for even simple examples, especially when interfacing with buffers. This module has custom interfaces classes for specific parts and development systems which can generally make them easier to understand and use. To get up and running with a device can be as simple as a few lines of code:
+```python
+import adi
+# Create device from specific uri address
+sdr = adi.ad9361(uri="ip:192.168.2.1")
+# Get data from transceiver
+data = sdr.rx()
+```
+
 ### Currently supported hardware
 - AD936X (Pluto, FMComms, ADRV936X)
 - AD9371
 - ADRV9009
+- ADRV9009-ZU11EG
 - AD9144
 - AD9680
 - DAQ2
+- ADIS16460
 
 ### Dependencies
-- libiio with python bindings
-- numpy
+- [libiio with python bindings](https://wiki.analog.com/resources/tools-software/linux-software/libiio)
+- [numpy](https://scipy.org/install.html)
 
 ### Installing from source
 ```
@@ -26,7 +37,6 @@ tcollins@jeeves:~$ cd pyadi-iio
 tcollins@jeeves:~$ (sudo) python setup.py install
 ```
 ### Installing from pip
-
 ```
 tcollins@jeeves:~$ (sudo) pip install pyadi-iio
 ```
