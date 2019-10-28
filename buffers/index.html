@@ -85,6 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../devices/index.html">Supported Devices</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Buffers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cyclic-mode">Cyclic Mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-adi.rx_tx">Members</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#buffer-examples">Buffer Examples</a></li>
 </ul>
@@ -166,6 +167,27 @@
 <ul class="simple">
 <li><p><strong>tx_enabled_channels</strong>: This is an array of integers and the number of elements in the array will determine the number of items in list to be submitted to <strong>tx</strong>. Like for <strong>rx_enabled_channels</strong>, devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.</p></li>
 </ul>
+<div class="section" id="cyclic-mode">
+<h2>Cyclic Mode<a class="headerlink" href="#cyclic-mode" title="Permalink to this headline">¶</a></h2>
+<p>In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to. To complement these use cases it is possible to create transmit buffer which repeats, which we call <strong>cylic buffers</strong>. Cyclic buffers are identical or normal or non-cylic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
+<span class="c1"># Create a complex sinusoid</span>
+<span class="n">fc</span> <span class="o">=</span> <span class="mi">3000000</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">30000000.0</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">fc</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">14</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">fc</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">14</span>
+<span class="n">iq</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">q</span>
+<span class="c1"># Enable cyclic buffers</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="c1"># Send data cyclically</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx</span><span class="p">(</span><span class="n">iq</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>At this point, the transmitter will keep transmitting the create sinusoid indefinitely until the buffer is destroyed or the <em>sdr</em> object destructor is called. Once data is pushed to hardware with a cyclic buffer the buffer must be manually destroyed or an error will occur if more data push. To update the buffer use the <strong>tx_destroy_buffer</strong> method before passing a new vector to the <strong>tx</strong> method.</p>
+</div>
 <div class="section" id="module-adi.rx_tx">
 <span id="members"></span><h2>Members<a class="headerlink" href="#module-adi.rx_tx" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
