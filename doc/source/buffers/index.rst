@@ -12,6 +12,27 @@ For transmitters this is the **tx** method. How data is sent and therefore must 
 
 * **tx_enabled_channels**: This is an array of integers and the number of elements in the array will determine the number of items in list to be submitted to **tx**. Like for **rx_enabled_channels**, devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.
 
+Cyclic Mode
+--------------
+In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to. To complement these use cases it is possible to create transmit buffer which repeats, which we call **cylic buffers**. Cyclic buffers are identical or normal or non-cylic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:
+
+.. code-block:: python
+
+ import adi
+ sdr = adi.ad9361()
+ # Create a complex sinusoid
+ fc = 3000000
+ N = 1024
+ ts = 1 / 30000000.0
+ t = np.arange(0, N * ts, ts)
+ i = np.cos(2 * np.pi * t * fc) * 2 ** 14
+ q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+ iq = i + 1j * q
+ # Enable cyclic buffers
+ sdr.tx_cyclic_buffer = True
+ # Send data cyclically
+ sdr.tx(iq)
+At this point, the transmitter will keep transmitting the create sinusoid indefinitely until the buffer is destroyed or the *sdr* object destructor is called. Once data is pushed to hardware with a cyclic buffer the buffer must be manually destroyed or an error will occur if more data push. To update the buffer use the **tx_destroy_buffer** method before passing a new vector to the **tx** method.
 
 Members
 --------------
