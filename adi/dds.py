@@ -62,9 +62,11 @@ class dds(attribute):
         for indx in range(len(self._txdac.channels)):
             chan = self._txdac.find_channel("altvoltage" + str(indx), True)
             if not chan:
-                return None
+                continue
             values.append(chan.attrs[attr].value)
             indx = indx + 1
+        if values == []:
+            return None
         return values
 
     def disable_dds(self):
@@ -109,3 +111,46 @@ class dds(attribute):
     @dds_enabled.setter
     def dds_enabled(self, value):
         self.__update_dds("raw", value)
+
+
+    def dds_single_tone(self, frequency, scale, channel=0):
+        """ Generate a single tone using the DDSs
+            For complex data devices this will create a complex
+            or single sided tone spectrally using two DDSs.
+            For non-complex devices the tone will use a single DDS.
+
+            parameters:
+                frequency: type=integer
+                    Frequency in hertz of the generated tone. This must be
+                    less than 1/2 the sample rate.
+
+                scale: type=float
+                    Scale of the generated tone in range [0,1]. At 1 the tone
+                    will be full-scale.
+
+                channel: type=integer
+                    Channel index to generate tone from. This is zero based
+                    and for complex devices this index relates to the pair
+                    of related converters. For non-complex devices this is
+                    the index of the individual converters.
+
+        """
+        chans = len(self.dds_scales)
+        self.dds_scales = [0] * chans
+        self.dds_phases = [0] * chans
+        self.dds_enabled = [1] * chans
+        # Set up tone
+        if self._complex_data:
+            if frequency<0:
+                frequency = np.abs(frequency)
+                A = "Q"; B = "I"
+            else:
+                A = "I"; B = "Q"
+            chan = self._txdac.find_channel("TX"+ str(channel+1)+"_"+A+"_F1", True)
+            chan.attrs['frequency'].value = str(frequency)
+            chan.attrs['phase'].value = str(90000)
+            chan.attrs['scale'].value = str(scale)
+            chan = self._txdac.find_channel("TX"+ str(channel+1)+"_"+B+"_F1", True)
+            chan.attrs['frequency'].value = str(frequency)
+            chan.attrs['phase'].value = str(0)
+            chan.attrs['scale'].value = str(scale)
