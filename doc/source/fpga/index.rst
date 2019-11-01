@@ -6,7 +6,7 @@ Direct Digital Synthesizers
 
 For FPGA based systems ADI reference designs include direct digital synthesizer (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.
 
-For the most basic or easiest configuration options use the methods **dds_single_tone** and **dds_two_tone** which generate a single tone or two tones respectively on a specific channel.
+For the most basic or easiest configuration options use the methods **dds_single_tone** and **dds_dual_tone** which generate a one tone or two tones respectively on a specific channel.
 
 .. code-block:: python
 
@@ -24,15 +24,16 @@ To configure DDSs individually a list of scales can be passed to the properties 
 .. code-block:: python
 
  import adi
+
  sdr = adi.ad9361()
  n = len(sdr.dds_scales)
  # Enable all DDSs
- sdr.dds_enabled = [True]*n
+ sdr.dds_enabled = [True] * n
  # Set all DDSs to same frequency, scale, and phase
  dds_freq_hz = 10000
- sdr.dds_phase = [0]*n
- sdr.dds_frequency = [dds_freq_hz]*n
- sdr.dds_scale = [0.9]*n
+ sdr.dds_phase = [0] * n
+ sdr.dds_frequency = [dds_freq_hz] * n
+ sdr.dds_scale = [0.9] * n
 
 Methods
 ---------------------------
