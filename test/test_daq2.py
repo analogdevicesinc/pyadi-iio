@@ -180,13 +180,14 @@ class TestDAQ2(unittest.TestCase):
         global URI
         # Test DMA
         daq = DAQ2(uri=URI)
+        daq._ctx.set_timeout = 1000
         daq.tx_cyclic_buffer = True
         daq.tx_enabled_channels = [0, 1]
         # Create signal
         fs = int(daq.sample_rate)
         fc1 = 30 * 1e6
         fc2 = 100 * 1e6
-        N = 2 ** 14
+        N = 2 ** 12
         ts = 1 / float(fs)
         t = np.arange(0, N * ts, ts)
         f1 = np.cos(2 * np.pi * t * fc1) * 2 ** 14
@@ -230,6 +231,42 @@ class TestDAQ2(unittest.TestCase):
 
         # Estimate frequency
         fc1_est = self.freq_est(data[0], fs)
+        fc2_est = self.freq_est(data[1], fs)
+
+        # Check Data
+        diff = np.abs(fc1_est - fc1)
+        self.assertGreater(fc1 * 0.01, diff, "Frequency offset TX1")
+        diff = np.abs(fc2_est - fc2)
+        self.assertGreater(fc2 * 0.01, diff, "Frequency offset TX2")
+
+    @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
+    def testDAQ2DDS_SimpleAPI(self):
+        global URI
+        # Test DMA
+        daq = DAQ2(uri=URI)
+        daq.tx_cyclic_buffer = True
+        daq.tx_enabled_channels = [0, 1]
+        daq.rx_buffer_size = 2 ** 14
+        fs = int(daq.sample_rate)
+
+        # Enable DDSs
+        fc1 = 200000000
+        daq.dds_single_tone(fc1, 0.5)
+
+        # Flush buffers
+        for _ in range(10):
+            data = daq.rx()
+
+        # Estimate frequency
+        fc1_est = self.freq_est(data[0], fs)
+
+        # Change DDS channel
+        fc2 = 200000000
+        daq.dds_single_tone(fc2, 0.5, 1)
+        # Flush buffers
+        for _ in range(10):
+            data = daq.rx()
+
         fc2_est = self.freq_est(data[1], fs)
 
         # Check Data
