@@ -90,6 +90,7 @@ class TestAD9361(unittest.TestCase):
         sdr = ad9361(uri=URI)
         data = sdr.rx()
         s = np.sum(np.abs(data))
+        del sdr
         self.assertGreater(s, 0, "check non-zero data")
 
     @unittest.skipUnless(check_dev("packrf"), "AD9361SDR not attached")
@@ -132,6 +133,7 @@ class TestAD9361(unittest.TestCase):
         #     plt.show()
 
         diff = np.abs(tone_freq - fc)
+        del sdr
         self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
