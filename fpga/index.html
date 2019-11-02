@@ -85,7 +85,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../devices/index.html">Supported Devices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">FPGA Features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-adi.dds">Direct Digital Synthesizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#direct-digital-synthesizers">Direct Digital Synthesizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-adi.dds">Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -154,13 +155,72 @@
             
   <div class="section" id="fpga-features">
 <h1>FPGA Features<a class="headerlink" href="#fpga-features" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="direct-digital-synthesizers">
+<h2>Direct Digital Synthesizers<a class="headerlink" href="#direct-digital-synthesizers" title="Permalink to this headline">¶</a></h2>
+<p>For FPGA based systems ADI reference designs include direct digital synthesizer (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.</p>
+<p>For the most basic or easiest configuration options use the methods <strong>dds_single_tone</strong> and <strong>dds_dual_tone</strong> which generate a one tone or two tones respectively on a specific channel.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
+<span class="c1"># Generate a single complex tone</span>
+<span class="n">dds_freq_hz</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">dds_scale</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="c1"># Enable all DDSs</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_single_tone</span><span class="p">(</span><span class="n">dds_freq_hz</span><span class="p">,</span> <span class="n">dds_scale</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To configure DDSs individually a list of scales can be passed to the properties <strong>dds_scales</strong>, <strong>dds_frequencies</strong>, and <strong>dds_phases</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">dds_scales</span><span class="p">)</span>
+<span class="c1"># Enable all DDSs</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_enabled</span> <span class="o">=</span> <span class="p">[</span><span class="bp">True</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="c1"># Set all DDSs to same frequency, scale, and phase</span>
+<span class="n">dds_freq_hz</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_phase</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_frequency</span> <span class="o">=</span> <span class="p">[</span><span class="n">dds_freq_hz</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_scale</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="module-adi.dds">
-<span id="direct-digital-synthesizers"></span><h2>Direct Digital Synthesizers<a class="headerlink" href="#module-adi.dds" title="Permalink to this headline">¶</a></h2>
+<span id="methods"></span><h2>Methods<a class="headerlink" href="#module-adi.dds" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="adi.dds.dds">
 <em class="property">class </em><code class="sig-prename descclassname">adi.dds.</code><code class="sig-name descname">dds</code><a class="headerlink" href="#adi.dds.dds" title="Permalink to this definition">¶</a></dt>
 <dd><p>DDS Signal generators: Each reference design contains two DDSs per channel.
 this allows for two complex tones to be generated per complex channel.</p>
+<dl class="method">
+<dt id="adi.dds.dds.dds_dual_tone">
+<code class="sig-name descname">dds_dual_tone</code><span class="sig-paren">(</span><em class="sig-param">frequency1</em>, <em class="sig-param">scale1</em>, <em class="sig-param">frequency2</em>, <em class="sig-param">scale2</em>, <em class="sig-param">channel=0</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate two tones simultaneously using the DDSs
+For complex data devices this will create two complex
+or single sided tones spectrally using four DDSs.
+For non-complex devices the tone will use two DDSs.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>frequency1: type=integer</dt><dd><p>Frequency of first tone in hertz of the generated tone.
+This must be less than 1/2 the sample rate.</p>
+</dd>
+<dt>scale1: type=float</dt><dd><p>Scale of the first tone generated tone in range [0,1].
+At 1 the tone will be full-scale.</p>
+</dd>
+<dt>frequency2: type=integer</dt><dd><p>Frequency of second tone in hertz of the generated tone.
+This must be less than 1/2 the sample rate.</p>
+</dd>
+<dt>scale2: type=float</dt><dd><p>Scale of the second tone generated tone in range [0,1].
+At 1 the tone will be full-scale.</p>
+</dd>
+<dt>channel: type=integer</dt><dd><p>Channel index to generate tone from. This is zero based
+and for complex devices this index relates to the pair
+of related converters. For non-complex devices this is
+the index of the individual converters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="adi.dds.dds.dds_enabled">
 <em class="property">property </em><code class="sig-name descname">dds_enabled</code><a class="headerlink" href="#adi.dds.dds.dds_enabled" title="Permalink to this definition">¶</a></dt>
@@ -185,6 +245,31 @@ Range in millidegrees [0,360000]</p>
 <em class="property">property </em><code class="sig-name descname">dds_scales</code><a class="headerlink" href="#adi.dds.dds.dds_scales" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale of DDS signal generators
 Ranges [0,1]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adi.dds.dds.dds_single_tone">
+<code class="sig-name descname">dds_single_tone</code><span class="sig-paren">(</span><em class="sig-param">frequency</em>, <em class="sig-param">scale</em>, <em class="sig-param">channel=0</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a single tone using the DDSs
+For complex data devices this will create a complex
+or single sided tone spectrally using two DDSs.
+For non-complex devices the tone will use a single DDS.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>frequency: type=integer</dt><dd><p>Frequency in hertz of the generated tone. This must be
+less than 1/2 the sample rate.</p>
+</dd>
+<dt>scale: type=float</dt><dd><p>Scale of the generated tone in range [0,1]. At 1 the tone
+will be full-scale.</p>
+</dd>
+<dt>channel: type=integer</dt><dd><p>Channel index to generate tone from. This is zero based
+and for complex devices this index relates to the pair
+of related converters. For non-complex devices this is
+the index of the individual converters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
