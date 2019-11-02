@@ -28,6 +28,7 @@ Sections
 
    guides/quick
    guides/examples
+   guides/connectivity
    devices/index
    buffers/index
    fpga/index
