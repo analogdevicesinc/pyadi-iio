@@ -91,6 +91,7 @@ class TestDAQ2(unittest.TestCase):
         adc.rx_enabled_channels = [0]
         data = adc.rx()
         s = np.sum(np.abs(data))
+        del adc
         self.assertGreater(s, 0, "check non-zero data")
 
     @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
@@ -101,6 +102,7 @@ class TestDAQ2(unittest.TestCase):
         adc.rx_enabled_channels = [1]
         data = adc.rx()
         s = np.sum(np.abs(data))
+        del adc
         self.assertGreater(s, 0, "check non-zero data")
 
     @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
@@ -110,6 +112,7 @@ class TestDAQ2(unittest.TestCase):
         adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [0, 1]
         data = adc.rx()
+        del adc
         s = np.sum(np.abs(data[0]))
         self.assertGreater(s, 0, "check non-zero data")
         s = np.sum(np.abs(data[1]))
@@ -122,6 +125,7 @@ class TestDAQ2(unittest.TestCase):
         adc = DAQ2(uri=URI)
         adc.rx_enabled_channels = [0, 1]
         data = adc.rx()
+        del adc
         is_complex = False
         for d in data[0]:
             is_complex = is_complex or np.iscomplex(d)
@@ -143,6 +147,7 @@ class TestDAQ2(unittest.TestCase):
         fc = 10000
         d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
         dac.tx(d)
+        del dac
         self.assertEqual(True, True, "transmit data failed")
 
     @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
@@ -158,6 +163,7 @@ class TestDAQ2(unittest.TestCase):
         fc = 10000
         d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
         dac.tx(d)
+        del dac
         self.assertEqual(True, True, "transmit data failed")
 
     @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
@@ -173,6 +179,7 @@ class TestDAQ2(unittest.TestCase):
         fc = 10000
         d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
         dac.tx([d, d])
+        del dac
         self.assertEqual(True, True, "transmit data failed")
 
     @unittest.skipUnless(check_dev("daq2"), "daq2 not attached")
@@ -199,6 +206,7 @@ class TestDAQ2(unittest.TestCase):
         # Flush buffers
         for _ in range(10):
             data = daq.rx()
+        del daq
         # Estimate frequency
         fc1_est = self.freq_est(data[0], fs)
         fc2_est = self.freq_est(data[1], fs)
@@ -228,6 +236,7 @@ class TestDAQ2(unittest.TestCase):
         # Flush buffers
         for _ in range(10):
             data = daq.rx()
+        del daq
 
         # Estimate frequency
         fc1_est = self.freq_est(data[0], fs)
@@ -266,6 +275,7 @@ class TestDAQ2(unittest.TestCase):
         # Flush buffers
         for _ in range(10):
             data = daq.rx()
+        del daq
 
         fc2_est = self.freq_est(data[1], fs)
 

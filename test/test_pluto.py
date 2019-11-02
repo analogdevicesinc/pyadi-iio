@@ -87,6 +87,7 @@ class TestPluto(unittest.TestCase):
         sdr = Pluto()
         data = sdr.rx()
         s = np.sum(np.abs(data))
+        del sdr
         self.assertGreater(s, 0, "check non-zero data")
 
     @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
@@ -176,6 +177,7 @@ class TestPluto(unittest.TestCase):
         #     plt.show()
 
         diff = np.abs(tone_freq - fc)
+        del sdr
         self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
     @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
@@ -216,6 +218,7 @@ class TestPluto(unittest.TestCase):
         # plt.show()
 
         diff = np.abs(tone_freq - fc)
+        del sdr
         self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
     @unittest.skipUnless(check_pluto(), "PlutoSDR not attached")
@@ -237,6 +240,7 @@ class TestPluto(unittest.TestCase):
             data = sdr.rx()
         # Turn off loopback (for other tests)
         sdr.loopback = 0
+        del sdr
         # Check data
         offset = 0
         for i in range(len(data)):
