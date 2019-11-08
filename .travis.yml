@@ -37,7 +37,7 @@ jobs:
         keep_history: true
         on:
           branch: master
-        token: $GITHUB_TOKEN
+        github_token: $GITHUB_TOKEN
         local_dir: doc/build/html
         committer_from_gh: true
       - provider: pages
@@ -46,7 +46,7 @@ jobs:
         keep_history: true
         on:
           tags: true
-        token: $GITHUB_TOKEN
+        github_token: $GITHUB_TOKEN
         local_dir: doc/build/html
         committer_from_gh: true
 
