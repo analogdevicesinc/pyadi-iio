@@ -1,8 +1,4 @@
 os: linux
-stages:
-- Test
-- Doc
-- Deploy
 language: python
 python:
 - '3.6'
@@ -20,15 +16,13 @@ install:
 - sudo apt-get install -y python3-pip python3-setuptools
 - travis_retry pip install -r requirements.txt
 - travis_retry pip install -r requirements_dev.txt
+script:
+- if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'; fi
+- if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.7/site-packages'; fi
+- pytest -v
 
 jobs:
   include:
-  - stage: Test
-    script:
-      - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'; fi
-      - if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.7/site-packages'; fi
-      - pytest -v
-
   - stage: Doc
     python: 3.7
     script:
@@ -58,6 +52,7 @@ jobs:
 
   - stage: Deploy
     python: 3.7
+    script: true # Skip default script
     deploy:
       - provider: pypi
         username:
