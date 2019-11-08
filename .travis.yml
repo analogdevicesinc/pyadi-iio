@@ -20,6 +20,8 @@ script:
 - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'; fi
 - if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.7/site-packages'; fi
 - pytest -v
+after_success:
+- codecov
 
 jobs:
   include:
@@ -30,6 +32,7 @@ jobs:
       - export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.7/site-packages'
       - cd doc && make html
       - cd ..
+    after_success: # Skip default after_succes
     deploy:
       - provider: pages
         verbose: true
@@ -53,6 +56,7 @@ jobs:
   - stage: Deploy
     python: 3.7
     script: true # Skip default script
+    after_success: # Skip default after_succes
     deploy:
       - provider: pypi
         username:
