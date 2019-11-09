@@ -176,6 +176,14 @@ class rx(attribute):
         return sig
 
     def rx(self):
+        """ Receive data from hardware buffers for each channel index in
+            rx_enabled_channels.
+
+            returns: type=numpy.array or list of numpy.array
+                An array or list of arrays when more than one receive channel
+                is enabled containing samples from a channel or set of channels.
+                Data will be complex when using a complex data device.
+        """
         if self._complex_data:
             return self.__rx_complex()
         else:
@@ -258,6 +266,14 @@ class tx(dds, attribute):
         )
 
     def tx(self, data_np):
+        """ Transmit data to hardware buffers for each channel index in
+            tx_enabled_channels.
+
+            args: type=numpy.array or list of numpy.array
+                An array or list of arrays when more than one transmit channel
+                is enabled containing samples from a channel or set of channels.
+                Data must be complex when using a complex data device.
+        """
         if self.__txbuf and self.tx_cyclic_buffer:
             raise Exception(
                 "TX buffer has been submitted in cyclic mode. \
