@@ -32,6 +32,7 @@ In many cases, it can be useful to continuously transmit a signal over and over,
  sdr.tx_cyclic_buffer = True
  # Send data cyclically
  sdr.tx(iq)
+
 At this point, the transmitter will keep transmitting the create sinusoid indefinitely until the buffer is destroyed or the *sdr* object destructor is called. Once data is pushed to hardware with a cyclic buffer the buffer must be manually destroyed or an error will occur if more data push. To update the buffer use the **tx_destroy_buffer** method before passing a new vector to the **tx** method.
 
 Members
