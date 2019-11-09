@@ -41,8 +41,6 @@ from adi.dds import dds
 
 
 class phy(attribute):
-    _ctrl: iio.Device = []
-
     def __del__(self):
         self._ctrl = []
 
