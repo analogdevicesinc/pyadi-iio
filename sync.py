@@ -6,14 +6,32 @@ from scipy import signal
 import numpy as np
 import scipy.io as sio
 
-def measure_phase_and_delay(chan0, chan1):
-    cor = np.correlate(chan0, chan1, "full")
-    i = np.argmax(cor)
-    m = cor[i]
-    sample_delay = len(chan0) - i - 1
-    return (np.angle(m)*180/np.pi, sample_delay)
+def measure_phase_and_delay(chan0, chan1, window=None):
+    assert len(chan0) == len(chan1)
+    if window==None:
+        window = len(chan0)
+    phases = []
+    delays = []
+    indx = 0
+    sections = len(chan0)//window
+    for sec in range(sections):
+        chan0_tmp = chan0[indx:indx+window]
+        chan1_tmp = chan1[indx:indx+window]
+        indx = indx+window+1
+        cor = np.correlate(chan0_tmp, chan1_tmp, "full")
+        # plt.plot(np.real(cor))
+        # plt.plot(np.imag(cor))
+        # plt.plot(np.abs(cor))
+        # plt.show()
+        i = np.argmax(np.abs(cor))
+        m = cor[i]
+        sample_delay = len(chan0_tmp) - i - 1
+        phases.append(np.angle(m)*180/np.pi)
+        delays.append(sample_delay)
+    return (np.mean(phases), np.mean(delays))
 
 def measure_phase(chan0, chan1):
+    assert len(chan0) == len(chan1)
     errorV = np.angle(chan0 * np.conj(chan1)) * 180 / np.pi
     error = np.mean(errorV)
     return error
@@ -174,13 +192,21 @@ for r in range(1):
     print("Same Chip (B)",measure_phase(y[0], y[1]))
     print("Across Chip (B)",measure_phase(y[0], y[2]))
     print("Across Chip (AB)",measure_phase(x[0], y[0]))
+    # print("###########")
     (p, s) = measure_phase_and_delay(x[0], x[1])
-    print("###########")
-    print("Sample delay: ",s)
-    print("Phase delay: ",p)
+    print("Same Chip Sample delay: ",s)
+    (p, s) = measure_phase_and_delay(x[0], x[2])
+    print("Across Chip Sample delay: ",s)
+    (p, s) = measure_phase_and_delay(y[0], y[1])
+    print("Same Chip (B) Sample delay: ",s)
+    (p, s) = measure_phase_and_delay(y[0], y[2])
+    print("Across Chip (B) Sample delay: ",s)
+    (p, s) = measure_phase_and_delay(x[0], y[0])
+    print("Across Chip (AB) Sample delay: ",s)
+    # print("Phase delay: ",p)
     print("------------------")
 
-    
+
     plt.plot(x[0], label='1')
     plt.plot(x[2], label='2')
     plt.plot(y[0], label='3')
