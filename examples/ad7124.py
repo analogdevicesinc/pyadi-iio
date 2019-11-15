@@ -31,23 +31,26 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad9361 import *
+import adi
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import signal
 
-from adi.ad9371 import *
+# Set up AD7124
+ad7124 = adi.ad7124(uri="ip:192.168.1.171")
 
-from adi.adrv9009 import *
+sc = ad7124.scale_available
+ad7124.channel[0].scale = sc[2]
 
-from adi.adrv9009_zu11eg import *
+ad7124.sampling_frequency = 19200 # sets sample rate for all channels
+ad7124.rx_enabled_channels = [ 0 ] # currently only one enabled channel buffer works at a time
+ad7124.rx_buffer_size = 100
 
-from adi.ad9680 import *
+data = ad7124.rx()
+raw = ad7124.channel[0].raw
+volt_data = ad7124.to_volts(0, data)
+volt_raw = ad7124.to_volts(0, data[0])
 
-from adi.ad9144 import *
+print(data)
 
-from adi.daq2 import *
 
-from adi.adis16460 import *
-
-from adi.ad7124 import *
-
-__version__ = "0.0.3"
-name = "Analog Devices Hardware Interfaces"
