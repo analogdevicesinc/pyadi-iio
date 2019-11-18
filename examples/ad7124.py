@@ -41,6 +41,7 @@ ad7124 = adi.ad7124(uri="ip:192.168.1.171")
 
 sc = ad7124.scale_available
 ad7124.channel[0].scale = sc[2]
+ad7124._rx_output_type='SI'
 
 ad7124.sampling_frequency = 19200 # sets sample rate for all channels
 ad7124.rx_enabled_channels = [ 0 ] # currently only one enabled channel buffer works at a time
