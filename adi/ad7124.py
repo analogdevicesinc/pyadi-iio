@@ -62,7 +62,7 @@ class ad7124(rx, context_manager):
 
     @property
     def sampling_frequency(self):
-        # only works with the same frequency for all channels
+        """Sets sampling frequency of the AD7124"""
         return self._get_iio_attr(self.channel[0].name, "sampling_frequency", False)
 
     @sampling_frequency.setter
@@ -72,19 +72,23 @@ class ad7124(rx, context_manager):
 
     @property
     def scale_available(self):
+        """Provides all available scale(gain) settings for the AD7124 channels"""
         return self._get_iio_attr(self.channel[0].name, "scale_available", False)
 
     class _channel(attribute):
+        """AD7124 channel"""
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
 
         @property
         def raw(self):
+            """AD7124 channel raw value"""
             return self._get_iio_attr(self.name, "raw", False)
 
         @property
         def scale(self):
+            """AD7124 channel scale(gain)"""
             return float(self._get_iio_attr_str(self.name, "scale", False))
 
         @scale.setter
@@ -95,6 +99,7 @@ class ad7124(rx, context_manager):
 
         @property
         def offset(self):
+            """AD7124 channel offset"""
             return self._get_iio_attr(self.name, "offset", False)
 
         @offset.setter
@@ -102,6 +107,7 @@ class ad7124(rx, context_manager):
             self._get_iio_attr(self.name, "offset", False, value)
 
     def to_volts(self, index, val):
+        """Converts raw value to SI"""
         _scale = self.channel[index].scale
         _offset = self.channel[index].offset
 
