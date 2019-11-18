@@ -45,6 +45,7 @@ class ad7124(rx, context_manager):
     _complex_data = False
     channel = []
     _device_name = ""
+    _rx_data_type = np.int32
 
     def __init__(self, uri=""):
 
