@@ -46,8 +46,9 @@ ad7124.sampling_frequency = 19200 # sets sample rate for all channels
 ad7124.rx_enabled_channels = [ 0 ] # currently only one enabled channel buffer works at a time
 ad7124.rx_buffer_size = 100
 
-data = ad7124.rx()
 raw = ad7124.channel[0].raw
+data = ad7124.rx()
+
 volt_data = ad7124.to_volts(0, data)
 volt_raw = ad7124.to_volts(0, data[0])
 
