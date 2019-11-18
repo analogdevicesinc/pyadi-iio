@@ -69,7 +69,6 @@ class ad7124(rx, context_manager):
     def sampling_frequency(self, value):
         for ch in self.channel:
             self._set_iio_attr(ch.name, "sampling_frequency", False, value)
-        return 1
 
     @property
     def scale_available(self):
@@ -90,7 +89,7 @@ class ad7124(rx, context_manager):
 
         @scale.setter
         def scale(self, value):
-            return self._set_iio_attr(
+            self._set_iio_attr(
                 self.name, "scale", False, str(Decimal(value).real)
             )
 
@@ -100,7 +99,7 @@ class ad7124(rx, context_manager):
 
         @offset.setter
         def offset(self, value):
-            return self._get_iio_attr(self.name, "offset", False, value)
+            self._get_iio_attr(self.name, "offset", False, value)
 
     def to_volts(self, index, val):
         _scale = self.channel[index].scale
