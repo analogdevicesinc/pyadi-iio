@@ -61,12 +61,12 @@ class ad7124(rx, context_manager):
         rx.__init__(self)
 
     @property
-    def sampling_frequency(self):
+    def sample_rate(self):
         """Sets sampling frequency of the AD7124"""
         return self._get_iio_attr(self.channel[0].name, "sampling_frequency", False)
 
-    @sampling_frequency.setter
-    def sampling_frequency(self, value):
+    @sample_rate.setter
+    def sample_rate(self, value):
         for ch in self.channel:
             self._set_iio_attr(ch.name, "sampling_frequency", False, value)
 
