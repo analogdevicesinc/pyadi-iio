@@ -54,7 +54,7 @@ class rx(attribute):
     _rx_channel_names: List[str] = []
     _complex_data = False
     _rx_data_type = np.int16
-    _rx_output_type = 'raw'
+    rx_output_type = 'raw'
     __rxbuf = None
 
     def __init__(self, rx_buffer_size=1024):
@@ -142,10 +142,10 @@ class rx(attribute):
         sig = []
         stride = len(self.rx_enabled_channels)
 
-        if self._rx_output_type=='raw':
+        if self.rx_output_type=='raw':
             for c in range(stride):
                 sig.append(x[c::stride])
-        elif self._rx_output_type=='SI':
+        elif self.rx_output_type=='SI':
             rx_scale = []
             rx_offset = []
             for i in self.rx_enabled_channels:
