@@ -31,49 +31,92 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from decimal import Decimal
+
 import numpy as np
+from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
 
-class adis16460(rx, context_manager):
-    """ ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor """
+class ad7124(rx, context_manager):
+    """ AD7124 ADC """
 
     _complex_data = False
-    _rx_channel_names = [
-        "anglvel_x",
-        "anglvel_y",
-        "anglvel_z",
-        "accel_x",
-        "accel_y",
-        "accel_z",
-    ]
+    channel = []
     _device_name = ""
-    _rx_data_type = '>i4'
+    _rx_data_type = np.int32
 
     def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
+        self._ctrl = self._ctx.find_device("ad7124-8")
+        self._rxadc = self._ctx.find_device("ad7124-8")
 
-        self._ctrl = self._ctx.find_device("adis16460")
-        self._rxadc = self._ctx.find_device("adis16460")
+        # dynamically get channels
+        for ch in self._ctrl._channels:
+            name = ch._id
+            self._rx_channel_names.append(name)
+            self.channel.append(self._channel(self._ctrl, name))
         rx.__init__(self)
-        self.rx_buffer_size = 16  # Make default buffer smaller
 
     @property
     def sample_rate(self):
-        """sample_rate: Sample rate in samples per second"""
-        return self._get_iio_dev_attr("sampling_frequency")
+        """Sets sampling frequency of the AD7124"""
+        return self._get_iio_attr(self.channel[0].name, "sampling_frequency", False)
 
     @sample_rate.setter
     def sample_rate(self, value):
-        self._set_iio_dev_attr_str("sampling_frequency", value)
+        for ch in self.channel:
+            self._set_iio_attr(ch.name, "sampling_frequency", False, value)
 
     @property
-    def current_timestamp_clock(self):
-        """current_timestamp_clock: Source clock for timestamps"""
-        return self._get_iio_dev_attr("current_timestamp_clock")
+    def scale_available(self):
+        """Provides all available scale(gain) settings for the AD7124 channels"""
+        return self._get_iio_attr(self.channel[0].name, "scale_available", False)
 
-    @current_timestamp_clock.setter
-    def current_timestamp_clock(self, value):
-        self._set_iio_dev_attr_str("current_timestamp_clock", value)
+    class _channel(attribute):
+        """AD7124 channel"""
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property
+        def raw(self):
+            """AD7124 channel raw value"""
+            return self._get_iio_attr(self.name, "raw", False)
+
+        @property
+        def scale(self):
+            """AD7124 channel scale(gain)"""
+            return float(self._get_iio_attr_str(self.name, "scale", False))
+
+        @scale.setter
+        def scale(self, value):
+            self._set_iio_attr(
+                self.name, "scale", False, str(Decimal(value).real)
+            )
+
+        @property
+        def offset(self):
+            """AD7124 channel offset"""
+            return self._get_iio_attr(self.name, "offset", False)
+
+        @offset.setter
+        def offset(self, value):
+            self._get_iio_attr(self.name, "offset", False, value)
+
+    def to_volts(self, index, val):
+        """Converts raw value to SI"""
+        _scale = self.channel[index].scale
+        _offset = self.channel[index].offset
+
+        ret = None
+
+        if isinstance(val, np.int16):
+            ret = val * _scale + _offset
+
+        if isinstance(val, np.ndarray):
+            ret = [x * _scale + _offset for x in val]
+
+        return ret
