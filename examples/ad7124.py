@@ -31,49 +31,28 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import adi
+import matplotlib.pyplot as plt
 import numpy as np
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from scipy import signal
+
+# Set up AD7124
+ad7124 = adi.ad7124(uri="ip:192.168.1.171")
+
+sc = ad7124.scale_available
+ad7124.channel[0].scale = sc[2]
+ad7124.rx_output_type='SI'
+
+ad7124.sample_rate = 19200 # sets sample rate for all channels
+ad7124.rx_enabled_channels = [ 0 ] # currently only one enabled channel buffer works at a time
+ad7124.rx_buffer_size = 100
+
+raw = ad7124.channel[0].raw
+data = ad7124.rx()
+
+volt_data = ad7124.to_volts(0, data)
+volt_raw = ad7124.to_volts(0, data[0])
+
+print(data)
 
 
-class adis16460(rx, context_manager):
-    """ ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor """
-
-    _complex_data = False
-    _rx_channel_names = [
-        "anglvel_x",
-        "anglvel_y",
-        "anglvel_z",
-        "accel_x",
-        "accel_y",
-        "accel_z",
-    ]
-    _device_name = ""
-    _rx_data_type = '>i4'
-
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._ctrl = self._ctx.find_device("adis16460")
-        self._rxadc = self._ctx.find_device("adis16460")
-        rx.__init__(self)
-        self.rx_buffer_size = 16  # Make default buffer smaller
-
-    @property
-    def sample_rate(self):
-        """sample_rate: Sample rate in samples per second"""
-        return self._get_iio_dev_attr("sampling_frequency")
-
-    @sample_rate.setter
-    def sample_rate(self, value):
-        self._set_iio_dev_attr_str("sampling_frequency", value)
-
-    @property
-    def current_timestamp_clock(self):
-        """current_timestamp_clock: Source clock for timestamps"""
-        return self._get_iio_dev_attr("current_timestamp_clock")
-
-    @current_timestamp_clock.setter
-    def current_timestamp_clock(self, value):
-        self._set_iio_dev_attr_str("current_timestamp_clock", value)
