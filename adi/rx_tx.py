@@ -150,13 +150,21 @@ class rx(attribute):
             rx_offset = []
             for i in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[i])
-                scale = self._get_iio_attr(self._rx_channel_names[i], "scale", False)
-                offset = self._get_iio_attr(self._rx_channel_names[i], "offset", False)
+                if "scale" in v.attrs:
+                    scale = self._get_iio_attr(self._rx_channel_names[i], "scale", False)
+                else:
+                    scale = 1.0
+
+                if "offset" in v.attrs:
+                    offset = self._get_iio_attr(self._rx_channel_names[i], "offset", False)
+                else:
+                    offset=0.0
                 rx_scale.append(scale)
                 rx_offset.append(offset)
 
             for c in range(stride):
-                sig.append(x[c::stride] * rx_scale[c] + rx_offset[c])
+                raw=x[c::stride]
+                sig.append( raw * rx_scale[c] + rx_offset[c])
         else:
             raise Exception(
                 "rx_output_type undefined"
