@@ -88,7 +88,7 @@ class FMComms5(ad9361):
 
     @property
     def loopback_chip_b(self):
-        """loopback: Set loopback mode. Options are:
+        """loopback_chip_b: Set loopback mode of second transceiver. Options are:
         0 (Disable), 1 (Digital), 2 (RF)"""
         return self._get_iio_debug_attr("loopback", self._ctrl_b)
 
@@ -98,8 +98,8 @@ class FMComms5(ad9361):
 
     @property
     def gain_control_mode_chip_b(self):
-        """gain_control_mode: Mode of receive path AGC. Options are:
-        slow_attack, fast_attack, manual"""
+        """gain_control_mode_chip_b: Mode of receive path AGC of second transceiver.
+        Options are: slow_attack, fast_attack, manual"""
         return self._get_iio_attr("voltage0", "gain_control_mode", False, self._ctrl_b)
 
     @gain_control_mode_chip_b.setter
@@ -108,8 +108,8 @@ class FMComms5(ad9361):
 
     @property
     def rx_hardwaregain_chip_b(self):
-        """rx_hardwaregain: Gain applied to RX path. Only applicable when
-        gain_control_mode is set to 'manual'"""
+        """rx_hardwaregain_chip_b: Gain applied to RX path of second transceiver.
+        Only applicable when gain_control_mode is set to 'manual'"""
         return self._get_iio_attr("voltage0", "hardwaregain", False, self._ctrl_b)
 
     @rx_hardwaregain_chip_b.setter
@@ -119,7 +119,7 @@ class FMComms5(ad9361):
 
     @property
     def tx_hardwaregain_chip_b(self):
-        """tx_hardwaregain: Attenuation applied to TX path"""
+        """tx_hardwaregain: Attenuation applied to TX path of second transceiver"""
         return self._get_iio_attr("voltage0", "hardwaregain", True, self._ctrl_b)
 
     @tx_hardwaregain_chip_b.setter
@@ -128,7 +128,8 @@ class FMComms5(ad9361):
 
     @property
     def rx_rf_bandwidth_chip_b(self):
-        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path"""
+        """rx_rf_bandwidth_chip_b: Bandwidth of front-end analog filter of RX path
+         of second transceiver"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", False, self._ctrl_b)
 
     @rx_rf_bandwidth_chip_b.setter
@@ -137,7 +138,8 @@ class FMComms5(ad9361):
 
     @property
     def tx_rf_bandwidth_chip_b(self):
-        """tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path"""
+        """tx_rf_bandwidth_chip_b: Bandwidth of front-end analog filter of TX path
+         of second transceiver"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", True, self._ctrl_b)
 
     @tx_rf_bandwidth_chip_b.setter
@@ -146,7 +148,8 @@ class FMComms5(ad9361):
 
     @property
     def sample_rate(self):
-        """sample_rate: Sample rate RX and TX paths in samples per second"""
+        """sample_rate: Sample rate RX and TX paths in samples per second of 
+        second transceiver"""
         return self._get_iio_attr("voltage0", "sampling_frequency", False)
 
     @sample_rate.setter
@@ -223,7 +226,7 @@ class FMComms5(ad9361):
 
     @property
     def rx_lo_chip_b(self):
-        """rx_lo: Carrier frequency of RX path"""
+        """rx_lo_chip_b: Carrier frequency of RX path of second transceiver"""
         return self._get_iio_attr("altvoltage0", "frequency", True, self._ctrl_b)
 
     @rx_lo_chip_b.setter
@@ -232,7 +235,7 @@ class FMComms5(ad9361):
 
     @property
     def tx_lo_chip_b(self):
-        """tx_lo: Carrier frequency of TX path"""
+        """tx_lo_chip_b: Carrier frequency of TX path of second transceiver"""
         return self._get_iio_attr("altvoltage1", "frequency", True, self._ctrl_b)
 
     @tx_lo_chip_b.setter
