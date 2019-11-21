@@ -106,6 +106,10 @@ class rx(attribute):
         self._rxadc = []
 
     def _rx_init_channels(self):
+        for m in self._rx_channel_names:
+            v = self._rxadc.find_channel(m)
+            v.enabled = False
+
         if self._complex_data:
             for m in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[m * 2])
