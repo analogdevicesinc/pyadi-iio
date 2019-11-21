@@ -38,21 +38,19 @@ from scipy import signal
 
 # Set up AD7124
 ad7124 = adi.ad7124(uri="ip:192.168.1.171")
+ad_channel = 0
 
 sc = ad7124.scale_available
-ad7124.channel[0].scale = sc[2]
-ad7124.rx_output_type = "SI"
 
-# sets sample rate for all channels
-ad7124.sample_rate = 19200
-# currently only one enabled channel buffer works at a time
-ad7124.rx_enabled_channels = [0]
+ad7124.channel[ad_channel].scale = sc[-1] # get highest range
+ad7124.rx_output_type='SI'
+
+ad7124.sample_rate = 19200 # sets sample rate for all channels
+ad7124.rx_enabled_channels = [ ad_channel ] # currently only one enabled channel buffer works at a time
 ad7124.rx_buffer_size = 100
 
 raw = ad7124.channel[0].raw
 data = ad7124.rx()
 
-volt_data = ad7124.to_volts(0, data)
-volt_raw = ad7124.to_volts(0, data[0])
-
 print(data)
+
