@@ -1,0 +1,4 @@
+ADIS16460
+===================
+.. automodule:: adi.adis16460
+   :members:
