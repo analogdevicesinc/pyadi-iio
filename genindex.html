@@ -82,6 +82,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="guides/quick.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/connectivity.html">Connectivity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="devices/index.html">Supported Devices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a></li>
@@ -152,6 +153,7 @@
 
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
@@ -165,6 +167,8 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/ad7124.html#adi.ad7124.ad7124">ad7124 (class in adi.ad7124)</a>
+</li>
       <li><a href="devices/daq2.html#adi.ad9144.ad9144">ad9144 (class in adi.ad9144)</a>
 </li>
       <li><a href="devices/ad9361.html#adi.ad9361.ad9361">ad9361 (class in adi.ad9361)</a>
@@ -177,6 +181,8 @@
 </li>
       <li><a href="devices/daq2.html#adi.ad9680.ad9680">ad9680 (class in adi.ad9680)</a>
 </li>
+      <li><a href="devices/ad7124.html#module-adi.ad7124">adi.ad7124 (module)</a>
+</li>
       <li><a href="devices/daq2.html#module-adi.ad9144">adi.ad9144 (module)</a>
 </li>
       <li><a href="devices/ad9361.html#module-adi.ad9361">adi.ad9361 (module)</a>
@@ -186,6 +192,8 @@
       <li><a href="devices/ad9371.html#module-adi.ad9371">adi.ad9371 (module)</a>
 </li>
       <li><a href="devices/daq2.html#module-adi.ad9680">adi.ad9680 (module)</a>
+</li>
+      <li><a href="devices/adis16460.html#module-adi.adis16460">adi.adis16460 (module)</a>
 </li>
       <li><a href="devices/adrv9009.html#module-adi.adrv9009">adi.adrv9009 (module)</a>
 </li>
@@ -197,9 +205,19 @@
 </li>
       <li><a href="buffers/index.html#module-adi.rx_tx">adi.rx_tx (module)</a>
 </li>
+      <li><a href="devices/adis16460.html#adi.adis16460.adis16460">adis16460 (class in adi.adis16460)</a>
+</li>
       <li><a href="devices/adrv9009.html#adi.adrv9009.adrv9009">adrv9009 (class in adi.adrv9009)</a>
 </li>
       <li><a href="devices/adrv9009.html#adi.adrv9009_zu11eg.adrv9009_zu11eg">adrv9009_zu11eg (class in adi.adrv9009_zu11eg)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/adis16460.html#adi.adis16460.adis16460.current_timestamp_clock">current_timestamp_clock() (adi.adis16460.adis16460 property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -329,14 +347,20 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="devices/daq2.html#adi.ad9144.ad9144.sample_rate">sample_rate() (adi.ad9144.ad9144 property)</a>
+      <li><a href="devices/ad7124.html#adi.ad7124.ad7124.sample_rate">sample_rate() (adi.ad7124.ad7124 property)</a>
 
       <ul>
+        <li><a href="devices/daq2.html#adi.ad9144.ad9144.sample_rate">(adi.ad9144.ad9144 property)</a>
+</li>
         <li><a href="devices/ad9361.html#adi.ad9361.ad9361.sample_rate">(adi.ad9361.ad9361 property)</a>
+</li>
+        <li><a href="devices/adis16460.html#adi.adis16460.adis16460.sample_rate">(adi.adis16460.adis16460 property)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/ad7124.html#adi.ad7124.ad7124.scale_available">scale_available() (adi.ad7124.ad7124 property)</a>
+</li>
       <li><a href="devices/ad9371.html#adi.ad9371.ad9371.sn_lo">sn_lo() (adi.ad9371.ad9371 property)</a>
 </li>
   </ul></td>
@@ -346,6 +370,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/daq2.html#adi.ad9680.ad9680.test_mode">test_mode() (adi.ad9680.ad9680 property)</a>
+</li>
+      <li><a href="devices/ad7124.html#adi.ad7124.ad7124.to_volts">to_volts() (adi.ad7124.ad7124 method)</a>
 </li>
       <li><a href="devices/adrv9009.html#adi.adrv9009.adrv9009.trx_lo">trx_lo() (adi.adrv9009.adrv9009 property)</a>
 </li>
@@ -367,10 +393,10 @@
       </ul></li>
       <li><a href="devices/adrv9009.html#adi.adrv9009.adrv9009.tx_hardwaregain_chan0">tx_hardwaregain_chan0() (adi.adrv9009.adrv9009 property)</a>
 </li>
-      <li><a href="devices/adrv9009.html#adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_hardwaregain_chan0_chip_b">tx_hardwaregain_chan0_chip_b() (adi.adrv9009_zu11eg.adrv9009_zu11eg property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/adrv9009.html#adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_hardwaregain_chan0_chip_b">tx_hardwaregain_chan0_chip_b() (adi.adrv9009_zu11eg.adrv9009_zu11eg property)</a>
+</li>
       <li><a href="devices/adrv9009.html#adi.adrv9009.adrv9009.tx_hardwaregain_chan1">tx_hardwaregain_chan1() (adi.adrv9009.adrv9009 property)</a>
 </li>
       <li><a href="devices/adrv9009.html#adi.adrv9009_zu11eg.adrv9009_zu11eg.tx_hardwaregain_chan1_chip_b">tx_hardwaregain_chan1_chip_b() (adi.adrv9009_zu11eg.adrv9009_zu11eg property)</a>

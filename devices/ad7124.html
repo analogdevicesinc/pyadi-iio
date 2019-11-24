@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DAQ2 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>AD7124 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ADIS16460" href="adis16460.html" />
-    <link rel="prev" title="ADRV9009" href="adrv9009.html" /> 
+    <link rel="next" title="Buffers" href="../buffers/index.html" />
+    <link rel="prev" title="ADIS16460" href="adis16460.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,11 +88,11 @@
 <li class="toctree-l2"><a class="reference internal" href="ad9361.html">AD936X Family</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ad9371.html">AD9371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adrv9009.html">ADRV9009</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DAQ2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-adi.ad9680">AD9680</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-adi.ad9144">AD9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daq2.html">DAQ2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daq2.html#module-adi.ad9680">AD9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daq2.html#module-adi.ad9144">AD9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adis16460.html">ADIS16460</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ad7124.html">AD7124</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">AD7124</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -144,13 +144,13 @@
         
           <li><a href="index.html">Supported Devices</a> &raquo;</li>
         
-      <li>DAQ2</li>
+      <li>AD7124</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/devices/daq2.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/devices/ad7124.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -163,49 +163,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="daq2">
-<h1>DAQ2<a class="headerlink" href="#daq2" title="Permalink to this headline">¶</a></h1>
-</div>
-<div class="section" id="module-adi.ad9680">
-<span id="ad9680"></span><h1>AD9680<a class="headerlink" href="#module-adi.ad9680" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-adi.ad7124">
+<span id="ad7124"></span><h1>AD7124<a class="headerlink" href="#module-adi.ad7124" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="adi.ad9680.ad9680">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad9680.</code><code class="sig-name descname">ad9680</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9680.ad9680" title="Permalink to this definition">¶</a></dt>
-<dd><p>AD9680 High-Speed ADC</p>
+<dt id="adi.ad7124.ad7124">
+<em class="property">class </em><code class="sig-prename descclassname">adi.ad7124.</code><code class="sig-name descname">ad7124</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124" title="Permalink to this definition">¶</a></dt>
+<dd><p>AD7124 ADC</p>
 <dl class="method">
-<dt id="adi.ad9680.ad9680.test_mode">
-<em class="property">property </em><code class="sig-name descname">test_mode</code><a class="headerlink" href="#adi.ad9680.ad9680.test_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>test_mode: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
+<dt id="adi.ad7124.ad7124.sample_rate">
+<em class="property">property </em><code class="sig-name descname">sample_rate</code><a class="headerlink" href="#adi.ad7124.ad7124.sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets sampling frequency of the AD7124</p>
 </dd></dl>
 
-</dd></dl>
-
-<span class="target" id="module-adi.daq2"></span><dl class="class">
-<dt id="adi.daq2.DAQ2">
-<em class="property">class </em><code class="sig-prename descclassname">adi.daq2.</code><code class="sig-name descname">DAQ2</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.daq2.DAQ2" title="Permalink to this definition">¶</a></dt>
-<dd><p>DAQ2 High-Speed Data Aquistion Device</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-adi.ad9144">
-<span id="ad9144"></span><h1>AD9144<a class="headerlink" href="#module-adi.ad9144" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="adi.ad9144.ad9144">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad9144.</code><code class="sig-name descname">ad9144</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9144.ad9144" title="Permalink to this definition">¶</a></dt>
-<dd><p>AD9144 High-Speed DAC</p>
 <dl class="method">
-<dt id="adi.ad9144.ad9144.sample_rate">
-<em class="property">property </em><code class="sig-name descname">sample_rate</code><a class="headerlink" href="#adi.ad9144.ad9144.sample_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>sample_rate: Sample rate RX and TX paths in samples per second</p>
+<dt id="adi.ad7124.ad7124.scale_available">
+<em class="property">property </em><code class="sig-name descname">scale_available</code><a class="headerlink" href="#adi.ad7124.ad7124.scale_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides all available scale(gain) settings for the AD7124 channels</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="adi.ad7124.ad7124.to_volts">
+<code class="sig-name descname">to_volts</code><span class="sig-paren">(</span><em class="sig-param">index</em>, <em class="sig-param">val</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124.to_volts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts raw value to SI</p>
 </dd></dl>
 
-<dl class="class">
-<dt>
-<em class="property">class </em><code class="sig-prename descclassname">adi.daq2.</code><code class="sig-name descname">DAQ2</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span></dt>
-<dd><p>DAQ2 High-Speed Data Aquistion Device</p>
 </dd></dl>
 
 </div>
@@ -218,10 +199,10 @@ off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="adis16460.html" class="btn btn-neutral float-right" title="ADIS16460" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../buffers/index.html" class="btn btn-neutral float-right" title="Buffers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="adrv9009.html" class="btn btn-neutral float-left" title="ADRV9009" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="adis16460.html" class="btn btn-neutral float-left" title="ADIS16460" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

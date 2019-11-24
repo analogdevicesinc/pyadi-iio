@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Supported Devices &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>Connectivity &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="AD936X Family" href="ad9361.html" />
-    <link rel="prev" title="Connectivity" href="../guides/connectivity.html" /> 
+    <link rel="next" title="Supported Devices" href="../devices/index.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -81,20 +81,10 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Supported Devices</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ad9361.html">AD936X Family</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ad9371.html">AD9371</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adrv9009.html">ADRV9009</a></li>
-<li class="toctree-l2"><a class="reference internal" href="daq2.html">DAQ2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="daq2.html#module-adi.ad9680">AD9680</a></li>
-<li class="toctree-l2"><a class="reference internal" href="daq2.html#module-adi.ad9144">AD9144</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adis16460.html">ADIS16460</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ad7124.html">AD7124</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devices/index.html">Supported Devices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
 </ul>
@@ -142,13 +132,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Supported Devices</li>
+      <li>Connectivity</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/devices/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/guides/connectivity.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -161,19 +151,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="supported-devices">
-<h1>Supported Devices<a class="headerlink" href="#supported-devices" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ad9361.html">AD936X Family</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ad9371.html">AD9371</a></li>
-<li class="toctree-l1"><a class="reference internal" href="adrv9009.html">ADRV9009</a></li>
-<li class="toctree-l1"><a class="reference internal" href="daq2.html">DAQ2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="daq2.html#module-adi.ad9680">AD9680</a></li>
-<li class="toctree-l1"><a class="reference internal" href="daq2.html#module-adi.ad9144">AD9144</a></li>
-<li class="toctree-l1"><a class="reference internal" href="adis16460.html">ADIS16460</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ad7124.html">AD7124</a></li>
-</ul>
+  <div class="section" id="connectivity">
+<h1>Connectivity<a class="headerlink" href="#connectivity" title="Permalink to this headline">¶</a></h1>
+<p>Since pyadi-iio is built on top of libiio, it can use the different <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio">backends</a> which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="c1"># Create a device interface</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
+<span class="c1"># Read back properties from hardware</span>
+<span class="k">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 
@@ -185,10 +173,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ad9361.html" class="btn btn-neutral float-right" title="AD936X Family" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../devices/index.html" class="btn btn-neutral float-right" title="Supported Devices" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../guides/connectivity.html" class="btn btn-neutral float-left" title="Connectivity" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
