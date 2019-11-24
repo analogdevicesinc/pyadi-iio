@@ -17,7 +17,7 @@ data = sdr.rx()
 ```
 
 ### Currently supported hardware
-- AD936X (Pluto, FMComms, ADRV936X)
+- AD936X (Pluto, FMComms2/3/4, ADRV936X)
 - AD9371
 - ADRV9009
 - ADRV9009-ZU11EG
@@ -25,6 +25,7 @@ data = sdr.rx()
 - AD9680
 - DAQ2
 - ADIS16460
+- AD7124
 
 ### Dependencies
 - [libiio with python bindings](https://wiki.analog.com/resources/tools-software/linux-software/libiio)
