@@ -51,5 +51,5 @@ from adi.adis16460 import *
 
 from adi.ad7124 import *
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 name = "Analog Devices Hardware Interfaces"
