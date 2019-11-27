@@ -163,16 +163,16 @@
 <span class="n">sdr</span><span class="o">.</span><span class="n">rx_rf_bandwidth</span> <span class="o">=</span> <span class="mi">4000000</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">rx_lo</span> <span class="o">=</span> <span class="mi">2000000000</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_lo</span> <span class="o">=</span> <span class="mi">2000000000</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode</span> <span class="o">=</span> <span class="s2">&quot;slow_attack&quot;</span>
 <span class="c1"># Read back properties from hardware</span>
-<span class="k">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Send data to a device and receiving data from a device</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
