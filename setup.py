@@ -29,6 +29,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/analogdevicesinc/pyadi-iio",
     packages=setuptools.find_packages(),
+    python_requires='>=3.6',
     install_requires=["numpy"],
     classifiers=[
         "Programming Language :: Python :: 3",
