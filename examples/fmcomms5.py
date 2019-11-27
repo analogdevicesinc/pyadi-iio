@@ -31,25 +31,56 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad9361 import *
+import time
 
-from adi.fmcomms5 import *
+import adi
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import signal
 
-from adi.ad9371 import *
+# Create radio
+sdr = adi.FMComms5(uri="ip:analog")
 
-from adi.adrv9009 import *
+# Configure properties
+sdr.rx_lo = 2000000000
+sdr.rx_lo_chip_b = 2000000000
+sdr.tx_lo = 2000000000
+sdr.tx_lo_chip_b = 2000000000
+sdr.tx_cyclic_buffer = True
+sdr.tx_hardwaregain = -30
+sdr.tx_hardwaregain_chip_b = -30
+sdr.gain_control_mode = "slow_attack"
+sdr.gain_control_mode_chip_b = "slow_attack"
+sdr.sample_rate = 1000000
 
-from adi.adrv9009_zu11eg import *
+# Set single DDS tone for TX on one transmitter
+sdr.dds_single_tone(30000, 0.9)
 
-from adi.ad9680 import *
+# Read properties
+fs = int(sdr.sample_rate)
+print("RX LO %s" % (sdr.rx_lo))
 
-from adi.ad9144 import *
+# Collect data
+for r in range(20):
+    x = sdr.rx()
+    f, Pxx_den = signal.periodogram(x[0], fs)
+    plt.clf()
+    plt.semilogy(f, Pxx_den)
 
-from adi.daq2 import *
+    f, Pxx_den = signal.periodogram(x[1], fs)
+    plt.semilogy(f, Pxx_den)
 
-from adi.adis16460 import *
+    f, Pxx_den = signal.periodogram(x[2], fs)
+    plt.semilogy(f, Pxx_den)
 
-from adi.ad7124 import *
+    f, Pxx_den = signal.periodogram(x[3], fs)
+    plt.semilogy(f, Pxx_den)
 
-__version__ = "0.0.3"
-name = "Analog Devices Hardware Interfaces"
+    plt.ylim([1e-7, 1e2])
+    plt.xlabel("frequency [Hz]")
+    plt.ylabel("PSD [V**2/Hz]")
+    plt.draw()
+    plt.pause(0.05)
+    time.sleep(0.1)
+
+plt.show()
