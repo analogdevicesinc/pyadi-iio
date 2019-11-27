@@ -33,7 +33,7 @@ jobs:
     deploy:
       - provider: pages
         verbose: true
-        cleanup: false
+        skip_cleanup: true
         keep_history: true
         on:
           branch: master
@@ -42,7 +42,7 @@ jobs:
         committer_from_gh: true
       - provider: pages
         verbose: true
-        cleanup: false
+        skip_cleanup: true
         keep_history: true
         on:
           tags: true

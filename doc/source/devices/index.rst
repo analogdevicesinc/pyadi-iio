@@ -8,3 +8,5 @@ Supported Devices
    ad9371
    adrv9009
    daq2
+   adis16460
+   ad7124
