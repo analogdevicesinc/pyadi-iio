@@ -40,6 +40,9 @@ class dds(attribute):
         this allows for two complex tones to be generated per complex channel.
     """
 
+    # Set to True if there are multiple DDS drivers (FMComms5)
+    _split_cores = False
+
     def __init__(self):
         self.dds_frequencies = np.zeros(self._num_tx_channels * 2)
         self.dds_scales = np.zeros(self._num_tx_channels * 2)
@@ -47,8 +50,14 @@ class dds(attribute):
         self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
 
     def __update_dds(self, attr, value):
+        split_cores_indx = 0
         for indx in range(len(self._txdac.channels)):
             chan = self._txdac.find_channel("altvoltage" + str(indx), True)
+            if not chan and self._split_cores:
+                chan = self._txdac_chip_b.find_channel(
+                    "altvoltage" + str(split_cores_indx), True
+                )
+                split_cores_indx = split_cores_indx + 1
             if not chan:
                 return
             if attr == "raw":
@@ -59,8 +68,14 @@ class dds(attribute):
 
     def _read_dds(self, attr):
         values = []
+        split_cores_indx = 0
         for indx in range(len(self._txdac.channels)):
             chan = self._txdac.find_channel("altvoltage" + str(indx), True)
+            if not chan and self._split_cores:
+                chan = self._txdac_chip_b.find_channel(
+                    "altvoltage" + str(split_cores_indx), True
+                )
+                split_cores_indx = split_cores_indx + 1
             if not chan:
                 continue
             values.append(chan.attrs[attr].value)
