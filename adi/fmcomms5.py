@@ -35,10 +35,12 @@ from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
 from adi.ad9361 import ad9361
 
+
 class FMComms5(ad9361):
     """ FMComms5 Dual Transceiver Evaluation Board """
 
     _complex_data = True
+    _split_cores = True
     _rx_channel_names = [
         "voltage0",
         "voltage1",
@@ -67,6 +69,8 @@ class FMComms5(ad9361):
         self._ctrl_b = self._ctx.find_device("ad9361-phy-B")
         self._rxadc = self._ctx.find_device("cf-ad9361-A")
         self._txdac = self._ctx.find_device("cf-ad9361-dds-core-lpc")
+        self._rxadc_chip_b = self._ctx.find_device("cf-ad9361-B")
+        self._txdac_chip_b = self._ctx.find_device("cf-ad9361-dds-core-B")
         rx_tx.__init__(self)
 
     @property
@@ -148,7 +152,7 @@ class FMComms5(ad9361):
 
     @property
     def sample_rate(self):
-        """sample_rate: Sample rate RX and TX paths in samples per second of 
+        """sample_rate: Sample rate RX and TX paths in samples per second of
         second transceiver"""
         return self._get_iio_attr("voltage0", "sampling_frequency", False)
 
@@ -159,6 +163,7 @@ class FMComms5(ad9361):
                 "Error: Does not currently support sample rates below 521e3"
             )
 
+        # fmt: off
         # The following was converted from ad9361_set_bb_rate() in libad9361-iio
         if (rate <= 20000000):
             dec = 4
@@ -186,13 +191,16 @@ class FMComms5(ad9361):
             fir = [-58,0,83,-0,-127,0,185,-0,-262,0,361,-0,-488,0,648,-0,-853,0,1117,-0,-1466,0,1954,-0,-2689,0,3960,-0,-6825,0,20818,32767,
                 20818,0,-6825,-0,3960,0,-2689,-0,1954,0,-1466,-0,1117,0,-853,-0,648,0,-488,-0,361,0,-262,-0,185,0,-127,-0,83,0,-58,0]
             taps = 64
-            
+        # fmt: on
+
         current_rate = self._get_iio_attr("voltage0", "sampling_frequency", False)
 
         if self._get_iio_attr("out", "voltage_filter_fir_en", False):
             if current_rate <= (25000000 // 12):
                 self._set_iio_attr("voltage0", "sampling_frequency", False, 3000000)
-                self._set_iio_attr("voltage0", "sampling_frequency", False, 3000000, self._ctrl_b)
+                self._set_iio_attr(
+                    "voltage0", "sampling_frequency", False, 3000000, self._ctrl_b
+                )
             self._set_iio_attr("out", "voltage_filter_fir_en", False, 0)
             self._set_iio_attr("out", "voltage_filter_fir_en", False, 0, self._ctrl_b)
 
@@ -213,14 +221,20 @@ class FMComms5(ad9361):
             max_rate = (dacrate // txrate) * 16
             if max_rate < taps:
                 self._set_iio_attr("voltage0", "sampling_frequency", False, 3000000)
-                self._set_iio_attr("voltage0", "sampling_frequency", False, 3000000, self._ctrl_b)
+                self._set_iio_attr(
+                    "voltage0", "sampling_frequency", False, 3000000, self._ctrl_b
+                )
             self._set_iio_attr("out", "voltage_filter_fir_en", False, 1)
             self._set_iio_attr("out", "voltage_filter_fir_en", False, 1, self._ctrl_b)
             self._set_iio_attr("voltage0", "sampling_frequency", False, rate)
-            self._set_iio_attr("voltage0", "sampling_frequency", False, rate, self._ctrl_b)
+            self._set_iio_attr(
+                "voltage0", "sampling_frequency", False, rate, self._ctrl_b
+            )
         else:
             self._set_iio_attr("voltage0", "sampling_frequency", False, rate)
-            self._set_iio_attr("voltage0", "sampling_frequency", False, rate, self._ctrl_b)
+            self._set_iio_attr(
+                "voltage0", "sampling_frequency", False, rate, self._ctrl_b
+            )
             self._set_iio_attr("out", "voltage_filter_fir_en", False, 1)
             self._set_iio_attr("out", "voltage_filter_fir_en", False, 1, self._ctrl_b)
 
