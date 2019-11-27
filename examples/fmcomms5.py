@@ -39,7 +39,7 @@ import numpy as np
 from scipy import signal
 
 # Create radio
-sdr = adi.FMComms5(uri='ip:analog')
+sdr = adi.FMComms5(uri="ip:analog")
 
 # Configure properties
 sdr.rx_lo = 2000000000
@@ -51,6 +51,10 @@ sdr.tx_hardwaregain = -30
 sdr.tx_hardwaregain_chip_b = -30
 sdr.gain_control_mode = "slow_attack"
 sdr.gain_control_mode_chip_b = "slow_attack"
+sdr.sample_rate = 1000000
+
+# Set single DDS tone for TX on one transmitter
+sdr.dds_single_tone(30000, 0.9)
 
 # Read properties
 fs = int(sdr.sample_rate)
