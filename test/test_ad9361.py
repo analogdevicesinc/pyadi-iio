@@ -92,6 +92,25 @@ class TestAD9361(unittest.TestCase):
         s = np.sum(np.abs(data))
         del sdr
         self.assertGreater(s, 0, "check non-zero data")
+    
+    @unittest.skipUnless(check_dev("packrf"), "AD9361SDR not attached")
+    def testAD9361GainControlCheck(self):
+        # See if we can get non-zero data from AD9361
+        global URI
+        sdr = ad9361(uri=URI)
+        sdr.gain_control_mode = "manual"
+        current_gain = sdr.rx_hardwaregain
+        if current_gain==73:
+            next_gain = 70
+        else:
+            next_gain = current_gain + 1
+        sdr.rx_hardwaregain = next_gain
+        updated_gain = sdr.rx_hardwaregain
+        del sdr
+        self.assertNotEqual(current_gain, next_gain, "Gain not updating")
+        self.assertNotEqual(current_gain, updated_gain, "Gain not updating")
+        self.assertEqual(next_gain, updated_gain, "Gain not updating")
+
 
     @unittest.skipUnless(check_dev("packrf"), "AD9361SDR not attached")
     def testAD9361DAC(self):

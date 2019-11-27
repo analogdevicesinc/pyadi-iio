@@ -58,7 +58,7 @@ class ad9371(rx_tx, context_manager):
     def gain_control_mode(self):
         """gain_control_mode: Mode of receive path AGC. Options are:
         automatic, hybrid, manual"""
-        return self._get_iio_attr("voltage0", "gain_control_mode", False)
+        return self._get_iio_attr_str("voltage0", "gain_control_mode", False)
 
     @gain_control_mode.setter
     def gain_control_mode(self, value):
