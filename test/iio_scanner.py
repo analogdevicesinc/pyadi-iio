@@ -158,10 +158,13 @@ def scan_all():
     return boards
 
 
-def find_device(name):
+def find_device(names):
+    if not isinstance(names, list):
+        names = [names]
     for b in scan_all():
-        if b.name == name:
-            return (True, b)
+        for name in names:
+            if b.name == name:
+                return (True, b)
     return (False, [])
 
 
