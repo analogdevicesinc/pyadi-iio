@@ -49,7 +49,8 @@ sdr.tx_hardwaregain_chan0 = -10
 sdr.tx_hardwaregain_chan1 = -10
 print(sdr.tx_hardwaregain_chan0)
 print(sdr.tx_hardwaregain_chan1)
-sdr.gain_control_mode = "slow_attack"
+sdr.gain_control_mode_chan0 = "slow_attack"
+sdr.gain_control_mode_chan1 = "slow_attack"
 
 # Read properties
 print("TRX LO %s" % (sdr.trx_lo))
