@@ -54,7 +54,7 @@ class rx(attribute):
     _rx_channel_names: List[str] = []
     _complex_data = False
     _rx_data_type = np.int16
-    rx_output_type = 'raw'
+    rx_output_type = "raw"
     __rxbuf = None
 
     def __init__(self, rx_buffer_size=1024):
@@ -142,33 +142,35 @@ class rx(attribute):
         sig = []
         stride = len(self.rx_enabled_channels)
 
-        if self.rx_output_type=='raw':
+        if self.rx_output_type == "raw":
             for c in range(stride):
                 sig.append(x[c::stride])
-        elif self.rx_output_type=='SI':
+        elif self.rx_output_type == "SI":
             rx_scale = []
             rx_offset = []
             for i in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[i])
                 if "scale" in v.attrs:
-                    scale = self._get_iio_attr(self._rx_channel_names[i], "scale", False)
+                    scale = self._get_iio_attr(
+                        self._rx_channel_names[i], "scale", False
+                    )
                 else:
                     scale = 1.0
 
                 if "offset" in v.attrs:
-                    offset = self._get_iio_attr(self._rx_channel_names[i], "offset", False)
+                    offset = self._get_iio_attr(
+                        self._rx_channel_names[i], "offset", False
+                    )
                 else:
-                    offset=0.0
+                    offset = 0.0
                 rx_scale.append(scale)
                 rx_offset.append(offset)
 
             for c in range(stride):
-                raw=x[c::stride]
-                sig.append( raw * rx_scale[c] + rx_offset[c])
+                raw = x[c::stride]
+                sig.append(raw * rx_scale[c] + rx_offset[c])
         else:
-            raise Exception(
-                "rx_output_type undefined"
-            )
+            raise Exception("rx_output_type undefined")
 
         # Don't return list if a single channel
         if len(self.rx_enabled_channels) == 1:
