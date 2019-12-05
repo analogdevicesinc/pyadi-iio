@@ -196,6 +196,19 @@
 <em class="property">class </em><code class="sig-prename descclassname">adi.rx_tx.</code><code class="sig-name descname">rx</code><span class="sig-paren">(</span><em class="sig-param">rx_buffer_size=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Buffer handling for receive devices</p>
 <dl class="method">
+<dt id="adi.rx_tx.rx.rx">
+<code class="sig-name descname">rx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx.rx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive data from hardware buffers for each channel index in
+rx_enabled_channels.</p>
+<dl class="simple">
+<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
+is enabled containing samples from a channel or set of channels.
+Data will be complex when using a complex data device.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="adi.rx_tx.rx.rx_buffer_size">
 <em class="property">property </em><code class="sig-name descname">rx_buffer_size</code><a class="headerlink" href="#adi.rx_tx.rx.rx_buffer_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_buffer_size: Size of receive buffer in samples</p>
@@ -224,6 +237,19 @@
 <dt id="adi.rx_tx.tx">
 <em class="property">class </em><code class="sig-prename descclassname">adi.rx_tx.</code><code class="sig-name descname">tx</code><span class="sig-paren">(</span><em class="sig-param">tx_cyclic_buffer=False</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Buffer handling for transmit devices</p>
+<dl class="method">
+<dt id="adi.rx_tx.tx.tx">
+<code class="sig-name descname">tx</code><span class="sig-paren">(</span><em class="sig-param">data_np</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmit data to hardware buffers for each channel index in
+tx_enabled_channels.</p>
+<dl class="simple">
+<dt>args: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one transmit channel
+is enabled containing samples from a channel or set of channels.
+Data must be complex when using a complex data device.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="adi.rx_tx.tx.tx_cyclic_buffer">
 <em class="property">property </em><code class="sig-name descname">tx_cyclic_buffer</code><a class="headerlink" href="#adi.rx_tx.tx.tx_cyclic_buffer" title="Permalink to this definition">¶</a></dt>
