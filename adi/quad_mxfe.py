@@ -41,6 +41,7 @@ class QuadMxFE(rx_tx, context_manager):
     _complex_data = True
     _rx_channel_names = []
     _tx_channel_names = []
+    _dds_channel_names = []
     _device_name = ""
 
     def __init__(self, uri=""):
@@ -70,6 +71,8 @@ class QuadMxFE(rx_tx, context_manager):
         for ch in self._txdac.channels:
             if ch.scan_element:
                 self._tx_channel_names.append(ch._id)
+            else:
+                self._dds_channel_names.append(ch._id)
 
         rx_tx.__init__(self)
 
@@ -113,10 +116,10 @@ class QuadMxFE(rx_tx, context_manager):
     @property
     def external_hardwaregain(self):
         """external_hardwaregain: Attenuation applied to TX path"""
-        return self._get_iio_attr("voltage0", "hardwaregain", False)
+        return self._get_iio_attr("voltage0", "hardwaregain", True, self._attenuator)
 
     @external_hardwaregain.setter
     def external_hardwaregain(self, value):
         self._set_iio_attr(
-            "voltage0", "hardwaregain", False, value, _ctrl=self._attenuator
+            "voltage0", "hardwaregain", True, value, _ctrl=self._attenuator
         )
