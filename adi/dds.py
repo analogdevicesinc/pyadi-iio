@@ -42,11 +42,33 @@ class dds(attribute):
 
     # Set to True if there are multiple DDS drivers (FMComms5)
     _split_cores = False
+    _dds_channel_names = None
+
+    def __init__(self):
+        if self._dds_channel_names:
+            N = len(self._dds_channel_names)
+            self.dds_frequencies = np.zeros(N)
+            self.dds_scales = np.zeros(N)
+            self.dds_phases = np.zeros(N)
+            self.dds_enabled = np.zeros(N, dtype=bool)
+        else:
+            self.dds_frequencies = np.zeros(self._num_tx_channels * 2)
+            self.dds_scales = np.zeros(self._num_tx_channels * 2)
+            self.dds_phases = np.zeros(self._num_tx_channels * 2)
+            self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
+
 
     def __update_dds(self, attr, value):
         split_cores_indx = 0
-        for indx in range(len(self._txdac.channels)):
-            chan = self._txdac.find_channel("altvoltage" + str(indx), True)
+        if self._dds_channel_names:
+            N = len(self._dds_channel_names)
+        else:
+            N = len(self._txdac.channels)
+        for indx in range(N):
+            if self._dds_channel_names:
+                chan = self._txdac.find_channel(self._dds_channel_names[indx], True)
+            else:
+                chan = self._txdac.find_channel("altvoltage" + str(indx), True)
             if not chan and self._split_cores:
                 chan = self._txdac_chip_b.find_channel(
                     "altvoltage" + str(split_cores_indx), True
@@ -63,8 +85,15 @@ class dds(attribute):
     def _read_dds(self, attr):
         values = []
         split_cores_indx = 0
-        for indx in range(len(self._txdac.channels)):
-            chan = self._txdac.find_channel("altvoltage" + str(indx), True)
+        if self._dds_channel_names:
+            N = len(self._dds_channel_names)
+        else:
+            N = len(self._txdac.channels)
+        for indx in range(N):
+            if self._dds_channel_names:
+                chan = self._txdac.find_channel(self._dds_channel_names[indx], True)
+            else:
+                chan = self._txdac.find_channel("altvoltage" + str(indx), True)
             if not chan and self._split_cores:
                 chan = self._txdac_chip_b.find_channel(
                     "altvoltage" + str(split_cores_indx), True
@@ -79,7 +108,11 @@ class dds(attribute):
         return values
 
     def disable_dds(self):
-        self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
+        if self._dds_channel_names:
+            N = len(self._dds_channel_names)
+            self.dds_enabled = np.zeros(N, dtype=bool)
+        else:
+            self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
 
     @property
     def dds_frequencies(self):
