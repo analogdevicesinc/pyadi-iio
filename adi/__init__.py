@@ -51,7 +51,7 @@ from adi.adis16460 import *
 
 from adi.ad7124 import *
 
-from adi.QuadMxFE import *
+from adi.quad_mxfe import *
 
 __version__ = "0.0.5"
 name = "Analog Devices Hardware Interfaces"
