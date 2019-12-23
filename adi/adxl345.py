@@ -32,91 +32,70 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from decimal import Decimal
-from typing import Any
 
 import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
 
 
-class ad7124(rx, context_manager):
-    """ AD7124 ADC """
+class adxl345(context_manager, attribute):
+    """ ADXL345 3-axis accelerometer """
 
-    _complex_data = False
-    channel: Any = []
-    _device_name = ""
+    channel = [3]
+    _device_name = "adxl345"
     _rx_data_type = np.int32
 
     def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("ad7124-8")
-        self._rxadc = self._ctx.find_device("ad7124-8")
-
-        # dynamically get channels
-        for ch in self._ctrl._channels:
-            name = ch._id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-        rx.__init__(self)
+        self._ctrl = self._ctx.find_device("adxl345")
+        self.accel_x = self._channel(self._ctrl, "accel_x")
+        self.accel_y = self._channel(self._ctrl, "accel_y")
+        self.accel_z = self._channel(self._ctrl, "accel_z")
 
     @property
-    def sample_rate(self):
-        """Sets sampling frequency of the AD7124"""
-        return self._get_iio_attr(self.channel[0].name, "sampling_frequency", False)
-
-    @sample_rate.setter
-    def sample_rate(self, value):
-        for ch in self.channel:
-            self._set_iio_attr(ch.name, "sampling_frequency", False, value)
-
-    @property
-    def scale_available(self):
-        """Provides all available scale(gain) settings for the AD7124 channels"""
-        return self._get_iio_attr(self.channel[0].name, "scale_available", False)
+    def sampling_frequency_available(self):
+        """Provides all available sampling frequency settings for the ADXL345 channels"""
+        return self._get_iio_dev_attr("sampling_frequency_available")
 
     class _channel(attribute):
-        """AD7124 channel"""
+        """ADXL345 channel"""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
 
         @property
+        def calibbias(self):
+            """ADXL345 channel offset"""
+            return self._get_iio_attr(self.name, "calibbias", False)
+
+        @calibbias.setter
+        def calibbias(self, value):
+            self._set_iio_attr(self.name, "calibbias", False, value)
+
+        @property
         def raw(self):
-            """AD7124 channel raw value"""
+            """ADXL345 channel raw value"""
             return self._get_iio_attr(self.name, "raw", False)
 
         @property
-        def scale(self):
-            """AD7124 channel scale(gain)"""
-            return float(self._get_iio_attr_str(self.name, "scale", False))
+        def sampling_frequency(self):
+            """ADXL345 channel sampling frequency"""
+            return float(self._get_iio_attr_str(self.name, "sampling_frequency", False))
 
-        @scale.setter
-        def scale(self, value):
-            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
+        @sampling_frequency.setter
+        def sampling_frequency(self, value):
+            self._set_iio_attr(
+                self.name, "sampling_frequency", False, str(Decimal(value).real)
+            )
 
         @property
-        def offset(self):
-            """AD7124 channel offset"""
-            return self._get_iio_attr(self.name, "offset", False)
+        def scale(self):
+            """ADXL345 channel scale(gain)"""
+            return float(self._get_iio_attr_str(self.name, "scale", False))
 
-        @offset.setter
-        def offset(self, value):
-            self._get_iio_attr(self.name, "offset", False, value)
-
-    def to_volts(self, index, val):
-        """Converts raw value to SI"""
-        _scale = self.channel[index].scale
-        _offset = self.channel[index].offset
-
-        ret = None
-
-        if isinstance(val, np.int16):
-            ret = val * _scale + _offset
-
-        if isinstance(val, np.ndarray):
-            ret = [x * _scale + _offset for x in val]
-
+    def to_g(self, ch):
+        _scale = ch.scale
+        ret = (ch.raw * _scale) / 9.81
         return ret
