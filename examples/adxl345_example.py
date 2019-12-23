@@ -31,27 +31,42 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad9361 import *
+import time
 
-from adi.fmcomms5 import *
+import adi
 
-from adi.ad9371 import *
+# Set up ADXL345
+myacc = adi.adxl345(uri="ip:192.168.1.232")
 
-from adi.adrv9009 import *
+sfa = myacc.sampling_frequency_available
+print("Sampling frequencies available:")
+print(sfa)
 
-from adi.adrv9009_zu11eg import *
+xg = myacc.to_g(myacc.accel_x)
+yg = myacc.to_g(myacc.accel_y)
+zg = myacc.to_g(myacc.accel_z)
 
-from adi.ad9680 import *
+print("X acceleration: " + str(xg))
+print("Y acceleration: " + str(yg))
+print("Z acceleration: " + str(zg))
 
-from adi.ad9144 import *
+xsf = myacc.accel_x.sampling_frequency
+ysf = myacc.accel_y.sampling_frequency
+zsf = myacc.accel_z.sampling_frequency
 
-from adi.daq2 import *
+print("X sample rate: " + str(xsf))
+print("Y sample rate: " + str(ysf))
+print("Z sample rate: " + str(zsf))
+print("Setting only Z channel sample rate to 12.5 sps...")
+myacc.accel_z.sampling_frequency = 12.5
+time.sleep(0.25)
+xsf = myacc.accel_x.sampling_frequency
+ysf = myacc.accel_y.sampling_frequency
+zsf = myacc.accel_z.sampling_frequency
 
-from adi.adis16460 import *
+print("new X sample rate: " + str(xsf))
+print("new Y sample rate: " + str(ysf))
+print("new Z sample rate: " + str(zsf))
+myacc.accel_z.sampling_frequency = 100.0  # Set back to default
 
-from adi.ad7124 import *
-
-from adi.adxl345 import *
-
-__version__ = "0.0.5"
-name = "Analog Devices Hardware Interfaces"
+del myacc
