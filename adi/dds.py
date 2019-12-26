@@ -43,12 +43,6 @@ class dds(attribute):
     # Set to True if there are multiple DDS drivers (FMComms5)
     _split_cores = False
 
-    def __init__(self):
-        self.dds_frequencies = np.zeros(self._num_tx_channels * 2)
-        self.dds_scales = np.zeros(self._num_tx_channels * 2)
-        self.dds_phases = np.zeros(self._num_tx_channels * 2)
-        self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
-
     def __update_dds(self, attr, value):
         split_cores_indx = 0
         for indx in range(len(self._txdac.channels)):
