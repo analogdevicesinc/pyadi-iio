@@ -52,14 +52,51 @@ class fmclidar1 (ad5627, ad9094, phy):
     def rx(self):
         """Read the buffers for all the enabled channels, except Channel4 which should
         be all zeroes and not relevant for the user.
-        """
-        ret = []
-        for channel in super().rx():
-            cast_channel = channel.astype(np.int8)
-            # Ignore Channel4 and add everything else.
-            if not np.all(cast_channel==0):
-                ret.append(cast_channel)
-        return ret
+        """               
+        # Wait until we've seen all the paterns (4 in total), meaning all the 16
+        # channels have been updated, before returning.
+        all_channels = [[] for i in range(16)]
+        first  = False
+        second = False
+        third  = False
+        fourth = False
+
+        # Channel4 (index 2, in this case) holds the channel pattern. This is
+        # used to figure out the actual physical channel that the reading comes
+        # from. Keep refilling the buffers until all 16 channels have been read.
+        while ((first == False) or (second == False) or
+               (third == False) or (fourth == False)):
+            rx = super().rx()
+            pattern = rx[2][0]      # One entry from one Channel4 sample
+            if (pattern == -256 and first == False):
+                all_channels[0] = rx[0].astype(np.int8)
+                all_channels[1] = rx[1].astype(np.int8)
+                all_channels[2] = rx[3].astype(np.int8)
+                all_channels[3] = rx[4].astype(np.int8)
+                first = True
+                
+            if (pattern == -171 and second == False):
+                all_channels[4] = rx[0].astype(np.int8)
+                all_channels[5] = rx[1].astype(np.int8)
+                all_channels[6] = rx[3].astype(np.int8)
+                all_channels[7] = rx[4].astype(np.int8)
+                second = True
+
+            if (pattern == -86 and third == False):
+                all_channels[8] = rx[0].astype(np.int8)
+                all_channels[9] = rx[1].astype(np.int8)
+                all_channels[10] = rx[3].astype(np.int8)
+                all_channels[11] = rx[4].astype(np.int8)
+                third = True
+
+            if (pattern == -1 and fourth == False):
+                all_channels[12] = rx[0].astype(np.int8)
+                all_channels[13] = rx[1].astype(np.int8)
+                all_channels[14] = rx[3].astype(np.int8)
+                all_channels[15] = rx[4].astype(np.int8)
+                fourth = True
+
+        return all_channels
 
     def laser_enable(self):
         """Enable the laser."""
@@ -156,10 +193,11 @@ class fmclidar1 (ad5627, ad9094, phy):
 
     def set_all_iio_attrs_to_default_values(self):
         """Set all the Lidar attributes to reasonable default values."""
-        self.channel_sequencer_enable_disable = 0
+        self.channel_sequencer_enable_disable = 1
         self.channel_sequencer_opmode = "auto"
         self.channel_sequencer_order_manual_mode = "0 0 0 0"
         self.channel_sequencer_order_auto_mode = "0 1 2 3"
+        self.rx_enabled_channels = [0, 1, 2, 3, 4]
         self.sequencer_pulse_delay = 248
         self.laser_enable()
         self.laser_frequency = 50000

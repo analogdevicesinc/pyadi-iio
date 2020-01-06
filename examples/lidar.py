@@ -58,6 +58,8 @@ meas_distance_mean = 0
 mean_samples_count = 10
 mean_samples_sum   = 0
 
+distances = []
+
 def cont_capt():
     """Continuously request samples after Start is pressed."""
     if button_txt.get() == "Start":
@@ -95,7 +97,8 @@ def single_capt():
         else:
             dist = mean_samples_sum / 10
             distance_txt.set("{} cm".format(int(dist)))
-            distance_plot.bar(single_capt.sample_number, dist, color='#1e90ff')
+            distances.append(dist)
+            distance_plot.plot(distances, color='#1e90ff')
             mean_samples_sum = 0
             mean_samples_count = 10
             single_capt.sample_number += 1
@@ -113,11 +116,11 @@ def single_capt():
     a.set_ylabel('ADC Codes')
     a.grid(True)
 
-    # a.plot(x[trigger_point-10:trigger_point+int(pw.get()) +10],label="Raw Data")
-    a.plot(x,label="Recv")
-    a.plot(y,label="Drv")
+    for index, s in enumerate(samples, start=0):
+        a.plot(s, label="Channel" + str(index))
+        
     try:
-        a.plot(top_edge,x[top_edge], 'X')
+        a.plot(top_edge, x[top_edge], 'X')
         a.plot(bottom_edge, x[bottom_edge], 'X')
         a.axvline(x=TIME_OFFSET, color='green', label="Cal Offset")
         a.axvline(x=mid_point, color='red', label='Mid point')
@@ -135,7 +138,6 @@ def config_board():
         try:
             lidar = fmclidar1(uri="ip:" + ip_addr.get())
             lidar.rx_buffer_size = 1024
-            lidar.rx_enabled_channels = [0, 1, 4]
             lidar.laser_enable()
         except:
             txt1.insert(tk.END, 'No device found.\n')
