@@ -145,7 +145,7 @@ class fmclidar1 (ad5627, ad9094, phy):
     @property
     def channel_sequencer_opmode(self):
         """Get the channel sequencer operation mode."""
-        return self._get_iio_dev_attr("sequencer_mode")
+        return self._get_iio_dev_attr_str("sequencer_mode")
 
     @channel_sequencer_opmode.setter
     def channel_sequencer_opmode(self, mode):
