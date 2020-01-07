@@ -54,11 +54,13 @@ import tkinter as tk
 from scipy import signal
 
 lidar = None                    # Lidar context
-meas_distance_mean = 0
-mean_samples_count = 10
-mean_samples_sum   = 0
-
-distances = []
+NSAMPLES = 10
+# Keep count of distance measurements for each sample and for all channels.
+# One channel is used for the reference signal.
+distances = [[] for i in range(16)] 
+meas_distance_mean = [0 for i in range (16)]
+mean_samples_count = [NSAMPLES for i in range (16)]
+mean_samples_sum   = [0 for i in range (16)]
 
 def cont_capt():
     """Continuously request samples after Start is pressed."""
@@ -76,48 +78,51 @@ def single_capt():
         single_capt.sample_number = 0
     
     samples = lidar.rx()
-    x = samples[0]
-    y = samples[1]
-    
-    try:
+    ref = samples[12]           # Reference signal
+    # Adjust to zero
+    ref = ref - np.mean(ref)
+        
+    for i, s in enumerate(samples, start=0):
+        if i == 0 or i == 4 or i == 8 or i == 12: # Ignore reference signals
+            continue
         global meas_distance_mean
         global mean_samples_count
         global mean_samples_sum
-        # Adjust to zero before correlating
-        corr_lidar = np.correlate(x - np.mean(x), y, mode='full')
-        lag_lidar = corr_lidar.argmax() - (len(y) - 1)
+        
+        corr_lidar = np.correlate(ref, s, mode='full')
+        lag_lidar = corr_lidar.argmax() - (len(s) - 1)
         # Adjust for system offset
         lag_lidar -= 8
         meas_distance = abs(lag_lidar*15)           
         alpha = 1
-        meas_distance_mean = (meas_distance * alpha) + (meas_distance_mean * (1-alpha))
-        if mean_samples_count > 0:
-            mean_samples_sum += meas_distance_mean
-            mean_samples_count -= 1
+        meas_distance_mean[i] = (meas_distance * alpha) + (meas_distance_mean[i] * (1-alpha))
+        if mean_samples_count[i] > 0:
+            mean_samples_sum[i] += meas_distance_mean[i]
+            mean_samples_count[i] -= 1
         else:
-            dist = mean_samples_sum / 10
+            dist = mean_samples_sum[i] / NSAMPLES
             distance_txt.set("{} cm".format(int(dist)))
-            distances.append(dist)
-            distance_plot.plot(distances, color='#1e90ff')
-            mean_samples_sum = 0
-            mean_samples_count = 10
-            single_capt.sample_number += 1
-        if single_capt.sample_number > MAX_SAMPLES:
-            distance_plot.set_xlim([single_capt.sample_number - MAX_SAMPLES,
-                                    single_capt.sample_number])
-    except:
-        txt1.insert(tk.END, 'No Pulse Detected!\n')
+            distances[i].append(dist)
+            for j, d in enumerate(distances, start=0):
+                if len(d) == 0:
+                    continue                
+                distance_plot.plot(d, label="Measurement" + str(j), linewidth=1)
+            mean_samples_sum[i] = 0
+            mean_samples_count[i] = NSAMPLES
+            # single_capt.sample_number += 1
+            # if single_capt.sample_number > MAX_SAMPLES:
+            #     distance_plot.set_xlim([single_capt.sample_number - MAX_SAMPLES,
+            #                             single_capt.sample_number])
 
     # Plot data
-    txt1.insert(tk.END, 'ploting raw data...\n')
     a.cla()
     a.set_title('Pulse Shape')
     a.set_xlabel('Time (ns)')
     a.set_ylabel('ADC Codes')
     a.grid(True)
 
-    for index, s in enumerate(samples, start=0):
-        a.plot(s, label="Channel" + str(index))
+    for i, s in enumerate(samples, start=0):                
+        a.plot(s, label="Channel" + str(i))
         
     try:
         a.plot(top_edge, x[top_edge], 'X')
@@ -258,6 +263,7 @@ a.set_xlabel('Time (ns)')
 a.set_ylabel('ADC Codes')
 
 distance_plot = fig.add_subplot(212)
+distance_plot.grid(True)
 distance_plot.set_title('Distance Approximation')
 distance_plot.set_xlabel('Sample number')
 distance_plot.set_ylabel('Distance (cm)')
