@@ -54,6 +54,7 @@ class rx(attribute):
     _rx_channel_names: List[str] = []
     _complex_data = False
     _rx_data_type = np.int16
+    _rx_data_si_type = np.int16
     rx_output_type = "raw"
     __rxbuf = None
     _rx_unbuffered_data = False
@@ -119,8 +120,9 @@ class rx(attribute):
 
     def __rx_unbuffered_data(self):
         x = []
+        t = self._rx_data_si_type if self.rx_output_type == "SI" else self._rx_data_type
         for l in range(len(self.rx_enabled_channels)):
-            x.append(np.zeros(self.rx_buffer_size, dtype=self._rx_data_type))
+            x.append(np.zeros(self.rx_buffer_size, dtype=t))
 
         # Get scalers first
         if self.rx_output_type == "SI":
