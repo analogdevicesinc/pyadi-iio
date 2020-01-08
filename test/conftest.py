@@ -13,9 +13,18 @@ import test.rf.spec as spec
 import sys
 import time
 
+ignore_skip = False
 dev_checked = False
 found_dev = False
 URI = "ip:analog"
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--error_on_filter",
+        action="store_true",
+        help="When device is not found generate error not skip",
+    )
 
 
 class BaseTestHelpers:
@@ -26,9 +35,11 @@ class BaseTestHelpers:
     def check_skip(self):
         # Check if calling function is in skip list
         calling_func = sys._getframe(1).f_code.co_name
-        if (calling_func in self.skipped_tests) or (not self.check_dev()):
-            # pytest.xfail()
-            pytest.skip("Skipping")
+        global ignore_skip
+        if not ignore_skip:
+            if (calling_func in self.skipped_tests) or (not self.check_dev()):
+                # pytest.xfail()
+                pytest.skip("Skipping")
 
     def check_dev(self):
         # Must use globals since each test is a separate class instance
@@ -294,56 +305,70 @@ def gain_check(
     rssi3 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_b)
     rssi4 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_b)
 
-    if channel==0:
+    if channel == 0:
         rssi = rssi1
-    if channel==1:
+    if channel == 1:
         rssi = rssi2
-    if channel==2:
+    if channel == 2:
         rssi = rssi3
-    if channel==3:
+    if channel == 3:
         rssi = rssi4
-    print(rssi1,rssi2,rssi3,rssi4)
+    print(rssi1, rssi2, rssi3, rssi4)
     assert rssi >= min_rssi
     assert rssi <= max_rssi
+
+
+def command_line_config(request):
+    if request.config.getoption("--error_on_filter"):
+        global ignore_skip
+        ignore_skip = True
 
 
 #########################################
 # Fixtures
 @pytest.fixture()
-def test_attribute_single_value():
+def test_attribute_single_value(request):
+    command_line_config(request)
     yield attribute_single_value
 
 
 @pytest.fixture()
-def test_attribute_single_value_str():
+def test_attribute_single_value_str(request):
+    command_line_config(request)
     yield attribute_single_value_str
 
 
 @pytest.fixture()
-def test_attribute_single_value_pow2():
+def test_attribute_single_value_pow2(request):
+    command_line_config(request)
     yield attribute_single_value_pow2
 
 
 @pytest.fixture()
-def test_dma_rx():
+def test_dma_rx(request):
+    command_line_config(request)
     yield dma_rx
 
 
 @pytest.fixture()
-def test_dma_loopback():
+def test_dma_loopback(request):
+    command_line_config(request)
     yield dma_loopback
 
 
 @pytest.fixture()
-def test_sfdr():
+def test_sfdr(request):
+    command_line_config(request)
     yield t_sfdr
 
 
 @pytest.fixture()
-def test_iq_loopback():
+def test_iq_loopback(request):
+    command_line_config(request)
     yield iq_loopback
 
 
 @pytest.fixture()
-def test_gain_check():
+def test_gain_check(request):
+    command_line_config(request)
     yield gain_check
