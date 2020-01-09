@@ -34,7 +34,6 @@
 from adi.ad5627 import ad5627
 from adi.ad9094 import ad9094
 from adi.rx_tx import phy
-import numpy as np
 
 class fmclidar1 (ad5627, ad9094, phy):
     """ LiDAR """
