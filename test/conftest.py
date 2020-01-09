@@ -16,6 +16,7 @@ import time
 ignore_skip = False
 dev_checked = False
 found_dev = False
+found_devices = {}
 URI = "ip:analog"
 
 
@@ -43,14 +44,29 @@ class BaseTestHelpers:
 
     def check_dev(self):
         # Must use globals since each test is a separate class instance
-        global dev_checked
-        global found_dev
+        global found_devices
+        if not isinstance(self.devicename, list):
+            ds = [self.devicename]
+        else:
+            ds = self.devicename
+        dev_checked = False
+        found_dev = False
+        for d in ds:
+            if d in found_devices:
+                found_dev = found_devices[d]
+                dev_checked = True
+                break
+
         if not dev_checked:
             found_dev, board = iio_scanner.find_device(self.devicename)
             if found_dev:
+                found_devices[board.name] = found_dev
                 global URI
                 URI = board.uri
-            dev_checked = True
+            else:
+                for d in ds:
+                    found_devices[d] = False
+
         return found_dev
 
     def dev_interface(self, val, attr, tol):
