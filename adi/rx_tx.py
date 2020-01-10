@@ -121,7 +121,7 @@ class rx(attribute):
     def __rx_unbuffered_data(self):
         x = []
         t = self._rx_data_si_type if self.rx_output_type == "SI" else self._rx_data_type
-        for l in range(len(self.rx_enabled_channels)):
+        for _ in range(len(self.rx_enabled_channels)):
             x.append(np.zeros(self.rx_buffer_size, dtype=t))
 
         # Get scalers first
