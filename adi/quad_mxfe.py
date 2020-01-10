@@ -34,6 +34,42 @@
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
 
+# Class descriptors
+class channel_multi:
+    def __init__(self, attr, dev, channel_names, output):
+        self._dev = dev
+        self._attr = attr
+        self._channel_names = channel_names
+        self._output = output
+
+    def __get__(self, instance, owner):
+        return instance._get_iio_attr_vec(
+            self._channel_names, self._attr, self._output, self._dev
+        )
+
+    def __set__(self, instance, values):
+        instance._set_iio_attr_int_vec(
+            self._channel_names, self._attr, self._output, values, self._dev
+        )
+
+
+class channel_single:
+    def __init__(self, attr, dev, channel_names, input):
+        self._dev = dev
+        self._attr = attr
+        self._channel_names = channel_names
+        self._output = output
+
+    def __get__(self, instance, owner):
+        return instance._get_iio_attr_str(
+            self._channel_names, self._attr, self._output, self._dev
+        )
+
+    def __set__(self, instance, value):
+        instance._set_iio_attr(
+            self._channel_names, self._attr, self._output, value, self._dev
+        )
+
 
 class QuadMxFE(rx_tx, context_manager):
     """ Quad AD9081 Mixed-Signal Front End (MxFE) Evaluation Board """
@@ -41,6 +77,9 @@ class QuadMxFE(rx_tx, context_manager):
     _complex_data = True
     _rx_channel_names = []
     _tx_channel_names = []
+    _rx_dds_channel_names = []
+    _tx_main_channel_names = []
+    _tx_chan_channel_names = []
     _dds_channel_names = []
     _device_name = ""
 
@@ -63,55 +102,130 @@ class QuadMxFE(rx_tx, context_manager):
         self._pll1 = self._ctx.find_device("adf4371-1")
         self._pll2 = self._ctx.find_device("adf4371-2")
         self._pll3 = self._ctx.find_device("adf4371-3")
+        adcs = [self._rxadc0, self._rxadc1, self._rxadc2, self._rxadc3]
 
-        # dynamically get channels
+        # Dynamically get channels
+        dds_chans = []
         for ch in self._rxadc.channels:
+            if (ch._id.find('voltage_q') != -1):
+                continue
             if ch.scan_element:
                 self._rx_channel_names.append(ch._id)
+            else:
+                self._rx_dds_channel_names.append(ch._id)
+                dds_chans.append(ch)
         for ch in self._txdac.channels:
+            if (ch._id.find('voltage_q') != -1):
+                continue
             if ch.scan_element:
                 self._tx_channel_names.append(ch._id)
             else:
                 self._dds_channel_names.append(ch._id)
 
-        rx_tx.__init__(self)
+        # Driver structure
+        # RX path (inputs)
+        # - 32 buffered channels
+        # -- 32 with test mode control
+        # -- 8 channels with DDS Control
+        # RX path (outputs)
+        # - 8 channels with DDS Control (more complex)
 
-    def _get_set(self, chan, attr, value):
-        if value:
-            self._set_iio_attr(self._rx_channel_names[chan], attr, False, value)
-        else:
-            return self._get_iio_attr(self._rx_channel_names[chan], attr, False)
+        # axi-ad9081-rx0
+        # - 8 input channels
+        # - 8 output channels
 
-    def _get_set_str(self, chan, attr, value):
-        if value:
-            self._set_iio_attr(self._rx_channel_names[chan], attr, False, value)
-        else:
-            return self._get_iio_attr_str(self._rx_channel_names[chan], attr, False)
+        # Dynamically add methods for each RX channel
+        for i, chan in enumerate(adcs):
+            # Channel
+            name = "rx_channel_nco_frequencies_chip_" + chr(i + 97)
+            attr = "channel_nco_frequency"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, False),
+            )
+            name = "rx_channel_nco_phases_chip_" + chr(i + 97)
+            attr = "channel_nco_phase"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, False),
+            )
 
-    def rx_channel_nco_frequency(self, chan=0, value=None):
-        """rx_channel_nco_frequency: '"""
-        return self._get_set(chan, "channel_nco_frequency", value)
+            # Main
+            name = "rx_main_nco_frequencies_chip_" + chr(i + 97)
+            attr = "main_nco_frequency"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, False),
+            )
+            name = "rx_main_nco_phases_chip_" + chr(i + 97)
+            attr = "main_nco_phase"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, False),
+            )
 
-    def rx_channel_nco_gain_scale(self, chan=0, value=None):
-        """rx_channel_nco_gain_scale: '"""
-        return self._get_set(chan, "channel_nco_gain_scale", value)
+            # Singletons
+            name = "rx_test_mode_chip_" + lets[i]
+            attr = "test_mode"
+            setattr(
+                type(self),
+                name,
+                channel_single(attr, adcs[i], self._rx_dds_channel_names[0], False),
+            )
 
-    def rx_channel_nco_gain_scale(self, chan=0, value=None):
-        """rx_channel_nco_phase: '"""
-        return self._get_set(chan, "channel_nco_phase", value)
+        # Dynamically add methods for each TX channel
+        for i, chan in enumerate(adcs):
+            # Channel
+            name = "tx_channel_nco_frequencies_chip_" + chr(i + 97)
+            attr = "channel_nco_frequency"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
+            name = "tx_channel_nco_phases_chip_" + chr(i + 97)
+            attr = "channel_nco_phase"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
+            name = "tx_channel_nco_gain_scale_chip_" + chr(i + 97)
+            attr = "channel_nco_gain_scale"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
 
-    def rx_main_nco_frequency(self, chan=0, value=None):
-        """rx_main_nco_frequency: '"""
-        return self._get_set(chan, "main_nco_frequency", value)
+            # Main
+            name = "tx_main_nco_frequencies_chip_" + chr(i + 97)
+            attr = "main_nco_frequency"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
+            name = "tx_main_nco_phases_chip_" + chr(i + 97)
+            attr = "main_nco_phase"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
 
-    def rx_main_nco_phase(self, chan=0, value=None):
-        """rx_main_nco_phase: '"""
-        return self._get_set(chan, "main_nco_phase", value)
-
-    def rx_test_mode(self, chan=0, value=None):
-        """test_mode: Select Test Mode. Options are:
-        off midscale_short pos_fullscale neg_fullscale checkerboard pn9 pn32 one_zero_toggle user pn7 pn15 pn31 ramp"""
-        return self._get_set_str(chan, "test_mode ", value)
+            # Singletons
+            name = "rx_test_mode_chip_" + chr(i + 97)
+            attr = "test_mode"
+            setattr(
+                type(self),
+                name,
+                channel_single(attr, adcs[i], self._rx_dds_channel_names[0], True),
+            )
 
     @property
     def external_hardwaregain(self):
