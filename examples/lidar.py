@@ -64,14 +64,14 @@ mean_samples_count = [NSAMPLES for i in range (16)]
 mean_samples_sum   = [0 for i in range (16)]
 
 def cont_capt():
+    global laser_enabled    
     """Continuously request samples after Start is pressed."""
-    if button_txt.get() == "Start":
+    if button_txt.get() == "Start" and laser_enabled.get() == 1:
         button_txt.set("Stop")
     else:
         button_txt.set("Start")
-    while button_txt.get() == "Stop":
+    while button_txt.get() == "Stop" and laser_enabled.get() == 1:
         single_capt()
-        # sleep(TIMEOUT_SAMPLES)
 
 def single_capt():
     """Display info about a single capture."""
@@ -242,26 +242,38 @@ label8.grid(row = 4, column = 0)
 entry8 = tk.Entry(fr2, textvariable=tilt_voltage)
 entry8.grid(row = 4, column = 1)
 
+laser_enabled = tk.IntVar(value=1)
+
+def enable_disable_laser():
+    """Enable/disable the laser."""
+    global laser_enabled    
+    if laser_enabled == 0:
+        lidar.laser_disable()
+    else:
+        lidar.laser_enable()
+        cont_capt()
+
+en_laser = tk.Checkbutton(fr2, text="Enable Laser", variable = laser_enabled,
+                          command=enable_disable_laser)
+en_laser.grid(row = 5, column = 0)
+
 seq_mode = tk.StringVar(root)
 seq_mode.set("auto")
-tk.OptionMenu(fr2, seq_mode, "manual", "auto").grid(row=6, column=0)
+tk.OptionMenu(fr2, seq_mode, "manual", "auto").grid(row=7, column=0)
 
 manual_mode_order = tk.StringVar(root)
 manual_mode_order.set("0 0 0 0")
-tk.Entry(fr2, textvariable=manual_mode_order).grid(row=6, column=1)
-
-label5 = tk.Label(fr2, text = "", font=("Arial", 20, "bold"))
-label5.grid(row = 8, column = 1)
+tk.Entry(fr2, textvariable=manual_mode_order).grid(row=7, column=1)
 
 button_txt = tk.StringVar()
 button = tk.Button(fr2, textvariable=button_txt, command=cont_capt)
 button_txt.set("Start")
 button.config(width = 10, height = 1)
-button.grid(row = 7, column = 1, pady = 10)
+button.grid(row = 8, column = 1, pady = 10)
 
 config_button = tk.Button(fr2, text="Config Board", command=config_board)
 config_button.config(width = 10, height = 1)
-config_button.grid(row = 7, column = 0, pady = 10)
+config_button.grid(row = 8, column = 0, pady = 10)
 
 fr3 = tk.Frame(fr1)
 fr3.grid(row = 3, column = 0)
