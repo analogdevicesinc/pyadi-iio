@@ -58,10 +58,8 @@ class fmclidar1 (ad5627, ad9094, phy):
         if (self.channel_sequencer_opmode == "manual"):
             # Only 4 channels are read in manual mode, selected by the user.
             rx = super().rx()
-            print(rx)
             for i, pos in enumerate(self.channel_sequencer_order_manual_mode):
                 all_channels[int(i*4 + pos)] = rx[i]
-                # print(rx[i].astype(np.int8))
         else:
             # Wait until we've seen all the paterns (4 in total), meaning all
             # the 16 channels have been updated, before returning.
@@ -70,40 +68,40 @@ class fmclidar1 (ad5627, ad9094, phy):
             third  = False
             fourth = False
 
-            # Channel4 (index 2, in this case) holds the channel pattern. This is
-            # used to figure out the actual physical channel that the reading comes
-            # from. Keep refilling the buffers until all 16 channels have been read.
+            # Channel4 holds the channel pattern. This is used to figure out the
+            # actual physical channel that the reading comes from. Keep
+            # refilling the buffers until all 16 channels have been read.
             while ((first == False) or (second == False) or
                    (third == False) or (fourth == False)):
                 rx = super().rx()
-                pattern = rx[2][0]      # One entry from one Channel4 sample
+                pattern = rx[4][0]      # One entry from one Channel4 sample
                 # print(str(pattern) + " ", end='')
-                if (pattern == -256 and first == False):
+                if (pattern == 0 and first == False):
                     all_channels[0] = rx[0].astype(np.int8)
                     all_channels[1] = rx[1].astype(np.int8)
-                    all_channels[2] = rx[3].astype(np.int8)
-                    all_channels[3] = rx[4].astype(np.int8)
+                    all_channels[2] = rx[2].astype(np.int8)
+                    all_channels[3] = rx[3].astype(np.int8)
                     first = True
                 
-                if (pattern == -171 and second == False):
+                if (pattern == 85 and second == False):
                     all_channels[4] = rx[0].astype(np.int8)
                     all_channels[5] = rx[1].astype(np.int8)
-                    all_channels[6] = rx[3].astype(np.int8)
-                    all_channels[7] = rx[4].astype(np.int8)
+                    all_channels[6] = rx[2].astype(np.int8)
+                    all_channels[7] = rx[3].astype(np.int8)
                     second = True
 
                 if (pattern == -86 and third == False):
                     all_channels[8] = rx[0].astype(np.int8)
                     all_channels[9] = rx[1].astype(np.int8)
-                    all_channels[10] = rx[3].astype(np.int8)
-                    all_channels[11] = rx[4].astype(np.int8)
+                    all_channels[10] = rx[2].astype(np.int8)
+                    all_channels[11] = rx[3].astype(np.int8)
                     third = True
 
                 if (pattern == -1 and fourth == False):
                     all_channels[12] = rx[0].astype(np.int8)
                     all_channels[13] = rx[1].astype(np.int8)
-                    all_channels[14] = rx[3].astype(np.int8)
-                    all_channels[15] = rx[4].astype(np.int8)
+                    all_channels[14] = rx[2].astype(np.int8)
+                    all_channels[15] = rx[3].astype(np.int8)
                     fourth = True
 
         return all_channels
