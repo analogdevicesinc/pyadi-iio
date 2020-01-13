@@ -215,23 +215,17 @@ label3.grid(row = 2, column = 0)
 entry3 = tk.Entry(fr2, textvariable=pulse_freq)
 entry3.grid(row = 2, column = 1)
 
-label6 = tk.Label(fr2, text = "Trigger Level (ADC): ")
-label6.grid(row = 3, column = 0)
-
-entry6 = tk.Entry(fr2, textvariable=trig_level)
-entry6.grid(row = 3, column = 1)
-
 label7 = tk.Label(fr2, text = "APD Bias (V): ")
-label7.grid(row = 4, column = 0)
+label7.grid(row = 3, column = 0)
 
 entry7 = tk.Entry(fr2, textvariable=apd_voltage)
-entry7.grid(row = 4, column = 1)
+entry7.grid(row = 3, column = 1)
 
 label8 = tk.Label(fr2, text = "Tilt Voltage (V): ")
-label8.grid(row = 5, column = 0)
+label8.grid(row = 4, column = 0)
 
 entry8 = tk.Entry(fr2, textvariable=tilt_voltage)
-entry8.grid(row = 5, column = 1)
+entry8.grid(row = 4, column = 1)
 
 seq_mode = tk.StringVar(root)
 seq_mode.set("auto")
