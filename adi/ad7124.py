@@ -47,11 +47,11 @@ class ad7124(rx, context_manager):
     _device_name = ""
     _rx_data_type = np.int32
 
-    def __init__(self, uri=""):
+    def __init__(self, uri="", part="ad7124-8"):
 
         context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("ad7124-8")
-        self._rxadc = self._ctx.find_device("ad7124-8")
+        self._ctrl = self._ctx.find_device(part)
+        self._rxadc = self._ctx.find_device(part)
 
         # dynamically get channels
         for ch in self._ctrl._channels:
