@@ -99,6 +99,12 @@ def single_capt():
             mean_samples_sum[i] += meas_distance_mean[i]
             mean_samples_count[i] -= 1
         else:
+            distance_plot.cla()
+            distance_plot.grid(True)
+            distance_plot.set_title('Distance Approximation')
+            distance_plot.set_xlabel('Sample number')
+            distance_plot.set_ylabel('Distance (cm)')
+            distance_plot.bar(range(MAX_SAMPLES), [0] * MAX_SAMPLES)
             dist = mean_samples_sum[i] / NSAMPLES
             distance_txt.set("{} cm".format(int(dist)))
             distances[i].append(dist)
@@ -140,6 +146,10 @@ def single_capt():
 
 def config_board():
     global lidar
+    global distances
+    global meas_distance_mean
+    global mean_samples_count
+    global mean_samples_sum
     if lidar == None:
         try:
             lidar = fmclidar1(uri="ip:" + ip_addr.get())
@@ -154,6 +164,12 @@ def config_board():
     lidar.tiltvoltage = float(tilt_voltage.get())    
     lidar.channel_sequencer_opmode = seq_mode.get()    
     lidar.channel_sequencer_order_manual_mode = manual_mode_order.get()
+
+    # Clear the distance measurement and display
+    distances          = [[] for i in range(16)] 
+    meas_distance_mean = [0 for i in range (16)]
+    mean_samples_count = [NSAMPLES for i in range (16)]
+    mean_samples_sum   = [0 for i in range (16)]    
 
 root = tk.Tk()
 root.title("TOF Demo")
@@ -268,11 +284,6 @@ a.set_xlabel('Time (ns)')
 a.set_ylabel('ADC Codes')
 
 distance_plot = fig.add_subplot(212)
-distance_plot.grid(True)
-distance_plot.set_title('Distance Approximation')
-distance_plot.set_xlabel('Sample number')
-distance_plot.set_ylabel('Distance (cm)')
-distance_plot.bar(range(MAX_SAMPLES), [0] * MAX_SAMPLES)
 
 canvas = FigureCanvasTkAgg(fig, master=root)
 canvas.get_tk_widget().pack(side = tk.LEFT, pady = 10, padx = 10, anchor = 'n')
