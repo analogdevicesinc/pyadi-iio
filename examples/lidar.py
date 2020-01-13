@@ -104,14 +104,14 @@ def single_capt():
             distance_plot.set_title('Distance Approximation')
             distance_plot.set_xlabel('Sample number')
             distance_plot.set_ylabel('Distance (cm)')
-            distance_plot.bar(range(MAX_SAMPLES), [0] * MAX_SAMPLES)
+            distance_plot.bar(range(MAX_SAMPLES), [0] * MAX_SAMPLES)            
             dist = mean_samples_sum[i] / NSAMPLES
-            distance_txt.set("{} cm".format(int(dist)))
             distances[i].append(dist)
             for j, d in enumerate(distances, start=0):
                 if len(d) == 0:
                     continue                
-                distance_plot.plot(d, label="Measurement" + str(j), linewidth=1)
+                distance_plot.plot(d, label=str(d[-1]))
+            distance_plot.legend()
             mean_samples_sum[i] = 0
             mean_samples_count[i] = NSAMPLES
             # single_capt.sample_number += 1
@@ -120,16 +120,17 @@ def single_capt():
             #                             single_capt.sample_number])
 
     # Plot data
-    a.cla()
-    a.set_title('Pulse Shape')
-    a.set_xlabel('Time (ns)')
-    a.set_ylabel('ADC Codes')
-    a.grid(True)
+    signal_plot.cla()
+    signal_plot.set_title('Pulse Shape')
+    signal_plot.set_xlabel('Time (ns)')
+    signal_plot.set_ylabel('ADC Codes')
+    signal_plot.set_ylim([-30, 130])
+    signal_plot.grid(True)
 
     for i, s in enumerate(samples, start=0):
         if (len(s) == 0):
             continue
-        a.plot(s, label="Channel" + str(i))
+        signal_plot.plot(s, label="Channel" + str(i))
         
     try:
         a.plot(top_edge, x[top_edge], 'X')
@@ -138,7 +139,7 @@ def single_capt():
         a.axvline(x=mid_point, color='red', label='Mid point')
     except:
         pass
-    a.legend()
+    signal_plot.legend()
     canvas.draw()
     
     root.update_idletasks()
@@ -196,8 +197,6 @@ pw.set(DEFAULT_PULSE_WIDTH)
 pulse_freq = tk.StringVar()
 pulse_freq.set(DEFAULT_FREQUENCY)
 
-distance_txt = tk.StringVar()
-
 trig_level = tk.StringVar()
 trig_level.set(DEFAULT_TRIG_LEVEL)
 
@@ -251,10 +250,6 @@ manual_mode_order = tk.StringVar(root)
 manual_mode_order.set("0 0 0 0")
 tk.Entry(fr2, textvariable=manual_mode_order).grid(row=6, column=1)
 
-label4 = tk.Label(fr2, textvariable = distance_txt, font=("Arial", 60), fg='#1e90ff', pady=50, padx=10)
-distance_txt.set("0 cm")
-label4.grid(row = 8, column = 0, columnspan = 2)
-
 label5 = tk.Label(fr2, text = "", font=("Arial", 20, "bold"))
 label5.grid(row = 8, column = 1)
 
@@ -278,10 +273,10 @@ txt1 = tk.Text(fr3, width = 40, height = 2)
 txt1.grid(row = 4, column = 0)
 
 fig = plt.figure(figsize=(15,10))
-a = fig.add_subplot(211)
-a.set_title('Pulse Shape')
-a.set_xlabel('Time (ns)')
-a.set_ylabel('ADC Codes')
+signal_plot = fig.add_subplot(211)
+signal_plot.set_title('Pulse Shape')
+signal_plot.set_xlabel('Time (ns)')
+signal_plot.set_ylabel('ADC Codes')
 
 distance_plot = fig.add_subplot(212)
 
