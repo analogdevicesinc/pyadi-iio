@@ -52,6 +52,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import ttk
 import csv
 from scipy import signal
 
@@ -267,7 +268,7 @@ def enable_disable_laser():
 
 en_laser = tk.Checkbutton(fr2, text="Enable Laser", variable = laser_enabled,
                           command=enable_disable_laser)
-en_laser.grid(row = 5, column = 0)
+en_laser.grid(row = 10, column = 1)
 
 seq_mode = tk.StringVar(root)
 seq_mode.set("auto")
@@ -277,15 +278,20 @@ manual_mode_order = tk.StringVar(root)
 manual_mode_order.set("0 0 0 0")
 tk.Entry(fr2, textvariable=manual_mode_order).grid(row=7, column=1)
 
+sep1 = ttk.Separator(fr2, orient="horizontal")
+sep2 = ttk.Separator(fr2, orient="horizontal")
+sep1.grid(row=8, column = 0, sticky="ew", pady = 15)
+sep2.grid(row=8, column = 1, sticky="ew", pady = 15)
+
 button_txt = tk.StringVar()
 button = tk.Button(fr2, textvariable=button_txt, command=cont_capt)
 button_txt.set("Start")
 button.config(width = 10, height = 1)
-button.grid(row = 8, column = 1, pady = 10)
+button.grid(row = 9, column = 1, pady = 5)
 
 config_button = tk.Button(fr2, text="Config Board", command=config_board)
 config_button.config(width = 10, height = 1)
-config_button.grid(row = 8, column = 0, pady = 10)
+config_button.grid(row = 9, column = 0, pady = 5)
 
 def save_snapshot():
     """Request a snapshot save to the user selected file."""
@@ -297,7 +303,7 @@ def save_snapshot():
 
 save_csv = tk.Button(fr2, text="Save Snapshot", command=save_snapshot)
 save_csv.config(width = 10, height = 1)
-save_csv.grid(row = 9, column = 0, pady = 10)
+save_csv.grid(row = 10, column = 0, pady = 10)
 
 fr3 = tk.Frame(fr1)
 fr3.grid(row = 3, column = 0)
@@ -305,7 +311,7 @@ fr3.grid(row = 3, column = 0)
 label2 = tk.Label(fr3, text = "Message Log: ")
 label2.grid(row = 0, column = 0)
 
-txt1 = tk.Text(fr3, width = 40, height = 2)
+txt1 = tk.Text(fr3, width = 40, height = 5)
 txt1.grid(row = 4, column = 0)
 
 fig = plt.figure(figsize=(15,10))
