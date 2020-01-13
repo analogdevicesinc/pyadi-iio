@@ -54,7 +54,7 @@ class channel_multi:
 
 
 class channel_single:
-    def __init__(self, attr, dev, channel_names, input):
+    def __init__(self, attr, dev, channel_names, output):
         self._dev = dev
         self._attr = attr
         self._channel_names = channel_names
@@ -122,6 +122,14 @@ class QuadMxFE(rx_tx, context_manager):
             else:
                 self._dds_channel_names.append(ch._id)
 
+        # Sort DDS channels
+        def ignoreN(w):
+            return int(w[len("altvoltage"):])
+        self._dds_channel_names = sorted(self._dds_channel_names, key=ignoreN)
+
+        rx_tx.__init__(self)
+        self.rx_buffer_size = 2**16
+
         # Driver structure
         # RX path (inputs)
         # - 32 buffered channels
@@ -169,7 +177,7 @@ class QuadMxFE(rx_tx, context_manager):
             )
 
             # Singletons
-            name = "rx_test_mode_chip_" + lets[i]
+            name = "rx_test_mode_chip_" + chr(i + 97)
             attr = "test_mode"
             setattr(
                 type(self),
@@ -218,14 +226,15 @@ class QuadMxFE(rx_tx, context_manager):
                 channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
             )
 
-            # Singletons
-            name = "rx_test_mode_chip_" + chr(i + 97)
-            attr = "test_mode"
-            setattr(
-                type(self),
-                name,
-                channel_single(attr, adcs[i], self._rx_dds_channel_names[0], True),
-            )
+    @property
+    def rx_sampling_frequency(self):
+        """rx_sampling_frequency: Sample rate after decimation"""
+        return self._get_iio_attr("voltage0_i", "sampling_frequency", False)
+
+    @property
+    def tx_sampling_frequency(self):
+        """tx_sampling_frequency: Sample rate before interpolation"""
+        return self._get_iio_attr("voltage0_i", "sampling_frequency", True)
 
     @property
     def external_hardwaregain(self):

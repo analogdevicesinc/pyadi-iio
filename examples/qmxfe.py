@@ -17,11 +17,5 @@ print(sdr.rx_test_mode_chip_a)
 # Read registers
 reg = 0x01
 for offset in range(10):
-    print(sdr._rxadc0.reg_read(reg+offset))
-    print(sdr._rxadc1.reg_read(reg+offset))
-    print(sdr._rxadc2.reg_read(reg+offset))
-    print(sdr._rxadc3.reg_read(reg+offset))
-    print(sdr._txdac0.reg_read(reg+offset))
-    print(sdr._txdac1.reg_read(reg+offset))
-    print(sdr._txdac2.reg_read(reg+offset))
-    print(sdr._txdac3.reg_read(reg+offset))
+    print(sdr._rxadc.reg_read(reg+offset))
+    print(sdr._txdac.reg_read(reg+offset))

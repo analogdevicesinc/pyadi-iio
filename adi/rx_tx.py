@@ -255,7 +255,6 @@ class tx(dds, attribute):
         self._num_tx_channels = len(self._tx_channel_names)
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
-        dds.__init__(self)
 
     def __del__(self):
         self._txdac = []
