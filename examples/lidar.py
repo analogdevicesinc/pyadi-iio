@@ -57,6 +57,7 @@ lidar = None                    # Lidar context
 NSAMPLES = 10
 # Keep count of distance measurements for each sample and for all channels.
 # One channel is used for the reference signal.
+all_channels_samples = [[] for i in range(16)]
 distances = [[] for i in range(16)] 
 meas_distance_mean = [0 for i in range (16)]
 mean_samples_count = [NSAMPLES for i in range (16)]
@@ -76,14 +77,12 @@ def single_capt():
     """Display info about a single capture."""
     if 'sample_number' not in single_capt.__dict__:
         single_capt.sample_number = 0
-    
     samples = lidar.rx()
-    ref = samples[12]           # Reference signal
-    # Adjust to zero
-    ref = ref - np.mean(ref)
+    ref = samples[0] # Reference signal    
+    ref = ref - np.mean(ref) # Adjust to zero
         
-    for i, s in enumerate(samples, start=0):
-        if i == 0 or i == 4 or i == 8 or i == 12: # Ignore reference signals
+    for i, s in enumerate(samples, start=0):        
+        if (len(s) == 0):
             continue
         global meas_distance_mean
         global mean_samples_count
@@ -121,7 +120,9 @@ def single_capt():
     a.set_ylabel('ADC Codes')
     a.grid(True)
 
-    for i, s in enumerate(samples, start=0):                
+    for i, s in enumerate(samples, start=0):
+        if (len(s) == 0):
+            continue
         a.plot(s, label="Channel" + str(i))
         
     try:
@@ -143,14 +144,16 @@ def config_board():
         try:
             lidar = fmclidar1(uri="ip:" + ip_addr.get())
             lidar.rx_buffer_size = 1024
-            lidar.laser_enable()
+            lidar.laser_enable()            
         except:
             txt1.insert(tk.END, 'No device found.\n')
             return    
     lidar.laser_pulse_width = int(pw.get())
     lidar.laser_frequency = int(pulse_freq.get())
     lidar.apdbias     = float(apd_voltage.get())
-    lidar.tiltvoltage = float(tilt_voltage.get())
+    lidar.tiltvoltage = float(tilt_voltage.get())    
+    lidar.channel_sequencer_opmode = seq_mode.get()    
+    lidar.channel_sequencer_order_manual_mode = manual_mode_order.get()
 
 root = tk.Tk()
 root.title("TOF Demo")
@@ -212,7 +215,7 @@ label3.grid(row = 2, column = 0)
 entry3 = tk.Entry(fr2, textvariable=pulse_freq)
 entry3.grid(row = 2, column = 1)
 
-label6 = tk.Label(fr2, text = "Trigger Level (ADC Codes): ")
+label6 = tk.Label(fr2, text = "Trigger Level (ADC): ")
 label6.grid(row = 3, column = 0)
 
 entry6 = tk.Entry(fr2, textvariable=trig_level)
@@ -230,22 +233,30 @@ label8.grid(row = 5, column = 0)
 entry8 = tk.Entry(fr2, textvariable=tilt_voltage)
 entry8.grid(row = 5, column = 1)
 
+seq_mode = tk.StringVar(root)
+seq_mode.set("auto")
+tk.OptionMenu(fr2, seq_mode, "manual", "auto").grid(row=6, column=0)
+
+manual_mode_order = tk.StringVar(root)
+manual_mode_order.set("0 0 0 0")
+tk.Entry(fr2, textvariable=manual_mode_order).grid(row=6, column=1)
+
 label4 = tk.Label(fr2, textvariable = distance_txt, font=("Arial", 60), fg='#1e90ff', pady=50, padx=10)
 distance_txt.set("0 cm")
-label4.grid(row = 7, column = 0, columnspan = 2)
+label4.grid(row = 8, column = 0, columnspan = 2)
 
-label5 = tk.Label(fr2, text = "", font=("Arial", 24, "bold"))
-label5.grid(row = 7, column = 1)
+label5 = tk.Label(fr2, text = "", font=("Arial", 20, "bold"))
+label5.grid(row = 8, column = 1)
 
 button_txt = tk.StringVar()
 button = tk.Button(fr2, textvariable=button_txt, command=cont_capt)
 button_txt.set("Start")
 button.config(width = 10, height = 1)
-button.grid(row = 6, column = 1, pady = 10)
+button.grid(row = 7, column = 1, pady = 10)
 
 config_button = tk.Button(fr2, text="Config Board", command=config_board)
 config_button.config(width = 10, height = 1)
-config_button.grid(row = 6, column = 0, pady = 10)
+config_button.grid(row = 7, column = 0, pady = 10)
 
 fr3 = tk.Frame(fr1)
 fr3.grid(row = 3, column = 0)
