@@ -31,37 +31,70 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import *
+from decimal import Decimal
 
-from adi.fmcomms5 import *
+import numpy as np
+from adi.attribute import attribute
+from adi.context_manager import context_manager
 
-from adi.ad9371 import *
 
-from adi.adrv9009 import *
+class ad5683r(context_manager, attribute):
+    """ AD5683R DAC """
 
-from adi.adrv9009_zu11eg import *
+    _complex_data = False
+    channel = []
+    _device_name = ""
+    _channel = "voltage0"
+    _rx_data_type = np.int32
 
-from adi.ad9680 import *
+    def __init__(self, uri=""):
 
-from adi.ad9144 import *
+        context_manager.__init__(self, uri, self._device_name)
+        self._ctrl = self._ctx.find_device("ad5683r")
+        self._scale = float(self._get_iio_attr_str(self._channel, "scale", True))
 
-from adi.ad9152 import *
+    @property
+    def powerdown(self):
+        """AD5683R channel powerdown value"""
+        return self._get_iio_attr(self._channel, "raw", True)
 
-from adi.daq2 import *
+    @powerdown.setter
+    def powerdown(self, val):
+        """AD5683R channel powerdown value"""
+        self._set_iio_attr(self._channel, "powerdown", True, val)
 
-from adi.daq3 import *
+    @property
+    def powerdown_mode(self):
+        """AD5683R channel powerdown mode value"""
+        return self._get_iio_attr_str(self._channel, "powerdown_mode", True)
 
-from adi.adis16460 import *
+    @powerdown_mode.setter
+    def powerdown_mode(self, val):
+        """AD5683R channel powerdown value"""
+        self._set_iio_attr_str(self._channel, "powerdown_mode", True, val)
 
-from adi.adis16507 import *
+    @property
+    def powerdown_mode_available(self):
+        """Provides all available powerdown mode settings for the AD5683r"""
+        return self._get_iio_attr_str(self._channel, "powerdown_mode_available", True)
 
-from adi.ad7124 import *
+    @property
+    def raw(self):
+        """AD5683R channel raw value"""
+        return self._get_iio_attr(self._channel, "raw", True)
 
-from adi.adxl345 import *
+    @raw.setter
+    def raw(self, val):
+        """AD5683R channel raw value"""
+        self._set_iio_attr(self._channel, "raw", True, val)
 
-from adi.fmclidar1 import *
+    @property
+    def scale(self):
+        """AD5683R channel scale(gain)"""
+        return self._scale
 
-from adi.ad5683r import *
 
-__version__ = "0.0.5"
-name = "Analog Devices Hardware Interfaces"
+    def to_raw(self, val):
+        """Converts raw value to SI"""
+        return int(1000.0 * val / self._scale)
+
