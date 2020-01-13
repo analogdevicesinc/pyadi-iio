@@ -51,9 +51,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
+from tkinter import filedialog
+import csv
 from scipy import signal
 
 lidar = None                    # Lidar context
+snapshot_path = ""              # If set to non-empty, save the rx samples to that path
 NSAMPLES = 10
 # Keep count of distance measurements for each sample and for all channels.
 # One channel is used for the reference signal.
@@ -75,9 +78,18 @@ def cont_capt():
 
 def single_capt():
     """Display info about a single capture."""
+    global snapshot_path
     if 'sample_number' not in single_capt.__dict__:
         single_capt.sample_number = 0
-    samples = lidar.rx()
+    samples = lidar.rx()    
+    if snapshot_path != "":     # Requested to save a snapshot
+        with open(snapshot_path, 'w') as result_file:
+            wr = csv.writer(result_file, dialect='excel')
+            for s in samples:   # add all samples to file specified in path
+                if len(s) > 0:  # not empty 
+                    wr.writerow(s.tolist())
+        snapshot_path = ""      # wait for the next request
+       
     ref = samples[0] # Reference signal    
     ref = ref - np.mean(ref) # Adjust to zero
         
@@ -274,6 +286,18 @@ button.grid(row = 8, column = 1, pady = 10)
 config_button = tk.Button(fr2, text="Config Board", command=config_board)
 config_button.config(width = 10, height = 1)
 config_button.grid(row = 8, column = 0, pady = 10)
+
+def save_snapshot():
+    """Request a snapshot save to the user selected file."""
+    global snapshot_path
+    snapshot_path = filedialog.asksaveasfilename(
+        initialdir = ".",
+        title = "Save as",
+        filetypes = (("CSV","*.csv"), ("all files","*.*")))    
+
+save_csv = tk.Button(fr2, text="Save Snapshot", command=save_snapshot)
+save_csv.config(width = 10, height = 1)
+save_csv.grid(row = 9, column = 0, pady = 10)
 
 fr3 = tk.Frame(fr1)
 fr3.grid(row = 3, column = 0)
