@@ -54,7 +54,6 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
 import csv
-from scipy import signal
 
 lidar = None                    # Lidar context
 snapshot_path = ""              # If set to non-empty, save the rx samples to that path
@@ -173,6 +172,7 @@ def config_board():
             txt1.insert(tk.END, 'No device found.\n')
             return    
     lidar.laser_pulse_width = int(pw.get())
+    lidar.sequencer_pulse_delay = int(pulse_delay.get())
     lidar.laser_frequency = int(pulse_freq.get())
     lidar.apdbias     = float(apd_voltage.get())
     lidar.tiltvoltage = float(tilt_voltage.get())    
@@ -194,6 +194,7 @@ DEFAULT_FREQUENCY    = '1000'
 DEFAULT_TRIG_LEVEL   = '-10'
 DEFAULT_APD_VOLTAGE  = '-160.0'
 DEFAULT_TILT_VOLTAGE = '1.0'
+DEFAULT_PULSE_DELAY = '248'
 
 TIME_OFFSET     = 167.033333
 RUN_DUMMY_DATA  = 0
@@ -219,41 +220,40 @@ apd_voltage.set(DEFAULT_APD_VOLTAGE)
 tilt_voltage = tk.StringVar()
 tilt_voltage.set(DEFAULT_TILT_VOLTAGE)
 
+pulse_delay = tk.StringVar()
+pulse_delay.set(DEFAULT_PULSE_DELAY)
+
 fr1 = tk.Frame(root)
 fr1.pack(side = tk.LEFT, anchor = 'n', padx = 10)
 
 fr2 = tk.Frame(fr1)
 fr2.grid(row = 0, column = 0, pady = 10)
 
+laser_settings_label = tk.Label(fr2, text = "LiDAR Demo")
+laser_settings_label.grid(row = 0, column = 0, columnspan = 2, pady = (0, 10))
+laser_settings_label.configure(font="Verdana 20")
+
 label1 = tk.Label(fr2, text = "IP Addressss: ")
-label1.grid(row = 0, column = 0)
+label1.grid(row = 1, column = 0)
 
 entry1 = tk.Entry(fr2, textvariable=ip_addr)
-entry1.grid(row = 0, column = 1)
+entry1.grid(row = 1, column = 1)
+
+laser_settings_label = tk.Label(fr2, text = "Laser Settings")
+laser_settings_label.grid(row = 2, column = 0, columnspan = 2, pady = (25, 10))
+laser_settings_label.configure(font="Verdana 16")
 
 label2 = tk.Label(fr2, text = "Pulse Width (ns): ")
-label2.grid(row = 1, column = 0)
+label2.grid(row = 3, column = 0)
 
 entry2 = tk.Entry(fr2, textvariable=pw)
-entry2.grid(row = 1, column = 1)
+entry2.grid(row = 3, column = 1)
 
 label3 = tk.Label(fr2, text = "Rep Rate (Hz): ")
-label3.grid(row = 2, column = 0)
+label3.grid(row = 4, column = 0)
 
 entry3 = tk.Entry(fr2, textvariable=pulse_freq)
-entry3.grid(row = 2, column = 1)
-
-label7 = tk.Label(fr2, text = "APD Bias (V): ")
-label7.grid(row = 3, column = 0)
-
-entry7 = tk.Entry(fr2, textvariable=apd_voltage)
-entry7.grid(row = 3, column = 1)
-
-label8 = tk.Label(fr2, text = "Tilt Voltage (V): ")
-label8.grid(row = 4, column = 0)
-
-entry8 = tk.Entry(fr2, textvariable=tilt_voltage)
-entry8.grid(row = 4, column = 1)
+entry3.grid(row = 4, column = 1)
 
 laser_enabled = tk.IntVar(value=1)
 
@@ -268,30 +268,51 @@ def enable_disable_laser():
 
 en_laser = tk.Checkbutton(fr2, text="Enable Laser", variable = laser_enabled,
                           command=enable_disable_laser)
-en_laser.grid(row = 10, column = 1)
+en_laser.grid(row = 5, column = 0)
+
+afe_settings_label = tk.Label(fr2, text = "AFE Settings")
+afe_settings_label.grid(row = 6, column = 0, columnspan = 2, pady = (20, 10))
+afe_settings_label.configure(font="Verdana 16")
+
+label7 = tk.Label(fr2, text = "APD Bias (V): ")
+label7.grid(row = 7, column = 0)
+
+entry7 = tk.Entry(fr2, textvariable=apd_voltage)
+entry7.grid(row = 7, column = 1)
+
+label8 = tk.Label(fr2, text = "Tilt Voltage (V): ")
+label8.grid(row = 8, column = 0)
+
+entry8 = tk.Entry(fr2, textvariable=tilt_voltage)
+entry8.grid(row = 8, column = 1)
+
+sequencer_settings_label = tk.Label(fr2, text = "Sequencer Settings")
+sequencer_settings_label.grid(row = 9, column = 0, columnspan = 2, pady = (20, 10))
+sequencer_settings_label.configure(font="Verdana 16")
 
 seq_mode = tk.StringVar(root)
-seq_mode.set("auto")
-tk.OptionMenu(fr2, seq_mode, "manual", "auto").grid(row=7, column=0)
+seq_mode.set("manual")
+tk.OptionMenu(fr2, seq_mode, "manual", "auto").grid(row = 10, column=0)
 
 manual_mode_order = tk.StringVar(root)
 manual_mode_order.set("0 0 0 0")
-tk.Entry(fr2, textvariable=manual_mode_order).grid(row=7, column=1)
+tk.Entry(fr2, textvariable=manual_mode_order).grid(row = 10, column=1)
 
-sep1 = ttk.Separator(fr2, orient="horizontal")
-sep2 = ttk.Separator(fr2, orient="horizontal")
-sep1.grid(row=8, column = 0, sticky="ew", pady = 15)
-sep2.grid(row=8, column = 1, sticky="ew", pady = 15)
+pulse_delay_label = tk.Label(fr2, text = "Pulse Delay (ns)")
+pulse_delay_label.grid(row = 11, column = 0)
+
+pulse_delay_entry = tk.Entry(fr2, textvariable=pulse_delay)
+pulse_delay_entry.grid(row = 11, column = 1)
 
 button_txt = tk.StringVar()
 button = tk.Button(fr2, textvariable=button_txt, command=cont_capt)
 button_txt.set("Start")
-button.config(width = 10, height = 1)
-button.grid(row = 9, column = 1, pady = 5)
+button.config(width = 20, height = 1)
+button.grid(row = 12, column = 0, columnspan = 2, pady = (60, 5))
 
 config_button = tk.Button(fr2, text="Config Board", command=config_board)
-config_button.config(width = 10, height = 1)
-config_button.grid(row = 9, column = 0, pady = 5)
+config_button.config(width = 20, height = 1)
+config_button.grid(row = 13, column = 0, columnspan = 2, pady = 5)
 
 def save_snapshot():
     """Request a snapshot save to the user selected file."""
@@ -302,8 +323,8 @@ def save_snapshot():
         filetypes = (("CSV","*.csv"), ("all files","*.*")))    
 
 save_csv = tk.Button(fr2, text="Save Snapshot", command=save_snapshot)
-save_csv.config(width = 10, height = 1)
-save_csv.grid(row = 10, column = 0, pady = 10)
+save_csv.config(width = 20, height = 1)
+save_csv.grid(row = 14, column = 0, columnspan = 2, pady = 10)
 
 fr3 = tk.Frame(fr1)
 fr3.grid(row = 3, column = 0)
