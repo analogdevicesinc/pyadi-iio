@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>AD936X Family &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>AD936x Family &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
   
 
   
@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Supported Devices</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">AD936X Family</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">AD936x Family</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ad9371.html">AD9371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adrv9009.html">ADRV9009</a></li>
 <li class="toctree-l2"><a class="reference internal" href="daq2.html">DAQ2</a></li>
@@ -144,7 +144,7 @@
         
           <li><a href="index.html">Supported Devices</a> &raquo;</li>
         
-      <li>AD936X Family</li>
+      <li>AD936x Family</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -163,93 +163,123 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-adi.ad9361">
-<span id="ad936x-family"></span><h1>AD936X Family<a class="headerlink" href="#module-adi.ad9361" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="adi.ad9361.Pluto">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad9361.</code><code class="sig-name descname">Pluto</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9361.Pluto" title="Permalink to this definition">¶</a></dt>
+  <div class="section" id="ad936x-family">
+<h1>AD936x Family<a class="headerlink" href="#ad936x-family" title="Permalink to this headline">¶</a></h1>
+<p>This class includes support for any AD936x based device including AD9361, AD9363, AD9364. The following development boards have been tested:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>FMCOMMS 2/3/4/5</p></li>
+<li><p>ADRV9361-Z7035</p></li>
+<li><p>ADRV9364-Z7020</p></li>
+<li><p>ADALM-PLUTO</p></li>
+<li><p>Ettus Research USRP E310</p></li>
+</ul>
+</div></blockquote>
+<span class="target" id="module-adi.ad936x"></span><dl class="class">
+<dt id="adi.ad936x.Pluto">
+<em class="property">class </em><code class="sig-prename descclassname">adi.ad936x.</code><code class="sig-name descname">Pluto</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.Pluto" title="Permalink to this definition">¶</a></dt>
 <dd><p>PlutoSDR Evaluation Platform</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="adi.ad9361.ad9361">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad9361.</code><code class="sig-name descname">ad9361</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9361.ad9361" title="Permalink to this definition">¶</a></dt>
+<dt id="adi.ad936x.ad9361">
+<em class="property">class </em><code class="sig-prename descclassname">adi.ad936x.</code><code class="sig-name descname">ad9361</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9361" title="Permalink to this definition">¶</a></dt>
 <dd><p>AD9361 Transceiver</p>
 <dl class="method">
-<dt id="adi.ad9361.ad9361.filter">
-<em class="property">property </em><code class="sig-name descname">filter</code><a class="headerlink" href="#adi.ad9361.ad9361.filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load FIR filter file. Provide path to filter file to attribute</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="adi.ad9361.ad9361.gain_control_mode">
-<em class="property">property </em><code class="sig-name descname">gain_control_mode</code><a class="headerlink" href="#adi.ad9361.ad9361.gain_control_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>gain_control_mode: Mode of receive path AGC. Options are:
+<dt id="adi.ad936x.ad9361.gain_control_mode_chan1">
+<em class="property">property </em><code class="sig-name descname">gain_control_mode_chan1</code><a class="headerlink" href="#adi.ad936x.ad9361.gain_control_mode_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>gain_control_mode_chan1: Mode of receive path AGC. Options are:
 slow_attack, fast_attack, manual</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="adi.ad9361.ad9361.loopback">
-<em class="property">property </em><code class="sig-name descname">loopback</code><a class="headerlink" href="#adi.ad9361.ad9361.loopback" title="Permalink to this definition">¶</a></dt>
+<dt id="adi.ad936x.ad9361.rx_hardwaregain_chan1">
+<em class="property">property </em><code class="sig-name descname">rx_hardwaregain_chan1</code><a class="headerlink" href="#adi.ad936x.ad9361.rx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain_chan1: Gain applied to RX path. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adi.ad936x.ad9361.tx_hardwaregain_chan1">
+<em class="property">property </em><code class="sig-name descname">tx_hardwaregain_chan1</code><a class="headerlink" href="#adi.ad936x.ad9361.tx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain_chan1: Attenuation applied to TX path</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="adi.ad936x.ad9363">
+<em class="property">class </em><code class="sig-prename descclassname">adi.ad936x.</code><code class="sig-name descname">ad9363</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9363" title="Permalink to this definition">¶</a></dt>
+<dd><p>AD9363 Transceiver</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="adi.ad936x.ad9364">
+<em class="property">class </em><code class="sig-prename descclassname">adi.ad936x.</code><code class="sig-name descname">ad9364</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9364" title="Permalink to this definition">¶</a></dt>
+<dd><p>AD9364 Transceiver</p>
+<dl class="method">
+<dt id="adi.ad936x.ad9364.filter">
+<em class="property">property </em><code class="sig-name descname">filter</code><a class="headerlink" href="#adi.ad936x.ad9364.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load FIR filter file. Provide path to filter file to attribute</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adi.ad936x.ad9364.gain_control_mode_chan0">
+<em class="property">property </em><code class="sig-name descname">gain_control_mode_chan0</code><a class="headerlink" href="#adi.ad936x.ad9364.gain_control_mode_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>gain_control_mode_chan0: Mode of receive path AGC. Options are:
+slow_attack, fast_attack, manual</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adi.ad936x.ad9364.loopback">
+<em class="property">property </em><code class="sig-name descname">loopback</code><a class="headerlink" href="#adi.ad936x.ad9364.loopback" title="Permalink to this definition">¶</a></dt>
 <dd><p>loopback: Set loopback mode. Options are:
 0 (Disable), 1 (Digital), 2 (RF)</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="adi.ad9361.ad9361.rx_hardwaregain">
-<em class="property">property </em><code class="sig-name descname">rx_hardwaregain</code><a class="headerlink" href="#adi.ad9361.ad9361.rx_hardwaregain" title="Permalink to this definition">¶</a></dt>
-<dd><p>rx_hardwaregain: Gain applied to RX path. Only applicable when
+<dt id="adi.ad936x.ad9364.rx_hardwaregain_chan0">
+<em class="property">property </em><code class="sig-name descname">rx_hardwaregain_chan0</code><a class="headerlink" href="#adi.ad936x.ad9364.rx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain_chan0: Gain applied to RX path. Only applicable when
 gain_control_mode is set to ‘manual’</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="adi.ad9361.ad9361.rx_lo">
-<em class="property">property </em><code class="sig-name descname">rx_lo</code><a class="headerlink" href="#adi.ad9361.ad9361.rx_lo" title="Permalink to this definition">¶</a></dt>
+<dt id="adi.ad936x.ad9364.rx_lo">
+<em class="property">property </em><code class="sig-name descname">rx_lo</code><a class="headerlink" href="#adi.ad936x.ad9364.rx_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_lo: Carrier frequency of RX path</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="adi.ad9361.ad9361.rx_rf_bandwidth">
-<em class="property">property </em><code class="sig-name descname">rx_rf_bandwidth</code><a class="headerlink" href="#adi.ad9361.ad9361.rx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dt id="adi.ad936x.ad9364.rx_rf_bandwidth">
+<em class="property">property </em><code class="sig-name descname">rx_rf_bandwidth</code><a class="headerlink" href="#adi.ad936x.ad9364.rx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="adi.ad9361.ad9361.sample_rate">
-<em class="property">property </em><code class="sig-name descname">sample_rate</code><a class="headerlink" href="#adi.ad9361.ad9361.sample_rate" title="Permalink to this definition">¶</a></dt>
+<dt id="adi.ad936x.ad9364.sample_rate">
+<em class="property">property </em><code class="sig-name descname">sample_rate</code><a class="headerlink" href="#adi.ad936x.ad9364.sample_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>sample_rate: Sample rate RX and TX paths in samples per second</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="adi.ad9361.ad9361.tx_hardwaregain">
-<em class="property">property </em><code class="sig-name descname">tx_hardwaregain</code><a class="headerlink" href="#adi.ad9361.ad9361.tx_hardwaregain" title="Permalink to this definition">¶</a></dt>
-<dd><p>tx_hardwaregain: Attenuation applied to TX path</p>
+<dt id="adi.ad936x.ad9364.tx_hardwaregain_chan0">
+<em class="property">property </em><code class="sig-name descname">tx_hardwaregain_chan0</code><a class="headerlink" href="#adi.ad936x.ad9364.tx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain_chan0: Attenuation applied to TX path</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="adi.ad9361.ad9361.tx_lo">
-<em class="property">property </em><code class="sig-name descname">tx_lo</code><a class="headerlink" href="#adi.ad9361.ad9361.tx_lo" title="Permalink to this definition">¶</a></dt>
+<dt id="adi.ad936x.ad9364.tx_lo">
+<em class="property">property </em><code class="sig-name descname">tx_lo</code><a class="headerlink" href="#adi.ad936x.ad9364.tx_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_lo: Carrier frequency of TX path</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="adi.ad9361.ad9361.tx_rf_bandwidth">
-<em class="property">property </em><code class="sig-name descname">tx_rf_bandwidth</code><a class="headerlink" href="#adi.ad9361.ad9361.tx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dt id="adi.ad936x.ad9364.tx_rf_bandwidth">
+<em class="property">property </em><code class="sig-name descname">tx_rf_bandwidth</code><a class="headerlink" href="#adi.ad936x.ad9364.tx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="adi.ad9361.ad9363">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad9361.</code><code class="sig-name descname">ad9363</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9361.ad9363" title="Permalink to this definition">¶</a></dt>
-<dd><p>AD9363 Transceiver</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="adi.ad9361.ad9364">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad9361.</code><code class="sig-name descname">ad9364</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9361.ad9364" title="Permalink to this definition">¶</a></dt>
-<dd><p>AD9364 Transceiver</p>
 </dd></dl>
 
 </div>
