@@ -53,10 +53,12 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
+from scipy.signal import firwin
 import csv
 
 lidar = None                    # Lidar context
 snapshot_path = ""              # If set to non-empty, save the rx samples to that path
+reference_signal = []           # Synthetic signal used for distance correlation
 NSAMPLES = 10
 # Keep count of distance measurements for each sample and for all channels.
 # One channel is used for the reference signal.
@@ -160,6 +162,7 @@ def single_capt():
 def config_board():
     global lidar
     global distances
+    global reference_signal
     global meas_distance_mean
     global mean_samples_count
     global mean_samples_sum
@@ -183,10 +186,18 @@ def config_board():
     distances          = [[] for i in range(16)] 
     meas_distance_mean = [0 for i in range (16)]
     mean_samples_count = [NSAMPLES for i in range (16)]
-    mean_samples_sum   = [0 for i in range (16)]    
+    mean_samples_sum   = [0 for i in range (16)]
+
+    # Generate the signal used for distance correlation based on user settings
+    leading_gap = 100    
+    square_signal  = [0 for i in range(leading_gap)] \
+        + [1 for i in range(lidar.laser_pulse_width)] \
+        + [0 for i in range(lidar.rx_buffer_size - lidar.laser_pulse_width - leading_gap)]
+    fir_filter = firwin(filter_numtaps.get(), filter_cutoff.get())
+    reference_signal = np.convolve(square_signal, fir_filter)    
 
 root = tk.Tk()
-root.title("TOF Demo")
+root.title("AD-FMCLIDAR1-EBZ")
 
 DEFAULT_IP           = '10.48.65.153'
 DEFAULT_PULSE_WIDTH  = '20'
@@ -195,6 +206,8 @@ DEFAULT_TRIG_LEVEL   = '-10'
 DEFAULT_APD_VOLTAGE  = '-160.0'
 DEFAULT_TILT_VOLTAGE = '1.0'
 DEFAULT_PULSE_DELAY = '248'
+DEFAULT_FILTER_NUMTAPS = 64   # Length of filter for synthetic signal generation
+DEFAULT_FILTER_CUTOFF  = 0.05 # Cuttof frequency of filter for synthetic signal generation
 
 TIME_OFFSET     = 167.033333
 RUN_DUMMY_DATA  = 0
@@ -229,9 +242,9 @@ fr1.pack(side = tk.LEFT, anchor = 'n', padx = 10)
 fr2 = tk.Frame(fr1)
 fr2.grid(row = 0, column = 0, pady = 10)
 
-laser_settings_label = tk.Label(fr2, text = "LiDAR Demo")
-laser_settings_label.grid(row = 0, column = 0, columnspan = 2, pady = (0, 10))
-laser_settings_label.configure(font="Verdana 20")
+laser_settings_label = tk.Label(fr2, text = "AD-FMCLIDAR1-EBZ")
+laser_settings_label.grid(row = 0, column = 0, columnspan = 2, pady = (0, 50))
+laser_settings_label.configure(font="Verdana 19 bold")
 
 label1 = tk.Label(fr2, text = "IP Addressss: ")
 label1.grid(row = 1, column = 0)
@@ -240,7 +253,7 @@ entry1 = tk.Entry(fr2, textvariable=ip_addr)
 entry1.grid(row = 1, column = 1)
 
 laser_settings_label = tk.Label(fr2, text = "Laser Settings")
-laser_settings_label.grid(row = 2, column = 0, columnspan = 2, pady = (25, 10))
+laser_settings_label.grid(row = 2, column = 0, columnspan = 2, pady = (30, 10))
 laser_settings_label.configure(font="Verdana 16")
 
 label2 = tk.Label(fr2, text = "Pulse Width (ns): ")
@@ -271,7 +284,7 @@ en_laser = tk.Checkbutton(fr2, text="Enable Laser", variable = laser_enabled,
 en_laser.grid(row = 5, column = 0)
 
 afe_settings_label = tk.Label(fr2, text = "AFE Settings")
-afe_settings_label.grid(row = 6, column = 0, columnspan = 2, pady = (20, 10))
+afe_settings_label.grid(row = 6, column = 0, columnspan = 2, pady = (30, 10))
 afe_settings_label.configure(font="Verdana 16")
 
 label7 = tk.Label(fr2, text = "APD Bias (V): ")
@@ -287,7 +300,7 @@ entry8 = tk.Entry(fr2, textvariable=tilt_voltage)
 entry8.grid(row = 8, column = 1)
 
 sequencer_settings_label = tk.Label(fr2, text = "Sequencer Settings")
-sequencer_settings_label.grid(row = 9, column = 0, columnspan = 2, pady = (20, 10))
+sequencer_settings_label.grid(row = 9, column = 0, columnspan = 2, pady = (30, 10))
 sequencer_settings_label.configure(font="Verdana 16")
 
 seq_mode = tk.StringVar(root)
@@ -304,15 +317,33 @@ pulse_delay_label.grid(row = 11, column = 0)
 pulse_delay_entry = tk.Entry(fr2, textvariable=pulse_delay)
 pulse_delay_entry.grid(row = 11, column = 1)
 
+ref_signal_label = tk.Label(fr2, text = "Reference Signal Parameters")
+ref_signal_label.grid(row = 12, column = 0, columnspan = 2, pady = (30, 10))
+ref_signal_label.configure(font="Verdana 16")
+
+filter_numtaps_label = tk.Label(fr2, text = "Filter Length: ")
+filter_numtaps_label.grid(row = 13, column = 0)
+
+filter_numtaps = tk.IntVar(value=DEFAULT_FILTER_NUMTAPS)
+filter_numtaps_entry = tk.Entry(fr2, textvariable=filter_numtaps)
+filter_numtaps_entry.grid(row = 13, column = 1)
+
+filter_cutoff_label = tk.Label(fr2, text = "Filter Cutoff: ")
+filter_cutoff_label.grid(row = 14, column = 0)
+
+filter_cutoff = tk.DoubleVar(value=DEFAULT_FILTER_CUTOFF)
+filter_cutoff_entry = tk.Entry(fr2, textvariable=filter_cutoff)
+filter_cutoff_entry.grid(row = 14, column = 1)
+
 button_txt = tk.StringVar()
 button = tk.Button(fr2, textvariable=button_txt, command=cont_capt)
 button_txt.set("Start")
 button.config(width = 20, height = 1)
-button.grid(row = 12, column = 0, columnspan = 2, pady = (60, 5))
+button.grid(row = 15, column = 0, columnspan = 2, pady = (60, 5))
 
 config_button = tk.Button(fr2, text="Config Board", command=config_board)
 config_button.config(width = 20, height = 1)
-config_button.grid(row = 13, column = 0, columnspan = 2, pady = 5)
+config_button.grid(row = 16, column = 0, columnspan = 2, pady = 5)
 
 def save_snapshot():
     """Request a snapshot save to the user selected file."""
@@ -324,7 +355,7 @@ def save_snapshot():
 
 save_csv = tk.Button(fr2, text="Save Snapshot", command=save_snapshot)
 save_csv.config(width = 20, height = 1)
-save_csv.grid(row = 14, column = 0, columnspan = 2, pady = 10)
+save_csv.grid(row = 17, column = 0, columnspan = 2, pady = 10)
 
 fr3 = tk.Frame(fr1)
 fr3.grid(row = 3, column = 0)
