@@ -33,7 +33,7 @@
 
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
-from adi.ad9361 import ad9361
+from adi.ad936x import ad9361
 
 
 class FMComms5(ad9361):

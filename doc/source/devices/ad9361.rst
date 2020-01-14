@@ -1,4 +1,13 @@
-AD936X Family
+AD936x Family
 ===================
-.. automodule:: adi.ad9361
+
+This class includes support for any AD936x based device including AD9361, AD9363, AD9364. The following development boards have been tested:
+
+ * FMCOMMS 2/3/4/5
+ * ADRV9361-Z7035
+ * ADRV9364-Z7020
+ * ADALM-PLUTO
+ * Ettus Research USRP E310
+
+.. automodule:: adi.ad936x
    :members:
