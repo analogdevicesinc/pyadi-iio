@@ -46,8 +46,8 @@ sdr.rx_rf_bandwidth = 4000000
 sdr.rx_lo = 2000000000
 sdr.tx_lo = 2000000000
 sdr.tx_cyclic_buffer = True
-sdr.tx_hardwaregain = -30
-sdr.gain_control_mode = "slow_attack"
+sdr.tx_hardwaregain_chan0 = -30
+sdr.gain_control_mode_chan0 = "slow_attack"
 
 # Read properties
 print("RX LO %s" % (sdr.rx_lo))
