@@ -69,8 +69,8 @@ mean_samples_count = [NSAMPLES for i in range (16)]
 mean_samples_sum   = [0 for i in range (16)]
 
 def cont_capt():
-    global laser_enabled    
     """Continuously request samples after Start is pressed."""
+    global laser_enabled    
     if button_txt.get() == "Start" and laser_enabled.get() == 1:
         button_txt.set("Stop")
     else:
@@ -91,7 +91,8 @@ def single_capt():
                 if len(s) > 0:  # not empty 
                     wr.writerow(s.tolist())
         snapshot_path = ""      # wait for the next request
-       
+
+    samples[0] = [x*120 for x in reference_signal]
     ref = samples[0] # Reference signal    
     ref = ref - np.mean(ref) # Adjust to zero
         
@@ -167,12 +168,13 @@ def config_board():
     global mean_samples_count
     global mean_samples_sum
     if lidar == None:
-        try:
+        try:            
             lidar = fmclidar1(uri="ip:" + ip_addr.get())
+            msg_log_txt.insert(tk.END, 'Device Connected.\n')
             lidar.rx_buffer_size = 1024
             lidar.laser_enable()            
         except:
-            txt1.insert(tk.END, 'No device found.\n')
+            msg_log_txt.insert(tk.END, 'No device found.\n')
             return    
     lidar.laser_pulse_width = int(pw.get())
     lidar.sequencer_pulse_delay = int(pulse_delay.get())
@@ -237,14 +239,14 @@ pulse_delay = tk.StringVar()
 pulse_delay.set(DEFAULT_PULSE_DELAY)
 
 fr1 = tk.Frame(root)
-fr1.pack(side = tk.LEFT, anchor = 'n', padx = 10)
+fr1.pack(side = tk.LEFT, anchor = 'n', pady = 30, padx = 30)
 
 fr2 = tk.Frame(fr1)
 fr2.grid(row = 0, column = 0, pady = 10)
 
 laser_settings_label = tk.Label(fr2, text = "AD-FMCLIDAR1-EBZ")
 laser_settings_label.grid(row = 0, column = 0, columnspan = 2, pady = (0, 50))
-laser_settings_label.configure(font="Verdana 19 bold")
+laser_settings_label.configure(font="Verdana 19 bold underline")
 
 label1 = tk.Label(fr2, text = "IP Addressss: ")
 label1.grid(row = 1, column = 0)
@@ -256,8 +258,8 @@ laser_settings_label = tk.Label(fr2, text = "Laser Settings")
 laser_settings_label.grid(row = 2, column = 0, columnspan = 2, pady = (30, 10))
 laser_settings_label.configure(font="Verdana 16")
 
-label2 = tk.Label(fr2, text = "Pulse Width (ns): ")
-label2.grid(row = 3, column = 0)
+msg_log_label = tk.Label(fr2, text = "Pulse Width (ns): ")
+msg_log_label.grid(row = 3, column = 0)
 
 entry2 = tk.Entry(fr2, textvariable=pw)
 entry2.grid(row = 3, column = 1)
@@ -287,17 +289,17 @@ afe_settings_label = tk.Label(fr2, text = "AFE Settings")
 afe_settings_label.grid(row = 6, column = 0, columnspan = 2, pady = (30, 10))
 afe_settings_label.configure(font="Verdana 16")
 
-label7 = tk.Label(fr2, text = "APD Bias (V): ")
-label7.grid(row = 7, column = 0)
+apd_bias_label = tk.Label(fr2, text = "APD Bias (V): ")
+apd_bias_label.grid(row = 7, column = 0)
 
-entry7 = tk.Entry(fr2, textvariable=apd_voltage)
-entry7.grid(row = 7, column = 1)
+apd_bias_entry = tk.Entry(fr2, textvariable=apd_voltage)
+apd_bias_entry.grid(row = 7, column = 1)
 
-label8 = tk.Label(fr2, text = "Tilt Voltage (V): ")
-label8.grid(row = 8, column = 0)
+tilt_voltage_label = tk.Label(fr2, text = "Tilt Voltage (V): ")
+tilt_voltage_label.grid(row = 8, column = 0)
 
-entry8 = tk.Entry(fr2, textvariable=tilt_voltage)
-entry8.grid(row = 8, column = 1)
+tilt_voltage_entry = tk.Entry(fr2, textvariable=tilt_voltage)
+tilt_voltage_entry.grid(row = 8, column = 1)
 
 sequencer_settings_label = tk.Label(fr2, text = "Sequencer Settings")
 sequencer_settings_label.grid(row = 9, column = 0, columnspan = 2, pady = (30, 10))
@@ -360,22 +362,18 @@ save_csv.grid(row = 17, column = 0, columnspan = 2, pady = 10)
 fr3 = tk.Frame(fr1)
 fr3.grid(row = 3, column = 0)
 
-label2 = tk.Label(fr3, text = "Message Log: ")
-label2.grid(row = 0, column = 0)
+msg_log_label = tk.Label(fr3, text = "Message Log: ")
+msg_log_label.grid(row = 0, column = 0)
 
-txt1 = tk.Text(fr3, width = 40, height = 5)
-txt1.grid(row = 4, column = 0)
+msg_log_txt = tk.Text(fr3, width = 40, height = 5)
+msg_log_txt.grid(row = 4, column = 0)
 
-fig = plt.figure(figsize=(15,10))
+fig = plt.figure(figsize=(15, 20))
 signal_plot = fig.add_subplot(211)
-signal_plot.set_title('Pulse Shape')
-signal_plot.set_xlabel('Time (ns)')
-signal_plot.set_ylabel('ADC Codes')
-
 distance_plot = fig.add_subplot(212)
 
 canvas = FigureCanvasTkAgg(fig, master=root)
-canvas.get_tk_widget().pack(side = tk.LEFT, pady = 10, padx = 10, anchor = 'n')
+canvas.get_tk_widget().pack(side = tk.RIGHT, anchor = 'n')
 canvas.draw()
 root.update_idletasks()
 
