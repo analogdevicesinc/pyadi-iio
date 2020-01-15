@@ -146,6 +146,35 @@ def dma_rx(classname, devicename, channel):
     del sdr
 
 
+def dma_tx(classname, devicename, channel):
+    bi = BoardInterface(classname, devicename)
+    global URI
+    sdr = eval(bi.classname + "(uri='" + URI + "')")
+
+    TXFS = 1000
+    N = 2 ** 15
+    ts = 1 / float(TXFS)
+    t = np.arange(0, N * ts, ts)
+    fc = 10000
+    d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+
+    if sdr._num_tx_channels > 2:
+        if not isinstance(channel, list):
+            sdr.tx_enabled_channels = [channel]
+        else:
+            sdr.tx_enabled_channels = channel
+            d = [d] * len(channel)
+
+    try:
+        for _ in range(10):
+            sdr.tx(d)
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+    del sdr
+
+
 def dma_loopback(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
     global URI
