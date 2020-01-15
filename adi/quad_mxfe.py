@@ -107,7 +107,7 @@ class QuadMxFE(rx_tx, context_manager):
         # Dynamically get channels
         dds_chans = []
         for ch in self._rxadc.channels:
-            if (ch._id.find('voltage_q') != -1):
+            if ch._id.find("voltage_q") != -1:
                 continue
             if ch.scan_element:
                 self._rx_channel_names.append(ch._id)
@@ -115,20 +115,40 @@ class QuadMxFE(rx_tx, context_manager):
                 self._rx_dds_channel_names.append(ch._id)
                 dds_chans.append(ch)
         for ch in self._txdac.channels:
-            if (ch._id.find('voltage_q') != -1):
+            if ch._id.find("voltage_q") != -1:
                 continue
             if ch.scan_element:
                 self._tx_channel_names.append(ch._id)
             else:
                 self._dds_channel_names.append(ch._id)
 
-        # Sort DDS channels
-        def ignoreN(w):
-            return int(w[len("altvoltage"):])
-        self._dds_channel_names = sorted(self._dds_channel_names, key=ignoreN)
+        # Sort converter channels
+        def sortconv(chans_names):
+            tmpI = filter(lambda k: "_i" in k, chans_names)
+            tmpQ = filter(lambda k: "_q" in k, chans_names)
+
+            def ignoreadc(w):
+                return int(w[len("voltage") : w.find("_")])
+
+            tmpI = sorted(tmpI, key=ignoreadc)
+            tmpQ = sorted(tmpQ, key=ignoreadc)
+            chans_names = []
+            for i in range(len(tmpI)):
+                chans_names.append(tmpI[i])
+                chans_names.append(tmpQ[i])
+            return chans_names
+
+        self._rx_dds_channel_names = sortconv(self._rx_dds_channel_names)
+        self._tx_dds_channel_names = sortconv(self._tx_dds_channel_names)
+
+        # Sort dds channels
+        def ignoredds(w):
+            return int(w[len("altvoltage") :])
+
+        self._dds_channel_names = sorted(self._dds_channel_names, key=ignoredds)
 
         rx_tx.__init__(self)
-        self.rx_buffer_size = 2**16
+        self.rx_buffer_size = 2 ** 16
 
         # Driver structure
         # RX path (inputs)
