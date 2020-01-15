@@ -138,8 +138,8 @@ class QuadMxFE(rx_tx, context_manager):
                 chans_names.append(tmpQ[i])
             return chans_names
 
-        self._rx_dds_channel_names = sortconv(self._rx_dds_channel_names)
-        self._tx_dds_channel_names = sortconv(self._tx_dds_channel_names)
+        self._rx_channel_names = sortconv(self._rx_channel_names)
+        self._tx_channel_names = sortconv(self._tx_channel_names)
 
         # Sort dds channels
         def ignoredds(w):
