@@ -103,11 +103,9 @@ def single_capt():
         lag_lidar = corr_lidar.argmax() - (len(s) - 1)
         # Adjust for system offset
         lag_lidar -= 8
-        meas_distance = abs(lag_lidar*15) - distance_offset.get()
-        alpha = 0.7
-        meas_distance_mean[i] = (meas_distance * alpha) + (meas_distance_mean[i] * (1-alpha))        
+        meas_distance = abs(lag_lidar*15) - distance_offset.get()        
         if mean_samples_count[i] > 0:
-            mean_samples_sum[i] += meas_distance_mean[i]
+            mean_samples_sum[i] += meas_distance
             mean_samples_count[i] -= 1
         else:
             distance_plot.cla()
