@@ -52,7 +52,7 @@ class fmclidar1 (ad5627, ad9094, phy):
     def rx(self):
         """Read the buffers for all the enabled channels, except Channel4 which should
         be all zeroes and not relevant for the user.
-        """               
+        """
         all_channels = [[] for i in range(16)]
 
         if (self.channel_sequencer_opmode == "manual"):
@@ -71,33 +71,33 @@ class fmclidar1 (ad5627, ad9094, phy):
             # Channel4 holds the channel pattern. This is used to figure out the
             # actual physical channel that the reading comes from. Keep
             # refilling the buffers until all 16 channels have been read.
-            while ((first == False) or (second == False) or
-                   (third == False) or (fourth == False)):
+            while ((first is False) or (second is False) or
+                   (third is False) or (fourth is False)):
                 rx = super().rx()
                 pattern = rx[4][0]      # One entry from one Channel4 sample
                 # print(str(pattern) + " ", end='')
-                if (pattern == 0 and first == False):
+                if (pattern == 0 and first is False):
                     all_channels[0] = rx[0].astype(np.int8)
                     all_channels[1] = rx[1].astype(np.int8)
                     all_channels[2] = rx[2].astype(np.int8)
                     all_channels[3] = rx[3].astype(np.int8)
                     first = True
-                
-                if (pattern == 85 and second == False):
+
+                if (pattern == 85 and second is False):
                     all_channels[4] = rx[0].astype(np.int8)
                     all_channels[5] = rx[1].astype(np.int8)
                     all_channels[6] = rx[2].astype(np.int8)
                     all_channels[7] = rx[3].astype(np.int8)
                     second = True
 
-                if (pattern == -86 and third == False):
+                if (pattern == -86 and third is False):
                     all_channels[8] = rx[0].astype(np.int8)
                     all_channels[9] = rx[1].astype(np.int8)
                     all_channels[10] = rx[2].astype(np.int8)
                     all_channels[11] = rx[3].astype(np.int8)
                     third = True
 
-                if (pattern == -1 and fourth == False):
+                if (pattern == -1 and fourth is False):
                     all_channels[12] = rx[0].astype(np.int8)
                     all_channels[13] = rx[1].astype(np.int8)
                     all_channels[14] = rx[2].astype(np.int8)
