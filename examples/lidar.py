@@ -80,9 +80,7 @@ def cont_capt():
 
 def single_capt():
     """Display info about a single capture."""
-    global snapshot_path
-    if 'sample_number' not in single_capt.__dict__:
-        single_capt.sample_number = 0
+    global snapshot_path    
     samples = lidar.rx()    
     if snapshot_path != "":     # Requested to save a snapshot
         with open(snapshot_path, 'w') as result_file:
@@ -127,10 +125,13 @@ def single_capt():
             distance_plot.legend()
             mean_samples_sum[i] = 0
             mean_samples_count[i] = NSAMPLES
-            # single_capt.sample_number += 1
-            # if single_capt.sample_number > MAX_SAMPLES:
-            #     distance_plot.set_xlim([single_capt.sample_number - MAX_SAMPLES,
-            #                             single_capt.sample_number])
+
+    # Readjust the axes after a certain number of measurements so that
+    # MAX_SAMPLES measurements are always visible on the plot
+    samples_taken = len(distances[0])
+    if samples_taken > MAX_SAMPLES - 5:
+        distance_plot.set_xlim([samples_taken - MAX_SAMPLES + 5,
+                                samples_taken + 5])
 
     # Plot data
     signal_plot.cla()
