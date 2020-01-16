@@ -91,10 +91,8 @@ def single_capt():
                 if len(s) > 0:  # not empty 
                     wr.writerow(s.tolist())
         snapshot_path = ""      # wait for the next request
-
-    samples[0] = [x*120 for x in reference_signal]
-    ref = samples[0] # Reference signal    
-    ref = ref - np.mean(ref) # Adjust to zero
+      
+    ref = [x*120 for x in reference_signal] # Reference signal
         
     for i, s in enumerate(samples, start=0):        
         if (len(s) == 0):
@@ -107,7 +105,7 @@ def single_capt():
         lag_lidar = corr_lidar.argmax() - (len(s) - 1)
         # Adjust for system offset
         lag_lidar -= 8
-        meas_distance = abs(lag_lidar*15)           
+        meas_distance = abs(lag_lidar*15) - distance_offset.get()
         alpha = 1
         meas_distance_mean[i] = (meas_distance * alpha) + (meas_distance_mean[i] * (1-alpha))
         if mean_samples_count[i] > 0:
@@ -146,6 +144,7 @@ def single_capt():
         if (len(s) == 0):
             continue
         signal_plot.plot(s, label="Channel" + str(i))
+    signal_plot.plot(ref, label="Reference")
         
     try:
         a.plot(top_edge, x[top_edge], 'X')
@@ -210,6 +209,8 @@ DEFAULT_TILT_VOLTAGE = '1.0'
 DEFAULT_PULSE_DELAY = '248'
 DEFAULT_FILTER_NUMTAPS = 64   # Length of filter for synthetic signal generation
 DEFAULT_FILTER_CUTOFF  = 0.05 # Cuttof frequency of filter for synthetic signal generation
+# Measured distance offset for the synthetic signal (for 64 and 0.05)
+DEFAULT_DISTANCE_OFFSET = 745 
 
 TIME_OFFSET     = 167.033333
 RUN_DUMMY_DATA  = 0
@@ -245,7 +246,7 @@ fr2 = tk.Frame(fr1)
 fr2.grid(row = 0, column = 0, pady = 10)
 
 laser_settings_label = tk.Label(fr2, text = "AD-FMCLIDAR1-EBZ")
-laser_settings_label.grid(row = 0, column = 0, columnspan = 2, pady = (0, 50))
+laser_settings_label.grid(row = 0, column = 0, columnspan = 2, pady = (0, 10))
 laser_settings_label.configure(font="Verdana 19 bold underline")
 
 label1 = tk.Label(fr2, text = "IP Addressss: ")
@@ -337,15 +338,22 @@ filter_cutoff = tk.DoubleVar(value=DEFAULT_FILTER_CUTOFF)
 filter_cutoff_entry = tk.Entry(fr2, textvariable=filter_cutoff)
 filter_cutoff_entry.grid(row = 14, column = 1)
 
+distance_offset_label = tk.Label(fr2, text = "Distance Offset (cm): ")
+distance_offset_label.grid(row = 15, column = 0)
+
+distance_offset = tk.DoubleVar(value=DEFAULT_DISTANCE_OFFSET)
+distance_offset_entry = tk.Entry(fr2, textvariable=distance_offset)
+distance_offset_entry.grid(row = 15, column = 1)
+
 button_txt = tk.StringVar()
 button = tk.Button(fr2, textvariable=button_txt, command=cont_capt)
 button_txt.set("Start")
 button.config(width = 20, height = 1)
-button.grid(row = 15, column = 0, columnspan = 2, pady = (60, 5))
+button.grid(row = 16, column = 0, columnspan = 2, pady = (60, 5))
 
 config_button = tk.Button(fr2, text="Config Board", command=config_board)
 config_button.config(width = 20, height = 1)
-config_button.grid(row = 16, column = 0, columnspan = 2, pady = 5)
+config_button.grid(row = 17, column = 0, columnspan = 2, pady = 5)
 
 def save_snapshot():
     """Request a snapshot save to the user selected file."""
@@ -357,7 +365,7 @@ def save_snapshot():
 
 save_csv = tk.Button(fr2, text="Save Snapshot", command=save_snapshot)
 save_csv.config(width = 20, height = 1)
-save_csv.grid(row = 17, column = 0, columnspan = 2, pady = 10)
+save_csv.grid(row = 18, column = 0, columnspan = 2, pady = 10)
 
 fr3 = tk.Frame(fr1)
 fr3.grid(row = 3, column = 0)
