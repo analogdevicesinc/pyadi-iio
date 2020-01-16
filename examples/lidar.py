@@ -104,8 +104,8 @@ def single_capt():
         # Adjust for system offset
         lag_lidar -= 8
         meas_distance = abs(lag_lidar*15) - distance_offset.get()
-        alpha = 1
-        meas_distance_mean[i] = (meas_distance * alpha) + (meas_distance_mean[i] * (1-alpha))
+        alpha = 0.7
+        meas_distance_mean[i] = (meas_distance * alpha) + (meas_distance_mean[i] * (1-alpha))        
         if mean_samples_count[i] > 0:
             mean_samples_sum[i] += meas_distance_mean[i]
             mean_samples_count[i] -= 1
@@ -116,7 +116,7 @@ def single_capt():
             distance_plot.set_xlabel('Sample number')
             distance_plot.set_ylabel('Distance (cm)')
             distance_plot.bar(range(MAX_SAMPLES), [0] * MAX_SAMPLES)            
-            dist = mean_samples_sum[i] / NSAMPLES
+            dist = round(mean_samples_sum[i] / NSAMPLES, 2)
             distances[i].append(dist)
             for j, d in enumerate(distances, start=0):
                 if len(d) == 0:
