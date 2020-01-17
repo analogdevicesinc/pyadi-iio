@@ -31,12 +31,13 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import numpy as np
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
 class ad9094(rx, context_manager):
     """ AD9094 Quad ADC """
-
+    _rx_data_type = np.int8
     _complex_data = False
     _rx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3", "voltage4"]
     _device_name = ""
