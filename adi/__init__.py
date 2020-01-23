@@ -43,6 +43,8 @@ from adi.adrv9009_zu11eg import *
 
 from adi.adrv9009_zu11eg_multi import *
 
+from adi.adrv9009_zu11eg_fmcomms8 import *
+
 from adi.ad9680 import *
 
 from adi.ad9144 import *
