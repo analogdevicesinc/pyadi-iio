@@ -37,7 +37,7 @@ def test_adrv9009_zu11eg_rx_data(test_dma_rx, classname, hardware, channel):
     "param_set",
     [
         dict(
-            trx_lo_chip_c=1000000000,
+            trx_lo_chip_c=1700000000,
             trx_lo_chip_d=5000000000,
             gain_control_mode_chan0_chip_c="slow_attack",
             gain_control_mode_chan1_chip_c="slow_attack",
@@ -55,7 +55,7 @@ def test_adrv9009_zu11eg_rx_data(test_dma_rx, classname, hardware, channel):
             calibrate_chip_d=1,
         ),
         dict(
-            trx_lo_chip_c=3000000000,
+            trx_lo_chip_c=3300000000,
             trx_lo_chip_d=4000000000,
             gain_control_mode_chan0_chip_c="slow_attack",
             gain_control_mode_chan1_chip_c="slow_attack",
@@ -73,7 +73,7 @@ def test_adrv9009_zu11eg_rx_data(test_dma_rx, classname, hardware, channel):
             calibrate_chip_d=1,
         ),
         dict(
-            trx_lo_chip_c=5000000000,
+            trx_lo_chip_c=4700000000,
             trx_lo_chip_d=1000000000,
             gain_control_mode_chan0_chip_c="slow_attack",
             gain_control_mode_chan1_chip_c="slow_attack",
