@@ -48,6 +48,3 @@ data = adis16460.rx()
 
 # print Y and Z axis acceleration
 print(data)
-
-
-
