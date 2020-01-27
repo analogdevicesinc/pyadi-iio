@@ -45,7 +45,7 @@ class ad7124(rx, context_manager):
     """ AD7124 ADC """
 
     _complex_data = False
-    channel: List[iio.channel] = []
+    channel = []  # type: ignore
     _device_name = ""
     _rx_data_type = np.int32
 
