@@ -58,12 +58,12 @@ from scipy.signal import firwin
 
 lidar = None  # Lidar context
 snapshot_path = ""  # If set to non-empty, save the rx samples to that path
-reference_signal = []  # Synthetic signal used for distance correlation
+reference_signal = []  # type: ignore Synthetic signal used for distance correlation
 NSAMPLES = 10
 # Keep count of distance measurements for each sample and for all channels.
 # One channel is used for the reference signal.
-all_channels_samples = [[] for i in range(16)]
-distances = [[] for i in range(16)]
+all_channels_samples = [[] for i in range(16)]  # type: ignore
+distances = [[] for i in range(16)]  # type: ignore
 meas_distance_mean = [0 for i in range(16)]
 mean_samples_count = [NSAMPLES for i in range(16)]
 mean_samples_sum = [0 for i in range(16)]
@@ -214,10 +214,10 @@ DEFAULT_TRIG_LEVEL = "-10"
 DEFAULT_APD_VOLTAGE = "-160.0"
 DEFAULT_TILT_VOLTAGE = "1.0"
 DEFAULT_PULSE_DELAY = "248"
-DEFAULT_FILTER_NUMTAPS = 64  # Length of filter for synthetic signal generation
-DEFAULT_FILTER_CUTOFF = (
-    0.05
-)  # Cuttof frequency of filter for synthetic signal generation
+# Length of filter for synthetic signal generation
+DEFAULT_FILTER_NUMTAPS = 64
+# Cuttof frequency of filter for synthetic signal generation
+DEFAULT_FILTER_CUTOFF = 0.05
 # Measured distance offset for the synthetic signal (for 64 and 0.05)
 DEFAULT_DISTANCE_OFFSET = 745
 

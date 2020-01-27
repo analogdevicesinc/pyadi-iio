@@ -32,9 +32,6 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from decimal import Decimal
-from typing import List
-
-import iio
 
 import numpy as np
 from adi.attribute import attribute
