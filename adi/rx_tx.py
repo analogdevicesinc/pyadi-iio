@@ -34,6 +34,7 @@
 from typing import List
 
 import iio
+
 import numpy as np
 from adi.attribute import attribute
 from adi.dds import dds

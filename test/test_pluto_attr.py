@@ -1,6 +1,7 @@
 import random
 
 import iio
+
 import numpy as np
 import pytest
 from adi import Pluto

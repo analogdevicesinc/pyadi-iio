@@ -4,6 +4,7 @@ import subprocess
 import sys
 
 import iio
+
 import scapy.all as scapy
 
 HOSTNAMES = ["analog.local", "analog.lan"]
