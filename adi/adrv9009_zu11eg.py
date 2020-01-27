@@ -67,7 +67,9 @@ class adrv9009_zu11eg(adrv9009):
     def gain_control_mode_chip_b(self):
         """gain_control_mode_chip_b: Mode of receive path AGC. Options are:
         slow_attack, manual"""
-        return self._get_iio_attr_str("voltage0", "gain_control_mode", False, self._ctrl_b)
+        return self._get_iio_attr_str(
+            "voltage0", "gain_control_mode", False, self._ctrl_b
+        )
 
     @gain_control_mode_chip_b.setter
     def gain_control_mode_chip_b(self, value):

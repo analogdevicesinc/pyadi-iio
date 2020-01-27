@@ -32,7 +32,9 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from decimal import Decimal
+from typing import List
 
+import iio
 import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
@@ -43,7 +45,7 @@ class ad7124(rx, context_manager):
     """ AD7124 ADC """
 
     _complex_data = False
-    channel = []
+    channel: List[iio.channel] = []
     _device_name = ""
     _rx_data_type = np.int32
 
@@ -77,6 +79,7 @@ class ad7124(rx, context_manager):
 
     class _channel(attribute):
         """AD7124 channel"""
+
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
@@ -93,9 +96,7 @@ class ad7124(rx, context_manager):
 
         @scale.setter
         def scale(self, value):
-            self._set_iio_attr(
-                self.name, "scale", False, str(Decimal(value).real)
-            )
+            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
 
         @property
         def offset(self):
