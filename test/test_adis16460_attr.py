@@ -2,7 +2,6 @@ import random
 import test.iio_scanner as iio_scanner
 
 import iio
-
 import numpy as np
 import pytest
 from adi import adis16460
@@ -47,7 +46,7 @@ def test_adis16460_attribute_single_value(attr, start, stop, tol):
     nums = []
     for k in range(0, 12):
         nums.append(2 ** k)
-    ind = random.randint(0, len(nums)-1)
+    ind = random.randint(0, len(nums) - 1)
     val = nums[ind]
     # Check hardware
     setattr(sdr, attr, val)
