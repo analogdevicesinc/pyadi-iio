@@ -250,31 +250,31 @@ class ad9361(ad9364):
     def gain_control_mode_chan1(self):
         """gain_control_mode_chan1: Mode of receive path AGC. Options are:
         slow_attack, fast_attack, manual"""
-        return self._get_iio_attr_str("voltage0", "gain_control_mode", False)
+        return self._get_iio_attr_str("voltage1", "gain_control_mode", False)
 
     @gain_control_mode_chan1.setter
     def gain_control_mode_chan1(self, value):
-        self._set_iio_attr("voltage0", "gain_control_mode", False, value)
+        self._set_iio_attr("voltage1", "gain_control_mode", False, value)
 
     @property
     def rx_hardwaregain_chan1(self):
         """rx_hardwaregain_chan1: Gain applied to RX path. Only applicable when
         gain_control_mode is set to 'manual'"""
-        return self._get_iio_attr("voltage0", "hardwaregain", False)
+        return self._get_iio_attr("voltage1", "hardwaregain", False)
 
     @rx_hardwaregain_chan1.setter
     def rx_hardwaregain_chan1(self, value):
         if self.gain_control_mode_chan1 == "manual":
-            self._set_iio_attr_float("voltage0", "hardwaregain", False, value)
+            self._set_iio_attr_float("voltage1", "hardwaregain", False, value)
 
     @property
     def tx_hardwaregain_chan1(self):
         """tx_hardwaregain_chan1: Attenuation applied to TX path"""
-        return self._get_iio_attr("voltage0", "hardwaregain", True)
+        return self._get_iio_attr("voltage1", "hardwaregain", True)
 
     @tx_hardwaregain_chan1.setter
     def tx_hardwaregain_chan1(self, value):
-        self._set_iio_attr_float("voltage0", "hardwaregain", True, value)
+        self._set_iio_attr_float("voltage1", "hardwaregain", True, value)
 
 
 class ad9363(ad9361):
