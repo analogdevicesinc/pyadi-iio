@@ -47,10 +47,10 @@ sdr.rx_lo_chip_b = 2000000000
 sdr.tx_lo = 2000000000
 sdr.tx_lo_chip_b = 2000000000
 sdr.tx_cyclic_buffer = True
-sdr.tx_hardwaregain = -30
-sdr.tx_hardwaregain_chip_b = -30
-sdr.gain_control_mode = "slow_attack"
-sdr.gain_control_mode_chip_b = "slow_attack"
+sdr.tx_hardwaregain_chan0 = -30
+sdr.tx_hardwaregain_chip_b_chan0 = -30
+sdr.gain_control_mode_chan0 = "slow_attack"
+sdr.gain_control_mode_chip_b_chan0 = "slow_attack"
 sdr.sample_rate = 1000000
 
 # Set single DDS tone for TX on one transmitter
