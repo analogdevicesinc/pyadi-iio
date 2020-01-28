@@ -42,7 +42,7 @@ from scipy import signal
 daq = adi.DAQ2(uri="ip:192.168.86.44")
 
 # Transmit a tone with the DDS API
-daq.dds_single_tone(200000000,0.5)
+daq.dds_single_tone(200000000, 0.5)
 
 # Collect data
 fs = float(daq.sample_rate)

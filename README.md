@@ -12,6 +12,7 @@
 pyadi-iio is a python abstraction module for ADI hardware with IIO drivers to make them easier to use. The libIIO interface although extremely flexible can be cumbersome to use due to the amount of boilerplate code required for even simple examples, especially when interfacing with buffers. This module has custom interfaces classes for specific parts and development systems which can generally make them easier to understand and use. To get up and running with a device can be as simple as a few lines of code:
 ```python
 import adi
+
 # Create device from specific uri address
 sdr = adi.ad9361(uri="ip:192.168.2.1")
 # Get data from transceiver

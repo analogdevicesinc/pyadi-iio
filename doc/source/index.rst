@@ -8,6 +8,8 @@ Analog Devices Hardware Python Interfaces
 
 This module provides a convenient way to access and control ADI hardware from Python through existing IIO drivers.
 
+.. figure:: ../../images/PyADI-IIO_Logo_72.png
+
 .. image:: https://secure.travis-ci.org/analogdevicesinc/pyadi-iio.png
     :target: http://travis-ci.org/analogdevicesinc/pyadi-iio
 .. image:: https://badge.fury.io/py/pyadi-iio.svg
