@@ -172,6 +172,7 @@
 <h2>Cyclic Mode<a class="headerlink" href="#cyclic-mode" title="Permalink to this headline">¶</a></h2>
 <p>In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to. To complement these use cases it is possible to create transmit buffer which repeats, which we call <strong>cylic buffers</strong>. Cyclic buffers are identical or normal or non-cylic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
 <span class="c1"># Create a complex sinusoid</span>
 <span class="n">fc</span> <span class="o">=</span> <span class="mi">3000000</span>
