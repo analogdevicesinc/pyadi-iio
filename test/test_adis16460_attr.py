@@ -47,7 +47,7 @@ def test_adis16460_attribute_single_value(attr, start, stop, tol):
     nums = []
     for k in range(0, 12):
         nums.append(2 ** k)
-    ind = random.randint(0, len(nums)-1)
+    ind = random.randint(0, len(nums) - 1)
     val = nums[ind]
     # Check hardware
     setattr(sdr, attr, val)
