@@ -149,7 +149,7 @@ def scan_all():
         c = iio.Context(ctx)
         name = check_board_other(c)
         if name:
-            if c.name=="local":
+            if c.name == "local":
                 boards.append(board(name, "local:"))
             else:
                 boards.append(board(name, c.name))
