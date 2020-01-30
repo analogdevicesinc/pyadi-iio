@@ -56,7 +56,7 @@ class rx(attribute):
     _rx_data_si_type = np.int16
     _rx_mask = 0x0000
     _rx_shift = 0
-    rx_output_type = 'raw'
+    rx_output_type = "raw"
 
     __rxbuf = None
     _rx_unbuffered_data = False
@@ -222,7 +222,7 @@ class rx(attribute):
                 rx_offset.append(offset)
 
             for c in range(stride):
-                raw=x[c::stride]
+                raw = x[c::stride]
                 # when scale is used, values are in mV
                 sig.append((raw * rx_scale[c] + rx_offset[c]) / 1000.0)
         else:

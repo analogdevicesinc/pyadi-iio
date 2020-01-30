@@ -45,8 +45,8 @@ class ad7124(rx, context_manager):
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
-    _rx_data_type = '>u4'
-    _rx_mask = 0xffffff
+    _rx_data_type = ">u4"
+    _rx_mask = 0xFFFFFF
     _rx_shift = 0
 
     def __init__(self, uri="", part="ad7124-8"):
@@ -66,11 +66,13 @@ class ad7124(rx, context_manager):
     def sample_rate(self):
         """Sets sampling frequency of the AD7124"""
         return self._get_iio_attr(self.channel[0].name, "sampling_frequency", False)
+        # return self._get_iio_dev_attr("sampling_frequency")
 
     @sample_rate.setter
     def sample_rate(self, value):
         for ch in self.channel:
             self._set_iio_attr(ch.name, "sampling_frequency", False, value)
+        # self._set_iio_dev_attr_str("sampling_frequency",value)
 
     @property
     def scale_available(self):
