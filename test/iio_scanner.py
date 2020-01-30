@@ -4,7 +4,6 @@ import subprocess
 import sys
 
 import iio
-
 import scapy.all as scapy
 
 HOSTNAMES = [

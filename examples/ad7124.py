@@ -37,7 +37,7 @@ import numpy as np
 from scipy import signal
 
 # Set up AD7124
-ad7124 = adi.ad7124(uri="ip:192.168.1.171")
+ad7124 = adi.ad7124(uri="ip:10.48.65.138")
 ad_channel = 0
 
 sc = ad7124.scale_available

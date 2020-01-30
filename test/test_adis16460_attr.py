@@ -2,7 +2,6 @@ import random
 import test.iio_scanner as iio_scanner
 
 import iio
-
 import numpy as np
 import pytest
 from adi import adis16460
