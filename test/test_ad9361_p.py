@@ -40,6 +40,13 @@ def test_ad9361_rx_data(test_dma_rx, classname, hardware, channel):
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("channel", [0, 1, [0, 1]])
+def test_ad9361_tx_data(test_dma_tx, classname, hardware, channel):
+    test_dma_tx(classname, hardware, channel)
+
+
+#########################################
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("channel", [0, 1])
 def test_ad9361_loopback(test_dma_loopback, classname, hardware, channel):
     test_dma_loopback(classname, hardware, channel)

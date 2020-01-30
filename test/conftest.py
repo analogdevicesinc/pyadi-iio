@@ -1,22 +1,19 @@
-import pytest
-import sys
-
 import random
+import sys
+import test.iio_scanner as iio_scanner
+import test.rf.spec as spec
+import time
 
 import iio
 
+import adi
 import numpy as np
 import pytest
-import adi
-import test.iio_scanner as iio_scanner
-import test.rf.spec as spec
-import sys
-import time
 
 ignore_skip = False
 dev_checked = False
 found_dev = False
-found_devices = {}
+found_devices = {}  # type: ignore
 URI = "ip:analog"
 
 
@@ -30,7 +27,7 @@ def pytest_addoption(parser):
 
 class BaseTestHelpers:
     devicename = "pluto"
-    skipped_tests = []
+    skipped_tests = []  # type: ignore
     classname = "adi.ad9361"
 
     def check_skip(self):
@@ -393,6 +390,12 @@ def test_attribute_single_value_pow2(request):
 def test_dma_rx(request):
     command_line_config(request)
     yield dma_rx
+
+
+@pytest.fixture()
+def test_dma_tx(request):
+    command_line_config(request)
+    yield dma_tx
 
 
 @pytest.fixture()
