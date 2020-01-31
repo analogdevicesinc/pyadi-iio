@@ -141,31 +141,40 @@ def ip_scan(subnet):
     return boards
 
 
-def scan_all():
+def scan_all(skip_usb=False):
     boards = []
-    # Find USB/LOCAL
-    ctxs = iio.scan_contexts()
-    for ctx in ctxs:
-        c = iio.Context(ctx)
-        name = check_board_other(c)
-        if name:
-            if c.name == "local":
-                boards.append(board(name, "local:"))
-            else:
-                boards.append(board(name, c.name))
 
     # FIND IP
     bs = ip_scan_auto()
     # bs = ip_scan("192.168.86")
     if bs not in boards:
         boards = boards + bs
+
+    # Find USB/LOCAL
+    if not skip_usb:
+        ctxs = iio.scan_contexts()
+        for ctx in ctxs:
+            c = iio.Context(ctx)
+            name = check_board_other(c)
+            if name:
+                if c.name == "local":
+                    boards.append(board(name, "local:"))
+                else:
+                    boards.append(board(name, c.name))
     return boards
 
 
-def find_device(name):
-    for b in scan_all():
-        if b.name == name:
-            return (True, b)
+def find_device(names):
+    skip_usb = False
+    if not isinstance(names, list):
+        names = [names]
+    # for n in names:
+    #     if n=="adrv9009-dual":
+    #         skip_usb = True
+    for b in scan_all(skip_usb):
+        for name in names:
+            if b.name == name:
+                return (True, b)
     return (False, [])
 
 
