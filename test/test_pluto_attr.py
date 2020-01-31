@@ -35,7 +35,7 @@ def check_dev():
 
 
 scalar_properties = [
-    ("tx_hardwaregain", -89.75, 0.0, 0.25, 0),
+    ("tx_hardwaregain_chan0", -89.75, 0.0, 0.25, 0),
     ("rx_lo", 70000000, 6000000000, 1, 8),
     ("tx_lo", 70000000, 6000000000, 1, 8),
     ("sample_rate", 2084000, 30720000, 1, 4),

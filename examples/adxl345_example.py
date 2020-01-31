@@ -34,53 +34,34 @@
 import time
 
 import adi
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy import signal
 
-# Create radio
-sdr = adi.FMComms5(uri="ip:analog")
+# Set up ADXL345
+myacc = adi.adxl345(uri="ip:192.168.1.232")
+myacc.rx_output_type = "SI"
+myacc.rx_buffer_size = 4
+myacc.rx_enabled_channels = [0, 1, 2]
 
-# Configure properties
-sdr.rx_lo = 2000000000
-sdr.rx_lo_chip_b = 2000000000
-sdr.tx_lo = 2000000000
-sdr.tx_lo_chip_b = 2000000000
-sdr.tx_cyclic_buffer = True
-sdr.tx_hardwaregain_chan0 = -30
-sdr.tx_hardwaregain_chip_b_chan0 = -30
-sdr.gain_control_mode_chan0 = "slow_attack"
-sdr.gain_control_mode_chip_b_chan0 = "slow_attack"
-sdr.sample_rate = 1000000
+sfa = myacc.sampling_frequency_available
+print("Sampling frequencies available:")
+print(sfa)
 
-# Set single DDS tone for TX on one transmitter
-sdr.dds_single_tone(30000, 0.9)
+print("\nX acceleration: " + str(myacc.accel_x.raw))
+print("Y acceleration: " + str(myacc.accel_y.raw))
+print("Z acceleration: " + str(myacc.accel_z.raw))
 
-# Read properties
-fs = int(sdr.sample_rate)
-print("RX LO %s" % (sdr.rx_lo))
+print("\nSample rate: " + str(myacc.sampling_frequency))
 
-# Collect data
-for r in range(20):
-    x = sdr.rx()
-    f, Pxx_den = signal.periodogram(x[0], fs)
-    plt.clf()
-    plt.semilogy(f, Pxx_den)
+print("Setting sample rate to 12.5 sps...")
+myacc.sampling_frequency = 12.5
+time.sleep(0.25)
 
-    f, Pxx_den = signal.periodogram(x[1], fs)
-    plt.semilogy(f, Pxx_den)
+print("new sample rate: " + str(myacc.sampling_frequency))
+myacc.sampling_frequency = 100.0  # Set back to default
+print("\nData using unbuffered rx(), SI (m/s^2):")
+print(myacc.rx())
 
-    f, Pxx_den = signal.periodogram(x[2], fs)
-    plt.semilogy(f, Pxx_den)
+myacc.rx_output_type = "raw"
+print("\nData using unbuffered rx(), raw:")
+print(myacc.rx())
 
-    f, Pxx_den = signal.periodogram(x[3], fs)
-    plt.semilogy(f, Pxx_den)
-
-    plt.ylim([1e-7, 1e2])
-    plt.xlabel("frequency [Hz]")
-    plt.ylabel("PSD [V**2/Hz]")
-    plt.draw()
-    plt.pause(0.05)
-    time.sleep(0.1)
-
-plt.show()
+del myacc

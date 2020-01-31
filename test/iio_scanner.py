@@ -143,6 +143,7 @@ def ip_scan(subnet):
 
 def scan_all(skip_usb=False):
     boards = []
+
     # FIND IP
     bs = ip_scan_auto()
     # bs = ip_scan("192.168.86")
@@ -156,7 +157,10 @@ def scan_all(skip_usb=False):
             c = iio.Context(ctx)
             name = check_board_other(c)
             if name:
-                boards.append(board(name, c.name))
+                if c.name == "local":
+                    boards.append(board(name, "local:"))
+                else:
+                    boards.append(board(name, c.name))
     return boards
 
 
