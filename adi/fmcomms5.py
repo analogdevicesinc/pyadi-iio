@@ -31,7 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad9361 import ad9361
+from adi.ad936x import ad9361
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
 
@@ -101,34 +101,64 @@ class FMComms5(ad9361):
         self._set_iio_debug_attr_str("loopback", value, self._ctrl_b)
 
     @property
-    def gain_control_mode_chip_b(self):
-        """gain_control_mode_chip_b: Mode of receive path AGC of second transceiver.
+    def gain_control_mode_chip_b_chan0(self):
+        """gain_control_mode_chip_b_chan0: Mode of receive path AGC of second transceiver.
         Options are: slow_attack, fast_attack, manual"""
         return self._get_iio_attr("voltage0", "gain_control_mode", False, self._ctrl_b)
 
-    @gain_control_mode_chip_b.setter
-    def gain_control_mode_chip_b(self, value):
+    @gain_control_mode_chip_b_chan0.setter
+    def gain_control_mode_chip_b_chan0(self, value):
         self._set_iio_attr("voltage0", "gain_control_mode", False, value, self._ctrl_b)
 
     @property
-    def rx_hardwaregain_chip_b(self):
-        """rx_hardwaregain_chip_b: Gain applied to RX path of second transceiver.
+    def gain_control_mode_chip_b_chan1(self):
+        """gain_control_mode_chip_b_chan1: Mode of receive path AGC of second transceiver.
+        Options are: slow_attack, fast_attack, manual"""
+        return self._get_iio_attr("voltage1", "gain_control_mode", False, self._ctrl_b)
+
+    @gain_control_mode_chip_b_chan1.setter
+    def gain_control_mode_chip_b_chan1(self, value):
+        self._set_iio_attr("voltage1", "gain_control_mode", False, value, self._ctrl_b)
+
+    @property
+    def rx_hardwaregain_chip_b_chan0(self):
+        """rx_hardwaregain_chip_b_chan0: Gain applied to RX path of second transceiver.
         Only applicable when gain_control_mode is set to 'manual'"""
         return self._get_iio_attr("voltage0", "hardwaregain", False, self._ctrl_b)
 
-    @rx_hardwaregain_chip_b.setter
-    def rx_hardwaregain_chip_b(self, value):
+    @rx_hardwaregain_chip_b_chan0.setter
+    def rx_hardwaregain_chip_b_chan0(self, value):
         if self.gain_control_mode == "manual":
             self._set_iio_attr("voltage0", "hardwaregain", False, value, self._ctrl_b)
 
     @property
-    def tx_hardwaregain_chip_b(self):
-        """tx_hardwaregain: Attenuation applied to TX path of second transceiver"""
+    def rx_hardwaregain_chip_b_chan1(self):
+        """rx_hardwaregain_chip_b_chan1: Gain applied to RX path of second transceiver.
+        Only applicable when gain_control_mode is set to 'manual'"""
+        return self._get_iio_attr("voltage1", "hardwaregain", False, self._ctrl_b)
+
+    @rx_hardwaregain_chip_b_chan1.setter
+    def rx_hardwaregain_chip_b_chan1(self, value):
+        if self.gain_control_mode == "manual":
+            self._set_iio_attr("voltage1", "hardwaregain", False, value, self._ctrl_b)
+
+    @property
+    def tx_hardwaregain_chip_b_chan0(self):
+        """tx_hardwaregain_chip_b_chan0: Attenuation applied to TX path of second transceiver"""
         return self._get_iio_attr("voltage0", "hardwaregain", True, self._ctrl_b)
 
-    @tx_hardwaregain_chip_b.setter
-    def tx_hardwaregain_chip_b(self, value):
+    @tx_hardwaregain_chip_b_chan0.setter
+    def tx_hardwaregain_chip_b_chan0(self, value):
         self._set_iio_attr("voltage0", "hardwaregain", True, value, self._ctrl_b)
+
+    @property
+    def tx_hardwaregain_chip_b_chan1(self):
+        """tx_hardwaregain_chip_b_chan1: Attenuation applied to TX path of second transceiver"""
+        return self._get_iio_attr("voltage1", "hardwaregain", True, self._ctrl_b)
+
+    @tx_hardwaregain_chip_b_chan1.setter
+    def tx_hardwaregain_chip_b_chan1(self, value):
+        self._set_iio_attr("voltage1", "hardwaregain", True, value, self._ctrl_b)
 
     @property
     def rx_rf_bandwidth_chip_b(self):
@@ -163,8 +193,8 @@ class FMComms5(ad9361):
                 "Error: Does not currently support sample rates below 521e3"
             )
 
-        # fmt: off
         # The following was converted from ad9361_set_bb_rate() in libad9361-iio
+        # fmt: off
         if (rate <= 20000000):
             dec = 4
             fir = [
@@ -218,7 +248,6 @@ class FMComms5(ad9361):
             ]
             taps = 64
         # fmt: on
-
         current_rate = self._get_iio_attr("voltage0", "sampling_frequency", False)
 
         if self._get_iio_attr("out", "voltage_filter_fir_en", False):

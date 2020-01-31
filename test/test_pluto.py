@@ -146,8 +146,8 @@ class TestPluto(unittest.TestCase):
         sdr.tx_lo = 1000000000
         sdr.rx_lo = 1000000000
         sdr.tx_cyclic_buffer = True
-        sdr.tx_hardwaregain = -30
-        sdr.gain_control_mode = "slow_attack"
+        sdr.tx_hardwaregain_chan0 = -30
+        sdr.gain_control_mode_chan0 = "slow_attack"
         sdr.rx_buffer_size = 2 ** 20
         # Create a sinewave waveform
         RXFS = int(sdr.sample_rate)
@@ -187,8 +187,8 @@ class TestPluto(unittest.TestCase):
         sdr.tx_lo = 1000000000
         sdr.rx_lo = 1000000000
         sdr.tx_cyclic_buffer = True
-        sdr.tx_hardwaregain = -30
-        sdr.gain_control_mode = "slow_attack"
+        sdr.tx_hardwaregain_chan0 = -30
+        sdr.gain_control_mode_chan0 = "slow_attack"
         sdr.rx_buffer_size = 2 ** 20
         sdr.sample_rate = 4000000
         sdr.loopback = 1

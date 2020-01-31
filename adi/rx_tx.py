@@ -54,8 +54,10 @@ class rx(attribute):
     _rx_channel_names: List[str] = []
     _complex_data = False
     _rx_data_type = np.int16
+    _rx_data_si_type = np.int16
     rx_output_type = "raw"
     __rxbuf = None
+    _rx_unbuffered_data = False
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -115,6 +117,46 @@ class rx(attribute):
                 v = self._rxadc.find_channel(self._rx_channel_names[m])
                 v.enabled = True
         self.__rxbuf = iio.Buffer(self._rxadc, self.__rx_buffer_size, False)
+
+    def __rx_unbuffered_data(self):
+        x = []
+        t = self._rx_data_si_type if self.rx_output_type == "SI" else self._rx_data_type
+        for _ in range(len(self.rx_enabled_channels)):
+            x.append(np.zeros(self.rx_buffer_size, dtype=t))
+
+        # Get scalers first
+        if self.rx_output_type == "SI":
+            rx_scale = []
+            rx_offset = []
+            for i in self.rx_enabled_channels:
+                v = self._rxadc.find_channel(self._rx_channel_names[i])
+                if "scale" in v.attrs:
+                    scale = self._get_iio_attr(
+                        self._rx_channel_names[i], "scale", False
+                    )
+                else:
+                    scale = 1.0
+
+                if "offset" in v.attrs:
+                    offset = self._get_iio_attr(
+                        self._rx_channel_names[i], "offset", False
+                    )
+                else:
+                    offset = 0.0
+                rx_scale.append(scale)
+                rx_offset.append(offset)
+
+        for samp in range(self.rx_buffer_size):
+            for i, m in enumerate(self.rx_enabled_channels):
+                s = self._get_iio_attr(
+                    self._rx_channel_names[m], "raw", False, self._rxadc
+                )
+                if self.rx_output_type == "SI":
+                    x[i][samp] = rx_scale[i] * s + rx_offset[i]
+                else:
+                    x[i][samp] = s
+
+        return x
 
     def __rx_complex(self):
         if not self.__rxbuf:
@@ -178,10 +220,21 @@ class rx(attribute):
         return sig
 
     def rx(self):
-        if self._complex_data:
-            return self.__rx_complex()
+        """ Receive data from hardware buffers for each channel index in
+            rx_enabled_channels.
+
+            returns: type=numpy.array or list of numpy.array
+                An array or list of arrays when more than one receive channel
+                is enabled containing samples from a channel or set of channels.
+                Data will be complex when using a complex data device.
+        """
+        if self._rx_unbuffered_data:
+            return self.__rx_unbuffered_data()
         else:
-            return self.__rx_non_complex()
+            if self._complex_data:
+                return self.__rx_complex()
+            else:
+                return self.__rx_non_complex()
 
 
 class tx(dds, attribute):
@@ -260,6 +313,14 @@ class tx(dds, attribute):
         )
 
     def tx(self, data_np):
+        """ Transmit data to hardware buffers for each channel index in
+            tx_enabled_channels.
+
+            args: type=numpy.array or list of numpy.array
+                An array or list of arrays when more than one transmit channel
+                is enabled containing samples from a channel or set of channels.
+                Data must be complex when using a complex data device.
+        """
         if self.__txbuf and self.tx_cyclic_buffer:
             raise Exception(
                 "TX buffer has been submitted in cyclic mode. \

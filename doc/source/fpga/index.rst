@@ -11,6 +11,7 @@ For the most basic or easiest configuration options use the methods **dds_single
 .. code-block:: python
 
  import adi
+
  sdr = adi.ad9361()
  # Generate a single complex tone
  dds_freq_hz = 10000

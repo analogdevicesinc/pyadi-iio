@@ -12,4 +12,3 @@ Since pyadi-iio is built on top of libiio, it can use the different `backends <h
   sdr = adi.ad9361(uri="ip:192.168.2.1")
   # Read back properties from hardware
   print(sdr.rx_hardwaregain)
-

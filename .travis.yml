@@ -25,6 +25,12 @@ script:
 
 jobs:
   include:
+  - stage: Lint
+    python: 3.6
+    script:
+      - export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'
+      - pre-commit run --all-files
+      - git diff -U0 > log.txt && cat log.txt
   - stage: Doc
     python: 3.7
     script:

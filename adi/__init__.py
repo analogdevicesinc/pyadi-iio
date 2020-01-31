@@ -31,7 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad9361 import *
+from adi.ad936x import *
 
 from adi.fmcomms5 import *
 
@@ -50,6 +50,8 @@ from adi.daq2 import *
 from adi.adis16460 import *
 
 from adi.ad7124 import *
+
+from adi.adxl345 import *
 
 __version__ = "0.0.5"
 name = "Analog Devices Hardware Interfaces"
