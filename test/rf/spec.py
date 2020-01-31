@@ -1,15 +1,16 @@
 from __future__ import division
+
 from numpy import (
-    argsort,
-    multiply,
-    exp,
-    argmax,
-    log10,
-    linspace,
-    cos,
-    pi,
     absolute,
+    argmax,
+    argsort,
+    cos,
+    exp,
     floor,
+    linspace,
+    log10,
+    multiply,
+    pi,
 )
 from numpy.fft import fft, fftfreq, fftshift
 from scipy import signal

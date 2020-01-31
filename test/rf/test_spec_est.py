@@ -1,7 +1,7 @@
-import pytest
-
 from test.rf.spec import *
+
 import numpy as np
+import pytest
 
 
 def test_spec_est_t1():
