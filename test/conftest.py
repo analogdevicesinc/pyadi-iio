@@ -313,6 +313,7 @@ def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
     # Pass through SDR
     try:
         sdr.tx(iq)
+        time.sleep(3)
         for _ in range(10):  # Wait for IQ correction to stabilize
             data = sdr.rx()
     except Exception as e:
