@@ -64,14 +64,66 @@ class adrv9009_zu11eg(adrv9009):
         self._ctrl_b = self._ctx.find_device("adrv9009-phy-b")
 
     @property
-    def gain_control_mode_chip_b(self):
-        """gain_control_mode_chip_b: Mode of receive path AGC. Options are:
-        slow_attack, manual"""
-        return self._get_iio_attr_str("voltage0", "gain_control_mode", False, self._ctrl_b)
+    def calibrate_rx_phase_correction_en_chip_b(self):
+        """calibrate_rx_phase_correction_en: Enable RX Phase Correction Calibration"""
+        return self._get_iio_dev_attr("calibrate_rx_phase_correction_en", self._ctrl_b)
 
-    @gain_control_mode_chip_b.setter
-    def gain_control_mode_chip_b(self, value):
+    @calibrate_rx_phase_correction_en_chip_b.setter
+    def calibrate_rx_phase_correction_en_chip_b(self, value):
+        self._set_iio_dev_attr_str(
+            "calibrate_rx_phase_correction_en", value, self._ctrl_b
+        )
+
+    @property
+    def calibrate_rx_qec_en_chip_b(self):
+        """calibrate_rx_qec_en_chip_b: Enable RX QEC Calibration"""
+        return self._get_iio_dev_attr("calibrate_rx_qec_en", self._ctrl_b)
+
+    @calibrate_rx_qec_en_chip_b.setter
+    def calibrate_rx_qec_en_chip_b(self, value):
+        self._set_iio_dev_attr_str("calibrate_rx_qec_en", value, self._ctrl_b)
+
+    @property
+    def calibrate_tx_qec_en_chip_b(self):
+        """calibrate_tx_qec_en_chip_b: Enable TX QEC Calibration"""
+        return self._get_iio_dev_attr("calibrate_tx_qec_en", self._ctrl_b)
+
+    @calibrate_tx_qec_en_chip_b.setter
+    def calibrate_tx_qec_en_chip_b(self, value):
+        self._set_iio_dev_attr_str("calibrate_tx_qec_en", value, self._ctrl_b)
+
+    @property
+    def calibrate_chip_b(self):
+        """calibrate_chip_b: Trigger Calibration"""
+        return self._get_iio_dev_attr("calibrate", self._ctrl_b)
+
+    @calibrate_chip_b.setter
+    def calibrate_chip_b(self, value):
+        self._set_iio_dev_attr_str("calibrate", value, self._ctrl_b)
+
+    @property
+    def gain_control_mode_chan0_chip_b(self):
+        """gain_control_mode_chan0_chip_b: Mode of receive path AGC. Options are:
+        slow_attack, manual"""
+        return self._get_iio_attr_str(
+            "voltage0", "gain_control_mode", False, self._ctrl_b
+        )
+
+    @gain_control_mode_chan0_chip_b.setter
+    def gain_control_mode_chan0_chip_b(self, value):
         self._set_iio_attr("voltage0", "gain_control_mode", False, value, self._ctrl_b)
+
+    @property
+    def gain_control_mode_chan1_chip_b(self):
+        """gain_control_mode_chan1_chip_b: Mode of receive path AGC. Options are:
+        slow_attack, manual"""
+        return self._get_iio_attr_str(
+            "voltage1", "gain_control_mode", False, self._ctrl_b
+        )
+
+    @gain_control_mode_chan1_chip_b.setter
+    def gain_control_mode_chan1_chip_b(self, value):
+        self._set_iio_attr("voltage1", "gain_control_mode", False, value, self._ctrl_b)
 
     @property
     def rx_hardwaregain_chan0_chip_b(self):
@@ -81,7 +133,7 @@ class adrv9009_zu11eg(adrv9009):
 
     @rx_hardwaregain_chan0_chip_b.setter
     def rx_hardwaregain_chan0_chip_b(self, value):
-        if self.gain_control_mode_chip_b == "manual":
+        if self.gain_control_mode_chan0_chip_b == "manual":
             self._set_iio_attr("voltage0", "hardwaregain", False, value, self._ctrl_b)
 
     @property
@@ -92,7 +144,7 @@ class adrv9009_zu11eg(adrv9009):
 
     @rx_hardwaregain_chan1_chip_b.setter
     def rx_hardwaregain_chan1_chip_b(self, value):
-        if self.gain_control_mode_chip_b == "manual":
+        if self.gain_control_mode_chan1_chip_b == "manual":
             self._set_iio_attr("voltage1", "hardwaregain", False, value, self._ctrl_b)
 
     @property

@@ -31,49 +31,72 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from decimal import Decimal
+
 import numpy as np
+from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
 
-class adis16460(rx, context_manager):
-    """ ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor """
+class adxl345(rx, context_manager, attribute):
+    """ ADXL345 3-axis accelerometer """
 
-    _complex_data = False
-    _rx_channel_names = [
-        "anglvel_x",
-        "anglvel_y",
-        "anglvel_z",
-        "accel_x",
-        "accel_y",
-        "accel_z",
-    ]
-    _device_name = ""
-    _rx_data_type = ">i4"
+    _device_name = "adxl345"
+    _rx_data_type = np.int32
+    _rx_unbuffered_data = True
+    _rx_data_si_type = np.float
 
     def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
-
-        self._ctrl = self._ctx.find_device("adis16460")
-        self._rxadc = self._ctx.find_device("adis16460")
+        self._ctrl = self._ctx.find_device("adxl345")
+        self.accel_x = self._channel(self._ctrl, "accel_x")
+        self.accel_y = self._channel(self._ctrl, "accel_y")
+        self.accel_z = self._channel(self._ctrl, "accel_z")
+        self._rxadc = self._ctx.find_device("adxl345")
+        self._rx_channel_names = ["accel_x", "accel_y", "accel_z"]
         rx.__init__(self)
-        self.rx_buffer_size = 16  # Make default buffer smaller
 
     @property
-    def sample_rate(self):
-        """sample_rate: Sample rate in samples per second"""
-        return self._get_iio_dev_attr("sampling_frequency")
-
-    @sample_rate.setter
-    def sample_rate(self, value):
-        self._set_iio_dev_attr_str("sampling_frequency", value)
+    def sampling_frequency_available(self):
+        """Provides all available sampling frequency settings for the ADXL345 channels"""
+        return self._get_iio_dev_attr("sampling_frequency_available")
 
     @property
-    def current_timestamp_clock(self):
-        """current_timestamp_clock: Source clock for timestamps"""
-        return self._get_iio_dev_attr("current_timestamp_clock")
+    def sampling_frequency(self):
+        """ADXL345 sampling frequency"""
+        # Only need to consider one channel, all others follow
+        return float(self._get_iio_attr_str("accel_x", "sampling_frequency", False))
 
-    @current_timestamp_clock.setter
-    def current_timestamp_clock(self, value):
-        self._set_iio_dev_attr_str("current_timestamp_clock", value)
+    @sampling_frequency.setter
+    def sampling_frequency(self, value):
+        self._set_iio_attr(
+            "accel_x", "sampling_frequency", False, str(Decimal(value).real)
+        )
+
+    class _channel(attribute):
+        """ADXL345 channel"""
+
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property
+        def calibbias(self):
+            """ADXL345 channel offset"""
+            return self._get_iio_attr(self.name, "calibbias", False)
+
+        @calibbias.setter
+        def calibbias(self, value):
+            self._set_iio_attr(self.name, "calibbias", False, value)
+
+        @property
+        def raw(self):
+            """ADXL345 channel raw value"""
+            return self._get_iio_attr(self.name, "raw", False)
+
+        @property
+        def scale(self):
+            """ADXL345 channel scale(gain)"""
+            return float(self._get_iio_attr_str(self.name, "scale", False))

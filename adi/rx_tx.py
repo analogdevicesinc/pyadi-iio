@@ -54,8 +54,10 @@ class rx(attribute):
     _rx_channel_names: List[str] = []
     _complex_data = False
     _rx_data_type = np.int16
-    rx_output_type = 'raw'
+    _rx_data_si_type = np.int16
+    rx_output_type = "raw"
     __rxbuf = None
+    _rx_unbuffered_data = False
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -116,6 +118,46 @@ class rx(attribute):
                 v.enabled = True
         self.__rxbuf = iio.Buffer(self._rxadc, self.__rx_buffer_size, False)
 
+    def __rx_unbuffered_data(self):
+        x = []
+        t = self._rx_data_si_type if self.rx_output_type == "SI" else self._rx_data_type
+        for _ in range(len(self.rx_enabled_channels)):
+            x.append(np.zeros(self.rx_buffer_size, dtype=t))
+
+        # Get scalers first
+        if self.rx_output_type == "SI":
+            rx_scale = []
+            rx_offset = []
+            for i in self.rx_enabled_channels:
+                v = self._rxadc.find_channel(self._rx_channel_names[i])
+                if "scale" in v.attrs:
+                    scale = self._get_iio_attr(
+                        self._rx_channel_names[i], "scale", False
+                    )
+                else:
+                    scale = 1.0
+
+                if "offset" in v.attrs:
+                    offset = self._get_iio_attr(
+                        self._rx_channel_names[i], "offset", False
+                    )
+                else:
+                    offset = 0.0
+                rx_scale.append(scale)
+                rx_offset.append(offset)
+
+        for samp in range(self.rx_buffer_size):
+            for i, m in enumerate(self.rx_enabled_channels):
+                s = self._get_iio_attr(
+                    self._rx_channel_names[m], "raw", False, self._rxadc
+                )
+                if self.rx_output_type == "SI":
+                    x[i][samp] = rx_scale[i] * s + rx_offset[i]
+                else:
+                    x[i][samp] = s
+
+        return x
+
     def __rx_complex(self):
         if not self.__rxbuf:
             self._rx_init_channels()
@@ -142,33 +184,35 @@ class rx(attribute):
         sig = []
         stride = len(self.rx_enabled_channels)
 
-        if self.rx_output_type=='raw':
+        if self.rx_output_type == "raw":
             for c in range(stride):
                 sig.append(x[c::stride])
-        elif self.rx_output_type=='SI':
+        elif self.rx_output_type == "SI":
             rx_scale = []
             rx_offset = []
             for i in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[i])
                 if "scale" in v.attrs:
-                    scale = self._get_iio_attr(self._rx_channel_names[i], "scale", False)
+                    scale = self._get_iio_attr(
+                        self._rx_channel_names[i], "scale", False
+                    )
                 else:
                     scale = 1.0
 
                 if "offset" in v.attrs:
-                    offset = self._get_iio_attr(self._rx_channel_names[i], "offset", False)
+                    offset = self._get_iio_attr(
+                        self._rx_channel_names[i], "offset", False
+                    )
                 else:
-                    offset=0.0
+                    offset = 0.0
                 rx_scale.append(scale)
                 rx_offset.append(offset)
 
             for c in range(stride):
-                raw=x[c::stride]
-                sig.append( raw * rx_scale[c] + rx_offset[c])
+                raw = x[c::stride]
+                sig.append(raw * rx_scale[c] + rx_offset[c])
         else:
-            raise Exception(
-                "rx_output_type undefined"
-            )
+            raise Exception("rx_output_type undefined")
 
         # Don't return list if a single channel
         if len(self.rx_enabled_channels) == 1:
@@ -184,10 +228,13 @@ class rx(attribute):
                 is enabled containing samples from a channel or set of channels.
                 Data will be complex when using a complex data device.
         """
-        if self._complex_data:
-            return self.__rx_complex()
+        if self._rx_unbuffered_data:
+            return self.__rx_unbuffered_data()
         else:
-            return self.__rx_non_complex()
+            if self._complex_data:
+                return self.__rx_complex()
+            else:
+                return self.__rx_non_complex()
 
 
 class tx(dds, attribute):

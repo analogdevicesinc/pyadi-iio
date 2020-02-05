@@ -66,14 +66,60 @@ class adrv9009(rx_tx, context_manager):
     #     self._set_iio_dev_attr_str("profile_config", data)
 
     @property
-    def gain_control_mode(self):
-        """gain_control_mode: Mode of receive path AGC. Options are:
+    def calibrate_rx_phase_correction_en(self):
+        """calibrate_rx_phase_correction_en: Enable RX Phase Correction Calibration"""
+        return self._get_iio_dev_attr("calibrate_rx_phase_correction_en")
+
+    @calibrate_rx_phase_correction_en.setter
+    def calibrate_rx_phase_correction_en(self, value):
+        self._set_iio_dev_attr_str("calibrate_rx_phase_correction_en", value)
+
+    @property
+    def calibrate_rx_qec_en(self):
+        """calibrate_rx_qec_en: Enable RX QEC Calibration"""
+        return self._get_iio_dev_attr("calibrate_rx_qec_en")
+
+    @calibrate_rx_qec_en.setter
+    def calibrate_rx_qec_en(self, value):
+        self._set_iio_dev_attr_str("calibrate_rx_qec_en", value)
+
+    @property
+    def calibrate_tx_qec_en(self):
+        """calibrate_tx_qec_en: Enable TX QEC Calibration"""
+        return self._get_iio_dev_attr("calibrate_tx_qec_en")
+
+    @calibrate_tx_qec_en.setter
+    def calibrate_tx_qec_en(self, value):
+        self._set_iio_dev_attr_str("calibrate_tx_qec_en", value)
+
+    @property
+    def calibrate(self):
+        """calibrate: Trigger Calibration"""
+        return self._get_iio_dev_attr("calibrate")
+
+    @calibrate.setter
+    def calibrate(self, value):
+        self._set_iio_dev_attr_str("calibrate", value)
+
+    @property
+    def gain_control_mode_chan0(self):
+        """gain_control_mode_chan0: Mode of receive path AGC. Options are:
         slow_attack, manual"""
         return self._get_iio_attr_str("voltage0", "gain_control_mode", False)
 
-    @gain_control_mode.setter
-    def gain_control_mode(self, value):
+    @gain_control_mode_chan0.setter
+    def gain_control_mode_chan0(self, value):
         self._set_iio_attr("voltage0", "gain_control_mode", False, value)
+
+    @property
+    def gain_control_mode_chan1(self):
+        """gain_control_mode_chan1: Mode of receive path AGC. Options are:
+        slow_attack, manual"""
+        return self._get_iio_attr_str("voltage1", "gain_control_mode", False)
+
+    @gain_control_mode_chan1.setter
+    def gain_control_mode_chan1(self, value):
+        self._set_iio_attr("voltage1", "gain_control_mode", False, value)
 
     @property
     def rx_hardwaregain_chan0(self):
@@ -83,7 +129,7 @@ class adrv9009(rx_tx, context_manager):
 
     @rx_hardwaregain_chan0.setter
     def rx_hardwaregain_chan0(self, value):
-        if self.gain_control_mode == "manual":
+        if self.gain_control_mode_chan0 == "manual":
             self._set_iio_attr("voltage0", "hardwaregain", False, value)
 
     @property
@@ -94,7 +140,7 @@ class adrv9009(rx_tx, context_manager):
 
     @rx_hardwaregain_chan1.setter
     def rx_hardwaregain_chan1(self, value):
-        if self.gain_control_mode == "manual":
+        if self.gain_control_mode_chan1 == "manual":
             self._set_iio_attr("voltage1", "hardwaregain", False, value)
 
     @property

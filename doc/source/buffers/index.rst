@@ -19,6 +19,7 @@ In many cases, it can be useful to continuously transmit a signal over and over,
 .. code-block:: python
 
  import adi
+
  sdr = adi.ad9361()
  # Create a complex sinusoid
  fc = 3000000

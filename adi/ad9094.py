@@ -31,56 +31,20 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import time
-
-import adi
-import matplotlib.pyplot as plt
 import numpy as np
-from scipy import signal
+from adi.context_manager import context_manager
+from adi.rx_tx import rx
 
-# Create radio
-sdr = adi.FMComms5(uri="ip:analog")
 
-# Configure properties
-sdr.rx_lo = 2000000000
-sdr.rx_lo_chip_b = 2000000000
-sdr.tx_lo = 2000000000
-sdr.tx_lo_chip_b = 2000000000
-sdr.tx_cyclic_buffer = True
-sdr.tx_hardwaregain_chan0 = -30
-sdr.tx_hardwaregain_chip_b_chan0 = -30
-sdr.gain_control_mode_chan0 = "slow_attack"
-sdr.gain_control_mode_chip_b_chan0 = "slow_attack"
-sdr.sample_rate = 1000000
+class ad9094(rx, context_manager):
+    """ AD9094 Quad ADC """
 
-# Set single DDS tone for TX on one transmitter
-sdr.dds_single_tone(30000, 0.9)
+    _rx_data_type = np.int8
+    _complex_data = False
+    _rx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3", "voltage4"]
+    _device_name = ""
 
-# Read properties
-fs = int(sdr.sample_rate)
-print("RX LO %s" % (sdr.rx_lo))
-
-# Collect data
-for r in range(20):
-    x = sdr.rx()
-    f, Pxx_den = signal.periodogram(x[0], fs)
-    plt.clf()
-    plt.semilogy(f, Pxx_den)
-
-    f, Pxx_den = signal.periodogram(x[1], fs)
-    plt.semilogy(f, Pxx_den)
-
-    f, Pxx_den = signal.periodogram(x[2], fs)
-    plt.semilogy(f, Pxx_den)
-
-    f, Pxx_den = signal.periodogram(x[3], fs)
-    plt.semilogy(f, Pxx_den)
-
-    plt.ylim([1e-7, 1e2])
-    plt.xlabel("frequency [Hz]")
-    plt.ylabel("PSD [V**2/Hz]")
-    plt.draw()
-    plt.pause(0.05)
-    time.sleep(0.1)
-
-plt.show()
+    def __init__(self, uri=""):
+        context_manager.__init__(self, uri, self._device_name)
+        self._rxadc = self._ctx.find_device("axi-ad9094-hpc")
+        rx.__init__(self)
