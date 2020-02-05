@@ -37,7 +37,6 @@ import test.iio_scanner as iio_scanner
 import unittest
 
 import iio
-
 import numpy as np
 from adi import DAQ2
 
