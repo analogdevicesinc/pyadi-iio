@@ -4,8 +4,9 @@ import test.iio_scanner as iio_scanner
 import test.rf.spec as spec
 import time
 
-import adi
 import iio
+
+import adi
 import numpy as np
 import pytest
 
