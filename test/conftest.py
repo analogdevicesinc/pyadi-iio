@@ -4,9 +4,8 @@ import test.iio_scanner as iio_scanner
 import test.rf.spec as spec
 import time
 
-import iio
-
 import adi
+import iio
 import numpy as np
 import pytest
 
@@ -14,6 +13,7 @@ ignore_skip = False
 dev_checked = False
 found_dev = False
 found_devices = {}  # type: ignore
+found_uris = {}  # type: ignore
 URI = "ip:analog"
 
 
@@ -29,6 +29,7 @@ class BaseTestHelpers:
     devicename = "pluto"
     skipped_tests = []  # type: ignore
     classname = "adi.ad9361"
+    uri = "ip:pluto.local"
 
     def check_skip(self):
         # Check if calling function is in skip list
@@ -42,6 +43,7 @@ class BaseTestHelpers:
     def check_dev(self):
         # Must use globals since each test is a separate class instance
         global found_devices
+        global found_uris
         if not isinstance(self.devicename, list):
             ds = [self.devicename]
         else:
@@ -51,6 +53,8 @@ class BaseTestHelpers:
         for d in ds:
             if d in found_devices:
                 found_dev = found_devices[d]
+                # If device was already found before, update the board interface URI
+                self.uri = found_uris[d]
                 dev_checked = True
                 break
 
@@ -58,17 +62,16 @@ class BaseTestHelpers:
             found_dev, board = iio_scanner.find_device(self.devicename)
             if found_dev:
                 found_devices[board.name] = found_dev
-                global URI
-                URI = board.uri
+                found_uris[board.name] = board.uri
+                self.uri = board.uri
             else:
                 for d in ds:
                     found_devices[d] = False
-
+                    found_uris[d] = ""
         return found_dev
 
     def dev_interface(self, val, attr, tol):
-        global URI
-        sdr = eval(self.classname + "(uri='" + URI + "')")
+        sdr = eval(self.classname + "(uri='" + self.uri + "')")
         # Check hardware
         setattr(sdr, attr, val)
         rval = float(getattr(sdr, attr))
@@ -87,6 +90,7 @@ class BoardInterface(BaseTestHelpers):
     def __init__(self, classname, devicename):
         self.classname = classname
         self.devicename = devicename
+        self.uri = ""
         self.check_skip()
 
 
@@ -120,8 +124,7 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol):
 
 def dma_rx(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
-    global URI
-    sdr = eval(bi.classname + "(uri='" + URI + "')")
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     if sdr._num_rx_channels > 2:
         if not isinstance(channel, list):
             sdr.rx_enabled_channels = [channel]
@@ -145,9 +148,7 @@ def dma_rx(classname, devicename, channel):
 
 def dma_tx(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
-    global URI
-    sdr = eval(bi.classname + "(uri='" + URI + "')")
-
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     TXFS = 1000
     N = 2 ** 15
     ts = 1 / float(TXFS)
@@ -174,8 +175,7 @@ def dma_tx(classname, devicename, channel):
 
 def dma_loopback(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
-    global URI
-    sdr = eval(bi.classname + "(uri='" + URI + "')")
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     sdr.loopback = 1
     sdr.tx_cyclic_buffer = True
     if sdr._num_tx_channels > 2:
@@ -231,8 +231,7 @@ def freq_est(y, fs):
 def iq_loopback(classname, devicename, channel, param_set):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    global URI
-    sdr = eval(bi.classname + "(uri='" + URI + "')")
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -285,8 +284,7 @@ def iq_loopback(classname, devicename, channel, param_set):
 def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    global URI
-    sdr = eval(bi.classname + "(uri='" + URI + "')")
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -329,8 +327,7 @@ def gain_check(
 ):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    global URI
-    sdr = eval(bi.classname + "(uri='" + URI + "')")
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
