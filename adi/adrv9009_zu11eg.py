@@ -62,6 +62,9 @@ class adrv9009_zu11eg(adrv9009):
     def __init__(self, uri=""):
         adrv9009.__init__(self, uri=uri)
         self._ctrl_b = self._ctx.find_device("adrv9009-phy-b")
+        self._clock_chip = self._ctx.find_device("hmc7044")
+        self._clock_chip_carrier = self._ctx.find_device("hmc7044-car")
+        self._clock_chip_ext = self._ctx.find_device("hmc7044-ext")
 
     @property
     def calibrate_rx_phase_correction_en_chip_b(self):
