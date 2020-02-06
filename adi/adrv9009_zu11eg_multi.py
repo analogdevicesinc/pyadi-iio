@@ -31,14 +31,17 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.adrv9009_zu11eg import adrv9009_zu11eg
 import time
+from typing import List
+
+from adi.adrv9009_zu11eg import adrv9009_zu11eg
 
 
 class adrv9009_zu11eg_multi(object):
     """ ADRV9009-ZU11EG Multi-SOM Manager"""
 
     __rx_buffer_size_multi = 2 ** 14
+    slaves: List[adrv9009_zu11eg] = []
 
     def __init__(self, master_uri="", slave_uris=[]):
 
@@ -172,19 +175,19 @@ class adrv9009_zu11eg_multi(object):
         for dev in [self.master] + self.slaves:
             try:
                 dev._ctrl.attrs["multichip_sync"].value = "3"
-            except:
+            except OSError:
                 pass
             try:
                 dev._ctrl_b.attrs["multichip_sync"].value = "3"
-            except:
+            except OSError:
                 pass
             try:
                 dev._ctrl.attrs["multichip_sync"].value = "4"
-            except:
+            except OSError:
                 pass
             try:
                 dev._ctrl_b.attrs["multichip_sync"].value = "4"
-            except:
+            except OSError:
                 pass
 
         # step 5
