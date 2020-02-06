@@ -41,6 +41,8 @@ from adi.adrv9009 import *
 
 from adi.adrv9009_zu11eg import *
 
+from adi.adrv9009_zu11eg_multi import *
+
 from adi.ad9680 import *
 
 from adi.ad9144 import *
