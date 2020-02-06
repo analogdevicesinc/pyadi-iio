@@ -7,7 +7,12 @@ import iio
 
 import scapy.all as scapy
 
-HOSTNAMES = ["analog.local", "analog.lan"]
+HOSTNAMES = [
+    "analog.local",
+    "analog.lan",
+    "analog-zc706-daq2.local",
+    "analog-zc706-fmcomms2.local",
+]
 
 
 def check_iio(address):
@@ -83,6 +88,10 @@ def check_board_other(ctx):
         ctx, [device("adm1177"), device("ad9361-phy"), device("cf-ad9361-lpc", 2)]
     ):
         return "pluto"
+    if check_config(
+        ctx, [device("ad7291"), device("ad9361-phy"), device("cf-ad9361-lpc", 4)]
+    ):
+        return "fmcomms2"
     if check_config(ctx, [device("ad9361-phy"), device("ad9361-phy-b")]):
         return "fmcomms5"
     if check_config(ctx, [device("ad9361-phy"), device("cf-ad9361-lpc", 2)]):
@@ -147,6 +156,7 @@ def scan_all(skip_usb=False):
     # FIND IP
     bs = ip_scan_auto()
     # bs = ip_scan("192.168.86")
+
     if bs not in boards:
         boards = boards + bs
 
@@ -160,7 +170,7 @@ def scan_all(skip_usb=False):
                 if c.name == "local":
                     boards.append(board(name, "local:"))
                 else:
-                    boards.append(board(name, c.name))
+                    boards.append(board(name, ctx))
     return boards
 
 
