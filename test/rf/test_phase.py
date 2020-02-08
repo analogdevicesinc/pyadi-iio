@@ -1,6 +1,6 @@
 from test.rf.phase import *
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import pytest
 from numpy import abs, exp, linspace, pi, real
 
