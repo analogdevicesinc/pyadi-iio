@@ -269,8 +269,8 @@ class tx(dds, attribute):
     def tx_cyclic_buffer(self, value):
         if self.__txbuf:
             raise Exception(
-                "TX buffer already created, buffer must be \
-                destroyed then recreated to modify tx_cyclic_buffer"
+                "TX buffer already created, buffer must be "
+                "destroyed then recreated to modify tx_cyclic_buffer"
             )
         self.__tx_cyclic_buffer = value
 
@@ -323,8 +323,8 @@ class tx(dds, attribute):
         """
         if self.__txbuf and self.tx_cyclic_buffer:
             raise Exception(
-                "TX buffer has been submitted in cyclic mode. \
-                To push more data the tx buffer must be destroyed first."
+                "TX buffer has been submitted in cyclic mode. "
+                "To push more data the tx buffer must be destroyed first."
             )
 
         if self._complex_data:
@@ -364,8 +364,8 @@ class tx(dds, attribute):
 
         if len(data) // stride != self._tx_buffer_size:
             raise Exception(
-                "Buffer length different than data length. \
-                Cannot change buffer length on the fly"
+                "Buffer length different than data length. "
+                "Cannot change buffer length on the fly"
             )
 
         # Send data to buffer
