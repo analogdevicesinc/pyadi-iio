@@ -177,7 +177,10 @@ def dma_tx(classname, devicename, channel):
 def dma_loopback(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
     sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
-    sdr.loopback = 1
+    if classname == "adi.FMComms5" and (channel in [2, 3]):
+        sdr.loopback_chip_b = 1
+    else:
+        sdr.loopback = 1
     sdr.tx_cyclic_buffer = True
     if sdr._num_tx_channels > 2:
         sdr.tx_enabled_channels = [channel]
@@ -196,7 +199,10 @@ def dma_loopback(classname, devicename, channel):
         for _ in range(100):
             data = sdr.rx()
         # Turn off loopback (for other tests)
-        sdr.loopback = 0
+        if classname == "adi.FMComms5" and (channel in [2, 3]):
+            sdr.loopback_chip_b = 0
+        else:
+            sdr.loopback = 0
     except Exception as e:
         del sdr
         raise Exception(e)
@@ -227,6 +233,42 @@ def freq_est(y, fs):
     #     plt.show()
     indx = np.argmax(np.abs(yf))
     return xf[indx]
+
+
+def dds_loopback(classname, devicename, param_set, channel, frequency, scale, peak_min):
+    bi = BoardInterface(classname, devicename)
+    # See if we can tone using DMAs
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    # Set custom device parameters
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+    # Set common buffer settings
+    sdr.tx_cyclic_buffer = True
+    sdr.rx_buffer_size = 2 ** 15
+    num_tx_channels = sdr._num_tx_channels
+    # Create a sinewave waveform
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    else:
+        RXFS = int(sdr.rx_sample_rate)
+
+    sdr.rx_enabled_channels = [channel]
+
+    sdr.dds_single_tone(frequency, scale, channel)
+
+    # Pass through SDR
+    try:
+        for _ in range(10):  # Wait
+            data = sdr.rx()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    indx = np.argmax(tone_peaks)
+    diff = np.abs(tone_freqs[indx] - frequency)
+    assert (frequency * 0.01) > diff
+    assert tone_peaks[indx] > peak_min
 
 
 def iq_loopback(classname, devicename, channel, param_set):
@@ -359,6 +401,77 @@ def gain_check(
     assert rssi <= max_rssi
 
 
+def cyclic_buffer(classname, devicename, channel, param_set):
+    bi = BoardInterface(classname, devicename)
+    # See if we can tone using DMAs
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    # Set custom device parameters
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+    fs = int(sdr.sample_rate)
+    fc = -3000000
+    N = 1024
+    ts = 1 / float(fs)
+    t = np.arange(0, N * ts, ts)
+    i = np.cos(2 * np.pi * t * fc) * 2 ** 14
+    q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+    iq = i + 1j * q
+    sdr.tx_cyclic_buffer = True
+    sdr.tx(iq)
+    sdr.tx_destroy_buffer()
+    fail = False
+    try:
+        sdr.tx(iq)
+    except Exception as e:
+        fail = True
+        msg = (
+            "Pushing new data after destroying buffer should not fail. "
+            "message: " + str(e)
+        )
+
+    # Cleanly end
+    del sdr
+    if fail:
+        pytest.fail(msg)
+
+
+def cyclic_buffer_exception(classname, devicename, channel, param_set):
+    bi = BoardInterface(classname, devicename)
+    # See if we can tone using DMAs
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    # Set custom device parameters
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+    fs = int(sdr.sample_rate)
+    fc = -3000000
+    N = 1024
+    ts = 1 / float(fs)
+    t = np.arange(0, N * ts, ts)
+    i = np.cos(2 * np.pi * t * fc) * 2 ** 14
+    q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+    iq = i + 1j * q
+    sdr.tx_cyclic_buffer = True
+    try:
+        sdr.tx(iq)
+        sdr.tx(iq)
+    except Exception as e:
+        if (
+            "TX buffer has been submitted in cyclic mode. "
+            "To push more data the tx buffer must be destroyed first." not in str(e)
+        ):
+            fail = True
+            msg = "Wrong exception raised, message was: " + str(e)
+        else:
+            fail = False
+    else:
+        fail = True
+        msg = "ExpectedException not raised"
+    # Cleanly end
+    del sdr
+    if fail:
+        pytest.fail(msg)
+
+
 def command_line_config(request):
     if request.config.getoption("--error_on_filter"):
         global ignore_skip
@@ -398,6 +511,18 @@ def test_dma_tx(request):
 
 
 @pytest.fixture()
+def test_cyclic_buffer(request):
+    command_line_config(request)
+    yield cyclic_buffer
+
+
+@pytest.fixture()
+def test_cyclic_buffer_exception(request):
+    command_line_config(request)
+    yield cyclic_buffer_exception
+
+
+@pytest.fixture()
 def test_dma_loopback(request):
     command_line_config(request)
     yield dma_loopback
@@ -407,6 +532,12 @@ def test_dma_loopback(request):
 def test_sfdr(request):
     command_line_config(request)
     yield t_sfdr
+
+
+@pytest.fixture()
+def test_dds_loopback(request):
+    command_line_config(request)
+    yield dds_loopback
 
 
 @pytest.fixture()
