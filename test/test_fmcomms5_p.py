@@ -54,6 +54,40 @@ def test_fmcomms5_loopback(test_dma_loopback, classname, hardware, channel):
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        dict(
+            tx_lo=1000000000,
+            rx_lo=1000000000,
+            gain_control_mode_chan0="slow_attack",
+            tx_hardwaregain_chan0=-20,
+            gain_control_mode_chan1="slow_attack",
+            tx_hardwaregain_chan1=-20,
+            sample_rate=4000000,
+        )
+    ],
+)
+@pytest.mark.parametrize("peak_min", [-40])
+def test_fmcomms5_dds_loopback(
+    test_dds_loopback,
+    classname,
+    hardware,
+    param_set,
+    channel,
+    frequency,
+    scale,
+    peak_min,
+):
+    test_dds_loopback(
+        classname, hardware, param_set, channel, frequency, scale, peak_min
+    )
+
+
+#########################################
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
     "param_set",
@@ -166,13 +200,47 @@ def test_fmcomms5_chip_b_loopback(test_dma_loopback, classname, hardware, channe
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("channel", [2, 3])
+@pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        dict(
+            tx_lo_chip_b=1500000000,
+            rx_lo_chip_b=1500000000,
+            gain_control_mode_chip_b_chan0="slow_attack",
+            tx_hardwaregain_chip_b_chan0=-20,
+            gain_control_mode_chip_b_chan1="slow_attack",
+            tx_hardwaregain_chip_b_chan1=-20,
+            sample_rate=4000000,
+        ),
+    ],
+)
+@pytest.mark.parametrize("peak_min", [-40])
+def test_fmcomms5_dds_chip_b_loopback(
+    test_dds_loopback,
+    classname,
+    hardware,
+    param_set,
+    channel,
+    frequency,
+    scale,
+    peak_min,
+):
+    test_dds_loopback(
+        classname, hardware, param_set, channel, frequency, scale, peak_min
+    )
+
+
+#########################################
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("channel", [3])
 @pytest.mark.parametrize(
     "param_set",
     [
         dict(
-            tx_lo_chip_b=1000000000,
-            rx_lo_chip_b=1000000000,
+            tx_lo_chip_b=1500000000,
+            rx_lo_chip_b=1500000000,
             gain_control_mode_chip_b_chan0="slow_attack",
             tx_hardwaregain_chip_b_chan0=-20,
             gain_control_mode_chip_b_chan1="slow_attack",
@@ -195,8 +263,8 @@ def test_fmcomms5_chip_b_sfdr(
     "param_set",
     [
         dict(
-            tx_lo_chip_b=1000000000,
-            rx_lo_chip_b=1000000000,
+            tx_lo_chip_b=1500000000,
+            rx_lo_chip_b=1500000000,
             gain_control_mode_chip_b_chan0="slow_attack",
             tx_hardwaregain_chip_b_chan0=-20,
             gain_control_mode_chip_b_chan1="slow_attack",
@@ -204,8 +272,8 @@ def test_fmcomms5_chip_b_sfdr(
             sample_rate=4000000,
         ),
         dict(
-            tx_lo_chip_b=2000000000,
-            rx_lo_chip_b=2000000000,
+            tx_lo_chip_b=2500000000,
+            rx_lo_chip_b=2500000000,
             gain_control_mode_chip_b_chan0="slow_attack",
             tx_hardwaregain_chip_b_chan0=-20,
             gain_control_mode_chip_b_chan1="slow_attack",
@@ -213,8 +281,8 @@ def test_fmcomms5_chip_b_sfdr(
             sample_rate=4000000,
         ),
         dict(
-            tx_lo_chip_b=3000000000,
-            rx_lo_chip_b=3000000000,
+            tx_lo_chip_b=3500000000,
+            rx_lo_chip_b=3500000000,
             gain_control_mode_chip_b_chan0="slow_attack",
             tx_hardwaregain_chip_b_chan0=-20,
             gain_control_mode_chip_b_chan1="slow_attack",

@@ -116,6 +116,8 @@ def test_pluto_sfdr(test_sfdr, classname, hardware, channel, param_set, sfdr_min
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
 @pytest.mark.parametrize(
     "param_set",
     [
@@ -125,15 +127,23 @@ def test_pluto_sfdr(test_sfdr, classname, hardware, channel, param_set, sfdr_min
             gain_control_mode_chan0="slow_attack",
             tx_hardwaregain_chan0=-30,
             sample_rate=4000000,
-            dds_scales=[0.6, 0, 0.6, 0],
         )
     ],
 )
 @pytest.mark.parametrize("peak_min", [-40])
 def test_pluto_dds_loopback(
-    test_dds_loopback, classname, hardware, param_set, peak_min
+    test_dds_loopback,
+    classname,
+    hardware,
+    param_set,
+    channel,
+    frequency,
+    scale,
+    peak_min,
 ):
-    test_dds_loopback(classname, hardware, param_set, peak_min)
+    test_dds_loopback(
+        classname, hardware, param_set, channel, frequency, scale, peak_min
+    )
 
 
 #########################################

@@ -235,7 +235,7 @@ def freq_est(y, fs):
     return xf[indx]
 
 
-def dds_loopback(classname, devicename, param_set, peak_min):
+def dds_loopback(classname, devicename, param_set, channel, frequency, scale, peak_min):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
     sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
@@ -251,11 +251,10 @@ def dds_loopback(classname, devicename, param_set, peak_min):
         RXFS = int(sdr.sample_rate)
     else:
         RXFS = int(sdr.rx_sample_rate)
-    fc = RXFS * 0.1
-    num_iq_channels = range(2 * num_tx_channels)
-    sdr.dds_enabled = [1 for i in num_iq_channels]
-    sdr.dds_frequencies = [fc if not i % 2 else 0 for i in num_iq_channels]
-    sdr.dds_phases = [90000 if not i % 4 else 0 for i in num_iq_channels]
+
+    sdr.rx_enabled_channels = [channel]
+
+    sdr.dds_single_tone(frequency, scale, channel)
 
     # Pass through SDR
     try:
@@ -265,19 +264,11 @@ def dds_loopback(classname, devicename, param_set, peak_min):
         del sdr
         raise Exception(e)
     del sdr
-    if num_tx_channels > 2:
-        for d in data:
-            tone_peaks, tone_freqs = spec.spec_est(d, fs=RXFS, ref=2 ** 15)
-            indx = np.argmax(tone_peaks)
-            diff = np.abs(tone_freqs[indx] - fc)
-            assert (fc * 0.01) > diff
-            assert tone_peaks[indx] > peak_min
-    else:
-        tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
-        indx = np.argmax(tone_peaks)
-        diff = np.abs(tone_freqs[indx] - fc)
-        assert (fc * 0.01) > diff
-        assert tone_peaks[indx] > peak_min
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    indx = np.argmax(tone_peaks)
+    diff = np.abs(tone_freqs[indx] - frequency)
+    assert (frequency * 0.01) > diff
+    assert tone_peaks[indx] > peak_min
 
 
 def iq_loopback(classname, devicename, channel, param_set):
