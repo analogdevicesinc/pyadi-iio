@@ -52,6 +52,23 @@ class channel_multi:
             self._channel_names, self._attr, self._output, values, self._dev
         )
 
+class channel_multi_float:
+    def __init__(self, attr, dev, channel_names, output):
+        self._dev = dev
+        self._attr = attr
+        self._channel_names = channel_names
+        self._output = output
+
+    def __get__(self, instance, owner):
+        return instance._get_iio_attr_vec(
+            self._channel_names, self._attr, self._output, self._dev
+        )
+
+    def __set__(self, instance, values):
+        instance._set_iio_attr_float_vec(
+            self._channel_names, self._attr, self._output, values, self._dev
+        )
+
 
 class channel_single:
     def __init__(self, attr, dev, channel_names, output):
@@ -70,6 +87,16 @@ class channel_single:
             self._channel_names, self._attr, self._output, value, self._dev
         )
 
+class devattr_single:
+    def __init__(self, attr, dev):
+        self._dev = dev
+        self._attr = attr
+
+    def __get__(self, instance, owner):
+        return instance._get_iio_dev_attr(self._attr, self._dev)
+
+    def __set__(self, instance, value):
+        instance._set_iio_dev_attr_str(self._attr, value, self._dev)
 
 class QuadMxFE(rx_tx, context_manager):
     """ Quad AD9081 Mixed-Signal Front End (MxFE) Evaluation Board """
@@ -205,6 +232,15 @@ class QuadMxFE(rx_tx, context_manager):
                 channel_single(attr, adcs[i], self._rx_dds_channel_names[0], False),
             )
 
+            # multichip_sync
+            name = "multichip_sync_" + chr(i + 97)
+            attr = "multichip_sync"
+            setattr(
+                type(self),
+                name,
+                devattr_single(attr, adcs[i]),
+            )
+
         # Dynamically add methods for each TX channel
         for i, chan in enumerate(adcs):
             # Channel
@@ -230,6 +266,22 @@ class QuadMxFE(rx_tx, context_manager):
                 channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
             )
 
+            name = "tx_channel_nco_test_tone_en_chip_" + chr(i + 97)
+            attr = "channel_nco_test_tone_en"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
+
+            name = "tx_channel_nco_test_tone_scale_chip_" + chr(i + 97)
+            attr = "channel_nco_test_tone_scale"
+            setattr(
+                type(self),
+                name,
+                channel_multi_float(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
+
             # Main
             name = "tx_main_nco_frequencies_chip_" + chr(i + 97)
             attr = "main_nco_frequency"
@@ -245,6 +297,23 @@ class QuadMxFE(rx_tx, context_manager):
                 name,
                 channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
             )
+
+            name = "tx_main_nco_test_tone_en_chip_" + chr(i + 97)
+            attr = "main_nco_test_tone_en"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
+
+            name = "tx_main_nco_test_tone_scale_chip_" + chr(i + 97)
+            attr = "main_nco_test_tone_scale"
+            setattr(
+                type(self),
+                name,
+                channel_multi_float(attr, adcs[i], self._rx_dds_channel_names, True),
+            )
+
 
     @property
     def rx_sampling_frequency(self):
@@ -266,3 +335,4 @@ class QuadMxFE(rx_tx, context_manager):
         self._set_iio_attr(
             "voltage0", "hardwaregain", True, value, _ctrl=self._attenuator
         )
+
