@@ -64,6 +64,13 @@ class attribute:
             raise Exception("Value must be a float")
         self._set_iio_attr(channel_name, attr_name, output, value, _ctrl)
 
+    def _set_iio_attr_float_vec(self, channel_names, attr_name, output, values, _ctrl=None):
+        """ Set channel attribute with list of floats """
+        if not isinstance(values, list):
+            raise Exception("Value must be a list")
+        for i, v in enumerate(values):
+            self._set_iio_attr_float(channel_names[i], attr_name, output, v, _ctrl)
+
     def _set_iio_attr_int(self, channel_name, attr_name, output, value, _ctrl=None):
         """ Set channel attribute with int """
         if not isinstance(value, int):
