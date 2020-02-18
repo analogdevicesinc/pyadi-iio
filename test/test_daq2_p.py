@@ -37,3 +37,13 @@ def test_daq2_dds_loopback(
     test_dds_loopback(
         classname, hardware, param_set, channel, frequency, scale, peak_min
     )
+
+
+#########################################
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize(
+    "param_set", [dict(),],
+)
+def test_daq2_cw_loopback(test_cw_loopback, classname, hardware, channel, param_set):
+    test_cw_loopback(classname, hardware, channel, param_set)
