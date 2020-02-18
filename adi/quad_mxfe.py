@@ -133,13 +133,20 @@ class QuadMxFE(rx_tx, context_manager):
 
         # Dynamically get channels
         dds_chans = []
+        # print(self._rxadc.channels)
         for ch in self._rxadc.channels:
             if ch._id.find("voltage_q") != -1:
                 continue
             if ch.scan_element:
                 self._rx_channel_names.append(ch._id)
             else:
-                self._rx_dds_channel_names.append(ch._id)
+                if (
+                    (ch._id.find("voltage0_") > -1)
+                    or (ch._id.find("voltage1_") > -1)
+                    or (ch._id.find("voltage2_") > -1)
+                    or (ch._id.find("voltage3_") > -1)
+                ):
+                    self._rx_dds_channel_names.append(ch._id)
                 dds_chans.append(ch)
         for ch in self._txdac.channels:
             if ch._id.find("voltage_q") != -1:
