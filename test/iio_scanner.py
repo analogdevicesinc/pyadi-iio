@@ -105,7 +105,7 @@ def check_board_other(ctx):
 
     if check_config(ctx, [device("axi-ad9152-hpc", 2), device("axi-ad9680-hpc", 2)]):
         return "daq3"
-    
+
     if check_config(ctx, [device("adrv9009-phy"), device("adrv9009-phy-b")]):
         return "adrv9009-dual"
     if check_config(ctx, [device("adrv9009-phy")]):
