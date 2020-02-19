@@ -104,7 +104,8 @@ class QuadMxFE(rx_tx, context_manager):
     _complex_data = True
     _rx_channel_names = []
     _tx_channel_names = []
-    _rx_dds_channel_names = []
+    _rx_attr_only_channel_names = []
+    _tx_attr_only_channel_names = []
     _tx_main_channel_names = []
     _tx_chan_channel_names = []
     _dds_channel_names = []
@@ -132,25 +133,18 @@ class QuadMxFE(rx_tx, context_manager):
         adcs = [self._rxadc0, self._rxadc1, self._rxadc2, self._rxadc3]
 
         # Dynamically get channels
-        dds_chans = []
-        # print(self._rxadc.channels)
         for ch in self._rxadc.channels:
-            if ch._id.find("voltage_q") != -1:
-                continue
             if ch.scan_element:
                 self._rx_channel_names.append(ch._id)
             else:
-                if (
-                    (ch._id.find("voltage0_") > -1)
-                    or (ch._id.find("voltage1_") > -1)
-                    or (ch._id.find("voltage2_") > -1)
-                    or (ch._id.find("voltage3_") > -1)
-                ):
-                    self._rx_dds_channel_names.append(ch._id)
-                dds_chans.append(ch)
+                # i/q channels are the same
+                if ch._id.find("voltage_q") != -1:
+                    continue
+                if not ch.output:
+                    self._rx_attr_only_channel_names.append(ch._id)
+                else:
+                    self._tx_attr_only_channel_names.append(ch._id)
         for ch in self._txdac.channels:
-            if ch._id.find("voltage_q") != -1:
-                continue
             if ch.scan_element:
                 self._tx_channel_names.append(ch._id)
             else:
@@ -204,14 +198,14 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, False),
+                channel_multi(attr, adcs[i], self._rx_attr_only_channel_names, False),
             )
             name = "rx_channel_nco_phases_chip_" + chr(i + 97)
             attr = "channel_nco_phase"
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, False),
+                channel_multi(attr, adcs[i], self._rx_attr_only_channel_names, False),
             )
 
             # Main
@@ -220,14 +214,14 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, False),
+                channel_multi(attr, adcs[i], self._rx_attr_only_channel_names, False),
             )
             name = "rx_main_nco_phases_chip_" + chr(i + 97)
             attr = "main_nco_phase"
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, False),
+                channel_multi(attr, adcs[i], self._rx_attr_only_channel_names, False),
             )
 
             # Singletons
@@ -236,7 +230,7 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_single(attr, adcs[i], self._rx_dds_channel_names[0], False),
+                channel_single(attr, adcs[i], self._rx_attr_only_channel_names[0], False),
             )
 
             # multichip_sync
@@ -256,21 +250,21 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
             name = "tx_channel_nco_phases_chip_" + chr(i + 97)
             attr = "channel_nco_phase"
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
             name = "tx_channel_nco_gain_scale_chip_" + chr(i + 97)
             attr = "channel_nco_gain_scale"
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
 
             name = "tx_channel_nco_test_tone_en_chip_" + chr(i + 97)
@@ -278,7 +272,7 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
 
             name = "tx_channel_nco_test_tone_scale_chip_" + chr(i + 97)
@@ -286,7 +280,7 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi_float(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi_float(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
 
             # Main
@@ -295,14 +289,14 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
             name = "tx_main_nco_phases_chip_" + chr(i + 97)
             attr = "main_nco_phase"
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
 
             name = "tx_main_nco_test_tone_en_chip_" + chr(i + 97)
@@ -310,7 +304,7 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
 
             name = "tx_main_nco_test_tone_scale_chip_" + chr(i + 97)
@@ -318,7 +312,7 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi_float(attr, adcs[i], self._rx_dds_channel_names, True),
+                channel_multi_float(attr, adcs[i], self._tx_attr_only_channel_names, True),
             )
 
 
