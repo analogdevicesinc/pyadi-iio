@@ -132,17 +132,19 @@ class QuadMxFE(rx_tx, context_manager):
         self._pll3 = self._ctx.find_device("adf4371-3")
         adcs = [self._rxadc0, self._rxadc1, self._rxadc2, self._rxadc3]
 
+        RX_channels = 4
+        TX_channels = 8
         # Dynamically get channels
         for ch in self._rxadc.channels:
             if ch.scan_element:
                 self._rx_channel_names.append(ch._id)
-            else:
-                # i/q channels are the same
-                if ch._id.find("voltage_q") != -1:
-                    continue
                 if not ch.output:
                     self._rx_attr_only_channel_names.append(ch._id)
-                else:
+            else:
+                # i/q channels are the same
+                if ch._id.find("_q") > -1:
+                    continue
+                if ch.output:
                     self._tx_attr_only_channel_names.append(ch._id)
         for ch in self._txdac.channels:
             if ch.scan_element:
@@ -151,7 +153,7 @@ class QuadMxFE(rx_tx, context_manager):
                 self._dds_channel_names.append(ch._id)
 
         # Sort converter channels
-        def sortconv(chans_names):
+        def sortconv(chans_names, noq=False):
             tmpI = filter(lambda k: "_i" in k, chans_names)
             tmpQ = filter(lambda k: "_q" in k, chans_names)
 
@@ -163,11 +165,24 @@ class QuadMxFE(rx_tx, context_manager):
             chans_names = []
             for i in range(len(tmpI)):
                 chans_names.append(tmpI[i])
-                chans_names.append(tmpQ[i])
+                if not noq:
+                    chans_names.append(tmpQ[i])
             return chans_names
 
         self._rx_channel_names = sortconv(self._rx_channel_names)
         self._tx_channel_names = sortconv(self._tx_channel_names)
+        self._rx_attr_only_channel_names = sortconv(
+            self._rx_attr_only_channel_names, True
+        )
+        self._tx_attr_only_channel_names = sortconv(
+            self._tx_attr_only_channel_names, True
+        )
+        self._rx_attr_only_channel_names = self._rx_attr_only_channel_names[
+            :RX_channels
+        ]
+        self._tx_attr_only_channel_names = self._tx_attr_only_channel_names[
+            :TX_channels
+        ]
 
         # Sort dds channels
         def ignoredds(w):
@@ -230,16 +245,16 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_single(attr, adcs[i], self._rx_attr_only_channel_names[0], False),
+                channel_single(
+                    attr, adcs[i], self._rx_attr_only_channel_names[0], False
+                ),
             )
 
             # multichip_sync
             name = "multichip_sync_" + chr(i + 97)
             attr = "multichip_sync"
             setattr(
-                type(self),
-                name,
-                devattr_single(attr, adcs[i]),
+                type(self), name, devattr_single(attr, adcs[i]),
             )
 
         # Dynamically add methods for each TX channel
@@ -280,7 +295,9 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi_float(attr, adcs[i], self._tx_attr_only_channel_names, True),
+                channel_multi_float(
+                    attr, adcs[i], self._tx_attr_only_channel_names, True
+                ),
             )
 
             # Main
@@ -312,9 +329,10 @@ class QuadMxFE(rx_tx, context_manager):
             setattr(
                 type(self),
                 name,
-                channel_multi_float(attr, adcs[i], self._tx_attr_only_channel_names, True),
+                channel_multi_float(
+                    attr, adcs[i], self._tx_attr_only_channel_names, True
+                ),
             )
-
 
     @property
     def rx_sampling_frequency(self):
@@ -336,4 +354,3 @@ class QuadMxFE(rx_tx, context_manager):
         self._set_iio_attr(
             "voltage0", "hardwaregain", True, value, _ctrl=self._attenuator
         )
-
