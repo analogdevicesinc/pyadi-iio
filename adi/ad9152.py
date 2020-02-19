@@ -31,31 +31,30 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import *
+from adi.context_manager import context_manager
+from adi.rx_tx import tx
 
-from adi.fmcomms5 import *
 
-from adi.ad9371 import *
+class ad9152(tx, context_manager):
+    """ AD9152 High-Speed DAC """
 
-from adi.adrv9009 import *
+    _complex_data = False
+    _tx_channel_names = ["voltage0", "voltage1"]
+    _device_name = ""
 
-from adi.adrv9009_zu11eg import *
+    def __init__(self, uri=""):
 
-from adi.ad9680 import *
+        context_manager.__init__(self, uri, self._device_name)
 
-from adi.ad9144 import *
+        self._txdac = self._ctx.find_device("axi-ad9152-hpc")
 
-from adi.ad9152 import *
+        tx.__init__(self)
 
-from adi.daq2 import *
+    @property
+    def sample_rate(self):
+        """sample_rate: Sample rate RX and TX paths in samples per second"""
+        return self._get_iio_attr("voltage0", "sampling_frequency", True, self._txdac)
 
-from adi.adis16460 import *
-
-from adi.ad7124 import *
-
-from adi.adxl345 import *
-
-from adi.fmclidar1 import *
-
-__version__ = "0.0.5"
-name = "Analog Devices Hardware Interfaces"
+    @sample_rate.setter
+    def sample_rate(self, value):
+        self._set_iio_attr("voltage0", "sampling_frequency", True, value, self._txdac)
