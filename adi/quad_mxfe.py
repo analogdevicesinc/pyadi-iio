@@ -334,6 +334,38 @@ class QuadMxFE(rx_tx, context_manager):
                 ),
             )
 
+            name = "tx_main_nco_ffh_select_chip_" + chr(i + 97)
+            attr = "main_nco_ffh_select"
+            setattr(
+                type(self),
+                name,
+                channel_multi(attr, adcs[i], self._tx_attr_only_channel_names, True),
+            )
+
+            name = "tx_main_ffh_frequency_chip_" + chr(i + 97)
+            attr = "main_ffh_frequency"
+            setattr(
+                type(self),
+                name,
+                channel_single(attr, adcs[i], self._tx_attr_only_channel_names[0], True),
+            )
+
+            name = "tx_main_ffh_index_chip_" + chr(i + 97)
+            attr = "main_ffh_index"
+            setattr(
+                type(self),
+                name,
+                channel_single(attr, adcs[i], self._tx_attr_only_channel_names[0], True),
+            )
+
+            name = "tx_main_ffh_mode_chip_" + chr(i + 97)
+            attr = "main_ffh_mode"
+            setattr(
+                type(self),
+                name,
+                channel_single(attr, adcs[i], self._tx_attr_only_channel_names[0], True),
+            )
+
     @property
     def rx_sampling_frequency(self):
         """rx_sampling_frequency: Sample rate after decimation"""
