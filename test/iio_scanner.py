@@ -12,7 +12,6 @@ HOSTNAMES = [
     "analog.lan",
     "analog-zc706-daq2.local",
     "analog-zc706-fmcomms2.local",
-    "analog-zc706-daq3.local",
 ]
 
 
@@ -81,9 +80,7 @@ def check_board_other(ctx):
         ctx, [device("ad9517"), device("ad9361-phy"), device("cf-ad9361-lpc", 4)]
     ):
         return "adrv9361"
-    if check_config(
-        ctx, [device("ad9517"), device("ad9361-phy"), device("cf-ad9361-lpc", 2)]
-    ):
+    if check_config(ctx, [device("ad7291-bob"), device("cf-ad9361-lpc", 2)]):
         return "adrv9364"
     if check_config(
         ctx, [device("adm1177"), device("ad9361-phy"), device("cf-ad9361-lpc", 2)]
@@ -93,6 +90,10 @@ def check_board_other(ctx):
         ctx, [device("ad7291"), device("ad9361-phy"), device("cf-ad9361-lpc", 4)]
     ):
         return "fmcomms2"
+    if check_config(
+        ctx, [device("ad7291"), device("ad9361-phy"), device("cf-ad9361-lpc", 2),],
+    ):
+        return "fmcomms4"
     if check_config(ctx, [device("ad9361-phy"), device("ad9361-phy-b")]):
         return "fmcomms5"
     if check_config(ctx, [device("ad9361-phy"), device("cf-ad9361-lpc", 2)]):
