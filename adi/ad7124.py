@@ -49,13 +49,24 @@ class ad7124(rx, context_manager):
     _rx_mask = 0xFFFFFF
     _rx_shift = 0
 
-    def __init__(self, uri="", part="ad7124-8"):
+    def __init__(self, uri="", device_index=0):
 
         context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device(part)
-        self._rxadc = self._ctx.find_device(part)
 
-        # dynamically get channels
+        compatible_parts = ["ad7124-8", "ad7124-4"]
+
+        self._ctrl = None
+        index = 0
+
+        # Selecting the device_index-th device from the 7124 family as working device.
+        for device in self._ctx.devices:
+            if device.name in compatible_parts:
+                if index == device_index:
+                    self._ctrl = device
+                    break
+                else:
+                    index += 1
+
         for ch in self._ctrl._channels:
             name = ch._id
             self._rx_channel_names.append(name)
