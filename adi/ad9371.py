@@ -138,16 +138,18 @@ class ad9371(rx_tx, context_manager):
     @property
     def obs_rf_port_select(self):
         """obs_rf_port_select: Observation path source. Options are:
-            OFF - SnRx path is disabled
-            ORX1_TX_LO – SnRx operates in observation mode on ORx1 with Tx LO synthesizer
-            ORX2_TX_LO – SnRx operates in observation mode on ORx2 with Tx LO synthesizer
-            INTERNALCALS – enables scheduled Tx calibrations while using SnRx path. The enableTrackingCals function needs to be called in RADIO_OFF state. It sets the calibration mask, which the scheduler will later use to schedule the desired calibrations. This command is issued in RADIO_OFF. Once the AD9371 moves to RADIO_ON state, the internal scheduler will use the enabled calibration mask to schedule calibrations whenever possible, based on the state of the transceiver. The Tx calibrations will not be scheduled until INTERNALCALS is selected and the Tx calibrations are enabled in the cal mask.
-            OBS_SNIFFER – SnRx operates in sniffer mode with latest selected Sniffer Input – for hardware pin control operation. In pin mode, the GPIO pins designated for ORX_MODE would select SNIFFER mode. Then MYKONOS_setSnifferChannel function would choose the channel.
-            ORX1_SN_LO – SnRx operates in observation mode on ORx1 with SNIFFER LO synthesizer
-            ORX2_SN_LO – SnRx operates in observation mode on ORx2 with SNIFFER LO synthesizer
-            SN_A – SnRx operates in sniffer mode on SnRxA with SNIFFER LO synthesizer
-            SN_B – SnRx operates in sniffer mode on SnRxB with SNIFFER LO synthesizer
-            SN_C – SnRx operates in sniffer mode on SnRxC with SNIFFER LO synthesizer
+
+        - OFF - SnRx path is disabled
+        - ORX1_TX_LO – SnRx operates in observation mode on ORx1 with Tx LO synthesizer
+        - ORX2_TX_LO – SnRx operates in observation mode on ORx2 with Tx LO synthesizer
+        - INTERNALCALS – enables scheduled Tx calibrations while using SnRx path. The enableTrackingCals function needs to be called in RADIO_OFF state. It sets the calibration mask, which the scheduler will later use to schedule the desired calibrations. This command is issued in RADIO_OFF. Once the AD9371 moves to RADIO_ON state, the internal scheduler will use the enabled calibration mask to schedule calibrations whenever possible, based on the state of the transceiver. The Tx calibrations will not be scheduled until INTERNALCALS is selected and the Tx calibrations are enabled in the cal mask.
+        - OBS_SNIFFER – SnRx operates in sniffer mode with latest selected Sniffer Input – for hardware pin control operation. In pin mode, the GPIO pins designated for ORX_MODE would select SNIFFER mode. Then MYKONOS_setSnifferChannel function would choose the channel.
+        - ORX1_SN_LO – SnRx operates in observation mode on ORx1 with SNIFFER LO synthesizer
+        - ORX2_SN_LO – SnRx operates in observation mode on ORx2 with SNIFFER LO synthesizer
+        - SN_A – SnRx operates in sniffer mode on SnRxA with SNIFFER LO synthesizer
+        - SN_B – SnRx operates in sniffer mode on SnRxB with SNIFFER LO synthesizer
+        - SN_C – SnRx operates in sniffer mode on SnRxC with SNIFFER LO synthesizer
+
         """
         return self._get_iio_attr_str("voltage2", "rf_port_select", False)
 
