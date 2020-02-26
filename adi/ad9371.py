@@ -56,7 +56,9 @@ class ad9371(rx_tx, context_manager):
 
         rx_tx.__init__(self)
 
-        self.obs = obs(self._ctx, self._rxobs, self._obs_channel_names)
+        self.obs = obs(
+            self._ctx, self._rxobs, self._obs_channel_names, self._complex_data
+        )
 
     @property
     def gain_control_mode(self):

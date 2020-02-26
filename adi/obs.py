@@ -38,10 +38,11 @@ from adi.rx_tx import rx
 class obs(rx):
     """ Buffer handling for observation devices """
 
-    def __init__(self, ctx, obs_dev, channel_names):
+    def __init__(self, ctx, obs_dev, channel_names, complex_data=False):
         self._ctx = ctx
         self._rxadc = obs_dev
         self._rx_channel_names = channel_names
+        self._complex_data = complex_data
         rx.__init__(self)
 
     def __del__(self):
