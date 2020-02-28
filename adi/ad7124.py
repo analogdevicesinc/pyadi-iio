@@ -67,6 +67,9 @@ class ad7124(rx, context_manager):
                 else:
                     index += 1
 
+        # dynamically get channels and sorting them after the index of the first voltage channel
+        self._ctrl.channels.sort(key=lambda x: int(x.id[7 : x.id.find("-")]))
+
         for ch in self._ctrl._channels:
             name = ch._id
             self._rx_channel_names.append(name)
