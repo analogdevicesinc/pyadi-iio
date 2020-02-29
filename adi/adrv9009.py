@@ -33,6 +33,7 @@
 
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
+from adi.jesd import jesd
 
 
 class adrv9009(rx_tx, context_manager):
@@ -52,6 +53,7 @@ class adrv9009(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
+        self._jesd = jesd(uri)
 
         rx_tx.__init__(self)
 

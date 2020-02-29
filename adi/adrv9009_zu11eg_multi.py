@@ -49,11 +49,15 @@ class adrv9009_zu11eg_multi(object):
             Exception("slave_uris must be a list")
 
         self._dma_show_arming = False
+        self._jesd_show_status = False
         self._rx_initialized = False
         self.master = adrv9009_zu11eg(uri=master_uri)
         self.slaves = []
         for uri in slave_uris:
             self.slaves.append(adrv9009_zu11eg(uri=uri))
+
+        for dev in self.slaves + [self.master]:
+            dev._rxadc.set_kernel_buffers_count(1)
 
     @property
     def rx_buffer_size(self):
