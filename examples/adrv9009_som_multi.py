@@ -44,16 +44,16 @@ def measure_phase(chan0, chan1):
 buff_size = 2 ** 14
 
 # Create radio
+# def run_dev():
 master = "ip:192.168.86.51"
-slave = "ip:192.168.86.33"
+slave = "ip:192.168.86.39"
 
 print("--Connecting to devices")
 multi = adi.adrv9009_zu11eg_multi(master, [slave])
-multi._dma_show_arming = True
+# multi._dma_show_arming = True
 multi.rx_buffer_size = 2 ** 14
 
 # Configure LOs
-print(multi.master.trx_lo)
 multi.master.trx_lo = 1000000000
 multi.master.trx_lo_chip_b = 1000000000
 
