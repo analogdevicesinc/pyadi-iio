@@ -66,6 +66,47 @@ class adrv9009_zu11eg_multi(object):
         for dev in self.slaves + [self.master]:
             dev.rx_buffer_size = value
 
+    def __read_jesd_status(self):
+        for dev in self.slaves + [self.master]:
+            s = dev._jesd.get_all_links_statuses()
+            for dev in s:
+                print("JESD Link status:", dev, s[dev]["Link status"])
+            for dev in s:
+                print("JESD SYSREF captured:", dev, s[dev]["SYSREF captured"])
+            for dev in s:
+                print(
+                    "JESD SYSREF alignment error:",
+                    dev,
+                    s[dev]["SYSREF alignment error"],
+                )
+
+    def __setup_framers(self):
+        # adi,jesd204-framer-a-lmfc-offset 15
+        for dev in self.slaves + [self.master]:
+            v1 = (
+                dev._get_iio_debug_attr_str(
+                    "adi,jesd204-framer-a-lmfc-offset", dev._ctrl_b
+                )
+                == "15"
+            )
+            v2 = (
+                dev._get_iio_debug_attr_str(
+                    "adi,jesd204-framer-a-lmfc-offset", dev._ctrl
+                )
+                == "15"
+            )
+            if (not v1) or (not v2):
+                dev._set_iio_debug_attr_str(
+                    "adi,jesd204-framer-a-lmfc-offset", "15", dev._ctrl_b
+                )
+                dev._set_iio_debug_attr_str(
+                    "adi,jesd204-framer-a-lmfc-offset", "15", dev._ctrl
+                )
+                dev._set_iio_debug_attr_str("initialize", "1", dev._ctrl_b)
+                dev._set_iio_debug_attr_str("initialize", "1", dev._ctrl)
+                print("Re-initializing JESD links")
+                time.sleep(10)
+
     def __clock_chips_init(self):
         for dev in self.slaves + [self.master]:
             # disable RF seeder, doing it on SOM and Carrier breaks Sync
@@ -73,6 +114,7 @@ class adrv9009_zu11eg_multi(object):
             # SET SOM pulses to 8
             dev._clock_chip.reg_write(0x5A, 0x4)
         self._clock_chips_initialized = True
+        time.sleep(0.1)
 
     def __unsync(self):
         for dev in [self.master] + self.slaves:
@@ -154,7 +196,7 @@ class adrv9009_zu11eg_multi(object):
         for dev in self.slaves + [self.master]:
             # 8 pulses on pulse generator request
             # iio_reg hmc7044 0x5a 4
-            dev._clock_chip.reg_write(0x5A, 4)
+            dev._clock_chip.reg_write(0x5A, 5)
             # step 0 & 1
             dev._ctrl.attrs["multichip_sync"].value = "0"
             dev._ctrl_b.attrs["multichip_sync"].value = "0"
@@ -168,26 +210,31 @@ class adrv9009_zu11eg_multi(object):
         for dev in [self.master] + self.slaves:
             # iio_attr  -q -d adrv9009-phy multichip_sync 11 >/dev/null 2>&1
             # iio_attr  -q -d adrv9009-phy-b multichip_sync 11 >/dev/null 2>&1
-            dev._ctrl.attrs["multichip_sync"].value = "11"
-            dev._ctrl_b.attrs["multichip_sync"].value = "11"
+            # dev._ctrl.attrs["multichip_sync"].value = "11"
+            # dev._ctrl_b.attrs["multichip_sync"].value = "11"
+            pass
 
         # step 3 & 4
         for dev in [self.master] + self.slaves:
             try:
                 dev._ctrl.attrs["multichip_sync"].value = "3"
             except OSError:
+                print("OSERROR1")
                 pass
             try:
                 dev._ctrl_b.attrs["multichip_sync"].value = "3"
             except OSError:
+                print("OSERROR2")
                 pass
             try:
                 dev._ctrl.attrs["multichip_sync"].value = "4"
             except OSError:
+                print("OSERROR3")
                 pass
             try:
                 dev._ctrl_b.attrs["multichip_sync"].value = "4"
             except OSError:
+                print("OSERROR4")
                 pass
 
         # step 5
@@ -216,14 +263,24 @@ class adrv9009_zu11eg_multi(object):
             dev._ctrl.attrs["multichip_sync"].value = "11"
             dev._ctrl_b.attrs["multichip_sync"].value = "11"
             # 8 pulses on pulse generator request
-            dev._clock_chip.reg_write(0x5A, 1)
+            # dev._clock_chip.reg_write(0x5A, 1)
+
+        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
 
         # cal RX phase correction
         for dev in self.slaves + [self.master]:
+            # go back to 1 pulse / sysref request
+            dev._clock_chip.reg_write(0x5A, 1)
+
             dev._ctrl.attrs["calibrate_rx_phase_correction_en"].value = "1"
             dev._ctrl.attrs["calibrate"].value = "1"
             dev._ctrl_b.attrs["calibrate_rx_phase_correction_en"].value = "1"
             dev._ctrl_b.attrs["calibrate"].value = "1"
+
+        for _ in range(4):
+            self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
+            time.sleep(1)
+
         time.sleep(1)
 
     def __rx_dma_arm(self):
@@ -235,17 +292,22 @@ class adrv9009_zu11eg_multi(object):
                 dev._rxadc.reg_write(0x80000044, 0x8)
                 if self._dma_show_arming:
                     print(".", end="")
-            print("\n--DMA ARMED--", dev.uri)
+            if self._dma_show_arming:
+                print("\n--DMA ARMED--", dev.uri)
 
     def rx(self):
         if not self._rx_initialized:
+            self.__setup_framers()
+            if self._jesd_show_status:
+                self.__read_jesd_status()
             self.__clock_chips_init()
             self.__unsync()
             self.__configure_continuous_sysref()
             self.__sync()
             self.__mcs()
-            self.__rx_dma_arm()
             # Create buffers but do not pull data yet
+            self.__rx_dma_arm()
+            self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
             for dev in [self.master] + self.slaves:
                 dev._rx_init_channels()
             self._rx_initialized = True
