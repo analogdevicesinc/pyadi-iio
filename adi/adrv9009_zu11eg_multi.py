@@ -33,6 +33,8 @@
 
 import time
 from typing import List
+import threading
+import datetime
 
 from adi.adrv9009_zu11eg import adrv9009_zu11eg
 
@@ -53,6 +55,8 @@ class adrv9009_zu11eg_multi(object):
         self._rx_initialized = False
         self.master = adrv9009_zu11eg(uri=master_uri)
         self.slaves = []
+        self.samples_master = []
+        self.samples_slave = []
         for uri in slave_uris:
             self.slaves.append(adrv9009_zu11eg(uri=uri))
 
@@ -286,7 +290,7 @@ class adrv9009_zu11eg_multi(object):
             time.sleep(1)
 
         time.sleep(1)
-
+                
     def __rx_dma_arm(self):
         for dev in self.slaves + [self.master]:
             if self._dma_show_arming:
@@ -298,7 +302,13 @@ class adrv9009_zu11eg_multi(object):
                     print(".", end="")
             if self._dma_show_arming:
                 print("\n--DMA ARMED--", dev.uri)
-
+                
+    def __refill_samples(self, dev, is_master):
+        if is_master:
+            self.samples_master = dev.rx()
+        else:
+            self.samples_slave = dev.rx()
+        
     def rx(self):
         if not self._rx_initialized:
             self.__setup_framers()
@@ -310,13 +320,30 @@ class adrv9009_zu11eg_multi(object):
             self.__sync()
             self.__mcs()
             # Create buffers but do not pull data yet
-            self.__rx_dma_arm()
+#            self.__rx_dma_arm()
             self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
             for dev in [self.master] + self.slaves:
                 dev._rx_init_channels()
             self._rx_initialized = True
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-        data = []
+        # Drop the first set of dummy data (probably aquired when running iio.Buffer.create ?)
         for dev in [self.master] + self.slaves:
-            data = data + dev.rx()
+            dev.rx()
+        data = []
+        self.__rx_dma_arm()
+        threads = []
+        for dev in [self.master] + self.slaves:
+            #data = data + dev.rx()
+            is_master = False
+            if dev == self.master:
+                is_master = True
+            thread = threading.Thread(target=self.__refill_samples, args=(dev, is_master))
+            thread.start()
+            threads.append(thread)
+        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
+        time.sleep(0.3)
+        for thread in threads:
+            thread.join()
+        data = data + self.samples_master + self.samples_slave
+        self.samples_master = []
+        self.samples_slave = []            
         return data
