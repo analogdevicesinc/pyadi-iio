@@ -38,8 +38,8 @@ from adi.attribute import attribute
 from adi.context_manager import context_manager
 
 
-class ad5683r(context_manager, attribute):
-    """ AD5683R DAC """
+class ad5686(context_manager, attribute):
+    """ AD5686 DAC """
 
     _complex_data = False
     channel = []
@@ -47,10 +47,53 @@ class ad5683r(context_manager, attribute):
     _channel = "voltage0"
     _rx_data_type = np.int32
 
-    def __init__(self, uri=""):
-
+    def __init__(self, uri="", device_index=0):
         context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("ad5683r")
+        # Dictionary with all compatible parts. The key of each entry is the device's id and it's value
+        # is the number of bits the device supports.
+        compatible_parts = [
+            "ad5310r",
+            "ad5311r",
+            "ad5671r",
+            "ad5672r",
+            "ad5673r",
+            "ad5674r",
+            "ad5675r",
+            "ad5676",
+            "ad5676r",
+            "ad5677r",
+            "ad5679r",
+            "ad5681r",
+            "ad5682r",
+            "ad5683",
+            "ad5683r",
+            "ad5684",
+            "ad5684r",
+            "ad5685r",
+            "ad5686",
+            "ad5686r",
+            "ad5691r",
+            "ad5692r",
+            "ad5693",
+            "ad5693r",
+            "ad5694",
+            "ad5694r",
+            "ad5695r",
+            "ad5696",
+            "ad5696r",
+        ]
+
+        self._ctrl = None
+        index = 0
+        # We are selecting the device_index-th device from the 5686 family as working device.
+        for device in self._ctx.devices:
+            if device.name in compatible_parts:
+                if index == device_index:
+                    self._ctrl = device
+                    break
+                else:
+                    index += 1
+
         self._scale = float(self._get_iio_attr_str(self._channel, "scale", True))
 
     @property
@@ -93,8 +136,16 @@ class ad5683r(context_manager, attribute):
         """AD5683R channel scale(gain)"""
         return self._scale
 
-
     def to_raw(self, val):
         """Converts raw value to SI"""
         return int(1000.0 * val / self._scale)
 
+    @property
+    def volts(self):
+        """AD5683R channel value in volts"""
+        return self.raw * self._scale
+
+    @volts.setter
+    def volts(self, val):
+        """AD5683R channel value in volts"""
+        self.raw = self.to_raw(val)
