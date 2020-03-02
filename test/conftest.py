@@ -126,12 +126,12 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol):
 def dma_rx(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
     sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
-    if sdr._num_rx_channels > 2:
-        if not isinstance(channel, list):
-            sdr.rx_enabled_channels = [channel]
-        else:
-            sdr.rx_enabled_channels = channel
-
+    N = 2 ** 15
+    if not isinstance(channel, list):
+        sdr.rx_enabled_channels = [channel]
+    else:
+        sdr.rx_enabled_channels = channel
+    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
     try:
         for _ in range(10):
             data = sdr.rx()
@@ -157,12 +157,12 @@ def dma_tx(classname, devicename, channel):
     fc = 10000
     d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
 
-    if sdr._num_tx_channels > 2:
-        if not isinstance(channel, list):
-            sdr.tx_enabled_channels = [channel]
-        else:
-            sdr.tx_enabled_channels = channel
-            d = [d] * len(channel)
+    if not isinstance(channel, list):
+        sdr.tx_enabled_channels = [channel]
+    else:
+        sdr.tx_enabled_channels = channel
+        d = [d] * len(channel)
+    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
 
     try:
         for _ in range(10):
@@ -182,17 +182,15 @@ def dma_loopback(classname, devicename, channel):
     else:
         sdr.loopback = 1
     sdr.tx_cyclic_buffer = True
-    if sdr._num_tx_channels > 2:
-        sdr.tx_enabled_channels = [channel]
-    if sdr._num_rx_channels > 2:
-        sdr.rx_enabled_channels = [channel]
-
     # Create a ramp signal with different values for I and Q
     start = 0
     tx_data = np.array(range(start, 2 ** 11), dtype=np.int16)
     tx_data = tx_data << 4
     tx_data = tx_data + 1j * (tx_data * -1 - 1)
-    sdr.rx_buffer_size = len(tx_data) * 2
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = len(tx_data) * 2 * len(sdr.tx_enabled_channels)
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = len(tx_data) * 2 * len(sdr.rx_enabled_channels)
     try:
         sdr.tx(tx_data)
         # Flush buffers
@@ -244,8 +242,7 @@ def dds_loopback(classname, devicename, param_set, channel, frequency, scale, pe
         setattr(sdr, p, param_set[p])
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
-    sdr.rx_buffer_size = 2 ** 15
-    num_tx_channels = sdr._num_tx_channels
+    N = 2 ** 14
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
@@ -253,7 +250,7 @@ def dds_loopback(classname, devicename, param_set, channel, frequency, scale, pe
         RXFS = int(sdr.rx_sample_rate)
 
     sdr.rx_enabled_channels = [channel]
-
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
     sdr.dds_single_tone(frequency, scale, channel)
 
     # Pass through SDR
@@ -267,11 +264,12 @@ def dds_loopback(classname, devicename, param_set, channel, frequency, scale, pe
     tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - frequency)
+    print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
 
 
-def iq_loopback(classname, devicename, channel, param_set):
+def cw_loopback(classname, devicename, channel, param_set):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
     sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
@@ -280,46 +278,45 @@ def iq_loopback(classname, devicename, channel, param_set):
         setattr(sdr, p, param_set[p])
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
-    sdr.rx_buffer_size = 2 ** 15
-    if sdr._num_tx_channels > 2:
-        sdr.tx_enabled_channels = [channel]
-    if sdr._num_rx_channels > 2:
-        sdr.rx_enabled_channels = [channel]
+    N = 2 ** 14
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
     else:
         RXFS = int(sdr.rx_sample_rate)
+    A = 2 ** 15
     fc = RXFS * 0.1
-    N = 2 ** 14
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * 0.5
-    iq = i + 1j * q
+    if sdr._complex_data:
+        i = np.cos(2 * np.pi * t * fc) * A * 0.5
+        q = np.sin(2 * np.pi * t * fc) * A * 0.5
+        cw = i + 1j * q
+    else:
+        cw = np.cos(2 * np.pi * t * fc) * A * 1
+
     # Pass through SDR
     try:
-        sdr.tx(iq)
-        for _ in range(30):  # Wait for IQ correction to stabilize
+        sdr.tx(cw)
+        for _ in range(30):  # Wait to stabilize
             data = sdr.rx()
     except Exception as e:
         del sdr
         raise Exception(e)
     del sdr
-    tone_freq = freq_est(data, RXFS)
+    # tone_freq = freq_est(data, RXFS)
+    # diff = np.abs(tone_freq - fc)
+    # print("Peak: @"+str(tone_freq) )
+    # assert (fc * 0.01) > diff
 
-    # if self.do_plots:
-    #     import matplotlib.pyplot as plt
-    #
-    #     reals = np.real(data)
-    #     plt.plot(reals)
-    #     imags = np.imag(data)
-    #     plt.plot(imags)
-    #     plt.xlabel("Samples")
-    #     plt.ylabel("Amplitude [dbFS]")
-    #     plt.show()
-
-    diff = np.abs(tone_freq - fc)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A)
+    indx = np.argmax(tone_peaks)
+    diff = np.abs(tone_freqs[indx] - fc)
+    print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
     assert (fc * 0.01) > diff
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
@@ -333,19 +330,19 @@ def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
         setattr(sdr, p, param_set[p])
     time.sleep(5)  # Wait for QEC to kick in
     # Set common buffer settings
+    N = 2 ** 14
     sdr.tx_cyclic_buffer = True
-    sdr.rx_buffer_size = 2 ** 14
-    if sdr._num_tx_channels > 2:
-        sdr.tx_enabled_channels = [channel]
-    if sdr._num_rx_channels > 2:
-        sdr.rx_enabled_channels = [channel]
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
     else:
         RXFS = int(sdr.rx_sample_rate)
     fc = RXFS * 0.1
-    N = 2 ** 14
+
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
     i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.9
@@ -417,6 +414,8 @@ def cyclic_buffer(classname, devicename, channel, param_set):
     q = np.sin(2 * np.pi * t * fc) * 2 ** 14
     iq = i + 1j * q
     sdr.tx_cyclic_buffer = True
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
     sdr.tx(iq)
     sdr.tx_destroy_buffer()
     fail = False
@@ -451,6 +450,8 @@ def cyclic_buffer_exception(classname, devicename, channel, param_set):
     q = np.sin(2 * np.pi * t * fc) * 2 ** 14
     iq = i + 1j * q
     sdr.tx_cyclic_buffer = True
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
     try:
         sdr.tx(iq)
         sdr.tx(iq)
@@ -543,7 +544,13 @@ def test_dds_loopback(request):
 @pytest.fixture()
 def test_iq_loopback(request):
     command_line_config(request)
-    yield iq_loopback
+    yield cw_loopback
+
+
+@pytest.fixture()
+def test_cw_loopback(request):
+    command_line_config(request)
+    yield cw_loopback
 
 
 @pytest.fixture()
