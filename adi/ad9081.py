@@ -147,6 +147,24 @@ class ad9081(rx_tx, context_manager):
         )
 
     @property
+    def rx_channel_nco_phases(self):
+        """rx_channel_nco_phases: Receive path fine DDC NCO phases
+        """
+        return self._get_iio_attr_vec(
+            self._rx_fine_ddc_channel_names, "channel_nco_phase", False
+        )
+
+    @rx_channel_nco_phases.setter
+    def rx_channel_nco_phases(self, value):
+        self._set_iio_attr_vec(
+            self._rx_fine_ddc_channel_names,
+            "channel_nco_phase",
+            False,
+            value,
+            self._rxadc,
+        )
+
+    @property
     def rx_main_nco_frequencies(self):
         """rx_main_nco_frequencies: Receive path coarse DDC NCO frequencies
         """
@@ -158,6 +176,31 @@ class ad9081(rx_tx, context_manager):
     def rx_main_nco_frequencies(self, value):
         self._set_iio_attr_vec(
             self._rx_coarse_ddc_channel_names, "main_nco_frequency", False, value,
+        )
+
+    @property
+    def rx_main_nco_phases(self):
+        """rx_main_nco_phases: Receive path coarse DDC NCO phases
+        """
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_nco_phase", False
+        )
+
+    @rx_main_nco_phases.setter
+    def rx_main_nco_phases(self, value):
+        self._set_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_nco_phase", False, value,
+        )
+
+    @property
+    def rx_test_mode(self):
+        """rx_test_mode: NCO Test Mode """
+        return self._get_iio_attr("voltage0_i", "test_mode", False)
+
+    @rx_test_mode.setter
+    def rx_test_mode(self, value):
+        self._set_iio_attr_str(
+            "voltage0_i", "test_mode", False, value,
         )
 
     @property
