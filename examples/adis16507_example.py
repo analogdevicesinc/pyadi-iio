@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2020 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,35 +31,24 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import *
+import adi
+import matplotlib.pyplot as plt
+import numpy as np
 
-from adi.fmcomms5 import *
+# Set up ADIS16507
+imu = adi.adis16507(uri="ip:analog")
 
-from adi.ad9371 import *
+imu.rx_output_type = "SI"
+imu.rx_enabled_channels = [0, 1, 2, 3, 4, 5]
+imu.sample_rate = 1024
+imu.rx_buffer_size = 100
+imu.burst_mode_enable = True
 
-from adi.adrv9009 import *
-
-from adi.adrv9009_zu11eg import *
-
-from adi.ad9680 import *
-
-from adi.ad9144 import *
-
-from adi.ad9152 import *
-
-from adi.daq2 import *
-
-from adi.daq3 import *
-
-from adi.adis16460 import *
-
-from adi.adis16507 import *
-
-from adi.ad7124 import *
-
-from adi.adxl345 import *
-
-from adi.fmclidar1 import *
-
-__version__ = "0.0.5"
-name = "Analog Devices Hardware Interfaces"
+for _ in range(100):
+    data = imu.rx()
+    plt.clf()
+    for i, d in enumerate(data):
+        plt.plot(d, label=imu._rx_channel_names[i])
+    plt.legend()
+    plt.show(block=False)
+    plt.pause(0.1)
