@@ -49,6 +49,21 @@ class jesd:
             "ssh://{}:{}@{}/".format(self.username, self.password, self.address)
         )
         self.find_jesd_dir()
+        self.find_lanes()
+
+    def find_lanes(self):
+        self.lanes = dict()
+        for dir in self.dirs:
+            if "-rx" in dir:
+                self.lanes[dir] = []
+                lanIndx = 0
+                while 1:
+                    li = "/lane{}_info".format(lanIndx)
+                    if self.fs.isfile(self.rootdir + dir + li):
+                        self.lanes[dir].append(li)
+                        lanIndx = lanIndx + 1
+                    else:
+                        break
 
     def find_jesd_dir(self):
         dirs = self.fs.listdir(self.rootdir)
@@ -72,9 +87,24 @@ class jesd:
     def get_status(self, dir):
         return self.fs.gettext(self.rootdir + dir + "/status")
 
-    def get_all_links_statuses(self):
+    def get_dev_lane_info(self, dir):
+        lane_info = dict()
+        for ldir in self.lanes[dir]:
+            lane_info[ldir] = self.decode_status(
+                self.fs.gettext(self.rootdir + dir + "/" + ldir)
+            )
+        return lane_info
+
+    def get_all_link_statuses(self):
         statuses = dict()
         for dir in self.dirs:
-            # name = dir.split(".")[1]
+            if "-rx" in dir:
+                statuses[dir] = self.get_dev_lane_info(dir)
+                # print(statuses[dir])
+        return statuses
+
+    def get_all_statuses(self):
+        statuses = dict()
+        for dir in self.dirs:
             statuses[dir] = self.decode_status(self.get_status(dir))
         return statuses

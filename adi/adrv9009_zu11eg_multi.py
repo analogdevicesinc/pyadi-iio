@@ -51,7 +51,7 @@ class adrv9009_zu11eg_multi(object):
             Exception("slave_uris must be a list")
 
         self._dma_show_arming = False
-        self._jesd_show_status = False
+        self._jesd_show_status = True
         self._rx_initialized = False
         self.master = adrv9009_zu11eg(uri=master_uri)
         self.slaves = []
@@ -74,19 +74,32 @@ class adrv9009_zu11eg_multi(object):
         for dev in self.slaves + [self.master]:
             dev.rx_buffer_size = value
 
-    def __read_jesd_status(self):
+    def __read_jesd_status_all_devs(self, attr, islink=False):
         for dev in self.slaves + [self.master]:
-            s = dev._jesd.get_all_links_statuses()
-            for dev in s:
-                print("JESD Link status:", dev, s[dev]["Link status"])
-            for dev in s:
-                print("JESD SYSREF captured:", dev, s[dev]["SYSREF captured"])
-            for dev in s:
-                print(
-                    "JESD SYSREF alignment error:",
-                    dev,
-                    s[dev]["SYSREF alignment error"],
-                )
+            if islink:
+                devs = dev._jesd.get_all_link_statuses()
+                for dev in devs:
+                    lanes = devs[dev]
+                    print("JESD {}: ".format(dev), end="")
+                    for lane in lanes:
+                        if attr in lanes[lane]:
+                            print(" {}".format(lanes[lane][attr]), end="")
+                    print("")
+            else:
+                s = dev._jesd.get_all_statuses()
+                for dev in s:
+                    if attr in s[dev]:
+                        print("JESD {}: {} ({})".format(attr, s[dev][attr], dev))
+
+    def __read_jesd_status(self):
+        self.__read_jesd_status_all_devs("Link status")
+        self.__read_jesd_status_all_devs("SYSREF captured")
+        self.__read_jesd_status_all_devs("SYSREF alignment error")
+
+    def __read_jesd_link_status(self):
+        self.__read_jesd_status_all_devs("Errors", True)
+        self.__read_jesd_status_all_devs("Initial Lane Alignment Sequence", True)
+        self.__read_jesd_status_all_devs("Initial Frame Synchronization", True)
 
     def __setup_framers(self):
         # adi,jesd204-framer-a-lmfc-offset 15
@@ -319,10 +332,13 @@ class adrv9009_zu11eg_multi(object):
             self.__configure_continuous_sysref()
             self.__sync()
             self.__mcs()
+            if self._jesd_show_status:
+                self.__read_jesd_link_status()
             # Create buffers but do not pull data yet
-#            self.__rx_dma_arm()
+            #            self.__rx_dma_arm()
             self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
             for dev in [self.master] + self.slaves:
+                dev.rx_destroy_buffer()
                 dev._rx_init_channels()
             self._rx_initialized = True
         # Drop the first set of dummy data (probably aquired when running iio.Buffer.create ?)
