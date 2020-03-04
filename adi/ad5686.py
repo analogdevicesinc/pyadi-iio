@@ -31,8 +31,6 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from decimal import Decimal
-
 import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
@@ -42,9 +40,8 @@ class ad5686(context_manager, attribute):
     """ AD5686 DAC """
 
     _complex_data = False
-    channel = []
+    channel = []  # type: ignore
     _device_name = ""
-    _channel = "voltage0"
     _rx_data_type = np.int32
 
     def __init__(self, uri="", device_index=0):
@@ -94,58 +91,69 @@ class ad5686(context_manager, attribute):
                 else:
                     index += 1
 
-        self._scale = float(self._get_iio_attr_str(self._channel, "scale", True))
+        for ch in self._ctrl.channels:
+            name = ch.id
+            self.channel.append(self._channel(self._ctrl, name))
 
-    @property
-    def powerdown(self):
-        """AD5683R channel powerdown value"""
-        return self._get_iio_attr(self._channel, "raw", True)
+        # sort device channels after the index of their index
+        self.channel.sort(key=lambda x: int(x.name[7:]))
 
-    @powerdown.setter
-    def powerdown(self, val):
-        """AD5683R channel powerdown value"""
-        self._set_iio_attr(self._channel, "powerdown", True, val)
+    class _channel(attribute):
+        """AD5686 channel"""
 
-    @property
-    def powerdown_mode(self):
-        """AD5683R channel powerdown mode value"""
-        return self._get_iio_attr_str(self._channel, "powerdown_mode", True)
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
 
-    @powerdown_mode.setter
-    def powerdown_mode(self, val):
-        """AD5683R channel powerdown value"""
-        self._set_iio_attr_str(self._channel, "powerdown_mode", True, val)
+        @property
+        def raw(self):
+            """AD5686 channel raw value"""
+            return self._get_iio_attr(self.name, "raw", True, self._ctrl)
 
-    @property
-    def powerdown_mode_available(self):
-        """Provides all available powerdown mode settings for the AD5683r"""
-        return self._get_iio_attr_str(self._channel, "powerdown_mode_available", True)
+        @raw.setter
+        def raw(self, value):
+            self._set_iio_attr(self.name, "raw", True, str(int(value)))
 
-    @property
-    def raw(self):
-        """AD5683R channel raw value"""
-        return self._get_iio_attr(self._channel, "raw", True)
+        @property
+        def powerdown(self):
+            """AD5686 channel powerdown value"""
+            return self._get_iio_attr(self.name, "powerdown", True)
 
-    @raw.setter
-    def raw(self, val):
-        """AD5683R channel raw value"""
-        self._set_iio_attr(self._channel, "raw", True, val)
+        @powerdown.setter
+        def powerdown(self, val):
+            """AD5686 channel powerdown value"""
+            self._set_iio_attr(self.name, "powerdown", True, val)
 
-    @property
-    def scale(self):
-        """AD5683R channel scale(gain)"""
-        return self._scale
+        @property
+        def powerdown_mode(self):
+            """AD5686 channel powerdown mode value"""
+            return self._get_iio_attr_str(self.name, "powerdown_mode", True)
 
-    def to_raw(self, val):
-        """Converts raw value to SI"""
-        return int(1000.0 * val / self._scale)
+        @powerdown_mode.setter
+        def powerdown_mode(self, val):
+            """AD5686 channel powerdown value"""
+            self._set_iio_attr_str(self.name, "powerdown_mode", True, val)
 
-    @property
-    def volts(self):
-        """AD5683R channel value in volts"""
-        return self.raw * self._scale
+        @property
+        def powerdown_mode_available(self):
+            """Provides all available powerdown mode settings for the AD5686"""
+            return self._get_iio_attr_str(self.name, "powerdown_mode_available", True)
 
-    @volts.setter
-    def volts(self, val):
-        """AD5683R channel value in volts"""
-        self.raw = self.to_raw(val)
+        @property
+        def scale(self):
+            """AD5686 channel scale(gain)"""
+            return self._get_iio_attr(self.name, "scale", True)
+
+        def to_raw(self, val):
+            """Converts raw value to SI"""
+            return int(1000.0 * val / self.scale)
+
+        @property
+        def volts(self):
+            """AD5686 channel value in volts"""
+            return self.raw * self.scale
+
+        @volts.setter
+        def volts(self, val):
+            """AD5686 channel value in volts"""
+            self.raw = self.to_raw(val)
