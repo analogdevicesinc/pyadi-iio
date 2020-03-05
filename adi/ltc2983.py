@@ -1,9 +1,8 @@
+import numbers
 from collections import OrderedDict
 from collections.abc import Iterable
-import numbers
 
 import numpy as np
-
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
@@ -42,8 +41,7 @@ class ltc2983(rx, context_manager):
 
             # raw value attribute is '<x>_raw' with
             # <x>=thermistor,rtd,diode,thermocouple,direct_adc
-            raw_attr_name = [x for x in channel.attrs.keys()
-                              if x.endswith("raw")]
+            raw_attr_name = [x for x in channel.attrs.keys() if x.endswith("raw")]
             assert len(raw_attr_name) == 1
             raw_attr_name = raw_attr_name[0]
 
