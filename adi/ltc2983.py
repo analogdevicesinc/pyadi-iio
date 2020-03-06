@@ -12,7 +12,7 @@ class ltc2983(rx, context_manager):
     """ LTC2983 Multi-Sensor Temperature Measurement System """
 
     _complex_data = False
-    channel = None
+    channel: OrderedDict = None
     _device_name = ""
     _rx_data_type = np.int32
 
