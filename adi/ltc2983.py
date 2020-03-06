@@ -11,10 +11,11 @@ from adi.rx_tx import rx
 class ltc2983(rx, context_manager):
     """ LTC2983 Multi-Sensor Temperature Measurement System """
 
-    _complex_data = False
     channel: OrderedDict = None
-    _device_name = ""
+    _device_name = "ltc2983"
+    _rx_unbuffered_data = True
     _rx_data_type = np.int32
+    _rx_data_si_type = np.float
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, self._device_name)
@@ -25,7 +26,7 @@ class ltc2983(rx, context_manager):
         _channels = []
         for ch in self._ctrl.channels:
             self._rx_channel_names.append(ch.id)
-            _channels.append((ch.id, self._channel(self._ctrl, ch)))
+            _channels.append((ch.id, self._channel(self._ctrl, ch.id)))
         self.channel = OrderedDict(_channels)
 
         rx.__init__(self)
@@ -33,30 +34,19 @@ class ltc2983(rx, context_manager):
     class _channel(attribute):
         """ LTC2983 channel """
 
-        def __init__(self, ctrl, channel):
+        def __init__(self, ctrl, channel_name):
             self._ctrl = ctrl
-            self._channel = channel
-
-            self.name = channel.id
-
-            # raw value attribute is '<x>_raw' with
-            # <x>=thermistor,rtd,diode,thermocouple,direct_adc
-            raw_attr_name = [x for x in channel.attrs.keys() if x.endswith("raw")]
-            assert len(raw_attr_name) == 1
-            raw_attr_name = raw_attr_name[0]
-
-            self._raw_attr = self._channel.attrs[raw_attr_name]
-            self._scale_attr = self._channel.attrs["scale"]
+            self.name = channel_name
 
         @property
         def raw(self):
             """Channel raw value"""
-            return np.int32(self._raw_attr.value)
+            return self._get_iio_attr(self.name, "raw", False)
 
         @property
         def scale(self):
             """Channel scale factor"""
-            return np.float32(self._scale_attr.value)
+            return np.float(self._get_iio_attr_str(self.name, "scale", False))
 
         @property
         def value(self):
