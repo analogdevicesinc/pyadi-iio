@@ -61,7 +61,7 @@ from adi.adxl345 import *
 
 from adi.fmclidar1 import *
 
-from adi.ad5683r import *
+from adi.ad5686 import *
 
 __version__ = "0.0.5"
 name = "Analog Devices Hardware Interfaces"
