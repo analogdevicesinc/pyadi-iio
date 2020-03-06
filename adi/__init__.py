@@ -61,6 +61,8 @@ from adi.adxl345 import *
 
 from adi.fmclidar1 import *
 
+from adi.ad5686 import *
+
 from adi.ltc2983 import *
 
 __version__ = "0.0.5"
