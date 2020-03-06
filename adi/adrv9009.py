@@ -189,3 +189,68 @@ class adrv9009(rx_tx, context_manager):
     @trx_lo.setter
     def trx_lo(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value)
+
+    @property
+    def aux_pll_lo(self):
+        """aux_pll_lo: Carrier frequency of OBS path"""
+        return self._get_iio_attr("altvoltage1", "AUX_OBS_RX_LO_frequency", True)
+
+    @aux_pll_lo.setter
+    def aux_pll_lo(self, value):
+        self._set_iio_attr("altvoltage1", "AUX_OBS_RX_LO_frequency", True, value)
+
+    @property
+    def rx_powerdown_chan0(self):
+        """Powerdown:  Eanbles/Disables the Receive Chain"""
+        return self._get_iio_attr("voltage0", "powerdown", False)
+
+    @rx_powerdown_chan0.setter
+    def rx_powerdown_chan0(self, value):
+        self._set_iio_attr("voltage0", "powerdown", False, value)
+
+    @property
+    def rx_powerdown_chan1(self):
+        """Powerdown:  Eanbles/Disables the Receive Chain"""
+        return self._get_iio_attr("voltage1", "powerdown", False)
+
+    @rx_powerdown_chan1.setter
+    def rx_powerdown_chan1(self, value):
+        self._set_iio_attr("voltage1", "powerdown", False, value)
+
+    @property
+    def obs_powerdown_chan0(self):
+        """Powerdown:  Eanbles/Disables the Observation Receive Chain"""
+        return self._get_iio_attr("voltage2", "powerdown", False)
+
+    @obs_powerdown_chan0.setter
+    def obs_powerdown_chan0(self, value):
+        """Powerdown:  Eanbles/Disables the Observation Receive Chain"""
+        return self._set_iio_attr("voltage2", "powerdown", False, value)
+
+    @property
+    def obs_powerdown_chan1(self):
+        """Powerdown:  Eanbles/Disables the Observation Receive Chain"""
+        return self._get_iio_attr("voltage3", "powerdown", False)
+
+    @obs_powerdown_chan1.setter
+    def obs_powerdown_chan1(self, value):
+        """Powerdown:  Eanbles/Disables the Observation Receive Chain"""
+        return self._set_iio_attr("voltage3", "powerdown", False, value)
+
+    @property
+    def obs_hardwaregain_chan0(self):
+        """obs_hardwaregain: Gain applied to OBS path channel 0."""
+        return self._get_iio_attr("voltage2", "hardwaregain", False)
+
+    @obs_hardwaregain_chan0.setter
+    def obs_hardwaregain_chan0(self, value):
+        self._set_iio_attr("voltage2", "hardwaregain", False, value)
+
+    @property
+    def obs_hardwaregain_chan1(self):
+        """obs_hardwaregain: Gain applied to OBS path channel 1."""
+        return self._get_iio_attr("voltage3", "hardwaregain", False)
+
+    @obs_hardwaregain_chan1.setter
+    def obs_hardwaregain_chan1(self, value):
+        self._set_iio_attr("voltage3", "hardwaregain", False, value)

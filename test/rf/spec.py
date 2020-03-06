@@ -105,7 +105,7 @@ def measure_peaks(x, num_peaks=4):
     return peak_vals, peak_indxs
 
 
-def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.01):
+def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.1):
     vals, indxs = measure_peaks(x, num_harmonics)
     main = absolute(freqs[indxs[0]])
     main_loc = indxs[0]
@@ -126,10 +126,10 @@ def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.01):
     return main, main_loc, harmonics_vals, harmonics_locs
 
 
-def sfdr(x, fs=1, ref=2 ** 15, plot=False):
+def sfdr(x, fs=1, ref=2 ** 15, plot=True):
     amp, freqs = spec_est(x, fs=fs, ref=ref, plot=plot)
     amp = fftshift(amp)
-    peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.1))
+    peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.11))
 
     # Sort peaks
     indxs = argsort(amp[peak_indxs])

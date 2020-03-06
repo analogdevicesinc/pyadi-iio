@@ -331,10 +331,10 @@ def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
-    time.sleep(5)  # Wait for QEC to kick in
+    # time.sleep(5)  # Wait for QEC to kick in
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
-    sdr.rx_buffer_size = 2 ** 14
+    sdr.rx_buffer_size = 2 ** 15
     if sdr._num_tx_channels > 2:
         sdr.tx_enabled_channels = [channel]
     if sdr._num_rx_channels > 2:
@@ -345,23 +345,24 @@ def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
     else:
         RXFS = int(sdr.rx_sample_rate)
     fc = RXFS * 0.1
-    N = 2 ** 14
+    N = 2 ** 15
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.9
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * 0.9
+    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * 0.5
     iq = i + 1j * q
     # Pass through SDR
+    window = np.hanning(sdr.rx_buffer_size)
     try:
         sdr.tx(iq)
-        time.sleep(3)
+        time.sleep(1)
         for _ in range(10):  # Wait for IQ correction to stabilize
-            data = sdr.rx()
+            data = sdr.rx() * window
     except Exception as e:
         del sdr
         raise Exception(e)
+    val = spec.sfdr(data, ref=sdr.rx_buffer_size, plot=False)
     del sdr
-    val = spec.sfdr(data, plot=False)
     assert val > sfdr_min
 
 
@@ -380,13 +381,16 @@ def gain_check(
     else:
         fs = int(sdr.rx_sample_rate)
     sdr.dds_single_tone(np.floor(fs * 0.1), dds_scale, channel)
-    time.sleep(3)
+    time.sleep(1)
 
     # Check RSSI
     rssi1 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl)
     rssi2 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl)
-    rssi3 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_b)
-    rssi4 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_b)
+    rssi3 = 0
+    rssi4 = 0
+    if devicename == "adrv9009-dual":
+        rssi3 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_b)
+        rssi4 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_b)
 
     if channel == 0:
         rssi = rssi1
@@ -396,7 +400,8 @@ def gain_check(
         rssi = rssi3
     if channel == 3:
         rssi = rssi4
-    print(rssi1, rssi2, rssi3, rssi4)
+
+    print(rssi)
     assert rssi >= min_rssi
     assert rssi <= max_rssi
 

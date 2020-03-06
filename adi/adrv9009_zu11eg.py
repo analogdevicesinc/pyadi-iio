@@ -193,3 +193,72 @@ class adrv9009_zu11eg(adrv9009):
     @trx_lo_chip_b.setter
     def trx_lo_chip_b(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl_b)
+
+    @property
+    def aux_pll_lo_ctrl_b(self):
+        """aux_pll_lo_ctrl_b: Carrier frequency of OBS path"""
+        return self._get_iio_attr(
+            "altvoltage1", "AUX_OBS_RX_LO_frequency", True, self._ctrl_b
+        )
+
+    @aux_pll_lo_ctrl_b.setter
+    def aux_pll_lo_ctrl_b(self, value):
+        self._set_iio_attr(
+            "altvoltage1", "AUX_OBS_RX_LO_frequency", True, value, self._ctrl_b
+        )
+
+    @property
+    def rx_powerdown_chan0_ctrl_b(self):
+        """Powerdown:  Eanbles/Disables the Receive Chain"""
+        return self._get_iio_attr("voltage0", "powerdown", False, self._ctrl_b)
+
+    @rx_powerdown_chan0_ctrl_b.setter
+    def rx_powerdown_chan0_ctrl_b(self, value):
+        self._set_iio_attr("voltage0", "powerdown", False, value, self._ctrl_b)
+
+    @property
+    def rx_powerdown_chan1_ctrl_b(self):
+        """Powerdown:  Eanbles/Disables the Receive Chain"""
+        return self._get_iio_attr("voltage1", "powerdown", False, self._ctrl_b)
+
+    @rx_powerdown_chan1_ctrl_b.setter
+    def rx_powerdown_chan1_ctrl_b(self, value):
+        self._set_iio_attr("voltage1", "powerdown", False, value, self._ctrl_b)
+
+    @property
+    def obs_powerdown_chan0_ctrl_b(self):
+        """Powerdown:  Eanbles/Disables the Observation Receive Chain"""
+        return self._get_iio_attr("voltage2", "powerdown", False, self._ctrl_b)
+
+    @obs_powerdown_chan0_ctrl_b.setter
+    def obs_powerdown_chan0_ctrl_b(self, value):
+        """Powerdown:  Eanbles/Disables the Observation Receive Chain"""
+        return self._set_iio_attr("voltage2", "powerdown", False, value, self._ctrl_b)
+
+    @property
+    def obs_powerdown_chan1_ctrl_b(self):
+        """Powerdown:  Eanbles/Disables the Observation Receive Chain"""
+        return self._get_iio_attr("voltage3", "powerdown", False, self._ctrl_b)
+
+    @obs_powerdown_chan1_ctrl_b.setter
+    def obs_powerdown_chan1_ctrl_b(self, value):
+        """Powerdown:  Eanbles/Disables the Observation Receive Chain"""
+        return self._set_iio_attr("voltage3", "powerdown", False, value, self._ctrl_b)
+
+    @property
+    def obs_hardwaregain_chan0_ctrl_b(self):
+        """obs_hardwaregain: Gain applied to OBS path channel 0."""
+        return self._get_iio_attr("voltage2", "hardwaregain", False, self._ctrl_b)
+
+    @obs_hardwaregain_chan0_ctrl_b.setter
+    def obs_hardwaregain_chan0_ctrl_b(self, value):
+        self._set_iio_attr("voltage2", "hardwaregain", False, value, self._ctrl_b)
+
+    @property
+    def obs_hardwaregain_chan1_ctrl_b(self):
+        """obs_hardwaregain: Gain applied to OBS path channel 1."""
+        return self._get_iio_attr("voltage3", "hardwaregain", False, self._ctrl_b)
+
+    @obs_hardwaregain_chan1_ctrl_b.setter
+    def obs_hardwaregain_chan1_ctrl_b(self, value):
+        self._set_iio_attr("voltage3", "hardwaregain", False, value, self._ctrl_b)
