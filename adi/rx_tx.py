@@ -34,6 +34,7 @@
 from typing import List
 
 import iio
+
 import numpy as np
 from adi.attribute import attribute
 from adi.dds import dds
@@ -57,7 +58,6 @@ class rx(attribute):
     _rx_mask = 0x0000
     _rx_shift = 0
     rx_output_type = "raw"
-
     __rxbuf = None
     _rx_unbuffered_data = False
 

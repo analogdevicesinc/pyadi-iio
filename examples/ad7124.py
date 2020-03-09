@@ -46,9 +46,7 @@ ad7124.channel[ad_channel].scale = sc[-1]  # get highest range
 ad7124.rx_output_type = "SI"
 
 ad7124.sample_rate = 19200  # sets sample rate for all channels
-ad7124.rx_enabled_channels = [
-    ad_channel
-]  # currently only one enabled channel buffer works at a time
+ad7124.rx_enabled_channels = [ad_channel]
 ad7124.rx_buffer_size = 100
 
 raw = ad7124.channel[0].raw
