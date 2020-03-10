@@ -59,8 +59,8 @@ class adrv9009_zu11eg(adrv9009):
     ]
     _device_name = ""
 
-    def __init__(self, uri=""):
-        adrv9009.__init__(self, uri=uri)
+    def __init__(self, uri="", jesd=None):
+        adrv9009.__init__(self, uri=uri, jesd=jesd)
         self._ctrl_b = self._ctx.find_device("adrv9009-phy-b")
         self._clock_chip = self._ctx.find_device("hmc7044")
         self._clock_chip_carrier = self._ctx.find_device("hmc7044-car")

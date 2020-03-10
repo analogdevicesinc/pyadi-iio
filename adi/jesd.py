@@ -44,9 +44,14 @@ class jesd:
         self.username = username
         self.password = password
         self.rootdir = "/sys/bus/platform/devices/"
+        self.sshargs = (
+            "?StrictHostKeyChecking=no&CheckHostIP=no&UserKnownHostsFile=/dev/null"
+        )
         # Connect
         self.fs = fs.open_fs(
-            "ssh://{}:{}@{}/".format(self.username, self.password, self.address)
+            "ssh://{}:{}@{}/{}".format(
+                self.username, self.password, self.address, self.sshargs
+            )
         )
         self.find_jesd_dir()
         self.find_lanes()
