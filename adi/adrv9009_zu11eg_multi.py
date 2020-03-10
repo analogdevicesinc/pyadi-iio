@@ -45,20 +45,24 @@ class adrv9009_zu11eg_multi(object):
     __rx_buffer_size_multi = 2 ** 14
     slaves: List[adrv9009_zu11eg] = []
 
-    def __init__(self, master_uri="", slave_uris=[]):
+    def __init__(
+        self, master_uri="", slave_uris=[], master_jesd=None, slave_jesds=[None]
+    ):
 
         if not isinstance(slave_uris, list):
             Exception("slave_uris must be a list")
+        if not isinstance(slave_jesds, list):
+            Exception("slave_jesds must be a list")
 
         self._dma_show_arming = False
         self._jesd_show_status = True
         self._rx_initialized = False
-        self.master = adrv9009_zu11eg(uri=master_uri)
+        self.master = adrv9009_zu11eg(uri=master_uri, jesd=master_jesd)
         self.slaves = []
         self.samples_master = []
         self.samples_slave = []
-        for uri in slave_uris:
-            self.slaves.append(adrv9009_zu11eg(uri=uri))
+        for i, uri in enumerate(slave_uris):
+            self.slaves.append(adrv9009_zu11eg(uri=uri, jesd=slave_jesds[i]))
 
         for dev in self.slaves + [self.master]:
             dev._rxadc.set_kernel_buffers_count(1)
@@ -303,7 +307,7 @@ class adrv9009_zu11eg_multi(object):
             time.sleep(1)
 
         time.sleep(1)
-                
+
     def __rx_dma_arm(self):
         for dev in self.slaves + [self.master]:
             if self._dma_show_arming:
@@ -315,13 +319,13 @@ class adrv9009_zu11eg_multi(object):
                     print(".", end="")
             if self._dma_show_arming:
                 print("\n--DMA ARMED--", dev.uri)
-                
+
     def __refill_samples(self, dev, is_master):
         if is_master:
             self.samples_master = dev.rx()
         else:
             self.samples_slave = dev.rx()
-        
+
     def rx(self):
         if not self._rx_initialized:
             self.__setup_framers()
@@ -348,11 +352,13 @@ class adrv9009_zu11eg_multi(object):
         self.__rx_dma_arm()
         threads = []
         for dev in [self.master] + self.slaves:
-            #data = data + dev.rx()
+            # data = data + dev.rx()
             is_master = False
             if dev == self.master:
                 is_master = True
-            thread = threading.Thread(target=self.__refill_samples, args=(dev, is_master))
+            thread = threading.Thread(
+                target=self.__refill_samples, args=(dev, is_master)
+            )
             thread.start()
             threads.append(thread)
         self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
@@ -361,5 +367,5 @@ class adrv9009_zu11eg_multi(object):
             thread.join()
         data = data + self.samples_master + self.samples_slave
         self.samples_master = []
-        self.samples_slave = []            
+        self.samples_slave = []
         return data

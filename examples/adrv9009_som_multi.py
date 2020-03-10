@@ -46,14 +46,15 @@ buff_size = 2 ** 14
 
 # Create radio
 # def run_dev():
-master = "ip:192.168.1.60"
-slave = "ip:192.168.1.61"
+master = "ip:192.168.86.35"
+slave = "ip:192.168.86.44"
 
-#master = "ip:10.48.65.100"
-#slave = "ip:10.48.65.107"
+master_jesd = adi.jesd(master)
+slave_jesd = adi.jesd(slave)
 
 print("--Connecting to devices")
-multi = adi.adrv9009_zu11eg_multi(master, [slave])
+multi = adi.adrv9009_zu11eg_multi(master, [slave], master_jesd, [slave_jesd])
+# multi = adi.adrv9009_zu11eg_multi(master, [slave])
 # multi._dma_show_arming = True
 multi.rx_buffer_size = 2 ** 10
 

@@ -33,7 +33,7 @@
 
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
-from adi.jesd import jesd
+from adi.jesd import jesd as jesdadi
 
 
 class adrv9009(rx_tx, context_manager):
@@ -44,7 +44,7 @@ class adrv9009(rx_tx, context_manager):
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _device_name = ""
 
-    def __init__(self, uri=""):
+    def __init__(self, uri="", jesd=None):
 
         context_manager.__init__(self, uri, self._device_name)
 
@@ -53,7 +53,10 @@ class adrv9009(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
-        self._jesd = jesd(uri)
+        if jesd:
+            self._jesd = jesd
+        else:
+            self._jesd = jesdadi(uri)
 
         rx_tx.__init__(self)
 
