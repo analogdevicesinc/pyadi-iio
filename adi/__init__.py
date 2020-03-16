@@ -48,6 +48,7 @@ from adi.ad9094 import ad9094
 from adi.ad9136 import ad9136
 from adi.ad9144 import ad9144
 from adi.ad9152 import ad9152
+from adi.ad916x import ad9166
 from adi.ad9172 import ad9172
 from adi.ad9250 import ad9250
 from adi.ad9265 import ad9265
@@ -79,6 +80,7 @@ from adi.adxl313 import adxl313
 from adi.adxl345 import adxl345
 from adi.adxl355 import adxl355
 from adi.adxrs290 import adxrs290
+from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.daq2 import DAQ2
 from adi.daq3 import DAQ3
