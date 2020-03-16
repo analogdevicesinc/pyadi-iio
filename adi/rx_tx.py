@@ -55,6 +55,8 @@ class rx(attribute):
     _complex_data = False
     _rx_data_type = np.int16
     _rx_data_si_type = np.int16
+    _rx_mask = 0x0000
+    _rx_shift = 0
     rx_output_type = "raw"
     __rxbuf = None
     _rx_unbuffered_data = False
@@ -106,6 +108,10 @@ class rx(attribute):
         self._rxadc = []
 
     def _rx_init_channels(self):
+        for m in self._rx_channel_names:
+            v = self._rxadc.find_channel(m)
+            v.enabled = False
+
         if self._complex_data:
             for m in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[m * 2])
@@ -181,6 +187,13 @@ class rx(attribute):
         self.__rxbuf.refill()
         data = self.__rxbuf.read()
         x = np.frombuffer(data, dtype=self._rx_data_type)
+        if self._rx_mask != 0:
+            x = np.bitwise_and(x, self._rx_mask)
+        if self._rx_shift > 0:
+            x = np.right_shift(x, self._rx_shift)
+        elif self._rx_shift < 0:
+            x = np.left_shift(x, -(self._rx_shift))
+
         sig = []
         stride = len(self.rx_enabled_channels)
 
