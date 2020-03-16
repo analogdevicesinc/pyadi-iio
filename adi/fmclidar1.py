@@ -47,7 +47,7 @@ class fmclidar1(ad5627, ad9094, phy):
         ad9094.__init__(self, uri)
         # The name of the pulse capture channel. The address might be different,
         # depending on how the board was built.
-        self.pulse_capture = pulse_capture_address + "." + "axi-pulse-capture"
+        self.pulse_capture = "axi-pulse-capture"
         self._ctrl = self._ctx.find_device(self.pulse_capture)
         self.set_all_iio_attrs_to_default_values()
 
