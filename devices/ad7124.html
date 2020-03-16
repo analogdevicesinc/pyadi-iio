@@ -167,8 +167,21 @@
 <span id="ad7124"></span><h1>AD7124<a class="headerlink" href="#module-adi.ad7124" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="adi.ad7124.ad7124">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad7124.</code><code class="sig-name descname">ad7124</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em>, <em class="sig-param">part='ad7124-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">adi.ad7124.</code><code class="sig-name descname">ad7124</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em>, <em class="sig-param">device_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124" title="Permalink to this definition">¶</a></dt>
 <dd><p>AD7124 ADC</p>
+<dl class="method">
+<dt id="adi.ad7124.ad7124.rx">
+<code class="sig-name descname">rx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124.rx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive data from hardware buffers for each channel index in
+rx_enabled_channels.</p>
+<dl class="simple">
+<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
+is enabled containing samples from a channel or set of channels.
+Data will be complex when using a complex data device.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="adi.ad7124.ad7124.sample_rate">
 <em class="property">property </em><code class="sig-name descname">sample_rate</code><a class="headerlink" href="#adi.ad7124.ad7124.sample_rate" title="Permalink to this definition">¶</a></dt>
