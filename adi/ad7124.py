@@ -76,6 +76,23 @@ class ad7124(rx, context_manager):
             self.channel.append(self._channel(self._ctrl, name))
         rx.__init__(self)
 
+    def rx(self):
+        sig = super().rx()
+
+        if (
+            self._rx_unbuffered_data
+            or self._complex_data
+            or self.rx_output_type == "raw"
+        ):
+            return sig
+        else:
+            mv_sig = []
+
+            for signal in sig:
+                mv_sig.append(signal / 1000)
+
+            return mv_sig
+
     @property
     def sample_rate(self):
         """Sets sampling frequency of the AD7124"""

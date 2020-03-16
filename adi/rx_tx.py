@@ -223,8 +223,7 @@ class rx(attribute):
 
             for c in range(stride):
                 raw = x[c::stride]
-                # when scale is used, values are in mV
-                sig.append((raw * rx_scale[c] + rx_offset[c]) / 1000.0)
+                sig.append(raw * rx_scale[c] + rx_offset[c])
         else:
             raise Exception("rx_output_type undefined")
 
