@@ -31,6 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from adi.ad916x import *
+
 from adi.ad936x import *
 
 from adi.fmcomms5 import *
@@ -58,6 +60,8 @@ from adi.adis16507 import *
 from adi.ad7124 import *
 
 from adi.adxl345 import *
+
+from adi.cn0511 import *
 
 from adi.fmclidar1 import *
 

@@ -34,28 +34,56 @@
 import time
 
 import adi
-import matplotlib.pyplot as plt
 import numpy as np
-from scipy import signal
 
-# Set up DAQ2. Replace URI with the actual uri of your DAQ2.
-daq = adi.DAQ2(uri="ip:192.168.86.44")
+uri = "ip:192.168.254.102"
+ambient_temp = 32.0
+# Set up CN0511. Replace URI with the actual uri of your CN0511.
+rpi_sig_gen = adi.CN0511(uri=uri)
 
-# Transmit a tone with the DDS API
-daq.dds_single_tone(200000000, 0.5)
+# enable temperature measurements
+rpi_sig_gen.temperature_enable = True
 
-# Collect data
-fs = float(daq.sample_rate)
-for r in range(40):
-    x = daq.rx()
-    f, Pxx_den = signal.periodogram(x[0], fs)
-    plt.clf()
-    plt.semilogy(f, Pxx_den)
-    plt.ylim([1e-7, 1e2])
-    plt.xlabel("frequency [Hz]")
-    plt.ylabel("PSD [V**2/Hz]")
-    plt.draw()
-    plt.pause(0.05)
-    time.sleep(0.1)
+# calibrate temperature
+rpi_sig_gen.temperature_cal = 34.0  # Ambient
 
-plt.show()
+# Read temperature
+temp = rpi_sig_gen.temperature
+print("Temperature: " + str(temp) + "°C")
+
+# set NCO frequency in Hz
+rpi_sig_gen.nco_enable = True
+rpi_sig_gen.channel[0].frequency = 100000000
+print("Setting Output Frequency to: " + str(rpi_sig_gen.channel[0].frequency) + " Hz")
+
+# set scale of waveform (0-32767)
+rpi_sig_gen.channel[0].raw = 1000
+print(
+    "Setting Output scale to: "
+    + str(20 * np.log10(rpi_sig_gen.channel[0].raw / (2 ** 15)))
+    + " dBFS"
+)
+
+# enable transmit
+rpi_sig_gen.channel[0].tx_enable = True
+
+# enable amplifier
+rpi_sig_gen.amp_enable = True
+
+print("Sleeping for 15 secs")
+# sleep 15 sec
+for i in range(15):
+    print(".", end="", flush=True)
+    time.sleep(1)
+print(".")
+# compute temperature
+# Read temperature
+temp = rpi_sig_gen.temperature
+print("Temperature: " + str(temp) + "°C")
+
+print("Frequency: " + str(rpi_sig_gen.channel[0].frequency) + " Hz")
+print("Scale: " + str(20 * np.log10(rpi_sig_gen.channel[0].raw / (2 ** 15))) + " dBFS")
+
+# turn off amplifier and disable transmit
+rpi_sig_gen.amp_enable = False
+rpi_sig_gen.channel[0].tx_enable = False
