@@ -11,6 +11,7 @@ import adi
 import numpy as np
 import pytest
 import yaml
+import nebula
 
 target_uri_arg = None
 ignore_skip = False
@@ -56,7 +57,12 @@ def pytest_addoption(parser):
         action="store",
         help="Import custom configuration file not in default location.",
     )
-
+    parser.addoption(
+        "--custombootfiles",
+        action="store_true",
+        default=False,
+        help="Boot board with specific boot files",
+    )
 
 class BaseTestHelpers:
     devicename = "pluto"
@@ -536,6 +542,31 @@ def command_line_config(request):
 
 #########################################
 # Fixtures
+@pytest.fixture(scope="session", autouse=True)
+def load_boot_file(request):
+    if request.config.getoption("--custombootfiles"):
+        ### Before test
+
+        # Bring up board
+        print("Board bring up")
+        # m = nebula.manager(configfilename=configfilename)
+        # m.start_tests()
+
+        ############################
+        yield
+        ############################
+
+        ### After test
+        print("Board bring down")
+
+        # Put board into good state
+        # m.stop_tests()
+
+        # Update jenkins node status
+    else:
+        yield
+
+
 @pytest.fixture()
 def test_attribute_single_value(request):
     command_line_config(request)
