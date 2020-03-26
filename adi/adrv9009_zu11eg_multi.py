@@ -37,6 +37,7 @@ import threading
 import datetime
 
 from adi.adrv9009_zu11eg import adrv9009_zu11eg
+from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
 
 
 class adrv9009_zu11eg_multi(object):
@@ -46,7 +47,7 @@ class adrv9009_zu11eg_multi(object):
     slaves: List[adrv9009_zu11eg] = []
 
     def __init__(
-        self, master_uri="", slave_uris=[], master_jesd=None, slave_jesds=[None]
+        self, master_uri="", slave_uris=[], master_jesd=None, slave_jesds=[None], fmcomms8=False
     ):
 
         if not isinstance(slave_uris, list):
@@ -57,12 +58,18 @@ class adrv9009_zu11eg_multi(object):
         self._dma_show_arming = False
         self._jesd_show_status = True
         self._rx_initialized = False
-        self.master = adrv9009_zu11eg(uri=master_uri, jesd=master_jesd)
+        if fmcomms8:
+            self.master = adrv9009_zu11eg_fmcomms8(uri=master_uri, jesd=master_jesd)
+        else:
+            self.master = adrv9009_zu11eg(uri=master_uri, jesd=master_jesd)
         self.slaves = []
         self.samples_master = []
         self.samples_slave = []
         for i, uri in enumerate(slave_uris):
-            self.slaves.append(adrv9009_zu11eg(uri=uri, jesd=slave_jesds[i]))
+            if fmcomms8:
+                self.slaves.append(adrv9009_zu11eg_fmcomms8(uri=uri, jesd=slave_jesds[i]))
+            else:
+                self.slaves.append(adrv9009_zu11eg(uri=uri, jesd=slave_jesds[i]))
 
         for dev in self.slaves + [self.master]:
             dev._rxadc.set_kernel_buffers_count(1)
