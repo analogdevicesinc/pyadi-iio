@@ -1,6 +1,7 @@
-ADRV9009
+adrv9009
 ===================
+
 .. automodule:: adi.adrv9009
    :members:
-.. automodule:: adi.adrv9009_zu11eg
-   :members:
+   :undoc-members:
+   :show-inheritance:
