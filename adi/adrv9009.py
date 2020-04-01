@@ -51,19 +51,20 @@ class adrv9009(rx_tx, context_manager):
         self._rxadc = self._ctx.find_device("axi-adrv9009-rx-hpc")
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
+        self._ctx.set_timeout(30000)  # Needed for loading profiles
 
         rx_tx.__init__(self)
 
-    # @property
-    # def profile(self):
-    #     """Load profile file. Provide path to profile file to attribute"""
-    #     return self._get_iio_dev_attr("profile_config")
-    #
-    # @profile.setter
-    # def profile(self, value):
-    #     with open(value, "r") as file:
-    #         data = file.read()
-    #     self._set_iio_dev_attr_str("profile_config", data)
+    @property
+    def profile(self):
+        """Load profile file. Provide path to profile file to attribute"""
+        return self._get_iio_dev_attr("profile_config")
+
+    @profile.setter
+    def profile(self, value):
+        with open(value, "r") as file:
+            data = file.read()
+        self._set_iio_dev_attr_str("profile_config", data)
 
     @property
     def calibrate_rx_phase_correction_en(self):
