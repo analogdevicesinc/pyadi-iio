@@ -25,4 +25,3 @@ Supported Devices
    adi.fmclidar1
    adi.fmcomms5
    adi.ltc2983
-
