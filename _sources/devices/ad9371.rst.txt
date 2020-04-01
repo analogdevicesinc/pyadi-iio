@@ -1,4 +1,0 @@
-AD9371
-===================
-.. automodule:: adi.ad9371
-   :members:

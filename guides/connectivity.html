@@ -163,6 +163,27 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Devices that are connected over USB or are on a system with IIO devices like a ZC706 or Zedboard, should be able to automatically connect without defining a URI like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="c1"># Create a device interface</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
+<span class="c1"># Read back properties from hardware</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Whoever if you have multiple USB device connected an want to pick one specifically, the set the USB URI similar to IP:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="c1"># Create a device interface</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;usb:1.24.5&quot;</span><span class="p">)</span>
+<span class="c1"># Read back properties from hardware</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you are not sure of the device URI you can utilize libiio commandline tools like <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_info">iio_info</a> and <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_attr">iio_attr</a>.</p>
 </div>
 
 

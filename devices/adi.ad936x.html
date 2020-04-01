@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>AD936x Family &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>ad936x &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="AD9371" href="ad9371.html" />
-    <link rel="prev" title="Supported Devices" href="index.html" /> 
+    <link rel="next" title="ad9371" href="adi.ad9371.html" />
+    <link rel="prev" title="ad9152" href="adi.ad9152.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,14 +85,25 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Supported Devices</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">AD936x Family</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ad9371.html">AD9371</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adrv9009.html">ADRV9009</a></li>
-<li class="toctree-l2"><a class="reference internal" href="daq2.html">DAQ2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="daq2.html#module-adi.ad9680">AD9680</a></li>
-<li class="toctree-l2"><a class="reference internal" href="daq2.html#module-adi.ad9144">AD9144</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adis16460.html">ADIS16460</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ad7124.html">AD7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9371.html">ad9371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -144,13 +155,13 @@
         
           <li><a href="index.html">Supported Devices</a> &raquo;</li>
         
-      <li>AD936x Family</li>
+      <li>ad936x</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/devices/ad9361.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/devices/adi.ad936x.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -163,28 +174,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ad936x-family">
-<h1>AD936x Family<a class="headerlink" href="#ad936x-family" title="Permalink to this headline">¶</a></h1>
-<p>This class includes support for any AD936x based device including AD9361, AD9363, AD9364. The following development boards have been tested:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>FMCOMMS 2/3/4/5</p></li>
-<li><p>ADRV9361-Z7035</p></li>
-<li><p>ADRV9364-Z7020</p></li>
-<li><p>ADALM-PLUTO</p></li>
-<li><p>Ettus Research USRP E310</p></li>
-</ul>
-</div></blockquote>
-<span class="target" id="module-adi.ad936x"></span><dl class="class">
+  <div class="section" id="module-adi.ad936x">
+<span id="ad936x"></span><h1>ad936x<a class="headerlink" href="#module-adi.ad936x" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
 <dt id="adi.ad936x.Pluto">
 <em class="property">class </em><code class="sig-prename descclassname">adi.ad936x.</code><code class="sig-name descname">Pluto</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.Pluto" title="Permalink to this definition">¶</a></dt>
-<dd><p>PlutoSDR Evaluation Platform</p>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad936x.ad9364" title="adi.ad936x.ad9364"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad936x.ad9364</span></code></a></p>
+<p>PlutoSDR Evaluation Platform</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="adi.ad936x.ad9361">
 <em class="property">class </em><code class="sig-prename descclassname">adi.ad936x.</code><code class="sig-name descname">ad9361</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9361" title="Permalink to this definition">¶</a></dt>
-<dd><p>AD9361 Transceiver</p>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad936x.ad9364" title="adi.ad936x.ad9364"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad936x.ad9364</span></code></a></p>
+<p>AD9361 Transceiver</p>
 <dl class="method">
 <dt id="adi.ad936x.ad9361.gain_control_mode_chan1">
 <em class="property">property </em><code class="sig-name descname">gain_control_mode_chan1</code><a class="headerlink" href="#adi.ad936x.ad9361.gain_control_mode_chan1" title="Permalink to this definition">¶</a></dt>
@@ -210,13 +213,15 @@ gain_control_mode is set to ‘manual’</p>
 <dl class="class">
 <dt id="adi.ad936x.ad9363">
 <em class="property">class </em><code class="sig-prename descclassname">adi.ad936x.</code><code class="sig-name descname">ad9363</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9363" title="Permalink to this definition">¶</a></dt>
-<dd><p>AD9363 Transceiver</p>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad936x.ad9361" title="adi.ad936x.ad9361"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad936x.ad9361</span></code></a></p>
+<p>AD9363 Transceiver</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="adi.ad936x.ad9364">
 <em class="property">class </em><code class="sig-prename descclassname">adi.ad936x.</code><code class="sig-name descname">ad9364</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9364" title="Permalink to this definition">¶</a></dt>
-<dd><p>AD9364 Transceiver</p>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_tx" title="adi.rx_tx.rx_tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx_tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>AD9364 Transceiver</p>
 <dl class="method">
 <dt id="adi.ad936x.ad9364.filter">
 <em class="property">property </em><code class="sig-name descname">filter</code><a class="headerlink" href="#adi.ad936x.ad9364.filter" title="Permalink to this definition">¶</a></dt>
@@ -292,10 +297,10 @@ gain_control_mode is set to ‘manual’</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ad9371.html" class="btn btn-neutral float-right" title="AD9371" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="adi.ad9371.html" class="btn btn-neutral float-right" title="ad9371" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="Supported Devices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="adi.ad9152.html" class="btn btn-neutral float-left" title="ad9152" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

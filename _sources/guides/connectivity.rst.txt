@@ -12,3 +12,30 @@ Since pyadi-iio is built on top of libiio, it can use the different `backends <h
   sdr = adi.ad9361(uri="ip:192.168.2.1")
   # Read back properties from hardware
   print(sdr.rx_hardwaregain)
+
+
+Devices that are connected over USB or are on a system with IIO devices like a ZC706 or Zedboard, should be able to automatically connect without defining a URI like:
+
+.. code-block:: python
+
+  # Import the library
+  import adi
+
+  # Create a device interface
+  sdr = adi.Pluto()
+  # Read back properties from hardware
+  print(sdr.tx_rf_bandwidth)
+
+Whoever if you have multiple USB device connected an want to pick one specifically, the set the USB URI similar to IP:
+
+.. code-block:: python
+
+  # Import the library
+  import adi
+
+  # Create a device interface
+  sdr = adi.Pluto(uri="usb:1.24.5")
+  # Read back properties from hardware
+  print(sdr.tx_rf_bandwidth)
+
+If you are not sure of the device URI you can utilize libiio commandline tools like `iio_info <https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_info>`_ and `iio_attr <https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_attr>`_.
