@@ -473,6 +473,15 @@ def cyclic_buffer_exception(classname, devicename, channel, param_set):
         pytest.fail(msg)
 
 
+def load_profile(classname, devicename, profilename):
+    bi = BoardInterface(classname, devicename)
+    # See if we can tone using DMAs
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    # Set custom device parameters
+    print("Loading profile:", profilename)
+    sdr.profile = profilename
+
+
 def command_line_config(request):
     if request.config.getoption("--error_on_filter"):
         global ignore_skip
@@ -557,3 +566,9 @@ def test_cw_loopback(request):
 def test_gain_check(request):
     command_line_config(request)
     yield gain_check
+
+
+@pytest.fixture()
+def test_load_profile(request):
+    command_line_config(request)
+    yield load_profile
