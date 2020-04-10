@@ -1,4 +1,5 @@
-import inspect
+# type:ignore
+# flake8: noqa
 import os
 import sys
 
@@ -9,8 +10,9 @@ def try_import():
     try:
         import iio
 
+        print("---IIO version found:", iio.version)
         return True
-    except:
+    except ImportError:
         return False
 
 
@@ -63,6 +65,15 @@ def libiiopath(c):
 
 
 @task
+def setup(c):
+    """ Install required python packages for development through pip """
+    c.run("pip3 install -r requirements.txt")
+    c.run("pip3 install -r requirements_dev.txt")
+    c.run("pip3 install -r requirements_doc.txt")
+    print("---Python packages all setup (be sure to verify libiio is installed)")
+
+
+@task
 def builddoc(c):
     """ Build sphinx doc """
     c.run("sphinx-build doc/source doc/build")
@@ -77,10 +88,10 @@ def build(c, docs=False):
 @task(
     help={
         "message": "Custom message for tag. Defaults to `Beta release vXX`, where XX is auto determined",
-        "next": "Revision class increment position. major=X.2.3, minor==1.X.3, rev==1.2.X. Defaults to rev",
+        "inc": "Revision class increment position. major=X.2.3, minor==1.X.3, rev==1.2.X. Defaults to rev",
     }
 )
-def createrelease(c, message=None, next="rev"):
+def createrelease(c, message=None, inc="rev"):
     """ Create GitHub release
 
         The following is performed:
@@ -114,11 +125,11 @@ def createrelease(c, message=None, next="rev"):
     for line in fileinput.input("adi/__init__.py", inplace=True, backup=".bkp"):
         if line.find("__version__") > -1:
             l = line[len("__version__ = ") + 1 :].strip()[:-1].split(".")
-            if next == "major":
+            if inc == "major":
                 major = int(l[0]) + 1
                 minor = 0
                 rev = 0
-            elif next == "minor":
+            elif inc == "minor":
                 major = int(l[0])
                 minor = int(l[1]) + 1
                 rev = 0
@@ -148,7 +159,6 @@ def checkparts(c):
     print("Running supported_parts check")
     mod = __import__("adi")
     parts = []
-    missing = []
     ignored_parts = ["ad9361", "ad9363", "ad9364", "adrv9009_zu11eg"]
     for c in dir(mod):
         if c[:2] == "ad" and not c in ignored_parts:
