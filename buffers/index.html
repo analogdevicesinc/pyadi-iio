@@ -192,11 +192,11 @@
 </div>
 <div class="section" id="module-adi.rx_tx">
 <span id="members"></span><h2>Members<a class="headerlink" href="#module-adi.rx_tx" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="adi.rx_tx.rx">
-<em class="property">class </em><code class="sig-prename descclassname">adi.rx_tx.</code><code class="sig-name descname">rx</code><span class="sig-paren">(</span><em class="sig-param">rx_buffer_size=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">adi.rx_tx.</code><code class="sig-name descname">rx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rx_buffer_size</span><span class="o">=</span><span class="default_value">1024</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Buffer handling for receive devices</p>
-<dl class="method">
+<dl class="py method">
 <dt id="adi.rx_tx.rx.rx">
 <code class="sig-name descname">rx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx.rx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive data from hardware buffers for each channel index in
@@ -209,19 +209,19 @@ Data will be complex when using a complex data device.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.rx_tx.rx.rx_buffer_size">
 <em class="property">property </em><code class="sig-name descname">rx_buffer_size</code><a class="headerlink" href="#adi.rx_tx.rx.rx_buffer_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_buffer_size: Size of receive buffer in samples</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.rx_tx.rx.rx_destroy_buffer">
 <code class="sig-name descname">rx_destroy_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx.rx_destroy_buffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_destroy_buffer: Clears RX buffer</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.rx_tx.rx.rx_enabled_channels">
 <em class="property">property </em><code class="sig-name descname">rx_enabled_channels</code><a class="headerlink" href="#adi.rx_tx.rx.rx_enabled_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_enabled_channels: List of enabled channels (channel 1 is 0)</p>
@@ -229,18 +229,18 @@ Data will be complex when using a complex data device.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="adi.rx_tx.rx_tx">
 <em class="property">class </em><code class="sig-prename descclassname">adi.rx_tx.</code><code class="sig-name descname">rx_tx</code><a class="headerlink" href="#adi.rx_tx.rx_tx" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="adi.rx_tx.tx">
-<em class="property">class </em><code class="sig-prename descclassname">adi.rx_tx.</code><code class="sig-name descname">tx</code><span class="sig-paren">(</span><em class="sig-param">tx_cyclic_buffer=False</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">adi.rx_tx.</code><code class="sig-name descname">tx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tx_cyclic_buffer</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Buffer handling for transmit devices</p>
-<dl class="method">
+<dl class="py method">
 <dt id="adi.rx_tx.tx.tx">
-<code class="sig-name descname">tx</code><span class="sig-paren">(</span><em class="sig-param">data_np</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transmit data to hardware buffers for each channel index in
 tx_enabled_channels.</p>
 <dl class="simple">
@@ -251,19 +251,19 @@ Data must be complex when using a complex data device.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.rx_tx.tx.tx_cyclic_buffer">
 <em class="property">property </em><code class="sig-name descname">tx_cyclic_buffer</code><a class="headerlink" href="#adi.rx_tx.tx.tx_cyclic_buffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_cyclic_buffer: Enable cyclic buffer for TX</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.rx_tx.tx.tx_destroy_buffer">
 <code class="sig-name descname">tx_destroy_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx_destroy_buffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_destroy_buffer: Clears TX buffer</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.rx_tx.tx.tx_enabled_channels">
 <em class="property">property </em><code class="sig-name descname">tx_enabled_channels</code><a class="headerlink" href="#adi.rx_tx.tx.tx_enabled_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_enabled_channels: List of enabled channels (channel 1 is 0)</p>

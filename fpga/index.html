@@ -187,14 +187,14 @@
 </div>
 <div class="section" id="module-adi.dds">
 <span id="methods"></span><h2>Methods<a class="headerlink" href="#module-adi.dds" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="adi.dds.dds">
 <em class="property">class </em><code class="sig-prename descclassname">adi.dds.</code><code class="sig-name descname">dds</code><a class="headerlink" href="#adi.dds.dds" title="Permalink to this definition">¶</a></dt>
 <dd><p>DDS Signal generators: Each reference design contains two DDSs per channel.
 this allows for two complex tones to be generated per complex channel.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="adi.dds.dds.dds_dual_tone">
-<code class="sig-name descname">dds_dual_tone</code><span class="sig-paren">(</span><em class="sig-param">frequency1</em>, <em class="sig-param">scale1</em>, <em class="sig-param">frequency2</em>, <em class="sig-param">scale2</em>, <em class="sig-param">channel=0</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dds_dual_tone</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency1</span></em>, <em class="sig-param"><span class="n">scale1</span></em>, <em class="sig-param"><span class="n">frequency2</span></em>, <em class="sig-param"><span class="n">scale2</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate two tones simultaneously using the DDSs
 For complex data devices this will create two complex
 or single sided tones spectrally using four DDSs.
@@ -223,35 +223,35 @@ the index of the individual converters.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.dds.dds.dds_enabled">
 <em class="property">property </em><code class="sig-name descname">dds_enabled</code><a class="headerlink" href="#adi.dds.dds.dds_enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>DDS generator enable state</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.dds.dds.dds_frequencies">
 <em class="property">property </em><code class="sig-name descname">dds_frequencies</code><a class="headerlink" href="#adi.dds.dds.dds_frequencies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frequencies of DDSs in Hz</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.dds.dds.dds_phases">
 <em class="property">property </em><code class="sig-name descname">dds_phases</code><a class="headerlink" href="#adi.dds.dds.dds_phases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Phases of DDS signal generators.
 Range in millidegrees [0,360000]</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.dds.dds.dds_scales">
 <em class="property">property </em><code class="sig-name descname">dds_scales</code><a class="headerlink" href="#adi.dds.dds.dds_scales" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale of DDS signal generators
 Ranges [0,1]</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.dds.dds.dds_single_tone">
-<code class="sig-name descname">dds_single_tone</code><span class="sig-paren">(</span><em class="sig-param">frequency</em>, <em class="sig-param">scale</em>, <em class="sig-param">channel=0</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dds_single_tone</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency</span></em>, <em class="sig-param"><span class="n">scale</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a single tone using the DDSs
 For complex data devices this will create a complex
 or single sided tone spectrally using two DDSs.

@@ -176,17 +176,17 @@
             
   <div class="section" id="module-adi.ad7124">
 <span id="ad7124"></span><h1>ad7124<a class="headerlink" href="#module-adi.ad7124" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="adi.ad7124.ad7124">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad7124.</code><code class="sig-name descname">ad7124</code><span class="sig-paren">(</span><em class="sig-param">uri=''</em>, <em class="sig-param">device_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">adi.ad7124.</code><code class="sig-name descname">ad7124</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">device_index</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
 <p>AD7124 ADC</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="adi.ad7124.ad7124.channel">
 <code class="sig-name descname">channel</code><em class="property"> = []</em><a class="headerlink" href="#adi.ad7124.ad7124.channel" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.ad7124.ad7124.rx">
 <code class="sig-name descname">rx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124.rx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive data from hardware buffers for each channel index in
@@ -199,21 +199,21 @@ Data will be complex when using a complex data device.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.ad7124.ad7124.sample_rate">
 <em class="property">property </em><code class="sig-name descname">sample_rate</code><a class="headerlink" href="#adi.ad7124.ad7124.sample_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets sampling frequency of the AD7124</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.ad7124.ad7124.scale_available">
 <em class="property">property </em><code class="sig-name descname">scale_available</code><a class="headerlink" href="#adi.ad7124.ad7124.scale_available" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides all available scale(gain) settings for the AD7124 channels</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="adi.ad7124.ad7124.to_volts">
-<code class="sig-name descname">to_volts</code><span class="sig-paren">(</span><em class="sig-param">index</em>, <em class="sig-param">val</em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124.to_volts" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_volts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span></em>, <em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124.to_volts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts raw value to SI</p>
 </dd></dl>
 
