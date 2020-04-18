@@ -10,6 +10,7 @@ import adi
 import numpy as np
 import pytest
 
+target_uri_arg = None
 ignore_skip = False
 dev_checked = False
 found_dev = False
@@ -24,6 +25,11 @@ def pytest_addoption(parser):
         action="store_true",
         help="When device is not found generate error not skip",
     )
+    parser.addoption(
+        "--uri",
+        action="store",
+        help="Run test on device with the given uri. IP scanning will be skipped.",
+    )
 
 
 class BaseTestHelpers:
@@ -36,15 +42,19 @@ class BaseTestHelpers:
         # Check if calling function is in skip list
         calling_func = sys._getframe(1).f_code.co_name
         global ignore_skip
-        if not ignore_skip:
-            if (calling_func in self.skipped_tests) or (not self.check_dev()):
-                # pytest.xfail()
+        if (calling_func in self.skipped_tests) or (not self.check_dev()):
+            if not ignore_skip:
+                # Will skip test if board not found or calling_func in skipped_tests
                 pytest.skip("Skipping")
+            else:
+                # Will fail if board not found or calling_func in skipped_tests
+                pytest.fail("Board not found!")
 
     def check_dev(self):
         # Must use globals since each test is a separate class instance
         global found_devices
         global found_uris
+        global target_uri_arg
         if not isinstance(self.devicename, list):
             ds = [self.devicename]
         else:
@@ -60,7 +70,13 @@ class BaseTestHelpers:
                 break
 
         if not dev_checked:
-            found_dev, board = iio_scanner.find_device(self.devicename)
+            if target_uri_arg:
+                found_dev, board = iio_scanner.find_device(
+                    self.devicename, target_uri_arg
+                )
+            else:
+                found_dev, board = iio_scanner.find_device(self.devicename)
+
             if found_dev:
                 found_devices[board.name] = found_dev
                 found_uris[board.name] = board.uri
@@ -477,6 +493,11 @@ def command_line_config(request):
     if request.config.getoption("--error_on_filter"):
         global ignore_skip
         ignore_skip = True
+
+    global target_uri_arg
+    target_uri_arg = request.config.getoption("--uri")
+    if not target_uri_arg:
+        target_uri_arg = None
 
 
 #########################################
