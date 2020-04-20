@@ -22,6 +22,13 @@ def check_iio(address):
         return False
 
 
+def check_iio_uri(uri):
+    try:
+        return iio.Context(uri)
+    except:
+        return False
+
+
 def dump(obj):
     for attr in dir(obj):
         print("obj.%s = %r" % (attr, getattr(obj, attr)))
@@ -179,17 +186,37 @@ def scan_all(skip_usb=False):
     return boards
 
 
-def find_device(names):
+def get_device(uri):
+    ctx = check_iio_uri(uri)
+    if ctx:
+        board_name = check_board_other(ctx)
+        if board_name:
+            if ctx.name == "local":
+                b = board(board_name, "local:")
+            else:
+                b = board(board_name, uri)
+        return b
+    return None
+
+
+def find_device(names, uri=None):
     skip_usb = False
     if not isinstance(names, list):
         names = [names]
-    # for n in names:
-    #     if n=="adrv9009-dual":
-    #         skip_usb = True
-    for b in scan_all(skip_usb):
+    if uri:
+        b = get_device(uri)
+        if b:
+            boards = [b]
+        else:
+            return (False, [])
+    else:
+        boards = scan_all(skip_usb)
+
+    for b in boards:
         for name in names:
             if b.name == name:
                 return (True, b)
+
     return (False, [])
 
 
