@@ -204,8 +204,8 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
             aux_pll_lo_chip_b=1000000000,
             rx_powerdown_chan0=1,
             rx_powerdown_chan1=1,
-            rx_powerdown_chan0_chip_b=1,
-            rx_powerdown_chan1_chip_b=1,
+            rx_powerdown_chan0_ctrl_b=1,
+            rx_powerdown_chan1_ctrl_b=1,
             tx_hardwaregain_chan0=0,
             tx_hardwaregain_chan1=0,
             tx_hardwaregain_chan0_chip_b=0,
@@ -218,8 +218,8 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
             calibrate_chip_b=1,
             obs_powerdown_chan0=0,
             obs_powerdown_chan1=0,
-            obs_powerdown_chan0_chip_b=0,
-            obs_powerdown_chan1_chip_b=0,
+            obs_powerdown_chan0_ctrl_b=0,
+            obs_powerdown_chan1_ctrl_b=0,
             obs_hardwaregain_chan0=30,
             obs_hardwaregain_chan1=30,
             obs_hardwaregain_chan0_chip_b=30,
@@ -228,7 +228,7 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
     ],
 )
 @pytest.mark.parametrize(
-    "dds_scale, min_rssi, max_rssi", [(0, 35, 60), (0.31616, 0, 10)]
+    "dds_scale, min_rssi, max_rssi", [(0, 39, 60), (0.31616, 0, 10)]
 )
 def test_adrv9009_zu11eg_obs_rssi(
     test_gain_check,

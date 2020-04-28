@@ -393,19 +393,23 @@ def gain_check(
         sdr.obs_powerdown_chan0 = 1
         sdr.obs_powerdown_chan1 = 1
         if "zu11eg" in classname:
-            sdr.rx_powerdown_chan0 = 1
-            sdr.rx_powerdown_chan1 = 1
-            sdr.obs_powerdown_chan0 = 1
-            sdr.obs_powerdown_chan1 = 1
+            sdr.rx_powerdown_chan0_ctrl_b = 1
+            sdr.rx_powerdown_chan1_ctrl_b = 1
+            sdr.obs_powerdown_chan0_ctrl_b = 1
+            sdr.obs_powerdown_chan1_ctrl_b = 1
         print("Powering things up as desired")
         count = 0
         for p in param_set.keys():
             if "powerdown" in p and not param_set[p]:
                 count = 1
+                print(p,param_set[p])
                 setattr(sdr, p, param_set[p])
         if count==0:
+            print("Loading Default")
             sdr.rx_powerdown_chan0 = 0
             sdr.rx_powerdown_chan1 = 0
+            sdr.rx_powerdown_chan0_ctrl_b = 0
+            sdr.rx_powerdown_chan1_ctrl_b = 0
 
 
     # Enable DDSs
