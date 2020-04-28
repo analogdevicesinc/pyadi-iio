@@ -65,5 +65,5 @@ from adi.ad5686 import *
 
 from adi.ltc2983 import *
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 name = "Analog Devices Hardware Interfaces"
