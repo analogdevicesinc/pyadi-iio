@@ -199,7 +199,7 @@ def get_device(uri):
     return None
 
 
-def find_device(names, uri=None):
+def find_device(names, uri=None, config=None):
     skip_usb = False
     if not isinstance(names, list):
         names = [names]
@@ -209,6 +209,15 @@ def find_device(names, uri=None):
             boards = [b]
         else:
             return (False, [])
+    elif config:
+        # Convert config to board class
+        boards = []
+        for dev in config["uri-map"]:
+            hardware_options = config["uri-map"][dev]
+            for hardware in hardware_options.split(","):
+                b = board(hardware, dev)
+                boards.append(b)
+
     else:
         boards = scan_all(skip_usb)
 
