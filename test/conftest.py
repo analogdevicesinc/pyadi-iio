@@ -1,3 +1,4 @@
+import os
 import random
 import sys
 import test.iio_scanner as iio_scanner
@@ -9,6 +10,7 @@ import iio
 import adi
 import numpy as np
 import pytest
+import yaml
 
 target_uri_arg = None
 ignore_skip = False
@@ -17,6 +19,25 @@ found_dev = False
 found_devices = {}  # type: ignore
 found_uris = {}  # type: ignore
 URI = "ip:analog"
+TESTCONFIG_DEFAULT_PATH = "/etc/default/pyadi_test.yaml"
+
+
+def get_test_config(filename=None):
+    if not filename:
+        if os.name == "nt" or os.name == "posix":
+            if os.path.exists(TESTCONFIG_DEFAULT_PATH):
+                filename = TESTCONFIG_DEFAULT_PATH
+    if not filename:
+        return None
+
+    stream = open(filename, "r")
+    config = yaml.safe_load(stream)
+    stream.close()
+    return config
+
+
+# Get default config if it exists
+imported_config = get_test_config()
 
 
 def pytest_addoption(parser):
@@ -29,6 +50,11 @@ def pytest_addoption(parser):
         "--uri",
         action="store",
         help="Run test on device with the given uri. IP scanning will be skipped.",
+    )
+    parser.addoption(
+        "--test-configfilename",
+        action="store",
+        help="Import custom configuration file not in default location.",
     )
 
 
@@ -55,6 +81,7 @@ class BaseTestHelpers:
         global found_devices
         global found_uris
         global target_uri_arg
+        global imported_config
         if not isinstance(self.devicename, list):
             ds = [self.devicename]
         else:
@@ -72,10 +99,12 @@ class BaseTestHelpers:
         if not dev_checked:
             if target_uri_arg:
                 found_dev, board = iio_scanner.find_device(
-                    self.devicename, target_uri_arg
+                    self.devicename, target_uri_arg, imported_config
                 )
             else:
-                found_dev, board = iio_scanner.find_device(self.devicename)
+                found_dev, board = iio_scanner.find_device(
+                    self.devicename, None, imported_config
+                )
 
             if found_dev:
                 found_devices[board.name] = found_dev
@@ -498,6 +527,10 @@ def command_line_config(request):
     target_uri_arg = request.config.getoption("--uri")
     if not target_uri_arg:
         target_uri_arg = None
+
+    global imported_config
+    filename = request.config.getoption("--test-configfilename")
+    imported_config = get_test_config(filename)
 
 
 #########################################
