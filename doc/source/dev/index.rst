@@ -4,7 +4,7 @@ Developers
 .. warning::
     This section is only for developers and advanced users.
 
-When submitting code or running tests there are a few ways things are done in pyadi-iio.
+When submitting code or running tests, there are a few ways things are done in pyadi-iio.
 
 Invoke
 ---------------------------
@@ -29,7 +29,7 @@ To make repetitve tasks easier, pyadi-iio utilizes pyinvoke. To see the availabl
 
 Precommit
 ---------------------------
-**pre-commit** is heavily relied on for keeping code in order and eliminating certain bugs. Be sure to run these checks before submitting code. This can be run through pyinvoke or directly from the repo root as:
+**pre-commit** is heavily relied on for keeping code in order and for eliminating certain bugs. Be sure to run these checks before submitting code. This can be run through pyinvoke or directly from the repo root as:
 
 .. code-block:: console
 
@@ -42,7 +42,7 @@ Precommit
 Testing
 ---------------------------
 
-Testing pyadi-iio requires hardware, but fortunately by default it assumes no hardware is connect unless found. It will only load specific tests for hardware it can find and skip all other tests. **pytest**, which is the framework pyadi-iio uses, can be call as following:
+Testing pyadi-iio requires hardware, but fortunately by default it assumes no hardware is connected unless found. It will only load specific tests for hardware it can find and skip all other tests. **pytest**, which is the framework pyadi-iio uses, can be call as following:
 
 .. code-block:: console
 
@@ -55,11 +55,11 @@ Testing pyadi-iio requires hardware, but fortunately by default it assumes no ha
 Test Configuration
 ^^^^^^^^^^^^^^^^^^
 
-When running tests a single URI can be provided to the command line, devices can be dynamically scanned for on the network, and they can be provided through a configuration file. URIs for hardware are descripted in the **uri-map** section of the pyadi_test.yaml file with the convention "<uri>: hardware1, hardware2,...". Here is an example where the URI ip:192.168.2.1 applied to tests looking for the hardware adrv9361 or fmcomms2.
+When running tests a single URI can be provided to the command line. Devices can be dynamically scanned for on the network, and they can be provided through a configuration file. URIs for hardware are descripted in the **uri-map** section of the pyadi_test.yaml file with the convention "<uri>: hardware1, hardware2,...". Here is an example where the URI ip:192.168.2.1 applied to tests looking for the hardware adrv9361 or fmcomms2.
 
 .. code-block:: yaml
 
         uri-map:
           "ip:192.168.86.35": adrv9361, fmcomms2
 
-This file will automatically loaded when in the location **/etc/default/pyadi_test.yaml** on Linux machines. Otherwise, it can be provided to pytest through the **--test-configfilename** argument.
+This file will automatically be loaded when it is in the location **/etc/default/pyadi_test.yaml** on Linux machines. Otherwise, it can be provided to pytest through the **--test-configfilename** argument.
