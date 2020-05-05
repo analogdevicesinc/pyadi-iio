@@ -34,6 +34,7 @@ Sections
    devices/index
    buffers/index
    fpga/index
+   dev/index
 
 Indices and tables
 ==================
