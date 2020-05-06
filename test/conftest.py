@@ -82,6 +82,7 @@ class BaseTestHelpers:
         global found_uris
         global target_uri_arg
         global imported_config
+        global ignore_skip
         if not isinstance(self.devicename, list):
             ds = [self.devicename]
         else:
@@ -99,11 +100,11 @@ class BaseTestHelpers:
         if not dev_checked:
             if target_uri_arg:
                 found_dev, board = iio_scanner.find_device(
-                    self.devicename, target_uri_arg, imported_config
+                    self.devicename, target_uri_arg, imported_config, ignore_skip
                 )
             else:
                 found_dev, board = iio_scanner.find_device(
-                    self.devicename, None, imported_config
+                    self.devicename, None, imported_config, ignore_skip
                 )
 
             if found_dev:
