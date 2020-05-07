@@ -142,6 +142,25 @@ class BoardInterface(BaseTestHelpers):
 
 
 def attribute_single_value(classname, devicename, attr, start, stop, step, tol):
+    """ Test single numeric attribute
+
+    Parameters
+    ----------
+    classname : string
+        Description of parameter `x`.
+    devicename: string
+        Description of parameter `y` (with type not specified)
+    attr : string
+        Description of parameter `x`.
+    start: int
+        Description of parameter `y` (with type not specified)
+    stop: int
+        Description of parameter `y` (with type not specified)
+    step: int
+        Description of parameter `y` (with type not specified)
+    tol: int
+        Description of parameter `y` (with type not specified)
+    """
     bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
     numints = int((stop - start) / step)
@@ -152,12 +171,44 @@ def attribute_single_value(classname, devicename, attr, start, stop, step, tol):
 
 
 def attribute_single_value_str(classname, devicename, attr, val, tol):
+    """ Test single string attribute
+
+    Parameters
+    ----------
+    classname : string
+        Description of parameter `x`.
+    devicename: string
+        Description of parameter `y` (with type not specified)
+    attr : string
+        Description of parameter `x`.
+    val: string
+        Description of parameter `y` (with type not specified)
+    tol: int
+        Description of parameter `y` (with type not specified)
+    """
     bi = BoardInterface(classname, devicename)
     # Check hardware
     assert bi.dev_interface(str(val), attr, tol) <= tol
 
 
 def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol):
+    """ Test single numeric attribute with attributes
+    constrained to powers of two
+
+    Parameters
+    ----------
+    classname : string
+        Description of parameter `x`.
+    devicename: string
+        Description of parameter `y` (with type not specified)
+    attr : string
+        Description of parameter `x`.
+    max_pow: int
+        Description of parameter `y` (with type not specified)
+    tol: int
+        Description of parameter `y` (with type not specified)
+    """
+
     bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
     nums = []
@@ -170,6 +221,19 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol):
 
 
 def dma_rx(classname, devicename, channel):
+    """ Test RX DMA by pulling several buffers and verifying the data
+    is not all zeros
+
+    Parameters
+    ----------
+    classname : string
+        Description of parameter `x`.
+    devicename: string
+        Description of parameter `y` (with type not specified)
+    channel: int
+        Description of parameter `y` (with type not specified)
+    """
+
     bi = BoardInterface(classname, devicename)
     sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     N = 2 ** 15
@@ -194,6 +258,19 @@ def dma_rx(classname, devicename, channel):
 
 
 def dma_tx(classname, devicename, channel):
+    """ Test TX DMA by push several buffers and verifying the data
+    no error errors
+
+    Parameters
+    ----------
+    classname : string
+        Description of parameter `x`.
+    devicename: string
+        Description of parameter `y` (with type not specified)
+    channel: int
+        Description of parameter `y` (with type not specified)
+    """
+
     bi = BoardInterface(classname, devicename)
     sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     TXFS = 1000

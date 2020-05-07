@@ -63,3 +63,8 @@ When running tests a single URI can be provided to the command line. Devices can
           "ip:192.168.86.35": adrv9361, fmcomms2
 
 This file will automatically be loaded when it is in the location **/etc/default/pyadi_test.yaml** on Linux machines. Otherwise, it can be provided to pytest through the **--test-configfilename** argument.
+
+Available Tests
+---------------------------
+.. automodule:: test.conftest
+   :members:
