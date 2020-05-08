@@ -122,6 +122,9 @@ def check_board_other(ctx):
     if check_config(ctx, [device("ad9371-phy")]):
         return "ad9371"
 
+    if check_config(ctx, [device("adrv9002-phy")]):
+        return "adrv9002"
+
     for dev in ctx.devices:
         if dev.name:
             return dev.name
