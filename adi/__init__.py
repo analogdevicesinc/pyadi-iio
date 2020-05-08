@@ -37,6 +37,8 @@ from adi.fmcomms5 import *
 
 from adi.ad9371 import *
 
+from adi.adrv9002 import *
+
 from adi.adrv9009 import *
 
 from adi.adrv9009_zu11eg import *
