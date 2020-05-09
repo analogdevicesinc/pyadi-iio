@@ -559,7 +559,7 @@ def load_boot_file(request):
         assert os.path.isfile(devtreepath), devtreepath + " not found"
         # Bring up board
         print("Board bring up")
-        m = nebula.manager(configfilename=configfilename)
+        m = nebula.manager(configfilename="/etc/default/nebula")
         m.board_reboot_auto(
             system_top_bit_path=system_top_bit_path,
             bootbinpath=bootbinpath,
