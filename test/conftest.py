@@ -64,6 +64,7 @@ def pytest_addoption(parser):
         help="Boot board with specific boot files",
     )
 
+
 class BaseTestHelpers:
     devicename = "pluto"
     skipped_tests = []  # type: ignore
@@ -546,11 +547,25 @@ def command_line_config(request):
 def load_boot_file(request):
     if request.config.getoption("--custombootfiles"):
         ### Before test
+        system_top_bit_path = "system_top.bit"
+        bootbinpath = "BOOT.BIN"
+        uimagepath = "uImage"
+        devtreepath = "devicetree.dtb"
+        import os
 
+        assert os.path.isfile(system_top_bit_path), system_top_bit_path + " not found"
+        assert os.path.isfile(bootbinpath), bootbinpath + " not found"
+        assert os.path.isfile(uimagepath), uimagepath + " not found"
+        assert os.path.isfile(devtreepath), devtreepath + " not found"
         # Bring up board
         print("Board bring up")
-        # m = nebula.manager(configfilename=configfilename)
-        # m.start_tests()
+        m = nebula.manager(configfilename=configfilename)
+        m.board_reboot_auto(
+            system_top_bit_path=system_top_bit_path,
+            bootbinpath=bootbinpath,
+            uimagepath=uimagepath,
+            devtreepath=devtreepath,
+        )
 
         ############################
         yield
@@ -558,6 +573,7 @@ def load_boot_file(request):
 
         ### After test
         print("Board bring down")
+        del m
 
         # Put board into good state
         # m.stop_tests()
