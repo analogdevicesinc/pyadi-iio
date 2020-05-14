@@ -58,6 +58,35 @@ def pytest_addoption(parser):
     )
 
 
+def pytest_configure(config):
+    # Add customer marks to ini to remove warnings
+    from test import test_map as tm
+
+    test_map = tm.get_test_map()
+    vals = []
+    for k in test_map:
+        vals = vals + test_map[k]
+    keys = np.unique(np.array(vals))
+    for k in keys:
+        config.addinivalue_line("markers", k.replace("-", "_"))
+
+
+def pytest_collection_modifyitems(items):
+    # Map HDL project names to tests as markers
+    from test import test_map as tm
+
+    test_map = tm.get_test_map()
+    test_map_keys = test_map.keys()
+
+    for item in items:
+        if item.originalname:
+            for key in test_map_keys:
+                if key in item.originalname:
+                    for marker in test_map[key]:
+                        item.add_marker(marker.replace("-", "_"))
+                    break
+
+
 class BaseTestHelpers:
     devicename = "pluto"
     skipped_tests = []  # type: ignore
