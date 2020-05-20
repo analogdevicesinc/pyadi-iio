@@ -38,9 +38,9 @@ def get_test_map():
     ]
     test_map["adrv9009"] = [
         "socfpga_arria10_socdk_adrv9009",
-        "zynqmp-zcu102-rev10-adrv9009",
-        "zynqmp-zcu102-rev10-adrv9008-2",
         "zynqmp-zcu102-rev10-adrv9008-1",
+        "zynqmp-zcu102-rev10-adrv9008-2",
+        "zynqmp-zcu102-rev10-adrv9009",
     ]
     test_map["fmcomms5"] = [
         "zynqmp-zcu102-rev10-ad9361-fmcomms5",
@@ -50,33 +50,26 @@ def get_test_map():
     ]
     test_map["ad9361"] = [
         "socfpga_cyclone5_sockit_arradio",
-        "zynq-adrv9361-z7035-bob-cmos",
+        "zynq-zed-adv7511-ad9361-fmcomms2-3",
+        "zynq-zc702-adv7511-ad9361-fmcomms2-3",
         "zynq-zc706-adv7511-ad9361-fmcomms2-3",
+        "zynqmp-zcu102-rev10-ad9361-fmcomms2-3",
+        "zynq-adrv9361-z7035-fmc",
         "zynq-adrv9361-z7035-box",
         "zynq-adrv9361-z7035-bob",
-        "zynq-zed-adv7511-ad9361-fmcomms2-3",
-        "zynqmp-zcu102-rev10-ad9361-fmcomms2-3",
-        "zynq-zc702-adv7511-ad9361-fmcomms2-3",
-        "zynq-adrv9361-z7035-fmc",
+        "zynq-adrv9361-z7035-bob-cmos",
     ]
     test_map["pluto"] = [
         "socfpga_cyclone5_sockit_arradio",
-        "zynqmp-zcu102-rev10-ad9364-fmcomms4",
-        "zynq-adrv9364-z7020-bob-cmos",
-        "zynq-adrv9361-z7035-bob-cmos",
-        "zynq-adrv9364-z7020-box",
-        "zynq-zc706-adv7511-ad9361-fmcomms2-3",
-        "zynq-zc706-adv7511-ad9364-fmcomms4",
-        "zynq-adrv9361-z7035-box",
-        "zynq-adrv9361-z7035-bob",
-        "zynq-adrv9364-z7020-bob",
-        "zynq-zed-adv7511-ad9361-fmcomms2-3",
-        "zynqmp-zcu102-rev10-ad9361-fmcomms2-3",
         "zynq-zc702-adv7511-ad9364-fmcomms4",
-        "zynq-zc702-adv7511-ad9361-fmcomms2-3",
+        "zynq-zc706-adv7511-ad9364-fmcomms4",
+        "zynqmp-zcu102-rev10-ad9364-fmcomms4",
+        "zynq-adrv9364-z7020-box",
+        "zynq-adrv9364-z7020-bob",
+        "zynq-adrv9364-z7020-bob-cmos",
         "zynq-zed-adv7511-ad9364-fmcomms4",
-        "zynq-adrv9361-z7035-fmc",
-    ]
+        "pluto",
+    ] + test_map["ad9361"]
     test_map["ad9364"] = test_map["pluto"]
 
     return test_map
