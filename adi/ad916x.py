@@ -41,7 +41,6 @@ class ad9166(attribute, context_manager):
 
     _complex_data = False
     channel = []  # type: ignore
-    _tx_channel_names = ["altvoltage0"]  # type: ignore
     _device_name = ""
     _temperatureRef = 32.0
     _temperatureRefCode = 0x8008
@@ -53,12 +52,7 @@ class ad9166(attribute, context_manager):
         self._ctrl = self._ctx.find_device("ad9166")
         self._txdac = self._ctx.find_device("ad9166")
         self._temp_sensor_name = "temp0"
-
-        # dynamically get NCO channels
-        for ch in self._ctrl._channels:
-            if ch.id in self._tx_channel_names:
-                name = ch._id
-                self.channel.append(self._channel(self._ctrl, name))
+        self._dac0_name = "altvoltage0"
 
     @property
     def sample_rate(self):
@@ -183,55 +177,48 @@ class ad9166(attribute, context_manager):
             self._ctrl.reg_write(0x111, tmp_reg)
         pass
 
-    class _channel(attribute):
-        """ AD916x channel """
+    @property
+    def tx_enable(self):
+        """ tx_enable: AD9166 TX Enable
+            Options:
+                True: TX is enabled (Datapath is connected to DAC)
+                False: TX is disabled or  (DAC input is zeroed)
+        """
+        tmp_reg = self._ctrl.reg_read(0x03F) & 0x80
+        if tmp_reg == 0:
+            return False
+        else:
+            return True
+        pass
 
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
+    @tx_enable.setter
+    def tx_enable(self, value=True):
+        # Supports only SPI Data Post Enable/disable.
+        # TODO: Implement other tx enable ways.
 
-        @property
-        def tx_enable(self):
-            """ tx_enable: AD9166 TX Enable
-                Options:
-                    True: TX is enabled (Datapath is connected to DAC)
-                    False: TX is disabled or  (DAC input is zeroed)
-            """
-            tmp_reg = self._ctrl.reg_read(0x03F) & 0x80
-            if tmp_reg == 0:
-                return False
-            else:
-                return True
-            pass
+        tmp_reg = self._ctrl.reg_read(0x03F) & 0x7F
+        if value:
+            # TX_ENABLE (0x3F) Bit7=1
+            self._ctrl.reg_write(0x03F, tmp_reg | 0x80)
+        else:
+            # TX_ENABLE (0x3F) Bit7=0
+            self._ctrl.reg_write(0x03F, tmp_reg)
+        pass
 
-        @tx_enable.setter
-        def tx_enable(self, value=True):
-            # Supports only SPI Data Post Enable/disable.
-            # TODO: Implement other tx enable ways.
+    @property
+    def frequency(self):
+        """ frequency: AD916x channel nco frequency value in hz."""
+        return self._get_iio_attr(self._dac0_name, "nco_frequency", True)
 
-            tmp_reg = self._ctrl.reg_read(0x03F) & 0x7F
-            if value:
-                # TX_ENABLE (0x3F) Bit7=1
-                self._ctrl.reg_write(0x03F, tmp_reg | 0x80)
-            else:
-                # TX_ENABLE (0x3F) Bit7=0
-                self._ctrl.reg_write(0x03F, tmp_reg)
-            pass
+    @frequency.setter
+    def frequency(self, value):
+        return self._set_iio_attr(self._dac0_name, "nco_frequency", True, value)
 
-        @property
-        def frequency(self):
-            """ frequency: AD916x channel nco frequency value in hz."""
-            return self._get_iio_attr(self.name, "nco_frequency", True)
+    @property
+    def raw(self):
+        """ raw: AD916x channel raw value. Integer range 0-32767. """
+        return self._get_iio_attr(self._dac0_name, "raw", True)
 
-        @frequency.setter
-        def frequency(self, value):
-            return self._set_iio_attr(self.name, "nco_frequency", True, value)
-
-        @property
-        def raw(self):
-            """ raw: AD916x channel raw value. Integer range 0-32767. """
-            return self._get_iio_attr(self.name, "raw", True)
-
-        @raw.setter
-        def raw(self, value):
-            return self._set_iio_attr(self.name, "raw", True, value)
+    @raw.setter
+    def raw(self, value):
+        return self._set_iio_attr(self._dac0_name, "raw", True, value)

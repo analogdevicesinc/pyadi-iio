@@ -53,6 +53,12 @@ def attribute_single_value(
         else:
             assert dev_interface(uri, classname, val, attr, tol) <= tol
 
+def attribute_single_value_boolean(classname, devicename, attr, value):
+    bi = BoardInterface(classname, devicename)
+    # Pick random number in operational range
+    setattr(bi, attr, value)
+    rval = getattr(bi, attr)
+    assert rval == value
 
 def attribute_single_value_str(uri, classname, attr, val, tol):
     """attribute_single_value_str: Write and read back string class property
