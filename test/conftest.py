@@ -198,6 +198,14 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol):
     assert bi.dev_interface(val, attr, tol) <= tol
 
 
+def attribute_single_value_boolean(classname, devicename, attr, value):
+    bi = BoardInterface(classname, devicename)
+    # Pick random number in operational range
+    setattr(bi, attr, value)
+    rval = getattr(bi, attr)
+    assert rval == value
+
+
 def dma_rx(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
     sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
@@ -581,6 +589,12 @@ def test_attribute_single_value_str(request):
 def test_attribute_single_value_pow2(request):
     command_line_config(request)
     yield attribute_single_value_pow2
+
+
+@pytest.fixture()
+def test_attribute_single_value_boolean(request):
+    command_line_config(request)
+    yield attribute_single_value_boolean
 
 
 @pytest.fixture()

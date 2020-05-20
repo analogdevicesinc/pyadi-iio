@@ -36,39 +36,44 @@ import time
 import adi
 import numpy as np
 
-uri = "ip:192.168.254.102"
+# Set up CN0511. Replace URI with the actual uri of your CN0511 for remote access.
+uri = "ip:192.168.254.104"
+# uri = "local:"
+# replace ambient temperature value with actual temperature for temperature
+# calibration.
 ambient_temp = 32.0
-# Set up CN0511. Replace URI with the actual uri of your CN0511.
+
 rpi_sig_gen = adi.CN0511(uri=uri)
 
 # enable temperature measurements
 rpi_sig_gen.temperature_enable = True
 
 # calibrate temperature
-rpi_sig_gen.temperature_cal = 34.0  # Ambient
+rpi_sig_gen.temperature_cal = ambient_temp
 
 # Read temperature
 temp = rpi_sig_gen.temperature
-print("Temperature: " + str(temp) + "°C")
+print("Chip Temperature: " + str(temp) + "°C")
 
 # set NCO frequency in Hz
 rpi_sig_gen.nco_enable = True
-rpi_sig_gen.channel[0].frequency = 100000000
-print("Setting Output Frequency to: " + str(rpi_sig_gen.channel[0].frequency) + " Hz")
+rpi_sig_gen.frequency = 1985467370
+print("Output Frequency set to: " + str(rpi_sig_gen.frequency) + " Hz")
 
 # set scale of waveform (0-32767)
-rpi_sig_gen.channel[0].raw = 1000
+rpi_sig_gen.raw = 1000
 print(
-    "Setting Output scale to: "
-    + str(20 * np.log10(rpi_sig_gen.channel[0].raw / (2 ** 15)))
-    + " dBFS"
+    "Output scale set to: " + str(20 * np.log10(rpi_sig_gen.raw / (2 ** 15))) + " dBFS"
 )
 
 # enable transmit
-rpi_sig_gen.channel[0].tx_enable = True
+rpi_sig_gen.tx_enable = True
+print("Output enabled: ", rpi_sig_gen.tx_enable)
 
 # enable amplifier
 rpi_sig_gen.amp_enable = True
+
+print("Amplifier enabled: ", rpi_sig_gen.amp_enable)
 
 print("Sleeping for 15 secs")
 # sleep 15 sec
@@ -76,14 +81,17 @@ for i in range(15):
     print(".", end="", flush=True)
     time.sleep(1)
 print(".")
-# compute temperature
+
 # Read temperature
 temp = rpi_sig_gen.temperature
-print("Temperature: " + str(temp) + "°C")
+print("Chip Temperature: " + str(temp) + "°C")
 
-print("Frequency: " + str(rpi_sig_gen.channel[0].frequency) + " Hz")
-print("Scale: " + str(20 * np.log10(rpi_sig_gen.channel[0].raw / (2 ** 15))) + " dBFS")
+print("Output Frequency: " + str(rpi_sig_gen.frequency) + " Hz")
+print("Output power: " + str(20 * np.log10(rpi_sig_gen.raw / (2 ** 15))) + " dBFS")
 
-# turn off amplifier and disable transmit
+print("Disabling the amplifier and output...")
+# turn off amplifier and disable output
 rpi_sig_gen.amp_enable = False
-rpi_sig_gen.channel[0].tx_enable = False
+print("Amplifier enabled: ", rpi_sig_gen.amp_enable)
+rpi_sig_gen.tx_enable = False
+print("Output enabled: ", rpi_sig_gen.tx_enable)

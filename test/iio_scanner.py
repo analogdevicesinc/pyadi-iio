@@ -87,26 +87,36 @@ def check_board_other(ctx):
         ctx, [device("ad9517"), device("ad9361-phy"), device("cf-ad9361-lpc", 4)]
     ):
         return "adrv9361"
+
     if check_config(ctx, [device("ad7291-bob"), device("cf-ad9361-lpc", 2)]):
         return "adrv9364"
+
     if check_config(
         ctx, [device("adm1177"), device("ad9361-phy"), device("cf-ad9361-lpc", 2)]
     ):
         return "pluto"
+
     if check_config(
         ctx, [device("ad7291"), device("ad9361-phy"), device("cf-ad9361-lpc", 4)]
     ):
         return "fmcomms2"
+
     if check_config(
         ctx, [device("ad7291"), device("ad9361-phy"), device("cf-ad9361-lpc", 2),],
     ):
         return "fmcomms4"
+
     if check_config(ctx, [device("ad9361-phy"), device("ad9361-phy-b")]):
         return "fmcomms5"
+
     if check_config(ctx, [device("ad9361-phy"), device("cf-ad9361-lpc", 2)]):
         return "ad9364"
+
     if check_config(ctx, [device("ad9361-phy"), device("cf-ad9361-lpc", 4)]):
         return "ad9361"
+
+    if check_config(ctx, [device("ad9166"), device("adf4372")]):
+        return "cn0511"
 
     if check_config(ctx, [device("axi-ad9144-hpc", 4), device("axi-ad9680-hpc", 2)]):
         return "daq2"
@@ -116,6 +126,7 @@ def check_board_other(ctx):
 
     if check_config(ctx, [device("adrv9009-phy"), device("adrv9009-phy-b")]):
         return "adrv9009-dual"
+
     if check_config(ctx, [device("adrv9009-phy")]):
         return "adrv9009"
 
