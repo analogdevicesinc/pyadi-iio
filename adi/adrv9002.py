@@ -32,8 +32,28 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
-from adi.obs import obs
+from adi.obs import obs, remap, tx_two
 from adi.rx_tx import rx_tx
+
+
+def rx1(self):
+    """rx1: Receive data on channel 0 (Same as rx() method) """
+    return self.rx()
+
+
+def rx2(self):
+    """rx2: Receive data on channel 1 """
+    return self._rx2.rx()
+
+
+def tx1(self, data):
+    """tx1: Transmit data on channel 0 (Same as tx() method) """
+    self.tx(data)
+
+
+def tx2(self, data):
+    """tx2: Transmit data on channel 1 """
+    self._tx2.tx()
 
 
 class adrv9002(rx_tx, context_manager):
@@ -49,24 +69,49 @@ class adrv9002(rx_tx, context_manager):
     def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
+        # Determine if we have a split or combined DMA
+        devs = self._ctx.devices
+        rxdevs = list(filter(lambda dev: "rx" in str(dev.name), devs))
+        txdevs = list(filter(lambda dev: "tx" in str(dev.name), devs))
+
+        if len(rxdevs) > 1:
+            self._rx_dma_mode = "split"
+            self._rxadc = self._ctx.find_device("axi-adrv9002-rx1-lpc")
+            self._rxadc2 = self._ctx.find_device("axi-adrv9002-rx2-lpc")
+            self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
+            setattr(adrv9002, "rx1", rx1)
+            setattr(adrv9002, "rx2", rx2)
+            remap(self._rx2, "rx_", "rx2_", type(self))
+
+        else:
+            self._rx_dma_mode = "combined"
+            self._rx_channel_names = [
+                "voltage0_i",
+                "voltage0_q",
+                "voltage1_i",
+                "voltage1_q",
+            ]
+            self._rxadc = self._ctx.find_device("axi-adrv9002-rx-lpc")
+
+        if len(txdevs) > 1:
+            self._tx_dma_mode = "split"
+            self._txdac = self._ctx.find_device("axi-adrv9002-tx1-lpc")
+            self._txdac2 = self._ctx.find_device("axi-adrv9002-tx2-lpc")
+            self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
+            setattr(adrv9002, "tx1", tx1)
+            setattr(adrv9002, "tx2", tx2)
+            remap(self._tx2, "tx_", "tx2_", type(self))
+
+        else:
+            self._tx_dma_mode = "combined"
+            self._tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
+            self._txdac = self._ctx.find_device("axi-adrv9002-tx-lpc")
 
         self._ctrl = self._ctx.find_device("adrv9002-phy")
-        self._rxadc = self._ctx.find_device("axi-adrv9002-rx1-lpc")
-        self._rxadc2 = self._ctx.find_device("axi-adrv9002-rx2-lpc")
-        self._txdac = self._ctx.find_device("axi-adrv9002-tx1-lpc")
-        self._txdac2 = self._ctx.find_device("axi-adrv9002-tx2-lpc")
+
         self._ctx.set_timeout(30000)  # Needed for loading profiles
 
         rx_tx.__init__(self)
-        self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
-
-    def rx1(self):
-        """rx1: Receive data on channel 0 (Same as rx() method) """
-        return self.rx()
-
-    def rx2(self):
-        """rx1: Receive data on channel 1 """
-        return self._rx2.rx()
 
     @property
     def profile(self):
@@ -78,6 +123,28 @@ class adrv9002(rx_tx, context_manager):
         with open(value, "r") as file:
             data = file.read()
         self._set_iio_dev_attr_str("profile_config", data)
+
+    @property
+    def rx_dma_mode(self):
+        """rx_dma_mode: DMA configuration for RX path. Options are:
+            combined: RX1 and RX2 share the same rx method
+            split: RX1 and RX2 have separate rx methods rx1 and rx2.
+                   Typically used when they are at different rates.
+                   In this case the standard rx method has the same
+                   effect as the rx1 method.
+        """
+        return self._rx_dma_mode
+
+    @property
+    def tx_dma_mode(self):
+        """tx_dma_mode: DMA configuration for TX path. Options are:
+                combined: TX1 and TX2 share the same tx method
+                split: TX1 and TX2 have separate tx methods tx1 and tx2.
+                       Typically used when they are at different rates.
+                       In this case the standard tx method has the same
+                       effect as the tx1 method.
+        """
+        return self._tx_dma_mode
 
     # @property
     # def calibrate_rx_phase_correction_en(self):
