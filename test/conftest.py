@@ -170,8 +170,16 @@ class BoardInterface(BaseTestHelpers):
         self.check_skip()
 
 
-def attribute_single_value(classname, devicename, attr, start, stop, step, tol):
+def attribute_single_value(
+    classname, devicename, attr, start, stop, step, tol, param_set=None
+):
     bi = BoardInterface(classname, devicename)
+    hw = eval(bi.classname + "(uri='" + bi.uri + "')")
+    if param_set is not None:
+        print("Initial parameters exist:")
+        for p in param_set.keys():
+            setattr(hw, p, param_set[p])
+    del hw
     # Pick random number in operational range
     numints = int((stop - start) / step)
     ind = random.randint(0, numints + 1)
@@ -201,8 +209,10 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol):
 def attribute_single_value_boolean(classname, devicename, attr, value):
     bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
-    setattr(bi, attr, value)
-    rval = getattr(bi, attr)
+    hw = eval(bi.classname + "(uri='" + bi.uri + "')")
+    setattr(hw, attr, value)
+    rval = getattr(hw, attr)
+    del hw
     assert rval == value
 
 
