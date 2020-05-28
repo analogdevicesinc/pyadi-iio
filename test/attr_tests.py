@@ -56,8 +56,11 @@ def attribute_single_value(
 def attribute_single_value_boolean(classname, devicename, attr, value):
     bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
-    setattr(bi, attr, value)
+    hw = eval(bi.classname + "(uri='" + bi.uri + "')")
     rval = getattr(bi, attr)
+    setattr(hw, attr, value)
+    rval = getattr(hw, attr)
+    del hw
     assert rval == value
 
 def attribute_single_value_str(uri, classname, attr, val, tol):
