@@ -54,10 +54,10 @@ rpi_sig_gen.temperature_cal = ambient_temp
 # Read temperature
 temp = rpi_sig_gen.temperature
 print("Chip Temperature: " + str(temp) + "°C")
-
+rpi_sig_gen.sample_rate = 5283840000
 # set NCO frequency in Hz
 rpi_sig_gen.nco_enable = True
-rpi_sig_gen.frequency = 1985467370
+rpi_sig_gen.frequency = 100000000
 print("Output Frequency set to: " + str(rpi_sig_gen.frequency) + " Hz")
 
 # set scale of waveform (0-32767)
@@ -95,3 +95,5 @@ rpi_sig_gen.amp_enable = False
 print("Amplifier enabled: ", rpi_sig_gen.amp_enable)
 rpi_sig_gen.tx_enable = False
 print("Output enabled: ", rpi_sig_gen.tx_enable)
+# enable temperature measurements
+print(rpi_sig_gen.temperature_enable)

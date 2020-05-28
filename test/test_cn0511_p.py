@@ -7,16 +7,27 @@ classname = "adi.CN0511"
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize(
-    "attr, start, stop, step, tol",
+    "attr, start, stop, step, tol, param_set",
     [
-        ("raw", 1, 2 ** 15 - 1, 1, 8),
-        ("sample_rate", 4915200000, 5898240000, 122880000, 8),
+        ("frequency", 1, 2949120000, 1, 8, dict(sample_rate=5898240000)),
+        ("raw", 1, 2 ** 15 - 1, 1, 8, None),
+        ("sample_rate", 4915200000, 5775360000, 122880000, 8, None),
     ],
 )
 def test_cn0511_attr(
-    test_attribute_single_value, classname, hardware, attr, start, stop, step, tol
+    test_attribute_single_value,
+    classname,
+    hardware,
+    attr,
+    start,
+    stop,
+    step,
+    tol,
+    param_set,
 ):
-    test_attribute_single_value(classname, hardware, attr, start, stop, step, tol)
+    test_attribute_single_value(
+        classname, hardware, attr, start, stop, step, tol, param_set
+    )
 
 
 #########################################
@@ -26,8 +37,6 @@ def test_cn0511_attr(
     [
         ("amp_enable", True),
         ("amp_enable", False),
-        ("temperature_enable", False),
-        ("temperature_enable", True),
         ("FIR85_enable", True),
         ("FIR85_enable", False),
         ("tx_enable", False),
