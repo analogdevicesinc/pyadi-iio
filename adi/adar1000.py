@@ -100,9 +100,8 @@ class adar1000(attribute, context_manager):
                 for dev in self._ctx.devices:
                     if dev.attrs["label"].value == beam:
                         self._ctrls.append(dev)
-            assert len(self._ctrls) == len(beams), (
-                ",".join(beams) + " Not all devices found"
-            )
+            if len(self._ctrls) == len(beams):
+                raise Exception("Not all devices found: " + ",".join(beams))
         else:
             for dev in self._ctx.devices:
                 if dev.attrs["label"].value == beams:
