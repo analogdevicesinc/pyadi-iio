@@ -67,9 +67,9 @@ class attribute:
                 values: type=list
                     Must be of length <= len(ctrls)*len(channel_names)
         """
-        for i in range(len(values)):
-            if isinstance(values[i], int):
-                values[i] = float(values[i])
+        for i, value in enumerate(values):
+            if isinstance(value, int):
+                values[i] = float(value)
             if not isinstance(values[i], float):
                 raise Exception("Values must be floats")
         self._set_iio_attr_multi_dev(channel_names, attr_name, output, values, ctrls)
