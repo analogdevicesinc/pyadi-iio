@@ -31,11 +31,10 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.context_manager import context_manager
-from adi.rx_tx import tx
+from adi.rx_tx import Tx
 
 
-class ad9152(tx, context_manager):
+class ad9152(Tx):
     """ AD9152 High-Speed DAC """
 
     _complex_data = False
@@ -44,7 +43,7 @@ class ad9152(tx, context_manager):
 
     def __init__(self, uri=""):
 
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
 
         self._txdac = self._ctx.find_device("axi-ad9152-hpc")
 

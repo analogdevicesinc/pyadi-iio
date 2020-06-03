@@ -31,12 +31,11 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.context_manager import context_manager
-from adi.obs import obs
-from adi.rx_tx import rx_tx
+from adi.obs import Obs
+from adi.rx_tx import RxTx
 
 
-class ad9371(rx_tx, context_manager):
+class ad9371(RxTx):
     """ AD9371 Transceiver """
 
     _complex_data = True
@@ -47,7 +46,7 @@ class ad9371(rx_tx, context_manager):
 
     def __init__(self, uri=""):
 
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
 
         self._ctrl = self._ctx.find_device("ad9371-phy")
         self._rxadc = self._ctx.find_device("axi-ad9371-rx-hpc")
@@ -56,7 +55,7 @@ class ad9371(rx_tx, context_manager):
 
         rx_tx.__init__(self)
 
-        self.obs = obs(self._ctx, self._rxobs, self._obs_channel_names)
+        self.obs = Obs(self._ctx, self._rxobs, self._obs_channel_names)
 
     @property
     def gain_control_mode(self):

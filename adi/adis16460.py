@@ -32,11 +32,11 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.context_manager import ContextManager
+from adi.rx_tx import Rx
 
 
-class adis16460(rx, context_manager):
+class adis16460(Rx, ContextManager):
     """ ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor """
 
     _complex_data = False
@@ -53,7 +53,7 @@ class adis16460(rx, context_manager):
 
     def __init__(self, uri=""):
 
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
 
         self._ctrl = self._ctx.find_device("adis16460")
         self._rxadc = self._ctx.find_device("adis16460")

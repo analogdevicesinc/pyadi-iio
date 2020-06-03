@@ -32,8 +32,8 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.ad936x import ad9361
-from adi.context_manager import context_manager
-from adi.rx_tx import rx_tx
+from adi.context_manager import ContextManager
+from adi.rx_tx import RxTx
 
 
 class FMComms5(ad9361):
@@ -64,7 +64,7 @@ class FMComms5(ad9361):
     _device_name = ""
 
     def __init__(self, uri=""):
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
         self._ctrl = self._ctx.find_device("ad9361-phy")
         self._ctrl_b = self._ctx.find_device("ad9361-phy-B")
         self._rxadc = self._ctx.find_device("cf-ad9361-A")

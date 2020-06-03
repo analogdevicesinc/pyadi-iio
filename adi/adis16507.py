@@ -32,11 +32,11 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.context_manager import ContextManager
+from adi.rx_tx import Rx
 
 
-class adis16507(rx, context_manager):
+class adis16507(Rx, ContextManager):
     """ ADIS16507 Precision, Miniature MEMS IMU """
 
     _complex_data = False
@@ -56,7 +56,7 @@ class adis16507(rx, context_manager):
         self, uri="", imu_dev_name="adis16507-3", trigger_name="adis16507-3-dev0"
     ):
 
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
 
         self._ctrl = self._ctx.find_device(imu_dev_name)
         self._rxadc = self._ctx.find_device(imu_dev_name)

@@ -32,11 +32,10 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.rx_tx import Rx
 
 
-class ad9094(rx, context_manager):
+class ad9094(Rx):
     """ AD9094 Quad ADC """
 
     _rx_data_type = np.int8
@@ -45,6 +44,6 @@ class ad9094(rx, context_manager):
     _device_name = ""
 
     def __init__(self, uri=""):
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
         self._rxadc = self._ctx.find_device("axi-ad9094-hpc")
         rx.__init__(self)

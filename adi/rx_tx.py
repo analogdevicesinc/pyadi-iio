@@ -31,6 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from abc import abstractproperty
 from typing import List
 
 import iio
@@ -40,33 +41,63 @@ from adi.attribute import attribute
 from adi.dds import dds
 
 
-class phy(attribute):
-    _ctrl: iio.Device = []
-
-    def __del__(self):
-        self._ctrl = []
+def enable_channel(channel):
+    """ Enable IIO channel """
+    channel.enabled = True
 
 
-class rx(attribute):
+class Phy(attribute):  # pylint disable=R0903
+    """ Control device handler """
+
+    @abstractproperty
+    def _ctrl(self) -> iio.Device:
+        pass
+
+
+class Meta(type):
+    """ Rx and Tx metaclass
+        This class is used to initialize contexts at startup
+        and setup Rx and Tx appropriately
+    """
+
+    def __call__(cls, *args, **kwargs):
+        instance = super().__call__(*args, **kwargs)
+        tree = cls.mro()
+        if any(x is Rx for x in tree):
+            Rx.__init_rx__(instance)
+        if any(x is Tx for x in tree):
+            Tx.__init_tx__(instance)
+        return instance
+
+
+class Rx(attribute, metaclass=Meta):
     """ Buffer handling for receive devices """
 
-    _rxadc: iio.Device = []
-    _rx_channel_names: List[str] = []
+    @abstractproperty
+    def _rxadc(self) -> iio.Device:
+        pass
+
+    @abstractproperty
+    def _rx_channel_names(self) -> List[str]:
+        pass
+
     _complex_data = False
     _rx_data_type = np.int16
     _rx_data_si_type = np.int16
     _rx_mask = 0x0000
     _rx_shift = 0
+    _num_rx_channels = 0
     rx_output_type = "raw"
     __rxbuf = None
+    __rx_buffer_size = 16
+    __rx_enabled_channels = []
     _rx_unbuffered_data = False
 
-    def __init__(self, rx_buffer_size=1024):
-        if self._complex_data:
-            N = 2
-        else:
-            N = 1
-        rx_enabled_channels = list(range(len(self._rx_channel_names) // N))
+    def __init_rx__(self, rx_buffer_size=1024):
+        chan_per_out_chan = 2 if self._complex_data else 1
+        rx_enabled_channels = list(
+            range(len(self._rx_channel_names) // chan_per_out_chan)
+        )
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
@@ -104,46 +135,51 @@ class rx(attribute):
         self.__rxbuf = None
 
     def __del__(self):
-        self.__rxbuf = []
-        self._rxadc = []
+        if self.__rxbuf:
+            del self.__rxbuf
 
     def _rx_init_channels(self):
-        for m in self._rx_channel_names:
-            v = self._rxadc.find_channel(m)
-            v.enabled = False
+        for chan_name in self._rx_channel_names:
+            chan = self._rxadc.find_channel(chan_name)
+            chan.enabled = False
 
         if self._complex_data:
-            for m in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[m * 2])
-                v.enabled = True
-                v = self._rxadc.find_channel(self._rx_channel_names[m * 2 + 1])
-                v.enabled = True
+            for chan_index in self.rx_enabled_channels:
+                enable_channel(
+                    self._rxadc.find_channel(self._rx_channel_names[chan_index * 2])
+                )
+                enable_channel(
+                    self._rxadc.find_channel(self._rx_channel_names[chan_index * 2 + 1])
+                )
         else:
-            for m in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[m])
-                v.enabled = True
+            for chan_index in self.rx_enabled_channels:
+                enable_channel(
+                    self._rxadc.find_channel(self._rx_channel_names[chan_index])
+                )
         self.__rxbuf = iio.Buffer(self._rxadc, self.__rx_buffer_size, False)
 
     def __rx_unbuffered_data(self):
-        x = []
-        t = self._rx_data_si_type if self.rx_output_type == "SI" else self._rx_data_type
+        channel_data = []
+        chan_type = (
+            self._rx_data_si_type if self.rx_output_type == "SI" else self._rx_data_type
+        )
         for _ in range(len(self.rx_enabled_channels)):
-            x.append(np.zeros(self.rx_buffer_size, dtype=t))
+            channel_data.append(np.zeros(self.rx_buffer_size, dtype=chan_type))
 
         # Get scalers first
         if self.rx_output_type == "SI":
             rx_scale = []
             rx_offset = []
             for i in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[i])
-                if "scale" in v.attrs:
+                chan = self._rxadc.find_channel(self._rx_channel_names[i])
+                if "scale" in chan.attrs:
                     scale = self._get_iio_attr(
                         self._rx_channel_names[i], "scale", False
                     )
                 else:
                     scale = 1.0
 
-                if "offset" in v.attrs:
+                if "offset" in chan.attrs:
                     offset = self._get_iio_attr(
                         self._rx_channel_names[i], "offset", False
                     )
@@ -153,28 +189,33 @@ class rx(attribute):
                 rx_offset.append(offset)
 
         for samp in range(self.rx_buffer_size):
-            for i, m in enumerate(self.rx_enabled_channels):
-                s = self._get_iio_attr(
-                    self._rx_channel_names[m], "raw", False, self._rxadc
+            for channel_data_index, channel_index in enumerate(
+                self.rx_enabled_channels
+            ):
+                raw_data = self._get_iio_attr(
+                    self._rx_channel_names[channel_index], "raw", False, self._rxadc
                 )
                 if self.rx_output_type == "SI":
-                    x[i][samp] = rx_scale[i] * s + rx_offset[i]
+                    channel_data[channel_data_index][samp] = (
+                        rx_scale[channel_data_index] * raw_data
+                        + rx_offset[channel_data_index]
+                    )
                 else:
-                    x[i][samp] = s
+                    channel_data[channel_data_index][samp] = raw_data
 
-        return x
+        return channel_data
 
     def __rx_complex(self):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        data = self.__rxbuf.read()
-        x = np.frombuffer(data, dtype=self._rx_data_type)
+        data_coded = self.__rxbuf.read()
+        data = np.frombuffer(data_coded, dtype=self._rx_data_type)
         indx = 0
         sig = []
         stride = len(self.rx_enabled_channels) * 2
         for _ in range(stride // 2):
-            sig.append(x[indx::stride] + 1j * x[indx + 1 :: stride])
+            sig.append(data[indx::stride] + 1j * data[indx + 1 :: stride])
             indx = indx + 2
         # Don't return list if a single channel
         if indx == 2:
@@ -185,34 +226,34 @@ class rx(attribute):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        data = self.__rxbuf.read()
-        x = np.frombuffer(data, dtype=self._rx_data_type)
+        data_coded = self.__rxbuf.read()
+        data = np.frombuffer(data_coded, dtype=self._rx_data_type)
         if self._rx_mask != 0:
-            x = np.bitwise_and(x, self._rx_mask)
+            data = np.bitwise_and(data, self._rx_mask)
         if self._rx_shift > 0:
-            x = np.right_shift(x, self._rx_shift)
+            data = np.right_shift(data, self._rx_shift)
         elif self._rx_shift < 0:
-            x = np.left_shift(x, -(self._rx_shift))
+            data = np.left_shift(data, -(self._rx_shift))
 
         sig = []
         stride = len(self.rx_enabled_channels)
 
         if self.rx_output_type == "raw":
-            for c in range(stride):
-                sig.append(x[c::stride])
+            for offset in range(stride):
+                sig.append(data[offset::stride])
         elif self.rx_output_type == "SI":
             rx_scale = []
             rx_offset = []
             for i in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[i])
-                if "scale" in v.attrs:
+                chan = self._rxadc.find_channel(self._rx_channel_names[i])
+                if "scale" in chan.attrs:
                     scale = self._get_iio_attr(
                         self._rx_channel_names[i], "scale", False
                     )
                 else:
                     scale = 1.0
 
-                if "offset" in v.attrs:
+                if "offset" in chan.attrs:
                     offset = self._get_iio_attr(
                         self._rx_channel_names[i], "offset", False
                     )
@@ -221,9 +262,9 @@ class rx(attribute):
                 rx_scale.append(scale)
                 rx_offset.append(offset)
 
-            for c in range(stride):
-                raw = x[c::stride]
-                sig.append(raw * rx_scale[c] + rx_offset[c])
+            for offset in range(stride):
+                raw = data[offset::stride]
+                sig.append(raw * rx_scale[offset] + rx_offset[offset])
         else:
             raise Exception("rx_output_type undefined")
 
@@ -232,7 +273,7 @@ class rx(attribute):
             return sig[0]
         return sig
 
-    def rx(self):
+    def rx(self):  # pylint: disable=C0103
         """ Receive data from hardware buffers for each channel index in
             rx_enabled_channels.
 
@@ -243,35 +284,42 @@ class rx(attribute):
         """
         if self._rx_unbuffered_data:
             return self.__rx_unbuffered_data()
-        else:
-            if self._complex_data:
-                return self.__rx_complex()
-            else:
-                return self.__rx_non_complex()
+        if self._complex_data:
+            return self.__rx_complex()
+        return self.__rx_non_complex()
 
 
-class tx(dds, attribute):
+class Tx(dds, attribute, metaclass=Meta):
     """ Buffer handling for transmit devices """
 
-    _tx_buffer_size = 1024
-    _txdac: iio.Device = []
-    _tx_channel_names: List[str] = []
-    _complex_data = False
-    __txbuf = None
+    @abstractproperty
+    def _txdac(self) -> iio.Device:
+        pass
 
-    def __init__(self, tx_cyclic_buffer=False):
-        if self._complex_data:
-            N = 2
-        else:
-            N = 1
-        tx_enabled_channels = list(range(len(self._tx_channel_names) // N))
+    @abstractproperty
+    def _tx_channel_names(self) -> List[str]:
+        pass
+
+    _tx_buffer_size = 1024
+    _complex_data = False
+    _num_tx_channels = 0
+    __txbuf = None
+    __tx_enabled_channels: List[int] = []
+    __tx_cyclic_buffer = False
+
+    def __init_tx__(self, tx_cyclic_buffer=False):
+        chan_per_out_chan = 2 if self._complex_data else 1
+        tx_enabled_channels = list(
+            range(len(self._tx_channel_names) // chan_per_out_chan)
+        )
         self._num_tx_channels = len(self._tx_channel_names)
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
 
     def __del__(self):
-        self._txdac = []
+        if self.__txbuf:
+            del self.__txbuf
 
     @property
     def tx_cyclic_buffer(self):
@@ -312,20 +360,27 @@ class tx(dds, attribute):
 
     def _tx_init_channels(self):
         if self._complex_data:
-            for m in self.tx_enabled_channels:
-                v = self._txdac.find_channel(self._tx_channel_names[m * 2], True)
-                v.enabled = True
-                v = self._txdac.find_channel(self._tx_channel_names[m * 2 + 1], True)
-                v.enabled = True
+            for chan_index in self.tx_enabled_channels:
+                enable_channel(
+                    self._txdac.find_channel(
+                        self._tx_channel_names[chan_index * 2], True
+                    )
+                )
+                enable_channel(
+                    self._txdac.find_channel(
+                        self._tx_channel_names[chan_index * 2 + 1], True
+                    )
+                )
         else:
-            for m in self.tx_enabled_channels:
-                v = self._txdac.find_channel(self._tx_channel_names[m], True)
-                v.enabled = True
+            for chan_index in self.tx_enabled_channels:
+                enable_channel(
+                    self._txdac.find_channel(self._tx_channel_names[chan_index], True)
+                )
         self.__txbuf = iio.Buffer(
             self._txdac, self._tx_buffer_size, self.__tx_cyclic_buffer
         )
 
-    def tx(self, data_np):
+    def tx(self, data_np):  # pylint: disable=C0103
         """ Transmit data to hardware buffers for each channel index in
             tx_enabled_channels.
 
@@ -352,7 +407,7 @@ class tx(dds, attribute):
             data = np.empty(stride * len(data_np[0]), dtype=np.int16)
             for chan in data_np:
                 i = np.real(chan)
-                q = np.imag(chan)
+                q = np.imag(chan)  # pylint: disable=C0103
                 data[indx::stride] = i.astype(int)
                 data[indx + 1 :: stride] = q.astype(int)
                 indx = indx + 2
@@ -386,12 +441,9 @@ class tx(dds, attribute):
         self.__txbuf.push()
 
 
-class rx_tx(rx, tx, phy):
-    def __init__(self):
-        rx.__init__(self)
-        tx.__init__(self)
+class RxTx(Rx, Tx, Phy):  # pylint: disable=W0223
+    """ Combined RX and TX base class for DDS and buffer management"""
 
     def __del__(self):
-        rx.__del__(self)
-        tx.__del__(self)
-        phy.__del__(self)
+        Rx.__del__(self)
+        Tx.__del__(self)

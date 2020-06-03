@@ -31,29 +31,24 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.attribute import add_dev
+from adi.rx_tx import Rx
 
 
-class ad9680(rx, context_manager):
+class ad9680(Rx):  # pylint: disable=C0103
     """ AD9680 High-Speed ADC """
 
     _complex_data = False
     _rx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
-
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._rxadc = self._ctx.find_device("axi-ad9680-hpc")
-
-        rx.__init__(self)
+    _rxadc = add_dev("axi-ad9680-hpc")
+    _ctrl = add_dev("axi-ad9680-hpc")
 
     @property
     def test_mode(self):
         """test_mode: Select Test Mode. Options are:
-        off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp"""
+        off midscale_short pos_fullscale neg_fullscale checkerboard
+        pn_long pn_short one_zero_toggle user ramp"""
         return self._get_iio_attr("voltage0", "test_mode", False)
 
     @test_mode.setter

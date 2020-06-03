@@ -31,21 +31,18 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.context_manager import context_manager
-from adi.rx_tx import tx
+from adi.attribute import add_dev
+from adi.rx_tx import Tx
 
 
-class ad5627(tx, context_manager):
+class ad5627(Tx):  # pylint: disable=C0103
     """ AD5627 Low Power Dual nanoDAC """
 
     _complex_data = False
     _tx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
-
-    def __init__(self, uri=""):
-        context_manager.__init__(self, uri, self._device_name)
-        self._txdac = self._ctx.find_device("ad5627")
-        tx.__init__(self)
+    _txdac = add_dev("ad5627")
+    _ctrl = add_dev("ad5627")
 
     @staticmethod
     def _adp_bias_volts_to_raw_convert(value, inverse):

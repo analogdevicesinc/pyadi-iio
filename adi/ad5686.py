@@ -33,10 +33,9 @@
 
 import numpy as np
 from adi.attribute import attribute
-from adi.context_manager import context_manager
 
 
-class ad5686(context_manager, attribute):
+class ad5686(attribute):
     """ AD5686 DAC """
 
     _complex_data = False
@@ -45,9 +44,9 @@ class ad5686(context_manager, attribute):
     _rx_data_type = np.int32
 
     def __init__(self, uri="", device_index=0):
-        context_manager.__init__(self, uri, self._device_name)
-        # Dictionary with all compatible parts. The key of each entry is the device's id and it's value
-        # is the number of bits the device supports.
+        # Dictionary with all compatible parts. The key of each entry
+        # is the device's id and it's value is the number of bits the
+        # device supports.
         compatible_parts = [
             "ad5310r",
             "ad5311r",
@@ -88,11 +87,10 @@ class ad5686(context_manager, attribute):
                 if index == device_index:
                     self._ctrl = device
                     break
-                else:
-                    index += 1
+                index += 1
 
-        for ch in self._ctrl.channels:
-            name = ch.id
+        for chan in self._ctrl.channels:
+            name = chan.id
             self.channel.append(self._channel(self._ctrl, name))
 
         # sort device channels after the index of their index
@@ -132,7 +130,7 @@ class ad5686(context_manager, attribute):
         @powerdown_mode.setter
         def powerdown_mode(self, val):
             """AD5686 channel powerdown value"""
-            self._set_iio_attr_str(self.name, "powerdown_mode", True, val)
+            self._set_iio_attr(self.name, "powerdown_mode", True, val)
 
         @property
         def powerdown_mode_available(self):

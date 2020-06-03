@@ -35,11 +35,10 @@ from decimal import Decimal
 
 import numpy as np
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.rx_tx import Rx
 
 
-class ad7124(rx, context_manager):
+class ad7124(Rx):
     """ AD7124 ADC """
 
     _complex_data = False
@@ -50,8 +49,6 @@ class ad7124(rx, context_manager):
     _rx_shift = 0
 
     def __init__(self, uri="", device_index=0):
-
-        context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = ["ad7124-8", "ad7124-4"]
 
@@ -74,7 +71,6 @@ class ad7124(rx, context_manager):
             name = ch._id
             self._rx_channel_names.append(name)
             self.channel.append(self._channel(self._ctrl, name))
-        rx.__init__(self)
 
     def rx(self):
         sig = super().rx()

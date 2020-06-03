@@ -32,17 +32,17 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-from adi.rx_tx import rx
+from adi.rx_tx import Rx
 
 
-class obs(rx):
+class Obs(Rx):  # pylint: disable=W0223
     """ Buffer handling for observation devices """
 
     def __init__(self, ctx, obs_dev, channel_names):
         self._ctx = ctx
         self._rxadc = obs_dev
         self._rx_channel_names = channel_names
-        rx.__init__(self)
+        Rx.__init__(self)
 
     def __del__(self):
-        rx.__del__(self)
+        Rx.__del__(self)

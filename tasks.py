@@ -183,7 +183,7 @@ def checkparts(c):
 @task(checkparts)
 def precommit(c):
     """ Run precommit checks """
-    c.run("pre-commit run --all-files")
+    c.run("pre-commit run")
 
 
 @task

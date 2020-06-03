@@ -4,11 +4,11 @@ from collections.abc import Iterable
 
 import numpy as np
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.context_manager import ContextManager
+from adi.rx_tx import Rx
 
 
-class ltc2983(rx, context_manager):
+class ltc2983(Rx, ContextManager):
     """ LTC2983 Multi-Sensor Temperature Measurement System """
 
     channel: OrderedDict = None
@@ -18,7 +18,7 @@ class ltc2983(rx, context_manager):
     _rx_data_si_type = np.float
 
     def __init__(self, uri=""):
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
         self._ctrl = self._ctx.find_device("ltc2983")
         self._rxadc = self._ctx.find_device("ltc2983")
 

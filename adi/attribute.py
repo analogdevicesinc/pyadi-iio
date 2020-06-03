@@ -32,19 +32,54 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import re
+from abc import abstractproperty
+from enum import Enum
+
+import iio
+
+from adi.context_manager import ContextManager
 
 
-def get_numbers(s):
-    v = re.findall(r"[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?", s)
-    v = [float(i) for i in v]
-    if len(v) == 1:
-        v = v[0]
-        if int(v) == v:
-            v = int(v)
-    return v
+class IO(Enum):
+    OUTPUT = True
+    INPUT = False
 
 
-class attribute:
+def add_dev(devname):
+    """ Generate property for IIO device """
+    return property(lambda self: self._ctx.find_device(devname))
+
+
+class devattr:
+    def __init__(self, attr, dev):
+        self._dev = dev
+        self._attr = attr
+
+    def __get__(self, instance, owner):
+        return instance._get_iio_dev_attr(self._attr, self._dev)
+
+    def __set__(self, instance, value):
+        instance._set_iio_dev_attr_str(self._attr, value, self._dev)
+
+
+def get_numbers(string):
+    """ Convert string to number """
+    val = re.findall(r"[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?", string)
+    val = [float(i) for i in val]
+    if len(val) == 1:
+        val = val[0]
+        if int(val) == val:
+            val = int(val)
+    return val
+
+
+class attribute(ContextManager):
+    """ IIO Attribute interfaces """
+
+    @abstractproperty
+    def _ctrl(self) -> iio.Device:
+        pass
+
     def _set_iio_attr(self, channel_name, attr_name, output, value, _ctrl=None):
         """ Set channel attribute """
         if _ctrl:
@@ -98,8 +133,7 @@ class attribute:
         """ Get device attribute as string """
         if _ctrl:
             return _ctrl.attrs[attr_name].value
-        else:
-            return self._ctrl.attrs[attr_name].value
+        return self._ctrl.attrs[attr_name].value
 
     def _get_iio_dev_attr(self, attr_name, _ctrl=None):
         """ Set device attribute as number """
@@ -119,8 +153,7 @@ class attribute:
         """ Get debug attribute as string """
         if _ctrl:
             return _ctrl.debug_attrs[attr_name].value
-        else:
-            return self._ctrl.debug_attrs[attr_name].value
+        return self._ctrl.debug_attrs[attr_name].value
 
     def _get_iio_debug_attr(self, attr_name, _ctrl=None):
         """ Set debug attribute as number """

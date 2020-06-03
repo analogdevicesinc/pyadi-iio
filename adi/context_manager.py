@@ -34,9 +34,17 @@
 import iio
 
 
-class context_manager(object):
+class ContextManager:  # pylint: disable=R0903
+    """ Context management and helper functions """
+
     _uri_auto = "ip:analog"
     _ctx = None
+    _device_name = ""
+
+    def __new__(cls, uri=""):
+        instance = super(ContextManager, cls).__new__(cls)
+        ContextManager.__init__(instance, uri, instance._device_name)
+        return instance
 
     def __init__(self, uri="", _device_name=""):
         if self._ctx:
@@ -47,9 +55,9 @@ class context_manager(object):
                 # Try USB contexts first
                 if _device_name != "":
                     contexts = iio.scan_contexts()
-                    for c in contexts:
-                        if _device_name in contexts[c]:
-                            self._ctx = iio.Context(c)
+                    for ctx in contexts:
+                        if _device_name in contexts[ctx]:
+                            self._ctx = iio.Context(ctx)
                             break
                 # Try auto discover
                 if not self._ctx and self._uri_auto != "":

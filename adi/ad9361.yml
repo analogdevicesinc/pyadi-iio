@@ -1,0 +1,9 @@
+in_voltage0:
+  rx_hardwaregain_chan0:
+      attr: hardware_gain
+      doc: "rx_hardwaregain_chan0: Gain applied to RX path. Only applicable when gain_control_mode_chan0 is set to 'manual'"
+      func: add_chan_attr_float
+  gain_control_mode_chan0:
+      attr: gain_control_mode
+      doc: "gain_control_mode_chan0: Mode of receive path AGC. Options are: slow_attack, fast_attack, manual"
+      func: add_chan_attr_float

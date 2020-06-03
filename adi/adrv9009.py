@@ -31,11 +31,11 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx_tx
+from adi.context_manager import ContextManager
+from adi.rx_tx import RxTx
 
 
-class adrv9009(rx_tx, context_manager):
+class adrv9009(RxTx, ContextManager):
     """ ADRV9009 Transceiver """
 
     _complex_data = True
@@ -45,7 +45,7 @@ class adrv9009(rx_tx, context_manager):
 
     def __init__(self, uri=""):
 
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
 
         self._ctrl = self._ctx.find_device("adrv9009-phy")
         self._rxadc = self._ctx.find_device("axi-adrv9009-rx-hpc")

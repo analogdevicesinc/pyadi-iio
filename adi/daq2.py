@@ -39,6 +39,6 @@ class DAQ2(ad9144, ad9680):
     """ DAQ2 High-Speed Data Aquistion Device """
 
     def __init__(self, uri=""):
-
-        ad9144.__init__(self, uri=uri)
-        ad9680.__init__(self, uri=uri)
+        pass
+        # ad9144.__init__(self, uri=uri)
+        # ad9680.__init__(self, uri=uri)

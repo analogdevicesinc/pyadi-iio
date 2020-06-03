@@ -31,32 +31,35 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx_tx
+# pyling: ignore: C0103
+
+from adi.attribute import add_dev
+from adi.rx_tx import RxTx
 
 
-class ad9364(rx_tx, context_manager):
+class ad9364(RxTx):  # pylint: disable=C0103,R0901
     """ AD9364 Transceiver """
 
     _complex_data = True
     _rx_channel_names = ["voltage0", "voltage1"]
     _tx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
+    _rxadc = add_dev("cf-ad9361-lpc")
+    _txdac = add_dev("cf-ad9361-dds-core-lpc")
+    _ctrl = add_dev("ad9361-phy")
 
-    def __init__(self, uri=""):
+    # def __init__(self, uri="", o=1):
+    #     print("HERE")
+    #     pass
 
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._ctrl = self._ctx.find_device("ad9361-phy")
-        self._rxadc = self._ctx.find_device("cf-ad9361-lpc")
-        self._txdac = self._ctx.find_device("cf-ad9361-dds-core-lpc")
-
-        rx_tx.__init__(self)
+    # def __init__(self):
+    #     print("HERE")
+    #     pass
 
     @property
     def filter(self):
         """Load FIR filter file. Provide path to filter file to attribute"""
-        return self._get_iio_dev_attr("filter_fir_config")
+        return self._get_iio_dev_attr("filter_fir_config", "hardwaregain",)
 
     @filter.setter
     def filter(self, value):
@@ -67,36 +70,27 @@ class ad9364(rx_tx, context_manager):
         self._set_iio_dev_attr_str("filter_fir_config", data)
         self._set_iio_attr("out", "voltage_filter_fir_en", False, 1)
 
-    @property
-    def loopback(self):
-        """loopback: Set loopback mode. Options are:
-        0 (Disable), 1 (Digital), 2 (RF)"""
-        return self._get_iio_debug_attr("loopback")
-
-    @loopback.setter
-    def loopback(self, value):
-        self._set_iio_debug_attr_str("loopback", value)
-
-    @property
-    def gain_control_mode_chan0(self):
-        """gain_control_mode_chan0: Mode of receive path AGC. Options are:
-        slow_attack, fast_attack, manual"""
-        return self._get_iio_attr_str("voltage0", "gain_control_mode", False)
-
-    @gain_control_mode_chan0.setter
-    def gain_control_mode_chan0(self, value):
-        self._set_iio_attr("voltage0", "gain_control_mode", False, value)
-
-    @property
-    def rx_hardwaregain_chan0(self):
-        """rx_hardwaregain_chan0: Gain applied to RX path. Only applicable when
-        gain_control_mode is set to 'manual'"""
-        return self._get_iio_attr("voltage0", "hardwaregain", False)
-
-    @rx_hardwaregain_chan0.setter
-    def rx_hardwaregain_chan0(self, value):
-        if self.gain_control_mode_chan0 == "manual":
-            self._set_iio_attr_float("voltage0", "hardwaregain", False, value)
+    # loopback = attr.add_debug_attr_str(
+    #     "loopback",
+    #     """loopback: Set loopback mode. Options are:
+    # 0 (Disable), 1 (Digital), 2 (RF)""",
+    # )
+    #
+    # gain_control_mode_chan0 = attr.add_chan_attr_str(
+    #     "voltage0",
+    #     "gain_control_mode",
+    #     attr.IO.INPUT,
+    #     """gain_control_mode_chan0: Mode of receive path AGC. Options are:
+    # slow_attack, fast_attack, manual""",
+    # )
+    #
+    # rx_hardwaregain_chan0 = attr.add_chan_attr_float(
+    #     "voltage0",
+    #     "hardwaregain",
+    #     attr.IO.INPUT,
+    #     """rx_hardwaregain_chan0: Gain applied to RX path. Only applicable when
+    #     gain_control_mode_chan0 is set to 'manual'""",
+    # )
 
     @property
     def tx_hardwaregain_chan0(self):
@@ -139,7 +133,7 @@ class ad9364(rx_tx, context_manager):
 
         # The following was converted from ad9361_set_bb_rate() in libad9361-iio
         # fmt: off
-        if (rate <= 20000000):
+        if rate <= 20000000:
             dec = 4
             fir = [
                 -15, -27, -23, -6, 17, 33, 31, 9, -23, -47, -45, -13, 34, 69,
@@ -155,7 +149,7 @@ class ad9364(rx_tx, context_manager):
                 34, -13, -45, -47, -23, 9, 31, 33, 17, -6, -23, -27, -15
             ]
             taps = 128
-        elif (rate <= 40000000):
+        elif rate <= 40000000:
             dec = 2
             fir = [
                 -0, 0, 1, -0, -2, 0, 3, -0, -5, 0, 8, -0, -11, 0, 17, -0, -24,
@@ -169,7 +163,7 @@ class ad9364(rx_tx, context_manager):
                 -0, 17, 0, -11, -0, 8, 0, -5, -0, 3, 0, -2, -0, 1, 0, -0, 0
             ]
             taps = 128
-        elif (rate <= 53333333):
+        elif rate <= 53333333:
             dec = 2
             fir = [
                 -4, 0, 8, -0, -14, 0, 23, -0, -36, 0, 52, -0, -75, 0, 104, -0,

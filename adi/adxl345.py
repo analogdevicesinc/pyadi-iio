@@ -35,11 +35,10 @@ from decimal import Decimal
 
 import numpy as np
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.rx_tx import Rx
 
 
-class adxl345(rx, context_manager, attribute):
+class adxl345(Rx):
     """ ADXL345 3-axis accelerometer """
 
     _device_name = "adxl345"
@@ -49,7 +48,7 @@ class adxl345(rx, context_manager, attribute):
 
     def __init__(self, uri=""):
 
-        context_manager.__init__(self, uri, self._device_name)
+        ContextManager.__init__(self, uri, self._device_name)
         self._ctrl = self._ctx.find_device("adxl345")
         self.accel_x = self._channel(self._ctrl, "accel_x")
         self.accel_y = self._channel(self._ctrl, "accel_y")
