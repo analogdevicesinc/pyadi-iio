@@ -45,6 +45,35 @@ def get_numbers(s):
 
 
 class attribute:
+    def _set_iio_attr_multi_dev(self, channel_names, attr_name, output, values, ctrls):
+        """ Set the same channel attribute across multiple devices
+            Unique parameters:
+                values: type=list
+                    Must be of length <= len(ctrls)*len(channel_names)
+        """
+        if len(values) > len(ctrls) * len(channel_names):
+            raise Exception("Too many values to write")
+        i = 0
+        for ctrl in ctrls:
+            for chan_name in channel_names:
+                self._set_iio_attr(chan_name, attr_name, output, values[i], ctrl)
+                i += 1
+
+    def _set_iio_attr_float_multi_dev(
+        self, channel_names, attr_name, output, values, ctrls
+    ):
+        """ Set the same float channel attribute(s) across multiple devices
+            Unique parameters:
+                values: type=list
+                    Must be of length <= len(ctrls)*len(channel_names)
+        """
+        for i in range(len(values)):
+            if isinstance(values[i], int):
+                values[i] = float(values[i])
+            if not isinstance(values[i], float):
+                raise Exception("Values must be floats")
+        self._set_iio_attr_multi_dev(channel_names, attr_name, output, values, ctrls)
+
     def _set_iio_attr(self, channel_name, attr_name, output, value, _ctrl=None):
         """ Set channel attribute """
         if _ctrl:
@@ -76,6 +105,8 @@ class attribute:
             channel = _ctrl.find_channel(channel_name, output)
         else:
             channel = self._ctrl.find_channel(channel_name, output)
+        if not channel:
+            raise Exception("No channel found with name: " + channel_name)
         return channel.attrs[attr_name].value
 
     def _get_iio_attr(self, channel_name, attr_name, output, _ctrl=None):
