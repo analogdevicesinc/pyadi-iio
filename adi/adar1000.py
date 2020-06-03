@@ -70,26 +70,26 @@ def add_prop(classname, channelname, attr, i, inout, dev, beam_name=None):
 
 
 class adar1000(attribute, context_manager):
-    """ ADAR1000 Beamformer """
+    """ ADAR1000 Beamformer
+
+        parameters:
+            uri: type=string
+                URI of IIO context with ADAR100(s)
+            beams: type=string,list[string]
+                String or list of strings idenifying desired chip select
+                option of ADAR100. This is based on the jumper configuration
+                if the EVAL-ADAR100 is used. These strings are the labels
+                coinciding with each chip select and are typically in the
+                form BEAM0, BEAM1, BEAM2, BEAM3. Use a list when multiple
+                are chips are cascaded together. Dynamic class properties
+                will be created for each beam and signal path.
+    """
 
     _device_name = ""
     _beam_channels = ["voltage0", "voltage1", "voltage2", "voltage3"]
 
     def __init__(self, uri="", beams="BEAM0"):
-        """ Initialize ADAR1000 object
 
-            parameters:
-                uri: type=string
-                    URI of IIO context with ADAR100(s)
-                beams: type=string,list[string]
-                    String or list of strings idenifying desired chip select
-                    option of ADAR100. This is based on the jumper configuration
-                    if the EVAL-ADAR100 is used. These strings are the labels
-                    coinciding with each chip select and are typically in the
-                    form BEAM0, BEAM1, BEAM2, BEAM3. Use a list when multiple
-                    are chips are cascaded together. Dynamic class properties
-                    will be created for each beam and signal path.
-        """
         context_manager.__init__(self, uri, self._device_name)
 
         self._ctrl = None
@@ -125,43 +125,60 @@ class adar1000(attribute, context_manager):
     @property
     def tx_hardwaregains(self):
         """tx_hardwaregains: Set all gains applied to TX path"""
-        bs = self._beam_channels
-        return [self._get_iio_attr(b, "hardwaregain", True) for b in bs]
+        return [
+            self._get_iio_attr(b, "hardwaregain", True, dev)
+            for dev in self._ctrls
+            for b in self._beam_channels
+        ]
 
     @tx_hardwaregains.setter
-    def tx_hardwaregains(self, value):
-        for i, v in enumerate(value):
-            self._set_iio_attr_float(self._beam_channels[i], "hardwaregain", True, v)
+    def tx_hardwaregains(self, values):
+        self._set_iio_attr_float_multi_dev(
+            self._beam_channels, "hardwaregain", True, values, self._ctrls
+        )
 
     @property
     def rx_hardwaregains(self):
         """rx_hardwaregains: Set all gains applied to RX path"""
-        bs = self._beam_channels
-        return [self._get_iio_attr(b, "hardwaregain", False) for b in bs]
+        return [
+            self._get_iio_attr(b, "hardwaregain", False, dev)
+            for dev in self._ctrls
+            for b in self._beam_channels
+        ]
 
     @rx_hardwaregains.setter
-    def rx_hardwaregains(self, value):
-        for i, v in enumerate(value):
-            self._set_iio_attr_float(self._beam_channels[i], "hardwaregain", False, v)
+    def rx_hardwaregains(self, values):
+        self._set_iio_attr_float_multi_dev(
+            self._beam_channels, "hardwaregain", False, values, self._ctrls
+        )
 
     @property
     def tx_phases(self):
         """tx_phases: Set all phases of TX path"""
-        bs = self._beam_channels
-        return [self._get_iio_attr(b, "phase", True) for b in bs]
+        return [
+            self._get_iio_attr(b, "phase", True, dev)
+            for dev in self._ctrls
+            for b in self._beam_channels
+        ]
 
     @tx_phases.setter
-    def tx_phases(self, value):
-        for i, v in enumerate(value):
-            self._set_iio_attr_float(self._beam_channels[i], "phase", True, v)
+    def tx_phases(self, values):
+        self._set_iio_attr_float_multi_dev(
+            self._beam_channels, "phase", True, values, self._ctrls
+        )
 
     @property
     def rx_phases(self):
         """rx_phases: Set all phases of RX path"""
-        bs = self._beam_channels
-        return [self._get_iio_attr(b, "phase", False) for b in bs]
+        return [
+            self._get_iio_attr(b, "phase", False, dev)
+            for dev in self._ctrls
+            for b in self._beam_channels
+        ]
 
     @rx_phases.setter
-    def rx_phases(self, value):
-        for i, v in enumerate(value):
-            self._set_iio_attr_float(self._beam_channels[i], "phase", False, v)
+    def rx_phases(self, values):
+
+        self._set_iio_attr_float_multi_dev(
+            self._beam_channels, "phase", False, values, self._ctrls
+        )
