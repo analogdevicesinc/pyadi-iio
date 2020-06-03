@@ -35,18 +35,37 @@ from adi.attribute import attribute
 from adi.context_manager import context_manager
 
 
-def add_prop(classname, channelname, attr, i, inout):
-    def fget(self):
-        self._get_iio_attr(channelname + str(i), attr, inout)
+class dyn_property_float:
+    """ Class descriptor for accessing individual attributes """
 
-    def fset(self, value):
-        self._set_iio_attr("voltage" + str(i), attr, inout, value)
+    def __init__(self, attr, dev, channel_name, output):
+        self._dev = dev
+        self._attr = attr
+        self._channel_name = channel_name
+        self._output = output
 
-    doc = "Phase of channel " + str(i)
+    def __get__(self, instance, owner):
+        return instance._get_iio_attr(
+            self._channel_name, self._attr, self._output, self._dev
+        )
+
+    def __set__(self, instance, value):
+        instance._set_iio_attr_float(
+            self._channel_name, self._attr, self._output, value, self._dev
+        )
+
+
+def add_prop(classname, channelname, attr, i, inout, dev, beam_name=None):
+    """ Add dynamic property """
     inoutstr = "rx" if inout else "tx"
     pn = inoutstr + str(i) + "_" + attr
+    if beam_name:
+        pn += "_" + beam_name.lower()
+
     setattr(
-        classname, pn, property(fget=fget, fset=fset, doc=doc),
+        classname,
+        pn,
+        dyn_property_float(attr=attr, dev=dev, channel_name=channelname, output=inout),
     )
 
 
@@ -56,24 +75,56 @@ class adar1000(attribute, context_manager):
     _device_name = ""
     _beam_channels = ["voltage0", "voltage1", "voltage2", "voltage3"]
 
-    def __init__(self, uri="", beam="BEAM0"):
+    def __init__(self, uri="", beams="BEAM0"):
+        """ Initialize ADAR1000 object
+
+            parameters:
+                uri: type=string
+                    URI of IIO context with ADAR100(s)
+                beams: type=string,list[string]
+                    String or list of strings idenifying desired chip select
+                    option of ADAR100. This is based on the jumper configuration
+                    if the EVAL-ADAR100 is used. These strings are the labels
+                    coinciding with each chip select and are typically in the
+                    form BEAM0, BEAM1, BEAM2, BEAM3. Use a list when multiple
+                    are chips are cascaded together. Dynamic class properties
+                    will be created for each beam and signal path.
+        """
         context_manager.__init__(self, uri, self._device_name)
 
         self._ctrl = None
-        for dev in self._ctx.devices:
-            if dev.attrs["label"].value == beam:
-                self._ctrl = dev
-        if not self._ctrl:
-            raise Exception("No device found for BEAM: " + beam)
-        for i in range(4):
-            add_prop(type(self), "voltage", "phase", i, False)
-            add_prop(type(self), "voltage", "phase", i, True)
-            add_prop(type(self), "voltage", "hardwaregain", i, False)
-            add_prop(type(self), "voltage", "hardwaregain", i, True)
+        self._ctrls = []
+
+        if isinstance(beams, list):
+            for beam in beams:
+                for dev in self._ctx.devices:
+                    if dev.attrs["label"].value == beam:
+                        self._ctrls.append(dev)
+            assert len(self._ctrls) == len(beams), (
+                ",".join(beams) + " Not all devices found"
+            )
+        else:
+            for dev in self._ctx.devices:
+                if dev.attrs["label"].value == beams:
+                    self._ctrl = dev
+            if not self._ctrl:
+                raise Exception("No device found for BEAM: " + beams)
+
+        # Dynamically add properties for accessing individual phases/gains
+        if not isinstance(beams, list):
+            beams = [None]
+            self._ctrls = [self._ctrl]
+        for b, beam in enumerate(beams):
+            for i, chan_name in enumerate(self._beam_channels):
+                dev = self._ctrls[b]
+                add_prop(type(self), chan_name, "phase", i, False, dev, beams[b])
+                add_prop(type(self), chan_name, "phase", i, True, dev, beams[b])
+                add_prop(type(self), chan_name, "hardwaregain", i, False, dev, beams[b])
+                add_prop(type(self), chan_name, "hardwaregain", i, True, dev, beams[b])
 
     @property
     def tx_hardwaregains(self):
-        """tx_hardwaregains: Gains applied to TX path"""
+        """tx_hardwaregains: Set all gains applied to TX path"""
         bs = self._beam_channels
         return [self._get_iio_attr(b, "hardwaregain", True) for b in bs]
 
@@ -84,7 +135,7 @@ class adar1000(attribute, context_manager):
 
     @property
     def rx_hardwaregains(self):
-        """rx_hardwaregains: Gains applied to RX path"""
+        """rx_hardwaregains: Set all gains applied to RX path"""
         bs = self._beam_channels
         return [self._get_iio_attr(b, "hardwaregain", False) for b in bs]
 
@@ -95,7 +146,7 @@ class adar1000(attribute, context_manager):
 
     @property
     def tx_phases(self):
-        """tx_phases: Phases of TX path"""
+        """tx_phases: Set all phases of TX path"""
         bs = self._beam_channels
         return [self._get_iio_attr(b, "phase", True) for b in bs]
 
@@ -106,7 +157,7 @@ class adar1000(attribute, context_manager):
 
     @property
     def rx_phases(self):
-        """rx_phases: Phases of RX path"""
+        """rx_phases: Set all phases of RX path"""
         bs = self._beam_channels
         return [self._get_iio_attr(b, "phase", False) for b in bs]
 
