@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ad9094 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>adar1000 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ad9144" href="adi.ad9144.html" />
-    <link rel="prev" title="ad7124" href="adi.ad7124.html" /> 
+    <link rel="next" title="adis16460" href="adi.adis16460.html" />
+    <link rel="prev" title="ad9680" href="adi.ad9680.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,13 +88,13 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad936x.html">ad936x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9371.html">ad9371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9680.html">ad9680</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
@@ -157,13 +157,13 @@
         
           <li><a href="index.html">Supported Devices</a> &raquo;</li>
         
-      <li>ad9094</li>
+      <li>adar1000</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/devices/adi.ad9094.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/devices/adi.adar1000.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -176,13 +176,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-adi.ad9094">
-<span id="ad9094"></span><h1>ad9094<a class="headerlink" href="#module-adi.ad9094" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-adi.adar1000">
+<span id="adar1000"></span><h1>adar1000<a class="headerlink" href="#module-adi.adar1000" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="adi.ad9094.ad9094">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad9094.</code><code class="sig-name descname">ad9094</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9094.ad9094" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
-<p>AD9094 Quad ADC</p>
+<dt id="adi.adar1000.adar1000">
+<em class="property">class </em><code class="sig-prename descclassname">adi.adar1000.</code><code class="sig-name descname">adar1000</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">beams</span><span class="o">=</span><span class="default_value">'BEAM0'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>ADAR1000 Beamformer</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context with ADAR100(s)</p>
+</dd>
+<dt>beams: type=string,list[string]</dt><dd><p>String or list of strings idenifying desired chip select
+option of ADAR100. This is based on the jumper configuration
+if the EVAL-ADAR100 is used. These strings are the labels
+coinciding with each chip select and are typically in the
+form BEAM0, BEAM1, BEAM2, BEAM3. Use a list when multiple
+are chips are cascaded together. Dynamic class properties
+will be created for each beam and signal path.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="adi.adar1000.adar1000.rx_hardwaregains">
+<em class="property">property </em><code class="sig-name descname">rx_hardwaregains</code><a class="headerlink" href="#adi.adar1000.adar1000.rx_hardwaregains" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregains: Set all gains applied to RX path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adar1000.adar1000.rx_phases">
+<em class="property">property </em><code class="sig-name descname">rx_phases</code><a class="headerlink" href="#adi.adar1000.adar1000.rx_phases" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_phases: Set all phases of RX path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adar1000.adar1000.tx_hardwaregains">
+<em class="property">property </em><code class="sig-name descname">tx_hardwaregains</code><a class="headerlink" href="#adi.adar1000.adar1000.tx_hardwaregains" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregains: Set all gains applied to TX path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adar1000.adar1000.tx_phases">
+<em class="property">property </em><code class="sig-name descname">tx_phases</code><a class="headerlink" href="#adi.adar1000.adar1000.tx_phases" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_phases: Set all phases of TX path</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="adi.adar1000.add_prop">
+<code class="sig-prename descclassname">adi.adar1000.</code><code class="sig-name descname">add_prop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channelname</span></em>, <em class="sig-param"><span class="n">attr</span></em>, <em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">inout</span></em>, <em class="sig-param"><span class="n">dev</span></em>, <em class="sig-param"><span class="n">beam_name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.add_prop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add dynamic property</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="adi.adar1000.dyn_property_float">
+<em class="property">class </em><code class="sig-prename descclassname">adi.adar1000.</code><code class="sig-name descname">dyn_property_float</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attr</span></em>, <em class="sig-param"><span class="n">dev</span></em>, <em class="sig-param"><span class="n">channel_name</span></em>, <em class="sig-param"><span class="n">output</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.dyn_property_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class descriptor for accessing individual attributes</p>
 </dd></dl>
 
 </div>
@@ -195,10 +247,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="adi.ad9144.html" class="btn btn-neutral float-right" title="ad9144" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="adi.adis16460.html" class="btn btn-neutral float-right" title="adis16460" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="adi.ad7124.html" class="btn btn-neutral float-left" title="ad7124" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="adi.ad9680.html" class="btn btn-neutral float-left" title="ad9680" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

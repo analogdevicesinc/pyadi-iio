@@ -15,6 +15,7 @@ Supported Devices
    adi.ad936x
    adi.ad9371
    adi.ad9680
+   adi.adar1000
    adi.adis16460
    adi.adis16507
    adi.adrv9009
