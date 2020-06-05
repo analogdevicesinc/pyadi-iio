@@ -32,6 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.adrv9009_zu11eg import adrv9009_zu11eg
+import time
 
 
 class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
@@ -79,18 +80,96 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         adrv9009_zu11eg.__init__(self, uri=uri)
         self._ctrl_c = self._ctx.find_device("adrv9009-phy-c")
         self._ctrl_d = self._ctx.find_device("adrv9009-phy-d")
+        self._clock_chip_fmc = self._ctx.find_device("hmc7044-fmc")
+
+
+    def init(self):
+        self._clock_chip.reg_write(0x5a, 0x04)
+        self._clock_chip_fmc.reg_write(0x5a,0x04)
+
+    def unsync(self):
+        # sleep -> wakeup
+        self._clock_chip.reg_write(0x01 ,0x61)
+        self._clock_chip_fmc.reg_write(0x01, 0x01)
+        self._clock_chip_carrier.reg_write(0x01, 0x61)
+        time.sleep(0.1)
+        self._clock_chip_carrier.reg_write(0x01, 0x60)
+        time.sleep(0.1)
+        self._clock_chip.reg_write(0x01, 0x60)
+        time.sleep(0.1)
+        self._clock_chip_fmc.reg_write(0x01, 0x60)
+        time.sleep(0.1)
+
+    def hmc7044_setup(self):
+        # CLK2 sync pin mode disabled to avoid false triggering
+        # needs to be enabled if there is another master in the system
+        self._clock_chip_carrier.reg_write(0x05, 0x02)
+
+        # CLK3 sync pin mode as SYNC
+        self._clock_chip.reg_write(0x05, 0x43)
+        # CLK3 sync pin mode as SYNC
+        self._clock_chip_fmc.reg_write(0x05, 0x43)
+
+        # restart request for all 7044
+        self._clock_chip.reg_write(0x01, 0x62)
+        self._clock_chip_fmc.reg_write(0x01, 0x62) #INTREBARE
+        self._clock_chip_carrier.reg_write(0x01, 0x62)
+
+        # restart from top of the clocking tree
+        time.sleep(0.1)
+        self._clock_chip_carrier.reg_write(0x1, 0x60)
+        time.sleep(0.1)
+        self._clock_chip.reg_write(0x1, 0x60)
+        time.sleep(0.1)
+        self._clock_chip_fmc.reg_write(0x1, 0x60)
+        time.sleep(0.1)
+
+    def clock_sync(self):
+        # Sync pulse is always requested to the master clk and propagates to the system
+        # once a level has been synced, sync pin mode needs to be changed to pulsor
+        # Reseed request to clk2 -----> syncs the output of CLK2
+        self._clock_chip_carrier.reg_write(0x01, 0xE0)
+        self._clock_chip_carrier.reg_write(0x01, 0x60)
+        time.sleep(0.1)
+        # pulse request to CLK2----> syncs the outputs of CLK3
+        self._clock_chip_carrier.attrs["sysref_request"] = 1
+        time.sleep(0.1)
+
+        # CLK3 sync pin mode as Pulsor so it doesn't resync on next pulse
+        self._clock_chip.reg_write(0x05, 0x83)
+        self._clock_chip_fmc.reg_write(0x05, 0x83)
+
+
 
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize all four transceivers """
         # Turn off continuous SYSREF, and enable GPI SYSREF request
         self._clock_chip_carrier.reg_write(0x5A, 0)
+        self._sysref_request_steps = [2 ,5 , 7, 10]
         chips = [self._ctrl, self._ctrl_b, self._ctrl_c, self._ctrl_d]
         for i in range(12):
+            if i in self._sysref_request_steps:
+                self._clock_chip_carrier.attrs["sysref_request"] = 1
+                continue
+
             for chip in chips:
                 try:
                     self._set_iio_dev_attr_str("multichip_sync", i, chip)
                 except OSError:
                     pass
+        self._clock_chip_carrier.attrs["sysref_request"] = 1
+        self._clock_chip.reg_write(0x5A, 1)
+        self._clock_chip_fmc.reg_write(0x5A, 1)
+
+    def calibrate_rx_phase_correction(self):
+        for chip in [self._ctrl, self._ctrl_b, self._ctrl_c, self._ctrl_d]:
+            chip.attrs["calibrate_rx_phase_correction_en"] = 1
+            chip.attrs["calibrate"] = 1
+
+        time.sleep(0.1)
+        self._clock_chip_carrier.attrs["sysref_request"] = 1
+        time.sleep(1)
+
 
     @property
     def calibrate_rx_phase_correction_en_chip_c(self):
