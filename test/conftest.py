@@ -548,6 +548,120 @@ def cyclic_buffer_exception(classname, devicename, channel, param_set):
         pytest.fail(msg)
 
 
+#########################################
+
+
+def stress_context_creation(classname, devicename, channel, repeats):
+    """ Repeatedly create and destroy a context """
+    for _ in range(repeats):
+        bi = BoardInterface(classname, devicename)
+        sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+        N = 2 ** 15
+        if not isinstance(channel, list):
+            sdr.rx_enabled_channels = [channel]
+        else:
+            sdr.rx_enabled_channels = channel
+        sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+        try:
+            for _ in range(repeats):
+                data = sdr.rx()
+                if isinstance(data, list):
+                    for chan in data:
+                        assert np.sum(np.abs(chan)) > 0
+                else:
+                    assert np.sum(np.abs(data)) > 0
+                sdr.rx_destroy_buffer()
+        except Exception as e:
+            del sdr
+            raise Exception(e)
+
+        del sdr
+
+
+def stress_rx_buffer_length(classname, devicename, channel, buffer_sizes):
+    """ Repeatedly create and destroy buffers across different buffer sizes"""
+    bi = BoardInterface(classname, devicename)
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    if not isinstance(channel, list):
+        sdr.rx_enabled_channels = [channel]
+    else:
+        sdr.rx_enabled_channels = channel
+    try:
+        for size in buffer_sizes:
+            sdr.rx_buffer_size = size
+            data = sdr.rx()
+            if isinstance(data, list):
+                for chan in data:
+                    assert len(chan) == size
+                    assert np.sum(np.abs(chan)) > 0
+            else:
+                assert len(data) == size
+                assert np.sum(np.abs(data)) > 0
+            sdr.rx_destroy_buffer()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+    del sdr
+
+
+def stress_rx_buffer_creation(classname, devicename, channel, repeats):
+    """ Repeatedly create and destroy buffers """
+    bi = BoardInterface(classname, devicename)
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    N = 2 ** 15
+    if not isinstance(channel, list):
+        sdr.rx_enabled_channels = [channel]
+    else:
+        sdr.rx_enabled_channels = channel
+    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+    try:
+        for _ in range(repeats):
+            data = sdr.rx()
+            if isinstance(data, list):
+                for chan in data:
+                    assert np.sum(np.abs(chan)) > 0
+            else:
+                assert np.sum(np.abs(data)) > 0
+            sdr.rx_destroy_buffer()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+    del sdr
+
+
+def stress_tx_buffer_creation(classname, devicename, channel, repeats):
+    bi = BoardInterface(classname, devicename)
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    TXFS = 1000
+    N = 2 ** 15
+    ts = 1 / float(TXFS)
+    t = np.arange(0, N * ts, ts)
+    fc = 10000
+    d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+
+    if not isinstance(channel, list):
+        sdr.tx_enabled_channels = [channel]
+    else:
+        sdr.tx_enabled_channels = channel
+        d = [d] * len(channel)
+    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+
+    try:
+        for _ in range(repeats):
+            sdr.tx(d)
+            sdr.tx_destroy_buffer()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+    del sdr
+
+
+#########################################
+
+
 def command_line_config(request):
     if request.config.getoption("--error_on_filter"):
         global ignore_skip
@@ -565,6 +679,30 @@ def command_line_config(request):
 
 #########################################
 # Fixtures
+@pytest.fixture()
+def test_stress_context_creation(request):
+    command_line_config(request)
+    yield stress_context_creation
+
+
+@pytest.fixture()
+def test_stress_rx_buffer_length(request):
+    command_line_config(request)
+    yield stress_rx_buffer_length
+
+
+@pytest.fixture()
+def test_stress_rx_buffer_creation(request):
+    command_line_config(request)
+    yield stress_rx_buffer_creation
+
+
+@pytest.fixture()
+def test_stress_tx_buffer_creation(request):
+    command_line_config(request)
+    yield stress_tx_buffer_creation
+
+
 @pytest.fixture()
 def test_attribute_single_value(request):
     command_line_config(request)
