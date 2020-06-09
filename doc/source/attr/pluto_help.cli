@@ -1,0 +1,6 @@
+python3
+>>> import adi
+>>> help(adi.Pluto.gain_control_mode_chan0)
+Help on property:
+    gain_control_mode_chan0: Mode of receive path AGC. Options are:
+    slow_attack, fast_attack, manual
