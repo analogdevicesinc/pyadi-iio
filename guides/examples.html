@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Connectivity" href="connectivity.html" />
-    <link rel="prev" title="Quick Start" href="quick.html" /> 
+    <link rel="prev" title="Attributes" href="../attr/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,12 +82,14 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectivity.html">Connectivity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../devices/index.html">Supported Devices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/index.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
             
@@ -154,7 +156,8 @@
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
-<p>Configuring hardware properties</p>
+<p>Here is a collection of small examples which demonstrate interfacings with different devices in different ways.</p>
+<p>Configuring hardware properties and reading back settings</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
 <span class="kn">import</span> <span class="nn">adi</span>
 
@@ -183,11 +186,30 @@
 <span class="n">data_rx</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Using URIs to access specific devices</p>
+<p>Configure the DDS of a transmit capable FPGA based device</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">DAQ2</span><span class="p">()</span>
+<span class="c1"># Configure DDS</span>
+<span class="n">tone_freq_hz</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># In Hz</span>
+<span class="n">tone_scale</span> <span class="o">=</span> <span class="mf">0.9</span>  <span class="c1"># Range: 0-1.0</span>
+<span class="n">tx_channel</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Starts at 0</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_single_tone</span><span class="p">(</span><span class="n">tone_freq_hz</span><span class="p">,</span> <span class="n">tone_scale</span><span class="p">,</span> <span class="n">tx_channel</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using URIs to access specific devices over the network</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
 <span class="c1"># Create device from specific uri address</span>
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Using URIs to access specific devices over USB</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="c1"># Create device from specific uri address</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;usb:1.24.5&quot;</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -205,7 +227,7 @@
         <a href="connectivity.html" class="btn btn-neutral float-right" title="Connectivity" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="quick.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../attr/index.html" class="btn btn-neutral float-left" title="Attributes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
