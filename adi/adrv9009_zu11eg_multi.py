@@ -47,7 +47,12 @@ class adrv9009_zu11eg_multi(object):
     slaves: List[adrv9009_zu11eg] = []
 
     def __init__(
-        self, master_uri="", slave_uris=[], master_jesd=None, slave_jesds=[None], fmcomms8=False
+        self,
+        master_uri="",
+        slave_uris=[],
+        master_jesd=None,
+        slave_jesds=[None],
+        fmcomms8=False,
     ):
 
         if not isinstance(slave_uris, list):
@@ -56,7 +61,7 @@ class adrv9009_zu11eg_multi(object):
             Exception("slave_jesds must be a list")
 
         self._dma_show_arming = False
-        self._jesd_show_status = True
+        self._jesd_show_status = False
         self._rx_initialized = False
         if fmcomms8:
             self.master = adrv9009_zu11eg_fmcomms8(uri=master_uri, jesd=master_jesd)
@@ -67,12 +72,20 @@ class adrv9009_zu11eg_multi(object):
         self.samples_slave = []
         for i, uri in enumerate(slave_uris):
             if fmcomms8:
-                self.slaves.append(adrv9009_zu11eg_fmcomms8(uri=uri, jesd=slave_jesds[i]))
+                self.slaves.append(
+                    adrv9009_zu11eg_fmcomms8(uri=uri, jesd=slave_jesds[i])
+                )
             else:
                 self.slaves.append(adrv9009_zu11eg(uri=uri, jesd=slave_jesds[i]))
 
         for dev in self.slaves + [self.master]:
             dev._rxadc.set_kernel_buffers_count(1)
+
+    def reinitialize(self):
+        for dev in self.slaves + [self.master]:
+            property_names = [p for p in dir(dev) if "reinitialize" in p]
+            for p in property_names:
+                eval("dev." + p + "()")
 
     @property
     def rx_buffer_size(self):
@@ -248,26 +261,30 @@ class adrv9009_zu11eg_multi(object):
 
         # step 3 & 4
         for dev in [self.master] + self.slaves:
-            try:
-                dev._ctrl.attrs["multichip_sync"].value = "3"
-            except OSError:
-                print("OSERROR1")
-                pass
-            try:
-                dev._ctrl_b.attrs["multichip_sync"].value = "3"
-            except OSError:
-                print("OSERROR2")
-                pass
-            try:
-                dev._ctrl.attrs["multichip_sync"].value = "4"
-            except OSError:
-                print("OSERROR3")
-                pass
-            try:
-                dev._ctrl_b.attrs["multichip_sync"].value = "4"
-            except OSError:
-                print("OSERROR4")
-                pass
+            # try:
+            #     dev._ctrl.attrs["multichip_sync"].value = "3"
+            # except OSError:
+            #     print("OSERROR1")
+            #     pass
+            # try:
+            #     dev._ctrl_b.attrs["multichip_sync"].value = "3"
+            # except OSError:
+            #     print("OSERROR2")
+            #     pass
+            # try:
+            #     dev._ctrl.attrs["multichip_sync"].value = "4"
+            # except OSError:
+            #     print("OSERROR3")
+            #     pass
+            # try:
+            #     dev._ctrl_b.attrs["multichip_sync"].value = "4"
+            # except OSError:
+            #     print("OSERROR4")
+            #     pass
+            dev._ctrl.attrs["multichip_sync"].value = "3"
+            dev._ctrl_b.attrs["multichip_sync"].value = "3"
+            dev._ctrl.attrs["multichip_sync"].value = "3"
+            dev._ctrl_b.attrs["multichip_sync"].value = "4"
 
         # step 5
         self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
@@ -333,46 +350,41 @@ class adrv9009_zu11eg_multi(object):
         else:
             self.samples_slave = dev.rx()
 
+    def _pre_rx_setup(self):
+        retries = 3
+        for _ in range(retries):
+            try:
+                self.__setup_framers()
+                if self._jesd_show_status:
+                    self.__read_jesd_status()
+                self.__clock_chips_init()
+                self.__unsync()
+                self.__configure_continuous_sysref()
+                self.__sync()
+                self.__mcs()
+                if self._jesd_show_status:
+                    self.__read_jesd_link_status()
+                self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
+                for dev in [self.master] + self.slaves:
+                    dev.rx_destroy_buffer()
+                    dev._rx_init_channels()
+                return
+            except:
+                print("Re-initializing due to lock-up")
+                self.reinitialize()
+            raise Exception("Unable to initialize (Board reboot required)")
+
     def rx(self):
         if not self._rx_initialized:
-            self.__setup_framers()
-            if self._jesd_show_status:
-                self.__read_jesd_status()
-            self.__clock_chips_init()
-            self.__unsync()
-            self.__configure_continuous_sysref()
-            self.__sync()
-            self.__mcs()
-            if self._jesd_show_status:
-                self.__read_jesd_link_status()
-            # Create buffers but do not pull data yet
-            #            self.__rx_dma_arm()
-            self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-            for dev in [self.master] + self.slaves:
-                dev.rx_destroy_buffer()
-                dev._rx_init_channels()
+            self._pre_rx_setup()
             self._rx_initialized = True
-        # Drop the first set of dummy data (probably aquired when running iio.Buffer.create ?)
-        for dev in [self.master] + self.slaves:
-            dev.rx()
         data = []
         self.__rx_dma_arm()
-        threads = []
+        # Recreate all buffers
         for dev in [self.master] + self.slaves:
-            # data = data + dev.rx()
-            is_master = False
-            if dev == self.master:
-                is_master = True
-            thread = threading.Thread(
-                target=self.__refill_samples, args=(dev, is_master)
-            )
-            thread.start()
-            threads.append(thread)
+            dev.rx_destroy_buffer()
+            dev._rx_init_channels()
         self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-        time.sleep(0.3)
-        for thread in threads:
-            thread.join()
-        data = data + self.samples_master + self.samples_slave
-        self.samples_master = []
-        self.samples_slave = []
+        for dev in [self.master] + self.slaves:
+            data += dev.rx()
         return data
