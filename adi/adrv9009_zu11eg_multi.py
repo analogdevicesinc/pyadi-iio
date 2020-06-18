@@ -283,7 +283,7 @@ class adrv9009_zu11eg_multi(object):
             #     pass
             dev._ctrl.attrs["multichip_sync"].value = "3"
             dev._ctrl_b.attrs["multichip_sync"].value = "3"
-            dev._ctrl.attrs["multichip_sync"].value = "3"
+            dev._ctrl.attrs["multichip_sync"].value = "4"
             dev._ctrl_b.attrs["multichip_sync"].value = "4"
 
         # step 5
