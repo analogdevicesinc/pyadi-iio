@@ -34,7 +34,7 @@
 from decimal import Decimal
 
 import numpy as np
-from adi.attribute import attribute
+from adi.attribute import Attribute
 from adi.rx_tx import Rx
 
 
@@ -74,7 +74,7 @@ class adxl345(Rx):
             "accel_x", "sampling_frequency", False, str(Decimal(value).real)
         )
 
-    class _channel(attribute):
+    class _channel(Attribute):
         """ADXL345 channel"""
 
         def __init__(self, ctrl, channel_name):

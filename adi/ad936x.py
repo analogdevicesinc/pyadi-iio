@@ -44,21 +44,13 @@ class ad9364(RxTx):  # pylint: disable=C0103,R0901
     _rx_channel_names = ["voltage0", "voltage1"]
     _tx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
-    _rxadc = add_dev("cf-ad9361-lpc")
-    _txdac = add_dev("cf-ad9361-dds-core-lpc")
-    _ctrl = add_dev("ad9361-phy")
-
-    # def __init__(self, uri="", o=1):
-    #     print("HERE")
-    #     pass
-
-    # def __init__(self):
-    #     print("HERE")
-    #     pass
+    _rxadc_name = "cf-ad9361-lpc"
+    _txdac_name = "cf-ad9361-dds-core-lpc"
+    _ctrl_names = "ad9361-phy"
 
     @property
     def filter(self):
-        """Load FIR filter file. Provide path to filter file to attribute"""
+        """Load FIR filter file. Provide path to filter file to Attribute"""
         return self._get_iio_dev_attr("filter_fir_config", "hardwaregain",)
 
     @filter.setter
@@ -218,20 +210,20 @@ class ad9364(RxTx):  # pylint: disable=C0103,R0901
     @property
     def rx_lo(self):
         """rx_lo: Carrier frequency of RX path"""
-        return self._get_iio_attr("altvoltage0", "frequency", True)
+        return self._get_iio_attr_vec("altvoltage0", "frequency", True)
 
     @rx_lo.setter
-    def rx_lo(self, value):
-        self._set_iio_attr_int("altvoltage0", "frequency", True, value)
+    def rx_lo(self, values):
+        self._set_iio_attr_int_vec("altvoltage0", "frequency", True, values)
 
     @property
     def tx_lo(self):
         """tx_lo: Carrier frequency of TX path"""
-        return self._get_iio_attr("altvoltage1", "frequency", True)
+        return self._get_iio_attr_vec("altvoltage1", "frequency", True)
 
     @tx_lo.setter
-    def tx_lo(self, value):
-        self._set_iio_attr_int("altvoltage1", "frequency", True, value)
+    def tx_lo(self, values):
+        self._set_iio_attr_int_vec("altvoltage1", "frequency", True, values)
 
 
 class ad9361(ad9364):

@@ -34,7 +34,7 @@
 from decimal import Decimal
 
 import numpy as np
-from adi.attribute import attribute
+from adi.attribute import Attribute
 from adi.rx_tx import Rx
 
 
@@ -104,7 +104,7 @@ class ad7124(Rx):
         """Provides all available scale(gain) settings for the AD7124 channels"""
         return self._get_iio_attr(self.channel[0].name, "scale_available", False)
 
-    class _channel(attribute):
+    class _channel(Attribute):
         """AD7124 channel"""
 
         def __init__(self, ctrl, channel_name):

@@ -3,7 +3,7 @@ from collections import OrderedDict
 from collections.abc import Iterable
 
 import numpy as np
-from adi.attribute import attribute
+from adi.attribute import Attribute
 from adi.context_manager import ContextManager
 from adi.rx_tx import Rx
 
@@ -31,7 +31,7 @@ class ltc2983(Rx, ContextManager):
 
         rx.__init__(self)
 
-    class _channel(attribute):
+    class _channel(Attribute):
         """ LTC2983 channel """
 
         def __init__(self, ctrl, channel_name):

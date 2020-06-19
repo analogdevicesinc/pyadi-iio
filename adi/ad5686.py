@@ -32,10 +32,10 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
-from adi.attribute import attribute
+from adi.attribute import Attribute
 
 
-class ad5686(attribute):
+class ad5686(Attribute):
     """ AD5686 DAC """
 
     _complex_data = False
@@ -96,7 +96,7 @@ class ad5686(attribute):
         # sort device channels after the index of their index
         self.channel.sort(key=lambda x: int(x.name[7:]))
 
-    class _channel(attribute):
+    class _channel(Attribute):
         """AD5686 channel"""
 
         def __init__(self, ctrl, channel_name):

@@ -40,13 +40,9 @@ class ContextManager:  # pylint: disable=R0903
     _uri_auto = "ip:analog"
     _ctx = None
     _device_name = ""
+    uri = ""
 
-    def __new__(cls, uri=""):
-        instance = super(ContextManager, cls).__new__(cls)
-        ContextManager.__init__(instance, uri, instance._device_name)
-        return instance
-
-    def __init__(self, uri="", _device_name=""):
+    def __init_cc__(self, uri="", _device_name=""):
         if self._ctx:
             return
         self.uri = uri

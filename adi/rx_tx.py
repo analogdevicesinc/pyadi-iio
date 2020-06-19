@@ -37,8 +37,8 @@ from typing import List
 import iio
 
 import numpy as np
-from adi.attribute import attribute
-from adi.dds import dds
+from adi.attribute import Attribute
+from adi.dds import DDS
 
 
 def enable_channel(channel):
@@ -46,7 +46,7 @@ def enable_channel(channel):
     channel.enabled = True
 
 
-class Phy(attribute):  # pylint disable=R0903
+class Phy(Attribute):  # pylint: disable=R0903
     """ Control device handler """
 
     @abstractproperty
@@ -70,30 +70,32 @@ class Meta(type):
         return instance
 
 
-class Rx(attribute, metaclass=Meta):
+class Rx(Attribute, metaclass=Meta):
     """ Buffer handling for receive devices """
-
-    @abstractproperty
-    def _rxadc(self) -> iio.Device:
-        pass
 
     @abstractproperty
     def _rx_channel_names(self) -> List[str]:
         pass
 
+    rx_output_type = "raw"
     _complex_data = False
     _rx_data_type = np.int16
     _rx_data_si_type = np.int16
     _rx_mask = 0x0000
     _rx_shift = 0
     _num_rx_channels = 0
-    rx_output_type = "raw"
+    _rx_unbuffered_data = False
+    _rxadc = None
     __rxbuf = None
     __rx_buffer_size = 16
     __rx_enabled_channels = []
-    _rx_unbuffered_data = False
+
+    @abstractproperty
+    def _rxadc_name(self) -> str:
+        pass
 
     def __init_rx__(self, rx_buffer_size=1024):
+        self._rxadc = self._find_device(self._rxadc_name)
         chan_per_out_chan = 2 if self._complex_data else 1
         rx_enabled_channels = list(
             range(len(self._rx_channel_names) // chan_per_out_chan)
@@ -289,25 +291,27 @@ class Rx(attribute, metaclass=Meta):
         return self.__rx_non_complex()
 
 
-class Tx(dds, attribute, metaclass=Meta):
+class Tx(DDS, Attribute, metaclass=Meta):
     """ Buffer handling for transmit devices """
 
+    _tx_buffer_size = 1024
+    _complex_data = False
+    _num_tx_channels = 0
+    _txdac = None
+    __txbuf = None
+    __tx_enabled_channels: List[int] = []
+    __tx_cyclic_buffer = False
+
     @abstractproperty
-    def _txdac(self) -> iio.Device:
+    def _txdac_name(self) -> str:
         pass
 
     @abstractproperty
     def _tx_channel_names(self) -> List[str]:
         pass
 
-    _tx_buffer_size = 1024
-    _complex_data = False
-    _num_tx_channels = 0
-    __txbuf = None
-    __tx_enabled_channels: List[int] = []
-    __tx_cyclic_buffer = False
-
     def __init_tx__(self, tx_cyclic_buffer=False):
+        self._txdac = self._find_device(self._txdac_name)
         chan_per_out_chan = 2 if self._complex_data else 1
         tx_enabled_channels = list(
             range(len(self._tx_channel_names) // chan_per_out_chan)
@@ -315,7 +319,7 @@ class Tx(dds, attribute, metaclass=Meta):
         self._num_tx_channels = len(self._tx_channel_names)
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
-        dds.__init__(self)
+        DDS.__init__(self)
 
     def __del__(self):
         if self.__txbuf:

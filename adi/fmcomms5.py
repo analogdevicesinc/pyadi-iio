@@ -32,7 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.ad936x import ad9361
-from adi.context_manager import ContextManager
+from adi.attribute import add_dev
 from adi.rx_tx import RxTx
 
 
@@ -62,20 +62,24 @@ class FMComms5(ad9361):
         "voltage7",
     ]
     _device_name = ""
+    _rxadc = add_dev("cf-ad9361-lpc")
+    _txdac = add_dev("cf-ad9361-dds-core-lpc")
+    _rxadc_b = add_dev("cf-ad9361-B")
+    _txdac_b = add_dev("cf-ad9361-dds-core-B")
+    # _ctrl = add_dev("ad9361-phy")
+    # _ctrl_b = add_dev("ad9361-phy-B")
+    _ctrls = [add_dev("ad9361-phy"), add_dev("ad9361-phy-B")]
 
     def __init__(self, uri=""):
-        ContextManager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("ad9361-phy")
         self._ctrl_b = self._ctx.find_device("ad9361-phy-B")
         self._rxadc = self._ctx.find_device("cf-ad9361-A")
         self._txdac = self._ctx.find_device("cf-ad9361-dds-core-lpc")
         self._rxadc_chip_b = self._ctx.find_device("cf-ad9361-B")
         self._txdac_chip_b = self._ctx.find_device("cf-ad9361-dds-core-B")
-        rx_tx.__init__(self)
 
     @property
     def filter(self):
-        """Load FIR filter file. Provide path to filter file to attribute"""
+        """Load FIR filter file. Provide path to filter file to Attribute"""
         return self._get_iio_dev_attr("filter_fir_config")
 
     @filter.setter

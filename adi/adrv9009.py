@@ -31,33 +31,28 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.context_manager import ContextManager
+from adi.attribute import add_dev
 from adi.rx_tx import RxTx
 
 
-class adrv9009(RxTx, ContextManager):
+class adrv9009(RxTx):  # pylint: disable=C0103,R0901
     """ ADRV9009 Transceiver """
 
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _device_name = ""
+    _rxadc = add_dev("axi-adrv9009-rx-hpc")
+    _rxobs = add_dev("axi-adrv9009-rx-obs-hpc")
+    _txdac = add_dev("axi-adrv9009-tx-hpc")
+    _ctrl = add_dev("adrv9009-phy")
 
     def __init__(self, uri=""):
-
-        ContextManager.__init__(self, uri, self._device_name)
-
-        self._ctrl = self._ctx.find_device("adrv9009-phy")
-        self._rxadc = self._ctx.find_device("axi-adrv9009-rx-hpc")
-        self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
-        self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
-
-        rx_tx.__init__(self)
 
     @property
     def profile(self):
-        """Load profile file. Provide path to profile file to attribute"""
+        """Load profile file. Provide path to profile file to Attribute"""
         return self._get_iio_dev_attr("profile_config")
 
     @profile.setter

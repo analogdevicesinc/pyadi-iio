@@ -199,7 +199,7 @@ class fmclidar1(ad5627, ad9094, Phy):
         self._set_iio_dev_attr_str("sequencer_pulse_delay_ns", ns, self._ctrl)
 
     def set_all_iio_attrs_to_default_values(self):
-        """Set all the Lidar attributes to reasonable default values."""
+        """Set all the Lidar Attributes to reasonable default values."""
         self.channel_sequencer_enable_disable = 1
         self.channel_sequencer_opmode = "auto"
         self.channel_sequencer_order_manual_mode = "0 0 0 0"

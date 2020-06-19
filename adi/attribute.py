@@ -34,6 +34,7 @@
 import re
 from abc import abstractproperty
 from enum import Enum
+from typing import List
 
 import iio
 
@@ -48,6 +49,7 @@ class IO(Enum):
 def add_dev(devname):
     """ Generate property for IIO device """
     return property(lambda self: self._ctx.find_device(devname))
+    # return lambda self: self._ctx.find_device(devname)
 
 
 class devattr:
@@ -73,15 +75,54 @@ def get_numbers(string):
     return val
 
 
-class attribute(ContextManager):
+class Attribute(ContextManager):
     """ IIO Attribute interfaces """
+
+    _ctrls = None
+
+    @abstractproperty
+    def _ctrl_names(self) -> List[str]:
+        pass
 
     @abstractproperty
     def _ctrl(self) -> iio.Device:
         pass
 
+    def __new__(cls, **kwargs):
+        uri = kwargs.get("uri")
+        if not uri:
+            uri = ""
+        instance = super(Attribute, cls).__new__(cls)
+        ContextManager.__init_cc__(instance, uri, instance._device_name)
+        Attribute.__init_attr__(instance)
+        # __init__ of youngest child will get called on return
+        return instance
+
+    def __init_attr__(self):
+        if not isinstance(self._ctrl_names, list):
+            name_list = [self._ctrl_names]
+        else:
+            name_list = self._ctrl_names
+        self._ctrls = [self._ctx.find_device(name) for name in name_list]
+
+    def _find_device(self, dev_name):
+        d = self._ctx.find_device(dev_name)
+        if not d:
+            raise Exception(dev_name + " not found")
+        return d
+
+    def _set_iio_attr_vec(self, channel_name, attr_name, output, values, _ctrls=None):
+        """ Set channel Attribute at multiple devices """
+        if not _ctrls:
+            _ctrls = self._ctrls
+        assert len(_ctrls) == len(
+            values
+        ), "Number of IIO devices must be same as input list"
+        for i, _ctrl in enumerate(_ctrls):
+            self._set_iio_attr(channel_name, attr_name, output, values[i], _ctrl)
+
     def _set_iio_attr(self, channel_name, attr_name, output, value, _ctrl=None):
-        """ Set channel attribute """
+        """ Set channel Attribute """
         if _ctrl:
             channel = _ctrl.find_channel(channel_name, output)
         else:
@@ -91,36 +132,78 @@ class attribute(ContextManager):
         except Exception as ex:
             raise ex
 
+    def _set_iio_attr_float_vec(
+        self, channel_name, attr_name, output, values, _ctrls=None
+    ):
+        """ Set channel Attribute with float at multiple devices """
+        if not _ctrls:
+            _ctrls = self._ctrls
+        if not isinstance(_ctrls, list):
+            _ctrls = [_ctrls]
+        assert len(_ctrls) == len(
+            values
+        ), "Number of IIO devices must be same as input list"
+        for i, _ctrl in enumerate(_ctrls):
+            self._set_iio_attr_int(channel_name, attr_name, output, values[i], _ctrl)
+
     def _set_iio_attr_float(self, channel_name, attr_name, output, value, _ctrl=None):
-        """ Set channel attribute with float """
+        """ Set channel Attribute with float """
         if isinstance(value, int):
             value = float(value)
         if not isinstance(value, float):
             raise Exception("Value must be a float")
         self._set_iio_attr(channel_name, attr_name, output, value, _ctrl)
 
+    def _set_iio_attr_int_vec(
+        self, channel_name, attr_name, output, values, _ctrls=None
+    ):
+        """ Set channel Attribute with int at multiple devices """
+        if not _ctrls:
+            _ctrls = self._ctrls
+        if not isinstance(_ctrls, list):
+            _ctrls = [_ctrls]
+        assert len(_ctrls) == len(
+            values
+        ), "Number of IIO devices must be same as input list"
+        for i, _ctrl in enumerate(_ctrls):
+            self._set_iio_attr_int(channel_name, attr_name, output, values[i], _ctrl)
+
     def _set_iio_attr_int(self, channel_name, attr_name, output, value, _ctrl=None):
-        """ Set channel attribute with int """
+        """ Set channel Attribute with int """
         if not isinstance(value, int):
             raise Exception("Value must be an int")
         self._set_iio_attr(channel_name, attr_name, output, value, _ctrl)
 
     def _get_iio_attr_str(self, channel_name, attr_name, output, _ctrl=None):
-        """ Get channel attribute as string """
+        """ Get channel Attribute as string """
         if _ctrl:
             channel = _ctrl.find_channel(channel_name, output)
         else:
             channel = self._ctrl.find_channel(channel_name, output)
         return channel.attrs[attr_name].value
 
+    def _get_iio_attr_vec(self, channel_name, attr_name, output, _ctrls=None):
+        """ Get vector of channel Attributes as numbers """
+        if not _ctrls:
+            _ctrls = self._ctrls
+        if not isinstance(_ctrls, list):
+            _ctrls = [_ctrls]
+        vec = [
+            get_numbers(self._get_iio_attr_str(channel_name, attr_name, output, _ctrl))
+            for _ctrl in _ctrls
+        ]
+        if len(vec) == 1:
+            vec = vec[0]
+        return vec
+
     def _get_iio_attr(self, channel_name, attr_name, output, _ctrl=None):
-        """ Get channel attribute as number """
+        """ Get channel Attribute as number """
         return get_numbers(
             self._get_iio_attr_str(channel_name, attr_name, output, _ctrl)
         )
 
     def _set_iio_dev_attr_str(self, attr_name, value, _ctrl=None):
-        """ Set device attribute with string """
+        """ Set device Attribute with string """
         try:
             if _ctrl:
                 _ctrl.attrs[attr_name].value = str(value)
@@ -130,17 +213,17 @@ class attribute(ContextManager):
             raise ex
 
     def _get_iio_dev_attr_str(self, attr_name, _ctrl=None):
-        """ Get device attribute as string """
+        """ Get device Attribute as string """
         if _ctrl:
             return _ctrl.attrs[attr_name].value
         return self._ctrl.attrs[attr_name].value
 
     def _get_iio_dev_attr(self, attr_name, _ctrl=None):
-        """ Set device attribute as number """
+        """ Set device Attribute as number """
         return get_numbers(self._get_iio_dev_attr_str(attr_name, _ctrl))
 
     def _set_iio_debug_attr_str(self, attr_name, value, _ctrl=None):
-        """ Set debug attribute with string """
+        """ Set debug Attribute with string """
         try:
             if _ctrl:
                 _ctrl.debug_attrs[attr_name].value = str(value)
@@ -150,11 +233,11 @@ class attribute(ContextManager):
             raise ex
 
     def _get_iio_debug_attr_str(self, attr_name, _ctrl=None):
-        """ Get debug attribute as string """
+        """ Get debug Attribute as string """
         if _ctrl:
             return _ctrl.debug_attrs[attr_name].value
         return self._ctrl.debug_attrs[attr_name].value
 
     def _get_iio_debug_attr(self, attr_name, _ctrl=None):
-        """ Set debug attribute as number """
+        """ Set debug Attribute as number """
         return get_numbers(self._get_iio_debug_attr_str(attr_name, _ctrl))
