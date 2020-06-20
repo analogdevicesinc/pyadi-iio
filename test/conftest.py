@@ -161,13 +161,73 @@ class BaseTestHelpers:
         else:
             return val == str(rval)
 
+    def iio_dev_interface(self, attrtype, dev_name, chan_name, inout, attr, val, tol):
+        sdr = iio.Context(self.uri)
+        attr_tl = attrtype.lower()
+
+        if attr_tl == "context":
+            ats = sdr.attrs
+            ats[attr].Value = str(val)
+            rval = float(sdr.attrs[attr].Value)
+        elif attr_tl == "debug":
+            raise Exception("Not supported")
+        elif attr_tl == "device":
+            dev = sdr.find_device(dev_name)
+            assert dev, "Device Not Found"
+            dev.attrs[attr].Value = str(val)
+            rval = float(dev.attrs[attr].Value)
+        elif attr_tl == "channel":
+            dev = sdr.find_device(dev_name)
+            assert dev, "Device Not Found"
+            chan = dev.find_channel(chan_name, inout)
+            assert chan, "Channel Not Found"
+            chan.attrs[attr].Value = str(val)
+            rval = float(chan.attrs[attr].Value)
+        else:
+            raise Exception("Device type unknown " + str(attrtype))
+
+        del sdr
+        if not isinstance(val, str):
+            if abs(val - rval) > tol:
+                print("Failed to set: " + attr)
+                print("Set: " + str(val))
+                print("Got: " + str(rval))
+            return abs(val - rval)
+        return val == str(rval)
+
 
 class BoardInterface(BaseTestHelpers):
-    def __init__(self, classname, devicename):
+    def __init__(self, classname=None, devicename=None):
         self.classname = classname
         self.devicename = devicename
         self.uri = ""
         self.check_skip()
+
+
+def iio_attribute_single_value(
+    devicename,
+    attrtype,
+    dev_name,
+    chan_name,
+    inout,
+    attr,
+    start,
+    stop,
+    step,
+    tol,
+    repeats=1,
+):
+    bi = BoardInterface(None, devicename)
+    # Pick random number in operational range
+    numints = int((stop - start) / step)
+    for _ in range(repeats):
+        ind = random.randint(0, numints + 1)
+        val = start + step * ind
+        # Check hardware
+        assert (
+            bi.iio_dev_interface(attrtype, dev_name, chan_name, inout, attr, val, tol)
+            <= tol
+        )
 
 
 def attribute_single_value(
@@ -683,6 +743,12 @@ def command_line_config(request):
 
 #########################################
 # Fixtures
+@pytest.fixture()
+def test_iio_attribute_single_value(request):
+    command_line_config(request)
+    yield iio_attribute_single_value
+
+
 @pytest.fixture()
 def test_stress_context_creation(request):
     command_line_config(request)
