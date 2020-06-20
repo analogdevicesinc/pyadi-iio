@@ -170,14 +170,17 @@ class BoardInterface(BaseTestHelpers):
         self.check_skip()
 
 
-def attribute_single_value(classname, devicename, attr, start, stop, step, tol):
+def attribute_single_value(
+    classname, devicename, attr, start, stop, step, tol, repeats=1
+):
     bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
     numints = int((stop - start) / step)
-    ind = random.randint(0, numints + 1)
-    val = start + step * ind
-    # Check hardware
-    assert bi.dev_interface(val, attr, tol) <= tol
+    for _ in range(repeats):
+        ind = random.randint(0, numints + 1)
+        val = start + step * ind
+        # Check hardware
+        assert bi.dev_interface(val, attr, tol) <= tol
 
 
 def attribute_single_value_str(classname, devicename, attr, val, tol):
@@ -186,16 +189,17 @@ def attribute_single_value_str(classname, devicename, attr, val, tol):
     assert bi.dev_interface(str(val), attr, tol) <= tol
 
 
-def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol):
+def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol, repeats=1):
     bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
     nums = []
     for k in range(0, max_pow):
         nums.append(2 ** k)
-    ind = random.randint(0, len(nums) - 1)
-    val = nums[ind]
-    # Check hardware
-    assert bi.dev_interface(val, attr, tol) <= tol
+    for _ in range(repeats):
+        ind = random.randint(0, len(nums) - 1)
+        val = nums[ind]
+        # Check hardware
+        assert bi.dev_interface(val, attr, tol) <= tol
 
 
 def dma_rx(classname, devicename, channel):
