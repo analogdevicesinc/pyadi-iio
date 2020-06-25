@@ -75,6 +75,7 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         "voltage15",
     ]
     _device_name = ""
+    _sync_init = False
 
     def __init__(self, uri=""):
         adrv9009_zu11eg.__init__(self, uri=uri)
@@ -82,14 +83,34 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         self._ctrl_d = self._ctx.find_device("adrv9009-phy-d")
         self._clock_chip_fmc = self._ctx.find_device("hmc7044-fmc")
 
+    def clock_chip_reset(self):
+        self._clock_chip_carrier.reg_write(0x5, 0x4A)
+        self._clock_chip_carrier.reg_write(0x1, 0x1)
+        time.sleep(1)
+        self._clock_chip_carrier.reg_write(0x1, 0x0)
+        self._clock_chip.reg_write(0x5, 0x43)
+        self._clock_chip.reg_write(0x5A, 0x7)
+        self._clock_chip.reg_write(0x1, 0x1)
+        time.sleep(1)
+        self._clock_chip.reg_write(0x1, 0x60)
+        self._clock_chip_fmc.reg_write(0x5, 0x43)
+        self._clock_chip_fmc.reg_write(0x5A, 0x7)
+        self._clock_chip_fmc.reg_write(0x1, 0x1)
+        time.sleep(1)
+        self._clock_chip_fmc.reg_write(0x1, 0x60)
+
+    def reinitialize_trx(self):
+        chips = [self._ctrl, self._ctrl_b, self._ctrl_c, self._ctrl_d]
+        for chip in chips:
+            chip._set_iio_debug_attr_str("initialize", "1", chip)
 
     def init(self):
-        self._clock_chip.reg_write(0x5a, 0x04)
-        self._clock_chip_fmc.reg_write(0x5a,0x04)
+        self._clock_chip.reg_write(0x5A, 0x04)
+        self._clock_chip_fmc.reg_write(0x5A, 0x04)
 
     def unsync(self):
         # sleep -> wakeup
-        self._clock_chip.reg_write(0x01 ,0x61)
+        self._clock_chip.reg_write(0x01, 0x61)
         self._clock_chip_fmc.reg_write(0x01, 0x01)
         self._clock_chip_carrier.reg_write(0x01, 0x61)
         time.sleep(0.1)
@@ -112,7 +133,7 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
 
         # restart request for all 7044
         self._clock_chip.reg_write(0x01, 0x62)
-        self._clock_chip_fmc.reg_write(0x01, 0x62) #INTREBARE
+        self._clock_chip_fmc.reg_write(0x01, 0x62)  # INTREBARE
         self._clock_chip_carrier.reg_write(0x01, 0x62)
 
         # restart from top of the clocking tree
@@ -139,24 +160,25 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         self._clock_chip.reg_write(0x05, 0x83)
         self._clock_chip_fmc.reg_write(0x05, 0x83)
 
-
-
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize all four transceivers """
         # Turn off continuous SYSREF, and enable GPI SYSREF request
-        self._clock_chip_carrier.reg_write(0x5A, 0)
-        self._sysref_request_steps = [2 ,5 , 7, 10]
+
+        # 16 pulses on pulse generator request
+        self._clock_chip.reg_write(0x5A, 5)
+        self._clock_chip_fmc.reg_write(0x5A, 5)
+
+        sysref_request_steps = [2, 5, 7, 10]
         chips = [self._ctrl, self._ctrl_b, self._ctrl_c, self._ctrl_d]
         for i in range(12):
-            if i in self._sysref_request_steps:
+            if i in sysref_request_steps:
                 self._clock_chip_carrier.attrs["sysref_request"] = 1
                 continue
 
             for chip in chips:
-                try:
-                    self._set_iio_dev_attr_str("multichip_sync", i, chip)
-                except OSError:
-                    pass
+                self._set_iio_dev_attr_str("multichip_sync", i, chip)
+
+        time.sleep(0.1)
         self._clock_chip_carrier.attrs["sysref_request"] = 1
         self._clock_chip.reg_write(0x5A, 1)
         self._clock_chip_fmc.reg_write(0x5A, 1)
@@ -170,6 +192,31 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         self._clock_chip_carrier.attrs["sysref_request"] = 1
         time.sleep(1)
 
+    def rx_synced(self):
+        if not self._sync_init:
+            self.init()
+            self.unsync()
+            self.hmc7044_setup()
+            self.clock_sync()
+            for i in range(3):
+                try:
+                    self.mcs_chips()
+                    break
+                except Exception as ex:
+                    print("Got Exception... trying MCS again", ex)
+                try:
+                    self.mcs_chips()
+                    break
+                except Exception as ex:
+                    print("Got Exception again... reseting clocks and transceivers", ex)
+                if i >= 2:
+                    raise Exception("Too many retries failed")
+                self.clock_chip_reset()
+                self.reinitialize_trx()
+
+            self.calibrate_rx_phase_correction()
+            self._sync_init = True
+        return self.rx()
 
     @property
     def calibrate_rx_phase_correction_en_chip_c(self):
