@@ -288,3 +288,23 @@ class Pluto(ad9364):
 
     _device_name = "PlutoSDR"
     _uri_auto = "ip:pluto.local"
+
+    def __repr__(self):
+        retstr = f"""Pluto(uri="{self.uri}") object "{self._device_name}" with following key properties:
+
+rx_lo:                   {self.rx_lo / 1000000:<12} MHz, Carrier frequency of RX path
+rx_hardwaregain_chan0    {self.rx_hardwaregain_chan0:<12} dB, Gain applied to RX path. Only applicable when gain_control_mode is set to 'manual'
+rx_rf_bandwidth:         {self.rx_rf_bandwidth / 1000000:<12} MHz, Bandwidth of front-end analog filter of RX path
+gain_control_mode_chan0: {self.gain_control_mode_chan0:<12} Receive path AGC Options: slow_attack, fast_attack, manual
+
+tx_lo:                   {self.tx_lo / 1000000:<12} MHz, Carrier frequency of TX path
+tx_hardwaregain_chan0:   {self.tx_hardwaregain_chan0:<12} dB, Attenuation applied to TX path
+tx_rf_bandwidth:         {self.tx_rf_bandwidth / 1000000:<12} MHz, Bandwidth of front-end analog filter of TX path
+tx_cyclic_buffer:        {self.tx_cyclic_buffer:<12} Toggles cyclic buffer
+
+filter:                  {str(self.filter):<12} FIR filter file
+sample_rate:             {self.sample_rate / 1000000:<12} MSPS, Sample rate RX and TX paths
+loopback:                {self.loopback:<12} 0=Disabled, 1=Digital, 2=RF
+
+"""
+        return retstr
