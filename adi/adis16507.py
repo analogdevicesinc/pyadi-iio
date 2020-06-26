@@ -86,17 +86,6 @@ class adis16507(rx, context_manager):
         self._set_iio_dev_attr_str("filter_low_pass_3db_frequency", value)
 
     @property
-    def burst_mode_enable(self):
-        """burst_mode_enable: Enables reading of the data with a SPI burst read"""
-        return self._get_iio_dev_attr("burst_mode_enable")
-
-    @burst_mode_enable.setter
-    def burst_mode_enable(self, value):
-        if isinstance(value, bool):
-            value = 1 if value else 0
-        self._set_iio_dev_attr_str("burst_mode_enable", value)
-
-    @property
     def current_timestamp_clock(self):
         """current_timestamp_clock: Source clock for timestamps"""
         return self._get_iio_dev_attr("current_timestamp_clock")
