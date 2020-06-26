@@ -20,7 +20,7 @@ data = sdr.rx()
 ```
 
 ### Currently supported hardware
-[Supported parts and boards](supported_parts.md)
+[Supported parts and boards](https://github.com/analogdevicesinc/pyadi-iio/blob/master/supported_parts.md)
 
 ### Dependencies
 - [libiio with python bindings](https://wiki.analog.com/resources/tools-software/linux-software/libiio)

@@ -1,24 +1,34 @@
 import pytest
 
-hardware = "pluto"
+hardware = ["pluto", "adrv9361", "fmcomms2"]
 classname = "adi.Pluto"
 
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize(
-    "attr, start, stop, step, tol",
+    "attr, start, stop, step, tol, repeats",
     [
-        ("tx_hardwaregain", -89.75, 0.0, 0.25, 0),
-        ("rx_lo", 325000000, 3800000000, 1, 8),
-        ("tx_lo", 325000000, 3800000000, 1, 8),
-        ("sample_rate", 2084000, 61440000, 1, 4),
+        ("tx_hardwaregain", -89.75, 0.0, 0.25, 0, 100),
+        ("rx_lo", 325000000, 3800000000, 1, 8, 100),
+        ("tx_lo", 325000000, 3800000000, 1, 8, 100),
+        ("sample_rate", 2084000, 61440000, 1, 4, 100),
     ],
 )
 def test_pluto_attr(
-    test_attribute_single_value, classname, hardware, attr, start, stop, step, tol
+    test_attribute_single_value,
+    classname,
+    hardware,
+    attr,
+    start,
+    stop,
+    step,
+    tol,
+    repeats,
 ):
-    test_attribute_single_value(classname, hardware, attr, start, stop, step, tol)
+    test_attribute_single_value(
+        classname, hardware, attr, start, stop, step, tol, repeats
+    )
 
 
 #########################################
