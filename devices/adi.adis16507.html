@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -29,10 +34,6 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="adrv9009" href="adi.adrv9009.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Analog Devices Hardware Python Interfaces
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Analog Devices Hardware Python Interfaces
           
 
           
@@ -73,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -117,6 +119,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -155,7 +158,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="index.html">Supported Devices</a> &raquo;</li>
         
@@ -185,12 +188,6 @@
 <em class="property">class </em><code class="sig-prename descclassname">adi.adis16507.</code><code class="sig-name descname">adis16507</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">imu_dev_name</span><span class="o">=</span><span class="default_value">'adis16507-3'</span></em>, <em class="sig-param"><span class="n">trigger_name</span><span class="o">=</span><span class="default_value">'adis16507-3-dev0'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16507.adis16507" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
 <p>ADIS16507 Precision, Miniature MEMS IMU</p>
-<dl class="py method">
-<dt id="adi.adis16507.adis16507.burst_mode_enable">
-<em class="property">property </em><code class="sig-name descname">burst_mode_enable</code><a class="headerlink" href="#adi.adis16507.adis16507.burst_mode_enable" title="Permalink to this definition">¶</a></dt>
-<dd><p>burst_mode_enable: Enables reading of the data with a SPI burst read</p>
-</dd></dl>
-
 <dl class="py method">
 <dt id="adi.adis16507.adis16507.current_timestamp_clock">
 <em class="property">property </em><code class="sig-name descname">current_timestamp_clock</code><a class="headerlink" href="#adi.adis16507.adis16507.current_timestamp_clock" title="Permalink to this definition">¶</a></dt>
@@ -234,11 +231,19 @@ gyroscope channels</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2019, Analog Devices, Inc
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -249,7 +254,6 @@ gyroscope channels</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
