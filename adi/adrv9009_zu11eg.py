@@ -62,6 +62,50 @@ class adrv9009_zu11eg(adrv9009):
     def __init__(self, uri=""):
         adrv9009.__init__(self, uri=uri)
         self._ctrl_b = self._ctx.find_device("adrv9009-phy-b")
+        self._clock_chip = self._ctx.find_device("hmc7044")
+        self._clock_chip_carrier = self._ctx.find_device("hmc7044-car")
+        # Used for multi-som sync
+        self._clock_chip_ext = self._ctx.find_device("hmc7044-ext")
+
+    def mcs_chips(self):
+        """mcs_chips: MCS Synchronize both transceivers """
+        # Turn off continuous SYSREF, and enable GPI SYSREF request
+        self._clock_chip.reg_write(0x5A, 0)
+        for i in range(12):
+            try:
+                self._set_iio_dev_attr_str("multichip_sync", i)
+            except OSError:
+                pass
+            try:
+                self._set_iio_dev_attr_str("multichip_sync", i, self._ctrl_b)
+            except OSError:
+                pass
+
+    @property
+    def frequency_hopping_mode_chip_b(self):
+        """frequency_hopping_mode_chip_b: Set Frequency Hopping Mode"""
+        return self._get_iio_attr(
+            "TRX_LO", "frequency_hopping_mode", True, self._ctrl_b
+        )
+
+    @frequency_hopping_mode_chip_b.setter
+    def frequency_hopping_mode_chip_b(self, value):
+        self._set_iio_attr(
+            "TRX_LO", "frequency_hopping_mode", True, value, self._ctrl_b
+        )
+
+    @property
+    def frequency_hopping_mode_en_chip_b(self):
+        """frequency_hopping_mode_en: Enable Frequency Hopping Mode"""
+        return self._get_iio_attr(
+            "TRX_LO", "frequency_hopping_mode_enable", True, self._ctrl_b
+        )
+
+    @frequency_hopping_mode_en_chip_b.setter
+    def frequency_hopping_mode_en_chip_b(self, value):
+        self._set_iio_attr(
+            "TRX_LO", "frequency_hopping_mode_enable", True, value, self._ctrl_b
+        )
 
     @property
     def calibrate_rx_phase_correction_en_chip_b(self):

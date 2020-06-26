@@ -67,6 +67,24 @@ class adrv9009(rx_tx, context_manager):
         self._set_iio_dev_attr_str("profile_config", data)
 
     @property
+    def frequency_hopping_mode(self):
+        """frequency_hopping_mode: Set Frequency Hopping Mode"""
+        return self._get_iio_attr("TRX_LO", "frequency_hopping_mode", True)
+
+    @frequency_hopping_mode.setter
+    def frequency_hopping_mode(self, value):
+        self._set_iio_attr("TRX_LO", "frequency_hopping_mode", True, value)
+
+    @property
+    def frequency_hopping_mode_en(self):
+        """frequency_hopping_mode_en: Enable Frequency Hopping Mode"""
+        return self._get_iio_attr("TRX_LO", "frequency_hopping_mode_enable", True)
+
+    @frequency_hopping_mode_en.setter
+    def frequency_hopping_mode_en(self, value):
+        self._set_iio_attr("TRX_LO", "frequency_hopping_mode_enable", True, value)
+
+    @property
     def calibrate_rx_phase_correction_en(self):
         """calibrate_rx_phase_correction_en: Enable RX Phase Correction Calibration"""
         return self._get_iio_dev_attr("calibrate_rx_phase_correction_en")
