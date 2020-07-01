@@ -42,17 +42,19 @@ class ContextManager:  # pylint: disable=R0903
     _device_name = ""
     uri = ""
 
-    def __init_cc__(self, uri="", _device_name=""):
+    def __init_cc__(self, uri="", _device_name=None):
         if self._ctx:
             return
+        if _device_name:
+            self._device_name = _device_name
         self.uri = uri
         try:
             if self.uri == "":
                 # Try USB contexts first
-                if _device_name != "":
+                if self._device_name != "":
                     contexts = iio.scan_contexts()
                     for ctx in contexts:
-                        if _device_name in contexts[ctx]:
+                        if self._device_name in contexts[ctx]:
                             self._ctx = iio.Context(ctx)
                             break
                 # Try auto discover
