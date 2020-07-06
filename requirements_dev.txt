@@ -3,7 +3,7 @@ codespell
 flake8
 pre-commit
 isort
-pytest
+pytest>=4.6
 scapy
 scipy
 pytest-cov
