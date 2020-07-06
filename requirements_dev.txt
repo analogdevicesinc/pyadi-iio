@@ -6,3 +6,5 @@ isort
 pytest
 scapy
 scipy
+pytest-cov
+coveralls
