@@ -152,7 +152,9 @@ class BaseTestHelpers:
         if not hasattr(sdr, attr):
             raise AttributeError(attr + " not defined in " + self.classname)
         setattr(sdr, attr, val)
-        rval = float(getattr(sdr, attr))
+        rval = getattr(sdr, attr)
+        if not isinstance(rval, str):
+            rval = float(rval)
         del sdr
         if not isinstance(val, str):
             if abs(val - rval) > tol:
