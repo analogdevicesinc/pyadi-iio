@@ -61,7 +61,7 @@ class adrv9002(rx_tx, context_manager):
 
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q"]
-    _rx2_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i"]
+    _rx2_channel_names = ["voltage0_i", "voltage0_q"]
     _tx_channel_names = ["voltage0", "voltage1"]
     _tx2_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
@@ -113,16 +113,14 @@ class adrv9002(rx_tx, context_manager):
 
         rx_tx.__init__(self)
 
-    @property
-    def profile(self):
-        """Load profile file. Provide path to profile file to attribute"""
-        return self._get_iio_dev_attr("profile_config")
-
-    @profile.setter
-    def profile(self, value):
+    def write_profile(self, value):
+        """Load a new profile on the device"""
         with open(value, "r") as file:
             data = file.read()
         self._set_iio_dev_attr_str("profile_config", data)
+
+    # we cannot really get the profile. The driver will just throw EPERM
+    profile = property(None, write_profile)
 
     @property
     def rx_dma_mode(self):
@@ -145,42 +143,6 @@ class adrv9002(rx_tx, context_manager):
                        effect as the tx1 method.
         """
         return self._tx_dma_mode
-
-    # @property
-    # def calibrate_rx_phase_correction_en(self):
-    #     """calibrate_rx_phase_correction_en: Enable RX Phase Correction Calibration"""
-    #     return self._get_iio_dev_attr("calibrate_rx_phase_correction_en")
-    #
-    # @calibrate_rx_phase_correction_en.setter
-    # def calibrate_rx_phase_correction_en(self, value):
-    #     self._set_iio_dev_attr_str("calibrate_rx_phase_correction_en", value)
-    #
-    # @property
-    # def calibrate_rx_qec_en(self):
-    #     """calibrate_rx_qec_en: Enable RX QEC Calibration"""
-    #     return self._get_iio_dev_attr("calibrate_rx_qec_en")
-    #
-    # @calibrate_rx_qec_en.setter
-    # def calibrate_rx_qec_en(self, value):
-    #     self._set_iio_dev_attr_str("calibrate_rx_qec_en", value)
-    #
-    # @property
-    # def calibrate_tx_qec_en(self):
-    #     """calibrate_tx_qec_en: Enable TX QEC Calibration"""
-    #     return self._get_iio_dev_attr("calibrate_tx_qec_en")
-    #
-    # @calibrate_tx_qec_en.setter
-    # def calibrate_tx_qec_en(self, value):
-    #     self._set_iio_dev_attr_str("calibrate_tx_qec_en", value)
-    #
-    # @property
-    # def calibrate(self):
-    #     """calibrate: Trigger Calibration"""
-    #     return self._get_iio_dev_attr("calibrate")
-    #
-    # @calibrate.setter
-    # def calibrate(self, value):
-    #     self._set_iio_dev_attr_str("calibrate", value)
 
     @property
     def rx_ensm_mode_chan0(self):
@@ -245,23 +207,23 @@ class adrv9002(rx_tx, context_manager):
     @property
     def rx_hardwaregain_chan0(self):
         """rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
-        gain_control_mode is set to 'manual_spi'"""
+        gain_control_mode is set to 'spi'"""
         return self._get_iio_attr("voltage0", "hardwaregain", False)
 
     @rx_hardwaregain_chan0.setter
     def rx_hardwaregain_chan0(self, value):
-        if self.gain_control_mode_chan0 == "manual_spi":
+        if self.gain_control_mode_chan0 == "spi":
             self._set_iio_attr("voltage0", "hardwaregain", False, value)
 
     @property
     def rx_hardwaregain_chan1(self):
         """rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
-        gain_control_mode is set to 'manual_spi'"""
+        gain_control_mode is set to 'spi'"""
         return self._get_iio_attr("voltage1", "hardwaregain", False)
 
     @rx_hardwaregain_chan1.setter
     def rx_hardwaregain_chan1(self, value):
-        if self.gain_control_mode_chan1 == "manual_spi":
+        if self.gain_control_mode_chan1 == "spi":
             self._set_iio_attr("voltage1", "hardwaregain", False, value)
 
     @property
@@ -271,7 +233,8 @@ class adrv9002(rx_tx, context_manager):
 
     @tx_hardwaregain_chan0.setter
     def tx_hardwaregain_chan0(self, value):
-        self._set_iio_attr("voltage0", "hardwaregain", True, value)
+        if self.atten_control_mode_chan0 == "spi":
+            self._set_iio_attr("voltage0", "hardwaregain", True, value)
 
     @property
     def tx_hardwaregain_chan1(self):
@@ -280,7 +243,8 @@ class adrv9002(rx_tx, context_manager):
 
     @tx_hardwaregain_chan1.setter
     def tx_hardwaregain_chan1(self, value):
-        self._set_iio_attr("voltage1", "hardwaregain", True, value)
+        if self.atten_control_mode_chan1 == "spi":
+            self._set_iio_attr("voltage1", "hardwaregain", True, value)
 
     @property
     def interface_gain_chan0(self):
@@ -290,7 +254,12 @@ class adrv9002(rx_tx, context_manager):
 
     @interface_gain_chan0.setter
     def interface_gain_chan0(self, value):
-        self._set_iio_attr("voltage0", "interface_gain", False, value)
+        if (
+            self.digital_gain_control_mode_chan0 == "Gain_Correction_manual_control"
+            or self.digital_gain_control_mode_chan0
+            == "Gain_Compensation_manual_control"
+        ) and self.rx_ensm_mode_chan0 == "rf_enabled":
+            self._set_iio_attr("voltage0", "interface_gain", False, value)
 
     @property
     def interface_gain_chan1(self):
@@ -300,42 +269,453 @@ class adrv9002(rx_tx, context_manager):
 
     @interface_gain_chan1.setter
     def interface_gain_chan1(self, value):
-        self._set_iio_attr("voltage1", "interface_gain", False, value)
+        if (
+            self.digital_gain_control_mode_chan1 == "Gain_Correction_manual_control"
+            or self.digital_gain_control_mode_chan1
+            == "Gain_Compensation_manual_control"
+        ) and self.rx_ensm_mode_chan1 == "rf_enabled":
+            self._set_iio_attr("voltage1", "interface_gain", False, value)
 
     @property
-    def rx_rf_bandwidth(self):
-        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path"""
+    def agc_tracking_en_chan0(self):
+        """Enable AGC on the fly tracking calibration for RX1"""
+        return self._get_iio_attr("voltage0", "agc_tracking_en", False)
+
+    @agc_tracking_en_chan0.setter
+    def agc_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "agc_tracking_en", False, value)
+
+    @property
+    def bbdc_rejection_tracking_en_chan0(self):
+        """"Enable Baseband DC rejection on the fly tracking calibration for RX1"""
+        return self._get_iio_attr("voltage0", "bbdc_rejection_tracking_en", False)
+
+    @bbdc_rejection_tracking_en_chan0.setter
+    def bbdc_rejection_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "bbdc_rejection_tracking_en", False, value)
+
+    @property
+    def hd_tracking_en_chan0(self):
+        """"Enable Harmonic Distortion on the fly tracking calibration for RX1"""
+        return self._get_iio_attr("voltage0", "hd_tracking_en", False)
+
+    @hd_tracking_en_chan0.setter
+    def hd_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "hd_tracking_en", False, value)
+
+    @property
+    def quadrature_fic_tracking_en_chan0(self):
+        """Enable Quadrature Error Correction Narrowband FIC on the fly tracking
+        calibration for RX1"""
+        return self._get_iio_attr("voltage0", "quadrature_fic_tracking_en", False)
+
+    @quadrature_fic_tracking_en_chan0.setter
+    def quadrature_fic_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "quadrature_fic_tracking_en", False, value)
+
+    @property
+    def quadrature_w_poly_tracking_en_chan0(self):
+        """Enable Quadrature Error Correction Wideband Poly on the fly tracking
+        calibration for RX1"""
+        return self._get_iio_attr("voltage0", "quadrature_w_poly_tracking_en", False)
+
+    @quadrature_w_poly_tracking_en_chan0.setter
+    def quadrature_w_poly_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "quadrature_w_poly_tracking_en", False, value)
+
+    @property
+    def rfdc_tracking_en_chan0(self):
+        """"Enable RF DC on the fly tracking calibration for RX1"""
+        return self._get_iio_attr("voltage0", "rfdc_tracking_en", False)
+
+    @rfdc_tracking_en_chan0.setter
+    def rfdc_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "rfdc_tracking_en", False, value)
+
+    @property
+    def rssi_tracking_en_chan0(self):
+        """"Enable RSSI on the fly tracking calibration for RX1"""
+        return self._get_iio_attr("voltage0", "rssi_tracking_en", False)
+
+    @rssi_tracking_en_chan0.setter
+    def rssi_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "rssi_tracking_en", False, value)
+
+    @property
+    def agc_tracking_en_chan1(self):
+        """Enable AGC on the fly tracking calibration for RX2"""
+        return self._get_iio_attr("voltage1", "agc_tracking_en", False)
+
+    @agc_tracking_en_chan1.setter
+    def agc_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "agc_tracking_en", False, value)
+
+    @property
+    def bbdc_rejection_tracking_en_chan1(self):
+        """"Enable Baseband DC rejection on the fly tracking calibration for RX2"""
+        return self._get_iio_attr("voltage1", "bbdc_rejection_tracking_en", False)
+
+    @bbdc_rejection_tracking_en_chan1.setter
+    def bbdc_rejection_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "bbdc_rejection_tracking_en", False, value)
+
+    @property
+    def hd_tracking_en_chan1(self):
+        """"Enable Harmonic Distortion on the fly tracking calibration for RX2"""
+        return self._get_iio_attr("voltage1", "hd_tracking_en", False)
+
+    @hd_tracking_en_chan1.setter
+    def hd_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "hd_tracking_en", False, value)
+
+    @property
+    def quadrature_fic_tracking_en_chan1(self):
+        """Enable Quadrature Error Correction Narrowband FIC on the fly tracking
+        calibration for RX2"""
+        return self._get_iio_attr("voltage1", "quadrature_fic_tracking_en", False)
+
+    @quadrature_fic_tracking_en_chan1.setter
+    def quadrature_fic_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "quadrature_fic_tracking_en", False, value)
+
+    @property
+    def quadrature_w_poly_tracking_en_chan1(self):
+        """Enable Quadrature Error Correction Wideband Poly on the fly tracking
+        calibration for RX2"""
+        return self._get_iio_attr("voltage1", "quadrature_w_poly_tracking_en", False)
+
+    @quadrature_w_poly_tracking_en_chan1.setter
+    def quadrature_w_poly_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "quadrature_w_poly_tracking_en", False, value)
+
+    @property
+    def rfdc_tracking_en_chan1(self):
+        """"Enable RF DC on the fly tracking calibration for RX2"""
+        return self._get_iio_attr("voltage1", "rfdc_tracking_en", False)
+
+    @rfdc_tracking_en_chan1.setter
+    def rfdc_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "rfdc_tracking_en", False, value)
+
+    @property
+    def rssi_tracking_en_chan1(self):
+        """"Enable RSSI on the fly tracking calibration for RX2"""
+        return self._get_iio_attr("voltage1", "rssi_tracking_en", False)
+
+    @rssi_tracking_en_chan1.setter
+    def rssi_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "rssi_tracking_en", False, value)
+
+    @property
+    def close_loop_gain_tracking_en_chan0(self):
+        """Enable Close Loop Gain tracking calibration for TX1"""
+        return self._get_iio_attr("voltage0", "close_loop_gain_tracking_en", True)
+
+    @close_loop_gain_tracking_en_chan0.setter
+    def close_loop_gain_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "close_loop_gain_tracking_en", True, value)
+
+    @property
+    def lo_leakage_tracking_en_chan0(self):
+        """Enable LO Leakage tracking calibration for TX1"""
+        return self._get_iio_attr("voltage0", "lo_leakage_tracking_en", True)
+
+    @lo_leakage_tracking_en_chan0.setter
+    def lo_leakage_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "lo_leakage_tracking_en", True, value)
+
+    @property
+    def loopback_delay_tracking_en_chan0(self):
+        """Enable Loopback delay tracking calibration for TX1"""
+        return self._get_iio_attr("voltage0", "loopback_delay_tracking_en", True)
+
+    @loopback_delay_tracking_en_chan0.setter
+    def loopback_delay_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "loopback_delay_tracking_en", True, value)
+
+    @property
+    def pa_correction_tracking_en_chan0(self):
+        """Enable PA Correction tracking calibration for TX1"""
+        return self._get_iio_attr("voltage0", "pa_correction_tracking_en", True)
+
+    @pa_correction_tracking_en_chan0.setter
+    def pa_correction_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "pa_correction_tracking_en", True, value)
+
+    @property
+    def quadrature_tracking_en_chan0(self):
+        """Enable Quadrature tracking calibration for TX1"""
+        return self._get_iio_attr("voltage0", "quadrature_tracking_en", True)
+
+    @quadrature_tracking_en_chan0.setter
+    def quadrature_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "quadrature_tracking_en", True, value)
+
+    @property
+    def close_loop_gain_tracking_en_chan1(self):
+        """Enable Close Loop Gain tracking calibration for TX2"""
+        return self._get_iio_attr("voltage1", "close_loop_gain_tracking_en", True)
+
+    @close_loop_gain_tracking_en_chan1.setter
+    def close_loop_gain_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "close_loop_gain_tracking_en", True, value)
+
+    @property
+    def lo_leakage_tracking_en_chan1(self):
+        """Enable LO Leakage tracking calibration for TX2"""
+        return self._get_iio_attr("voltage1", "lo_leakage_tracking_en", True)
+
+    @lo_leakage_tracking_en_chan1.setter
+    def lo_leakage_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "lo_leakage_tracking_en", True, value)
+
+    @property
+    def loopback_delay_tracking_en_chan1(self):
+        """Enable Loopback delay tracking calibration for TX2"""
+        return self._get_iio_attr("voltage1", "loopback_delay_tracking_en", True)
+
+    @loopback_delay_tracking_en_chan1.setter
+    def loopback_delay_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "loopback_delay_tracking_en", True, value)
+
+    @property
+    def pa_correction_tracking_en_chan1(self):
+        """Enable PA Correction tracking calibration for TX2"""
+        return self._get_iio_attr("voltage1", "pa_correction_tracking_en", True)
+
+    @pa_correction_tracking_en_chan1.setter
+    def pa_correction_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "pa_correction_tracking_en", True, value)
+
+    @property
+    def quadrature_tracking_en_chan1(self):
+        """Enable Quadrature tracking calibration for TX2"""
+        return self._get_iio_attr("voltage1", "quadrature_tracking_en", True)
+
+    @quadrature_tracking_en_chan1.setter
+    def quadrature_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "quadrature_tracking_en", True, value)
+
+    @property
+    def digital_gain_control_mode_chan0(self):
+        """Digital gain control mode for RX2. Option are: Gain_Correction_manual_control
+        Gain_Compensation_manual_control Gain_Correction_automatic_control
+        Gain_Compensation_automatic_control"""
+        return self._get_iio_attr_str("voltage0", "digital_gain_control_mode", False)
+
+    @digital_gain_control_mode_chan0.setter
+    def digital_gain_control_mode_chan0(self, value):
+        self._set_iio_attr("voltage0", "digital_gain_control_mode", False, value)
+
+    @property
+    def digital_gain_control_mode_chan1(self):
+        """ Digital gain control mode for RX2. Option are: Gain_Correction_manual_control
+        Gain_Compensation_manual_control Gain_Correction_automatic_control
+        Gain_Compensation_automatic_control"""
+        return self._get_iio_attr_str("voltage1", "digital_gain_control_mode", False)
+
+    @digital_gain_control_mode_chan1.setter
+    def digital_gain_control_mode_chan1(self, value):
+        self._set_iio_attr("voltage1", "digital_gain_control_mode", False, value)
+
+    @property
+    def rx0_port_en(self):
+        """Control Port RF Enable mode for RX1. Options are: pin and spi"""
+        return self._get_iio_attr_str("voltage0", "port_en_mode", False)
+
+    @rx0_port_en.setter
+    def rx0_port_en(self, value):
+        self._set_iio_attr("voltage0", "port_en_mode", False, value)
+
+    @property
+    def tx0_port_en(self):
+        """Control Port RF Enable mode for TX1. Options are: pin and spi"""
+        return self._get_iio_attr_str("voltage0", "port_en_mode", True)
+
+    @tx0_port_en.setter
+    def tx0_port_en(self, value):
+        self._set_iio_attr("voltage0", "port_en_mode", True, value)
+
+    @property
+    def rx1_port_en(self):
+        """Control Port RF Enable mode for RX2. Options are: pin and spi"""
+        return self._get_iio_attr_str("voltage1", "port_en_mode", False)
+
+    @rx1_port_en.setter
+    def rx1_port_en(self, value):
+        self._set_iio_attr("voltage1", "port_en_mode", False, value)
+
+    @property
+    def tx1_port_en(self):
+        """Control Port RF Enable mode for TX2. Options are: pin and spi"""
+        return self._get_iio_attr_str("voltage1", "port_en_mode", True)
+
+    @tx1_port_en.setter
+    def tx1_port_en(self, value):
+        self._set_iio_attr("voltage1", "port_en_mode", True, value)
+
+    @property
+    def rx0_en(self):
+        """Control RX1 Power state"""
+        return self._get_iio_attr("voltage0", "en", False)
+
+    @rx0_en.setter
+    def rx0_en(self, value):
+        self._set_iio_attr("voltage0", "en", False, value)
+
+    @property
+    def tx0_en(self):
+        """"Control TX1 Power state"""
+        return self._get_iio_attr("voltage0", "en", True)
+
+    @tx0_en.setter
+    def tx0_en(self, value):
+        self._set_iio_attr("voltage0", "en", True, value)
+
+    @property
+    def rx1_en(self):
+        """"Control RX2 Power state"""
+        return self._get_iio_attr("voltage1", "en", False)
+
+    @rx1_en.setter
+    def rx1_en(self, value):
+        self._set_iio_attr("voltage1", "en", False, value)
+
+    @property
+    def tx1_en(self):
+        """"Control TX2 Power state"""
+        return self._get_iio_attr("voltage1", "en", True)
+
+    @tx1_en.setter
+    def tx1_en(self, value):
+        self._set_iio_attr("voltage1", "en", True, value)
+
+    @property
+    def rx0_nco_frequency(self):
+        """NCO correction frequency for RX1"""
+        return self._get_iio_attr("voltage0", "nco_frequency", False)
+
+    @rx0_nco_frequency.setter
+    def rx0_nco_frequency(self, value):
+        self._set_iio_attr("voltage0", "nco_frequency", False, value)
+
+    @property
+    def tx0_nco_frequency(self):
+        """NCO correction frequency for TX1"""
+        return self._get_iio_attr("voltage0", "nco_frequency", True)
+
+    @tx0_nco_frequency.setter
+    def tx0_nco_frequency(self, value):
+        self._set_iio_attr("voltage0", "nco_frequency", True, value)
+
+    @property
+    def rx1_nco_frequency(self):
+        """NCO correction frequency for RX2"""
+        return self._get_iio_attr("voltage1", "nco_frequency", False)
+
+    @rx1_nco_frequency.setter
+    def rx1_nco_frequency(self, value):
+        self._set_iio_attr("voltage1", "nco_frequency", False, value)
+
+    @property
+    def tx1_nco_frequency(self):
+        """NCO correction frequency for TX2"""
+        return self._get_iio_attr("voltage1", "nco_frequency", True)
+
+    @tx1_nco_frequency.setter
+    def tx1_nco_frequency(self, value):
+        self._set_iio_attr("voltage1", "nco_frequency", True, value)
+
+    @property
+    def atten_control_mode_chan0(self):
+        """Control TX1 attenuation mode. Options are: bypass, spi, pin"""
+        return self._get_iio_attr_str("voltage0", "atten_control_mode", True)
+
+    @atten_control_mode_chan0.setter
+    def atten_control_mode_chan0(self, value):
+        self._set_iio_attr("voltage0", "atten_control_mode", True, value)
+
+    @property
+    def atten_control_mode_chan1(self):
+        """Control TX2 attenuation mode. Options are: bypass, spi, pin"""
+        return self._get_iio_attr_str("voltage1", "atten_control_mode", True)
+
+    @atten_control_mode_chan1.setter
+    def atten_control_mode_chan1(self, value):
+        self._set_iio_attr("voltage1", "atten_control_mode", True, value)
+
+    @property
+    def rx0_rf_bandwidth(self):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", False)
 
     @property
-    def tx_rf_bandwidth(self):
-        """tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path"""
+    def tx0_rf_bandwidth(self):
+        """tx_rf_bandwidth: Bandwidth of front-end analog filter of TX1 path"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", True)
 
     @property
-    def rx_sample_rate(self):
-        """rx_sample_rate: Sample rate RX path in samples per second"""
+    def rx0_sample_rate(self):
+        """rx_sample_rate: Sample rate RX1 path in samples per second"""
         return self._get_iio_attr("voltage0", "sampling_frequency", False)
 
     @property
-    def tx_sample_rate(self):
-        """tx_sample_rate: Sample rate TX path in samples per second"""
+    def tx0_sample_rate(self):
+        """tx_sample_rate: Sample rate TX1 path in samples per second"""
         return self._get_iio_attr("voltage0", "sampling_frequency", True)
 
     @property
-    def rx1_lo(self):
-        """rx1_lo: Carrier frequency of RX1 path"""
+    def rx1_rf_bandwidth(self):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX2 path"""
+        return self._get_iio_attr("voltage1", "rf_bandwidth", False)
+
+    @property
+    def tx1_rf_bandwidth(self):
+        """tx_rf_bandwidth: Bandwidth of front-end analog filter of TX2 path"""
+        return self._get_iio_attr("voltage1", "rf_bandwidth", True)
+
+    @property
+    def rx1_sample_rate(self):
+        """rx_sample_rate: Sample rate RX2 path in samples per second"""
+        return self._get_iio_attr("voltage1", "sampling_frequency", False)
+
+    @property
+    def tx1_sample_rate(self):
+        """tx_sample_rate: Sample rate TX2 path in samples per second"""
+        return self._get_iio_attr("voltage1", "sampling_frequency", True)
+
+    @property
+    def rx0_lo(self):
+        """rx0_lo: Carrier frequency of RX1 path"""
         return self._get_iio_attr("altvoltage0", "RX1_LO_frequency", True)
 
-    @rx1_lo.setter
-    def rx1_lo(self, value):
+    @rx0_lo.setter
+    def rx0_lo(self, value):
         self._set_iio_attr("altvoltage0", "RX1_LO_frequency", True, value)
 
     @property
-    def tx1_lo(self):
+    def rx1_lo(self):
+        """rx1_lo: Carrier frequency of RX2 path"""
+        return self._get_iio_attr("altvoltage1", "RX2_LO_frequency", True)
+
+    @rx1_lo.setter
+    def rx1_lo(self, value):
+        self._set_iio_attr("altvoltage1", "RX2_LO_frequency", True, value)
+
+    @property
+    def tx0_lo(self):
         """tx1_lo: Carrier frequency of TX1 path"""
         return self._get_iio_attr("altvoltage2", "TX1_LO_frequency", True)
 
+    @tx0_lo.setter
+    def tx0_lo(self, value):
+        self._set_iio_attr("altvoltage2", "TX1_LO_frequency", True, value)
+
+    @property
+    def tx1_lo(self):
+        """tx1_lo: Carrier frequency of TX2 path"""
+        return self._get_iio_attr("altvoltage3", "TX2_LO_frequency", True)
+
     @tx1_lo.setter
     def tx1_lo(self, value):
-        self._set_iio_attr("altvoltage2", "TX1_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage3", "TX2_LO_frequency", True, value)
