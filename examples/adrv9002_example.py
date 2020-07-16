@@ -14,7 +14,7 @@ sdr.tx_hardwaregain_chan0 = -20
 sdr.tx_ensm_mode_chan0 = "rf_enabled"
 sdr.tx_cyclic_buffer = True
 
-fs = int(sdr.rx_sample_rate)
+fs = int(sdr.rx0_sample_rate)
 
 # Set single DDS tone for TX on one transmitter
 sdr.dds_single_tone(-3000000, 0.9, channel=0)
