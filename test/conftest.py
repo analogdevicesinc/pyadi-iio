@@ -468,8 +468,14 @@ def cw_loopback(classname, devicename, channel, param_set):
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
-    else:
+    elif hasattr(sdr, "rx_sample_rate"):
         RXFS = int(sdr.rx_sample_rate)
+    else:
+        """ no sample_rate nor rx_sample_rate. Let's try something like
+        rx($channel)_sample_rate"""
+        attr = "rx" + str(channel) + "_sample_rate"
+        RXFS = int(getattr(sdr, attr))
+
     A = 2 ** 15
     fc = RXFS * 0.1
     ts = 1 / float(RXFS)
