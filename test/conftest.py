@@ -149,6 +149,8 @@ class BaseTestHelpers:
     def dev_interface(self, val, attr, tol):
         sdr = eval(self.classname + "(uri='" + self.uri + "')")
         # Check hardware
+        if not hasattr(sdr, attr):
+            raise AttributeError(attr + " not defined in " + self.classname)
         setattr(sdr, attr, val)
         rval = float(getattr(sdr, attr))
         del sdr
