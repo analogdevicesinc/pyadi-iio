@@ -266,6 +266,45 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol, repea
         assert bi.dev_interface(val, attr, tol) <= tol
 
 
+def attribute_multipe_values(classname, devicename, attr, values, tol, repeats=1):
+    bi = BoardInterface(classname, devicename)
+    for _ in range(repeats):
+        for val in values:
+            if isinstance(val, str):
+                assert bi.dev_interface(val, attr, 0)
+            else:
+                assert bi.dev_interface(val, attr, tol) <= tol
+
+
+def attribute_multipe_values_with_depends(
+    classname, devicename, attr, depends, values, tol, repeats=1
+):
+    bi = BoardInterface(classname, devicename)
+    # Set custom dependencies for the attr being tested
+    for p in depends.keys():
+        if isinstance(depends[p], str):
+            assert bi.dev_interface(depends[p], p, 0)
+        else:
+            assert bi.dev_interface(depends[p], p, tol) <= tol
+    for _ in range(repeats):
+        for val in values:
+            if isinstance(val, str):
+                assert bi.dev_interface(val, attr, 0)
+            else:
+                assert bi.dev_interface(val, attr, tol) <= tol
+
+
+def attribute_write_only_str(classname, devicename, attr, file):
+    bi = BoardInterface(classname, devicename)
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    try:
+        setattr(sdr, attr, file)
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+
 def dma_rx(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
     sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
@@ -853,3 +892,21 @@ def test_cw_loopback(request):
 def test_gain_check(request):
     command_line_config(request)
     yield gain_check
+
+
+@pytest.fixture()
+def test_attribute_multipe_values(request):
+    command_line_config(request)
+    yield attribute_multipe_values
+
+
+@pytest.fixture()
+def test_attribute_multipe_values_with_depends(request):
+    command_line_config(request)
+    yield attribute_multipe_values_with_depends
+
+
+@pytest.fixture
+def test_attribute_write_only_str(request):
+    command_line_config(request)
+    yield attribute_write_only_str
