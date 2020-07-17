@@ -48,6 +48,7 @@ def get_test_map():
         "zynq-zc706-adv7511-ad9361-fmcomms5",
         "zynq-zc706-adv7511-ad9361-fmcomms5-ext-lo-adf5355",
     ]
+    test_map["pluto"] = ["pluto"]
     test_map["ad9361"] = [
         "socfpga_cyclone5_sockit_arradio",
         "zynq-zed-adv7511-ad9361-fmcomms2-3",
@@ -58,8 +59,8 @@ def get_test_map():
         "zynq-adrv9361-z7035-box",
         "zynq-adrv9361-z7035-bob",
         "zynq-adrv9361-z7035-bob-cmos",
-    ]
-    test_map["pluto"] = [
+    ] + test_map["fmcomms5"]
+    test_map["ad9364"] = [
         "socfpga_cyclone5_sockit_arradio",
         "zynq-zc702-adv7511-ad9364-fmcomms4",
         "zynq-zc706-adv7511-ad9364-fmcomms4",
@@ -68,8 +69,6 @@ def get_test_map():
         "zynq-adrv9364-z7020-bob",
         "zynq-adrv9364-z7020-bob-cmos",
         "zynq-zed-adv7511-ad9364-fmcomms4",
-        "pluto",
     ] + test_map["ad9361"]
-    test_map["ad9364"] = test_map["pluto"]
 
     return test_map
