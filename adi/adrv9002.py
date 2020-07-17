@@ -126,10 +126,9 @@ class adrv9002(rx_tx, context_manager):
     def rx_dma_mode(self):
         """rx_dma_mode: DMA configuration for RX path. Options are:
             combined: RX1 and RX2 share the same rx method
-            split: RX1 and RX2 have separate rx methods rx1 and rx2.
-                   Typically used when they are at different rates.
-                   In this case the standard rx method has the same
-                   effect as the rx1 method.
+            split: RX1 and RX2 have separate rx methods rx1 and rx2. Typically
+            used when they are at different rates. In this case the standard rx
+            method has the same effect as the rx1 method.
         """
         return self._rx_dma_mode
 
@@ -138,9 +137,8 @@ class adrv9002(rx_tx, context_manager):
         """tx_dma_mode: DMA configuration for TX path. Options are:
                 combined: TX1 and TX2 share the same tx method
                 split: TX1 and TX2 have separate tx methods tx1 and tx2.
-                       Typically used when they are at different rates.
-                       In this case the standard tx method has the same
-                       effect as the tx1 method.
+                Typically used when they are at different rates. In this case
+                the standard tx method has the same effect as the tx1 method.
         """
         return self._tx_dma_mode
 
