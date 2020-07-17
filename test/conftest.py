@@ -149,8 +149,12 @@ class BaseTestHelpers:
     def dev_interface(self, val, attr, tol):
         sdr = eval(self.classname + "(uri='" + self.uri + "')")
         # Check hardware
+        if not hasattr(sdr, attr):
+            raise AttributeError(attr + " not defined in " + self.classname)
         setattr(sdr, attr, val)
-        rval = float(getattr(sdr, attr))
+        rval = getattr(sdr, attr)
+        if not isinstance(rval, str):
+            rval = float(rval)
         del sdr
         if not isinstance(val, str):
             if abs(val - rval) > tol:
@@ -260,6 +264,45 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol, repea
         val = nums[ind]
         # Check hardware
         assert bi.dev_interface(val, attr, tol) <= tol
+
+
+def attribute_multipe_values(classname, devicename, attr, values, tol, repeats=1):
+    bi = BoardInterface(classname, devicename)
+    for _ in range(repeats):
+        for val in values:
+            if isinstance(val, str):
+                assert bi.dev_interface(val, attr, 0)
+            else:
+                assert bi.dev_interface(val, attr, tol) <= tol
+
+
+def attribute_multipe_values_with_depends(
+    classname, devicename, attr, depends, values, tol, repeats=1
+):
+    bi = BoardInterface(classname, devicename)
+    # Set custom dependencies for the attr being tested
+    for p in depends.keys():
+        if isinstance(depends[p], str):
+            assert bi.dev_interface(depends[p], p, 0)
+        else:
+            assert bi.dev_interface(depends[p], p, tol) <= tol
+    for _ in range(repeats):
+        for val in values:
+            if isinstance(val, str):
+                assert bi.dev_interface(val, attr, 0)
+            else:
+                assert bi.dev_interface(val, attr, tol) <= tol
+
+
+def attribute_write_only_str(classname, devicename, attr, file):
+    bi = BoardInterface(classname, devicename)
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    try:
+        setattr(sdr, attr, file)
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
 
 
 def dma_rx(classname, devicename, channel):
@@ -425,8 +468,14 @@ def cw_loopback(classname, devicename, channel, param_set):
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
-    else:
+    elif hasattr(sdr, "rx_sample_rate"):
         RXFS = int(sdr.rx_sample_rate)
+    else:
+        """ no sample_rate nor rx_sample_rate. Let's try something like
+        rx($channel)_sample_rate"""
+        attr = "rx" + str(channel) + "_sample_rate"
+        RXFS = int(getattr(sdr, attr))
+
     A = 2 ** 15
     fc = RXFS * 0.1
     ts = 1 / float(RXFS)
@@ -849,3 +898,21 @@ def test_cw_loopback(request):
 def test_gain_check(request):
     command_line_config(request)
     yield gain_check
+
+
+@pytest.fixture()
+def test_attribute_multipe_values(request):
+    command_line_config(request)
+    yield attribute_multipe_values
+
+
+@pytest.fixture()
+def test_attribute_multipe_values_with_depends(request):
+    command_line_config(request)
+    yield attribute_multipe_values_with_depends
+
+
+@pytest.fixture
+def test_attribute_write_only_str(request):
+    command_line_config(request)
+    yield attribute_write_only_str
