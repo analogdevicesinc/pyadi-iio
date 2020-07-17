@@ -265,7 +265,7 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol, repea
         # Check hardware
         assert bi.dev_interface(val, attr, tol) <= tol
 
-        
+
 def attribute_multipe_values(classname, devicename, attr, values, tol, repeats=1):
     bi = BoardInterface(classname, devicename)
     for _ in range(repeats):
