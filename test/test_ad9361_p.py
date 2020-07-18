@@ -9,7 +9,8 @@ classname = "adi.ad9361"
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats",
     [
-        ("tx_hardwaregain", -89.75, 0.0, 0.25, 0, 100),
+        ("tx_hardwaregain_chan0", -89.75, 0.0, 0.25, 0, 100),
+        ("tx_hardwaregain_chan1", -89.75, 0.0, 0.25, 0, 100),
         ("rx_lo", 70000000, 6000000000, 1, 8, 100),
         ("tx_lo", 47000000, 6000000000, 1, 8, 100),
         ("sample_rate", 2084000, 61440000, 1, 4, 20),
