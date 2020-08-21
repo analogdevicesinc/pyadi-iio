@@ -31,45 +31,25 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import *
+from adi.context_manager import context_manager
+from adi.rx_tx import rx
 
-from adi.fmcomms5 import *
+import numpy as np
 
-from adi.ad9371 import *
 
-from adi.adrv9002 import adrv9002
+class cn0540(rx, context_manager):
+    """ CN0540 CBM DAQ Board """
 
-from adi.adrv9009 import *
+    _rx_data_type = np.int32
+    _rx_data_si_type = np.float
+    _complex_data = False
+    _rx_channel_names = ["voltage0"]
+    _device_name = ""
 
-from adi.adrv9009_zu11eg import *
+    def __init__(self, uri=""):
 
-from adi.ad9680 import *
+        context_manager.__init__(self, uri, self._device_name)
 
-from adi.ad9144 import *
+        self._rxadc = self._ctx.find_device("ad7768-1")
 
-from adi.ad9152 import *
-
-from adi.daq2 import *
-
-from adi.daq3 import *
-
-from adi.adis16460 import *
-
-from adi.adis16507 import *
-
-from adi.ad7124 import *
-
-from adi.adxl345 import *
-
-from adi.adxl1002 import *
-
-from adi.fmclidar1 import *
-
-from adi.ad5686 import *
-
-from adi.adar1000 import adar1000
-
-from adi.ltc2983 import *
-
-__version__ = "0.0.6"
-name = "Analog Devices Hardware Interfaces"
+        rx.__init__(self)
