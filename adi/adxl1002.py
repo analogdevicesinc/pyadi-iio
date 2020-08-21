@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2020 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,45 +31,12 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import *
+from adi.cn0540 import cn0540
 
-from adi.fmcomms5 import *
 
-from adi.ad9371 import *
+class adxl1002(cn0540):
+    """ ADXL1002 Low Noise, High Frequency +/-50g MEMS Accelerometer """
 
-from adi.adrv9002 import adrv9002
+    def __init__(self, uri=""):
 
-from adi.adrv9009 import *
-
-from adi.adrv9009_zu11eg import *
-
-from adi.ad9680 import *
-
-from adi.ad9144 import *
-
-from adi.ad9152 import *
-
-from adi.daq2 import *
-
-from adi.daq3 import *
-
-from adi.adis16460 import *
-
-from adi.adis16507 import *
-
-from adi.ad7124 import *
-
-from adi.adxl345 import *
-
-from adi.adxl1002 import *
-
-from adi.fmclidar1 import *
-
-from adi.ad5686 import *
-
-from adi.adar1000 import adar1000
-
-from adi.ltc2983 import *
-
-__version__ = "0.0.6"
-name = "Analog Devices Hardware Interfaces"
+        cn0540.__init__(self, uri=uri)
