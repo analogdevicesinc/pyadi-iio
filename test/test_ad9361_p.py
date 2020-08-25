@@ -1,6 +1,6 @@
 import pytest
 
-hardware = ["packrf", "adrv9361", "fmcomms2"]
+hardware = ["packrf", "adrv9361", "fmcomms2", "ad9361"]
 classname = "adi.ad9361"
 
 
