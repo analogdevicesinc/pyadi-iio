@@ -225,7 +225,7 @@ def iio_attribute_single_value(
     # Pick random number in operational range
     numints = int((stop - start) / step)
     for _ in range(repeats):
-        ind = random.randint(0, numints + 1)
+        ind = random.randint(0, numints)
         val = start + step * ind
         # Check hardware
         assert (
@@ -241,7 +241,7 @@ def attribute_single_value(
     # Pick random number in operational range
     numints = int((stop - start) / step)
     for _ in range(repeats):
-        ind = random.randint(0, numints + 1)
+        ind = random.randint(0, numints)
         val = start + step * ind
         # Check hardware
         assert bi.dev_interface(val, attr, tol) <= tol
