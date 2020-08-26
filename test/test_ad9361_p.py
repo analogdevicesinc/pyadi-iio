@@ -76,6 +76,41 @@ def test_ad9361_loopback(test_dma_loopback, classname, hardware, channel):
             tx_hardwaregain_chan0=-20,
             gain_control_mode_chan1="slow_attack",
             tx_hardwaregain_chan1=-20,
+            sample_rate=1000000,
+        )
+    ],
+)
+@pytest.mark.parametrize("buffer_length", [2 ** 15])
+@pytest.mark.parametrize("loops", [100])
+@pytest.mark.parametrize("tries", [10])
+def test_ad9361_throughput(
+    test_throughput,
+    classname,
+    hardware,
+    channel,
+    param_set,
+    buffer_length,
+    loops,
+    tries,
+):
+    test_throughput(
+        classname, hardware, channel, param_set, buffer_length, loops, tries
+    )
+
+
+#########################################
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        dict(
+            tx_lo=1000000000,
+            rx_lo=1000000000,
+            gain_control_mode_chan0="slow_attack",
+            tx_hardwaregain_chan0=-20,
+            gain_control_mode_chan1="slow_attack",
+            tx_hardwaregain_chan1=-20,
             sample_rate=4000000,
         )
     ],

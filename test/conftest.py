@@ -550,6 +550,46 @@ def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
     assert val > sfdr_min
 
 
+def measure_rate(
+    classname, devicename, channel, param_set, buffer_length, loops, tries
+):
+    bi = BoardInterface(classname, devicename)
+    # See if we can tone using DMAs
+    for _ in range(tries):
+        sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+        # Set custom device parameters
+        for p in param_set.keys():
+            assert hasattr(sdr, p)
+            setattr(sdr, p, param_set[p])
+        # Set common buffer settings
+        N = buffer_length
+        sdr.tx_enabled_channels = [channel]
+        sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
+        sdr.rx_enabled_channels = [channel]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+        # Create a sinewave waveform
+        if hasattr(sdr, "sample_rate"):
+            RXFS = int(sdr.sample_rate)
+        elif hasattr(sdr, "rx_sample_rate"):
+            RXFS = int(sdr.rx_sample_rate)
+        else:
+            """ no sample_rate nor rx_sample_rate. Let's try something like
+            rx($channel)_sample_rate"""
+            attr = "rx" + str(channel) + "_sample_rate"
+            RXFS = int(getattr(sdr, attr))
+        # Setup buffers
+        sdr.rx()
+        import time
+
+        start = time.time()
+        for _ in range(loops):
+            sdr.rx()
+        done = time.time()
+        throughput = (loops * N) / (done - start)
+        print("Throughput:", throughput)
+        del sdr
+
+
 def gain_check(
     classname, devicename, channel, param_set, dds_scale, min_rssi, max_rssi
 ):
@@ -892,6 +932,12 @@ def test_iq_loopback(request):
 def test_cw_loopback(request):
     command_line_config(request)
     yield cw_loopback
+
+
+@pytest.fixture()
+def test_throughput(request):
+    command_line_config(request)
+    yield measure_rate
 
 
 @pytest.fixture()
