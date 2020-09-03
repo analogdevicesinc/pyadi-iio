@@ -16,7 +16,7 @@ class ADIPlotter(object):
     def __init__(self):
 
         self.q = Queue(maxsize=20)
-        self.stream = adi.ad9361(uri="ip:192.168.86.40")
+        self.stream = adi.Pluto()
         self.stream.sample_rate = 10000000
         self.stream.dds_single_tone(3000000, 0.9)
         self.stream.rx_buffer_size = 2**12
@@ -67,8 +67,9 @@ class ADIPlotter(object):
             try:
                 self.q.put(data,block=False,timeout=4)
             except Full:
-                if self.run_source:
-                    raise
+                if not self.run_source:
+                    return
+                    #raise
 
     def start(self):
         if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
