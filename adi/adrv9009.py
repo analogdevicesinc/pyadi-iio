@@ -64,7 +64,11 @@ class adrv9009(rx_tx, context_manager):
     def profile(self, value):
         with open(value, "r") as file:
             data = file.read()
-        self._set_iio_dev_attr_str("profile_config", data)
+        # Apply profiles in specific order if multiple phys found
+        phys = [p for p in self.__dict__.keys() if "_ctrl" in p]
+        phys = sorted(phys)
+        for phy in phys[1:] + [phys[0]]:
+            self._set_iio_dev_attr_str("profile_config", data, self.getattr(phy))
 
     @property
     def frequency_hopping_mode(self):
