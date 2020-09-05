@@ -1,0 +1,8 @@
+# This file maintains a list of tests to skip under certain configurations.
+# Uusually due to known issues with certain revisions of boards
+filter_ad9361_soms_secondary_channels:
+  hardware: adrv9361
+  test_name: test_ad9361_iq_loopback
+  comment: "Most SOM revs have poor secondary channel performance except Rev F2"
+  config_to_skip:
+    channel: 1

@@ -56,6 +56,11 @@ def pytest_addoption(parser):
         action="store",
         help="Import custom configuration file not in default location.",
     )
+    parser.addoption(
+        "--filter-known-failures",
+        action="store_true",
+        help="Filter out known tests which fail due to certain hardware revs.",
+    )
 
 
 def pytest_configure(config):
@@ -775,6 +780,35 @@ def stress_tx_buffer_creation(classname, devicename, channel, repeats):
 #########################################
 
 
+def apply_filters(request):
+    # Filter out known failing tests
+    func_name = request.function.__name__
+
+    import pathlib
+
+    path = pathlib.Path(__file__).parent.absolute()
+    filename = os.path.join(path, "test_filters.yaml")
+    stream = open(filename, "r")
+    filters = yaml.safe_load(stream)
+    stream.close()
+
+    # Search through each filter to see if we have a match
+    for filter_name in filters:
+        if filters[filter_name]["test_name"] == func_name:
+            if "hardware" in request.fixturenames:
+                hw = request.getfixturevalue("hardware")
+                if filters[filter_name]["hardware"] in hw:
+                    for kw in request.fixturenames:
+                        for c2s in filters[filter_name]["config_to_skip"]:
+                            if c2s == kw:
+                                val = request.getfixturevalue(kw)
+                                rval = filters[filter_name]["config_to_skip"][c2s]
+                                if val == rval:
+                                    print("Skipping", func_name)
+                                    print("Due to property:", kw, "Value:", val)
+                                    pytest.skip(filters[filter_name]["comment"])
+
+
 def command_line_config(request):
     if request.config.getoption("--error_on_filter"):
         global ignore_skip
@@ -788,6 +822,9 @@ def command_line_config(request):
     global imported_config
     filename = request.config.getoption("--test-configfilename")
     imported_config = get_test_config(filename)
+
+    if request.config.getoption("--filter-known-failures"):
+        apply_filters(request)
 
 
 #########################################
