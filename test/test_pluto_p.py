@@ -9,7 +9,7 @@ classname = "adi.Pluto"
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats",
     [
-        ("tx_hardwaregain", -89.75, 0.0, 0.25, 0, 100),
+        ("tx_hardwaregain_chan0", -89.75, 0.0, 0.25, 0, 100),
         ("rx_lo", 325000000, 3800000000, 1, 8, 100),
         ("tx_lo", 325000000, 3800000000, 1, 8, 100),
         ("sample_rate", 2084000, 61440000, 1, 4, 100),
