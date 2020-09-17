@@ -70,13 +70,13 @@ def test_ad9361_loopback(test_dma_loopback, classname, hardware, channel):
     "param_set",
     [
         dict(
+            sample_rate=4000000,
             tx_lo=1000000000,
             rx_lo=1000000000,
             gain_control_mode_chan0="slow_attack",
             tx_hardwaregain_chan0=-20,
             gain_control_mode_chan1="slow_attack",
             tx_hardwaregain_chan1=-20,
-            sample_rate=4000000,
         )
     ],
 )
@@ -92,31 +92,31 @@ def test_ad9361_sfdr(test_sfdr, classname, hardware, channel, param_set, sfdr_mi
     "param_set",
     [
         dict(
+            sample_rate=4000000,
             tx_lo=1000000000,
             rx_lo=1000000000,
             gain_control_mode_chan0="slow_attack",
             tx_hardwaregain_chan0=-20,
             gain_control_mode_chan1="slow_attack",
             tx_hardwaregain_chan1=-20,
-            sample_rate=4000000,
         ),
         dict(
+            sample_rate=4000000,
             tx_lo=2000000000,
             rx_lo=2000000000,
             gain_control_mode_chan0="slow_attack",
             tx_hardwaregain_chan0=-20,
             gain_control_mode_chan1="slow_attack",
             tx_hardwaregain_chan1=-20,
-            sample_rate=4000000,
         ),
         dict(
+            sample_rate=4000000,
             tx_lo=3000000000,
             rx_lo=3000000000,
             gain_control_mode_chan0="slow_attack",
             tx_hardwaregain_chan0=-20,
             gain_control_mode_chan1="slow_attack",
             tx_hardwaregain_chan1=-20,
-            sample_rate=4000000,
         ),
     ],
 )
