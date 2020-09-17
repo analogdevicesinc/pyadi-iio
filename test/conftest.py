@@ -1,3 +1,4 @@
+import datetime
 import os
 import random
 import sys
@@ -11,6 +12,7 @@ import adi
 import numpy as np
 import pytest
 import yaml
+from elasticsearch import Elasticsearch
 
 target_uri_arg = None
 ignore_skip = False
@@ -56,6 +58,54 @@ def pytest_addoption(parser):
         action="store",
         help="Import custom configuration file not in default location.",
     )
+    parser.addoption(
+        "--elastic-log",
+        action="store_true",
+        help="Enable submission of telemetry to elasticsearch",
+    )
+
+
+def submit_elastic_tx_quad_cal(devname, failed, iterations, channel, date):
+    global imported_config
+    print(imported_config)
+    if "elastic" not in imported_config:
+        print("No elasticsearch configuration found")
+        return
+    s = imported_config["elastic"]
+    es = Elasticsearch(
+        [{"host": s["server"], "port": s["port"]}],
+        http_auth=(s["username"], s["password"]),
+    )
+    if not es.ping():
+        print("elasticsearch server not found")
+        return
+    index = "ad936x_tx_quad_cal"
+    if not es.indices.exists(index):
+        record = {
+            "settings": {"number_of_shards": 1, "number_of_replicas": 0},
+            "mappings": {
+                "properties": {
+                    "test_name": {"type": "text"},
+                    "date": {"type": "date"},
+                    "device": {"type": "text"},
+                    "failed": {"type": "integer"},
+                    "iterations": {"type": "integer"},
+                    "channel": {"type": "integer"},
+                }
+            },
+        }
+        es.indices.create(index=index, body=record)
+
+    record = {
+        "test_name": "ad936x_tx_quad_cal",
+        "date": date,
+        "device": devname,
+        "failed": failed,
+        "iterations": iterations,
+        "channel": channel,
+    }
+    print(record)
+    es.index(index=index, body=record)
 
 
 def pytest_configure(config):
@@ -106,6 +156,8 @@ class BaseTestHelpers:
                 pytest.fail("Board not found!")
 
     def check_dev(self):
+        self.board = "NA"
+        board = "NA"
         # Must use globals since each test is a separate class instance
         global found_devices
         global found_uris
@@ -144,6 +196,11 @@ class BaseTestHelpers:
                 for d in ds:
                     found_devices[d] = False
                     found_uris[d] = ""
+
+        if not board == "NA":
+            self.board = board.name
+        else:
+            self.board = board
         return found_dev
 
     def dev_interface(self, val, attr, tol):
@@ -779,6 +836,30 @@ def stress_tx_buffer_creation(classname, devicename, channel, repeats):
     del sdr
 
 
+def catalina_tx_iq_cal_validate(classname, devicename, repeats):
+    bi = BoardInterface(classname, devicename)
+    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+
+    # Check Quad Cal
+    TX1_not_converged = 0
+    TX2_not_converged = 0
+    for n in range(repeats):
+        sdr._ctrl.debug_attrs["initialize"].value = "1"
+        time.sleep(1)
+        TX1_not_converged += bin(sdr._ctrl.reg_read(0x0A7))[-1] != "1"
+        TX2_not_converged += bin(sdr._ctrl.reg_read(0x0A8))[-1] != "1"
+        print(TX1_not_converged, TX2_not_converged, n)
+
+    date = datetime.datetime.now()
+    submit_elastic_tx_quad_cal(bi.board, TX1_not_converged, repeats, 0, date)
+    submit_elastic_tx_quad_cal(bi.board, TX2_not_converged, repeats, 1, date)
+
+    percent_fail = float(TX1_not_converged) / float(repeats)
+    assert percent_fail < 0.10
+    percent_fail = float(TX2_not_converged) / float(repeats)
+    assert percent_fail < 0.10
+
+
 #########################################
 
 
@@ -923,3 +1004,9 @@ def test_attribute_multipe_values_with_depends(request):
 def test_attribute_write_only_str(request):
     command_line_config(request)
     yield attribute_write_only_str
+
+
+@pytest.fixture
+def test_catalina_tx_iq_cal_validate(request):
+    command_line_config(request)
+    yield catalina_tx_iq_cal_validate

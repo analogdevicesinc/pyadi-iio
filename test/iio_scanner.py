@@ -212,7 +212,7 @@ def find_device(names, uri=None, config=None, ignore_skip=None):
             boards = [b]
         else:
             return (False, [])
-    elif config:
+    elif config and "uri-map" in config:
         # Convert config to board class
         boards = []
         for dev in config["uri-map"]:

@@ -122,3 +122,12 @@ def test_ad9361_sfdr(test_sfdr, classname, hardware, channel, param_set, sfdr_mi
 )
 def test_ad9361_iq_loopback(test_iq_loopback, classname, hardware, channel, param_set):
     test_iq_loopback(classname, hardware, channel, param_set)
+
+
+#########################################
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("repeats", [100])
+def test_ad9361_tx_quad_cal(
+    test_catalina_tx_iq_cal_validate, classname, hardware, repeats
+):
+    test_catalina_tx_iq_cal_validate(classname, hardware, repeats)
