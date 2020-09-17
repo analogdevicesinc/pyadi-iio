@@ -458,6 +458,13 @@ def cw_loopback(classname, devicename, channel, param_set):
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
+    time.sleep(1)
+    # Verify still set
+    for p in param_set.keys():
+        if isinstance(param_set[p], str):
+            assert getattr(sdr, p) == param_set[p]
+        else:
+            assert np.abs(getattr(sdr, p) - param_set[p]) < 4
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
     N = 2 ** 14
