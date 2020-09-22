@@ -53,16 +53,16 @@ sdr.gain_control_mode = "automatic"
 
 # Enable int8 filter in FPGA
 sdr.tx_enable_int8 = False
-print("TX FS Pre int8:",sdr.tx_sample_rate)
+print("TX FS Pre int8:", sdr.tx_sample_rate)
 sdr.tx_enable_int8 = True
-print("TX FS Post int8:",sdr.tx_sample_rate)
+print("TX FS Post int8:", sdr.tx_sample_rate)
 fs = int(sdr.tx_sample_rate)
 
 # Read properties
 print("RX LO %s" % (sdr.rx_lo))
 
 # Create a sinewave waveform
-N = 2**15
+N = 2 ** 15
 fc = 6000000
 ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)

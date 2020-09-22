@@ -20,11 +20,13 @@ def test_ad9371_attr(
 ):
     test_attribute_single_value(classname, hardware, attr, start, stop, step, tol)
 
+
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("channel", range(2))
 def test_ad9371_rx_data(test_dma_rx, classname, hardware, channel):
     test_dma_rx(classname, hardware, channel)
+
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
@@ -33,17 +35,18 @@ def test_ad9371_rx_data(test_dma_rx, classname, hardware, channel):
 @pytest.mark.parametrize("scale", [0.9])
 @pytest.mark.parametrize("peak_min", [-50])
 @pytest.mark.parametrize(
-    "param_set",
-    [
-        dict(
-            rx_lo=1000000000,
-            tx_lo=1000000000,
-            rx_enabled_dec8=False
-        )
-    ],
+    "param_set", [dict(rx_lo=1000000000, tx_lo=1000000000, rx_enabled_dec8=False)],
 )
 def test_ad9371_dds_loopback(
-    test_dds_loopback, classname, hardware, param_set, channel, frequency, scale, peak_min
+    test_dds_loopback,
+    classname,
+    hardware,
+    param_set,
+    channel,
+    frequency,
+    scale,
+    peak_min,
 ):
-    test_dds_loopback(classname, hardware, param_set, channel, frequency, scale, peak_min
-)
+    test_dds_loopback(
+        classname, hardware, param_set, channel, frequency, scale, peak_min
+    )
