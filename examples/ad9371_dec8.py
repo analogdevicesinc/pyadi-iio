@@ -39,7 +39,7 @@ import numpy as np
 from scipy import signal
 
 # Create radio
-sdr = adi.ad9371()
+sdr = adi.ad9371(uri="ip:192.168.86.55")
 
 # Configure properties
 sdr.rx_enabled_channels = [0, 1]
@@ -51,23 +51,26 @@ sdr.tx_hardwaregain_chan0 = -30
 sdr.tx_hardwaregain_chan1 = -30
 sdr.gain_control_mode = "automatic"
 
-# Enable digital loopback
-# sdr._ctrl.debug_attrs['loopback_tx_rx'].value = '1'
+# Enable int8 filter in FPGA
+sdr.tx_enable_int8 = False
+print("TX FS Pre int8:", sdr.tx_sample_rate)
+sdr.tx_enable_int8 = True
+print("TX FS Post int8:", sdr.tx_sample_rate)
+fs = int(sdr.tx_sample_rate)
 
 # Read properties
 print("RX LO %s" % (sdr.rx_lo))
 
 # Create a sinewave waveform
-N = 1024
-fs = int(sdr.tx_sample_rate)
-fc = 40000000
+N = 2 ** 15
+fc = 6000000
 ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)
 i = np.cos(2 * np.pi * t * fc) * 2 ** 14
 q = np.sin(2 * np.pi * t * fc) * 2 ** 14
 iq = i + 1j * q
 
-fc = -30000000
+fc = -3000000
 i = np.cos(2 * np.pi * t * fc) * 2 ** 14
 q = np.sin(2 * np.pi * t * fc) * 2 ** 14
 iq2 = i + 1j * q
@@ -91,4 +94,4 @@ for r in range(20):
     plt.pause(0.05)
     time.sleep(0.1)
 
-plt.show()
+# plt.show()
