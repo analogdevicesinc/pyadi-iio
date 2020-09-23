@@ -216,9 +216,22 @@ automatic, hybrid, manual</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.ad9371.ad9371.rx_hardwaregain">
-<em class="property">property </em><code class="sig-name descname">rx_hardwaregain</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_hardwaregain" title="Permalink to this definition">¶</a></dt>
-<dd><p>rx_hardwaregain: Gain applied to RX path. Only applicable when
+<dt id="adi.ad9371.ad9371.rx_enable_dec8">
+<em class="property">property </em><code class="sig-name descname">rx_enable_dec8</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_enable_dec8" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_enable_dec8: Enable x8 decimation filter in RX path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.ad9371.ad9371.rx_hardwaregain_chan0">
+<em class="property">property </em><code class="sig-name descname">rx_hardwaregain_chan0</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.ad9371.ad9371.rx_hardwaregain_chan1">
+<em class="property">property </em><code class="sig-name descname">rx_hardwaregain_chan1</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
 gain_control_mode is set to ‘manual’</p>
 </dd></dl>
 
@@ -237,7 +250,8 @@ gain_control_mode is set to ‘manual’</p>
 <dl class="py method">
 <dt id="adi.ad9371.ad9371.rx_sample_rate">
 <em class="property">property </em><code class="sig-name descname">rx_sample_rate</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_sample_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>rx_sample_rate: Sample rate RX path in samples per second</p>
+<dd><p>rx_sample_rate: Sample rate RX path in samples per second
+This value will reflect the correct value when 8x decimator is enabled</p>
 </dd></dl>
 
 <dl class="py method">
@@ -247,9 +261,21 @@ gain_control_mode is set to ‘manual’</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.ad9371.ad9371.tx_hardwaregain">
-<em class="property">property </em><code class="sig-name descname">tx_hardwaregain</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_hardwaregain" title="Permalink to this definition">¶</a></dt>
-<dd><p>tx_hardwaregain: Attenuation applied to TX path</p>
+<dt id="adi.ad9371.ad9371.tx_enable_int8">
+<em class="property">property </em><code class="sig-name descname">tx_enable_int8</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_enable_int8" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_enable_int8: Enable x8 interpolation filter in TX path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.ad9371.ad9371.tx_hardwaregain_chan0">
+<em class="property">property </em><code class="sig-name descname">tx_hardwaregain_chan0</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path channel 0</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.ad9371.ad9371.tx_hardwaregain_chan1">
+<em class="property">property </em><code class="sig-name descname">tx_hardwaregain_chan1</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path channel 1</p>
 </dd></dl>
 
 <dl class="py method">
@@ -267,7 +293,8 @@ gain_control_mode is set to ‘manual’</p>
 <dl class="py method">
 <dt id="adi.ad9371.ad9371.tx_sample_rate">
 <em class="property">property </em><code class="sig-name descname">tx_sample_rate</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_sample_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>tx_sample_rate: Sample rate TX path in samples per second</p>
+<dd><p>tx_sample_rate: Sample rate TX path in samples per second
+This value will reflect the correct value when 8x interpolator is enabled</p>
 </dd></dl>
 
 </dd></dl>
