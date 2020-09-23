@@ -10,6 +10,7 @@ from test.common import (
 )
 from test.globals import *
 
+import adi
 import numpy as np
 import pytest
 
