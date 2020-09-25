@@ -63,6 +63,7 @@ class ad7124(rx, context_manager):
             if device.name in compatible_parts:
                 if index == device_index:
                     self._ctrl = device
+                    self._rxadc = device
                     break
                 else:
                     index += 1
