@@ -98,13 +98,13 @@ class adar1000(attribute, context_manager):
         if isinstance(beams, list):
             for beam in beams:
                 for dev in self._ctx.devices:
-                    if dev.attrs["label"].value == beam:
+                    if "label" in dev.attrs and dev.attrs["label"].value == beam:
                         self._ctrls.append(dev)
             if len(self._ctrls) == len(beams):
                 raise Exception("Not all devices found: " + ",".join(beams))
         else:
             for dev in self._ctx.devices:
-                if dev.attrs["label"].value == beams:
+                if "label" in dev.attrs and dev.attrs["label"].value == beams:
                     self._ctrl = dev
             if not self._ctrl:
                 raise Exception("No device found for BEAM: " + beams)
@@ -118,7 +118,9 @@ class adar1000(attribute, context_manager):
                 dev = self._ctrls[b]
                 _add_prop(type(self), chan_name, "phase", i, False, dev, beams[b])
                 _add_prop(type(self), chan_name, "phase", i, True, dev, beams[b])
-                _add_prop(type(self), chan_name, "hardwaregain", i, False, dev, beams[b])
+                _add_prop(
+                    type(self), chan_name, "hardwaregain", i, False, dev, beams[b]
+                )
                 _add_prop(type(self), chan_name, "hardwaregain", i, True, dev, beams[b])
 
     @property
@@ -177,7 +179,6 @@ class adar1000(attribute, context_manager):
 
     @rx_phases.setter
     def rx_phases(self, values):
-
         self._set_iio_attr_float_multi_dev(
             self._beam_channels, "phase", False, values, self._ctrls
         )
