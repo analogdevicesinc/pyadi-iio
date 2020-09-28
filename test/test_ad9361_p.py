@@ -5,6 +5,7 @@ classname = "adi.ad9361"
 
 
 #########################################
+@pytest.mark.iio(hardware=hardware)
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats",
@@ -17,6 +18,7 @@ classname = "adi.ad9361"
     ],
 )
 def test_ad9361_attr(
+    contexts,
     test_attribute_single_value,
     classname,
     hardware,
@@ -28,39 +30,40 @@ def test_ad9361_attr(
     repeats,
 ):
     test_attribute_single_value(
-        classname, hardware, attr, start, stop, step, tol, repeats
+        contexts, classname, hardware, attr, start, stop, step, tol, repeats
     )
 
 
 #########################################
+@pytest.mark.iio(hardware=hardware)
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("attr, tol", [("loopback", 0)])
 @pytest.mark.parametrize("val", [0, 1, 2])
 def test_ad9361_loopback_attr(
-    test_attribute_single_value_str, classname, hardware, attr, val, tol
+    contexts, test_attribute_single_value_str, classname, hardware, attr, val, tol
 ):
-    test_attribute_single_value_str(classname, hardware, attr, val, tol)
+    test_attribute_single_value_str(contexts, classname, hardware, attr, val, tol)
 
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("channel", [0, 1, [0, 1]])
-def test_ad9361_rx_data(test_dma_rx, classname, hardware, channel):
-    test_dma_rx(classname, hardware, channel)
+def test_ad9361_rx_data(contexts, test_dma_rx, classname, hardware, channel):
+    test_dma_rx(contexts, classname, hardware, channel)
 
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("channel", [0, 1, [0, 1]])
-def test_ad9361_tx_data(test_dma_tx, classname, hardware, channel):
-    test_dma_tx(classname, hardware, channel)
+def test_ad9361_tx_data(contexts, test_dma_tx, classname, hardware, channel):
+    test_dma_tx(contexts, classname, hardware, channel)
 
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("channel", [0, 1])
-def test_ad9361_loopback(test_dma_loopback, classname, hardware, channel):
-    test_dma_loopback(classname, hardware, channel)
+def test_ad9361_loopback(contexts, test_dma_loopback, classname, hardware, channel):
+    test_dma_loopback(contexts, classname, hardware, channel)
 
 
 #########################################
@@ -81,8 +84,10 @@ def test_ad9361_loopback(test_dma_loopback, classname, hardware, channel):
     ],
 )
 @pytest.mark.parametrize("sfdr_min", [40])
-def test_ad9361_sfdr(test_sfdr, classname, hardware, channel, param_set, sfdr_min):
-    test_sfdr(classname, hardware, channel, param_set, sfdr_min)
+def test_ad9361_sfdr(
+    contexts, test_sfdr, classname, hardware, channel, param_set, sfdr_min
+):
+    test_sfdr(contexts, classname, hardware, channel, param_set, sfdr_min)
 
 
 #########################################
@@ -120,5 +125,7 @@ def test_ad9361_sfdr(test_sfdr, classname, hardware, channel, param_set, sfdr_mi
         ),
     ],
 )
-def test_ad9361_iq_loopback(test_iq_loopback, classname, hardware, channel, param_set):
-    test_iq_loopback(classname, hardware, channel, param_set)
+def test_ad9361_iq_loopback(
+    contexts, test_iq_loopback, classname, hardware, channel, param_set
+):
+    test_iq_loopback(contexts, classname, hardware, channel, param_set)
