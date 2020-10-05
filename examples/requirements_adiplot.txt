@@ -1,0 +1,3 @@
+pyqtgraph
+scipy
+PyQt5
