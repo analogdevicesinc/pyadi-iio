@@ -15,7 +15,7 @@ def command_line_config(request):
         ignore_skip = True
 
     global target_uri_arg
-    target_uri_arg = request.config.getoption("--uri")
+    target_uri_arg = request.config.getoption("--uri_py")
     if not target_uri_arg:
         target_uri_arg = None
 
@@ -31,7 +31,7 @@ def pytest_addoption(parser):
         help="When device is not found generate error not skip",
     )
     parser.addoption(
-        "--uri",
+        "--uri_py",
         action="store",
         help="Run test on device with the given uri. IP scanning will be skipped.",
     )
