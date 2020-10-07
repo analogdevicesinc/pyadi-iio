@@ -8,3 +8,4 @@ scapy
 scipy
 pytest-cov
 coveralls
+git+git://github.com/tfcollins/pytest-libiio@master#egg=pytest-libiio
