@@ -35,7 +35,7 @@ from adi.attribute import attribute
 from adi.context_manager import context_manager
 
 
-class dyn_property_float:
+class _dyn_property_float:
     """ Class descriptor for accessing individual attributes """
 
     def __init__(self, attr, dev, channel_name, output):
@@ -55,7 +55,7 @@ class dyn_property_float:
         )
 
 
-def add_prop(classname, channelname, attr, i, inout, dev, beam_name=None):
+def _add_prop(classname, channelname, attr, i, inout, dev, beam_name=None):
     """ Add dynamic property """
     inoutstr = "rx" if inout else "tx"
     pn = inoutstr + str(i) + "_" + attr
@@ -65,7 +65,7 @@ def add_prop(classname, channelname, attr, i, inout, dev, beam_name=None):
     setattr(
         classname,
         pn,
-        dyn_property_float(attr=attr, dev=dev, channel_name=channelname, output=inout),
+        _dyn_property_float(attr=attr, dev=dev, channel_name=channelname, output=inout),
     )
 
 
@@ -98,13 +98,13 @@ class adar1000(attribute, context_manager):
         if isinstance(beams, list):
             for beam in beams:
                 for dev in self._ctx.devices:
-                    if dev.attrs["label"].value == beam:
+                    if "label" in dev.attrs and dev.attrs["label"].value == beam:
                         self._ctrls.append(dev)
             if len(self._ctrls) == len(beams):
                 raise Exception("Not all devices found: " + ",".join(beams))
         else:
             for dev in self._ctx.devices:
-                if dev.attrs["label"].value == beams:
+                if "label" in dev.attrs and dev.attrs["label"].value == beams:
                     self._ctrl = dev
             if not self._ctrl:
                 raise Exception("No device found for BEAM: " + beams)
@@ -116,10 +116,12 @@ class adar1000(attribute, context_manager):
         for b, beam in enumerate(beams):
             for i, chan_name in enumerate(self._beam_channels):
                 dev = self._ctrls[b]
-                add_prop(type(self), chan_name, "phase", i, False, dev, beams[b])
-                add_prop(type(self), chan_name, "phase", i, True, dev, beams[b])
-                add_prop(type(self), chan_name, "hardwaregain", i, False, dev, beams[b])
-                add_prop(type(self), chan_name, "hardwaregain", i, True, dev, beams[b])
+                _add_prop(type(self), chan_name, "phase", i, False, dev, beams[b])
+                _add_prop(type(self), chan_name, "phase", i, True, dev, beams[b])
+                _add_prop(
+                    type(self), chan_name, "hardwaregain", i, False, dev, beams[b]
+                )
+                _add_prop(type(self), chan_name, "hardwaregain", i, True, dev, beams[b])
 
     @property
     def tx_hardwaregains(self):
@@ -177,7 +179,6 @@ class adar1000(attribute, context_manager):
 
     @rx_phases.setter
     def rx_phases(self, values):
-
         self._set_iio_attr_float_multi_dev(
             self._beam_channels, "phase", False, values, self._ctrls
         )
