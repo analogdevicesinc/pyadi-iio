@@ -1,11 +1,89 @@
+import random
+from test.common import (
+    BoardInterface,
+    command_line_config,
+    pytest_addoption,
+    pytest_collection_modifyitems,
+    pytest_configure,
+)
+from test.globals import *
+
 import iio
-import pprint
+
+import numpy as np
 import pytest
+from adi.context_manager import context_manager
+from adi.rx_tx import rx
 
-hardware = ["pluto", "adrv9361", "fmcomms2"]
-classname = ""
+
+def iio_dev_interface(uri, attrtype, dev_name, chan_name, inout, attr, val, tol):
+    try:
+        sdr = iio.Context(uri)
+    except:
+        pytest.skip("Context on reachable: " + str(uri))
+    attr_tl = attrtype.lower()
+
+    if attr_tl == "context":
+        ats = sdr.attrs
+        ats[attr].Value = str(val)
+        rval = float(sdr.attrs[attr].Value)
+    elif attr_tl == "debug":
+        raise Exception("Not supported")
+    elif attr_tl == "device":
+        dev = sdr.find_device(dev_name)
+        assert dev, "Device Not Found"
+        dev.attrs[attr].Value = str(val)
+        rval = float(dev.attrs[attr].Value)
+    elif attr_tl == "channel":
+        dev = sdr.find_device(dev_name)
+        assert dev, "Device Not Found"
+        chan = dev.find_channel(chan_name, inout)
+        assert chan, "Channel Not Found"
+        chan.attrs[attr].Value = str(val)
+        rval = float(chan.attrs[attr].Value)
+    else:
+        raise Exception("Device type unknown " + str(attrtype))
+
+    del sdr
+    if not isinstance(val, str):
+        if abs(val - rval) > tol:
+            print("Failed to set: " + attr)
+            print("Set: " + str(val))
+            print("Got: " + str(rval))
+        return abs(val - rval)
+    return val == str(rval)
+
+def iio_attribute_single_value(
+    uri,
+    attrtype,
+    dev_name,
+    chan_name,
+    inout,
+    attr,
+    start,
+    stop,
+    step,
+    tol,
+    repeats=1,
+):
+    """ Test numberic attributes over ranges
+        This is a generic test that does not use pyadi-iio classes
+        but instead uses libiio directly.
+    """
+    # Pick random number in operational range
+    numints = int((stop - start) / step)
+    for _ in range(repeats):
+        ind = random.randint(0, numints)
+        val = start + step * ind
+        # Check hardware
+        assert (
+            iio_dev_interface(uri, attrtype, dev_name, chan_name, inout, attr, val, tol)
+            <= tol
+        )
 
 
+#####################################
+## Helper functions for comparing driver states
 def get_states(ctx, devices_to_ignore=None, show_skipped=False):
     # Read all attributes in to flattened structure
     state = {}
@@ -116,58 +194,42 @@ def compare_states(state1, state2, expected_to_change, allowed_to_change):
         if expected_to_change:
             raise Exception("Expected changed attributes did not change")
 
+################################
+# Generic Buffer checks
+def iio_buffer_check(phy,rxdev,uri,percent_fail):
 
-def test_attribute_changes(contexts):
+    class rx_generic(rx, context_manager):
+        _complex_data = False
+        _rx_channel_names = []
+        _device_name = ""
+        def __init__(self,uri,phy,rxdev):
+            context_manager.__init__(self, uri, self._device_name)
+            self._rxadc = self._ctx.find_device(rxdev)
+            assert self._rxadc, "Device not found: "+rxdev
+            # Set channels
+            for chan in self._rxadc.channels:
+                if chan.scan_element:
+                    self._rx_channel_names.append(chan.id)
+            rx.__init__(self)
 
-    ctx = None
-    for ctx_desc in contexts:
-        if ctx_desc["hw"] in hardware:
-            ctx = iio.Context(ctx_desc["uri"])
-    if not ctx:
-        pytest.skip("No valid hardware found")
+    c = rx_generic(uri,phy,rxdev)
+    chans = len(c._rx_channel_names)
+    bs = c.rx_buffer_size
+    c.rx_enabled_channels = range(chans)
 
-    drivers_to_ignore = "xadc"
+    # Check for zeros
+    counts = np.zeros((chans,bs), dtype=int)
+    tries = 10
+    for _ in range(tries):
+        datas = c.rx()
+        for chan, data in enumerate(datas):
+            for i, sample in enumerate(data):
+                counts[chan,i] += counts[chan,i] + sample==0.0
 
-    # Set initial state
-    ctx.find_device("ad9361-phy").find_channel("RX_LO").attrs[
-        "frequency"
-    ].value = "1000000000"
-    ctx.find_device("ad9361-phy").find_channel("TX_LO").attrs[
-        "frequency"
-    ].value = "1000000000"
+    for chan, data in enumerate(datas):
+        for i, sample in enumerate(data):
+            counts[chan,i] = counts[chan,i]/tries
+            # print(counts[chan,i])
+            if counts[chan,i] > percent_fail:
+                raise Exception("Zeros in common pattern found")
 
-    # Collect state of all attributes
-    state1 = get_states(ctx, drivers_to_ignore)
-
-    # Change LOs
-    ctx.find_device("ad9361-phy").find_channel("RX_LO").attrs[
-        "frequency"
-    ].value = "2000000000"
-    ctx.find_device("ad9361-phy").find_channel("TX_LO").attrs[
-        "frequency"
-    ].value = "2000000000"
-
-    # Collect state of all attributes after change
-    state2 = get_states(ctx, drivers_to_ignore)
-
-    # Set up comparison
-    expected_to_change = [
-        "ad9361-phy_out_altvoltage0_frequency",
-        "ad9361-phy_out_altvoltage1_frequency",
-    ]
-    allowed_to_change = [
-        "ad7291_in_temp0_mean_raw",
-        "ad7291_in_temp0_raw",
-        "ad9361-phy_in_temp0_input",
-        "ad9361-phy_in_voltage0_hardwaregain",
-        "ad9361-phy_in_voltage1_hardwaregain",
-        "ad9361-phy_in_voltage2_raw",
-        "ad9361-phy_in_voltage0_rssi",
-        "ad9361-phy_in_voltage1_rssi",
-        "ad9361-phy_in_voltage0_hardwaregain_available",
-        "ad9361-phy_in_voltage1_hardwaregain_available",
-    ]
-    for k in range(6):
-        allowed_to_change.append("ad7291_in_voltage{}_raw".format(k))
-
-    compare_states(state1, state2, expected_to_change, allowed_to_change)

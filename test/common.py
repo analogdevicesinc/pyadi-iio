@@ -10,7 +10,7 @@ import pytest
 
 
 def command_line_config(request):
-    if request.config.getoption("--error_on_filter"):
+    if request.config.getoption("--error_on_test_filter"):
         global ignore_skip
         ignore_skip = True
 
@@ -26,7 +26,7 @@ def command_line_config(request):
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--error_on_filter",
+        "--error_on_test_filter",
         action="store_true",
         help="When device is not found generate error not skip",
     )
