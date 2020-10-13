@@ -8,37 +8,12 @@ from test.common import (
     pytest_collection_modifyitems,
     pytest_configure,
 )
+from test.generics import iio_attribute_single_value
 from test.globals import *
 
 import adi
 import numpy as np
 import pytest
-
-
-def iio_attribute_single_value(
-    devicename,
-    attrtype,
-    dev_name,
-    chan_name,
-    inout,
-    attr,
-    start,
-    stop,
-    step,
-    tol,
-    repeats=1,
-):
-    bi = BoardInterface(None, devicename)
-    # Pick random number in operational range
-    numints = int((stop - start) / step)
-    for _ in range(repeats):
-        ind = random.randint(0, numints)
-        val = start + step * ind
-        # Check hardware
-        assert (
-            bi.iio_dev_interface(attrtype, dev_name, chan_name, inout, attr, val, tol)
-            <= tol
-        )
 
 
 def attribute_single_value(
