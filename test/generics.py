@@ -53,20 +53,11 @@ def iio_dev_interface(uri, attrtype, dev_name, chan_name, inout, attr, val, tol)
         return abs(val - rval)
     return val == str(rval)
 
+
 def iio_attribute_single_value(
-    uri,
-    attrtype,
-    dev_name,
-    chan_name,
-    inout,
-    attr,
-    start,
-    stop,
-    step,
-    tol,
-    repeats=1,
+    uri, attrtype, dev_name, chan_name, inout, attr, start, stop, step, tol, repeats=1,
 ):
-    """ Test numberic attributes over ranges
+    """ Test numeric attributes over ranges
         This is a generic test that does not use pyadi-iio classes
         but instead uses libiio directly.
     """
@@ -194,42 +185,42 @@ def compare_states(state1, state2, expected_to_change, allowed_to_change):
         if expected_to_change:
             raise Exception("Expected changed attributes did not change")
 
+
 ################################
 # Generic Buffer checks
-def iio_buffer_check(phy,rxdev,uri,percent_fail):
-
+def iio_buffer_check(phy, rxdev, uri, percent_fail):
     class rx_generic(rx, context_manager):
         _complex_data = False
         _rx_channel_names = []
         _device_name = ""
-        def __init__(self,uri,phy,rxdev):
+
+        def __init__(self, uri, phy, rxdev):
             context_manager.__init__(self, uri, self._device_name)
             self._rxadc = self._ctx.find_device(rxdev)
-            assert self._rxadc, "Device not found: "+rxdev
+            assert self._rxadc, "Device not found: " + rxdev
             # Set channels
             for chan in self._rxadc.channels:
                 if chan.scan_element:
                     self._rx_channel_names.append(chan.id)
             rx.__init__(self)
 
-    c = rx_generic(uri,phy,rxdev)
+    c = rx_generic(uri, phy, rxdev)
     chans = len(c._rx_channel_names)
     bs = c.rx_buffer_size
     c.rx_enabled_channels = range(chans)
 
     # Check for zeros
-    counts = np.zeros((chans,bs), dtype=int)
+    counts = np.zeros((chans, bs), dtype=int)
     tries = 10
     for _ in range(tries):
         datas = c.rx()
         for chan, data in enumerate(datas):
             for i, sample in enumerate(data):
-                counts[chan,i] += counts[chan,i] + sample==0.0
+                counts[chan, i] += counts[chan, i] + sample == 0.0
 
     for chan, data in enumerate(datas):
         for i, sample in enumerate(data):
-            counts[chan,i] = counts[chan,i]/tries
+            counts[chan, i] = counts[chan, i] / tries
             # print(counts[chan,i])
-            if counts[chan,i] > percent_fail:
+            if counts[chan, i] > percent_fail:
                 raise Exception("Zeros in common pattern found")
-

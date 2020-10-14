@@ -10,51 +10,23 @@ classname = ""
 
 #########################################
 # fmt: off
-@pytest.mark.skip(reason="This is only used as a template")
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("hardware", [(*hardware)])
 @pytest.mark.parametrize(
     "attrtype, dev_name, chan_name, inout, attr, start, stop, step, tol, repeats",
     [
-        ("channel", "ad9361-phy", "voltage0", False, "hardwaregain", -89.75, 0.0, 0.25, 0, 100),
-        ("channel", "ad9361-phy", "TX_LO", True, "frequency", 47000000, 6000000000, 1, 4, 100),
-        ("channel", "ad9361-phy", "RX_LO", True, "frequency", 70000000, 6000000000, 1, 4, 100)
+        ("channel","ad9361-phy","voltage0",False,"hardwaregain",-89.75,0.0,0.25,0,100,),
+        ("channel","ad9361-phy","TX_LO",True,"frequency",47000000,6000000000,1,4,100,),
+        ("channel","ad9361-phy","RX_LO",True,"frequency",70000000,6000000000,1,4,100,),
     ],
 )
 def test_iio_attr(
-    test_iio_attribute_single_value,
-    context_desc,
-    hardware,
-    attrtype,
-    dev_name,
-    chan_name,
-    inout,
-    attr,
-    start,
-    stop,
-    step,
-    tol,
-    repeats,
+    test_iio_attribute_single_value,single_ctx_desc,hardware,attrtype,dev_name,chan_name,inout,
+    attr,start,stop,step,tol,repeats,
 ):
-    uri = None
-    for ctx_desc in context_desc:
-        if ctx_desc['hw'] == hardware:
-            uri = ctx_desc['uri']
-            break
-    if not uri:
-        pytest.skip("Unknown hardware")
     test_iio_attribute_single_value(
-        uri,
-        attrtype,
-        dev_name,
-        chan_name,
-        inout,
-        attr,
-        start,
-        stop,
-        step,
-        tol,
-        repeats,
+        single_ctx_desc["uri"],attrtype,dev_name,chan_name,inout,
+        attr,start,stop,step,tol,repeats,
     )
 # fmt: on
 
@@ -121,12 +93,7 @@ def test_attribute_changes(context_desc):
 
 @pytest.mark.parametrize("percent_fail", [(0.1)])
 @pytest.mark.iio_hardware(hardware)
-def test_iio_buffer_check(context_desc, percent_fail):
-    uri = None
-    for ctx_desc in context_desc:
-        if ctx_desc["hw"] in hardware:
-            uri = ctx_desc["uri"]
-    if not uri:
-        pytest.skip("No valid hardware found")
-
-    iio_buffer_check("ad9361-phy", "cf-ad9361-lpc", uri, percent_fail)
+def test_iio_buffer_check(single_ctx_desc, percent_fail):
+    iio_buffer_check(
+        "ad9361-phy", "cf-ad9361-lpc", single_ctx_desc["uri"], percent_fail
+    )
