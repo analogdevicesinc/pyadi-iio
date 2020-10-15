@@ -45,6 +45,7 @@ class cn0540(rx, context_manager):
     _complex_data = False
     _rx_channel_names = ["voltage0"]
     _device_name = ""
+    _rx_shift = 8
 
     def __init__(self, uri=""):
 
