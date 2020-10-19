@@ -114,21 +114,27 @@ def attribute_write_only_str(classname, devicename, attr, file):
 
 def dma_rx(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(bi.classname + "(uri='" + URI + "')")
+    #sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
     N = 2 ** 15
     if not isinstance(channel, list):
         sdr.rx_enabled_channels = [channel]
     else:
         sdr.rx_enabled_channels = channel
-    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+    print(sdr.rx_enabled_channels)
+    print("CHIP A",sdr.trx_lo)
+    print("CHIP B",sdr.trx_lo_chip_b)
+    print("CHIP A",sdr.trx_lo)
+    print("CHIP B",sdr.trx_lo_chip_b)
+    #sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
     try:
         for _ in range(10):
             data = sdr.rx()
-            if isinstance(data, list):
-                for chan in data:
-                    assert np.sum(np.abs(chan)) > 0
-            else:
-                assert np.sum(np.abs(data)) > 0
+        if isinstance(data, list):
+            for chan in data:
+                assert np.sum(np.abs(chan)) > 0
+        else:
+            assert np.sum(np.abs(data)) > 0
     except Exception as e:
         del sdr
         raise Exception(e)
@@ -138,7 +144,8 @@ def dma_rx(classname, devicename, channel):
 
 def dma_tx(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    #sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(bi.classname + "(uri='" + URI + "')")
     TXFS = 1000
     N = 2 ** 15
     ts = 1 / float(TXFS)
@@ -165,7 +172,8 @@ def dma_tx(classname, devicename, channel):
 
 def dma_loopback(classname, devicename, channel):
     bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    #sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(bi.classname + "(uri='" + URI + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
         sdr.loopback_chip_b = 1
     else:
@@ -225,7 +233,8 @@ def freq_est(y, fs):
 def dds_loopback(classname, devicename, param_set, channel, frequency, scale, peak_min):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    #sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(bi.classname + "(uri='" + URI + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -261,7 +270,8 @@ def dds_loopback(classname, devicename, param_set, channel, frequency, scale, pe
 def cw_loopback(classname, devicename, channel, param_set):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    #sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(bi.classname + "(uri='" + URI + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -326,41 +336,42 @@ def cw_loopback(classname, devicename, channel, param_set):
 def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    #sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(bi.classname + "(uri='" + URI + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
     time.sleep(5)  # Wait for QEC to kick in
     # Set common buffer settings
-    N = 2 ** 14
     sdr.tx_cyclic_buffer = True
-    sdr.tx_enabled_channels = [channel]
-    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
-    sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+    sdr.rx_buffer_size = 2 ** 15
+    if sdr._num_tx_channels > 2:
+        sdr.tx_enabled_channels = [channel]
+    if sdr._num_rx_channels > 2:
+        sdr.rx_enabled_channels = [channel]
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
     else:
         RXFS = int(sdr.rx_sample_rate)
     fc = RXFS * 0.1
-
+    N = 2 ** 15
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.9
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * 0.9
+    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * 0.5
     iq = i + 1j * q
     # Pass through SDR
+    window = np.hanning(sdr.rx_buffer_size)
     try:
         sdr.tx(iq)
-        time.sleep(3)
         for _ in range(10):  # Wait for IQ correction to stabilize
-            data = sdr.rx()
+            data = sdr.rx() * window
     except Exception as e:
         del sdr
         raise Exception(e)
+    val = spec.sfdr(data, ref=sdr.rx_buffer_size, plot=False)
     del sdr
-    val = spec.sfdr(data, plot=False)
     assert val > sfdr_min
 
 
@@ -369,10 +380,40 @@ def gain_check(
 ):
     bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    #sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(bi.classname + "(uri='" + URI + "')")
     # Set custom device parameters
     for p in param_set.keys():
-        setattr(sdr, p, param_set[p])
+        if "powerdown" not in p:
+            setattr(sdr, p, param_set[p])
+    # Handle powerdown channels correctly
+    if "adrv9009" in classname:
+        print("Powering RX and OBS Channels down")
+        # First power everything down
+        sdr.rx_powerdown_chan0 = 1
+        sdr.rx_powerdown_chan1 = 1
+        sdr.obs_powerdown_chan0 = 1
+        sdr.obs_powerdown_chan1 = 1
+        if "zu11eg" in classname:
+            sdr.rx_powerdown_chan0_ctrl_b = 1
+            sdr.rx_powerdown_chan1_ctrl_b = 1
+            sdr.obs_powerdown_chan0_ctrl_b = 1
+            sdr.obs_powerdown_chan1_ctrl_b = 1
+        print("Powering things up as desired")
+        count = 0
+        for p in param_set.keys():
+            if "powerdown" in p and not param_set[p]:
+                count = 1
+                print(p,param_set[p])
+                setattr(sdr, p, param_set[p])
+        if count==0:
+            print("Loading Default")
+            sdr.rx_powerdown_chan0 = 0
+            sdr.rx_powerdown_chan1 = 0
+            sdr.rx_powerdown_chan0_ctrl_b = 0
+            sdr.rx_powerdown_chan1_ctrl_b = 0
+
+
     # Enable DDSs
     if hasattr(sdr, "sample_rate"):
         fs = int(sdr.sample_rate)
@@ -384,8 +425,11 @@ def gain_check(
     # Check RSSI
     rssi1 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl)
     rssi2 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl)
-    rssi3 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_b)
-    rssi4 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_b)
+    rssi3 = -1
+    rssi4 = -1
+    if devicename == "adrv9009-dual" or "zu11eg" in classname:
+        rssi3 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_b)
+        rssi4 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_b)
 
     if channel == 0:
         rssi = rssi1
@@ -395,7 +439,28 @@ def gain_check(
         rssi = rssi3
     if channel == 3:
         rssi = rssi4
-    print(rssi1, rssi2, rssi3, rssi4)
+
+    # Handle powerdown channels correctly
+    if "adrv9009" in classname:
+        print("Reseting Power settings")
+        # First power everything down
+        sdr.rx_powerdown_chan0 = 1
+        sdr.rx_powerdown_chan1 = 1
+        sdr.obs_powerdown_chan0 = 1
+        sdr.obs_powerdown_chan1 = 1
+        if "zu11eg" in classname:
+            sdr.rx_powerdown_chan0_ctrl_b = 1
+            sdr.rx_powerdown_chan1_ctrl_b = 1
+            sdr.obs_powerdown_chan0_ctrl_b = 1
+            sdr.obs_powerdown_chan1_ctrl_b = 1
+        sdr.rx_powerdown_chan0 = 0
+        sdr.rx_powerdown_chan1 = 0
+        if "zu11eg" in classname:
+            sdr.rx_powerdown_chan0_ctrl_b = 0
+            sdr.rx_powerdown_chan1_ctrl_b = 0
+
+    print(rssi1,rssi2,rssi3,rssi4)
+    print(rssi)
     assert rssi >= min_rssi
     assert rssi <= max_rssi
 

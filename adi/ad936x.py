@@ -276,6 +276,25 @@ class ad9361(ad9364):
     def tx_hardwaregain_chan1(self, value):
         self._set_iio_attr_float("voltage1", "hardwaregain", True, value)
 
+    @property
+    def rx_port_select(self):
+        """Select RF RX port selection. Options are: A_BALANCED, B_BALANCED
+           TX_MONITOR1, TX_MONITOR2, TX_MONITOR1_2"""
+        return self._get_iio_dev_attr("voltage0", "rf_port_select", False)
+
+    @rx_port_select.setter
+    def rx_port_select(self, value):
+        self._set_iio_attr("voltage0", "rf_port_select", False, value)
+
+    @property
+    def tx_port_select(self):
+        """Select RF TX port selection. Options are: A, B"""
+        return self._get_iio_dev_attr("voltage0", "rf_port_select", True)
+
+    @tx_port_select.setter
+    def tx_port_select(self, value):
+        self._set_iio_attr("voltage0", "rf_port_select", True, value)
+
 
 class ad9363(ad9361):
     """ AD9363 Transceiver """
