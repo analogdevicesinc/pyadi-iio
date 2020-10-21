@@ -159,12 +159,30 @@ class dds(attribute):
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + A + "_F1", True
             )
+            if not chan and self._split_cores:
+                chan = self._txdac_chip_b.find_channel(
+                    "TX"
+                    + str(channel - int(self._num_tx_channels / 4) + 1)
+                    + "_"
+                    + A
+                    + "_F1",
+                    True,
+                )
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(90000)
             chan.attrs["scale"].value = str(scale)
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + B + "_F1", True
             )
+            if not chan and self._split_cores:
+                chan = self._txdac_chip_b.find_channel(
+                    "TX"
+                    + str(channel - int(self._num_tx_channels / 4) + 1)
+                    + "_"
+                    + B
+                    + "_F1",
+                    True,
+                )
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale)
@@ -223,12 +241,30 @@ class dds(attribute):
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + A + "_F1", True
             )
+            if not chan and self._split_cores:
+                chan = self._txdac_chip_b.find_channel(
+                    "TX"
+                    + str(channel - int(self._num_tx_channels / 4) + 1)
+                    + "_"
+                    + A
+                    + "_F1",
+                    True,
+                )
             chan.attrs["frequency"].value = str(frequency1)
             chan.attrs["phase"].value = str(90000)
             chan.attrs["scale"].value = str(scale1)
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + B + "_F1", True
             )
+            if not chan and self._split_cores:
+                chan = self._txdac_chip_b.find_channel(
+                    "TX"
+                    + str(channel - int(self._num_tx_channels / 4) + 1)
+                    + "_"
+                    + B
+                    + "_F1",
+                    True,
+                )
             chan.attrs["frequency"].value = str(frequency1)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale1)
@@ -243,12 +279,30 @@ class dds(attribute):
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + A + "_F2", True
             )
+            if not chan and self._split_cores:
+                chan = self._txdac_chip_b.find_channel(
+                    "TX"
+                    + str(channel - int(self._num_tx_channels / 4) + 1)
+                    + "_"
+                    + A
+                    + "_F2",
+                    True,
+                )
             chan.attrs["frequency"].value = str(frequency2)
             chan.attrs["phase"].value = str(90000)
             chan.attrs["scale"].value = str(scale2)
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + B + "_F2", True
             )
+            if not chan and self._split_cores:
+                chan = self._txdac_chip_b.find_channel(
+                    "TX"
+                    + str(channel - int(self._num_tx_channels / 4) + 1)
+                    + "_"
+                    + B
+                    + "_F2",
+                    True,
+                )
             chan.attrs["frequency"].value = str(frequency2)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale2)

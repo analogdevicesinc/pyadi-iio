@@ -69,6 +69,12 @@ mean_samples_count = [NSAMPLES for i in range(16)]
 mean_samples_sum = [0 for i in range(16)]
 
 
+def close_app():
+    global running
+    running = False
+    root.destroy()
+
+
 def cont_capt():
     """Continuously request samples after Start is pressed."""
     global laser_enabled
@@ -206,8 +212,10 @@ def config_board():
 
 root = tk.Tk()
 root.title("AD-FMCLIDAR1-EBZ")
-
-DEFAULT_IP = "10.48.65.153"
+global running
+running = True
+root.protocol("WM_DELETE_WINDOW", close_app)
+DEFAULT_IP = "10.48.65.124"
 DEFAULT_PULSE_WIDTH = "20"
 DEFAULT_FREQUENCY = "1000"
 DEFAULT_TRIG_LEVEL = "-10"
@@ -401,4 +409,5 @@ canvas.draw()
 root.update_idletasks()
 
 config_board()
-root.update()
+while running:
+    root.update()

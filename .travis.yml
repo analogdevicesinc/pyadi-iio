@@ -21,7 +21,9 @@ script:
 - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.6/site-packages'; fi
 - if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.7/site-packages'; fi
 - if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8/site-packages'; fi
-- pytest -v
+- pytest -v --cov=adi
+after_success:
+- coveralls
 
 jobs:
   include:

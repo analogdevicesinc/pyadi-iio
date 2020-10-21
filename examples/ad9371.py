@@ -47,7 +47,8 @@ sdr.tx_enabled_channels = [0, 1]
 sdr.rx_lo = 2000000000
 sdr.tx_lo = 2000000000
 sdr.tx_cyclic_buffer = True
-sdr.tx_hardwaregain = -30
+sdr.tx_hardwaregain_chan0 = -30
+sdr.tx_hardwaregain_chan1 = -30
 sdr.gain_control_mode = "automatic"
 
 # Enable digital loopback

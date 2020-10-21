@@ -69,7 +69,29 @@ class adrv9009(rx_tx, context_manager):
     def profile(self, value):
         with open(value, "r") as file:
             data = file.read()
-        self._set_iio_dev_attr_str("profile_config", data)
+        # Apply profiles in specific order if multiple phys found
+        phys = [p for p in self.__dict__.keys() if "_ctrl" in p]
+        phys = sorted(phys)
+        for phy in phys[1:] + [phys[0]]:
+            self._set_iio_dev_attr_str("profile_config", data, self.getattr(phy))
+
+    @property
+    def frequency_hopping_mode(self):
+        """frequency_hopping_mode: Set Frequency Hopping Mode"""
+        return self._get_iio_attr("TRX_LO", "frequency_hopping_mode", True)
+
+    @frequency_hopping_mode.setter
+    def frequency_hopping_mode(self, value):
+        self._set_iio_attr("TRX_LO", "frequency_hopping_mode", True, value)
+
+    @property
+    def frequency_hopping_mode_en(self):
+        """frequency_hopping_mode_en: Enable Frequency Hopping Mode"""
+        return self._get_iio_attr("TRX_LO", "frequency_hopping_mode_enable", True)
+
+    @frequency_hopping_mode_en.setter
+    def frequency_hopping_mode_en(self, value):
+        self._set_iio_attr("TRX_LO", "frequency_hopping_mode_enable", True, value)
 
     @property
     def calibrate_rx_phase_correction_en(self):
