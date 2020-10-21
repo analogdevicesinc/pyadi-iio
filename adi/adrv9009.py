@@ -217,3 +217,36 @@ class adrv9009(rx_tx, context_manager):
     @trx_lo.setter
     def trx_lo(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value)
+
+    @property
+    def jesd204_fsm_ctrl(self):
+        """jesd204_fsm_ctrl: jesd204-fsm control"""
+        return self._get_iio_dev_attr("jesd204_fsm_ctrl")
+
+    @jesd204_fsm_ctrl.setter
+    def jesd204_fsm_ctrl(self, value):
+        self._set_iio_dev_attr_str("jesd204_fsm_ctrl", value)
+
+    @property
+    def jesd204_fsm_resume(self):
+        """jesd204_fsm_resume: jesd204-fsm resume"""
+        return self._get_iio_dev_attr("jesd204_fsm_resume")
+
+    @jesd204_fsm_resume.setter
+    def jesd204_fsm_resume(self, value):
+        self._set_iio_dev_attr_str("jesd204_fsm_resume", value)
+
+    @property
+    def jesd204_fsm_state(self):
+        """jesd204_fsm_state: jesd204-fsm state"""
+        return self._get_iio_dev_attr_str("jesd204_fsm_state")
+
+    @property
+    def jesd204_fsm_paused(self):
+        """jesd204_fsm_paused: jesd204-fsm paused"""
+        return self._get_iio_dev_attr("jesd204_fsm_paused")
+
+    @property
+    def jesd204_fsm_error(self):
+        """jesd204_fsm_error: jesd204-fsm error"""
+        return self._get_iio_dev_attr("jesd204_fsm_error")
