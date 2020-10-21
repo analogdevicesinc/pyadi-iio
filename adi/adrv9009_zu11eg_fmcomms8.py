@@ -53,7 +53,7 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         "voltage6_i",
         "voltage6_q",
         "voltage7_i",
-        "voltage7_q"
+        "voltage7_q",
     ]
     _tx_channel_names = [
         "voltage0",
@@ -71,7 +71,7 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         "voltage12",
         "voltage13",
         "voltage14",
-        "voltage15"
+        "voltage15",
     ]
     _device_name = ""
 
@@ -79,6 +79,18 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         adrv9009_zu11eg.__init__(self, uri=uri)
         self._ctrl_c = self._ctx.find_device("adrv9009-phy-c")
         self._ctrl_d = self._ctx.find_device("adrv9009-phy-d")
+
+    def mcs_chips(self):
+        """mcs_chips: MCS Synchronize all four transceivers """
+        # Turn off continuous SYSREF, and enable GPI SYSREF request
+        self._clock_chip_carrier.reg_write(0x5A, 0)
+        chips = [self._ctrl, self._ctrl_b, self._ctrl_c, self._ctrl_d]
+        for i in range(12):
+            for chip in chips:
+                try:
+                    self._set_iio_dev_attr_str("multichip_sync", i, chip)
+                except OSError:
+                    pass
 
     @property
     def calibrate_rx_phase_correction_en_chip_c(self):
@@ -210,9 +222,9 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
     @trx_lo_chip_c.setter
     def trx_lo_chip_c(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl_c)
-        
-# Chip d setter/getters
-        
+
+    # Chip d setter/getters
+
     @property
     def calibrate_rx_phase_correction_en_chip_d(self):
         """calibrate_rx_phase_correction_en: Enable RX Phase Correction Calibration"""

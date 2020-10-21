@@ -1,8 +1,9 @@
 Examples
 ===================
 
+Here is a collection of small examples which demonstrate interfacings with different devices in different ways.
 
-Configuring hardware properties
+Configuring hardware properties and reading back settings
 
 .. code-block:: python
 
@@ -35,7 +36,21 @@ Send data to a device and receiving data from a device
   # Receive
   data_rx = sdr.rx()
 
-Using URIs to access specific devices
+Configure the DDS of a transmit capable FPGA based device
+
+.. code-block:: python
+
+  import adi
+
+  sdr = adi.DAQ2()
+  # Configure DDS
+  tone_freq_hz = 1000  # In Hz
+  tone_scale = 0.9  # Range: 0-1.0
+  tx_channel = 1  # Starts at 0
+  sdr.dds_single_tone(tone_freq_hz, tone_scale, tx_channel)
+
+
+Using URIs to access specific devices over the network
 
 .. code-block:: python
 
@@ -44,5 +59,16 @@ Using URIs to access specific devices
   # Create device from specific uri address
   sdr = adi.ad9361(uri="ip:192.168.2.1")
   data = sdr.rx()
+
+Using URIs to access specific devices over USB
+
+.. code-block:: python
+
+  import adi
+
+  # Create device from specific uri address
+  sdr = adi.Pluto(uri="usb:1.24.5")
+  data = sdr.rx()
+
 
 Other complex examples are available in the `source repository <https://github.com/analogdevicesinc/pyadi-iio/tree/master/examples>`_

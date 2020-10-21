@@ -29,11 +29,14 @@ Sections
    :maxdepth: 2
 
    guides/quick
+   attr/index
    guides/examples
    guides/connectivity
    devices/index
    buffers/index
    fpga/index
+   dev/index
+   support
 
 Indices and tables
 ==================

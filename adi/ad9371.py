@@ -32,6 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
+from adi.obs import obs
 from adi.rx_tx import rx_tx
 
 
@@ -41,6 +42,7 @@ class ad9371(rx_tx, context_manager):
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
+    _obs_channel_names = ["voltage0_i", "voltage0_q"]
     _device_name = ""
 
     def __init__(self, uri=""):
@@ -54,6 +56,8 @@ class ad9371(rx_tx, context_manager):
 
         rx_tx.__init__(self)
 
+        self.obs = obs(self._ctx, self._rxobs, self._obs_channel_names)
+
     @property
     def gain_control_mode(self):
         """gain_control_mode: Mode of receive path AGC. Options are:
@@ -65,24 +69,44 @@ class ad9371(rx_tx, context_manager):
         self._set_iio_attr("voltage0", "gain_control_mode", False, value)
 
     @property
-    def rx_hardwaregain(self):
-        """rx_hardwaregain: Gain applied to RX path. Only applicable when
+    def rx_hardwaregain_chan0(self):
+        """rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
         gain_control_mode is set to 'manual'"""
         return self._get_iio_attr("voltage0", "hardwaregain", False)
 
-    @rx_hardwaregain.setter
-    def rx_hardwaregain(self, value):
+    @rx_hardwaregain_chan0.setter
+    def rx_hardwaregain_chan0(self, value):
         if self.gain_control_mode == "manual":
             self._set_iio_attr("voltage0", "hardwaregain", False, value)
 
     @property
-    def tx_hardwaregain(self):
-        """tx_hardwaregain: Attenuation applied to TX path"""
+    def rx_hardwaregain_chan1(self):
+        """rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
+        gain_control_mode is set to 'manual'"""
+        return self._get_iio_attr("voltage1", "hardwaregain", False)
+
+    @rx_hardwaregain_chan1.setter
+    def rx_hardwaregain_chan1(self, value):
+        if self.gain_control_mode == "manual":
+            self._set_iio_attr("voltage1", "hardwaregain", False, value)
+
+    @property
+    def tx_hardwaregain_chan0(self):
+        """tx_hardwaregain: Attenuation applied to TX path channel 0"""
         return self._get_iio_attr("voltage0", "hardwaregain", True)
 
-    @tx_hardwaregain.setter
-    def tx_hardwaregain(self, value):
+    @tx_hardwaregain_chan0.setter
+    def tx_hardwaregain_chan0(self, value):
         self._set_iio_attr("voltage0", "hardwaregain", True, value)
+
+    @property
+    def tx_hardwaregain_chan1(self):
+        """tx_hardwaregain: Attenuation applied to TX path channel 1"""
+        return self._get_iio_attr("voltage1", "hardwaregain", True)
+
+    @tx_hardwaregain_chan1.setter
+    def tx_hardwaregain_chan1(self, value):
+        self._set_iio_attr("voltage1", "hardwaregain", True, value)
 
     @property
     def rx_rf_bandwidth(self):
@@ -95,14 +119,62 @@ class ad9371(rx_tx, context_manager):
         return self._get_iio_attr("voltage0", "rf_bandwidth", True)
 
     @property
+    def rx_enable_dec8(self):
+        """rx_enable_dec8: Enable x8 decimation filter in RX path"""
+        avail = self._get_iio_attr_str(
+            "voltage0_i", "sampling_frequency_available", False, self._rxadc
+        )
+        avail = avail.strip().split(" ")
+        val = self._get_iio_attr_str(
+            "voltage0_i", "sampling_frequency", False, self._rxadc
+        )
+        return val == avail[1]
+
+    @rx_enable_dec8.setter
+    def rx_enable_dec8(self, value):
+        avail = self._get_iio_attr_str(
+            "voltage0_i", "sampling_frequency_available", False, self._rxadc
+        )
+        avail = sorted(avail.strip().split(" "))
+        val = int(avail[1] if value else avail[0])
+        self._set_iio_attr("voltage0_i", "sampling_frequency", False, val, self._rxadc)
+
+    @property
+    def tx_enable_int8(self):
+        """tx_enable_int8: Enable x8 interpolation filter in TX path"""
+        avail = self._get_iio_attr_str(
+            "voltage0", "sampling_frequency_available", True, self._txdac
+        )
+        avail = avail.strip().split(" ")
+        val = self._get_iio_attr_str(
+            "voltage0", "sampling_frequency", True, self._txdac
+        )
+        return val == avail[1]
+
+    @tx_enable_int8.setter
+    def tx_enable_int8(self, value):
+        avail = self._get_iio_attr_str(
+            "voltage0", "sampling_frequency_available", True, self._txdac
+        )
+        avail = sorted(avail.strip().split(" "))
+        val = int(avail[1] if value else avail[0])
+        self._set_iio_attr("voltage0", "sampling_frequency", True, val, self._txdac)
+
+    @property
     def rx_sample_rate(self):
-        """rx_sample_rate: Sample rate RX path in samples per second"""
-        return self._get_iio_attr("voltage0", "sampling_frequency", False)
+        """rx_sample_rate: Sample rate RX path in samples per second
+            This value will reflect the correct value when 8x decimator is enabled
+        """
+        dec = 8 if self.rx_enable_dec8 else 1
+        return self._get_iio_attr("voltage0", "sampling_frequency", False) / dec
 
     @property
     def tx_sample_rate(self):
-        """tx_sample_rate: Sample rate TX path in samples per second"""
-        return self._get_iio_attr("voltage0", "sampling_frequency", True)
+        """tx_sample_rate: Sample rate TX path in samples per second
+            This value will reflect the correct value when 8x interpolator is enabled
+        """
+        dec = 8 if self.tx_enable_int8 else 1
+        return self._get_iio_attr("voltage0", "sampling_frequency", True) / dec
 
     @property
     def rx_lo(self):
@@ -130,3 +202,25 @@ class ad9371(rx_tx, context_manager):
     @sn_lo.setter
     def sn_lo(self, value):
         self._set_iio_attr("altvoltage2", "RX_SN_LO_frequency", True, value)
+
+    @property
+    def obs_rf_port_select(self):
+        """obs_rf_port_select: Observation path source. Options are:
+
+        - OFF - SnRx path is disabled
+        - ORX1_TX_LO – SnRx operates in observation mode on ORx1 with Tx LO synthesizer
+        - ORX2_TX_LO – SnRx operates in observation mode on ORx2 with Tx LO synthesizer
+        - INTERNALCALS – enables scheduled Tx calibrations while using SnRx path. The enableTrackingCals function needs to be called in RADIO_OFF state. It sets the calibration mask, which the scheduler will later use to schedule the desired calibrations. This command is issued in RADIO_OFF. Once the AD9371 moves to RADIO_ON state, the internal scheduler will use the enabled calibration mask to schedule calibrations whenever possible, based on the state of the transceiver. The Tx calibrations will not be scheduled until INTERNALCALS is selected and the Tx calibrations are enabled in the cal mask.
+        - OBS_SNIFFER – SnRx operates in sniffer mode with latest selected Sniffer Input – for hardware pin control operation. In pin mode, the GPIO pins designated for ORX_MODE would select SNIFFER mode. Then MYKONOS_setSnifferChannel function would choose the channel.
+        - ORX1_SN_LO – SnRx operates in observation mode on ORx1 with SNIFFER LO synthesizer
+        - ORX2_SN_LO – SnRx operates in observation mode on ORx2 with SNIFFER LO synthesizer
+        - SN_A – SnRx operates in sniffer mode on SnRxA with SNIFFER LO synthesizer
+        - SN_B – SnRx operates in sniffer mode on SnRxB with SNIFFER LO synthesizer
+        - SN_C – SnRx operates in sniffer mode on SnRxC with SNIFFER LO synthesizer
+
+        """
+        return self._get_iio_attr_str("voltage2", "rf_port_select", False)
+
+    @obs_rf_port_select.setter
+    def obs_rf_port_select(self, value):
+        self._set_iio_attr("voltage2", "rf_port_select", False, value)
