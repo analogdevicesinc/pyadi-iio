@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2020 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -46,11 +46,108 @@ class cn0540(rx, context_manager):
     _rx_channel_names = ["voltage0"]
     _device_name = ""
     _rx_shift = 8
+    _fda_mode_options = ["low-power", "full-power"]
+    _dac_buffer_gain = 1.22
+    _g = 0.3
+    _fda_gain = 2.667
+    _fda_vocm_mv = 2500
 
     def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
 
         self._rxadc = self._ctx.find_device("ad7768-1")
+        self._ltc2606 = self._ctx.find_device("ltc2606")
+        self._gpio = self._ctx.find_device("one-bit-adc-dac")
+        self._ltc2308 = self._ctx.find_device("ltc2308")
 
         rx.__init__(self)
+
+    @property
+    def input_voltage(self):
+        """input_voltage: mV <FIXME> """
+        adc_chan = self._rxadc
+        adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
+        raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
+        return raw * adc_scale * self._dac_buffer_gain
+
+    @property
+    def shift_voltage(self):
+        """shift_voltage: mV <FIXME> """
+        dac_chan = self._ltc2606
+        dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
+        raw = self._get_iio_attr("voltage0", "raw", True, dac_chan)
+        return raw * dac_scale * self._dac_buffer_gain
+
+    @shift_voltage.setter
+    def shift_voltage(self, value):
+        dac_chan = self._ltc2606
+        dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
+        raw = value / (dac_scale * self._dac_buffer_gain)
+        self._set_iio_attr_int("voltage0", "raw", True, int(raw), dac_chan)
+
+    @property
+    def sensor_voltage(self):
+        """sensor_voltage: mV <FIXME> """
+        adc_chan = self._rxadc
+        adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
+        raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
+
+        v1_st = self._fda_vocm_mv - raw * adc_scale / self._fda_gain
+        vsensor_mv = (((self._g + 1) * self.shift_voltage) - v1_st) / self._g
+
+        raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
+        vsensor_mv -= raw * adc_scale
+        return vsensor_mv
+
+    @property
+    def sw_ff_status(self):
+        """sw_ff_status: <FIXME> """
+        return self._get_iio_attr("voltage0", "raw", False, self._gpio)
+
+    @property
+    def monitor_powerup(self):
+        """monitor_powerup: Shutdown pin is tied to active-low inputs """
+        return self._get_iio_attr("voltage2", "raw", True, self._gpio)
+
+    @monitor_powerup.setter
+    def monitor_powerup(self, value):
+        self._set_iio_attr_int("voltage2", "raw", True, value, self._gpio)
+
+    @property
+    def fda_disable_status(self):
+        """fda_disable_status: <FIXME> """
+        return self._get_iio_attr("voltage5", "raw", True, self._gpio)
+
+    @fda_disable_status.setter
+    def fda_disable_status(self, value):
+        self._set_iio_attr_int("voltage5", "raw", True, value, self._gpio)
+
+    @property
+    def fda_mode(self):
+        """fda_mode: <FIXME> """
+        return self._fda_mode_options[
+            int(self._get_iio_attr("voltage6", "raw", True, self._gpio))
+        ]
+
+    @fda_mode.setter
+    def fda_mode(self, value):
+        self._set_iio_attr_int("voltage6", "raw", True, value, self._gpio)
+
+    @property
+    def red_led_enable(self):
+        """red_led_enable: <FIXME> """
+        return self._get_iio_attr("voltage1", "raw", True, self._gpio)
+
+    @red_led_enable.setter
+    def red_led_enable(self, value):
+        self._set_iio_attr_int("voltage1", "raw", True, value, self._gpio)
+
+    @property
+    def blue_led_enable(self):
+        """blue_led_enable: <FIXME> """
+        return self._get_iio_attr("voltage0", "raw", True, self._gpio)
+
+    @blue_led_enable.setter
+    def blue_led_enable(self, value):
+        self._set_iio_attr_int("voltage0", "raw", True, value, self._gpio)
