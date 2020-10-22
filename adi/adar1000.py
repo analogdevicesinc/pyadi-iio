@@ -55,9 +55,9 @@ class _dyn_property_float:
         )
 
 
-def _add_prop(classname, channelname, attr, i, inout, dev, beam_name=None):
+def _add_prop(classname, channelname, attr, i, output, dev, beam_name=None):
     """ Add dynamic property """
-    inoutstr = "rx" if inout else "tx"
+    inoutstr = "tx" if output else "rx"
     pn = inoutstr + str(i) + "_" + attr
     if beam_name:
         pn += "_" + beam_name.lower()
@@ -65,7 +65,7 @@ def _add_prop(classname, channelname, attr, i, inout, dev, beam_name=None):
     setattr(
         classname,
         pn,
-        _dyn_property_float(attr=attr, dev=dev, channel_name=channelname, output=inout),
+        _dyn_property_float(attr=attr, dev=dev, channel_name=channelname, output=output),
     )
 
 
@@ -100,7 +100,8 @@ class adar1000(attribute, context_manager):
                 for dev in self._ctx.devices:
                     if "label" in dev.attrs and dev.attrs["label"].value == beam:
                         self._ctrls.append(dev)
-            if len(self._ctrls) == len(beams):
+                        break
+            if len(self._ctrls) != len(beams):
                 raise Exception("Not all devices found: " + ",".join(beams))
         else:
             for dev in self._ctx.devices:
@@ -114,8 +115,8 @@ class adar1000(attribute, context_manager):
             beams = [None]
             self._ctrls = [self._ctrl]
         for b, beam in enumerate(beams):
+            dev = self._ctrls[b]
             for i, chan_name in enumerate(self._beam_channels):
-                dev = self._ctrls[b]
                 _add_prop(type(self), chan_name, "phase", i, False, dev, beams[b])
                 _add_prop(type(self), chan_name, "phase", i, True, dev, beams[b])
                 _add_prop(
