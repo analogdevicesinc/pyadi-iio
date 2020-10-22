@@ -1,13 +1,40 @@
 # pyadi-iio: Analog Devices python interfaces for hardware with Industrial I/O drivers
 
-![PyADI-IIO Logo](images/PyADI-IIO_Logo_72.png)
+<p align="center">
+<img src="images/PyADI-IIO_Logo_300.png" width="500" alt="PyADI-IIO Logo"> </br>
+</p>
 
-[![Build Status](https://travis-ci.org/analogdevicesinc/pyadi-iio.svg?branch=master)](https://travis-ci.org/analogdevicesinc/pyadi-iio)
-[![PyPI version](https://badge.fury.io/py/pyadi-iio.svg)](https://badge.fury.io/py/pyadi-iio) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4bd027bfc5774029a30a9e1cedf5a434)](https://www.codacy.com/app/travis.collins/pyadi-iio?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade) [![](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/download/releases/3.6.0/)
+<p align="center">
+<a href="https://travis-ci.org/analogdevicesinc/pyadi-iio">
+<img src="https://travis-ci.org/analogdevicesinc/pyadi-iio.svg?branch=master" alt="Build Status">
+</a>
+  
+<a href="https://badge.fury.io/py/pyadi-iio">
+<img src="https://badge.fury.io/py/pyadi-iio.svg" alt="PyPI version">
+</a>
+  
+<a href="https://www.codacy.com/app/travis.collins/pyadi-iio?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade">
+<img src="https://api.codacy.com/project/badge/Grade/4bd027bfc5774029a30a9e1cedf5a434" alt="Codacy Badge">
+</a>
+  
+<a href="https://www.python.org/download/releases/3.6.0/">
+<img src="https://img.shields.io/badge/python-3.6+-blue.svg" alt="Python Version">
+</a>
+</p>
 
-[[Docs](http://analogdevicesinc.github.io/pyadi-iio/)]
-[[Support](http://ez.analog.com)]
-[[Wiki](https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio)]
+<p align="center">
+<a href="http://analogdevicesinc.github.io/pyadi-iio/)">
+<img alt="GitHub Pages" src="https://img.shields.io/readthedocs/pyadi-iio">
+</a>
+
+<a href="https://ez.analog.com/sw-interface-tools/f/q-a)">
+<img alt="EngineerZone" src="https://img.shields.io/badge/Support-on%20EngineerZone-blue.svg">
+</a>
+
+<a href="https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio)">
+<img alt="Analog Wiki" src="https://img.shields.io/badge/Wiki-on%20wiki.analog.com-blue.svg">
+</a>
+</p>
 
 pyadi-iio is a python abstraction module for ADI hardware with IIO drivers to make them easier to use. The libIIO interface although extremely flexible can be cumbersome to use due to the amount of boilerplate code required for even simple examples, especially when interfacing with buffers. This module has custom interfaces classes for specific parts and development systems which can generally make them easier to understand and use. To get up and running with a device can be as simple as a few lines of code:
 ```python
