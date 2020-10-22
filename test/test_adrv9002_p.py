@@ -6,6 +6,11 @@ import pytest
 hardware = "adrv9002"
 classname = "adi.adrv9002"
 profile_path = dirname(realpath(__file__)) + "/adrv9002_profiles/"
+nco_test_profile = profile_path + "FDD_9MHz_2rx_2tx_LO_2_4G_NCO.json"
+lvds_test_profiles = [
+    profile_path + "FDD_20MHz_2rx_2tx_LO_2_4G.json",
+    profile_path + "FDD_40MHz_2rx_2tx_LO_2_4G.json",
+]
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
@@ -222,12 +227,42 @@ def test_adrv9002_interface_gain_narrowband(
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
-    "files", [join(profile_path, f) for f in listdir(profile_path)],
+    "files", lvds_test_profiles,
 )
 def test_adrv9002_profile_write(
     test_attribute_write_only_str, classname, hardware, attr, files
 ):
     test_attribute_write_only_str(classname, hardware, attr, files)
+
+
+#########################################
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize(
+    "attr, file", [("profile", nco_test_profile),],
+)
+def test_adrv9002_nco_write_profile(
+    test_attribute_write_only_str, classname, hardware, attr, file
+):
+    test_attribute_write_only_str(classname, hardware, attr, file)
+
+
+#########################################
+# It depends on test_adrv9002_nco_write_profile to be run first.
+# Maybe we should think in adding something like pytest-dependency
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize(
+    "attr, start, stop, step, tol",
+    [
+        ("rx0_nco_frequency", -20000, 20000, 1, 0),
+        ("rx1_nco_frequency", -20000, 20000, 1, 0),
+        ("tx0_nco_frequency", -20000, 20000, 1, 0),
+        ("tx1_nco_frequency", -20000, 20000, 1, 0),
+    ],
+)
+def test_adrv9002_nco(
+    test_attribute_single_value, classname, hardware, attr, start, stop, step, tol
+):
+    test_attribute_single_value(classname, hardware, attr, start, stop, step, tol)
 
 
 #########################################
