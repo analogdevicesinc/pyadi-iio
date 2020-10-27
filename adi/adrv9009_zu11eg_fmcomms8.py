@@ -75,10 +75,11 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
     ]
     _device_name = ""
 
-    def __init__(self, uri=""):
-        adrv9009_zu11eg.__init__(self, uri=uri)
+    def __init__(self, uri="", jesd=None):
+        adrv9009_zu11eg.__init__(self, uri=uri, jesd=jesd)
         self._ctrl_c = self._ctx.find_device("adrv9009-phy-c")
         self._ctrl_d = self._ctx.find_device("adrv9009-phy-d")
+        self._clock_chip_fmc = self._ctx.find_device("hmc7044-fmc")
 
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize all four transceivers """
