@@ -31,10 +31,10 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import datetime
+import threading
 import time
 from typing import List
-import threading
-import datetime
 
 from adi.adrv9009_zu11eg import adrv9009_zu11eg
 from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
@@ -63,6 +63,7 @@ class adrv9009_zu11eg_multi(object):
         self._dma_show_arming = False
         self._jesd_show_status = False
         self._rx_initialized = False
+        self.fmcomms8 = fmcomms8
         if fmcomms8:
             self.master = adrv9009_zu11eg_fmcomms8(uri=master_uri, jesd=master_jesd)
         else:
@@ -152,185 +153,79 @@ class adrv9009_zu11eg_multi(object):
                 print("Re-initializing JESD links")
                 time.sleep(10)
 
-    def __clock_chips_init(self):
-        for dev in self.slaves + [self.master]:
-            # disable RF seeder, doing it on SOM and Carrier breaks Sync
-            dev._clock_chip_ext.reg_write(0x3, 0xF)
-            # SET SOM pulses to 8
-            dev._clock_chip.reg_write(0x5A, 0x4)
-        self._clock_chips_initialized = True
-        time.sleep(0.1)
+    def device_is_running(self, dev, index, verbose):
+        err = dev.jesd204_fsm_error
+        paused = dev.jesd204_fsm_paused
+        state = dev.jesd204_fsm_state
+
+        if verbose:
+            print(
+                "%s: DEVICE%d: Is <%s> in state <%s> with status <%d>"
+                % (dev.uri, index, "Paused" if paused else "Running", state, err)
+            )
+
+        if err:
+            print(
+                "\nERROR %s: DEVICE%d: Is <%s> in state <%s> with status <%d>\n"
+                % (dev.uri, index, "Paused" if paused else "Running", state, err)
+            )
+            return "error"
+
+        state_last = state == "opt_post_running_stage"
+
+        if (state_last == 0) and (paused == 0):
+            return "running"
+
+        if (state_last == 0) and (paused == 1):
+            return "paused"
+
+        if (state_last == 1) and (paused == 0):
+            return "done"
+
+        return "undef"
+
+    def __jesd204_fsm_is_done(self):
+        cnt = 0
+        for index, dev in enumerate([self.master] + self.slaves):
+            ret = self.device_is_running(dev, index, 0)
+            if ret == "done":
+                cnt += 1
+
+        if cnt == len([self.master] + self.slaves):
+            return "done"
+
+    def jesd204_fsm_sync(self):
+        while True:
+            if self.__jesd204_fsm_is_done() == "done":
+                return "done"
+
+            for index, dev in enumerate(self.slaves + [self.master]):
+                ret = self.device_is_running(dev, index, 1)
+                if ret == "paused":
+                    # print ("RESUME device %d" % index)
+                    dev.jesd204_fsm_resume = "1"
+
+                if ret == "error":
+                    return ret
 
     def __unsync(self):
         for dev in [self.master] + self.slaves:
-            dev._clock_chip.reg_write(0x1, 0x61)
-            dev._clock_chip_carrier.reg_write(0x1, 0x61)
-            dev._clock_chip_ext.reg_write(0x1, 0x01)
-            time.sleep(0.1)
-            dev._clock_chip_ext.reg_write(0x1, 0x00)
-            time.sleep(0.1)
-            dev._clock_chip_carrier.reg_write(0x1, 0x60)
-            time.sleep(0.1)
-            dev._clock_chip.reg_write(0x1, 0x60)
-            time.sleep(0.1)
+            dev._clock_chip.attrs["sleep_request"].value = "1"
+            if self.fmcomms8:
+                dev._clock_chip_fmc.attrs["sleep_request"].value = "1"
+            dev._clock_chip_carrier.attrs["sleep_request"].value = "1"
 
-    def __configure_continuous_sysref(self):
-        for dev in self.slaves + [self.master]:
-            # CLK2 sync pin mode as SYNC
-            dev._clock_chip_carrier.reg_write(0x5, 0x42)
-            # CLK3 sync pin mode as SYNC
-            dev._clock_chip.reg_write(0x5, 0x43)
-            # restart request for all 7044
-            # iio_reg hmc7044 0x1 0x62
-            dev._clock_chip.reg_write(0x1, 0x62)
-            # iio_reg hmc7044-car 0x1 0x62
-            dev._clock_chip_carrier.reg_write(0x1, 0x62)
-            # iio_reg hmc7044-ext 0x1 0x02
-            dev._clock_chip_ext.reg_write(0x1, 0x02)
-            # sleep 0.1
-            time.sleep(0.1)
-            # iio_reg hmc7044-ext 0x1 0x00
-            dev._clock_chip_ext.reg_write(0x1, 0x00)
-            # sleep 0.1
-            time.sleep(0.1)
-            # iio_reg hmc7044-car 0x1 0x60
-            dev._clock_chip_carrier.reg_write(0x1, 0x60)
-            # sleep 0.1
-            time.sleep(0.1)
-            # iio_reg hmc7044 0x1 0x60
-            dev._clock_chip.reg_write(0x1, 0x60)
-            # sleep 0.1
-            time.sleep(0.1)
-
-    def __sync(self):
-        # Reseed request to clk1 -----> syncs the output of the 1st clk
-        # iio_reg hmc7044-ext 0x1 0x80
-        self.master._clock_chip_ext.reg_write(0x1, 0x80)
-        # iio_reg hmc7044-ext 0x1 0x00
-        self.master._clock_chip_ext.reg_write(0x1, 0x00)
+        self.master._clock_chip_ext.attrs["sleep_request"].value = "1"
         time.sleep(0.1)
-        # pulse request to CLK1----> syncs the outputs of CLK2
-        # iio_attr -q -d hmc7044-ext sysref_request 1
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-        time.sleep(0.1)
+        self.master._clock_chip_ext.attrs["sleep_request"].value = "0"
 
-        # CLK2 sync pin mode as Pulsor so it doesn't resync on next pulse
-        # iio_reg hmc7044-car 0x5 0x82
-        for slave in self.slaves:
-            slave._clock_chip_carrier.reg_write(0x5, 0x82)
-
-        # CLK2 sync pin mode as Pulsor so it doesn't resync on next pulse
-        # iio_reg hmc7044-car 0x5 0x82
-        self.master._clock_chip_carrier.reg_write(0x5, 0x82)
-        time.sleep(0.1)
-
-        # pulse request to CLK1----> syncs the outputs of CLK3
-        # iio_attr -q -d hmc7044-ext sysref_request 1
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-        time.sleep(0.1)
-        # CLK3 sync pin mode as Pulsor so it doesn't resync on next pulse
-        # iio_reg hmc7044 0x5 0x83
-        self.master._clock_chip.reg_write(0x5, 0x83)
-
-        # CLK3 sync pin mode as Pulsor so it doesn't resync on next pulse
-        # iio_reg hmc7044 0x5 0x83
-        for slave in self.slaves:
-            slave._clock_chip.reg_write(0x5, 0x83)
-
-    def __mcs(self):
-        for dev in self.slaves + [self.master]:
-            # 8 pulses on pulse generator request
-            # iio_reg hmc7044 0x5a 4
-            dev._clock_chip.reg_write(0x5A, 5)
-            # step 0 & 1
-            dev._ctrl.attrs["multichip_sync"].value = "0"
-            dev._ctrl_b.attrs["multichip_sync"].value = "0"
-            dev._ctrl.attrs["multichip_sync"].value = "1"
-            dev._ctrl_b.attrs["multichip_sync"].value = "1"
-        time.sleep(0.1)
-
-        # step 2
-        # iio_attr -q -d hmc7044-ext sysref_request 1
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
         for dev in [self.master] + self.slaves:
-            # iio_attr  -q -d adrv9009-phy multichip_sync 11 >/dev/null 2>&1
-            # iio_attr  -q -d adrv9009-phy-b multichip_sync 11 >/dev/null 2>&1
-            # dev._ctrl.attrs["multichip_sync"].value = "11"
-            # dev._ctrl_b.attrs["multichip_sync"].value = "11"
-            pass
-
-        # step 3 & 4
-        for dev in [self.master] + self.slaves:
-            # try:
-            #     dev._ctrl.attrs["multichip_sync"].value = "3"
-            # except OSError:
-            #     print("OSERROR1")
-            #     pass
-            # try:
-            #     dev._ctrl_b.attrs["multichip_sync"].value = "3"
-            # except OSError:
-            #     print("OSERROR2")
-            #     pass
-            # try:
-            #     dev._ctrl.attrs["multichip_sync"].value = "4"
-            # except OSError:
-            #     print("OSERROR3")
-            #     pass
-            # try:
-            #     dev._ctrl_b.attrs["multichip_sync"].value = "4"
-            # except OSError:
-            #     print("OSERROR4")
-            #     pass
-            dev._ctrl.attrs["multichip_sync"].value = "3"
-            dev._ctrl_b.attrs["multichip_sync"].value = "3"
-            dev._ctrl.attrs["multichip_sync"].value = "4"
-            dev._ctrl_b.attrs["multichip_sync"].value = "4"
-
-        # step 5
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-
-        # step 6
-        for dev in [self.master] + self.slaves:
-            dev._ctrl.attrs["multichip_sync"].value = "6"
-            dev._ctrl_b.attrs["multichip_sync"].value = "6"
-
-        # step 7
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-
-        # step 8 & 9
-        for dev in [self.master] + self.slaves:
-            dev._ctrl.attrs["multichip_sync"].value = "8"
-            dev._ctrl_b.attrs["multichip_sync"].value = "8"
-            dev._ctrl.attrs["multichip_sync"].value = "9"
-            dev._ctrl_b.attrs["multichip_sync"].value = "9"
-
-        # step 10
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-
-        # step 11
-        for dev in [self.master] + self.slaves:
-            dev._ctrl.attrs["multichip_sync"].value = "11"
-            dev._ctrl_b.attrs["multichip_sync"].value = "11"
-            # 8 pulses on pulse generator request
-            # dev._clock_chip.reg_write(0x5A, 1)
-
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-
-        # cal RX phase correction
-        for dev in self.slaves + [self.master]:
-            # go back to 1 pulse / sysref request
-            dev._clock_chip.reg_write(0x5A, 1)
-
-            dev._ctrl.attrs["calibrate_rx_phase_correction_en"].value = "1"
-            dev._ctrl.attrs["calibrate"].value = "1"
-            dev._ctrl_b.attrs["calibrate_rx_phase_correction_en"].value = "1"
-            dev._ctrl_b.attrs["calibrate"].value = "1"
-
-        for _ in range(4):
-            self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-            time.sleep(1)
-
-        time.sleep(1)
+            time.sleep(0.1)
+            dev._clock_chip_carrier.attrs["sleep_request"].value = "0"
+            time.sleep(0.1)
+            if self.fmcomms8:
+                dev._clock_chip_fmc.attrs["sleep_request"].value = "0"
+            dev._clock_chip.attrs["sleep_request"].value = "0"
 
     def __rx_dma_arm(self):
         for dev in self.slaves + [self.master]:
@@ -354,17 +249,20 @@ class adrv9009_zu11eg_multi(object):
         retries = 3
         for _ in range(retries):
             try:
-                self.__setup_framers()
+                for dev in [self.master] + self.slaves:
+                    dev.jesd204_fsm_ctrl = 0
+
+                self.__unsync()
+
+                for dev in [self.master] + self.slaves:
+                    dev.jesd204_fsm_ctrl = 1
+
+                self.jesd204_fsm_sync()
+
                 if self._jesd_show_status:
                     self.__read_jesd_status()
-                self.__clock_chips_init()
-                self.__unsync()
-                self.__configure_continuous_sysref()
-                self.__sync()
-                self.__mcs()
-                if self._jesd_show_status:
                     self.__read_jesd_link_status()
-                self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
+
                 for dev in [self.master] + self.slaves:
                     dev.rx_destroy_buffer()
                     dev._rx_init_channels()
