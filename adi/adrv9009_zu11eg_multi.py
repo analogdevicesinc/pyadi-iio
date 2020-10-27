@@ -239,6 +239,16 @@ class adrv9009_zu11eg_multi(object):
             if self._dma_show_arming:
                 print("\n--DMA ARMED--", dev.uri)
 
+    def __dds_sync_enable(self, enable):
+        for dev in self.slaves + [self.master]:
+            if self._dma_show_arming:
+                print("--DAC SYNC ARMING--", dev.uri)
+            chan = dev._txdac.find_channel("altvoltage0", True)
+            chan.attrs["raw"].value = str(enable)
+
+        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
+        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
+
     def __refill_samples(self, dev, is_master):
         if is_master:
             self.samples_master = dev.rx()
@@ -258,6 +268,7 @@ class adrv9009_zu11eg_multi(object):
                     dev.jesd204_fsm_ctrl = 1
 
                 self.jesd204_fsm_sync()
+                self.__dds_sync_enable(1)
 
                 if self._jesd_show_status:
                     self.__read_jesd_status()
