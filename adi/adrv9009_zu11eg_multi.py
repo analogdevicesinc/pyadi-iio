@@ -44,46 +44,46 @@ class adrv9009_zu11eg_multi(object):
     """ ADRV9009-ZU11EG Multi-SOM Manager"""
 
     __rx_buffer_size_multi = 2 ** 14
-    slaves: List[adrv9009_zu11eg] = []
+    secondaries: List[adrv9009_zu11eg] = []
 
     def __init__(
         self,
-        master_uri="",
-        slave_uris=[],
-        master_jesd=None,
-        slave_jesds=[None],
+        primary_uri="",
+        secondary_uris=[],
+        primary_jesd=None,
+        secondary_jesds=[None],
         fmcomms8=False,
     ):
 
-        if not isinstance(slave_uris, list):
-            Exception("slave_uris must be a list")
-        if not isinstance(slave_jesds, list):
-            Exception("slave_jesds must be a list")
+        if not isinstance(secondary_uris, list):
+            Exception("secondary_uris must be a list")
+        if not isinstance(secondary_jesds, list):
+            Exception("secondary_jesds must be a list")
 
         self._dma_show_arming = False
         self._jesd_show_status = False
         self._rx_initialized = False
         self.fmcomms8 = fmcomms8
         if fmcomms8:
-            self.master = adrv9009_zu11eg_fmcomms8(uri=master_uri, jesd=master_jesd)
+            self.primary = adrv9009_zu11eg_fmcomms8(uri=primary_uri, jesd=primary_jesd)
         else:
-            self.master = adrv9009_zu11eg(uri=master_uri, jesd=master_jesd)
-        self.slaves = []
-        self.samples_master = []
-        self.samples_slave = []
-        for i, uri in enumerate(slave_uris):
+            self.primary = adrv9009_zu11eg(uri=primary_uri, jesd=primary_jesd)
+        self.secondaries = []
+        self.samples_primary = []
+        self.samples_secondary = []
+        for i, uri in enumerate(secondary_uris):
             if fmcomms8:
-                self.slaves.append(
-                    adrv9009_zu11eg_fmcomms8(uri=uri, jesd=slave_jesds[i])
+                self.secondaries.append(
+                    adrv9009_zu11eg_fmcomms8(uri=uri, jesd=secondary_jesds[i])
                 )
             else:
-                self.slaves.append(adrv9009_zu11eg(uri=uri, jesd=slave_jesds[i]))
+                self.secondaries.append(adrv9009_zu11eg(uri=uri, jesd=secondary_jesds[i]))
 
-        for dev in self.slaves + [self.master]:
+        for dev in self.secondaries + [self.primary]:
             dev._rxadc.set_kernel_buffers_count(1)
 
     def reinitialize(self):
-        for dev in self.slaves + [self.master]:
+        for dev in self.secondaries + [self.primary]:
             property_names = [p for p in dir(dev) if "reinitialize" in p]
             for p in property_names:
                 eval("dev." + p + "()")
@@ -96,11 +96,11 @@ class adrv9009_zu11eg_multi(object):
     @rx_buffer_size.setter
     def rx_buffer_size(self, value):
         self.__rx_buffer_size_multi = value
-        for dev in self.slaves + [self.master]:
+        for dev in self.secondaries + [self.primary]:
             dev.rx_buffer_size = value
 
     def __read_jesd_status_all_devs(self, attr, islink=False):
-        for dev in self.slaves + [self.master]:
+        for dev in self.secondaries + [self.primary]:
             if islink:
                 devs = dev._jesd.get_all_link_statuses()
                 for dev in devs:
@@ -128,7 +128,7 @@ class adrv9009_zu11eg_multi(object):
 
     def __setup_framers(self):
         # adi,jesd204-framer-a-lmfc-offset 15
-        for dev in self.slaves + [self.master]:
+        for dev in self.secondaries + [self.primary]:
             v1 = (
                 dev._get_iio_debug_attr_str(
                     "adi,jesd204-framer-a-lmfc-offset", dev._ctrl_b
@@ -186,12 +186,12 @@ class adrv9009_zu11eg_multi(object):
 
     def __jesd204_fsm_is_done(self):
         cnt = 0
-        for index, dev in enumerate([self.master] + self.slaves):
+        for index, dev in enumerate([self.primary] + self.secondaries):
             ret = self.device_is_running(dev, index, 0)
             if ret == "done":
                 cnt += 1
 
-        if cnt == len([self.master] + self.slaves):
+        if cnt == len([self.primary] + self.secondaries):
             return "done"
 
     def jesd204_fsm_sync(self):
@@ -199,7 +199,7 @@ class adrv9009_zu11eg_multi(object):
             if self.__jesd204_fsm_is_done() == "done":
                 return "done"
 
-            for index, dev in enumerate(self.slaves + [self.master]):
+            for index, dev in enumerate(self.secondaries + [self.primary]):
                 ret = self.device_is_running(dev, index, 1)
                 if ret == "paused":
                     # print ("RESUME device %d" % index)
@@ -209,17 +209,17 @@ class adrv9009_zu11eg_multi(object):
                     return ret
 
     def __unsync(self):
-        for dev in [self.master] + self.slaves:
+        for dev in [self.primary] + self.secondaries:
             dev._clock_chip.attrs["sleep_request"].value = "1"
             if self.fmcomms8:
                 dev._clock_chip_fmc.attrs["sleep_request"].value = "1"
             dev._clock_chip_carrier.attrs["sleep_request"].value = "1"
 
-        self.master._clock_chip_ext.attrs["sleep_request"].value = "1"
+        self.primary._clock_chip_ext.attrs["sleep_request"].value = "1"
         time.sleep(0.1)
-        self.master._clock_chip_ext.attrs["sleep_request"].value = "0"
+        self.primary._clock_chip_ext.attrs["sleep_request"].value = "0"
 
-        for dev in [self.master] + self.slaves:
+        for dev in [self.primary] + self.secondaries:
             time.sleep(0.1)
             dev._clock_chip_carrier.attrs["sleep_request"].value = "0"
             time.sleep(0.1)
@@ -228,7 +228,7 @@ class adrv9009_zu11eg_multi(object):
             dev._clock_chip.attrs["sleep_request"].value = "0"
 
     def __rx_dma_arm(self):
-        for dev in self.slaves + [self.master]:
+        for dev in self.secondaries + [self.primary]:
             if self._dma_show_arming:
                 print("--DMA ARMING--", dev.uri)
             dev._rxadc.reg_write(0x80000044, 0x8)
@@ -240,17 +240,17 @@ class adrv9009_zu11eg_multi(object):
                 print("\n--DMA ARMED--", dev.uri)
 
     def __dds_sync_enable(self, enable):
-        for dev in self.slaves + [self.master]:
+        for dev in self.secondaries + [self.primary]:
             if self._dma_show_arming:
                 print("--DAC SYNC ARMING--", dev.uri)
             chan = dev._txdac.find_channel("altvoltage0", True)
             chan.attrs["raw"].value = str(enable)
 
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
+        self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
+        self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
 
     def set_trx_lo_frequency(self, freq):
-        for dev in self.slaves + [self.master]:
+        for dev in self.secondaries + [self.primary]:
             dev._set_iio_debug_attr_str("adi,trx-pll-lo-frequency_hz", freq, dev._ctrl)
             dev._set_iio_debug_attr_str(
                 "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_b
@@ -262,22 +262,22 @@ class adrv9009_zu11eg_multi(object):
                 "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_d
             )
 
-    def __refill_samples(self, dev, is_master):
-        if is_master:
-            self.samples_master = dev.rx()
+    def __refill_samples(self, dev, is_primary):
+        if is_primary:
+            self.samples_primary = dev.rx()
         else:
-            self.samples_slave = dev.rx()
+            self.samples_secondary = dev.rx()
 
     def _pre_rx_setup(self):
         retries = 3
         for _ in range(retries):
             try:
-                for dev in [self.master] + self.slaves:
+                for dev in [self.primary] + self.secondaries:
                     dev.jesd204_fsm_ctrl = 0
 
                 self.__unsync()
 
-                for dev in [self.master] + self.slaves:
+                for dev in [self.primary] + self.secondaries:
                     dev.jesd204_fsm_ctrl = 1
 
                 self.jesd204_fsm_sync()
@@ -287,7 +287,7 @@ class adrv9009_zu11eg_multi(object):
                     self.__read_jesd_status()
                     self.__read_jesd_link_status()
 
-                for dev in [self.master] + self.slaves:
+                for dev in [self.primary] + self.secondaries:
                     dev.rx_destroy_buffer()
                     dev._rx_init_channels()
                 return
@@ -303,10 +303,10 @@ class adrv9009_zu11eg_multi(object):
         data = []
         self.__rx_dma_arm()
         # Recreate all buffers
-        for dev in [self.master] + self.slaves:
+        for dev in [self.primary] + self.secondaries:
             dev.rx_destroy_buffer()
             dev._rx_init_channels()
-        self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
-        for dev in [self.master] + self.slaves:
+        self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
+        for dev in [self.primary] + self.secondaries:
             data += dev.rx()
         return data
