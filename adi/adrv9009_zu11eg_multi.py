@@ -249,6 +249,19 @@ class adrv9009_zu11eg_multi(object):
         self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
         self.master._clock_chip_ext.attrs["sysref_request"].value = "1"
 
+    def set_trx_lo_frequency(self, freq):
+        for dev in self.slaves + [self.master]:
+            dev._set_iio_debug_attr_str("adi,trx-pll-lo-frequency_hz", freq, dev._ctrl)
+            dev._set_iio_debug_attr_str(
+                "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_b
+            )
+            dev._set_iio_debug_attr_str(
+                "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_c
+            )
+            dev._set_iio_debug_attr_str(
+                "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_d
+            )
+
     def __refill_samples(self, dev, is_master):
         if is_master:
             self.samples_master = dev.rx()
