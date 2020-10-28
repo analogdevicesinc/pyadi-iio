@@ -4,15 +4,15 @@ import numpy as np
 
 uri = "ip:analog"
 captures = 100
-samples_per_capture = 2**12
+samples_per_capture = 2 ** 12
 fan_mode = 1
 
-xl = adi.adxl1002(uri)
+xl = adi.cn0532(uri)
 xl.rx_buffer_size = samples_per_capture
 
 for i in range(captures):
     data = xl.rx()
-    all_data = data if i==0 else np.vstack((all_data,data))
+    all_data = data if i == 0 else np.vstack((all_data, data))  # type: np.ndarray
     # Plot
     plt.clf()
     plt.plot(data)
