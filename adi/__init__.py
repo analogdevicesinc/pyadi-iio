@@ -49,6 +49,8 @@ from adi.ad9144 import *
 
 from adi.ad9152 import *
 
+from adi.cn0532 import *
+
 from adi.daq2 import *
 
 from adi.daq3 import *
@@ -60,8 +62,6 @@ from adi.adis16507 import *
 from adi.ad7124 import *
 
 from adi.adxl345 import *
-
-from adi.adxl1002 import *
 
 from adi.fmclidar1 import *
 

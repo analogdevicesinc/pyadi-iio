@@ -31,12 +31,13 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.cn0540 import cn0540
 import time
 
+from adi.cn0540 import cn0540
 
-class adxl1002(cn0540):
-    """ ADXL1002 Low Noise, High Frequency +/-50g MEMS Accelerometer """
+
+class cn0532(cn0540):
+    """ CN0532: Custom board with ADXL1002 Low Noise, High Frequency +/-50g MEMS Accelerometer """
 
     def __init__(self, uri=""):
 
