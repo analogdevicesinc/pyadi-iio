@@ -65,7 +65,7 @@ class cn0540(rx, context_manager):
 
     @property
     def input_voltage(self):
-        """input_voltage: mV <FIXME> """
+        """input_voltage: Input voltage in mV from ADC before shift voltage applied """
         adc_chan = self._rxadc
         adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
         raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
@@ -73,7 +73,7 @@ class cn0540(rx, context_manager):
 
     @property
     def shift_voltage(self):
-        """shift_voltage: mV <FIXME> """
+        """shift_voltage: Shift voltage in mV from LTC2606 to bias sensor data """
         dac_chan = self._ltc2606
         dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
         raw = self._get_iio_attr("voltage0", "raw", True, dac_chan)
@@ -88,7 +88,7 @@ class cn0540(rx, context_manager):
 
     @property
     def sensor_voltage(self):
-        """sensor_voltage: mV <FIXME> """
+        """sensor_voltage: Sensor voltage in mV read from ADC after biasing """
         adc_chan = self._rxadc
         adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
         raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
@@ -100,10 +100,11 @@ class cn0540(rx, context_manager):
         vsensor_mv -= raw * adc_scale
         return vsensor_mv
 
-    @property
-    def sw_ff_status(self):
-        """sw_ff_status: <FIXME> """
-        return self._get_iio_attr("voltage0", "raw", False, self._gpio)
+    # Not functional with current hardware
+    # @property
+    # def sw_ff_status(self):
+    #     """sw_ff_status: Fault flag status """
+    #     return self._get_iio_attr("voltage0", "raw", False, self._gpio)
 
     @property
     def monitor_powerup(self):
@@ -116,7 +117,7 @@ class cn0540(rx, context_manager):
 
     @property
     def fda_disable_status(self):
-        """fda_disable_status: <FIXME> """
+        """fda_disable_status: Amplifier disable status """
         return self._get_iio_attr("voltage5", "raw", True, self._gpio)
 
     @fda_disable_status.setter
@@ -125,7 +126,7 @@ class cn0540(rx, context_manager):
 
     @property
     def fda_mode(self):
-        """fda_mode: <FIXME> """
+        """fda_mode: Amplifier mode. Options are low-power or full-power """
         return self._fda_mode_options[
             int(self._get_iio_attr("voltage6", "raw", True, self._gpio))
         ]
@@ -136,7 +137,7 @@ class cn0540(rx, context_manager):
 
     @property
     def red_led_enable(self):
-        """red_led_enable: <FIXME> """
+        """red_led_enable: Enable red LED on board """
         return self._get_iio_attr("voltage1", "raw", True, self._gpio)
 
     @red_led_enable.setter
@@ -145,7 +146,7 @@ class cn0540(rx, context_manager):
 
     @property
     def blue_led_enable(self):
-        """blue_led_enable: <FIXME> """
+        """blue_led_enable: Enable blue LED on board """
         return self._get_iio_attr("voltage0", "raw", True, self._gpio)
 
     @blue_led_enable.setter
