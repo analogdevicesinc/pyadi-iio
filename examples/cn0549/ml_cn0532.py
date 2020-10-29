@@ -1,18 +1,12 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-from keras import metrics, losses, optimizers
-from keras.models import Model, Sequential
-from keras.layers import (
-    Dense,
-    Input,
-    Dropout,
-    Flatten
-)
+from keras import losses, metrics, optimizers
+from keras.layers import Dense, Dropout, Flatten, Input
 from keras.layers.convolutional import Conv2D, MaxPooling2D
+from keras.models import Model, Sequential
 from keras.utils import np_utils
-
 from scipy import signal
-import matplotlib.pyplot as plt
 
 
 def readfile(filename, label):
@@ -153,6 +147,7 @@ def create_model_cnn(x_train, y_train, x_test, y_test, n_outputs):
         verbose=1,
         validation_data=(x_test, y_test),
     )
+
 
 # Import data and run model
 x_train, y_train, x_test, y_test, num_classes = get_data()
