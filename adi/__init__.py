@@ -49,6 +49,8 @@ from adi.ad9144 import *
 
 from adi.ad9152 import *
 
+from adi.cn0532 import *
+
 from adi.daq2 import *
 
 from adi.daq3 import *
