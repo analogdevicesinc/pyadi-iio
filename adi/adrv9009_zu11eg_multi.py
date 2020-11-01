@@ -64,6 +64,7 @@ class adrv9009_zu11eg_multi(object):
         self._jesd_show_status = False
         self._jesd_fsm_show_status = False
         self._clk_chip_show_cap_bank_sel = False
+        self._resync_tx = False
         self._rx_initialized = False
         self.fmcomms8 = fmcomms8
         if fmcomms8:
@@ -258,7 +259,7 @@ class adrv9009_zu11eg_multi(object):
             chan = dev._txdac.find_channel("altvoltage0", True)
             chan.attrs["raw"].value = str(enable)
 
-        self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
+    def sysref_request(self):
         self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
 
     def set_trx_lo_frequency(self, freq):
@@ -293,7 +294,10 @@ class adrv9009_zu11eg_multi(object):
                     dev.jesd204_fsm_ctrl = 1
 
                 self.jesd204_fsm_sync()
-                self.__dds_sync_enable(1)
+
+                if not self._resync_tx:
+                    self.__dds_sync_enable(1)
+
                 if (self._clk_chip_show_cap_bank_sel):
                     print ("HMC7044s CAP bank select: ", self.hmc7044_cap_sel())
 
@@ -320,7 +324,12 @@ class adrv9009_zu11eg_multi(object):
         for dev in [self.primary] + self.secondaries:
             dev.rx_destroy_buffer()
             dev._rx_init_channels()
-        self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
+
+        if self._resync_tx:
+            self.__dds_sync_enable(1)
+
+        self.sysref_request()
+
         for dev in [self.primary] + self.secondaries:
             data += dev.rx()
         return data
