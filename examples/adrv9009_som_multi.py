@@ -2,6 +2,7 @@
 
 import csv
 import time
+import os
 
 import adi
 import matplotlib.pyplot as plt
@@ -46,10 +47,10 @@ buff_size = 2 ** 14
 
 # Create radio
 primary = "ip:10.44.3.39"
-secondary = "ip:10.44.3.38"
+secondary = "ip:10.44.3.50"
 
 lo_freq = 1000000000
-dds_freq = 1234567
+dds_freq = 7000000
 
 primary_jesd = adi.jesd(primary)
 secondary_jesd = adi.jesd(secondary)
@@ -61,21 +62,31 @@ multi = adi.adrv9009_zu11eg_multi(
 
 multi._dma_show_arming = False
 multi._jesd_show_status = True
+multi._jesd_fsm_show_status = True
+multi._clk_chip_show_cap_bank_sel = True
+multi._resync_tx = True
 multi.rx_buffer_size = 2 ** 10
+
+multi.primary._clock_chip_ext.reg_write(0xCF, 1)
+multi.primary._clock_chip_ext.reg_write(0xE3, 1)
+
 
 multi.primary.rx_enabled_channels = [0, 2, 4, 6]
 
 for secondary in multi.secondaries:
     secondary.rx_enabled_channels = [0, 2, 4, 6]
+    secondary.dds_single_tone(dds_freq, 0.2, 4)
 
 multi.set_trx_lo_frequency(999999990)
 multi.primary.dds_single_tone(dds_freq, 0.8)
+
 
 log = [[], [], [], [], []]
 
 N = 8
 C = 5
-R = 32
+R = 400
+
 
 plot_time = True
 
@@ -92,27 +103,25 @@ chan_desc = [
 ]
 
 for r in range(R):
-    print("Pulling buffers")
+    print("\n\nIteration#", r)
     multi._rx_initialized = False
+
+    plot_time = True
+    offset = 400
 
     # [0, 2, 4, 6][0, 2, 4, 6]
     # [0, 1, 2 ,3, 4, 5, 6, 7]
     for i in range(N):
         x = multi.rx()
-        rx[0][i] = measure_phase(x[0], x[1])
-        rx[1][i] = measure_phase(x[0], x[2])
-        rx[2][i] = measure_phase(x[4], x[5])
-        rx[3][i] = measure_phase(x[4], x[6])
-        rx[4][i] = measure_phase(x[0], x[4])
+        rx[0][i] = measure_phase(x[0][offset:], x[1][offset:])
+        rx[1][i] = measure_phase(x[0][offset:], x[2][offset:])
+        rx[2][i] = measure_phase(x[4][offset:], x[5][offset:])
+        rx[3][i] = measure_phase(x[4][offset:], x[6][offset:])
+        rx[4][i] = measure_phase(x[0][offset:], x[4][offset:])
 
     for i in range(C):
         rx_m[i][r] = np.mean(rx[i])
         rx_v[i][r] = np.var(rx[i])
-        if rx_v[i][r] > 10:
-            plot_time = True
-        else:
-            plot_time = False
-
         log[i].append(rx_m[i])
 
     print("###########")
@@ -120,29 +129,31 @@ for r in range(R):
         print("%s:\t %f" % (chan_desc[i], rx_m[i][r]))
     print("###########")
 
+    plot_time = True
+
     if plot_time:
         plt.clf()
-        plt.plot(x[0][:1000], label="Chan0 SOM A")
-        plt.plot(x[1][:1000], label="Chan2 SOM A")
-        plt.plot(x[2][:1000], label="Chan4 SOM A FMC8")
-        plt.plot(x[4][:1000], label="Chan0 SOM B")
-        plt.plot(x[6][:1000], label="Chan4 SOM B FMC8")
+        plt.plot(x[0][:].real, label="Chan0 SOM A")
+        plt.plot(x[1][:1000].real, label="Chan2 SOM A")
+        plt.plot(x[2][:1000].real, label="Chan4 SOM A FMC8")
+        plt.plot(x[4][:].real, label="Chan0 SOM B")
+        plt.plot(x[6][:1000].real, label="Chan4 SOM B FMC8")
         plt.legend()
         plt.draw()
-        plt.pause(5)
+        plt.pause(1)
 
     plt.clf()
     x = np.array(range(0, r + 1))
 
     for i in range(C):
         plt.errorbar(x, rx_m[i][x], yerr=rx_v[i][x], label=chan_desc[i])
-
+        #plt.errorbar(x, rx_m[i][x], yerr=0, label=chan_desc[i])
     plt.xlim([-1, x[-1] + 1])
     plt.xlabel("Measurement Index")
     plt.ylabel("Phase Difference (Degrees)")
     plt.legend()
     plt.draw()
-    plt.pause(0.1)
+    plt.pause(1)
 
 print(log)
 fields = []
