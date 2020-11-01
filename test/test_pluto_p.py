@@ -5,7 +5,8 @@ classname = "adi.Pluto"
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats",
     [
@@ -17,8 +18,8 @@ classname = "adi.Pluto"
 )
 def test_pluto_attr(
     test_attribute_single_value,
+    iio_uri,
     classname,
-    hardware,
     attr,
     start,
     stop,
@@ -27,36 +28,40 @@ def test_pluto_attr(
     repeats,
 ):
     test_attribute_single_value(
-        classname, hardware, attr, start, stop, step, tol, repeats
+        iio_uri, classname, attr, start, stop, step, tol, repeats
     )
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr, tol", [("loopback", 0)])
 @pytest.mark.parametrize("val", [0, 1, 2])
 def test_pluto_loopback_attr(
-    test_attribute_single_value_str, classname, hardware, attr, val, tol
+    test_attribute_single_value_str, iio_uri, classname, attr, val, tol
 ):
-    test_attribute_single_value_str(classname, hardware, attr, val, tol)
+    test_attribute_single_value_str(iio_uri, classname, attr, val, tol)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
-def test_pluto_rx_data(test_dma_rx, classname, hardware, channel):
-    test_dma_rx(classname, hardware, channel)
+def test_pluto_rx_data(test_dma_rx, iio_uri, classname, channel):
+    test_dma_rx(iio_uri, classname, channel)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
-def test_pluto_tx_data(test_dma_tx, classname, hardware, channel):
-    test_dma_tx(classname, hardware, channel)
+def test_pluto_tx_data(test_dma_tx, iio_uri, classname, channel):
+    test_dma_tx(iio_uri, classname, channel)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
     "param_set",
@@ -71,13 +76,14 @@ def test_pluto_tx_data(test_dma_tx, classname, hardware, channel):
     ],
 )
 def test_pluto_cyclic_buffers(
-    test_cyclic_buffer, classname, hardware, channel, param_set
+    test_cyclic_buffer, iio_uri, classname, channel, param_set
 ):
-    test_cyclic_buffer(classname, hardware, channel, param_set)
+    test_cyclic_buffer(iio_uri, classname, channel, param_set)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
     "param_set",
@@ -92,20 +98,22 @@ def test_pluto_cyclic_buffers(
     ],
 )
 def test_pluto_cyclic_buffers_exception(
-    test_cyclic_buffer_exception, classname, hardware, channel, param_set
+    test_cyclic_buffer_exception, iio_uri, classname, channel, param_set
 ):
-    test_cyclic_buffer_exception(classname, hardware, channel, param_set)
+    test_cyclic_buffer_exception(iio_uri, classname, channel, param_set)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
-def test_pluto_loopback(test_dma_loopback, classname, hardware, channel):
-    test_dma_loopback(classname, hardware, channel)
+def test_pluto_loopback(test_dma_loopback, iio_uri, classname, channel):
+    test_dma_loopback(iio_uri, classname, channel)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
     "param_set",
@@ -120,12 +128,13 @@ def test_pluto_loopback(test_dma_loopback, classname, hardware, channel):
     ],
 )
 @pytest.mark.parametrize("sfdr_min", [40])
-def test_pluto_sfdr(test_sfdr, classname, hardware, channel, param_set, sfdr_min):
-    test_sfdr(classname, hardware, channel, param_set, sfdr_min)
+def test_pluto_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
+    test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
 @pytest.mark.parametrize(
@@ -143,8 +152,8 @@ def test_pluto_sfdr(test_sfdr, classname, hardware, channel, param_set, sfdr_min
 @pytest.mark.parametrize("peak_min", [-40])
 def test_pluto_dds_loopback(
     test_dds_loopback,
+    iio_uri,
     classname,
-    hardware,
     param_set,
     channel,
     frequency,
@@ -152,12 +161,13 @@ def test_pluto_dds_loopback(
     peak_min,
 ):
     test_dds_loopback(
-        classname, hardware, param_set, channel, frequency, scale, peak_min
+        iio_uri, classname, param_set, channel, frequency, scale, peak_min
     )
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
     "param_set",
@@ -185,5 +195,5 @@ def test_pluto_dds_loopback(
         ),
     ],
 )
-def test_pluto_iq_loopback(test_iq_loopback, classname, hardware, channel, param_set):
-    test_iq_loopback(classname, hardware, channel, param_set)
+def test_pluto_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param_set):
+    test_iq_loopback(iio_uri, classname, channel, param_set)

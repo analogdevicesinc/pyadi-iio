@@ -4,6 +4,7 @@ import time
 from test.common import (
     BoardInterface,
     command_line_config,
+    dev_interface,
     pytest_addoption,
     pytest_collection_modifyitems,
     pytest_configure,
@@ -16,23 +17,21 @@ import numpy as np
 import pytest
 
 
-def attribute_single_value(
-    classname, devicename, attr, start, stop, step, tol, repeats=1
-):
-    bi = BoardInterface(classname, devicename)
+def attribute_single_value(uri, classname, attr, start, stop, step, tol, repeats=1):
+    # bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
     numints = int((stop - start) / step)
     for _ in range(repeats):
         ind = random.randint(0, numints)
         val = start + step * ind
         # Check hardware
-        assert bi.dev_interface(val, attr, tol) <= tol
+        assert dev_interface(uri, classname, val, attr, tol) <= tol
 
 
-def attribute_single_value_str(classname, devicename, attr, val, tol):
-    bi = BoardInterface(classname, devicename)
+def attribute_single_value_str(uri, classname, attr, val, tol):
+    # bi = BoardInterface(classname, devicename)
     # Check hardware
-    assert bi.dev_interface(str(val), attr, tol) <= tol
+    assert dev_interface(uri, classname, str(val), attr, tol) <= tol
 
 
 def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol, repeats=1):
@@ -87,9 +86,9 @@ def attribute_write_only_str(classname, devicename, attr, file):
         raise Exception(e)
 
 
-def dma_rx(classname, devicename, channel):
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+def dma_rx(uri, classname, channel):
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     N = 2 ** 15
     if not isinstance(channel, list):
         sdr.rx_enabled_channels = [channel]
@@ -111,9 +110,9 @@ def dma_rx(classname, devicename, channel):
     del sdr
 
 
-def dma_tx(classname, devicename, channel):
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+def dma_tx(uri, classname, channel):
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     TXFS = 1000
     N = 2 ** 15
     ts = 1 / float(TXFS)
@@ -138,9 +137,9 @@ def dma_tx(classname, devicename, channel):
     del sdr
 
 
-def dma_loopback(classname, devicename, channel):
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+def dma_loopback(uri, classname, channel):
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
         sdr.loopback_chip_b = 1
     else:
@@ -197,10 +196,9 @@ def freq_est(y, fs):
     return xf[indx]
 
 
-def dds_loopback(classname, devicename, param_set, channel, frequency, scale, peak_min):
-    bi = BoardInterface(classname, devicename)
+def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min):
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -233,10 +231,9 @@ def dds_loopback(classname, devicename, param_set, channel, frequency, scale, pe
     assert tone_peaks[indx] > peak_min
 
 
-def cw_loopback(classname, devicename, channel, param_set):
-    bi = BoardInterface(classname, devicename)
+def cw_loopback(uri, classname, channel, param_set):
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -298,10 +295,9 @@ def cw_loopback(classname, devicename, channel, param_set):
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
-    bi = BoardInterface(classname, devicename)
+def t_sfdr(uri, classname, channel, param_set, sfdr_min):
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -379,10 +375,10 @@ def gain_check(
     assert rssi <= max_rssi
 
 
-def cyclic_buffer(classname, devicename, channel, param_set):
-    bi = BoardInterface(classname, devicename)
+def cyclic_buffer(uri, classname, channel, param_set):
+    # bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -415,10 +411,10 @@ def cyclic_buffer(classname, devicename, channel, param_set):
         pytest.fail(msg)
 
 
-def cyclic_buffer_exception(classname, devicename, channel, param_set):
-    bi = BoardInterface(classname, devicename)
+def cyclic_buffer_exception(uri, classname, channel, param_set):
+    # bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
