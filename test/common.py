@@ -71,6 +71,30 @@ def pytest_collection_modifyitems(items):
                     break
 
 
+#################################################
+def dev_interface(uri, classname, val, attr, tol):
+    sdr = eval(classname + "(uri='" + uri + "')")
+    # Check hardware
+    if not hasattr(sdr, attr):
+        raise AttributeError(attr + " not defined in " + classname)
+    setattr(sdr, attr, val)
+    rval = getattr(sdr, attr)
+    if not isinstance(rval, str):
+        rval = float(rval)
+    del sdr
+    if not isinstance(val, str):
+        if abs(val - rval) > tol:
+            print("Failed to set: " + attr)
+            print("Set: " + str(val))
+            print("Got: " + str(rval))
+        return abs(val - rval)
+    else:
+        return val == str(rval)
+
+
+#################################################
+
+
 class BaseTestHelpers:
     devicename = "pluto"
     skipped_tests = []  # type: ignore
