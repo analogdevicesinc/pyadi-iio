@@ -63,6 +63,7 @@ class adrv9009_zu11eg_multi(object):
         self._dma_show_arming = False
         self._jesd_show_status = False
         self._jesd_fsm_show_status = False
+        self._clk_chip_show_cap_bank_sel = False
         self._rx_initialized = False
         self.fmcomms8 = fmcomms8
         if fmcomms8:
@@ -227,6 +228,17 @@ class adrv9009_zu11eg_multi(object):
                 dev._clock_chip_fmc.attrs["sleep_request"].value = "0"
             dev._clock_chip.attrs["sleep_request"].value = "0"
 
+    def hmc7044_cap_sel(self):
+        vals = []
+        for dev in [self.primary] + self.secondaries:
+            vals.append(dev._clock_chip.reg_read(0x8C))
+            if self.fmcomms8:
+                 vals.append(dev._clock_chip_fmc.reg_read(0x8C))
+            vals.append(dev._clock_chip_carrier.reg_read(0x8C))
+
+        vals.append(self.primary._clock_chip_ext.reg_read(0x8C))
+        return vals
+
     def __rx_dma_arm(self):
         for dev in self.secondaries + [self.primary]:
             if self._dma_show_arming:
@@ -282,6 +294,8 @@ class adrv9009_zu11eg_multi(object):
 
                 self.jesd204_fsm_sync()
                 self.__dds_sync_enable(1)
+                if (self._clk_chip_show_cap_bank_sel):
+                    print ("HMC7044s CAP bank select: ", self.hmc7044_cap_sel())
 
                 if self._jesd_show_status:
                     self.__read_jesd_status()
