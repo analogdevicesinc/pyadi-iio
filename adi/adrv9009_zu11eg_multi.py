@@ -62,6 +62,7 @@ class adrv9009_zu11eg_multi(object):
 
         self._dma_show_arming = False
         self._jesd_show_status = False
+        self._jesd_fsm_show_status = False
         self._rx_initialized = False
         self.fmcomms8 = fmcomms8
         if fmcomms8:
@@ -200,9 +201,8 @@ class adrv9009_zu11eg_multi(object):
                 return "done"
 
             for index, dev in enumerate(self.secondaries + [self.primary]):
-                ret = self.device_is_running(dev, index, 1)
+                ret = self.device_is_running(dev, index, self._jesd_fsm_show_status)
                 if ret == "paused":
-                    # print ("RESUME device %d" % index)
                     dev.jesd204_fsm_resume = "1"
 
                 if ret == "error":
