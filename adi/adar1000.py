@@ -188,5 +188,4 @@ class adar1000(attribute, context_manager):
                 dev = [c for c in self._ctrls if c.attrs['label'].value.lower() == beam][0]
                 self._set_iio_attr(channel, attribute_name, output, value, dev)
             except IndexError:
-                pass
-        return
+                raise KeyError(f'"{key}" does not correspond to any connected device!')
