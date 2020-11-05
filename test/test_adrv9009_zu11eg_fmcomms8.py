@@ -12,7 +12,7 @@ classname = "adi.adrv9009_zu11eg_fmcomms8"
         ("tx_hardwaregain_chan0_chip_c", -41.95, 0.0, 0.05, 0.05),
         ("tx_hardwaregain_chan1_chip_c", -41.95, 0.0, 0.05, 0.05),
         ("tx_hardwaregain_chan0_chip_d", -41.95, 0.0, 0.05, 0.05),
-        ("tx_hardwaregain_chan1_chip_d", -41.95, 0.0, 0.05, 0.05), 
+        ("tx_hardwaregain_chan1_chip_d", -41.95, 0.0, 0.05, 0.05),
         ("trx_lo_chip_c", 70000000, 6000000000, 1000, 0),
         ("trx_lo_chip_d", 70000000, 6000000000, 1000, 0),
     ],
@@ -25,14 +25,14 @@ def test_adrv9009_zu11eg_attr(
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
-@pytest.mark.parametrize("channel", [4,5,6,7])
+@pytest.mark.parametrize("channel", [4, 5, 6, 7])
 def test_adrv9009_zu11eg_rx_data(test_dma_rx, classname, hardware, channel):
     test_dma_rx(classname, hardware, channel)
 
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
-@pytest.mark.parametrize("channel", [4,5,6,7])
+@pytest.mark.parametrize("channel", [4, 5, 6, 7])
 @pytest.mark.parametrize(
     "param_set",
     [
@@ -101,7 +101,7 @@ def test_adrv9009_zu11eg_sfdr(
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
-@pytest.mark.parametrize("channel", [4,5,6,7])
+@pytest.mark.parametrize("channel", [4, 5, 6, 7])
 @pytest.mark.parametrize(
     "param_set",
     [
@@ -179,7 +179,7 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
-@pytest.mark.parametrize("channel", [4,5,6,7])
+@pytest.mark.parametrize("channel", [4, 5, 6, 7])
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
     [
@@ -252,7 +252,7 @@ def test_adrv9009_zu11eg_dds_gain_check_vary_power(
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
-@pytest.mark.parametrize("channel", [4,5,6,7])
+@pytest.mark.parametrize("channel", [4, 5, 6, 7])
 @pytest.mark.parametrize(
     "param_set",
     [
