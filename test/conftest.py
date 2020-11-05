@@ -382,21 +382,21 @@ def gain_check(
     time.sleep(3)
 
     # Check RSSI
-    if channel==0:
+    if channel == 0:
         rssi = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl)
-    if channel==1:
+    if channel == 1:
         rssi = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl)
-    if channel==2:
+    if channel == 2:
         rssi = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_b)
-    if channel==3:
+    if channel == 3:
         rssi = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_b)
-    if channel==4:
+    if channel == 4:
         rssi = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_c)
-    if channel==5:
+    if channel == 5:
         rssi = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_c)
-    if channel==6:
+    if channel == 6:
         rssi = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_d)
-    if channel==7:
+    if channel == 7:
         rssi = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_d)
 
     print(rssi)

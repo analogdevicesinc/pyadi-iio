@@ -1,8 +1,8 @@
 # type: ignore
 
 import csv
-import time
 import os
+import time
 
 import adi
 import matplotlib.pyplot as plt
@@ -147,7 +147,7 @@ for r in range(R):
 
     for i in range(C):
         plt.errorbar(x, rx_m[i][x], yerr=rx_v[i][x], label=chan_desc[i])
-        #plt.errorbar(x, rx_m[i][x], yerr=0, label=chan_desc[i])
+        # plt.errorbar(x, rx_m[i][x], yerr=0, label=chan_desc[i])
     plt.xlim([-1, x[-1] + 1])
     plt.xlabel("Measurement Index")
     plt.ylabel("Phase Difference (Degrees)")
@@ -161,7 +161,7 @@ for i in range(C):
     fields.append(np.sum(log[i]) / len(log[i]))
     fields.append(np.min(log[i]))
     fields.append(np.max(log[i]))
-with open(r'log.csv', 'a') as f:
+with open(r"log.csv", "a") as f:
     writer = csv.writer(f)
     writer.writerow(fields)
 plt.show(block=False)
