@@ -246,7 +246,7 @@ class adrv9009_zu11eg_multi(object):
                 dev._clock_chip_fmc.attrs["sleep_request"].value = "0"
             dev._clock_chip.attrs["sleep_request"].value = "0"
 
-    def _hmc7044_cap_sel(self):
+    def hmc7044_cap_sel(self):
         vals = []
         for dev in [self.primary] + self.secondaries:
             vals.append(dev._clock_chip.reg_read(0x8C))
@@ -256,6 +256,22 @@ class adrv9009_zu11eg_multi(object):
 
         vals.append(self.primary._clock_chip_ext.reg_read(0x8C))
         return vals
+
+    def hmc7044_set_cap_sel(self, vals):
+        """ hmc7044_set_cap_sel:
+
+            parameters:
+                vals: type=list
+                    Forces certain Capacitor bank seletions.
+                    Typically the list returned form hmc7044_cap_sel
+        """
+        for dev in [self.primary] + self.secondaries:
+            dev._clock_chip.reg_write(0xB2, vals.pop(0) << 2 | 1)
+            if self.fmcomms8:
+                 dev._clock_chip_fmc.reg_write(0xB2, vals.pop(0) << 2 | 1)
+            dev._clock_chip_carrier.reg_write(0xB2, vals.pop(0) << 2 | 1)
+
+        self.primary._clock_chip_ext.reg_write(0xB2, vals.pop(0) << 2 | 1)
 
     def __rx_dma_arm(self):
         for dev in self.secondaries + [self.primary]:
@@ -323,7 +339,7 @@ class adrv9009_zu11eg_multi(object):
                     self.__dds_sync_enable(1)
 
                 if self._clk_chip_show_cap_bank_sel:
-                    print("HMC7044s CAP bank select: ", self._hmc7044_cap_sel())
+                    print("HMC7044s CAP bank select: ", self.hmc7044_cap_sel())
 
                 if self._jesd_show_status:
                     self.__read_jesd_status()
