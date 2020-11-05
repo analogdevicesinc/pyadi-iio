@@ -82,20 +82,26 @@ class adrv9009_zu11eg_multi(object):
         self._rx_initialized = False
         self.fmcomms8 = fmcomms8
         if fmcomms8:
-            self.primary = adrv9009_zu11eg_fmcomms8(uri=primary_uri, jesd=primary_jesd)
+            self.primary = adrv9009_zu11eg_fmcomms8(
+                uri=primary_uri, jesd_monitor=True, jesd=primary_jesd
+            )
         else:
-            self.primary = adrv9009_zu11eg(uri=primary_uri, jesd=primary_jesd)
+            self.primary = adrv9009_zu11eg(
+                uri=primary_uri, jesd_monitor=True, jesd=primary_jesd
+            )
         self.secondaries = []
         self.samples_primary = []
         self.samples_secondary = []
         for i, uri in enumerate(secondary_uris):
             if fmcomms8:
                 self.secondaries.append(
-                    adrv9009_zu11eg_fmcomms8(uri=uri, jesd=secondary_jesds[i])
+                    adrv9009_zu11eg_fmcomms8(
+                        uri=uri, jesd_monitor=True, jesd=secondary_jesds[i]
+                    )
                 )
             else:
                 self.secondaries.append(
-                    adrv9009_zu11eg(uri=uri, jesd=secondary_jesds[i])
+                    adrv9009_zu11eg(uri=uri, jesd_monitor=True, jesd=secondary_jesds[i])
                 )
 
         for dev in self.secondaries + [self.primary]:
