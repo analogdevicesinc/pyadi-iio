@@ -268,7 +268,7 @@ class adrv9009_zu11eg_multi(object):
         for dev in [self.primary] + self.secondaries:
             dev._clock_chip.reg_write(0xB2, vals.pop(0) << 2 | 1)
             if self.fmcomms8:
-                 dev._clock_chip_fmc.reg_write(0xB2, vals.pop(0) << 2 | 1)
+                dev._clock_chip_fmc.reg_write(0xB2, vals.pop(0) << 2 | 1)
             dev._clock_chip_carrier.reg_write(0xB2, vals.pop(0) << 2 | 1)
 
         self.primary._clock_chip_ext.reg_write(0xB2, vals.pop(0) << 2 | 1)
@@ -292,7 +292,7 @@ class adrv9009_zu11eg_multi(object):
             enable = 0
             val = 0
 
-        offs = (chan * 10)
+        offs = chan * 10
         self.primary._clock_chip_ext.reg_write(0xCF + offs, enable)
         self.primary._clock_chip_ext.reg_write(0xCB + offs, int(val) & 0x1F)
         self.primary._clock_chip_ext.reg_write(0xCC + offs, int(digital) & 0x1F)
