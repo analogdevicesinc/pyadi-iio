@@ -1,2 +1,3 @@
 numpy
+pylibiio
 fs.sshfs

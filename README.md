@@ -36,6 +36,12 @@ tcollins@jeeves:~$ (sudo) python setup.py install
 ```
 tcollins@jeeves:~$ (sudo) pip install pyadi-iio
 ```
+
+To get optional dependency for JESD debugging
+```
+tcollins@jeeves:~$ (sudo) pip install pyadi-iio[jesd]
+```
+
 ### Building doc
 Install necessary tools
 ```
