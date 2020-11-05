@@ -100,14 +100,20 @@ class adar1000(attribute, context_manager):
         if isinstance(beams, list):
             for beam in beams:
                 for dev in self._ctx.devices:
-                    if "label" in dev.attrs and dev.attrs["label"].value.lower() == beam.lower():
+                    if (
+                        "label" in dev.attrs
+                        and dev.attrs["label"].value.lower() == beam.lower()
+                    ):
                         self._ctrls.append(dev)
                         break
             if len(self._ctrls) != len(beams):
                 raise Exception("Not all devices found: " + ",".join(beams))
         else:
             for dev in self._ctx.devices:
-                if "label" in dev.attrs and dev.attrs["label"].value.lower() == beams.lower():
+                if (
+                    "label" in dev.attrs
+                    and dev.attrs["label"].value.lower() == beams.lower()
+                ):
                     self._ctrl = dev
             if not self._ctrl:
                 raise Exception("No device found for BEAM: " + beams)
@@ -129,7 +135,7 @@ class adar1000(attribute, context_manager):
     @property
     def tx_hardwaregains(self):
         """tx_hardwaregains: Get all gains applied to TX path"""
-        return self._get_attribute_dictionary('hardwaregain', True)
+        return self._get_attribute_dictionary("hardwaregain", True)
 
     @tx_hardwaregains.setter
     def tx_hardwaregains(self, values):
@@ -139,7 +145,7 @@ class adar1000(attribute, context_manager):
     @property
     def rx_hardwaregains(self):
         """rx_hardwaregains: Get all gains applied to RX path"""
-        return self._get_attribute_dictionary('hardwaregain', False)
+        return self._get_attribute_dictionary("hardwaregain", False)
 
     @rx_hardwaregains.setter
     def rx_hardwaregains(self, values):
@@ -149,7 +155,7 @@ class adar1000(attribute, context_manager):
     @property
     def tx_phases(self):
         """tx_phases: Get all phases of TX path"""
-        return self._get_attribute_dictionary('phase', True)
+        return self._get_attribute_dictionary("phase", True)
 
     @tx_phases.setter
     def tx_phases(self, values):
@@ -159,7 +165,7 @@ class adar1000(attribute, context_manager):
     @property
     def rx_phases(self):
         """rx_phases: Get all phases of RX path"""
-        return self._get_attribute_dictionary('phase', False)
+        return self._get_attribute_dictionary("phase", False)
 
     @rx_phases.setter
     def rx_phases(self, values):
@@ -169,7 +175,9 @@ class adar1000(attribute, context_manager):
     def _get_attribute_dictionary(self, attribute_name, output):
         """ Get a dictionary of all attached requested attributes by name and output style """
         return {
-            f'{dev.attrs["label"].value}_{b}': self._get_iio_attr(b, attribute_name, output, dev)
+            f'{dev.attrs["label"].value}_{b}': self._get_iio_attr(
+                b, attribute_name, output, dev
+            )
             for dev in self._ctrls
             for b in self._beam_channels
         }
@@ -179,13 +187,13 @@ class adar1000(attribute, context_manager):
 
         for key, value in values.items():
             # Pull out the beam and channel names
-            label_sections = key.lower().split('_')
-            beam = '_'.join(label_sections[:2])
+            label_sections = key.lower().split("_")
+            beam = "_".join(label_sections[:2])
             channel = label_sections[-1]
 
             # Determine the device & set the attribute
             try:
-                dev = [c for c in self._ctrls if c.attrs['label'].value.lower() == beam][0]
+                dev = [c for c in self._ctrls if c.attrs["label"].value == beam][0]
                 self._set_iio_attr(channel, attribute_name, output, value, dev)
             except IndexError:
                 raise KeyError(f'"{key}" does not correspond to any connected device!')
