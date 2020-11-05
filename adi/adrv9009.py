@@ -42,6 +42,9 @@ class adrv9009(rx_tx, context_manager):
     parameters:
         uri: type=string
             URI of context with ADRV9009
+        jesd_monitor: type=boolean
+            Boolean flag to enable JESD monitoring. jesd input is
+            ignored otherwise.
         jesd: type=adi.jesd
             JESD object associated with ADRV9009
     """
@@ -51,7 +54,7 @@ class adrv9009(rx_tx, context_manager):
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _device_name = ""
 
-    def __init__(self, uri="", jesd=None):
+    def __init__(self, uri="", jesd_monitor=False, jesd=None):
 
         context_manager.__init__(self, uri, self._device_name)
 
@@ -60,7 +63,7 @@ class adrv9009(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
-        self._jesd = jesd or jesdadi(uri)
+        self._jesd = jesd or jesdadi(uri) if jesd_monitor else None
         rx_tx.__init__(self)
 
     @property
