@@ -57,7 +57,7 @@ class jesd:
         self.find_lanes()
 
     def find_lanes(self):
-        self.lanes = dict()
+        self.lanes = {}
         for dir in self.dirs:
             if "-rx" in dir:
                 self.lanes[dir] = []
@@ -66,7 +66,7 @@ class jesd:
                     li = "/lane{}_info".format(lanIndx)
                     if self.fs.isfile(self.rootdir + dir + li):
                         self.lanes[dir].append(li)
-                        lanIndx = lanIndx + 1
+                        lanIndx += 1
                     else:
                         break
 
@@ -79,7 +79,7 @@ class jesd:
 
     def decode_status(self, status):
         status = status.split("\n")
-        link_status = dict()
+        link_status = {}
         for s in status:
             if ":" in s:
                 o = s.split(":")
@@ -93,12 +93,10 @@ class jesd:
         return self.fs.gettext(self.rootdir + dir + "/status")
 
     def get_dev_lane_info(self, dir):
-        lane_info = dict()
-        for ldir in self.lanes[dir]:
-            lane_info[ldir] = self.decode_status(
-                self.fs.gettext(self.rootdir + dir + "/" + ldir)
-            )
-        return lane_info
+        return {
+            ldir: self.decode_status(self.fs.gettext(self.rootdir + dir + "/" + ldir))
+            for ldir in self.lanes[dir]
+        }
 
     def get_all_link_statuses(self):
         statuses = dict()
@@ -109,7 +107,4 @@ class jesd:
         return statuses
 
     def get_all_statuses(self):
-        statuses = dict()
-        for dir in self.dirs:
-            statuses[dir] = self.decode_status(self.get_status(dir))
-        return statuses
+        return {dir: self.decode_status(self.get_status(dir)) for dir in self.dirs}

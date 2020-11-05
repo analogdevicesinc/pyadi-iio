@@ -32,12 +32,19 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
-from adi.rx_tx import rx_tx
 from adi.jesd import jesd as jesdadi
+from adi.rx_tx import rx_tx
 
 
 class adrv9009(rx_tx, context_manager):
-    """ ADRV9009 Transceiver """
+    """ ADRV9009 Transceiver
+
+    parameters:
+        uri: type=string
+            URI of context with ADRV9009
+        jesd: type=adi.jesd
+            JESD object associated with ADRV9009
+    """
 
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
@@ -53,11 +60,7 @@ class adrv9009(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
-        if jesd:
-            self._jesd = jesd
-        else:
-            self._jesd = jesdadi(uri)
-
+        self._jesd = jesd or jesdadi(uri)
         rx_tx.__init__(self)
 
     @property
