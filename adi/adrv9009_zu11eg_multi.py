@@ -41,7 +41,21 @@ from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
 
 
 class adrv9009_zu11eg_multi(object):
-    """ ADRV9009-ZU11EG Multi-SOM Manager"""
+    """ ADRV9009-ZU11EG Multi-SOM Manager
+
+    parameters:
+        primary_uri: type=string
+            URI of primary ADRV9009-ZU11EG. Parent HMC7044 is connected
+            to this SOM
+        secondary_uris: type=list[string]
+            URI(s) of secondary ADRV9009-ZU11EG(s).
+        primary_jesd: type=adi.jesd
+            JESD object associated with primary ADRV9009-ZU11EG
+        secondary_jesds: type=list[adi.jesd]
+            JESD object(s) associated with secondary ADRV9009-ZU11EG(s)
+        fmcomms8: type=boolean
+            Boolean flag to idenify is FMComms8(s) are attached to SOMs
+    """
 
     __rx_buffer_size_multi = 2 ** 14
     secondaries: List[adrv9009_zu11eg] = []
@@ -80,12 +94,15 @@ class adrv9009_zu11eg_multi(object):
                     adrv9009_zu11eg_fmcomms8(uri=uri, jesd=secondary_jesds[i])
                 )
             else:
-                self.secondaries.append(adrv9009_zu11eg(uri=uri, jesd=secondary_jesds[i]))
+                self.secondaries.append(
+                    adrv9009_zu11eg(uri=uri, jesd=secondary_jesds[i])
+                )
 
         for dev in self.secondaries + [self.primary]:
             dev._rxadc.set_kernel_buffers_count(1)
 
     def reinitialize(self):
+        """ reinitialize: reinitialize all transceivers """
         for dev in self.secondaries + [self.primary]:
             property_names = [p for p in dir(dev) if "reinitialize" in p]
             for p in property_names:
@@ -156,7 +173,7 @@ class adrv9009_zu11eg_multi(object):
                 print("Re-initializing JESD links")
                 time.sleep(10)
 
-    def device_is_running(self, dev, index, verbose):
+    def _device_is_running(self, dev, index, verbose):
         err = dev.jesd204_fsm_error
         paused = dev.jesd204_fsm_paused
         state = dev.jesd204_fsm_state
@@ -190,20 +207,20 @@ class adrv9009_zu11eg_multi(object):
     def __jesd204_fsm_is_done(self):
         cnt = 0
         for index, dev in enumerate([self.primary] + self.secondaries):
-            ret = self.device_is_running(dev, index, 0)
+            ret = self._device_is_running(dev, index, 0)
             if ret == "done":
                 cnt += 1
 
         if cnt == len([self.primary] + self.secondaries):
             return "done"
 
-    def jesd204_fsm_sync(self):
+    def _jesd204_fsm_sync(self):
         while True:
             if self.__jesd204_fsm_is_done() == "done":
                 return "done"
 
             for index, dev in enumerate(self.secondaries + [self.primary]):
-                ret = self.device_is_running(dev, index, self._jesd_fsm_show_status)
+                ret = self._device_is_running(dev, index, self._jesd_fsm_show_status)
                 if ret == "paused":
                     dev.jesd204_fsm_resume = "1"
 
@@ -229,12 +246,12 @@ class adrv9009_zu11eg_multi(object):
                 dev._clock_chip_fmc.attrs["sleep_request"].value = "0"
             dev._clock_chip.attrs["sleep_request"].value = "0"
 
-    def hmc7044_cap_sel(self):
+    def _hmc7044_cap_sel(self):
         vals = []
         for dev in [self.primary] + self.secondaries:
             vals.append(dev._clock_chip.reg_read(0x8C))
             if self.fmcomms8:
-                 vals.append(dev._clock_chip_fmc.reg_read(0x8C))
+                vals.append(dev._clock_chip_fmc.reg_read(0x8C))
             vals.append(dev._clock_chip_carrier.reg_read(0x8C))
 
         vals.append(self.primary._clock_chip_ext.reg_read(0x8C))
@@ -260,9 +277,16 @@ class adrv9009_zu11eg_multi(object):
             chan.attrs["raw"].value = str(enable)
 
     def sysref_request(self):
+        """ sysref_request: Sysref request for parent HMC7044 """
         self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
 
     def set_trx_lo_frequency(self, freq):
+        """ set_trx_lo_frequency:
+
+            parameters:
+                freq: type=int
+                    Frequency in hertz to be applied to all LOs
+        """
         for dev in self.secondaries + [self.primary]:
             dev._set_iio_debug_attr_str("adi,trx-pll-lo-frequency_hz", freq, dev._ctrl)
             dev._set_iio_debug_attr_str(
@@ -293,13 +317,13 @@ class adrv9009_zu11eg_multi(object):
                 for dev in [self.primary] + self.secondaries:
                     dev.jesd204_fsm_ctrl = 1
 
-                self.jesd204_fsm_sync()
+                self._jesd204_fsm_sync()
 
                 if not self._resync_tx:
                     self.__dds_sync_enable(1)
 
-                if (self._clk_chip_show_cap_bank_sel):
-                    print ("HMC7044s CAP bank select: ", self.hmc7044_cap_sel())
+                if self._clk_chip_show_cap_bank_sel:
+                    print("HMC7044s CAP bank select: ", self._hmc7044_cap_sel())
 
                 if self._jesd_show_status:
                     self.__read_jesd_status()
@@ -309,12 +333,20 @@ class adrv9009_zu11eg_multi(object):
                     dev.rx_destroy_buffer()
                     dev._rx_init_channels()
                 return
-            except:
+            except:  # noqa: E722
                 print("Re-initializing due to lock-up")
                 self.reinitialize()
             raise Exception("Unable to initialize (Board reboot required)")
 
     def rx(self):
+        """ Receive data from multiple hardware buffers for each channel index in
+            rx_enabled_channels of each child object (primary,secondaries[indx]).
+
+            returns: type=numpy.array or list of numpy.array
+                An array or list of arrays when more than one receive channel
+                is enabled containing samples from a channel or set of channels.
+                Data will be complex when using a complex data device.
+        """
         if not self._rx_initialized:
             self._pre_rx_setup()
             self._rx_initialized = True

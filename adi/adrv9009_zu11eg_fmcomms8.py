@@ -35,7 +35,14 @@ from adi.adrv9009_zu11eg import adrv9009_zu11eg
 
 
 class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
-    """ ADRV9009-ZU11EG System-On-Module + FMCOMMS8"""
+    """ ADRV9009-ZU11EG System-On-Module + FMCOMMS8
+
+    parameters:
+        uri: type=string
+            URI of context with ADRV9009-ZU11EG
+        jesd: type=adi.jesd
+            JESD object associated with ADRV9009-ZU11EG
+    """
 
     _rx_channel_names = [
         "voltage0_i",
