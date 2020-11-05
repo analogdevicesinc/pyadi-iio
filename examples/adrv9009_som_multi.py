@@ -43,11 +43,9 @@ def measure_phase(chan0, chan1):
     return error
 
 
-buff_size = 2 ** 14
-
 # Create radio
 primary = "ip:10.44.3.39"
-secondary = "ip:10.44.3.50"
+secondary = "ip:10.44.3.61"
 
 lo_freq = 1000000000
 dds_freq = 7000000
@@ -67,9 +65,10 @@ multi._clk_chip_show_cap_bank_sel = True
 multi._resync_tx = True
 multi.rx_buffer_size = 2 ** 10
 
-multi.primary._clock_chip_ext.reg_write(0xCF, 1)
-multi.primary._clock_chip_ext.reg_write(0xE3, 1)
+multi.hmc7044_ext_output_delay(0, 0, 200)
+multi.hmc7044_ext_output_delay(2, 0, 700)
 
+# multi.hmc7044_set_cap_sel([14, 14, 14, 13, 13, 14, 13])
 
 multi.primary.rx_enabled_channels = [0, 2, 4, 6]
 
@@ -77,9 +76,8 @@ for secondary in multi.secondaries:
     secondary.rx_enabled_channels = [0, 2, 4, 6]
     secondary.dds_single_tone(dds_freq, 0.2, 4)
 
-multi.set_trx_lo_frequency(999999990)
+multi.set_trx_lo_frequency(lo_freq)
 multi.primary.dds_single_tone(dds_freq, 0.8)
-
 
 log = [[], [], [], [], []]
 
@@ -133,14 +131,14 @@ for r in range(R):
 
     if plot_time:
         plt.clf()
-        plt.plot(x[0][:].real, label="Chan0 SOM A")
+        plt.plot(x[0][:1000].real, label="Chan0 SOM A")
         plt.plot(x[1][:1000].real, label="Chan2 SOM A")
         plt.plot(x[2][:1000].real, label="Chan4 SOM A FMC8")
-        plt.plot(x[4][:].real, label="Chan0 SOM B")
+        plt.plot(x[4][:1000].real, label="Chan0 SOM B")
         plt.plot(x[6][:1000].real, label="Chan4 SOM B FMC8")
         plt.legend()
         plt.draw()
-        plt.pause(1)
+        plt.pause(2)
 
     plt.clf()
     x = np.array(range(0, r + 1))
