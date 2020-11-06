@@ -65,8 +65,11 @@ multi._clk_chip_show_cap_bank_sel = True
 multi._resync_tx = True
 multi.rx_buffer_size = 2 ** 10
 
-multi.hmc7044_ext_output_delay(0, 0, 200)
-multi.hmc7044_ext_output_delay(2, 0, 700)
+multi.hmc7044_ext_output_delay(0, 1, 0)
+multi.hmc7044_ext_output_delay(2, 5, 0)
+
+multi.hmc7044_car_output_delay(2, 2, 0)
+multi.hmc7044_car_output_delay(3, 2, 0)
 
 # multi.hmc7044_set_cap_sel([14, 14, 14, 13, 13, 14, 13])
 
@@ -126,8 +129,6 @@ for r in range(R):
     for i in range(C):
         print("%s:\t %f" % (chan_desc[i], rx_m[i][r]))
     print("###########")
-
-    plot_time = True
 
     if plot_time:
         plt.clf()
