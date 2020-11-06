@@ -1,7 +1,7 @@
 Quick Start
 ===============
 
-Before installing pyadi-iio make sure you have `libiio <https://github.com/analogdevicesinc/libiio>`_ and `its python bindings <https://github.com/analogdevicesinc/libiio/blob/master/bindings/python/iio.py>`_ installed.
+Before installing pyadi-iio make sure you have `libiio <https://github.com/analogdevicesinc/libiio>`_ and `its python bindings <https://github.com/analogdevicesinc/libiio/blob/master/bindings/python/iio.py>`_ installed. Since libiio v0.21, the libiio python bindings have been available on pypi and conda. The conda package includes the built library but the pypi install will require that it is installed beforehand. If you install pyadi-iio directly from pypi or conda they will automatically install the python bindings for libiio (pylibiio).
 
 .. note::
 
@@ -21,6 +21,14 @@ or by grabbing the source directly
   git clone https://github.com/analogdevicesinc/pyadi-iio.git
   cd pyadi-iio
   (sudo) python3 setup.py install
+
+To install the optional dependencies for JESD debugging and control
+
+.. code-block:: bash
+
+  (sudo) pip install pyadi-iio[jesd]
+
+Note that this is only needed for the ADRV9009-ZU11EG multi-SOM configuration.
 
 .. note::
 

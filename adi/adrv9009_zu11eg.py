@@ -35,7 +35,17 @@ from adi.adrv9009 import adrv9009
 
 
 class adrv9009_zu11eg(adrv9009):
-    """ ADRV9009-ZU11EG System-On-Module """
+    """ ADRV9009-ZU11EG System-On-Module
+
+    parameters:
+        uri: type=string
+            URI of context with ADRV9009-ZU11EG
+        jesd_monitor: type=boolean
+            Boolean flag to enable JESD monitoring. jesd input is
+            ignored otherwise.
+        jesd: type=adi.jesd
+            JESD object associated with ADRV9009-ZU11EG
+    """
 
     _rx_channel_names = [
         "voltage0_i",
@@ -59,8 +69,9 @@ class adrv9009_zu11eg(adrv9009):
     ]
     _device_name = ""
 
-    def __init__(self, uri=""):
-        adrv9009.__init__(self, uri=uri)
+    def __init__(self, uri="", jesd_monitor=False, jesd=None):
+
+        adrv9009.__init__(self, uri=uri, jesd_monitor=jesd_monitor, jesd=jesd)
         self._ctrl_b = self._ctx.find_device("adrv9009-phy-b")
         self._clock_chip = self._ctx.find_device("hmc7044")
         self._clock_chip_carrier = self._ctx.find_device("hmc7044-car")

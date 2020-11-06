@@ -32,18 +32,29 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
+from adi.jesd import jesd as jesdadi
 from adi.rx_tx import rx_tx
 
 
 class adrv9009(rx_tx, context_manager):
-    """ ADRV9009 Transceiver """
+    """ ADRV9009 Transceiver
+
+    parameters:
+        uri: type=string
+            URI of context with ADRV9009
+        jesd_monitor: type=boolean
+            Boolean flag to enable JESD monitoring. jesd input is
+            ignored otherwise.
+        jesd: type=adi.jesd
+            JESD object associated with ADRV9009
+    """
 
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _device_name = ""
 
-    def __init__(self, uri=""):
+    def __init__(self, uri="", jesd_monitor=False, jesd=None):
 
         context_manager.__init__(self, uri, self._device_name)
 
@@ -52,7 +63,7 @@ class adrv9009(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
-
+        self._jesd = jesd or jesdadi(uri) if jesd_monitor else None
         rx_tx.__init__(self)
 
     @property
@@ -212,3 +223,36 @@ class adrv9009(rx_tx, context_manager):
     @trx_lo.setter
     def trx_lo(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value)
+
+    @property
+    def jesd204_fsm_ctrl(self):
+        """jesd204_fsm_ctrl: jesd204-fsm control"""
+        return self._get_iio_dev_attr("jesd204_fsm_ctrl")
+
+    @jesd204_fsm_ctrl.setter
+    def jesd204_fsm_ctrl(self, value):
+        self._set_iio_dev_attr_str("jesd204_fsm_ctrl", value)
+
+    @property
+    def jesd204_fsm_resume(self):
+        """jesd204_fsm_resume: jesd204-fsm resume"""
+        return self._get_iio_dev_attr("jesd204_fsm_resume")
+
+    @jesd204_fsm_resume.setter
+    def jesd204_fsm_resume(self, value):
+        self._set_iio_dev_attr_str("jesd204_fsm_resume", value)
+
+    @property
+    def jesd204_fsm_state(self):
+        """jesd204_fsm_state: jesd204-fsm state"""
+        return self._get_iio_dev_attr_str("jesd204_fsm_state")
+
+    @property
+    def jesd204_fsm_paused(self):
+        """jesd204_fsm_paused: jesd204-fsm paused"""
+        return self._get_iio_dev_attr("jesd204_fsm_paused")
+
+    @property
+    def jesd204_fsm_error(self):
+        """jesd204_fsm_error: jesd204-fsm error"""
+        return self._get_iio_dev_attr("jesd204_fsm_error")
