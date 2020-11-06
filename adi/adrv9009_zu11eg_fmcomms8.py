@@ -35,7 +35,17 @@ from adi.adrv9009_zu11eg import adrv9009_zu11eg
 
 
 class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
-    """ ADRV9009-ZU11EG System-On-Module + FMCOMMS8"""
+    """ ADRV9009-ZU11EG System-On-Module + FMCOMMS8
+
+    parameters:
+        uri: type=string
+            URI of context with ADRV9009-ZU11EG
+        jesd_monitor: type=boolean
+            Boolean flag to enable JESD monitoring. jesd input is
+            ignored otherwise.
+        jesd: type=adi.jesd
+            JESD object associated with ADRV9009-ZU11EG
+    """
 
     _rx_channel_names = [
         "voltage0_i",
@@ -75,10 +85,11 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
     ]
     _device_name = ""
 
-    def __init__(self, uri=""):
-        adrv9009_zu11eg.__init__(self, uri=uri)
+    def __init__(self, uri="", jesd_monitor=False, jesd=None):
+        adrv9009_zu11eg.__init__(self, uri=uri, jesd_monitor=jesd_monitor, jesd=jesd)
         self._ctrl_c = self._ctx.find_device("adrv9009-phy-c")
         self._ctrl_d = self._ctx.find_device("adrv9009-phy-d")
+        self._clock_chip_fmc = self._ctx.find_device("hmc7044-fmc")
 
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize all four transceivers """
