@@ -322,7 +322,7 @@ class adrv9009_zu11eg_multi(object):
             enable = 0
             val = 0
 
-        offs = (chan * 10)
+        offs = chan * 10
 
         for dev in [self.primary] + self.secondaries:
             dev._clock_chip_carrier.reg_write(0xCF + offs, enable)
