@@ -303,6 +303,32 @@ class adrv9009_zu11eg_multi(object):
         self.primary._clock_chip_ext.reg_write(0xCB + offs, int(val) & 0x1F)
         self.primary._clock_chip_ext.reg_write(0xCC + offs, int(digital) & 0x1F)
 
+    def hmc7044_car_output_delay(self, chan, digital, analog_ps):
+        """ hmc7044_car_output_delay:
+
+            parameters:
+                digital: type=int
+                    Digital delay. Adjusts the phase of the divider signal
+                    by up to 17 half cycles of the VCO.
+                analog_ps: type=int
+                    Analog delay. Adjusts the delay of the divider signal in
+                    increments of ~25 ps. Range is from 100ps to 700ps.
+        """
+        assert 0 <= chan <= 13
+        if analog_ps - 100 >= 0:
+            enable = 1
+            val = (analog_ps - 100) / 25
+        else:
+            enable = 0
+            val = 0
+
+        offs = (chan * 10)
+
+        for dev in [self.primary] + self.secondaries:
+            dev._clock_chip_carrier.reg_write(0xCF + offs, enable)
+            dev._clock_chip_carrier.reg_write(0xCB + offs, int(val) & 0x1F)
+            dev._clock_chip_carrier.reg_write(0xCC + offs, int(digital) & 0x1F)
+
     def __rx_dma_arm(self):
         for dev in self.secondaries + [self.primary]:
             if self._dma_show_arming:
