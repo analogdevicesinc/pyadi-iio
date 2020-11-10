@@ -9,9 +9,9 @@ classname = "adi.adis16507"
     "classname, attr, max_pow, tol", [(classname, "sample_rate", 11, 0)],
 )
 def test_adis16507_sample_rate(
-    test_attribute_single_value_pow2, classname, hardware, attr, max_pow, tol
+    test_attribute_single_value_pow2, iio_uri, classname, attr, max_pow, tol
 ):
-    test_attribute_single_value_pow2(classname, hardware, attr, max_pow, tol)
+    test_attribute_single_value_pow2(iio_uri, classname, attr, max_pow, tol)
 
 
 @pytest.mark.iio_hardware(hardware)

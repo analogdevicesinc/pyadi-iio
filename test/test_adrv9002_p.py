@@ -248,9 +248,9 @@ def test_adrv9002_profile_write(
     "attr, file", [("profile", nco_test_profile),],
 )
 def test_adrv9002_nco_write_profile(
-    test_attribute_write_only_str, iio_attr, classname, attr, file
+    test_attribute_write_only_str, iio_uri, classname, attr, file
 ):
-    test_attribute_write_only_str(iio_attr, classname, hardware, attr, file)
+    test_attribute_write_only_str(iio_uri, classname, hardware, attr, file)
 
 
 #########################################
@@ -268,9 +268,9 @@ def test_adrv9002_nco_write_profile(
     ],
 )
 def test_adrv9002_nco(
-    test_attribute_single_value, iio_attr, classname, attr, start, stop, step, tol
+    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
-    test_attribute_single_value(iio_attr, classname, attr, start, stop, step, tol)
+    test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
 #########################################
