@@ -1,13 +1,8 @@
 import random
 import test.rf.spec as spec
 import time
-from test.common import (
-    BoardInterface,
-    command_line_config,
-    pytest_addoption,
-    pytest_collection_modifyitems,
-    pytest_configure,
-)
+from test.common import dev_interface, pytest_collection_modifyitems, pytest_configure
+from test.generics import iio_attribute_single_value
 from test.globals import *
 
 import adi
@@ -15,53 +10,25 @@ import numpy as np
 import pytest
 
 
-def iio_attribute_single_value(
-    devicename,
-    attrtype,
-    dev_name,
-    chan_name,
-    inout,
-    attr,
-    start,
-    stop,
-    step,
-    tol,
-    repeats=1,
-):
-    bi = BoardInterface(None, devicename)
+def attribute_single_value(uri, classname, attr, start, stop, step, tol, repeats=1):
+    # bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
     numints = int((stop - start) / step)
     for _ in range(repeats):
         ind = random.randint(0, numints)
         val = start + step * ind
         # Check hardware
-        assert (
-            bi.iio_dev_interface(attrtype, dev_name, chan_name, inout, attr, val, tol)
-            <= tol
-        )
+        assert dev_interface(uri, classname, val, attr, tol) <= tol
 
 
-def attribute_single_value(
-    classname, devicename, attr, start, stop, step, tol, repeats=1
-):
-    bi = BoardInterface(classname, devicename)
-    # Pick random number in operational range
-    numints = int((stop - start) / step)
-    for _ in range(repeats):
-        ind = random.randint(0, numints)
-        val = start + step * ind
-        # Check hardware
-        assert bi.dev_interface(val, attr, tol) <= tol
-
-
-def attribute_single_value_str(classname, devicename, attr, val, tol):
-    bi = BoardInterface(classname, devicename)
+def attribute_single_value_str(uri, classname, attr, val, tol):
+    # bi = BoardInterface(classname, devicename)
     # Check hardware
-    assert bi.dev_interface(str(val), attr, tol) <= tol
+    assert dev_interface(uri, classname, str(val), attr, tol) <= tol
 
 
-def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol, repeats=1):
-    bi = BoardInterface(classname, devicename)
+def attribute_single_value_pow2(uri, classname, attr, max_pow, tol, repeats=1):
+    # bi = BoardInterface(classname, devicename)
     # Pick random number in operational range
     nums = []
     for k in range(0, max_pow):
@@ -70,40 +37,40 @@ def attribute_single_value_pow2(classname, devicename, attr, max_pow, tol, repea
         ind = random.randint(0, len(nums) - 1)
         val = nums[ind]
         # Check hardware
-        assert bi.dev_interface(val, attr, tol) <= tol
+        assert dev_interface(uri, classname, val, attr, tol) <= tol
 
 
-def attribute_multipe_values(classname, devicename, attr, values, tol, repeats=1):
-    bi = BoardInterface(classname, devicename)
+def attribute_multipe_values(uri, classname, attr, values, tol, repeats=1):
+    # bi = BoardInterface(classname, devicename)
     for _ in range(repeats):
         for val in values:
             if isinstance(val, str):
-                assert bi.dev_interface(val, attr, 0)
+                assert dev_interface(uri, classname, val, attr, 0)
             else:
-                assert bi.dev_interface(val, attr, tol) <= tol
+                assert dev_interface(uri, classname, val, attr, tol) <= tol
 
 
 def attribute_multipe_values_with_depends(
-    classname, devicename, attr, depends, values, tol, repeats=1
+    uri, classname, attr, depends, values, tol, repeats=1
 ):
-    bi = BoardInterface(classname, devicename)
+    # bi = BoardInterface(classname, devicename)
     # Set custom dependencies for the attr being tested
     for p in depends.keys():
         if isinstance(depends[p], str):
-            assert bi.dev_interface(depends[p], p, 0)
+            assert dev_interface(uri, classname, depends[p], p, 0)
         else:
-            assert bi.dev_interface(depends[p], p, tol) <= tol
+            assert dev_interface(uri, classname, depends[p], p, tol) <= tol
     for _ in range(repeats):
         for val in values:
             if isinstance(val, str):
-                assert bi.dev_interface(val, attr, 0)
+                assert dev_interface(uri, classname, val, attr, 0)
             else:
-                assert bi.dev_interface(val, attr, tol) <= tol
+                assert dev_interface(uri, classname, val, attr, tol) <= tol
 
 
-def attribute_write_only_str(classname, devicename, attr, file):
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+def attribute_write_only_str(uri, classname, attr, file):
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     try:
         setattr(sdr, attr, file)
         del sdr
@@ -112,9 +79,9 @@ def attribute_write_only_str(classname, devicename, attr, file):
         raise Exception(e)
 
 
-def dma_rx(classname, devicename, channel):
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+def dma_rx(uri, classname, channel):
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     N = 2 ** 15
     if not isinstance(channel, list):
         sdr.rx_enabled_channels = [channel]
@@ -136,9 +103,9 @@ def dma_rx(classname, devicename, channel):
     del sdr
 
 
-def dma_tx(classname, devicename, channel):
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+def dma_tx(uri, classname, channel):
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     TXFS = 1000
     N = 2 ** 15
     ts = 1 / float(TXFS)
@@ -163,9 +130,9 @@ def dma_tx(classname, devicename, channel):
     del sdr
 
 
-def dma_loopback(classname, devicename, channel):
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+def dma_loopback(uri, classname, channel):
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
         sdr.loopback_chip_b = 1
     else:
@@ -222,10 +189,9 @@ def freq_est(y, fs):
     return xf[indx]
 
 
-def dds_loopback(classname, devicename, param_set, channel, frequency, scale, peak_min):
-    bi = BoardInterface(classname, devicename)
+def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min):
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -258,10 +224,9 @@ def dds_loopback(classname, devicename, param_set, channel, frequency, scale, pe
     assert tone_peaks[indx] > peak_min
 
 
-def cw_loopback(classname, devicename, channel, param_set):
-    bi = BoardInterface(classname, devicename)
+def cw_loopback(uri, classname, channel, param_set):
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -323,10 +288,9 @@ def cw_loopback(classname, devicename, channel, param_set):
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
-    bi = BoardInterface(classname, devicename)
+def t_sfdr(uri, classname, channel, param_set, sfdr_min):
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -364,12 +328,10 @@ def t_sfdr(classname, devicename, channel, param_set, sfdr_min):
     assert val > sfdr_min
 
 
-def gain_check(
-    classname, devicename, channel, param_set, dds_scale, min_rssi, max_rssi
-):
-    bi = BoardInterface(classname, devicename)
+def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi):
+    # bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -404,10 +366,10 @@ def gain_check(
     assert rssi <= max_rssi
 
 
-def cyclic_buffer(classname, devicename, channel, param_set):
-    bi = BoardInterface(classname, devicename)
+def cyclic_buffer(uri, classname, channel, param_set):
+    # bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -440,10 +402,10 @@ def cyclic_buffer(classname, devicename, channel, param_set):
         pytest.fail(msg)
 
 
-def cyclic_buffer_exception(classname, devicename, channel, param_set):
-    bi = BoardInterface(classname, devicename)
+def cyclic_buffer_exception(uri, classname, channel, param_set):
+    # bi = BoardInterface(classname, devicename)
     # See if we can tone using DMAs
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -482,11 +444,11 @@ def cyclic_buffer_exception(classname, devicename, channel, param_set):
 #########################################
 
 
-def stress_context_creation(classname, devicename, channel, repeats):
+def stress_context_creation(uri, classname, channel, repeats):
     """ Repeatedly create and destroy a context """
     for _ in range(repeats):
-        bi = BoardInterface(classname, devicename)
-        sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+        # bi = BoardInterface(classname, devicename)
+        sdr = eval(classname + "(uri='" + uri + "')")
         N = 2 ** 15
         if not isinstance(channel, list):
             sdr.rx_enabled_channels = [channel]
@@ -509,10 +471,10 @@ def stress_context_creation(classname, devicename, channel, repeats):
         del sdr
 
 
-def stress_rx_buffer_length(classname, devicename, channel, buffer_sizes):
+def stress_rx_buffer_length(uri, classname, channel, buffer_sizes):
     """ Repeatedly create and destroy buffers across different buffer sizes"""
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     if not isinstance(channel, list):
         sdr.rx_enabled_channels = [channel]
     else:
@@ -536,10 +498,10 @@ def stress_rx_buffer_length(classname, devicename, channel, buffer_sizes):
     del sdr
 
 
-def stress_rx_buffer_creation(classname, devicename, channel, repeats):
+def stress_rx_buffer_creation(uri, classname, channel, repeats):
     """ Repeatedly create and destroy buffers """
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     N = 2 ** 15
     if not isinstance(channel, list):
         sdr.rx_enabled_channels = [channel]
@@ -562,9 +524,9 @@ def stress_rx_buffer_creation(classname, devicename, channel, repeats):
     del sdr
 
 
-def stress_tx_buffer_creation(classname, devicename, channel, repeats):
-    bi = BoardInterface(classname, devicename)
-    sdr = eval(bi.classname + "(uri='" + bi.uri + "')")
+def stress_tx_buffer_creation(uri, classname, channel, repeats):
+    # bi = BoardInterface(classname, devicename)
+    sdr = eval(classname + "(uri='" + uri + "')")
     TXFS = 1000
     N = 2 ** 15
     ts = 1 / float(TXFS)
@@ -597,125 +559,104 @@ def stress_tx_buffer_creation(classname, devicename, channel, repeats):
 # Fixtures
 @pytest.fixture()
 def test_iio_attribute_single_value(request):
-    command_line_config(request)
     yield iio_attribute_single_value
 
 
 @pytest.fixture()
 def test_stress_context_creation(request):
-    command_line_config(request)
     yield stress_context_creation
 
 
 @pytest.fixture()
 def test_stress_rx_buffer_length(request):
-    command_line_config(request)
     yield stress_rx_buffer_length
 
 
 @pytest.fixture()
 def test_stress_rx_buffer_creation(request):
-    command_line_config(request)
     yield stress_rx_buffer_creation
 
 
 @pytest.fixture()
 def test_stress_tx_buffer_creation(request):
-    command_line_config(request)
     yield stress_tx_buffer_creation
 
 
 @pytest.fixture()
 def test_attribute_single_value(request):
-    command_line_config(request)
     yield attribute_single_value
 
 
 @pytest.fixture()
 def test_attribute_single_value_str(request):
-    command_line_config(request)
     yield attribute_single_value_str
 
 
 @pytest.fixture()
 def test_attribute_single_value_pow2(request):
-    command_line_config(request)
     yield attribute_single_value_pow2
 
 
 @pytest.fixture()
 def test_dma_rx(request):
-    command_line_config(request)
     yield dma_rx
 
 
 @pytest.fixture()
 def test_dma_tx(request):
-    command_line_config(request)
     yield dma_tx
 
 
 @pytest.fixture()
 def test_cyclic_buffer(request):
-    command_line_config(request)
     yield cyclic_buffer
 
 
 @pytest.fixture()
 def test_cyclic_buffer_exception(request):
-    command_line_config(request)
     yield cyclic_buffer_exception
 
 
 @pytest.fixture()
 def test_dma_loopback(request):
-    command_line_config(request)
     yield dma_loopback
 
 
 @pytest.fixture()
 def test_sfdr(request):
-    command_line_config(request)
     yield t_sfdr
 
 
 @pytest.fixture()
 def test_dds_loopback(request):
-    command_line_config(request)
     yield dds_loopback
 
 
 @pytest.fixture()
 def test_iq_loopback(request):
-    command_line_config(request)
     yield cw_loopback
 
 
 @pytest.fixture()
 def test_cw_loopback(request):
-    command_line_config(request)
     yield cw_loopback
 
 
 @pytest.fixture()
 def test_gain_check(request):
-    command_line_config(request)
     yield gain_check
 
 
 @pytest.fixture()
 def test_attribute_multipe_values(request):
-    command_line_config(request)
     yield attribute_multipe_values
 
 
 @pytest.fixture()
 def test_attribute_multipe_values_with_depends(request):
-    command_line_config(request)
     yield attribute_multipe_values_with_depends
 
 
 @pytest.fixture
 def test_attribute_write_only_str(request):
-    command_line_config(request)
     yield attribute_write_only_str

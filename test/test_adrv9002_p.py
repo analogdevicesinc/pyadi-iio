@@ -13,7 +13,8 @@ lvds_test_profiles = [
 ]
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
@@ -28,13 +29,14 @@ lvds_test_profiles = [
     ],
 )
 def test_adrv9002_float_attr(
-    test_attribute_single_value, classname, hardware, attr, start, stop, step, tol
+    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
-    test_attribute_single_value(classname, hardware, attr, start, stop, step, tol)
+    test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val",
     [
@@ -69,13 +71,14 @@ def test_adrv9002_float_attr(
     ],
 )
 def test_adrv9002_boolean_attr(
-    test_attribute_multipe_values, classname, hardware, attr, val
+    test_attribute_multipe_values, iio_uri, classname, attr, val
 ):
-    test_attribute_multipe_values(classname, hardware, attr, val, 0)
+    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val",
     [
@@ -112,16 +115,17 @@ def test_adrv9002_boolean_attr(
     ],
 )
 def test_adrv9002_str_attr(
-    test_attribute_multipe_values, classname, hardware, attr, val
+    test_attribute_multipe_values, iio_uri, classname, attr, val
 ):
-    test_attribute_multipe_values(classname, hardware, attr, val, 0)
+    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
 
 
 #########################################
 # baseband rx sample rate should be > 1MHz to run this test
 
 
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val, depends",
     [
@@ -144,10 +148,10 @@ def test_adrv9002_str_attr(
     ],
 )
 def test_adrv9002_interface_gain_wideband(
-    test_attribute_multipe_values_with_depends, classname, hardware, attr, depends, val
+    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
 ):
     test_attribute_multipe_values_with_depends(
-        classname, hardware, attr, depends, val, 0
+        iio_uri, classname, attr, depends, val, 0
     )
 
 
@@ -155,7 +159,8 @@ def test_adrv9002_interface_gain_wideband(
 # baseband rx sample rate should be < 1MHz to run this test
 
 
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val, depends",
     [
@@ -216,40 +221,43 @@ def test_adrv9002_interface_gain_wideband(
     ],
 )
 def test_adrv9002_interface_gain_narrowband(
-    test_attribute_multipe_values_with_depends, classname, hardware, attr, depends, val
+    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
 ):
     test_attribute_multipe_values_with_depends(
-        classname, hardware, attr, depends, val, 0
+        iio_uri, classname, attr, depends, val, 0
     )
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
     "files", lvds_test_profiles,
 )
 def test_adrv9002_profile_write(
-    test_attribute_write_only_str, classname, hardware, attr, files
+    test_attribute_write_only_str, iio_uri, classname, attr, files
 ):
-    test_attribute_write_only_str(classname, hardware, attr, files)
+    test_attribute_write_only_str(iio_uri, classname, attr, files)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, file", [("profile", nco_test_profile),],
 )
 def test_adrv9002_nco_write_profile(
-    test_attribute_write_only_str, classname, hardware, attr, file
+    test_attribute_write_only_str, iio_uri, classname, attr, file
 ):
-    test_attribute_write_only_str(classname, hardware, attr, file)
+    test_attribute_write_only_str(iio_uri, classname, hardware, attr, file)
 
 
 #########################################
 # It depends on test_adrv9002_nco_write_profile to be run first.
 # Maybe we should think in adding something like pytest-dependency
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
@@ -260,28 +268,31 @@ def test_adrv9002_nco_write_profile(
     ],
 )
 def test_adrv9002_nco(
-    test_attribute_single_value, classname, hardware, attr, start, stop, step, tol
+    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
-    test_attribute_single_value(classname, hardware, attr, start, stop, step, tol)
+    test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
-def test_adrv9002_tx_data(test_dma_tx, classname, hardware, channel):
-    test_dma_tx(classname, hardware, channel)
+def test_adrv9002_tx_data(test_dma_tx, iio_uri, classname, channel):
+    test_dma_tx(iio_uri, classname, channel)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
-def test_adrv9002_rx_data(test_dma_rx, classname, hardware, channel):
-    test_dma_rx(classname, hardware, channel)
+def test_adrv9002_rx_data(test_dma_rx, iio_uri, classname, channel):
+    test_dma_rx(iio_uri, classname, channel)
 
 
 #########################################
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.skip(reason="Test still fails on chan1")
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
     "param_set",
@@ -300,7 +311,5 @@ def test_adrv9002_rx_data(test_dma_rx, classname, hardware, channel):
         )
     ],
 )
-def test_adrv9002_cw_loopback(
-    test_cw_loopback, classname, hardware, channel, param_set
-):
-    test_cw_loopback(classname, hardware, channel, param_set)
+def test_adrv9002_cw_loopback(test_cw_loopback, iio_uri, classname, channel, param_set):
+    test_cw_loopback(iio_uri, classname, channel, param_set)

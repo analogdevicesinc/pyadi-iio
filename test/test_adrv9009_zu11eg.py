@@ -5,7 +5,8 @@ classname = "adi.adrv9009_zu11eg"
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
@@ -18,20 +19,22 @@ classname = "adi.adrv9009_zu11eg"
     ],
 )
 def test_adrv9009_zu11eg_attr(
-    test_attribute_single_value, classname, hardware, attr, start, stop, step, tol
+    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
-    test_attribute_single_value(classname, hardware, attr, start, stop, step, tol)
+    test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", range(4))
-def test_adrv9009_zu11eg_rx_data(test_dma_rx, classname, hardware, channel):
-    test_dma_rx(classname, hardware, channel)
+def test_adrv9009_zu11eg_rx_data(test_dma_rx, iio_uri, classname, channel):
+    test_dma_rx(iio_uri, classname, channel)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "param_set",
@@ -94,13 +97,14 @@ def test_adrv9009_zu11eg_rx_data(test_dma_rx, classname, hardware, channel):
 )
 @pytest.mark.parametrize("sfdr_min", [45])
 def test_adrv9009_zu11eg_sfdr(
-    test_sfdr, classname, hardware, channel, param_set, sfdr_min
+    test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 ):
-    test_sfdr(classname, hardware, channel, param_set, sfdr_min)
+    test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "param_set",
@@ -164,8 +168,8 @@ def test_adrv9009_zu11eg_sfdr(
 @pytest.mark.parametrize("dds_scale, min_rssi, max_rssi", [(0, 35, 60), (0.9, 0, 22)])
 def test_adrv9009_zu11eg_dds_gain_check_agc(
     test_gain_check,
+    iio_uri,
     classname,
-    hardware,
     channel,
     param_set,
     dds_scale,
@@ -173,12 +177,13 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
     max_rssi,
 ):
     test_gain_check(
-        classname, hardware, channel, param_set, dds_scale, min_rssi, max_rssi
+        iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     )
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
@@ -236,21 +241,20 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
 )
 def test_adrv9009_zu11eg_dds_gain_check_vary_power(
     test_gain_check,
+    iio_uri,
     classname,
-    hardware,
     channel,
     param_set,
     dds_scale,
     min_rssi,
     max_rssi,
 ):
-    test_gain_check(
-        classname, hardware, channel, param_set, dds_scale, min_rssi, max_rssi
-    )
+    test_gain_check(classname, channel, param_set, dds_scale, min_rssi, max_rssi)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "param_set",
@@ -306,6 +310,6 @@ def test_adrv9009_zu11eg_dds_gain_check_vary_power(
     ],
 )
 def test_adrv9009_zu11eg_iq_loopback(
-    test_iq_loopback, classname, hardware, channel, param_set
+    test_iq_loopback, iio_uri, classname, channel, param_set
 ):
-    test_iq_loopback(classname, hardware, channel, param_set)
+    test_iq_loopback(iio_uri, classname, channel, param_set)
