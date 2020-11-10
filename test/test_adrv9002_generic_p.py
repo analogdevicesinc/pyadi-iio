@@ -6,7 +6,7 @@ classname = ""
 
 #########################################
 # fmt: off
-@pytest.mark.parametrize("hardware", [(hardware)])
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize(
     "attrtype, dev_name, chan_name, inout, attr, start, stop, step, tol, repeats",
     [
@@ -17,7 +17,7 @@ classname = ""
 )
 def test_iio_attr(
     test_iio_attribute_single_value,
-    hardware,
+    iio_uri,
     attrtype,
     dev_name,
     chan_name,
@@ -30,7 +30,7 @@ def test_iio_attr(
     repeats,
 ):
     test_iio_attribute_single_value(
-        hardware,
+        iio_uri,
         attrtype,
         dev_name,
         chan_name,
