@@ -5,7 +5,8 @@ classname = "adi.ad9371"
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
@@ -16,20 +17,22 @@ classname = "adi.ad9371"
     ],
 )
 def test_ad9371_attr(
-    test_attribute_single_value, classname, hardware, attr, start, stop, step, tol
+    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
-    test_attribute_single_value(classname, hardware, attr, start, stop, step, tol)
+    test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", range(2))
-def test_ad9371_rx_data(test_dma_rx, classname, hardware, channel):
-    test_dma_rx(classname, hardware, channel)
+def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
+    test_dma_rx(iio_uri, classname, channel)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize("frequency", [2000000])
 @pytest.mark.parametrize("scale", [0.9])
@@ -39,8 +42,8 @@ def test_ad9371_rx_data(test_dma_rx, classname, hardware, channel):
 )
 def test_ad9371_dds_loopback(
     test_dds_loopback,
+    iio_uri,
     classname,
-    hardware,
     param_set,
     channel,
     frequency,
@@ -48,5 +51,5 @@ def test_ad9371_dds_loopback(
     peak_min,
 ):
     test_dds_loopback(
-        classname, hardware, param_set, channel, frequency, scale, peak_min
+        iio_uri, classname, param_set, channel, frequency, scale, peak_min
     )
