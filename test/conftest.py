@@ -1,14 +1,7 @@
 import random
 import test.rf.spec as spec
 import time
-from test.common import (
-    BoardInterface,
-    command_line_config,
-    dev_interface,
-    pytest_addoption,
-    pytest_collection_modifyitems,
-    pytest_configure,
-)
+from test.common import dev_interface, pytest_collection_modifyitems, pytest_configure
 from test.generics import iio_attribute_single_value
 from test.globals import *
 
@@ -566,125 +559,104 @@ def stress_tx_buffer_creation(uri, classname, channel, repeats):
 # Fixtures
 @pytest.fixture()
 def test_iio_attribute_single_value(request):
-    command_line_config(request)
     yield iio_attribute_single_value
 
 
 @pytest.fixture()
 def test_stress_context_creation(request):
-    command_line_config(request)
     yield stress_context_creation
 
 
 @pytest.fixture()
 def test_stress_rx_buffer_length(request):
-    command_line_config(request)
     yield stress_rx_buffer_length
 
 
 @pytest.fixture()
 def test_stress_rx_buffer_creation(request):
-    command_line_config(request)
     yield stress_rx_buffer_creation
 
 
 @pytest.fixture()
 def test_stress_tx_buffer_creation(request):
-    command_line_config(request)
     yield stress_tx_buffer_creation
 
 
 @pytest.fixture()
 def test_attribute_single_value(request):
-    command_line_config(request)
     yield attribute_single_value
 
 
 @pytest.fixture()
 def test_attribute_single_value_str(request):
-    command_line_config(request)
     yield attribute_single_value_str
 
 
 @pytest.fixture()
 def test_attribute_single_value_pow2(request):
-    command_line_config(request)
     yield attribute_single_value_pow2
 
 
 @pytest.fixture()
 def test_dma_rx(request):
-    command_line_config(request)
     yield dma_rx
 
 
 @pytest.fixture()
 def test_dma_tx(request):
-    command_line_config(request)
     yield dma_tx
 
 
 @pytest.fixture()
 def test_cyclic_buffer(request):
-    command_line_config(request)
     yield cyclic_buffer
 
 
 @pytest.fixture()
 def test_cyclic_buffer_exception(request):
-    command_line_config(request)
     yield cyclic_buffer_exception
 
 
 @pytest.fixture()
 def test_dma_loopback(request):
-    command_line_config(request)
     yield dma_loopback
 
 
 @pytest.fixture()
 def test_sfdr(request):
-    command_line_config(request)
     yield t_sfdr
 
 
 @pytest.fixture()
 def test_dds_loopback(request):
-    command_line_config(request)
     yield dds_loopback
 
 
 @pytest.fixture()
 def test_iq_loopback(request):
-    command_line_config(request)
     yield cw_loopback
 
 
 @pytest.fixture()
 def test_cw_loopback(request):
-    command_line_config(request)
     yield cw_loopback
 
 
 @pytest.fixture()
 def test_gain_check(request):
-    command_line_config(request)
     yield gain_check
 
 
 @pytest.fixture()
 def test_attribute_multipe_values(request):
-    command_line_config(request)
     yield attribute_multipe_values
 
 
 @pytest.fixture()
 def test_attribute_multipe_values_with_depends(request):
-    command_line_config(request)
     yield attribute_multipe_values_with_depends
 
 
 @pytest.fixture
 def test_attribute_write_only_str(request):
-    command_line_config(request)
     yield attribute_write_only_str
