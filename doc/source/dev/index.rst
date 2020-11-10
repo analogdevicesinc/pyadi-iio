@@ -55,11 +55,19 @@ Testing pyadi-iio requires hardware, but fortunately by default it assumes no ha
 Test Configuration
 ^^^^^^^^^^^^^^^^^^
 
-When running tests a single URI can be provided to the command line. Devices can be dynamically scanned for on the network, and they can be provided through a configuration file. URIs for hardware are descripted in the **uri-map** section of the pyadi_test.yaml file with the convention "<uri>: hardware1, hardware2,...". Here is an example where the URI ip:192.168.2.1 applied to tests looking for the hardware adrv9361 or fmcomms2.
+There are several advanced features of pytest that are utilized by pyadi-iio. Specifically custom markers and custom plugins.
 
-.. code-block:: yaml
+Markers are a way of labeling tests, which can be then used to filter specific tests. Markers are provided through the `test_map.py <https://github.com/analogdevicesinc/pyadi-iio/blob/master/test/test_map.py>`_ file in the test directory. These markers are used to map FPGA based boards with daughtercards to specific tests. `Reference design folder names <https://wiki.analog.com/resources/tools-software/linux-software/embedded_arm_images>`_ from the ADI SD cards are using as the markers, which them can be passed through the *-m* flag to enabled certain tests. For example, the following would enable all tests related to *ADRV9009*, assuming the hardware is available:
 
-        uri-map:
-          "ip:192.168.86.35": adrv9361, fmcomms2
+.. code-block:: console
 
-This file will automatically be loaded when it is in the location **/etc/default/pyadi_test.yaml** on Linux machines. Otherwise, it can be provided to pytest through the **--test-configfilename** argument.
+        python3 -m pytest -m zynqmp-zcu102-rev10-adrv9009
+
+
+To help manage libiio contexts, filter tests based on those contexts, and map drivers to board definitions, pyadi-iio utilizes the pytest plugin `pytest-libiio <https://pypi.org/project/pytest-libiio/>`_. This must be installed before tests are run since all test implementations rely on `pytest-libiio fixtures <https://pytest-libiio.readthedocs.io/en/latest/fixtures/>`_. Generally, pyadi-iio will also use the `standard hardware map <https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps>`_ provided by *pytest-libiio* to map drivers to board definitions. To enable the hardware make requires the *--adi-hw-map* flag as:
+
+.. code-block:: console
+
+        python3 -m pytest --adi-hw-map
+
+If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the `pytest-libiio CLI <https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps>`_.
