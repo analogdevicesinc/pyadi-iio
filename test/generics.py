@@ -1,11 +1,5 @@
 import random
-from test.common import (
-    BoardInterface,
-    command_line_config,
-    pytest_addoption,
-    pytest_collection_modifyitems,
-    pytest_configure,
-)
+from test.common import pytest_collection_modifyitems, pytest_configure
 from test.globals import *
 
 import iio
