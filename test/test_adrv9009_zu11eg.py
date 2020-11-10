@@ -5,7 +5,7 @@ classname = "adi.adrv9009_zu11eg"
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
@@ -24,14 +24,14 @@ def test_adrv9009_zu11eg_attr(
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", range(4))
 def test_adrv9009_zu11eg_rx_data(test_dma_rx, classname, hardware, channel):
     test_dma_rx(classname, hardware, channel)
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "param_set",
@@ -100,7 +100,7 @@ def test_adrv9009_zu11eg_sfdr(
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "param_set",
@@ -178,7 +178,7 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
@@ -250,7 +250,7 @@ def test_adrv9009_zu11eg_dds_gain_check_vary_power(
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "param_set",
