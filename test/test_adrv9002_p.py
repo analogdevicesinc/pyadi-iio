@@ -11,6 +11,8 @@ lvds_test_profiles = [
     profile_path + "FDD_20MHz_2rx_2tx_LO_2_4G.json",
     profile_path + "FDD_40MHz_2rx_2tx_LO_2_4G.json",
 ]
+lte_14_profile = profile_path + "lte_1_4_cmos_fdd_api_29_2_9.json"
+lte_14_stream = profile_path + "lte_1_4_cmos_fdd_api_29_2_9.stream"
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -251,6 +253,35 @@ def test_adrv9002_nco_write_profile(
     test_attribute_write_only_str, iio_uri, classname, attr, file
 ):
     test_attribute_write_only_str(iio_uri, classname, hardware, attr, file)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("attr", ["profile"])
+@pytest.mark.parametrize(
+    "profile_file, depends", [(lte_14_profile, {"write_stream": lte_14_stream})]
+)
+def test_adrv9002_stream_profile_write(
+    test_attribute_write_only_str_with_depends,
+    iio_uri,
+    classname,
+    attr,
+    profile_file,
+    depends,
+):
+    test_attribute_write_only_str_with_depends(
+        iio_uri, classname, attr, profile_file, depends
+    )
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+def test_adrv9002_stream_profile_write_both(iio_uri):
+    import adi
+
+    sdr = adi.adrv9002(iio_uri)
+    sdr.write_stream_profile(lte_14_stream, lte_14_profile)
 
 
 #########################################
