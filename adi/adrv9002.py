@@ -31,6 +31,10 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from ctypes import c_char_p
+
+import iio
+
 from adi.context_manager import context_manager
 from adi.obs import obs, remap, tx_two
 from adi.rx_tx import rx_tx
@@ -113,14 +117,40 @@ class adrv9002(rx_tx, context_manager):
 
         rx_tx.__init__(self)
 
+    def write_stream_profile(self, stream, profile):
+        """Load a new profile and stream on the device"""
+        with open(stream, "rb") as file:
+            data = file.read()
+            data = c_char_p(data)
+            attr_encode = "stream_config".encode("ascii")
+            iio._d_write_attr(self._ctrl._device, attr_encode, data)
+        with open(profile, "r") as file:
+            data = file.read()
+        self._set_iio_dev_attr_str("profile_config", data)
+
     def write_profile(self, value):
-        """Load a new profile on the device"""
+        """Load a new profile on the device
+            Stream related to profile should be loaded first.
+            Please see driver documentation about profile generation.
+        """
         with open(value, "r") as file:
             data = file.read()
         self._set_iio_dev_attr_str("profile_config", data)
 
+    def write_stream(self, value):
+        """Load a new stream on the device
+            Stream becomes active once accompanying profile is loaded
+            Please see driver documentation about stream generation.
+        """
+        with open(value, "rb") as file:
+            data = file.read()
+            data = c_char_p(data)
+            attr_encode = "stream_config".encode("ascii")
+            iio._d_write_attr(self._ctrl._device, attr_encode, data)
+
     # we cannot really get the profile. The driver will just throw EPERM
     profile = property(None, write_profile)
+    stream = property(None, write_stream)
 
     @property
     def rx_dma_mode(self):
