@@ -14,7 +14,7 @@ def iio_dev_interface(uri, attrtype, dev_name, chan_name, inout, attr, val, tol)
     try:
         sdr = iio.Context(uri)
     except:
-        pytest.skip("Context on reachable: " + str(uri))
+        pytest.skip("Context not reachable: " + str(uri))
     attr_tl = attrtype.lower()
 
     if attr_tl == "context":

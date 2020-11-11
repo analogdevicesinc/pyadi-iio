@@ -79,6 +79,18 @@ def attribute_write_only_str(uri, classname, attr, file):
         raise Exception(e)
 
 
+def attribute_write_only_str_with_depends(uri, classname, attr, profile_file, depends):
+    sdr = eval(classname + "(uri='" + uri + "')")
+    for p in depends:
+        setattr(sdr, p, depends[p])
+    try:
+        setattr(sdr, attr, profile_file)
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+
 def dma_rx(uri, classname, channel):
     # bi = BoardInterface(classname, devicename)
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -655,6 +667,11 @@ def test_attribute_multipe_values(request):
 @pytest.fixture()
 def test_attribute_multipe_values_with_depends(request):
     yield attribute_multipe_values_with_depends
+
+
+@pytest.fixture()
+def test_attribute_write_only_str_with_depends(request):
+    yield attribute_write_only_str_with_depends
 
 
 @pytest.fixture
