@@ -35,8 +35,27 @@ from adi.attribute import attribute
 from adi.context_manager import context_manager
 
 
-class _dyn_property_float:
-    """ Class descriptor for accessing individual attributes """
+class _dyn_device_property:
+    """ Class descriptor for accessing device attributes """
+
+    def __init__(self, attr, dev):
+        self._dev = dev
+        self._attr = attr
+
+    def __get__(self, instance, owner):
+        try:
+            return instance._get_iio_dev_attr(self._attr, self._dev)
+        except OSError:
+            return instance._get_iio_dev_attr_str(self._attr, self._dev)
+
+    def __set__(self, instance, value):
+        if value in (True, False):
+            value = int(value)
+        instance._set_iio_dev_attr_str(self._attr, str(value), self._dev)
+
+
+class _dyn_channel_property:
+    """ Class descriptor for accessing channel attributes """
 
     def __init__(self, attr, dev, channel_name, output):
         self._dev = dev
@@ -50,29 +69,22 @@ class _dyn_property_float:
         )
 
     def __set__(self, instance, value):
-        instance._set_iio_attr_float(
-            self._channel_name, self._attr, self._output, value, self._dev
-        )
-
-
-def _add_prop(classname, channelname, attr, i, output, dev, beam_name=None):
-    """ Add dynamic property """
-    inoutstr = "tx" if output else "rx"
-    pn = inoutstr + str(i) + "_" + attr
-    if beam_name:
-        pn += "_" + beam_name.lower()
-
-    setattr(
-        classname,
-        pn,
-        _dyn_property_float(
-            attr=attr, dev=dev, channel_name=channelname, output=output
-        ),
-    )
+        try:
+            instance._set_iio_attr_float(
+                self._channel_name, self._attr, self._output, float(value), self._dev
+            )
+        except OSError:
+            instance._set_iio_attr_int(
+                self._channel_name, self._attr, self._output, int(value), self._dev
+            )
+        except ValueError:
+            instance._set_iio_attr(
+                self._channel_name, self._attr, self._output, str(value), self._dev
+            )
 
 
 class adar1000(attribute, context_manager):
-    """ ADAR1000 Beamformer
+    """ADAR1000 Beamformer
 
     parameters:
         uri: type=string
@@ -118,82 +130,61 @@ class adar1000(attribute, context_manager):
             if not self._ctrl:
                 raise Exception("No device found for BEAM: " + beams)
 
-        # Dynamically add properties for accessing individual phases/gains
         if not isinstance(beams, list):
             beams = [None]
             self._ctrls = [self._ctrl]
+
+        # Add all attributes for each beam as a class property
         for b, beam in enumerate(beams):
             dev = self._ctrls[b]
-            for i, chan_name in enumerate(self._beam_channels):
-                _add_prop(type(self), chan_name, "phase", i, False, dev, beams[b])
-                _add_prop(type(self), chan_name, "phase", i, True, dev, beams[b])
-                _add_prop(
-                    type(self), chan_name, "hardwaregain", i, False, dev, beams[b]
+
+            # Only add the beam prefix to the property name if there are multiple devices
+            attr_prefix = ""
+            if len(beams) > 1:
+                attr_prefix = f"{str(beam).lower()}_"
+
+            # Add all the properties of interest for the device.
+            for attr in dev.attrs:
+                setattr(
+                    type(self),
+                    f"{attr_prefix}{attr}".lower(),
+                    _dyn_device_property(attr, dev),
                 )
-                _add_prop(type(self), chan_name, "hardwaregain", i, True, dev, beams[b])
 
-    @property
-    def tx_hardwaregains(self):
-        """tx_hardwaregains: Get all gains applied to TX path"""
-        return self._get_attribute_dictionary("hardwaregain", True)
+            # For each device channel, add all the properties to the device
+            for i, ch in enumerate(dev.channels):
+                # Check to see if it's a temperature channel
+                if "temp" in ch.id:
+                    setattr(
+                        type(self),
+                        f"{attr_prefix}temp".lower(),
+                        _dyn_channel_property("raw", dev, ch.id, ch.output),
+                    )
 
-    @tx_hardwaregains.setter
-    def tx_hardwaregains(self, values):
-        """tx_hardwaregains: Set all gains applied to TX path"""
-        self._set_attribute_dictionary("hardwaregain", True, values)
+                # If not, add all the channel's attributes
+                else:
+                    for attr in ch.attrs:
+                        channel = int(ch.id.replace("voltage", "")) + 1
 
-    @property
-    def rx_hardwaregains(self):
-        """rx_hardwaregains: Get all gains applied to RX path"""
-        return self._get_attribute_dictionary("hardwaregain", False)
+                        # Check to see if it's a detector read attribute
+                        if attr.lower() == "raw":
+                            setattr(
+                                type(self),
+                                f"{attr_prefix}ch{channel}_{ch.name.lower()}_detector".lower(),
+                                _dyn_channel_property(attr, dev, ch.id, ch.output),
+                            )
 
-    @rx_hardwaregains.setter
-    def rx_hardwaregains(self, values):
-        """rx_hardwaregains: Set all gains applied to RX path"""
-        self._set_attribute_dictionary("hardwaregain", False, values)
+                        # Check to see if it's a sequencer attribute
+                        elif any(s in attr.lower() for s in ("sequence", "bias_set")):
+                            setattr(
+                                type(self),
+                                f"{attr_prefix}{ch.name.lower()}_{attr}".lower(),
+                                _dyn_channel_property(attr, dev, ch.id, ch.output),
+                            )
 
-    @property
-    def tx_phases(self):
-        """tx_phases: Get all phases of TX path"""
-        return self._get_attribute_dictionary("phase", True)
-
-    @tx_phases.setter
-    def tx_phases(self, values):
-        """tx_phases: Set all phases of TX path"""
-        self._set_attribute_dictionary("phase", True, values)
-
-    @property
-    def rx_phases(self):
-        """rx_phases: Get all phases of RX path"""
-        return self._get_attribute_dictionary("phase", False)
-
-    @rx_phases.setter
-    def rx_phases(self, values):
-        """rx_phases: Set all phases of RX path"""
-        self._set_attribute_dictionary("phase", False, values)
-
-    def _get_attribute_dictionary(self, attribute_name, output):
-        """ Get a dictionary of all attached requested attributes by name and output style """
-        return {
-            f'{dev.attrs["label"].value}_{b}': self._get_iio_attr(
-                b, attribute_name, output, dev
-            )
-            for dev in self._ctrls
-            for b in self._beam_channels
-        }
-
-    def _set_attribute_dictionary(self, attribute_name, output, values):
-        """ Set all requested attributes by name and output style using a dictionary """
-
-        for key, value in values.items():
-            # Pull out the beam and channel names
-            label_sections = key.lower().split("_")
-            beam = "_".join(label_sections[:2])
-            channel = label_sections[-1]
-
-            # Determine the device & set the attribute
-            try:
-                dev = [c for c in self._ctrls if c.attrs["label"].value == beam][0]
-                self._set_iio_attr(channel, attribute_name, output, value, dev)
-            except IndexError:
-                raise KeyError(f'"{key}" does not correspond to any connected device!')
+                        else:
+                            setattr(
+                                type(self),
+                                f"{attr_prefix}ch{channel}_{ch.name.lower()}_{attr}".lower(),
+                                _dyn_channel_property(attr, dev, ch.id, ch.output),
+                            )
