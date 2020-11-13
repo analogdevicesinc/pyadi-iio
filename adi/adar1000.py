@@ -89,14 +89,16 @@ class adar1000(attribute, context_manager):
     parameters:
         uri: type=string
             URI of IIO context with ADAR1000(s)
-        beams: type=string,list[string]
-            String or list of strings identifying desired chip select
-            option of ADAR1000. This is based on the jumper configuration
-            if the EVAL-ADAR1000 is used. These strings are the labels
-            coinciding with each chip select and are typically in the
-            form BEAM0, BEAM1, BEAM2, BEAM3. Use a list when multiple
-            are chips are cascaded together. Dynamic class properties
-            will be created for each beam and signal path.
+        chip_ids: type=string,list[string]
+            String or list of strings identifying desired chip select and
+            hardware ID for the ADAR1000. These strings are the labels
+            coinciding with each chip select and hardware address and are
+            typically in the form csbX_chipX. The csb line can be any number
+            depending on how many are used in the system. The chip number
+            will typically be 1-4 because each CSB line can control up to
+            four ADAR1000s. Use a list when multiple chips are to be
+            controlled. Dynamic class properties will be created for each
+            ADAR1000 device.
     """
 
     _device_name = ""
@@ -129,13 +131,13 @@ class adar1000(attribute, context_manager):
                     self._ctrls = [self._ctrl]
                     break
             if not self._ctrl:
-                raise Exception("No device found for BEAM: " + chip_ids)
+                raise Exception(f"No device found for {chip_ids}")
 
         # Add all attributes for each ID as a class property
         for idx, chip_id in enumerate(chip_ids):
             dev = self._ctrls[idx]
 
-            # Only add the beam prefix to the property name if there are multiple devices
+            # Only add the prefix to the property name if there are multiple devices
             attr_prefix = ""
             if len(chip_ids) > 1:
                 attr_prefix = f"{str(chip_id).lower()}_"
