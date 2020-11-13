@@ -100,48 +100,45 @@ class adar1000(attribute, context_manager):
     """
 
     _device_name = ""
-    _beam_channels = ["voltage0", "voltage1", "voltage2", "voltage3"]
 
-    def __init__(self, uri="", beams="BEAM0"):
+    def __init__(self, uri="", chip_ids="csb1_chip1"):
 
         context_manager.__init__(self, uri, self._device_name)
 
         self._ctrl = None
         self._ctrls = []
 
-        if isinstance(beams, list):
-            for beam in beams:
+        if isinstance(chip_ids, list):
+            for chip_id in chip_ids:
                 for dev in self._ctx.devices:
                     if (
                         "label" in dev.attrs
-                        and dev.attrs["label"].value.lower() == beam.lower()
+                        and dev.attrs["label"].value.lower() == chip_id.lower()
                     ):
                         self._ctrls.append(dev)
                         break
-            if len(self._ctrls) != len(beams):
-                raise Exception("Not all devices found: " + ",".join(beams))
+            if len(self._ctrls) != len(chip_ids):
+                raise Exception("Not all devices found: " + ", ".join(chip_ids))
         else:
             for dev in self._ctx.devices:
                 if (
                     "label" in dev.attrs
-                    and dev.attrs["label"].value.lower() == beams.lower()
+                    and dev.attrs["label"].value.lower() == chip_ids.lower()
                 ):
                     self._ctrl = dev
+                    self._ctrls = [self._ctrl]
+                    break
             if not self._ctrl:
-                raise Exception("No device found for BEAM: " + beams)
+                raise Exception("No device found for BEAM: " + chip_ids)
 
-        if not isinstance(beams, list):
-            beams = [None]
-            self._ctrls = [self._ctrl]
-
-        # Add all attributes for each beam as a class property
-        for b, beam in enumerate(beams):
-            dev = self._ctrls[b]
+        # Add all attributes for each ID as a class property
+        for idx, chip_id in enumerate(chip_ids):
+            dev = self._ctrls[idx]
 
             # Only add the beam prefix to the property name if there are multiple devices
             attr_prefix = ""
-            if len(beams) > 1:
-                attr_prefix = f"{str(beam).lower()}_"
+            if len(chip_ids) > 1:
+                attr_prefix = f"{str(chip_id).lower()}_"
 
             # Add all the properties of interest for the device.
             for attr in dev.attrs:
