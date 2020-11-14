@@ -56,11 +56,11 @@ class _dyn_property:
 
 
 class one_bit_adc_dac(attribute, context_manager):
-    """One bit ADC/DAC (GPIO)
+    """ One bit ADC/DAC (GPIO)
 
     parameters:
         uri: type=string
-            URI of IIO context with ADAR100(s)
+            URI of IIO context with GPIO pins
         name: type=string
             String identifying the device by name from the device tree.
             Dynamic class properties will be created for each channel.
@@ -68,11 +68,7 @@ class one_bit_adc_dac(attribute, context_manager):
 
     _device_name = ""
 
-    def __init__(self, uri="", name=""):
-
-        # If no name is given, this will choose the first device of the correct type
-        if name == "":
-            name = "one-bit-adc-dac"
+    def __init__(self, uri="", name="one-bit-adc-dac"):
 
         try:
             context_manager.__init__(self, uri, self._device_name)
