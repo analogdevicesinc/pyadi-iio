@@ -73,7 +73,7 @@ from adi.jesd import *
 
 from adi.ad5686 import *
 
-from adi.adar1000 import adar1000
+from adi.adar1000 import *
 
 from adi.ltc2983 import *
 
