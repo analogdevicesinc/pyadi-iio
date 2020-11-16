@@ -10,9 +10,9 @@ classname = "adi.ad9364"
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
-        ("tx_hardwaregain", -89.75, 0.0, 0.25, 0),
+        ("tx_hardwaregain_chan0", -89.75, 0.0, 0.25, 0),
         ("rx_lo", 70000000, 6000000000, 1, 8),
-        ("tx_lo", 70000000, 600000000, 1, 8),
+        ("tx_lo", 47000000, 6000000000, 1, 8),
         ("sample_rate", 2084000, 61440000, 1, 4),
     ],
 )
