@@ -448,6 +448,46 @@ class adar1000(attribute, context_manager):
         self._set_iio_attr("voltage3", "phase", False, value, self._ctrl)
 
     @property
+    def ch1_rx_powerdown(self):
+        """ Get/Set Channel 1 Rx Powerdown """
+        return self._get_iio_attr("voltage0", "powerdown", False, self._ctrl)
+
+    @ch1_rx_powerdown.setter
+    def ch1_rx_powerdown(self, value):
+        """ Get/Set Channel 1 Rx Powerdown """
+        self._set_iio_attr("voltage0", "powerdown", False, value, self._ctrl)
+
+    @property
+    def ch2_rx_powerdown(self):
+        """ Get/Set Channel 2 Rx Powerdown """
+        return self._get_iio_attr("voltage1", "powerdown", False, self._ctrl)
+
+    @ch2_rx_powerdown.setter
+    def ch2_rx_powerdown(self, value):
+        """ Get/Set Channel 2 Rx Powerdown """
+        self._set_iio_attr("voltage1", "powerdown", False, value, self._ctrl)
+
+    @property
+    def ch3_rx_powerdown(self):
+        """ Get/Set Channel 3 Rx Powerdown """
+        return self._get_iio_attr("voltage2", "powerdown", False, self._ctrl)
+
+    @ch3_rx_powerdown.setter
+    def ch3_rx_powerdown(self, value):
+        """ Get/Set Channel 3 Rx Powerdown """
+        self._set_iio_attr("voltage2", "powerdown", False, value, self._ctrl)
+
+    @property
+    def ch4_rx_powerdown(self):
+        """ Get/Set Channel 4 Rx Powerdown """
+        return self._get_iio_attr("voltage3", "powerdown", False, self._ctrl)
+
+    @ch4_rx_powerdown.setter
+    def ch4_rx_powerdown(self, value):
+        """ Get/Set Channel 4 Rx Powerdown """
+        self._set_iio_attr("voltage3", "powerdown", False, value, self._ctrl)
+
+    @property
     def ch1_tx_gain(self):
         """ Get/Set Channel 1 Tx Gain """
         return self._get_iio_attr("voltage0", "hardwaregain", True, self._ctrl)
@@ -528,24 +568,44 @@ class adar1000(attribute, context_manager):
         self._set_iio_attr("voltage3", "phase", True, value, self._ctrl)
 
     @property
-    def powerdown_rx(self):
-        """ Get/Set the Rx powerdown """
-        return bool(self._get_iio_attr("voltage0", "powerdown", False, self._ctrl))
+    def ch1_tx_powerdown(self):
+        """ Get/Set Channel 1 Tx Powerdown """
+        return self._get_iio_attr("voltage0", "powerdown", True, self._ctrl)
 
-    @powerdown_rx.setter
-    def powerdown_rx(self, value):
-        """ Get/Set the Rx powerdown """
-        self._set_iio_attr("voltage0", "powerdown", False, int(value), self._ctrl)
+    @ch1_tx_powerdown.setter
+    def ch1_tx_powerdown(self, value):
+        """ Get/Set Channel 1 Tx Powerdown """
+        self._set_iio_attr("voltage0", "powerdown", True, value, self._ctrl)
 
     @property
-    def powerdown_tx(self):
-        """ Get/Set the Tx powerdown """
-        return bool(self._get_iio_attr("voltage0", "powerdown", True, self._ctrl))
+    def ch2_tx_powerdown(self):
+        """ Get/Set Channel 2 Tx Powerdown """
+        return self._get_iio_attr("voltage1", "powerdown", True, self._ctrl)
 
-    @powerdown_tx.setter
-    def powerdown_tx(self, value):
-        """ Get/Set the Tx powerdown """
-        self._set_iio_attr("voltage0", "powerdown", True, int(value), self._ctrl)
+    @ch2_tx_powerdown.setter
+    def ch2_tx_powerdown(self, value):
+        """ Get/Set Channel 2 Tx Powerdown """
+        self._set_iio_attr("voltage1", "powerdown", True, value, self._ctrl)
+
+    @property
+    def ch3_tx_powerdown(self):
+        """ Get/Set Channel 3 Tx Powerdown """
+        return self._get_iio_attr("voltage2", "powerdown", True, self._ctrl)
+
+    @ch3_tx_powerdown.setter
+    def ch3_tx_powerdown(self, value):
+        """ Get/Set Channel 3 Tx Powerdown """
+        self._set_iio_attr("voltage2", "powerdown", True, value, self._ctrl)
+
+    @property
+    def ch4_tx_powerdown(self):
+        """ Get/Set Channel 4 Tx Powerdown """
+        return self._get_iio_attr("voltage3", "powerdown", True, self._ctrl)
+
+    @ch4_tx_powerdown.setter
+    def ch4_tx_powerdown(self, value):
+        """ Get/Set Channel 4 Tx Powerdown """
+        self._set_iio_attr("voltage3", "powerdown", True, value, self._ctrl)
 
     @property
     def rx_sequencer_start(self):
