@@ -47,9 +47,7 @@ class adar1000(attribute, context_manager):
             select and hardware address and are typically in the form csbX_chipX.
             The csb line can be any number depending on how many are used in the
             system. The chip number will typically be 1-4 because each CSB line
-            can control up to four ADAR1000s. Use a list when multiple chips are
-            to be controlled. Dynamic class properties will be created for each
-            ADAR1000 device.
+            can control up to four ADAR1000s.
         context_handle: type=iio.Context
             IIO context handle. Not used unless creating an array of chips.
     """
@@ -66,6 +64,13 @@ class adar1000(attribute, context_manager):
 
         self._ctrl = None
         self._chip_id = chip_id
+
+        # Raise an error if the chip_id is a list. Suggest using the array class
+        if isinstance(chip_id, (list, tuple, set)):
+            raise Exception(
+                '"chip_id" can\'t be an iterable. '
+                "Please use the adar1000_array class for instantiating multiple devices"
+            )
 
         # Look for the matching device in the context
         for dev in self._ctx.devices:
@@ -727,8 +732,7 @@ class adar1000_array(context_manager):
             form csbX_chipX. The csb line can be any number depending on how
             many are used in the system. The chip number will typically be
             1-4 because each CSB line can control up to four ADAR1000s. Use
-            a list when multiple chips are to be controlled. Dynamic class
-            properties will be created for each ADAR1000 device.
+            a list when multiple chips are to be controlled.
     """
 
     _device_name = ""
