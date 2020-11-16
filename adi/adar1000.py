@@ -70,8 +70,8 @@ class adar1000(attribute, context_manager):
         # Look for the matching device in the context
         for dev in self._ctx.devices:
             if (
-                    "label" in dev.attrs
-                    and dev.attrs["label"].value.lower() == chip_id.lower()
+                "label" in dev.attrs
+                and dev.attrs["label"].value.lower() == chip_id.lower()
             ):
                 self._ctrl = dev
                 break
@@ -89,6 +89,7 @@ class adar1000(attribute, context_manager):
         return self._chip_id
 
     """ Device attributes """
+
     @property
     def lna_bias_off(self):
         """ Get/Set LNA_BIAS_OFF setting """
@@ -220,6 +221,7 @@ class adar1000(attribute, context_manager):
         self._set_iio_dev_attr_str("tx_vm_enable", int(value), self._ctrl)
 
     """ Channel attributes """
+
     @property
     def ch1_detector_enable(self):
         """ Get/Set Channel 1 detector enable bit """
@@ -586,6 +588,7 @@ class adar1000(attribute, context_manager):
         self._sequence_stop("tx", value)
 
     """ Private Methods """
+
     def _load_beam(self, rx_or_tx, state):
         """Load a beam from a memory position
 
@@ -659,6 +662,7 @@ class adar1000(attribute, context_manager):
         return
 
     """ Public Methods """
+
     def generate_clocks(self):
         """ Generate CLK cycles before pulsing RX_LOAD or TX_LOAD """
         self._set_iio_dev_attr_str("gen_clk_cycles", "", self._ctrl)
@@ -730,7 +734,7 @@ class adar1000_array(context_manager):
     _device_name = ""
 
     def __init__(
-            self, uri="", chip_ids=("csb1_chip1", "csb1_chip2", "csb1_chip3", "csb1_chip4")
+        self, uri="", chip_ids=("csb1_chip1", "csb1_chip2", "csb1_chip3", "csb1_chip4")
     ):
         context_manager.__init__(self, uri, self._device_name)
 
@@ -756,7 +760,7 @@ class adar1000_array(context_manager):
     def all_rx_gains(self):
         """ Get/Set all Rx Gain settings in the array. """
         return {
-            f'{chip.chip_id}_ch{ch}': getattr(chip, f'ch{ch}_rx_gain')
+            f"{chip.chip_id}_ch{ch}": getattr(chip, f"ch{ch}_rx_gain")
             for chip in self.devices.values()
             for ch in range(1, 5)
         }
@@ -765,15 +769,15 @@ class adar1000_array(context_manager):
     def all_rx_gains(self, value):
         """ Get/Set all Rx Gain settings in the array. """
         for id_string, gain in value.items():
-            chip_id = '_'.join(id_string.split('_')[:2])
-            channel = id_string.split('_')[-1]
-            setattr(self.devices[chip_id], f'{channel}_rx_gain', gain)
+            chip_id = "_".join(id_string.split("_")[:2])
+            channel = id_string.split("_")[-1]
+            setattr(self.devices[chip_id], f"{channel}_rx_gain", gain)
 
     @property
     def all_rx_phases(self):
         """ Get/Set all Rx Phase settings in the array. """
         return {
-            f'{chip.chip_id}_ch{ch}': getattr(chip, f'ch{ch}_rx_phase')
+            f"{chip.chip_id}_ch{ch}": getattr(chip, f"ch{ch}_rx_phase")
             for chip in self.devices.values()
             for ch in range(1, 5)
         }
@@ -782,15 +786,15 @@ class adar1000_array(context_manager):
     def all_rx_phases(self, value):
         """ Get/Set all Rx Phase settings in the array. """
         for id_string, gain in value.items():
-            chip_id = '_'.join(id_string.split('_')[:2])
-            channel = id_string.split('_')[-1]
-            setattr(self.devices[chip_id], f'{channel}_rx_phase', gain)
+            chip_id = "_".join(id_string.split("_")[:2])
+            channel = id_string.split("_")[-1]
+            setattr(self.devices[chip_id], f"{channel}_rx_phase", gain)
 
     @property
     def all_tx_gains(self):
         """ Get/Set all Tx Gain settings in the array. """
         return {
-            f'{chip.chip_id}_ch{ch}': getattr(chip, f'ch{ch}_tx_gain')
+            f"{chip.chip_id}_ch{ch}": getattr(chip, f"ch{ch}_tx_gain")
             for chip in self.devices.values()
             for ch in range(1, 5)
         }
@@ -799,15 +803,15 @@ class adar1000_array(context_manager):
     def all_tx_gains(self, value):
         """ Get/Set all Tx Gain settings in the array. """
         for id_string, gain in value.items():
-            chip_id = '_'.join(id_string.split('_')[:2])
-            channel = id_string.split('_')[-1]
-            setattr(self.devices[chip_id], f'{channel}_tx_gain', gain)
+            chip_id = "_".join(id_string.split("_")[:2])
+            channel = id_string.split("_")[-1]
+            setattr(self.devices[chip_id], f"{channel}_tx_gain", gain)
 
     @property
     def all_tx_phases(self):
         """ Get/Set all Tx Phase settings in the array. """
         return {
-            f'{chip.chip_id}_ch{ch}': getattr(chip, f'ch{ch}_tx_phase')
+            f"{chip.chip_id}_ch{ch}": getattr(chip, f"ch{ch}_tx_phase")
             for chip in self.devices.values()
             for ch in range(1, 5)
         }
@@ -816,6 +820,6 @@ class adar1000_array(context_manager):
     def all_tx_phases(self, value):
         """ Get/Set all Tx Phase settings in the array. """
         for id_string, gain in value.items():
-            chip_id = '_'.join(id_string.split('_')[:2])
-            channel = id_string.split('_')[-1]
-            setattr(self.devices[chip_id], f'{channel}_tx_phase', gain)
+            chip_id = "_".join(id_string.split("_")[:2])
+            channel = id_string.split("_")[-1]
+            setattr(self.devices[chip_id], f"{channel}_tx_phase", gain)
