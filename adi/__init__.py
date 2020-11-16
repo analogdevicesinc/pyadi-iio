@@ -77,5 +77,7 @@ from adi.adar1000 import *
 
 from adi.ltc2983 import *
 
+from adi.one_bit_adc_dac import one_bit_adc_dac
+
 __version__ = "0.0.6"
 name = "Analog Devices Hardware Interfaces"
