@@ -1,3 +1,18 @@
+# 	Required Test setup:
+#
+# 	- ZFRSC-123+ splitter is used to distribute
+# 	the TX to RX and ORX channels
+#
+# 							(1) -> RXx_A
+# 	TXx_A -> (S) ZFRSC-123+
+# 							(2) -> ORXx_A
+# 	-------------------------------------
+# 							(1) -> RXx_B
+# 	TXx_B -> (S) ZFRSC-123+
+# 							(2) -> ORXx_B
+# 	-------------------------------------
+# 	x = 1, 2
+
 import pytest
 
 hardware = "adrv9009-dual-fmcomms8"
@@ -179,6 +194,60 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
 
 #########################################
 @pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.parametrize("channel", [4, 5, 6, 7])
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        dict(
+            trx_lo_chip_c=1000000000,
+            trx_lo_chip_d=1000000000,
+            aux_pll_lo_chip_c=1000000000,
+            aux_pll_lo_chip_d=1000000000,
+            rx_powerdown_chan0_ctrl_c=1,
+            rx_powerdown_chan1_ctrl_c=1,
+            rx_powerdown_chan0_ctrl_d=1,
+            rx_powerdown_chan1_ctrl_d=1,
+            tx_hardwaregain_chan0_chip_c=0,
+            tx_hardwaregain_chan1_chip_c=0,
+            tx_hardwaregain_chan0_chip_d=0,
+            tx_hardwaregain_chan1_chip_d=0,
+            calibrate_rx_qec_en_chip_c=1,
+            calibrate_tx_qec_en_chip_c=1,
+            calibrate_chip_c=1,
+            calibrate_rx_qec_en_chip_d=1,
+            calibrate_tx_qec_en_chip_d=1,
+            calibrate_chip_d=1,
+            obs_powerdown_chan0_chip_c=0,
+            obs_powerdown_chan1_chip_c=0,
+            obs_powerdown_chan0_ctrl_d=0,
+            obs_powerdown_chan1_ctrl_d=0,
+            obs_hardwaregain_chan0_chip_c=30,
+            obs_hardwaregain_chan1_chip_c=30,
+            obs_hardwaregain_chan0_chip_d=30,
+            obs_hardwaregain_chan1_chip_d=30,
+        )
+    ],
+)
+@pytest.mark.parametrize(
+    "dds_scale, min_rssi, max_rssi", [(0, 35, 60), (0.9, 0, 10)]
+)
+def test_adrv9009_zu11eg_obs_rssi(
+    test_gain_check,
+    classname,
+    hardware,
+    channel,
+    param_set,
+    dds_scale,
+    min_rssi,
+    max_rssi,
+):
+    test_gain_check(
+        classname, hardware, channel, param_set, dds_scale, min_rssi, max_rssi
+    )
+
+
+#########################################
+@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
 @pytest.mark.parametrize("channel", [4,5,6,7])
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
@@ -187,6 +256,14 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
             dict(
                 trx_lo_chip_c=1000000000,
                 trx_lo_chip_d=1000000000,
+                obs_powerdown_chan0_ctrl_c=1,
+                obs_powerdown_chan1_ctrl_c=1,
+                obs_powerdown_chan0_ctrl_d=1,
+                obs_powerdown_chan1_ctrl_d=1,
+                rx_powerdown_chan0_ctrl_c=0,
+                rx_powerdown_chan1_ctrl_c=0,
+                rx_powerdown_chan0_ctrl_d=0,
+                rx_powerdown_chan1_ctrl_d=0,
                 gain_control_mode_chan0_chip_c="manual",
                 gain_control_mode_chan1_chip_c="manual",
                 gain_control_mode_chan0_chip_d="manual",
