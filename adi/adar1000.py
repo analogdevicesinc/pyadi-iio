@@ -83,7 +83,7 @@ class adar1000(attribute, context_manager):
 
         # Raise an exception if the device isn't found
         if not self._ctrl:
-            raise Exception("Device not found: " + ",".join(chip_id))
+            raise Exception(f"Device not found for {chip_id}")
 
     @property
     def chip_id(self):
@@ -108,12 +108,12 @@ class adar1000(attribute, context_manager):
     @property
     def lna_bias_on(self):
         """ Get/Set LNA_BIAS_ON setting """
-        return self._get_iio_dev_attr("lna_bias_off", self._ctrl)
+        return self._get_iio_dev_attr("lna_bias_on", self._ctrl)
 
     @lna_bias_on.setter
     def lna_bias_on(self, value):
         """ Get/Set LNA_BIAS_ON setting """
-        self._set_iio_dev_attr_str("lna_bias_off", value, self._ctrl)
+        self._set_iio_dev_attr_str("lna_bias_on", value, self._ctrl)
 
     @property
     def rx_lna_bias_current(self):
@@ -808,17 +808,12 @@ class adar1000_array(context_manager):
             # Get an ADAR1000 handle for each chip ID using the context already found
             self._ctrls.append(adar1000(uri, chip_id, self._ctx))
 
+        if len(self._ctrls) != len(chip_ids):
+            raise Exception(f"Couldn't find all devices in {', '.join(chip_ids)}")
+
     def __repr__(self):
         """ Representation of the ADAR1000 array class """
         return f"ADAR1000 array containing {len(self.devices)} ADAR1000 instances:\n\t{', '.join(self.devices)}"
-
-    @property
-    def devices(self):
-        """
-        Dictionary representing all of the connected ADAR1000s. The dictionary key is the chip_id for each
-        device.
-        """
-        return {chip.chip_id: chip for chip in self._ctrls}
 
     @property
     def all_rx_gains(self):
@@ -887,3 +882,11 @@ class adar1000_array(context_manager):
             chip_id = "_".join(id_string.split("_")[:2])
             channel = id_string.split("_")[-1]
             setattr(self.devices[chip_id], f"{channel}_tx_phase", gain)
+
+    @property
+    def devices(self):
+        """
+        Dictionary representing all of the connected ADAR1000s.
+        The dictionary key is the chip_id for each device.
+        """
+        return {chip.chip_id: chip for chip in self._ctrls}
