@@ -31,10 +31,51 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from typing import List
+from typing import Dict, List
 
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
+
+
+def _map_to_dict(paths, ch):
+    fddc, cddc, adc = ch.attrs["label"].value.split("->")
+    if adc not in paths.keys():
+        paths[adc] = {}
+    if cddc not in paths[adc].keys():
+        paths[adc][cddc] = {}
+    if fddc not in paths[adc][cddc].keys():
+        paths[adc][cddc][fddc] = {"channels": [ch._id]}
+    else:
+        paths[adc][cddc][fddc]["channels"].append(ch._id)
+    return paths
+
+
+def _sortconv(chans_names, noq=False, dds=False):
+    tmpI = filter(lambda k: "_i" in k, chans_names)
+    tmpQ = filter(lambda k: "_q" in k, chans_names)
+
+    def ignoreadc(w):
+        return int(w[len("voltage") : w.find("_")])
+
+    def ignorealt(w):
+        return int(w[len("altvoltage") :])
+
+    chans_names_out = []
+    if dds:
+        filt = ignorealt
+        tmpI = chans_names
+        noq = True
+    else:
+        filt = ignoreadc
+
+    tmpI = sorted(tmpI, key=filt)
+    tmpQ = sorted(tmpQ, key=filt)
+    for i in range(len(tmpI)):
+        chans_names_out.append(tmpI[i])
+        if not noq:
+            chans_names_out.append(tmpQ[i])
+
+    return chans_names_out
 
 
 class ad9081(rx_tx, context_manager):
@@ -54,6 +95,8 @@ class ad9081(rx_tx, context_manager):
     _rx_attr_only_channel_names: List[str] = []
     _tx_attr_only_channel_names: List[str] = []
 
+    _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
+
     def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
@@ -63,31 +106,54 @@ class ad9081(rx_tx, context_manager):
         self._rxadc = self._ctx.find_device("axi-ad9081-rx-hpc")
         self._txdac = self._ctx.find_device("axi-ad9081-tx-hpc")
 
-        # Dynamically get channels
+        # Get DDC and DUC mappings
+        paths = {}
+
         for ch in self._rxadc.channels:
-            if ch.scan_element:
+            if "label" in ch.attrs:
+                paths = _map_to_dict(paths, ch)
+        self._path_map = paths
+
+        # Get data + DDS channels
+        for ch in self._rxadc.channels:
+            if ch.scan_element and not ch.output:
                 self._rx_channel_names.append(ch._id)
-                if not ch.output and "_i" in ch._id:
-                    self._rx_attr_only_channel_names.append(ch._id)
-            else:
-                # i/q channels are the same
-                if "_q" in ch._id:
-                    continue
-                if ch.output:
-                    self._tx_attr_only_channel_names.append(ch._id)
         for ch in self._txdac.channels:
             if ch.scan_element:
                 self._tx_channel_names.append(ch._id)
             else:
                 self._dds_channel_names.append(ch._id)
 
-        self._rx_coarse_ddc_channel_names = self._rx_attr_only_channel_names
-        self._tx_coarse_duc_channel_names = self._tx_attr_only_channel_names
-        self._rx_fine_ddc_channel_names = self._rx_attr_only_channel_names
-        self._tx_fine_duc_channel_names = self._tx_attr_only_channel_names
+        # Sort channel names
+        self._rx_channel_names = _sortconv(self._rx_channel_names)
+        self._tx_channel_names = _sortconv(self._tx_channel_names)
+        self._dds_channel_names = _sortconv(self._dds_channel_names, dds=True)
+
+        # Map unique attributes to channel properties
+        self._rx_fine_ddc_channel_names = []
+        self._rx_coarse_ddc_channel_names = []
+        for converter in paths:
+            for cdc in paths[converter]:
+                channels = []
+                for fdc in paths[converter][cdc]:
+                    channels += paths[converter][cdc][fdc]["channels"]
+                channels = [name for name in channels if "_i" in name]
+                if "ADC" in converter:
+                    self._rx_coarse_ddc_channel_names.append(channels[0])
+                    self._rx_fine_ddc_channel_names += channels
+                else:
+                    self._tx_coarse_duc_channel_names.append(channels[0])
+                    self._tx_fine_duc_channel_names += channels
 
         rx_tx.__init__(self)
         self.rx_buffer_size = 2 ** 16
+
+    @property
+    def path_map(self):
+        """ path_map: Map of channelizers both coarse and fine to
+            individual driver channel names
+        """
+        return self._path_map
 
     @property
     def rx_channel_nco_frequencies(self):
@@ -254,7 +320,8 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_main_ffh_mode(self):
-        """tx_main_ffh_mode: <FIXME> This is not really documented on Wiki
+        """tx_main_ffh_mode: Set hop transition mode of NCOs Options are:
+            phase_continuous, phase_incontinuous, and phase_coherent
         """
         return self._get_iio_attr("voltage0_i", "main_ffh_mode", True)
 
@@ -266,7 +333,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def loopback_mode(self):
-        """loopback_mode: <FIXME> This is not really documented on Wiki
+        """loopback_mode: Enable loopback mode RX->TX
         """
         return self._get_iio_dev_attr("loopback_mode")
 
@@ -275,13 +342,6 @@ class ad9081(rx_tx, context_manager):
         self._set_iio_dev_attr(
             "loopback_mode", value,
         )
-
-    # def multichip_sync(self):
-    #     """ multichip_sync: Trigger MCS
-    #     """
-    #     self._set_iio_dev_attr(
-    #         "multichip_sync", 1,
-    #     )
 
     @property
     def rx_sampling_frequency(self):
