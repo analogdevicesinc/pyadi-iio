@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-<a href="https://travis-ci.org/analogdevicesinc/pyadi-iio">
-<img src="https://travis-ci.org/analogdevicesinc/pyadi-iio.svg?branch=master" alt="Build Status">
+<a href="https://github.com/analogdevicesinc/pyadi-iio/actions">
+<img src="https://img.shields.io/github/workflow/status/analogdevicesinc/pyadi-iio/CI%20Pushes/master" alt="Build Status">
 </a>
 
 <a href="https://badge.fury.io/py/pyadi-iio">
@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-<a href="http://analogdevicesinc.github.io/pyadi-iio/)">
+<a href="http://analogdevicesinc.github.io/pyadi-iio/">
 <img alt="GitHub Pages" src="https://img.shields.io/readthedocs/pyadi-iio">
 </a>
 
