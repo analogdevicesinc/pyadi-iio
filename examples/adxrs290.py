@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2020 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,66 +31,40 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import ad9361, ad9363, ad9364, Pluto
+import time
 
-from adi.fmcomms5 import FMComms5
+import adi
 
-from adi.ad9371 import ad9371
+# Set up ADXRS290
+mygyro = adi.adxrs290(uri="ip:192.168.1.7")
 
-from adi.adrv9002 import adrv9002
+hpf = mygyro.hpf_3db_frequency_available
+print("High pass filter 3D frequencies available:")
+print(hpf)
 
-from adi.adrv9009 import adrv9009
+lpf = mygyro.lpf_3db_frequency_available
+print("Low pass filter 3D frequencies available:")
+print(lpf)
 
-from adi.adrv9009_zu11eg import adrv9009_zu11eg
+print("\nX Angular Velocity: " + str(mygyro.anglvel_x.raw))
+print("Y Angular Velocity: " + str(mygyro.anglvel_y.raw))
+print("Chip Temperature: " + str(mygyro.temp.raw))
 
-from adi.adrv9009_zu11eg_multi import adrv9009_zu11eg_multi
+# Setting and Reading the band pass filter
+mygyro.hpf_3db_frequency = 0.044000
+print("High pass filter 3D frequency: " + str(mygyro.hpf_3db_frequency))
+mygyro.lpf_3db_frequency = 160.000000
+print("Low pass filter 3D frequency: " + str(mygyro.lpf_3db_frequency))
 
-from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
+# Read using RX.
+mygyro.rx_output_type = "SI"
+mygyro.rx_buffer_size = 4
+mygyro.rx_enabled_channels = [0, 1]
+print("\nData using unbuffered rx(), SI (rad/s):")
+print(mygyro.rx())
 
-from adi.ad9081 import ad9081
+mygyro.rx_output_type = "raw"
+print("\nData using unbuffered rx(), raw:")
+print(mygyro.rx())
 
-from adi.ad9081_mc import ad9081_mc, QuadMxFE
-
-from adi.ad9094 import ad9094
-
-from adi.ad9680 import ad9680
-
-from adi.ad9144 import ad9144
-
-from adi.ad9152 import ad9152
-
-from adi.cn0532 import cn0532
-
-from adi.daq2 import DAQ2
-
-from adi.daq3 import DAQ3
-
-from adi.adis16460 import adis16460
-
-from adi.adis16507 import adis16507
-
-from adi.ad7124 import ad7124
-
-from adi.adxl345 import adxl345
-
-from adi.adxrs290 import adxrs290
-
-from adi.fmclidar1 import fmclidar1
-
-from adi.ad5686 import ad5686
-
-from adi.adar1000 import adar1000, adar1000_array
-
-from adi.ltc2983 import ltc2983
-
-from adi.one_bit_adc_dac import one_bit_adc_dac
-
-from adi.ltc2314_14 import ltc2314_14
-
-try:
-    from adi.jesd import jesd
-except ImportError:
-    pass
-
-__version__ = "0.0.8"
-name = "Analog Devices Hardware Interfaces"
+del mygyro
