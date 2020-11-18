@@ -71,3 +71,16 @@ To help manage libiio contexts, filter tests based on those contexts, and map dr
         python3 -m pytest --adi-hw-map
 
 If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the `pytest-libiio CLI <https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps>`_.
+
+
+Test Functions and Fixtures
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links belows to the different test categories:
+
+.. toctree::
+   :maxdepth: 4
+
+   test_attr
+   test_dma
+   test_generics
