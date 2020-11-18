@@ -51,9 +51,36 @@ def iio_dev_interface(uri, attrtype, dev_name, chan_name, inout, attr, val, tol)
 def iio_attribute_single_value(
     uri, attrtype, dev_name, chan_name, inout, attr, start, stop, step, tol, repeats=1,
 ):
-    """ Test numeric attributes over ranges
+    """ iio_attribute_single_value: Test numeric attributes over ranges
         This is a generic test that does not use pyadi-iio classes
         but instead uses libiio directly.
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            attrtype: type=string
+                Name attribute type to test. Options are: context, channel, debug, device, and channel
+            dev_name: type=string
+                Name device with associated attribute. Ignored if not device,
+                debug, or channel attribute under test
+            chan_name: type=string
+                Name of channel if channel attribute. Ignored if not channel
+                attribute under test
+            inout: type=boolean
+                True if output channel, False otherwise. Ignored if not channel
+                attribute under test
+            attr: type=string
+                Attribute name to be written. Must be property of classname
+            start: type=integer
+                Lower bound of possible values attribute can be
+            stop: type=integer
+                Upper bound of possible values attribute can be
+            step: type=integer
+                Difference between successive values attribute can be
+            tol: type=integer
+                Allowable error of written value compared to read back value
+            repeats: type=integer
+                Number of random values to tests. Generated from uniform distribution
     """
     # Pick random number in operational range
     numints = int((stop - start) / step)
@@ -183,6 +210,22 @@ def compare_states(state1, state2, expected_to_change, allowed_to_change):
 ################################
 # Generic Buffer checks
 def iio_buffer_check(phy, rxdev, uri, percent_fail):
+    """ iio_buffer_check: Check receive buffers for repeative patterns of zeros.
+        This function does not require an interfaces class in pyadi but will
+        construct a generic interface on the fly.
+
+        parameters:
+            phy: type=string
+                Name of PHY IIO driver
+            rxdev: type=string
+                Name of driver with scan elements to create buffers with
+            uri: type=string
+                URI of IIO context of target board/system
+            percent_fail: type=float
+                Allowable percentage of zeros at a given index of collected
+                buffers
+    """
+
     class rx_generic(rx, context_manager):
         _complex_data = False
         _rx_channel_names = []
