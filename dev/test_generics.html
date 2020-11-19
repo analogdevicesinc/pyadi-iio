@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Generic Tests &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Support" href="../support.html" />
+    <link rel="prev" title="DMA Tests" href="test_dma.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Analog Devices Hardware Python Interfaces
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devices/index.html">Supported Devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Developers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#invoke">Invoke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#precommit">Precommit</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#testing">Testing</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#test-configuration">Test Configuration</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#test-functions-and-fixtures">Test Functions and Fixtures</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Generic Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Analog Devices Hardware Python Interfaces</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Developers</a> &raquo;</li>
+        
+      <li>Generic Tests</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/dev/test_generics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="generic-tests">
+<h1>Generic Tests<a class="headerlink" href="#generic-tests" title="Permalink to this headline">¶</a></h1>
+<p>Functions used by test fixtures for evaluating drivers without pyadi-iio classes or not by using pyadi-iio classes.</p>
+<span class="target" id="module-test.generics"></span><dl class="py function">
+<dt id="test.generics.iio_attribute_single_value">
+<code class="sig-prename descclassname">test.generics.</code><code class="sig-name descname">iio_attribute_single_value</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">attrtype</span></em>, <em class="sig-param"><span class="n">dev_name</span></em>, <em class="sig-param"><span class="n">chan_name</span></em>, <em class="sig-param"><span class="n">inout</span></em>, <em class="sig-param"><span class="n">attr</span></em>, <em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">stop</span></em>, <em class="sig-param"><span class="n">step</span></em>, <em class="sig-param"><span class="n">tol</span></em>, <em class="sig-param"><span class="n">repeats</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_attribute_single_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>iio_attribute_single_value: Test numeric attributes over ranges
+This is a generic test that does not use pyadi-iio classes
+but instead uses libiio directly.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>attrtype: type=string</dt><dd><p>Name attribute type to test. Options are: context, channel, debug, device, and channel</p>
+</dd>
+<dt>dev_name: type=string</dt><dd><p>Name device with associated attribute. Ignored if not device,
+debug, or channel attribute under test</p>
+</dd>
+<dt>chan_name: type=string</dt><dd><p>Name of channel if channel attribute. Ignored if not channel
+attribute under test</p>
+</dd>
+<dt>inout: type=boolean</dt><dd><p>True if output channel, False otherwise. Ignored if not channel
+attribute under test</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+<dt>start: type=integer</dt><dd><p>Lower bound of possible values attribute can be</p>
+</dd>
+<dt>stop: type=integer</dt><dd><p>Upper bound of possible values attribute can be</p>
+</dd>
+<dt>step: type=integer</dt><dd><p>Difference between successive values attribute can be</p>
+</dd>
+<dt>tol: type=integer</dt><dd><p>Allowable error of written value compared to read back value</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of random values to tests. Generated from uniform distribution</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.generics.iio_buffer_check">
+<code class="sig-prename descclassname">test.generics.</code><code class="sig-name descname">iio_buffer_check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">phy</span></em>, <em class="sig-param"><span class="n">rxdev</span></em>, <em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">percent_fail</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_buffer_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>iio_buffer_check: Check receive buffers for repeative patterns of zeros.
+This function does not require an interfaces class in pyadi but will
+construct a generic interface on the fly.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>phy: type=string</dt><dd><p>Name of PHY IIO driver</p>
+</dd>
+<dt>rxdev: type=string</dt><dd><p>Name of driver with scan elements to create buffers with</p>
+</dd>
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>percent_fail: type=float</dt><dd><p>Allowable percentage of zeros at a given index of collected
+buffers</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../support.html" class="btn btn-neutral float-right" title="Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="test_dma.html" class="btn btn-neutral float-left" title="DMA Tests" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2019, Analog Devices, Inc
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

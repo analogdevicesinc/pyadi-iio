@@ -510,6 +510,11 @@ gain_control_mode is set to ‘spi’</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="adi.adrv9002.adrv9002.stream">
+<em class="property">property </em><code class="sig-name descname">stream</code><a class="headerlink" href="#adi.adrv9002.adrv9002.stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="adi.adrv9002.adrv9002.tx0_en">
 <em class="property">property </em><code class="sig-name descname">tx0_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Control TX1 Power state</p>
@@ -620,7 +625,23 @@ calibrated, primed, rf_enabled</p>
 <dl class="py method">
 <dt id="adi.adrv9002.adrv9002.write_profile">
 <code class="sig-name descname">write_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a new profile on the device</p>
+<dd><p>Load a new profile on the device
+Stream related to profile should be loaded first.
+Please see driver documentation about profile generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9002.adrv9002.write_stream">
+<code class="sig-name descname">write_stream</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a new stream on the device
+Stream becomes active once accompanying profile is loaded
+Please see driver documentation about stream generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9002.adrv9002.write_stream_profile">
+<code class="sig-name descname">write_stream_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stream</span></em>, <em class="sig-param"><span class="n">profile</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_stream_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a new profile and stream on the device</p>
 </dd></dl>
 
 </dd></dl>

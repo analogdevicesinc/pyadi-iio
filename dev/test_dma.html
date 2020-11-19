@@ -1,0 +1,539 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DMA Tests &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generic Tests" href="test_generics.html" />
+    <link rel="prev" title="Attribute Tests" href="test_attr.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Analog Devices Hardware Python Interfaces
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devices/index.html">Supported Devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Developers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#invoke">Invoke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#precommit">Precommit</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#testing">Testing</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#test-configuration">Test Configuration</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#test-functions-and-fixtures">Test Functions and Fixtures</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">DMA Tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Analog Devices Hardware Python Interfaces</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Developers</a> &raquo;</li>
+        
+      <li>DMA Tests</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/dev/test_dma.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dma-tests">
+<h1>DMA Tests<a class="headerlink" href="#dma-tests" title="Permalink to this headline">¶</a></h1>
+<p>Functions used by test fixtures for evaluating receive and transmit DMA/buffers</p>
+<span class="target" id="module-test.dma_tests"></span><dl class="py function">
+<dt id="test.dma_tests.cw_loopback">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">cw_loopback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cw_loopback" title="Permalink to this definition">¶</a></dt>
+<dd><p>cw_loopback: Test CW loopback with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. Sinuoidal data is passed to DMAs which is then
+estimated on the RX side. The receive tone must be within
+1% of its expected frequency at the max peak found</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.cyclic_buffer">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">cyclic_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>cyclic_buffer: Construct Cyclic TX buffers and verify
+no errors occur when pushed. This is performed twice
+without closing the context</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.cyclic_buffer_exception">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">cyclic_buffer_exception</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>cyclic_buffer_exception: Construct Cyclic TX buffers and verify
+errors occur when pushed. This is performed twice
+without closing the context and with resetting the TX buffers
+which should cause an exception</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.dds_loopback">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dds_loopback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">param_set</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">frequency</span></em>, <em class="sig-param"><span class="n">scale</span></em>, <em class="sig-param"><span class="n">peak_min</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dds_loopback" title="Permalink to this definition">¶</a></dt>
+<dd><p>dds_loopback: Test DDS loopback with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. TX FPGA DDSs are used to generate a sinusoid
+which is then estimated on the RX side. The receive tone must be within
+1% of its expected frequency with a specified peak</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>frequency: type=integer</dt><dd><p>Frequency in Hz of transmitted tone</p>
+</dd>
+<dt>scale: type=float</dt><dd><p>Scale of DDS tone. Range [0,1]</p>
+</dd>
+<dt>peak_min: type=float</dt><dd><p>Minimum acceptable value of maximum peak in dBFS of received tone</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.dma_loopback">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dma_loopback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_loopback" title="Permalink to this definition">¶</a></dt>
+<dd><p>dma_loopback: Test DMA digital loopback with a triangle waveforms.
+This test requires a AD936x or similar device with internal loopback
+modes. A triangle wave is generated on I and Q or real1 and real2
+and multiple periods are compared for missing samples within a buffer
+and delay between buffers.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.dma_rx">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dma_rx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_rx" title="Permalink to this definition">¶</a></dt>
+<dd><p>dma_rx: Construct RX buffers and verify data is non-zero when pulled.
+Collected buffer is of size 2**15 and 10 buffers are checked</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through rx_enabled_channels</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.dma_tx">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dma_tx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_tx" title="Permalink to this definition">¶</a></dt>
+<dd><p>dma_tx: Construct TX buffers and verify no errors occur when pushed.
+Buffer is of size 2**15 and 10 buffers are pushed</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.gain_check">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">gain_check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em>, <em class="sig-param"><span class="n">dds_scale</span></em>, <em class="sig-param"><span class="n">min_rssi</span></em>, <em class="sig-param"><span class="n">max_rssi</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.gain_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>gain_check: Test DDS loopback with connected loopback cables and verify
+calculated RSSI. This is only applicable for devices with RSSI calculations
+onboard. This test also requires a devices with TX and RX onboard where the
+transmit signal can be recovered. TX FPGA DDSs are used to generate a
+sinusoid which is then received on the RX side. RSSI is captured during
+this reception. The generated tone is at 10% RX sample rate.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>dds_scale: type=float</dt><dd><p>Scale of DDS tone. Range [0,1]</p>
+</dd>
+<dt>min_rssi: type=float</dt><dd><p>Minimum acceptable value of RSSI attribute</p>
+</dd>
+<dt>max_rssi: type=float</dt><dd><p>Maximum acceptable value of RSSI attribute</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.stress_context_creation">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">stress_context_creation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">repeats</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_context_creation" title="Permalink to this definition">¶</a></dt>
+<dd><p>stress_context_creation: Repeatedly create and destroy a context</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of times to re-create contexts</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.stress_rx_buffer_creation">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">stress_rx_buffer_creation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">repeats</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_creation" title="Permalink to this definition">¶</a></dt>
+<dd><p>stress_rx_buffer_creation: Repeatedly create and destroy buffers</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of times to re-create contexts</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.stress_rx_buffer_length">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">stress_rx_buffer_length</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">buffer_sizes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>stress_rx_buffer_length: Repeatedly create and destroy buffers across different buffer sizes</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>buffer_sizes: type=list</dt><dd><p>List of buffer size to create and collect</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.stress_tx_buffer_creation">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">stress_tx_buffer_creation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">repeats</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_tx_buffer_creation" title="Permalink to this definition">¶</a></dt>
+<dd><p>stress_tx_buffer_creation: Repeatedly create and destroy TX buffers</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of times to re-create buffers</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="test.dma_tests.t_sfdr">
+<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">t_sfdr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em>, <em class="sig-param"><span class="n">sfdr_min</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.t_sfdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>t_sfdr: Test SFDR loopback of tone with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. Sinuoidal data is passed to DMAs which is then
+estimated on the RX side. The peak and second peak are determined in
+the received signal to determine the sfdr.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>sfdr_min: type=float</dt><dd><p>Minimum acceptable value of SFDR in dB</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="test_generics.html" class="btn btn-neutral float-right" title="Generic Tests" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="test_attr.html" class="btn btn-neutral float-left" title="Attribute Tests" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2019, Analog Devices, Inc
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

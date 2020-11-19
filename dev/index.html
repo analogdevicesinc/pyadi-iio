@@ -36,7 +36,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Support" href="../support.html" />
+    <link rel="next" title="Attribute Tests" href="test_attr.html" />
     <link rel="prev" title="FPGA Features" href="../fpga/index.html" /> 
 </head>
 
@@ -95,6 +95,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#precommit">Precommit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#test-configuration">Test Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-functions-and-fixtures">Test Functions and Fixtures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -211,12 +217,27 @@
 </div>
 <div class="section" id="test-configuration">
 <h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Permalink to this headline">¶</a></h3>
-<p>When running tests a single URI can be provided to the command line. Devices can be dynamically scanned for on the network, and they can be provided through a configuration file. URIs for hardware are descripted in the <strong>uri-map</strong> section of the pyadi_test.yaml file with the convention “&lt;uri&gt;: hardware1, hardware2,…”. Here is an example where the URI ip:192.168.2.1 applied to tests looking for the hardware adrv9361 or fmcomms2.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">uri-map</span><span class="p">:</span>
-  <span class="s">&quot;ip:192.168.86.35&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">adrv9361, fmcomms2</span>
+<p>There are several advanced features of pytest that are utilized by pyadi-iio. Specifically custom markers and custom plugins.</p>
+<p>Markers are a way of labeling tests, which can be then used to filter specific tests. Markers are provided through the <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/test/test_map.py">test_map.py</a> file in the test directory. These markers are used to map FPGA based boards with daughtercards to specific tests. <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/embedded_arm_images">Reference design folder names</a> from the ADI SD cards are using as the markers, which them can be passed through the <em>-m</em> flag to enabled certain tests. For example, the following would enable all tests related to <em>ADRV9009</em>, assuming the hardware is available:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pytest -m zynqmp-zcu102-rev10-adrv9009</span>
 </pre></div>
 </div>
-<p>This file will automatically be loaded when it is in the location <strong>/etc/default/pyadi_test.yaml</strong> on Linux machines. Otherwise, it can be provided to pytest through the <strong>–test-configfilename</strong> argument.</p>
+<p>To help manage libiio contexts, filter tests based on those contexts, and map drivers to board definitions, pyadi-iio utilizes the pytest plugin <a class="reference external" href="https://pypi.org/project/pytest-libiio/">pytest-libiio</a>. This must be installed before tests are run since all test implementations rely on <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/fixtures/">pytest-libiio fixtures</a>. Generally, pyadi-iio will also use the <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps">standard hardware map</a> provided by <em>pytest-libiio</em> to map drivers to board definitions. To enable the hardware make requires the <em>–adi-hw-map</em> flag as:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pytest --adi-hw-map</span>
+</pre></div>
+</div>
+<p>If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps">pytest-libiio CLI</a>.</p>
+</div>
+<div class="section" id="test-functions-and-fixtures">
+<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this headline">¶</a></h3>
+<p>pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links belows to the different test categories:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -229,7 +250,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../support.html" class="btn btn-neutral float-right" title="Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="test_attr.html" class="btn btn-neutral float-right" title="Attribute Tests" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../fpga/index.html" class="btn btn-neutral float-left" title="FPGA Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

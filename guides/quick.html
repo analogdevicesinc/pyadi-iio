@@ -162,7 +162,7 @@
             
   <div class="section" id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
-<p>Before installing pyadi-iio make sure you have <a class="reference external" href="https://github.com/analogdevicesinc/libiio">libiio</a> and <a class="reference external" href="https://github.com/analogdevicesinc/libiio/blob/master/bindings/python/iio.py">its python bindings</a> installed.</p>
+<p>Before installing pyadi-iio make sure you have <a class="reference external" href="https://github.com/analogdevicesinc/libiio">libiio</a> and <a class="reference external" href="https://github.com/analogdevicesinc/libiio/blob/master/bindings/python/iio.py">its python bindings</a> installed. Since libiio v0.21, the libiio python bindings have been available on pypi and conda. The conda package includes the built library but the pypi install will require that it is installed beforehand. If you install pyadi-iio directly from pypi or conda they will automatically install the python bindings for libiio (pylibiio).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>libiio does not currently have a pip installer, but releases are available on <a class="reference external" href="https://github.com/analogdevicesinc/libiio/releases">GitHub</a> along with the <a class="reference external" href="https://github.com/analogdevicesinc/libiio">source</a>.
@@ -178,6 +178,11 @@ For releases v0.19+ of libiio, when building from source the -DPYTHON_BINDINGS=O
 <span class="o">(</span>sudo<span class="o">)</span> python3 setup.py install
 </pre></div>
 </div>
+<p>To install the optional dependencies for JESD debugging and control</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>sudo<span class="o">)</span> pip install pyadi-iio<span class="o">[</span>jesd<span class="o">]</span>
+</pre></div>
+</div>
+<p>Note that this is only needed for the ADRV9009-ZU11EG multi-SOM configuration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>On Linux the libiio python bindings are sometimes installed in locations not on path. On Ubuntu this is a common fix</p>
