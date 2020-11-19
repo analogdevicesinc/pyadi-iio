@@ -77,5 +77,5 @@ from adi.adar1000 import adar1000
 
 from adi.ltc2983 import *
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 name = "Analog Devices Hardware Interfaces"
