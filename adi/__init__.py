@@ -69,13 +69,16 @@ from adi.adxl345 import *
 
 from adi.fmclidar1 import *
 
-from adi.jesd import *
-
 from adi.ad5686 import *
 
 from adi.adar1000 import adar1000
 
 from adi.ltc2983 import *
+
+try:
+    from adi.jesd import *
+except ImportError:
+    pass
 
 __version__ = "0.0.7"
 name = "Analog Devices Hardware Interfaces"
