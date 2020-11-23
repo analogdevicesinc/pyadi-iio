@@ -32,8 +32,15 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
-from adi.jesd import jesd as jesdadi
 from adi.rx_tx import rx_tx
+
+
+def _import_jesd(uri):
+    try:
+        from adi.jesd import jesd as jesdadi
+    except ImportError:
+        raise Exception("JESD interfaces require fs package")
+    return jesdadi(uri)
 
 
 class adrv9009(rx_tx, context_manager):
@@ -63,7 +70,7 @@ class adrv9009(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
-        self._jesd = jesd or jesdadi(uri) if jesd_monitor else None
+        self._jesd = jesd or _import_jesd(uri) if jesd_monitor else None
         rx_tx.__init__(self)
 
     @property
