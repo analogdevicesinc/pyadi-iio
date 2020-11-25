@@ -165,7 +165,7 @@ class ad9081(rx_tx, context_manager):
 
     @rx_channel_nco_frequencies.setter
     def rx_channel_nco_frequencies(self, value):
-        self._set_iio_attr_vec(
+        self._set_iio_attr_int_vec(
             self._rx_fine_ddc_channel_names, "channel_nco_frequency", False, value
         )
 
@@ -179,7 +179,7 @@ class ad9081(rx_tx, context_manager):
 
     @rx_channel_nco_phases.setter
     def rx_channel_nco_phases(self, value):
-        self._set_iio_attr_vec(
+        self._set_iio_attr_int_vec(
             self._rx_fine_ddc_channel_names, "channel_nco_phase", False, value,
         )
 
@@ -193,7 +193,7 @@ class ad9081(rx_tx, context_manager):
 
     @rx_main_nco_frequencies.setter
     def rx_main_nco_frequencies(self, value):
-        self._set_iio_attr_vec(
+        self._set_iio_attr_int_vec(
             self._rx_coarse_ddc_channel_names, "main_nco_frequency", False, value,
         )
 
@@ -207,7 +207,7 @@ class ad9081(rx_tx, context_manager):
 
     @rx_main_nco_phases.setter
     def rx_main_nco_phases(self, value):
-        self._set_iio_attr_vec(
+        self._set_iio_attr_int_vec(
             self._rx_coarse_ddc_channel_names, "main_nco_phase", False, value,
         )
 
@@ -243,7 +243,7 @@ class ad9081(rx_tx, context_manager):
 
     @tx_channel_nco_frequencies.setter
     def tx_channel_nco_frequencies(self, value):
-        self._set_iio_attr_vec(
+        self._set_iio_attr_int_vec(
             self._tx_fine_duc_channel_names, "channel_nco_frequency", True, value
         )
 
@@ -257,7 +257,7 @@ class ad9081(rx_tx, context_manager):
 
     @tx_channel_nco_phases.setter
     def tx_channel_nco_phases(self, value):
-        self._set_iio_attr_vec(
+        self._set_iio_attr_int_vec(
             self._tx_fine_duc_channel_names, "channel_nco_phase", True, value,
         )
 
@@ -271,7 +271,7 @@ class ad9081(rx_tx, context_manager):
 
     @tx_main_nco_frequencies.setter
     def tx_main_nco_frequencies(self, value):
-        self._set_iio_attr_vec(
+        self._set_iio_attr_int_vec(
             self._tx_coarse_duc_channel_names, "main_nco_frequency", True, value,
         )
 
@@ -285,7 +285,7 @@ class ad9081(rx_tx, context_manager):
 
     @tx_main_nco_phases.setter
     def tx_main_nco_phases(self, value):
-        self._set_iio_attr_vec(
+        self._set_iio_attr_int_vec(
             self._tx_coarse_duc_channel_names, "main_nco_phase", True, value,
         )
 
