@@ -437,7 +437,12 @@ def cyclic_buffer(uri, classname, channel, param_set):
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
-    fs = int(sdr.sample_rate)
+
+    if hasattr(sdr, "sample_rate"):
+        fs = int(sdr.sample_rate)
+    else:
+        fs = int(sdr.rx_sample_rate)
+
     fc = -3000000
     N = 1024
     ts = 1 / float(fs)
@@ -489,7 +494,12 @@ def cyclic_buffer_exception(uri, classname, channel, param_set):
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
-    fs = int(sdr.sample_rate)
+
+    if hasattr(sdr, "sample_rate"):
+        fs = int(sdr.sample_rate)
+    else:
+        fs = int(sdr.rx_sample_rate)
+
     fc = -3000000
     N = 1024
     ts = 1 / float(fs)
