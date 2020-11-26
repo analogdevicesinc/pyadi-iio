@@ -132,6 +132,8 @@ class ad9081(rx_tx, context_manager):
         # Map unique attributes to channel properties
         self._rx_fine_ddc_channel_names = []
         self._rx_coarse_ddc_channel_names = []
+        self._tx_fine_duc_channel_names = []
+        self._tx_coarse_duc_channel_names = []
         for converter in paths:
             for cdc in paths[converter]:
                 channels = []
