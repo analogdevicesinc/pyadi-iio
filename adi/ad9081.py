@@ -346,7 +346,7 @@ class ad9081(rx_tx, context_manager):
         )
 
     @property
-    def rx_sampling_frequency(self):
+    def rx_sample_rate(self):
         """rx_sampling_frequency: Sample rate after decimation"""
         return self._get_iio_attr("voltage0_i", "sampling_frequency", False)
 
@@ -356,7 +356,7 @@ class ad9081(rx_tx, context_manager):
         return self._get_iio_attr("voltage0_i", "adc_frequency", False)
 
     @property
-    def tx_sampling_frequency(self):
+    def tx_sample_rate(self):
         """tx_sampling_frequency: Sample rate before interpolation"""
         return self._get_iio_attr("voltage0_i", "sampling_frequency", True)
 
