@@ -64,7 +64,7 @@ dev.rx_nyquist_zone = 'odd'
 dev.rx_buffer_size = 2**16
 dev.tx_cyclic_buffer = True
 
-fs = int(dev.tx_sampling_frequency)
+fs = int(dev.tx_sample_rate)
 
 # Set single DDS tone for TX on one transmitter
 dev.dds_single_tone(fs / 10, 0.5, channel=0)
@@ -72,6 +72,7 @@ dev.dds_single_tone(fs / 10, 0.5, channel=0)
 # Collect data
 for r in range(20):
     x = dev.rx()
+
     f, Pxx_den = signal.periodogram(x, fs, return_onesided=False)
     plt.clf()
     plt.semilogy(f, Pxx_den)
