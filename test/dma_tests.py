@@ -293,7 +293,7 @@ def cw_loopback(uri, classname, channel, param_set):
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def t_sfdr(uri, classname, channel, param_set, sfdr_min):
+def t_sfdr(uri, classname, channel, param_set, sfdr_min, full_scale=0.9):
     """ t_sfdr: Test SFDR loopback of tone with connected loopback cables.
         This test requires a devices with TX and RX onboard where the transmit
         signal can be recovered. Sinuoidal data is passed to DMAs which is then
@@ -339,8 +339,8 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min):
 
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.9
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * 0.9
+    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * full_scale
+    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * full_scale
     iq = i + 1j * q
     # Pass through SDR
     try:

@@ -147,9 +147,9 @@ def test_ad9081_loopback(test_dma_loopback, iio_uri, classname, channel):
         )
     ],
 )
-@pytest.mark.parametrize("sfdr_min", [40])
+@pytest.mark.parametrize("sfdr_min", [70])
 def test_ad9081_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
-    test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
+    test_sfdr(iio_uri, classname, channel, param_set, sfdr_min, full_scale=0.5)
 
 
 #########################################
