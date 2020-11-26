@@ -260,6 +260,8 @@ def cw_loopback(uri, classname, channel, param_set):
 
     A = 2 ** 15
     fc = RXFS * 0.1
+    fc = int(fc / (RXFS / N)) * (RXFS / N)
+
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
     if sdr._complex_data:
@@ -331,7 +333,9 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min):
         RXFS = int(sdr.sample_rate)
     else:
         RXFS = int(sdr.rx_sample_rate)
+
     fc = RXFS * 0.1
+    fc = int(fc / (RXFS / N)) * (RXFS / N)
 
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
@@ -443,8 +447,9 @@ def cyclic_buffer(uri, classname, channel, param_set):
     else:
         fs = int(sdr.rx_sample_rate)
 
-    fc = -3000000
     N = 1024
+    fc = -3000000
+    fc = int(fc / (fs / N)) * (fs / N)
     ts = 1 / float(fs)
     t = np.arange(0, N * ts, ts)
     i = np.cos(2 * np.pi * t * fc) * 2 ** 14
@@ -500,8 +505,9 @@ def cyclic_buffer_exception(uri, classname, channel, param_set):
     else:
         fs = int(sdr.rx_sample_rate)
 
-    fc = -3000000
     N = 1024
+    fc = -3000000
+    fc = int(fc / (fs / N)) * (fs / N)
     ts = 1 / float(fs)
     t = np.arange(0, N * ts, ts)
     i = np.cos(2 * np.pi * t * fc) * 2 ** 14
