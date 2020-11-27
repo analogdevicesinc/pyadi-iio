@@ -208,6 +208,64 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
 
+def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
+    """ nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
+        This test requires a devices with TX and RX onboard where the transmit
+        signal can be recovered. TX/DAC internal NCOs are used to generate a sinusoid
+        which is then estimated on the RX side. The receive tone must be within
+        1% of its expected frequency with a specified peak
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            classname: type=string
+                Name of pyadi interface class which contain attribute
+            param_set: type=dict
+                Dictionary of attribute and values to be set before tone is
+                generated and received
+            channel: type=list
+                List of integers or list of list of integers of channels to
+                enable through tx_enabled_channels
+            frequency: type=integer
+                Frequency in Hz of transmitted tone
+            peak_min: type=float
+                Minimum acceptable value of maximum peak in dBFS of received tone
+
+    """
+    # See if we can tone using DMAs
+    sdr = eval(classname + "(uri='" + uri + "')")
+    # Set custom device parameters
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+
+    N = 2 ** 14
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+    # Create a sinewave waveform
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    elif hasattr(sdr, "rx_sample_rate"):
+        RXFS = int(sdr.rx_sample_rate)
+    else:
+        """ no sample_rate nor rx_sample_rate. Let's try something like
+        rx($channel)_sample_rate"""
+        attr = "rx" + str(channel) + "_sample_rate"
+        RXFS = int(getattr(sdr, attr))
+
+    # Pass through SDR
+    try:
+        for _ in range(10):  # Wait
+            data = sdr.rx()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    indx = np.argmax(tone_peaks)
+    diff = np.abs(tone_freqs[indx] - frequency)
+    print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
+    assert (frequency * 0.01) > diff
+    assert tone_peaks[indx] > peak_min
 
 def cw_loopback(uri, classname, channel, param_set):
     """ cw_loopback: Test CW loopback with connected loopback cables.
