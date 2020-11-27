@@ -264,6 +264,47 @@ class ad9081(rx_tx, context_manager):
         )
 
     @property
+    def tx_channel_nco_test_tone_en(self):
+        """tx_channel_nco_test_tone_en: Transmit path fine DUC NCO test tone enable
+        """
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "channel_nco_test_tone_en", True
+        )
+
+    @tx_channel_nco_test_tone_en.setter
+    def tx_channel_nco_test_tone_en(self, value):
+        self._set_iio_attr_int_vec(
+            self._tx_coarse_duc_channel_names, "channel_nco_test_tone_en", True, value,
+        )
+
+    @property
+    def tx_channel_nco_test_tone_scales(self):
+        """tx_channel_nco_test_tone_scales: Transmit path fine DUC NCO test tone scale
+        """
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "channel_nco_test_tone_scale", True
+        )
+
+    @tx_channel_nco_test_tone_scales.setter
+    def tx_channel_nco_test_tone_scales(self, value):
+        self._set_iio_attr_float_vec(
+            self._tx_coarse_duc_channel_names, "channel_nco_test_tone_scale", True, value,
+        )
+
+    @property
+    def tx_channel_nco_gain_scales(self):
+        """tx_channel_nco_gain_scales Transmit path fine DUC NCO gain scale
+        """
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "channel_nco_gain_scale", True
+        )
+
+    @tx_channel_nco_gain_scales.setter
+    def tx_channel_nco_gain_scales(self, value):
+        self._set_iio_attr_float_vec(
+            self._tx_coarse_duc_channel_names, "channel_nco_gain_scale", True, value,
+        )
+    @property
     def tx_main_nco_frequencies(self):
         """tx_main_nco_frequencies: Transmit path coarse DUC NCO frequencies
         """
@@ -289,6 +330,34 @@ class ad9081(rx_tx, context_manager):
     def tx_main_nco_phases(self, value):
         self._set_iio_attr_int_vec(
             self._tx_coarse_duc_channel_names, "main_nco_phase", True, value,
+        )
+
+    @property
+    def tx_main_nco_test_tone_en(self):
+        """tx_main_nco_test_tone_en: Transmit path coarse DUC NCO test tone enable
+        """
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_test_tone_en", True
+        )
+
+    @tx_main_nco_test_tone_en.setter
+    def tx_main_nco_test_tone_en(self, value):
+        self._set_iio_attr_int_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_test_tone_en", True, value,
+        )
+
+    @property
+    def tx_main_nco_test_tone_scales(self):
+        """tx_main_nco_test_tone_scales: Transmit path coarse DUC NCO test tone scale
+        """
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_test_tone_scale", True
+        )
+
+    @tx_main_nco_test_tone_scales.setter
+    def tx_main_nco_test_tone_scales(self, value):
+        self._set_iio_attr_float_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_test_tone_scale", True, value,
         )
 
     @property
