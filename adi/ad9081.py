@@ -394,7 +394,7 @@ class ad9081(rx_tx, context_manager):
         """tx_main_ffh_mode: Set hop transition mode of NCOs Options are:
             phase_continuous, phase_incontinuous, and phase_coherent
         """
-        return self._get_iio_attr("voltage0_i", "main_ffh_mode", True)
+        return self._get_iio_attr_str("voltage0_i", "main_ffh_mode", True)
 
     @tx_main_ffh_mode.setter
     def tx_main_ffh_mode(self, value):
