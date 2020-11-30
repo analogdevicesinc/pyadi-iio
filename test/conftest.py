@@ -102,6 +102,11 @@ def test_cw_loopback(request):
 
 
 @pytest.fixture()
+def test_tone_loopback(request):
+    yield nco_loopback
+
+
+@pytest.fixture()
 def test_gain_check(request):
     yield gain_check
 

@@ -93,11 +93,29 @@ class attribute:
             raise Exception("Value must be a float")
         self._set_iio_attr(channel_name, attr_name, output, value, _ctrl)
 
+    def _set_iio_attr_float_vec(
+        self, channel_names, attr_name, output, values, _ctrl=None
+    ):
+        """ Set channel attribute with list of floats """
+        if not isinstance(values, list):
+            raise Exception("Value must be a list")
+        for i, v in enumerate(values):
+            self._set_iio_attr_float(channel_names[i], attr_name, output, v, _ctrl)
+
     def _set_iio_attr_int(self, channel_name, attr_name, output, value, _ctrl=None):
         """ Set channel attribute with int """
         if not isinstance(value, int):
             raise Exception("Value must be an int")
         self._set_iio_attr(channel_name, attr_name, output, value, _ctrl)
+
+    def _set_iio_attr_int_vec(
+        self, channel_names, attr_name, output, values, _ctrl=None
+    ):
+        """ Set channel attribute with list of ints """
+        if not isinstance(values, list):
+            raise Exception("Value must be a list")
+        for i, v in enumerate(values):
+            self._set_iio_attr_int(channel_names[i], attr_name, output, v, _ctrl)
 
     def _get_iio_attr_str(self, channel_name, attr_name, output, _ctrl=None):
         """ Get channel attribute as string """
@@ -115,6 +133,14 @@ class attribute:
             self._get_iio_attr_str(channel_name, attr_name, output, _ctrl)
         )
 
+    def _get_iio_attr_vec(self, channel_names, attr_name, output, _ctrl=None):
+        """ Get channel attributes as list of numbers """
+        vals = []
+        for chn in channel_names:
+            v = self._get_iio_attr(chn, attr_name, output, _ctrl)
+            vals.append(v)
+        return vals
+
     def _set_iio_dev_attr_str(self, attr_name, value, _ctrl=None):
         """ Set device attribute with string """
         try:
@@ -131,6 +157,14 @@ class attribute:
             return _ctrl.attrs[attr_name].value
         else:
             return self._ctrl.attrs[attr_name].value
+
+    def _set_iio_dev_attr(self, attr_name, value, _ctrl=None):
+        """ Set device attribute """
+        _dev = _ctrl or self._ctrl
+        try:
+            _dev.attrs[attr_name].value = str(value)
+        except Exception as ex:
+            raise ex
 
     def _get_iio_dev_attr(self, attr_name, _ctrl=None):
         """ Set device attribute as number """
