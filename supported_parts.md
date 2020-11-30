@@ -64,4 +64,5 @@
 - DAQ2
 - DAQ3
 - FMCLIDAR1
+- FMComms8
 - LTC2983
