@@ -88,11 +88,13 @@ jobs:
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
+          pip install setuptools wheel twine
 
-      - name: Build doc
+      - name: Build doc and release
         run: |
           cd doc && make html
           cd ..
+          python setup.py sdist
 
       - name: Publish doc
         uses: peaceiris/actions-gh-pages@v3
