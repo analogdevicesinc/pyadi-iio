@@ -43,16 +43,25 @@ def dev_interface(uri, classname, val, attr, tol):
     # Check hardware
     if not hasattr(sdr, attr):
         raise AttributeError(attr + " not defined in " + classname)
+
+    rval = getattr(sdr, attr)
+    is_list = isinstance(rval, list)
+    if is_list:
+        l = len(rval)
+        val = [val]*l
+
     setattr(sdr, attr, val)
     rval = getattr(sdr, attr)
-    if not isinstance(rval, str):
+
+    if not isinstance(rval, str) and not is_list:
         rval = float(rval)
     del sdr
     if not isinstance(val, str):
-        if abs(val - rval) > tol:
+        abs_val = np.argmax(abs(np.array(val) - np.array(rval)))
+        if abs_val > tol:
             print("Failed to set: " + attr)
             print("Set: " + str(val))
             print("Got: " + str(rval))
-        return abs(val - rval)
+        return abs_val
     else:
         return val == str(rval)
