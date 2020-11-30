@@ -34,4 +34,3 @@ Supported Devices
    adi.fmcomms5
    adi.jesd
    adi.ltc2983
-
