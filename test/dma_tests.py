@@ -208,6 +208,7 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
 
+
 def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     """ nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
         This test requires a devices with TX and RX onboard where the transmit
@@ -267,6 +268,7 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
 
+
 def cw_loopback(uri, classname, channel, param_set):
     """ cw_loopback: Test CW loopback with connected loopback cables.
         This test requires a devices with TX and RX onboard where the transmit
@@ -297,7 +299,10 @@ def cw_loopback(uri, classname, channel, param_set):
         if isinstance(param_set[p], str):
             assert getattr(sdr, p) == param_set[p]
         else:
-            assert np.argmax(np.abs(np.array(getattr(sdr, p)) - np.array(param_set[p]))) < 4
+            assert (
+                np.argmax(np.abs(np.array(getattr(sdr, p)) - np.array(param_set[p])))
+                < 4
+            )
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
     N = 2 ** 14

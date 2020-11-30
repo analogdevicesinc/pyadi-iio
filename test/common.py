@@ -48,7 +48,7 @@ def dev_interface(uri, classname, val, attr, tol):
     is_list = isinstance(rval, list)
     if is_list:
         l = len(rval)
-        val = [val]*l
+        val = [val] * l
 
     setattr(sdr, attr, val)
     rval = getattr(sdr, attr)

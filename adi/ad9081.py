@@ -288,7 +288,10 @@ class ad9081(rx_tx, context_manager):
     @tx_channel_nco_test_tone_scales.setter
     def tx_channel_nco_test_tone_scales(self, value):
         self._set_iio_attr_float_vec(
-            self._tx_coarse_duc_channel_names, "channel_nco_test_tone_scale", True, value,
+            self._tx_coarse_duc_channel_names,
+            "channel_nco_test_tone_scale",
+            True,
+            value,
         )
 
     @property
@@ -304,6 +307,7 @@ class ad9081(rx_tx, context_manager):
         self._set_iio_attr_float_vec(
             self._tx_coarse_duc_channel_names, "channel_nco_gain_scale", True, value,
         )
+
     @property
     def tx_main_nco_frequencies(self):
         """tx_main_nco_frequencies: Transmit path coarse DUC NCO frequencies

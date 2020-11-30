@@ -32,9 +32,10 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import time
+
+import adi
 import matplotlib.pyplot as plt
 from scipy import signal
-import adi
 
 dev = adi.ad9081("ip:analog.local")
 
@@ -42,17 +43,17 @@ dev = adi.ad9081("ip:analog.local")
 print("--Setting up chip")
 
 # Set NCOs
-dev.rx_channel_nco_frequencies = [0]*4
-dev.tx_channel_nco_frequencies = [0]*4
+dev.rx_channel_nco_frequencies = [0] * 4
+dev.tx_channel_nco_frequencies = [0] * 4
 
-dev.rx_main_nco_frequencies = [1000000000]*4
-dev.tx_main_nco_frequencies = [1000000000]*4
+dev.rx_main_nco_frequencies = [1000000000] * 4
+dev.tx_main_nco_frequencies = [1000000000] * 4
 
 dev.rx_enabled_channels = [0]
 dev.tx_enabled_channels = [0]
-dev.rx_nyquist_zone = 'odd'
+dev.rx_nyquist_zone = "odd"
 
-dev.rx_buffer_size = 2**16
+dev.rx_buffer_size = 2 ** 16
 dev.tx_cyclic_buffer = True
 
 fs = int(dev.tx_sample_rate)
