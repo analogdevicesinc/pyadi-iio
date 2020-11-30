@@ -54,9 +54,8 @@ print("RX LO %s" % (sdr.rx_lo))
 
 # Create a sinewave waveform
 fs = int(sdr.sample_rate)
-fc = 3000000
 N = 1024
-fc = int(fc / (fs / N)) * (fs / N)
+fc = int(3000000 / (fs / N)) * (fs / N)
 ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)
 i = np.cos(2 * np.pi * t * fc) * 2 ** 14

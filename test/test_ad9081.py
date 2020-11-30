@@ -14,14 +14,33 @@ classname = "adi.ad9081"
     [
         ("rx_nyquist_zone", ["even", "odd"]),
         ("loopback_mode", [2, 1, 0]),
-        ("rx_test_mode", ["midscale_short", "pos_fullscale", "neg_fullscale", "checkerboard", "pn23", "pn9", "one_zero_toggle", "user", "pn7", "pn15", "pn31", "ramp", "off"]),
-        ("tx_main_ffh_mode", ["phase_continuous", "phase_incontinuous", "phase_coherent"]),
+        (
+            "rx_test_mode",
+            [
+                "midscale_short",
+                "pos_fullscale",
+                "neg_fullscale",
+                "checkerboard",
+                "pn23",
+                "pn9",
+                "one_zero_toggle",
+                "user",
+                "pn7",
+                "pn15",
+                "pn31",
+                "ramp",
+                "off",
+            ],
+        ),
+        (
+            "tx_main_ffh_mode",
+            ["phase_continuous", "phase_incontinuous", "phase_coherent"],
+        ),
     ],
 )
-def test_ad9081_str_attr(
-    test_attribute_multipe_values, iio_uri, classname, attr, val
-):
+def test_ad9081_str_attr(test_attribute_multipe_values, iio_uri, classname, attr, val):
     test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -59,6 +78,7 @@ def test_ad9081_attr(
         iio_uri, classname, attr, start, stop, step, tol, repeats
     )
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -66,12 +86,14 @@ def test_ad9081_attr(
 def test_ad9081_rx_data(test_dma_rx, iio_uri, classname, channel):
     test_dma_rx(iio_uri, classname, channel)
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
     test_dma_tx(iio_uri, classname, channel)
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -82,7 +104,7 @@ def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
     [
         dict(
             loopback_mode=0,
-            rx_nyquist_zone = 'odd',
+            rx_nyquist_zone="odd",
             tx_channel_nco_gain_scales=[0.5, 0.5, 0.5, 0.5],
             rx_main_nco_frequencies=[1000000000, 1000000000, 1000000000, 1000000000],
             tx_main_nco_frequencies=[1000000000, 1000000000, 1000000000, 1000000000],
@@ -94,7 +116,6 @@ def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
             tx_channel_nco_phases=[0, 0, 0, 0],
             tx_channel_nco_test_tone_en=[0, 0, 0, 0],
             tx_main_nco_test_tone_en=[0, 0, 0, 0],
-
         )
     ],
 )
@@ -102,6 +123,7 @@ def test_ad9081_cyclic_buffers(
     test_cyclic_buffer, iio_uri, classname, channel, param_set
 ):
     test_cyclic_buffer(iio_uri, classname, channel, param_set)
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -130,12 +152,14 @@ def test_ad9081_cyclic_buffers_exception(
 ):
     test_cyclic_buffer_exception(iio_uri, classname, channel, param_set)
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 def test_ad9081_loopback(test_dma_loopback, iio_uri, classname, channel):
     test_dma_loopback(iio_uri, classname, channel)
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -162,6 +186,7 @@ def test_ad9081_loopback(test_dma_loopback, iio_uri, classname, channel):
 @pytest.mark.parametrize("sfdr_min", [70])
 def test_ad9081_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min, full_scale=0.5)
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -198,6 +223,7 @@ def test_ad9081_dds_loopback(
     test_dds_loopback(
         iio_uri, classname, param_set, channel, frequency, scale, peak_min
     )
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -244,6 +270,7 @@ def test_ad9081_dds_loopback(
 def test_ad9081_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param_set):
     test_iq_loopback(iio_uri, classname, channel, param_set)
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -271,21 +298,14 @@ def test_ad9081_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
             tx_channel_nco_test_tone_scales=[0.5, 0.5, 0.5, 0.5],
             tx_main_nco_test_tone_en=[0, 0, 0, 0],
             tx_channel_nco_test_tone_en=[1, 1, 1, 1],
-        )
+        ),
     ],
 )
 @pytest.mark.parametrize("peak_min", [-30])
 def test_ad9081_nco_loopback(
-    test_tone_loopback,
-    iio_uri,
-    classname,
-    param_set,
-    channel,
-    frequency,
-    peak_min,
+    test_tone_loopback, iio_uri, classname, param_set, channel, frequency, peak_min,
 ):
-    test_tone_loopback(
-        iio_uri, classname, param_set, channel, frequency, peak_min
-    )
+    test_tone_loopback(iio_uri, classname, param_set, channel, frequency, peak_min)
+
 
 #########################################
