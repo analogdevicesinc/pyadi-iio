@@ -208,6 +208,64 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
 
+def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
+    """ nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
+        This test requires a devices with TX and RX onboard where the transmit
+        signal can be recovered. TX/DAC internal NCOs are used to generate a sinusoid
+        which is then estimated on the RX side. The receive tone must be within
+        1% of its expected frequency with a specified peak
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            classname: type=string
+                Name of pyadi interface class which contain attribute
+            param_set: type=dict
+                Dictionary of attribute and values to be set before tone is
+                generated and received
+            channel: type=list
+                List of integers or list of list of integers of channels to
+                enable through tx_enabled_channels
+            frequency: type=integer
+                Frequency in Hz of transmitted tone
+            peak_min: type=float
+                Minimum acceptable value of maximum peak in dBFS of received tone
+
+    """
+    # See if we can tone using DMAs
+    sdr = eval(classname + "(uri='" + uri + "')")
+    # Set custom device parameters
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+
+    N = 2 ** 14
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+    # Create a sinewave waveform
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    elif hasattr(sdr, "rx_sample_rate"):
+        RXFS = int(sdr.rx_sample_rate)
+    else:
+        """ no sample_rate nor rx_sample_rate. Let's try something like
+        rx($channel)_sample_rate"""
+        attr = "rx" + str(channel) + "_sample_rate"
+        RXFS = int(getattr(sdr, attr))
+
+    # Pass through SDR
+    try:
+        for _ in range(10):  # Wait
+            data = sdr.rx()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    indx = np.argmax(tone_peaks)
+    diff = np.abs(tone_freqs[indx] - frequency)
+    print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
+    assert (frequency * 0.01) > diff
+    assert tone_peaks[indx] > peak_min
 
 def cw_loopback(uri, classname, channel, param_set):
     """ cw_loopback: Test CW loopback with connected loopback cables.
@@ -239,7 +297,7 @@ def cw_loopback(uri, classname, channel, param_set):
         if isinstance(param_set[p], str):
             assert getattr(sdr, p) == param_set[p]
         else:
-            assert np.abs(getattr(sdr, p) - param_set[p]) < 4
+            assert np.argmax(np.abs(np.array(getattr(sdr, p)) - np.array(param_set[p]))) < 4
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
     N = 2 ** 14
@@ -260,6 +318,8 @@ def cw_loopback(uri, classname, channel, param_set):
 
     A = 2 ** 15
     fc = RXFS * 0.1
+    fc = int(fc / (RXFS / N)) * (RXFS / N)
+
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
     if sdr._complex_data:
@@ -291,7 +351,7 @@ def cw_loopback(uri, classname, channel, param_set):
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def t_sfdr(uri, classname, channel, param_set, sfdr_min):
+def t_sfdr(uri, classname, channel, param_set, sfdr_min, full_scale=0.9):
     """ t_sfdr: Test SFDR loopback of tone with connected loopback cables.
         This test requires a devices with TX and RX onboard where the transmit
         signal can be recovered. Sinuoidal data is passed to DMAs which is then
@@ -331,12 +391,14 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min):
         RXFS = int(sdr.sample_rate)
     else:
         RXFS = int(sdr.rx_sample_rate)
+
     fc = RXFS * 0.1
+    fc = int(fc / (RXFS / N)) * (RXFS / N)
 
     ts = 1 / float(RXFS)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.9
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * 0.9
+    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * full_scale
+    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * full_scale
     iq = i + 1j * q
     # Pass through SDR
     try:
@@ -437,9 +499,15 @@ def cyclic_buffer(uri, classname, channel, param_set):
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
-    fs = int(sdr.sample_rate)
-    fc = -3000000
+
+    if hasattr(sdr, "sample_rate"):
+        fs = int(sdr.sample_rate)
+    else:
+        fs = int(sdr.rx_sample_rate)
+
     N = 1024
+    fc = -3000000
+    fc = int(fc / (fs / N)) * (fs / N)
     ts = 1 / float(fs)
     t = np.arange(0, N * ts, ts)
     i = np.cos(2 * np.pi * t * fc) * 2 ** 14
@@ -489,9 +557,15 @@ def cyclic_buffer_exception(uri, classname, channel, param_set):
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
-    fs = int(sdr.sample_rate)
-    fc = -3000000
+
+    if hasattr(sdr, "sample_rate"):
+        fs = int(sdr.sample_rate)
+    else:
+        fs = int(sdr.rx_sample_rate)
+
     N = 1024
+    fc = -3000000
+    fc = int(fc / (fs / N)) * (fs / N)
     ts = 1 / float(fs)
     t = np.arange(0, N * ts, ts)
     i = np.cos(2 * np.pi * t * fc) * 2 ** 14
