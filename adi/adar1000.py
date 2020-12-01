@@ -670,7 +670,6 @@ class adar1000(attribute, context_manager):
             output = True
 
         self._set_iio_attr("voltage0", "beam_pos_load", output, state, self._ctrl)
-        return
 
     def _load_bias(self, rx_or_tx, state):
         """Load a bias from a memory position
@@ -688,7 +687,6 @@ class adar1000(attribute, context_manager):
             output = True
 
         self._set_iio_attr("voltage0", "bias_set_load", output, state, self._ctrl)
-        return
 
     def _sequence_start(self, rx_or_tx, state):
         """Set the sequencer's start position
@@ -706,7 +704,6 @@ class adar1000(attribute, context_manager):
             output = True
 
         self._set_iio_attr("voltage0", "sequence_start", output, state, self._ctrl)
-        return
 
     def _sequence_stop(self, rx_or_tx, state):
         """Set the sequencer's stop position
@@ -724,14 +721,12 @@ class adar1000(attribute, context_manager):
             output = True
 
         self._set_iio_attr("voltage0", "sequence_end", output, state, self._ctrl)
-        return
 
     """ Public Methods """
 
     def generate_clocks(self):
         """ Generate CLK cycles before pulsing RX_LOAD or TX_LOAD """
         self._set_iio_dev_attr_str("gen_clk_cycles", "", self._ctrl)
-        return
 
     def load_rx_beam(self, state):
         """Load an Rx beam from a memory position
@@ -741,7 +736,6 @@ class adar1000(attribute, context_manager):
                 State number to load. Valid options are 0 to 120
         """
         self._load_beam("rx", state)
-        return
 
     def load_tx_beam(self, state):
         """Load a Tx beam from a memory position
@@ -751,7 +745,6 @@ class adar1000(attribute, context_manager):
                 State number to load. Valid options are 0 to 120
         """
         self._load_beam("tx", state)
-        return
 
     def load_rx_bias(self, state):
         """Load an Rx bias from a memory position
@@ -761,7 +754,6 @@ class adar1000(attribute, context_manager):
                 State number to load. Valid options are 1 to 7
         """
         self._load_bias("rx", state)
-        return
 
     def load_tx_bias(self, state):
         """Load a Tx bias from a memory position
@@ -771,12 +763,10 @@ class adar1000(attribute, context_manager):
                 State number to load. Valid options are 1 to 7
         """
         self._load_bias("tx", state)
-        return
 
     def reset(self):
         """ Reset ADAR1000 to default settings """
         self._set_iio_dev_attr_str("reset", "1", self._ctrl)
-        return
 
 
 class adar1000_array(context_manager):
