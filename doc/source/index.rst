@@ -10,8 +10,8 @@ This module provides a convenient way to access and control ADI hardware from Py
 
 .. figure:: ../../images/PyADI-IIO_Logo_72.png
 
-.. image:: https://secure.travis-ci.org/analogdevicesinc/pyadi-iio.png
-    :target: http://travis-ci.org/analogdevicesinc/pyadi-iio
+.. image:: https://img.shields.io/github/workflow/status/analogdevicesinc/pyadi-iio/CI%20Pushes/master
+    :target: https://github.com/analogdevicesinc/pyadi-iio/actions
 .. image:: https://badge.fury.io/py/pyadi-iio.svg
     :target: https://badge.fury.io/py/pyadi-iio
 .. image:: https://api.codacy.com/project/badge/Grade/4bd027bfc5774029a30a9e1cedf5a434
