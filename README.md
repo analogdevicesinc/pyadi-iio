@@ -24,7 +24,7 @@
 
 <p align="center">
 <a href="http://analogdevicesinc.github.io/pyadi-iio/">
-<img alt="GitHub Pages" src="https://img.shields.io/badge/Docs-GitHub%20Pages-blue.svg>
+<img alt="GitHub Pages" src="https://img.shields.io/badge/Docs-GitHub%20Pages-blue.svg">
 </a>
 
 <a href="https://ez.analog.com/sw-interface-tools/f/q-a">
