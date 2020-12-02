@@ -159,7 +159,14 @@ def checkparts(c):
     print("Running supported_parts check")
     mod = __import__("adi")
     parts = []
-    ignored_parts = ["ad9361", "ad9363", "ad9364", "adrv9009_zu11eg"]
+    ignored_parts = [
+        "ad9361",
+        "ad9363",
+        "ad9364",
+        "adrv9009_zu11eg",
+        "adrv9009_zu11eg_multi",
+        "adrv9009_zu11eg_fmcomms8",
+    ]
     for c in dir(mod):
         if c[:2] == "ad" and not c in ignored_parts:
             parts.append(c)
