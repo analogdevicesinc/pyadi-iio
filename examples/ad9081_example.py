@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2020 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -35,43 +35,40 @@ import time
 
 import adi
 import matplotlib.pyplot as plt
-import numpy as np
 from scipy import signal
 
-# Create radio
-sdr = adi.Pluto()
+dev = adi.ad9081("ip:analog.local")
 
 # Configure properties
-sdr.rx_rf_bandwidth = 4000000
-sdr.rx_lo = 2000000000
-sdr.tx_lo = 2000000000
-sdr.tx_cyclic_buffer = True
-sdr.tx_hardwaregain_chan0 = -30
-sdr.gain_control_mode_chan0 = "slow_attack"
+print("--Setting up chip")
 
-# Read properties
-print("RX LO %s" % (sdr.rx_lo))
+# Set NCOs
+dev.rx_channel_nco_frequencies = [0] * 4
+dev.tx_channel_nco_frequencies = [0] * 4
 
-# Create a sinewave waveform
-fs = int(sdr.sample_rate)
-N = 1024
-fc = int(3000000 / (fs / N)) * (fs / N)
-ts = 1 / float(fs)
-t = np.arange(0, N * ts, ts)
-i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-q = np.sin(2 * np.pi * t * fc) * 2 ** 14
-iq = i + 1j * q
+dev.rx_main_nco_frequencies = [1000000000] * 4
+dev.tx_main_nco_frequencies = [1000000000] * 4
 
-# Send data
-sdr.tx(iq)
+dev.rx_enabled_channels = [0]
+dev.tx_enabled_channels = [0]
+dev.rx_nyquist_zone = "odd"
+
+dev.rx_buffer_size = 2 ** 16
+dev.tx_cyclic_buffer = True
+
+fs = int(dev.tx_sample_rate)
+
+# Set single DDS tone for TX on one transmitter
+dev.dds_single_tone(fs / 10, 0.5, channel=0)
 
 # Collect data
 for r in range(20):
-    x = sdr.rx()
-    f, Pxx_den = signal.periodogram(x, fs)
+    x = dev.rx()
+
+    f, Pxx_den = signal.periodogram(x, fs, return_onesided=False)
     plt.clf()
     plt.semilogy(f, Pxx_den)
-    plt.ylim([1e-7, 1e2])
+    plt.ylim([1e-7, 1e5])
     plt.xlabel("frequency [Hz]")
     plt.ylabel("PSD [V**2/Hz]")
     plt.draw()
