@@ -75,9 +75,11 @@ from adi.fmclidar1 import fmclidar1
 
 from adi.ad5686 import ad5686
 
-from adi.adar1000 import adar1000
+from adi.adar1000 import adar1000, adar1000_array
 
 from adi.ltc2983 import ltc2983
+
+from adi.one_bit_adc_dac import one_bit_adc_dac
 
 try:
     from adi.jesd import jesd
