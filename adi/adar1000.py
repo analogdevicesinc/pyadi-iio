@@ -96,6 +96,76 @@ class adar1000(attribute, context_manager):
     """ Device attributes """
 
     @property
+    def bias_dac_enable(self):
+        """ Get/Set enable for bias DACs """
+        return bool(self._get_iio_dev_attr("bias_enable", self._ctrl))
+
+    @bias_dac_enable.setter
+    def bias_dac_enable(self, value):
+        """ Get/Set enable for bias DACs """
+        self._set_iio_dev_attr_str("bias_enable", int(value), self._ctrl)
+
+    @property
+    def bias_dac_mode(self):
+        """
+        Get/Set BIAS_CTRL bit (Register 0x30[6]) which controls whether the bias DACs stay at "ON" value,
+        or toggle with respect to T/R state.
+        """
+        value = bool(self._get_iio_dev_attr("bias_ctrl", self._ctrl))
+        if value:
+            return "toggle"
+        else:
+            return "on"
+
+    @bias_dac_mode.setter
+    def bias_dac_mode(self, value):
+        """
+        Get/Set BIAS_CTRL bit (Register 0x30[6]) which controls whether the bias DACs stay at "ON" value,
+        or toggle with respect to T/R state.
+        """
+        if value.lower() == "toggle":
+            self._set_iio_dev_attr_str("bias_ctrl", 1, self._ctrl)
+        elif value.lower() == "on":
+            self._set_iio_dev_attr_str("bias_ctrl", 0, self._ctrl)
+        else:
+            raise ValueError('bias_dac_mode should be "toggle" or "on"')
+
+    @property
+    def external_tr_pin(self):
+        """ Get/Set which external T/R switch driver is used ("positive" = TR_SW_POS, "negative" = TR_SW_NEG) """
+        value = bool(self._get_iio_dev_attr("sw_drv_tr_mode_sel", self._ctrl))
+        if value:
+            return "positive"
+        else:
+            return "negative"
+
+    @external_tr_pin.setter
+    def external_tr_pin(self, value):
+        """ Get/Set which external T/R switch driver is used ("positive" = TR_SW_POS, "negative" = TR_SW_NEG) """
+        if value.lower() == "positive":
+            self._set_iio_dev_attr_str("sw_drv_tr_mode_sel", 1, self._ctrl)
+        elif value.lower() == "negative":
+            self._set_iio_dev_attr_str("sw_drv_tr_mode_sel", 0, self._ctrl)
+        else:
+            raise ValueError('external_tr_pin should be "toggle" or "on"')
+
+    @property
+    def external_tr_polarity(self):
+        """
+        Get/Set polarity of the T/R switch driver compared to the T/R state of the ADAR1000.
+        True outputs 0V in Rx mode, False outputs either 3.3V or -5V, depending on which T/R switch driver is enabled.
+        """
+        return bool(self._get_iio_dev_attr("sw_drv_tr_state", self._ctrl))
+
+    @external_tr_polarity.setter
+    def external_tr_polarity(self, value):
+        """
+        Get/Set polarity of the T/R switch driver compared to the T/R state of the ADAR1000.
+        True outputs 0V in Rx mode, False outputs either 3.3V or -5V, depending on which T/R switch driver is enabled.
+        """
+        self._set_iio_dev_attr_str("sw_drv_tr_state", int(value), self._ctrl)
+
+    @property
     def lna_bias_off(self):
         """ Get/Set LNA_BIAS_OFF setting """
         return self._get_iio_dev_attr("lna_bias_off", self._ctrl)
@@ -116,6 +186,46 @@ class adar1000(attribute, context_manager):
         self._set_iio_dev_attr_str("lna_bias_on", value, self._ctrl)
 
     @property
+    def lna_bias_out_enable(self):
+        """ Get/Set enable for LNA bias DAC output. Disable to allow for always-on self-biased LNAs """
+        return bool(self._get_iio_dev_attr("lna_bias_out_enable", self._ctrl))
+
+    @lna_bias_out_enable.setter
+    def lna_bias_out_enable(self, value):
+        """ Get/Set enable for LNA bias DAC output. Disable to allow for always-on self-biased LNAs """
+        self._set_iio_dev_attr_str("lna_bias_out_enable", int(value), self._ctrl)
+
+    @property
+    def pol_state(self):
+        """ Get/Set polarity switch state. True outputs -5V, False outputs 0V """
+        return bool(self._get_iio_dev_attr("pol", self._ctrl))
+
+    @pol_state.setter
+    def pol_state(self, value):
+        """ Get/Set polarity switch state. True outputs -5V, False outputs 0V """
+        self._set_iio_dev_attr_str("pol", int(value), self._ctrl)
+
+    @property
+    def pol_switch_enable(self):
+        """ Get/Set polarity switch driver enable state """
+        return bool(self._get_iio_dev_attr("sw_drv_en_pol", self._ctrl))
+
+    @pol_switch_enable.setter
+    def pol_switch_enable(self, value):
+        """ Get/Set polarity switch driver enable state """
+        self._set_iio_dev_attr_str("sw_drv_en_pol", int(value), self._ctrl)
+
+    @property
+    def rx_enable(self):
+        """ Get/Set enable for entire Rx chain """
+        return bool(self._get_iio_dev_attr("rx_en", self._ctrl))
+
+    @rx_enable.setter
+    def rx_enable(self, value):
+        """ Get/Set enable for entire Rx chain """
+        self._set_iio_dev_attr_str("rx_en", int(value), self._ctrl)
+
+    @property
     def rx_lna_bias_current(self):
         """ Get/Set Rx LNA bias current setting """
         return self._get_iio_dev_attr("bias_current_rx_lna", self._ctrl)
@@ -134,6 +244,26 @@ class adar1000(attribute, context_manager):
     def rx_lna_enable(self, value):
         """ Get/Set Rx LNA enable status """
         self._set_iio_dev_attr_str("rx_lna_enable", int(value), self._ctrl)
+
+    @property
+    def rx_to_tx_delay_1(self):
+        """ Get/Set Rx to Tx Delay 1 """
+        return self._get_iio_dev_attr("rx_to_tx_delay_1", self._ctrl)
+
+    @rx_to_tx_delay_1.setter
+    def rx_to_tx_delay_1(self, value):
+        """ Get/Set Rx to Tx Delay 1 """
+        self._set_iio_dev_attr_str("rx_to_tx_delay_1", int(value), self._ctrl)
+
+    @property
+    def rx_to_tx_delay_2(self):
+        """ Get/Set Rx to Tx Delay 2 """
+        return self._get_iio_dev_attr("rx_to_tx_delay_2", self._ctrl)
+
+    @rx_to_tx_delay_2.setter
+    def rx_to_tx_delay_2(self, value):
+        """ Get/Set Rx to Tx Delay 2 """
+        self._set_iio_dev_attr_str("rx_to_tx_delay_2", int(value), self._ctrl)
 
     @property
     def rx_vga_enable(self):
@@ -176,6 +306,55 @@ class adar1000(attribute, context_manager):
         self._set_iio_dev_attr_str("sequencer_enable", int(value), self._ctrl)
 
     @property
+    def tr_source(self):
+        """ Get/Set TR source for the chip. Valid options are "external" or "spi" """
+        value = bool(self._get_iio_dev_attr("tr_source", self._ctrl))
+        if value:
+            return "external"
+        else:
+            return "spi"
+
+    @tr_source.setter
+    def tr_source(self, value):
+        """ Get/Set TR source for the chip. Valid options are "external" or "spi" """
+        if value.lower() == "external":
+            self._set_iio_dev_attr_str("tr_source", 1, self._ctrl)
+        elif value.lower() == "spi":
+            self._set_iio_dev_attr_str("tr_source", 0, self._ctrl)
+        else:
+            raise ValueError('tr_source should be "external" or "spi"')
+
+    @property
+    def tr_spi(self):
+        """ Get/Set T/R state using the SPI bit. True is Tx, False is Rx """
+        return bool(self._get_iio_dev_attr("tr_spi", self._ctrl))
+
+    @tr_spi.setter
+    def tr_spi(self, value):
+        """ Get/Set T/R state using the SPI bit. True is Tx, False is Rx """
+        self._set_iio_dev_attr_str("tr_spi", int(value), self._ctrl)
+
+    @property
+    def tr_switch_enable(self):
+        """ Get/Set T/R switch driver enable state """
+        return bool(self._get_iio_dev_attr("sw_drv_en_tr", self._ctrl))
+
+    @tr_switch_enable.setter
+    def tr_switch_enable(self, value):
+        """ Get/Set T/R switch driver enable state """
+        self._set_iio_dev_attr_str("sw_drv_en_tr", int(value), self._ctrl)
+
+    @property
+    def tx_enable(self):
+        """ Get/Set enable for entire Tx chain """
+        return bool(self._get_iio_dev_attr("tx_en", self._ctrl))
+
+    @tx_enable.setter
+    def tx_enable(self, value):
+        """ Get/Set enable for entire Tx chain """
+        self._set_iio_dev_attr_str("tx_en", int(value), self._ctrl)
+
+    @property
     def tx_pa_bias_current(self):
         """ Get/Set Tx PA bias current setting """
         return self._get_iio_dev_attr("bias_current_tx_drv", self._ctrl)
@@ -194,6 +373,26 @@ class adar1000(attribute, context_manager):
     def tx_pa_enable(self, value):
         """ Get/Set Tx PA enable status """
         self._set_iio_dev_attr_str("tx_drv_enable", int(value), self._ctrl)
+
+    @property
+    def tx_to_rx_delay_1(self):
+        """ Get/Set Tx to Rx Delay 1 """
+        return self._get_iio_dev_attr("tx_to_rx_delay_1", self._ctrl)
+
+    @tx_to_rx_delay_1.setter
+    def tx_to_rx_delay_1(self, value):
+        """ Get/Set Tx to Rx Delay 1 """
+        self._set_iio_dev_attr_str("tx_to_rx_delay_1", int(value), self._ctrl)
+
+    @property
+    def tx_to_rx_delay_2(self):
+        """ Get/Set Tx to Rx Delay 2 """
+        return self._get_iio_dev_attr("tx_to_rx_delay_2", self._ctrl)
+
+    @tx_to_rx_delay_2.setter
+    def tx_to_rx_delay_2(self, value):
+        """ Get/Set Tx to Rx Delay 2 """
+        self._set_iio_dev_attr_str("tx_to_rx_delay_2", int(value), self._ctrl)
 
     @property
     def tx_vga_enable(self):
@@ -270,22 +469,22 @@ class adar1000(attribute, context_manager):
     @property
     def ch1_detector_power(self):
         """ Get Channel 1 detector power reading """
-        return bool(self._get_iio_attr("voltage0", "raw", True, self._ctrl))
+        return self._get_iio_attr("voltage0", "raw", True, self._ctrl)
 
     @property
     def ch2_detector_power(self):
         """ Get Channel 2 detector power reading """
-        return bool(self._get_iio_attr("voltage1", "raw", True, self._ctrl))
+        return self._get_iio_attr("voltage1", "raw", True, self._ctrl)
 
     @property
     def ch3_detector_power(self):
         """ Get Channel 3 detector power reading """
-        return bool(self._get_iio_attr("voltage2", "raw", True, self._ctrl))
+        return self._get_iio_attr("voltage2", "raw", True, self._ctrl)
 
     @property
     def ch4_detector_power(self):
         """ Get Channel 4 detector power reading """
-        return bool(self._get_iio_attr("voltage3", "raw", True, self._ctrl))
+        return self._get_iio_attr("voltage3", "raw", True, self._ctrl)
 
     @property
     def ch1_pa_bias_off(self):
@@ -450,42 +649,42 @@ class adar1000(attribute, context_manager):
     @property
     def ch1_rx_powerdown(self):
         """ Get/Set Channel 1 Rx Powerdown """
-        return self._get_iio_attr("voltage0", "powerdown", False, self._ctrl)
+        return bool(self._get_iio_attr("voltage0", "powerdown", False, self._ctrl))
 
     @ch1_rx_powerdown.setter
     def ch1_rx_powerdown(self, value):
         """ Get/Set Channel 1 Rx Powerdown """
-        self._set_iio_attr("voltage0", "powerdown", False, value, self._ctrl)
+        self._set_iio_attr("voltage0", "powerdown", False, int(value), self._ctrl)
 
     @property
     def ch2_rx_powerdown(self):
         """ Get/Set Channel 2 Rx Powerdown """
-        return self._get_iio_attr("voltage1", "powerdown", False, self._ctrl)
+        return bool(self._get_iio_attr("voltage1", "powerdown", False, self._ctrl))
 
     @ch2_rx_powerdown.setter
     def ch2_rx_powerdown(self, value):
         """ Get/Set Channel 2 Rx Powerdown """
-        self._set_iio_attr("voltage1", "powerdown", False, value, self._ctrl)
+        self._set_iio_attr("voltage1", "powerdown", False, int(value), self._ctrl)
 
     @property
     def ch3_rx_powerdown(self):
         """ Get/Set Channel 3 Rx Powerdown """
-        return self._get_iio_attr("voltage2", "powerdown", False, self._ctrl)
+        return bool(self._get_iio_attr("voltage2", "powerdown", False, self._ctrl))
 
     @ch3_rx_powerdown.setter
     def ch3_rx_powerdown(self, value):
         """ Get/Set Channel 3 Rx Powerdown """
-        self._set_iio_attr("voltage2", "powerdown", False, value, self._ctrl)
+        self._set_iio_attr("voltage2", "powerdown", False, int(value), self._ctrl)
 
     @property
     def ch4_rx_powerdown(self):
         """ Get/Set Channel 4 Rx Powerdown """
-        return self._get_iio_attr("voltage3", "powerdown", False, self._ctrl)
+        return bool(self._get_iio_attr("voltage3", "powerdown", False, self._ctrl))
 
     @ch4_rx_powerdown.setter
     def ch4_rx_powerdown(self, value):
         """ Get/Set Channel 4 Rx Powerdown """
-        self._set_iio_attr("voltage3", "powerdown", False, value, self._ctrl)
+        self._set_iio_attr("voltage3", "powerdown", False, int(value), self._ctrl)
 
     @property
     def ch1_tx_gain(self):
@@ -570,42 +769,42 @@ class adar1000(attribute, context_manager):
     @property
     def ch1_tx_powerdown(self):
         """ Get/Set Channel 1 Tx Powerdown """
-        return self._get_iio_attr("voltage0", "powerdown", True, self._ctrl)
+        return bool(self._get_iio_attr("voltage0", "powerdown", True, self._ctrl))
 
     @ch1_tx_powerdown.setter
     def ch1_tx_powerdown(self, value):
         """ Get/Set Channel 1 Tx Powerdown """
-        self._set_iio_attr("voltage0", "powerdown", True, value, self._ctrl)
+        self._set_iio_attr("voltage0", "powerdown", True, int(value), self._ctrl)
 
     @property
     def ch2_tx_powerdown(self):
         """ Get/Set Channel 2 Tx Powerdown """
-        return self._get_iio_attr("voltage1", "powerdown", True, self._ctrl)
+        return bool(self._get_iio_attr("voltage1", "powerdown", True, self._ctrl))
 
     @ch2_tx_powerdown.setter
     def ch2_tx_powerdown(self, value):
         """ Get/Set Channel 2 Tx Powerdown """
-        self._set_iio_attr("voltage1", "powerdown", True, value, self._ctrl)
+        self._set_iio_attr("voltage1", "powerdown", True, int(value), self._ctrl)
 
     @property
     def ch3_tx_powerdown(self):
         """ Get/Set Channel 3 Tx Powerdown """
-        return self._get_iio_attr("voltage2", "powerdown", True, self._ctrl)
+        return bool(self._get_iio_attr("voltage2", "powerdown", True, self._ctrl))
 
     @ch3_tx_powerdown.setter
     def ch3_tx_powerdown(self, value):
         """ Get/Set Channel 3 Tx Powerdown """
-        self._set_iio_attr("voltage2", "powerdown", True, value, self._ctrl)
+        self._set_iio_attr("voltage2", "powerdown", True, int(value), self._ctrl)
 
     @property
     def ch4_tx_powerdown(self):
         """ Get/Set Channel 4 Tx Powerdown """
-        return self._get_iio_attr("voltage3", "powerdown", True, self._ctrl)
+        return bool(self._get_iio_attr("voltage3", "powerdown", True, self._ctrl))
 
     @ch4_tx_powerdown.setter
     def ch4_tx_powerdown(self, value):
         """ Get/Set Channel 4 Tx Powerdown """
-        self._set_iio_attr("voltage3", "powerdown", True, value, self._ctrl)
+        self._set_iio_attr("voltage3", "powerdown", True, int(value), self._ctrl)
 
     @property
     def rx_sequencer_start(self):
@@ -654,12 +853,14 @@ class adar1000(attribute, context_manager):
 
     """ Private Methods """
 
-    def _load_beam(self, rx_or_tx, state):
+    def _load_beam(self, rx_or_tx, channel, state):
         """Load a beam from a memory position
 
         parameters:
             rx_or_tx: string
                 String indicating whether to load an Rx or Tx beam state. Valid options are "rx" and "tx"
+            channel: int, string
+                Channel number to load (1-4) or "X" to load from CHX_{rx_or_tx}
             state: int
                 State number to load. Valid options are 0 to 120
         """
@@ -669,7 +870,14 @@ class adar1000(attribute, context_manager):
         else:
             output = True
 
-        self._set_iio_attr("voltage0", "beam_pos_load", output, state, self._ctrl)
+        if isinstance(channel, int):
+            self._set_iio_attr(
+                f"voltage{channel - 1}", "beam_pos_load", output, state, self._ctrl
+            )
+        else:
+            self._set_iio_dev_attr_str(
+                f"static_{rx_or_tx.lower()}_beam_pos", state, self._ctrl
+            )
 
     def _load_bias(self, rx_or_tx, state):
         """Load a bias from a memory position
@@ -728,23 +936,27 @@ class adar1000(attribute, context_manager):
         """ Generate CLK cycles before pulsing RX_LOAD or TX_LOAD """
         self._set_iio_dev_attr_str("gen_clk_cycles", "", self._ctrl)
 
-    def load_rx_beam(self, state):
+    def load_rx_beam(self, channel, state):
         """Load an Rx beam from a memory position
 
         parameters:
+            channel: int
+                Channel number to load
             state: int
                 State number to load. Valid options are 0 to 120
         """
-        self._load_beam("rx", state)
+        self._load_beam("rx", channel, state)
 
-    def load_tx_beam(self, state):
+    def load_tx_beam(self, channel, state):
         """Load a Tx beam from a memory position
 
         parameters:
+            channel: int
+                Channel number to load
             state: int
                 State number to load. Valid options are 0 to 120
         """
-        self._load_beam("tx", state)
+        self._load_beam("tx", channel, state)
 
     def load_rx_bias(self, state):
         """Load an Rx bias from a memory position

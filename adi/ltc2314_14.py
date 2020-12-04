@@ -31,8 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.rx_tx import rx
 from adi.context_manager import context_manager
+from adi.rx_tx import rx
 
 
 class ltc2314_14(rx, context_manager):
@@ -49,16 +49,16 @@ class ltc2314_14(rx, context_manager):
         context_manager.__init__(self, uri, self._device_name)
 
         # Find the main and trigger devices
-        self._ctrl = self._ctx.find_device('ltc2314-14')
-        self._trig = self._ctx.find_device('ltc2314_trigger')
+        self._ctrl = self._ctx.find_device("ltc2314-14")
+        self._trig = self._ctx.find_device("ltc2314_trigger")
 
         # Raise an exception if the device isn't found
         if not self._ctrl:
-            raise Exception(f"LTC2314-14 device not found")
+            raise Exception("LTC2314-14 device not found")
 
         # Raise an exception if the trigger isn't found
         if not self._trig:
-            raise Exception(f"LTC2314-14 trigger not found")
+            raise Exception("LTC2314-14 trigger not found")
 
         # Add the trigger to the main device
         self._ctrl.trigger = self._trig
@@ -76,7 +76,7 @@ class ltc2314_14(rx, context_manager):
     def lsb_mv(self):
         """ Get/Set the LSB in millivolts """
         return self._get_iio_dev_attr("in_voltage_scale", self._ctrl)
-    
+
     @lsb_mv.setter
     def lsb_mv(self, value):
         """ Get/Set the LSB in millivolts """
@@ -93,6 +93,6 @@ class ltc2314_14(rx, context_manager):
         self._set_iio_dev_attr_str("sampling_frequency", value, self._trig)
 
 
-if __name__ == '__main__':
-    adc = ltc2314_14('ip:192.168.1.18')
+if __name__ == "__main__":
+    adc = ltc2314_14("ip:192.168.1.18")
     print(adc.rx())
