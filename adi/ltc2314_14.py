@@ -50,49 +50,18 @@ class ltc2314_14(rx, context_manager):
 
         # Find the main and trigger devices
         self._ctrl = self._ctx.find_device("ltc2314-14")
-        self._trig = self._ctx.find_device("ltc2314_trigger")
 
         # Raise an exception if the device isn't found
         if not self._ctrl:
             raise Exception("LTC2314-14 device not found")
 
-        # Raise an exception if the trigger isn't found
-        if not self._trig:
-            raise Exception("LTC2314-14 trigger not found")
-
-        # Add the trigger to the main device
-        self._ctrl.trigger = self._trig
-
-        # Initialize the rx device
-        rx.__init__(self)
-
-        # Set the buffer length
-        self.rx_buffer_size = 2
-
-        # Set the sampling frequency for the trigger
-        self.sampling_frequency = 10000
-
     @property
     def lsb_mv(self):
-        """ Get/Set the LSB in millivolts """
-        return self._get_iio_dev_attr("in_voltage_scale", self._ctrl)
-
-    @lsb_mv.setter
-    def lsb_mv(self, value):
-        """ Get/Set the LSB in millivolts """
-        self._set_iio_dev_attr_str("in_voltage_scale", value, self._ctrl)
+        """ Get the LSB in millivolts """
+        return self._get_iio_attr("voltage0", "scale", False, self._ctrl)
 
     @property
-    def sampling_frequency(self):
-        """ Get/Set the sampling frequency for the trigger """
-        return self._get_iio_dev_attr("sampling_frequency", self._trig)
-
-    @sampling_frequency.setter
-    def sampling_frequency(self, value):
-        """ Get/Set the sampling frequency for the trigger """
-        self._set_iio_dev_attr_str("sampling_frequency", value, self._trig)
-
-
-if __name__ == "__main__":
-    adc = ltc2314_14("ip:192.168.1.18")
-    print(adc.rx())
+    def voltage(self):
+        """ Get the voltage reading from the ADC """
+        code = self._get_iio_attr("voltage0", "raw", False, self._ctrl)
+        return code * self.lsb_mv / 1000
