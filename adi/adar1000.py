@@ -135,11 +135,13 @@ class adar1000(attribute, context_manager):
         or toggle with respect to T/R state.
         """
         if value.lower() == "toggle":
-            self._set_iio_dev_attr_str("bias_ctrl", 1, self._ctrl)
+            set_value = 1
         elif value.lower() == "on":
-            self._set_iio_dev_attr_str("bias_ctrl", 0, self._ctrl)
+            set_value = 0
         else:
             raise ValueError('bias_dac_mode should be "toggle" or "on"')
+
+        self._set_iio_dev_attr_str("bias_ctrl", set_value, self._ctrl)
 
     @property
     def bias_mem_enable(self):
@@ -172,19 +174,21 @@ class adar1000(attribute, context_manager):
         """ Get/Set which external T/R switch driver is used ("positive" = TR_SW_POS, "negative" = TR_SW_NEG) """
         value = bool(self._get_iio_dev_attr("sw_drv_tr_mode_sel", self._ctrl))
         if value:
-            return "positive"
-        else:
             return "negative"
+        else:
+            return "positive"
 
     @external_tr_pin.setter
     def external_tr_pin(self, value):
         """ Get/Set which external T/R switch driver is used ("positive" = TR_SW_POS, "negative" = TR_SW_NEG) """
-        if value.lower() == "positive":
-            self._set_iio_dev_attr_str("sw_drv_tr_mode_sel", 1, self._ctrl)
-        elif value.lower() == "negative":
-            self._set_iio_dev_attr_str("sw_drv_tr_mode_sel", 0, self._ctrl)
+        if value.lower() == "negative":
+            set_value = 1
+        elif value.lower() == "positive":
+            set_value = 0
         else:
-            raise ValueError('external_tr_pin should be "toggle" or "on"')
+            raise ValueError('external_tr_pin should be "positive" or "negative"')
+
+        self._set_iio_dev_attr_str("sw_drv_tr_mode_sel", set_value, self._ctrl)
 
     @property
     def external_tr_polarity(self):
@@ -359,21 +363,34 @@ class adar1000(attribute, context_manager):
     def tr_source(self, value):
         """ Get/Set TR source for the chip. Valid options are "external" or "spi" """
         if value.lower() == "external":
-            self._set_iio_dev_attr_str("tr_source", 1, self._ctrl)
+            set_value = 1
         elif value.lower() == "spi":
-            self._set_iio_dev_attr_str("tr_source", 0, self._ctrl)
+            set_value = 0
         else:
             raise ValueError('tr_source should be "external" or "spi"')
 
+        self._set_iio_dev_attr_str("tr_source", set_value, self._ctrl)
+
     @property
     def tr_spi(self):
-        """ Get/Set T/R state using the SPI bit. True is Tx, False is Rx """
-        return bool(self._get_iio_dev_attr("tr_spi", self._ctrl))
+        """ Get/Set T/R state using the SPI bit. Valid options are "tx" or "rx" """
+        value = bool(self._get_iio_dev_attr("tr_spi", self._ctrl))
+        if value:
+            return "tx"
+        else:
+            return "rx"
 
     @tr_spi.setter
     def tr_spi(self, value):
-        """ Get/Set T/R state using the SPI bit. True is Tx, False is Rx """
-        self._set_iio_dev_attr_str("tr_spi", int(value), self._ctrl)
+        """ Get/Set T/R state using the SPI bit. Valid options are "tx" or "rx" """
+        if value.lower() == "tx":
+            set_value = 1
+        elif value.lower() == "rx":
+            set_value = 0
+        else:
+            raise ValueError('tr_spi should be "tx" or "rx"')
+
+        self._set_iio_dev_attr_str("tr_spi", set_value, self._ctrl)
 
     @property
     def tr_switch_enable(self):
