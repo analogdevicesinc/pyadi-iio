@@ -56,7 +56,10 @@ class _dyn_property:
 
 
 class one_bit_adc_dac(attribute, context_manager):
-    """ One bit ADC/DAC (GPIO)
+    """One bit ADC/DAC (GPIO). This driver will create a handle for the
+    GPIO device as well as properties for each GPIO pin it accesses.
+    Each GPIO pin name will be lowercase and of the format:
+        "gpio_{pin name}"
 
     parameters:
         uri: type=string
