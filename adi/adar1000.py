@@ -215,7 +215,7 @@ class adar1000(attribute, context_manager):
     @lna_bias_off.setter
     def lna_bias_off(self, value):
         """ Get/Set LNA_BIAS_OFF in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_dev_attr_str("lna_bias_off", dac_code, self._ctrl)
 
     @property
@@ -227,7 +227,7 @@ class adar1000(attribute, context_manager):
     @lna_bias_on.setter
     def lna_bias_on(self, value):
         """ Get/Set LNA_BIAS_ON in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_dev_attr_str("lna_bias_on", dac_code, self._ctrl)
 
     @property
@@ -553,7 +553,7 @@ class adar1000(attribute, context_manager):
     @ch1_pa_bias_off.setter
     def ch1_pa_bias_off(self, value):
         """ Get/Set Channel 1 PA_BIAS_OFF in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_attr("voltage0", "pa_bias_off", True, dac_code, self._ctrl)
 
     @property
@@ -565,7 +565,7 @@ class adar1000(attribute, context_manager):
     @ch2_pa_bias_off.setter
     def ch2_pa_bias_off(self, value):
         """ Get/Set Channel 2 PA_BIAS_OFF in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_attr("voltage1", "pa_bias_off", True, dac_code, self._ctrl)
 
     @property
@@ -577,7 +577,7 @@ class adar1000(attribute, context_manager):
     @ch3_pa_bias_off.setter
     def ch3_pa_bias_off(self, value):
         """ Get/Set Channel 3 PA_BIAS_OFF in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_attr("voltage2", "pa_bias_off", True, dac_code, self._ctrl)
 
     @property
@@ -589,7 +589,7 @@ class adar1000(attribute, context_manager):
     @ch4_pa_bias_off.setter
     def ch4_pa_bias_off(self, value):
         """ Get/Set Channel 4 PA_BIAS_OFF in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_attr("voltage3", "pa_bias_off", True, dac_code, self._ctrl)
 
     @property
@@ -601,7 +601,7 @@ class adar1000(attribute, context_manager):
     @ch1_pa_bias_on.setter
     def ch1_pa_bias_on(self, value):
         """ Get/Set Channel 1 PA_BIAS_ON in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_attr("voltage0", "pa_bias_on", True, dac_code, self._ctrl)
 
     @property
@@ -613,7 +613,7 @@ class adar1000(attribute, context_manager):
     @ch2_pa_bias_on.setter
     def ch2_pa_bias_on(self, value):
         """ Get/Set Channel 2 PA_BIAS_ON in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_attr("voltage1", "pa_bias_on", True, dac_code, self._ctrl)
 
     @property
@@ -625,7 +625,7 @@ class adar1000(attribute, context_manager):
     @ch3_pa_bias_on.setter
     def ch3_pa_bias_on(self, value):
         """ Get/Set Channel 3 PA_BIAS_ON in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_attr("voltage2", "pa_bias_on", True, dac_code, self._ctrl)
 
     @property
@@ -637,7 +637,7 @@ class adar1000(attribute, context_manager):
     @ch4_pa_bias_on.setter
     def ch4_pa_bias_on(self, value):
         """ Get/Set Channel 4 PA_BIAS_ON in voltage """
-        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
         self._set_iio_attr("voltage3", "pa_bias_on", True, dac_code, self._ctrl)
 
     @property
@@ -1058,6 +1058,35 @@ class adar1000(attribute, context_manager):
 
         self._set_iio_attr("voltage0", "bias_set_load", output, state, self._ctrl)
 
+    def _save_beam(self, rx_or_tx, channel, state, attenuator, gain, phase):
+        """Save a beam to a memory position
+
+        parameters:
+            rx_or_tx: string
+                String indicating whether to load an Rx or Tx beam state. Valid options are "rx" and "tx"
+            channel: int
+                Channel number to save (1-4)
+            state: int
+                State number to save. Valid options are 0 to 120
+            attenuator: bool
+                Attenuator state for the beam position. True means the attenuator is in place.
+            gain: int
+                Gain value for the beam position. Valid settings are 0 to 127.
+            phase: float
+                Phase value for the beam position.
+        """
+
+        if rx_or_tx.lower() == "rx":
+            output = False
+        else:
+            output = True
+
+        save_string = f"{state}, {attenuator}, {gain}, {phase}"
+
+        self._set_iio_attr(
+            f"voltage{channel - 1}", "beam_pos_save", output, save_string, self._ctrl
+        )
+
     def _sequence_start(self, rx_or_tx, state):
         """Set the sequencer's start position
 
@@ -1149,6 +1178,130 @@ class adar1000(attribute, context_manager):
     def reset(self):
         """ Reset ADAR1000 to default settings """
         self._set_iio_dev_attr_str("reset", "1", self._ctrl)
+
+    def save_rx_beam(self, channel, state, attenuator, gain, phase):
+        """Save a beam to an Rx memory position
+
+        parameters:
+            channel: int
+                Channel number to save (1-4)
+            state: int
+                State number to save. Valid options are 0 to 120
+            attenuator: bool
+                Attenuator state for the beam position. True means the attenuator is in place.
+            gain: int
+                Gain value for the beam position. Valid settings are 0 to 127.
+            phase: float
+                Phase value for the beam position.
+        """
+        self._save_beam("rx", channel, state, attenuator, gain, phase)
+
+    def save_rx_bias(
+        self,
+        state,
+        lna_bias_off,
+        lna_bias_on,
+        rx_vga_vm_bias_current,
+        rx_lna_bias_current,
+    ):
+        """Save a bias setting to an Rx memory position
+
+        parameters:
+            state: int
+                State number to save. Valid options are 1 to 7
+            lna_bias_off: float
+                LNA_BIAS_OFF voltage
+            lna_bias_on: float
+                LNA_BIAS_ON voltage
+            rx_vga_vm_bias_current: int
+                Bias current setting for the Rx VGA and Vector Modulator
+            rx_lna_bias_current: int
+                Bias current setting for the Rx LNA
+        """
+
+        # Convert the LNA bias settings to dac codes:
+        lna_off_dac_code = lna_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        lna_on_dac_code = lna_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
+
+        save_string = f"{state}, {lna_off_dac_code}, {lna_on_dac_code}, {rx_vga_vm_bias_current}, {rx_lna_bias_current}"
+
+        self._set_iio_attr("voltage0", "bias_set_save", False, save_string, self._ctrl)
+
+    def save_tx_beam(self, channel, state, attenuator, gain, phase):
+        """Save a beam to a Tx memory position
+
+        parameters:
+            channel: int
+                Channel number to save (1-4)
+            state: int
+                State number to save. Valid options are 0 to 120
+            attenuator: bool
+                Attenuator state for the beam position. True means the attenuator is in place.
+            gain: int
+                Gain value for the beam position. Valid settings are 0 to 127.
+            phase: float
+                Phase value for the beam position.
+        """
+        self._save_beam("tx", channel, state, attenuator, gain, phase)
+
+    def save_tx_bias(
+        self,
+        state,
+        pa1_bias_off,
+        pa2_bias_off,
+        pa3_bias_off,
+        pa4_bias_off,
+        pa1_bias_on,
+        pa2_bias_on,
+        pa3_bias_on,
+        pa4_bias_on,
+        tx_vga_vm_bias_current,
+        tx_pa_bias_current,
+    ):
+        """Save a bias setting to a Tx memory position
+
+        parameters:
+            state: int
+                State number to save. Valid options are 1 to 7
+            pa1_bias_off: float
+                PA1_BIAS_OFF voltage
+            pa2_bias_off: float
+                PA2_BIAS_OFF voltage
+            pa3_bias_off: float
+                PA3_BIAS_OFF voltage
+            pa4_bias_off: float
+                PA4_BIAS_OFF voltage
+            pa1_bias_on: float
+                PA1_BIAS_ON voltage
+            pa2_bias_on: float
+                PA2_BIAS_ON voltage
+            pa3_bias_on: float
+                PA3_BIAS_ON voltage
+            pa4_bias_on: float
+                PA4_BIAS_ON voltage
+            tx_vga_vm_bias_current: int
+                Bias current setting for the Tx VGA and Vector Modulator
+            tx_lna_bias_current: int
+                Bias current setting for the Tx PA
+        """
+
+        # Convert the PA bias settings to dac codes:
+        pa1_off_dac_code = pa1_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        pa2_off_dac_code = pa2_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        pa3_off_dac_code = pa3_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        pa4_off_dac_code = pa4_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        pa1_on_dac_code = pa1_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        pa2_on_dac_code = pa2_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        pa3_on_dac_code = pa3_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        pa4_on_dac_code = pa4_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
+
+        save_string = (
+            f"{state}, {pa1_off_dac_code}, {pa2_off_dac_code}, {pa3_off_dac_code}, {pa4_off_dac_code}, "
+            f"{pa1_on_dac_code}, {pa2_on_dac_code}, {pa3_on_dac_code}, {pa4_on_dac_code}, {tx_vga_vm_bias_current}, "
+            f"{tx_pa_bias_current}"
+        )
+
+        self._set_iio_attr("voltage0", "bias_set_save", True, save_string, self._ctrl)
 
 
 class adar1000_array(context_manager):
