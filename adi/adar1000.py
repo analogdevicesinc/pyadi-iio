@@ -53,6 +53,7 @@ class adar1000(attribute, context_manager):
     """
 
     _device_name = ""
+    _BIAS_CODE_TO_VOLTAGE_SCALE = -0.018824
 
     def __init__(self, uri="", chip_id="csb1_chip1", context_handle=None):
 
@@ -96,6 +97,16 @@ class adar1000(attribute, context_manager):
     """ Device attributes """
 
     @property
+    def beam_mem_enable(self):
+        """ Get/Set enable bit for RAM control vs. SPI control of the beam state """
+        return bool(self._get_iio_dev_attr("beam_mem_enable", self._ctrl))
+
+    @beam_mem_enable.setter
+    def beam_mem_enable(self, value):
+        """ Get/Set enable bit for RAM control vs. SPI control of the beam state """
+        self._set_iio_dev_attr_str("beam_mem_enable", int(value), self._ctrl)
+
+    @property
     def bias_dac_enable(self):
         """ Get/Set enable for bias DACs """
         return bool(self._get_iio_dev_attr("bias_enable", self._ctrl))
@@ -129,6 +140,32 @@ class adar1000(attribute, context_manager):
             self._set_iio_dev_attr_str("bias_ctrl", 0, self._ctrl)
         else:
             raise ValueError('bias_dac_mode should be "toggle" or "on"')
+
+    @property
+    def bias_mem_enable(self):
+        """ Get/Set enable bit for RAM control vs. SPI control of the bias state """
+        return bool(self._get_iio_dev_attr("bias_mem_enable", self._ctrl))
+
+    @bias_mem_enable.setter
+    def bias_mem_enable(self, value):
+        """ Get/Set enable bit for RAM control vs. SPI control of the bias state """
+        self._set_iio_dev_attr_str("bias_mem_enable", int(value), self._ctrl)
+
+    @property
+    def common_mem_enable(self):
+        """
+        Get/Set the CHX_RAM_BYPASS bits to use either a common beam state for all channels set by registers 0x39
+        and 0x3A, or individual beam states set by registers 0x3D to 0x44.
+        """
+        return bool(self._get_iio_dev_attr("common_mem_enable", self._ctrl))
+
+    @common_mem_enable.setter
+    def common_mem_enable(self, value):
+        """
+        Get/Set the CHX_RAM_BYPASS bits to use either a common beam state for all channels set by registers 0x39
+        and 0x3A, or individual beam states set by registers 0x3D to 0x44.
+        """
+        self._set_iio_dev_attr_str("bias_enable", int(value), self._ctrl)
 
     @property
     def external_tr_pin(self):
@@ -167,23 +204,27 @@ class adar1000(attribute, context_manager):
 
     @property
     def lna_bias_off(self):
-        """ Get/Set LNA_BIAS_OFF setting """
-        return self._get_iio_dev_attr("lna_bias_off", self._ctrl)
+        """ Get/Set LNA_BIAS_OFF in voltage """
+        dac_code = self._get_iio_dev_attr("lna_bias_off", self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @lna_bias_off.setter
     def lna_bias_off(self, value):
-        """ Get/Set LNA_BIAS_OFF setting """
-        self._set_iio_dev_attr_str("lna_bias_off", value, self._ctrl)
+        """ Get/Set LNA_BIAS_OFF in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_dev_attr_str("lna_bias_off", dac_code, self._ctrl)
 
     @property
     def lna_bias_on(self):
-        """ Get/Set LNA_BIAS_ON setting """
-        return self._get_iio_dev_attr("lna_bias_on", self._ctrl)
+        """ Get/Set LNA_BIAS_ON in voltage """
+        dac_code = self._get_iio_dev_attr("lna_bias_on", self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @lna_bias_on.setter
     def lna_bias_on(self, value):
-        """ Get/Set LNA_BIAS_ON setting """
-        self._set_iio_dev_attr_str("lna_bias_on", value, self._ctrl)
+        """ Get/Set LNA_BIAS_ON in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_dev_attr_str("lna_bias_on", dac_code, self._ctrl)
 
     @property
     def lna_bias_out_enable(self):
@@ -488,83 +529,147 @@ class adar1000(attribute, context_manager):
 
     @property
     def ch1_pa_bias_off(self):
-        """ Get/Set Channel 1 PA_BIAS_OFF """
-        return self._get_iio_attr("voltage0", "pa_bias_off", True, self._ctrl)
+        """ Get/Set Channel 1 PA_BIAS_OFF in voltage """
+        dac_code = self._get_iio_attr("voltage0", "pa_bias_off", True, self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @ch1_pa_bias_off.setter
     def ch1_pa_bias_off(self, value):
-        """ Get/Set Channel 1 PA_BIAS_OFF """
-        self._set_iio_attr("voltage0", "pa_bias_off", True, value, self._ctrl)
+        """ Get/Set Channel 1 PA_BIAS_OFF in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_attr("voltage0", "pa_bias_off", True, dac_code, self._ctrl)
 
     @property
     def ch2_pa_bias_off(self):
-        """ Get/Set Channel 2 PA_BIAS_OFF """
-        return self._get_iio_attr("voltage1", "pa_bias_off", True, self._ctrl)
+        """ Get/Set Channel 2 PA_BIAS_OFF in voltage """
+        dac_code = self._get_iio_attr("voltage1", "pa_bias_off", True, self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @ch2_pa_bias_off.setter
     def ch2_pa_bias_off(self, value):
-        """ Get/Set Channel 2 PA_BIAS_OFF """
-        self._set_iio_attr("voltage1", "pa_bias_off", True, value, self._ctrl)
+        """ Get/Set Channel 2 PA_BIAS_OFF in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_attr("voltage1", "pa_bias_off", True, dac_code, self._ctrl)
 
     @property
     def ch3_pa_bias_off(self):
-        """ Get/Set Channel 3 PA_BIAS_OFF """
-        return self._get_iio_attr("voltage2", "pa_bias_off", True, self._ctrl)
+        """ Get/Set Channel 3 PA_BIAS_OFF in voltage """
+        dac_code = self._get_iio_attr("voltage2", "pa_bias_off", True, self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @ch3_pa_bias_off.setter
     def ch3_pa_bias_off(self, value):
-        """ Get/Set Channel 3 PA_BIAS_OFF """
-        self._set_iio_attr("voltage2", "pa_bias_off", True, value, self._ctrl)
+        """ Get/Set Channel 3 PA_BIAS_OFF in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_attr("voltage2", "pa_bias_off", True, dac_code, self._ctrl)
 
     @property
     def ch4_pa_bias_off(self):
-        """ Get/Set Channel 4 PA_BIAS_OFF """
-        return self._get_iio_attr("voltage3", "pa_bias_off", True, self._ctrl)
+        """ Get/Set Channel 4 PA_BIAS_OFF in voltage """
+        dac_code = self._get_iio_attr("voltage3", "pa_bias_off", True, self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @ch4_pa_bias_off.setter
     def ch4_pa_bias_off(self, value):
-        """ Get/Set Channel 4 PA_BIAS_OFF """
-        self._set_iio_attr("voltage3", "pa_bias_off", True, value, self._ctrl)
+        """ Get/Set Channel 4 PA_BIAS_OFF in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_attr("voltage3", "pa_bias_off", True, dac_code, self._ctrl)
 
     @property
     def ch1_pa_bias_on(self):
-        """ Get/Set Channel 1 PA_BIAS_ON """
-        return self._get_iio_attr("voltage0", "pa_bias_on", True, self._ctrl)
+        """ Get/Set Channel 1 PA_BIAS_ON in voltage """
+        dac_code = self._get_iio_attr("voltage0", "pa_bias_on", True, self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @ch1_pa_bias_on.setter
     def ch1_pa_bias_on(self, value):
-        """ Get/Set Channel 1 PA_BIAS_ON """
-        self._set_iio_attr("voltage0", "pa_bias_on", True, value, self._ctrl)
+        """ Get/Set Channel 1 PA_BIAS_ON in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_attr("voltage0", "pa_bias_on", True, dac_code, self._ctrl)
 
     @property
     def ch2_pa_bias_on(self):
-        """ Get/Set Channel 2 PA_BIAS_ON """
-        return self._get_iio_attr("voltage1", "pa_bias_on", True, self._ctrl)
+        """ Get/Set Channel 2 PA_BIAS_ON in voltage """
+        dac_code = self._get_iio_attr("voltage1", "pa_bias_on", True, self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @ch2_pa_bias_on.setter
     def ch2_pa_bias_on(self, value):
-        """ Get/Set Channel 2 PA_BIAS_ON """
-        self._set_iio_attr("voltage1", "pa_bias_on", True, value, self._ctrl)
+        """ Get/Set Channel 2 PA_BIAS_ON in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_attr("voltage1", "pa_bias_on", True, dac_code, self._ctrl)
 
     @property
     def ch3_pa_bias_on(self):
-        """ Get/Set Channel 3 PA_BIAS_ON """
-        return self._get_iio_attr("voltage2", "pa_bias_on", True, self._ctrl)
+        """ Get/Set Channel 3 PA_BIAS_ON in voltage """
+        dac_code = self._get_iio_attr("voltage2", "pa_bias_on", True, self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @ch3_pa_bias_on.setter
     def ch3_pa_bias_on(self, value):
-        """ Get/Set Channel 3 PA_BIAS_ON """
-        self._set_iio_attr("voltage2", "pa_bias_on", True, value, self._ctrl)
+        """ Get/Set Channel 3 PA_BIAS_ON in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_attr("voltage2", "pa_bias_on", True, dac_code, self._ctrl)
 
     @property
     def ch4_pa_bias_on(self):
-        """ Get/Set Channel 4 PA_BIAS_ON """
-        return self._get_iio_attr("voltage3", "pa_bias_on", True, self._ctrl)
+        """ Get/Set Channel 4 PA_BIAS_ON in voltage """
+        dac_code = self._get_iio_attr("voltage3", "pa_bias_on", True, self._ctrl)
+        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
     @ch4_pa_bias_on.setter
     def ch4_pa_bias_on(self, value):
-        """ Get/Set Channel 4 PA_BIAS_ON """
-        self._set_iio_attr("voltage3", "pa_bias_on", True, value, self._ctrl)
+        """ Get/Set Channel 4 PA_BIAS_ON in voltage """
+        dac_code = value / self._BIAS_CODE_TO_VOLTAGE_SCALE
+        self._set_iio_attr("voltage3", "pa_bias_on", True, dac_code, self._ctrl)
+
+    @property
+    def ch1_rx_attenuator(self):
+        """ Get/Set Channel 1 Rx Attenuator state """
+        return bool(
+            1 - self._get_iio_attr("voltage0", "attenuation", False, self._ctrl)
+        )
+
+    @ch1_rx_attenuator.setter
+    def ch1_rx_attenuator(self, value):
+        """ Get/Set Channel 1 Rx Attenuator state """
+        self._set_iio_attr("voltage0", "attenuation", False, 1 - int(value), self._ctrl)
+
+    @property
+    def ch2_rx_attenuator(self):
+        """ Get/Set Channel 2 Rx Attenuator state """
+        return bool(
+            1 - self._get_iio_attr("voltage1", "attenuation", False, self._ctrl)
+        )
+
+    @ch2_rx_attenuator.setter
+    def ch2_rx_attenuator(self, value):
+        """ Get/Set Channel 2 Rx Attenuator state """
+        self._set_iio_attr("voltage1", "attenuation", False, 1 - int(value), self._ctrl)
+
+    @property
+    def ch3_rx_attenuator(self):
+        """ Get/Set Channel 3 Rx Attenuator state """
+        return bool(
+            1 - self._get_iio_attr("voltage2", "attenuation", False, self._ctrl)
+        )
+
+    @ch3_rx_attenuator.setter
+    def ch3_rx_attenuator(self, value):
+        """ Get/Set Channel 3 Rx Attenuator state """
+        self._set_iio_attr("voltage2", "attenuation", False, 1 - int(value), self._ctrl)
+
+    @property
+    def ch4_rx_attenuator(self):
+        """ Get/Set Channel 4 Rx Attenuator state """
+        return bool(
+            1 - self._get_iio_attr("voltage3", "attenuation", False, self._ctrl)
+        )
+
+    @ch4_rx_attenuator.setter
+    def ch4_rx_attenuator(self, value):
+        """ Get/Set Channel 4 Rx Attenuator state """
+        self._set_iio_attr("voltage3", "attenuation", False, 1 - int(value), self._ctrl)
 
     @property
     def ch1_rx_gain(self):
@@ -685,6 +790,46 @@ class adar1000(attribute, context_manager):
     def ch4_rx_powerdown(self, value):
         """ Get/Set Channel 4 Rx Powerdown """
         self._set_iio_attr("voltage3", "powerdown", False, int(value), self._ctrl)
+
+    @property
+    def ch1_tx_attenuator(self):
+        """ Get/Set Channel 1 Tx Attenuator state """
+        return bool(1 - self._get_iio_attr("voltage0", "attenuation", True, self._ctrl))
+
+    @ch1_tx_attenuator.setter
+    def ch1_tx_attenuator(self, value):
+        """ Get/Set Channel 1 Tx Attenuator state """
+        self._set_iio_attr("voltage0", "attenuation", True, 1 - int(value), self._ctrl)
+
+    @property
+    def ch2_tx_attenuator(self):
+        """ Get/Set Channel 2 Tx Attenuator state """
+        return bool(1 - self._get_iio_attr("voltage1", "attenuation", True, self._ctrl))
+
+    @ch2_tx_attenuator.setter
+    def ch2_tx_attenuator(self, value):
+        """ Get/Set Channel 2 Tx Attenuator state """
+        self._set_iio_attr("voltage1", "attenuation", True, 1 - int(value), self._ctrl)
+
+    @property
+    def ch3_tx_attenuator(self):
+        """ Get/Set Channel 3 Tx Attenuator state """
+        return bool(1 - self._get_iio_attr("voltage2", "attenuation", True, self._ctrl))
+
+    @ch3_tx_attenuator.setter
+    def ch3_tx_attenuator(self, value):
+        """ Get/Set Channel 3 Tx Attenuator state """
+        self._set_iio_attr("voltage2", "attenuation", True, 1 - int(value), self._ctrl)
+
+    @property
+    def ch4_tx_attenuator(self):
+        """ Get/Set Channel 4 Tx Attenuator state """
+        return bool(1 - self._get_iio_attr("voltage3", "attenuation", True, self._ctrl))
+
+    @ch4_tx_attenuator.setter
+    def ch4_tx_attenuator(self, value):
+        """ Get/Set Channel 4 Tx Attenuator state """
+        self._set_iio_attr("voltage3", "attenuation", True, 1 - int(value), self._ctrl)
 
     @property
     def ch1_tx_gain(self):
@@ -935,6 +1080,14 @@ class adar1000(attribute, context_manager):
     def generate_clocks(self):
         """ Generate CLK cycles before pulsing RX_LOAD or TX_LOAD """
         self._set_iio_dev_attr_str("gen_clk_cycles", "", self._ctrl)
+
+    def latch_rx_settings(self):
+        """ Latch in new Gain/Phase settings for the Rx """
+        self._set_iio_dev_attr_str("rx_load_spi", 1, self._ctrl)
+
+    def latch_tx_settings(self):
+        """ Latch in new Gain/Phase settings for the Tx """
+        self._set_iio_dev_attr_str("tx_load_spi", 1, self._ctrl)
 
     def load_rx_beam(self, channel, state):
         """Load an Rx beam from a memory position
