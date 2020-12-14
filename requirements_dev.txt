@@ -9,3 +9,4 @@ scipy
 pytest-cov
 coveralls
 pytest-libiio
+bump2version
