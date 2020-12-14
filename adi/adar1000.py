@@ -205,6 +205,22 @@ class adar1000(attribute, context_manager):
             )
 
         @property
+        def rx_beam_state(self):
+            """Get/Set the Channel Rx beam position used by RAM when
+            all channels point to individual states. Valid states are 0-120."""
+            return self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "beam_pos_load", False
+            )
+
+        @rx_beam_state.setter
+        def rx_beam_state(self, value):
+            """Get/Set the Channel Rx beam position used by RAM when
+            all channels point to individual states. Valid states are 0-120."""
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "beam_pos_load", False, value
+            )
+
+        @property
         def rx_enable(self):
             """ Get/Set the Rx enable state for the associated channel """
             return bool(
@@ -267,6 +283,22 @@ class adar1000(attribute, context_manager):
             )
 
         @property
+        def tx_beam_state(self):
+            """Get/Set the Channel Tx beam position used by RAM when
+            all channels point to individual states. Valid states are 0-120."""
+            return self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "beam_pos_load", True
+            )
+
+        @tx_beam_state.setter
+        def tx_beam_state(self, value):
+            """Get/Set the Channel Tx beam position used by RAM when
+            all channels point to individual states. Valid states are 0-120."""
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "beam_pos_load", True, value
+            )
+
+        @property
         def tx_enable(self):
             """ Get/Set the Tx enable state for the associated channel """
             return bool(
@@ -313,28 +345,6 @@ class adar1000(attribute, context_manager):
 
         """ Public Methods """
 
-        def load_rx_beam(self, state):
-            """Load an Rx beam from a memory position
-
-            parameters:
-                state: int
-                    State number to load. Valid options are 0 to 120
-            """
-            self.adar1000_parent._set_iio_attr(
-                f"voltage{self.adar1000_channel}", "beam_pos_load", False, state
-            )
-
-        def load_tx_beam(self, state):
-            """Load a Tx beam from a memory position
-
-            parameters:
-                state: int
-                    State number to load. Valid options are 0 to 120
-            """
-            self.adar1000_parent._set_iio_attr(
-                f"voltage{self.adar1000_channel}", "beam_pos_load", True, state
-            )
-
         def save_rx_beam(self, state, attenuator, gain, phase):
             """Save a beam to an Rx memory position
 
@@ -348,7 +358,7 @@ class adar1000(attribute, context_manager):
                 phase: float
                     Phase value for the beam position.
             """
-            save_string = f"{state}, {attenuator}, {gain}, {phase}"
+            save_string = f"{state}, {1 - int(attenuator)}, {gain}, {phase}"
 
             self.adar1000_parent._set_iio_attr(
                 f"voltage{self.adar1000_channel}", "beam_pos_save", False, save_string
@@ -367,7 +377,7 @@ class adar1000(attribute, context_manager):
                 phase: float
                     Phase value for the beam position.
             """
-            save_string = f"{state}, {attenuator}, {gain}, {phase}"
+            save_string = f"{state}, {1 - int(attenuator)}, {gain}, {phase}"
 
             self.adar1000_parent._set_iio_attr(
                 f"voltage{self.adar1000_channel}", "beam_pos_save", True, save_string
@@ -552,6 +562,30 @@ class adar1000(attribute, context_manager):
         self._set_iio_dev_attr_str("bias_enable", int(value), self._ctrl)
 
     @property
+    def common_rx_beam_state(self):
+        """Get/Set the Rx beam position used by RAM when all
+        channels point to a common state. Valid states are 0-120."""
+        return self._get_iio_dev_attr_str("static_rx_beam_pos_load", self._ctrl)
+
+    @common_rx_beam_state.setter
+    def common_rx_beam_state(self, value):
+        """Get/Set the Rx beam position used by RAM when all
+        channels point to a common state. Valid states are 0-120."""
+        self._set_iio_dev_attr_str("static_rx_beam_pos_load", value, self._ctrl)
+
+    @property
+    def common_tx_beam_state(self):
+        """Get/Set the Tx beam position used by RAM when all
+        channels point to a common state. Valid states are 0-120."""
+        return self._get_iio_dev_attr_str("static_tx_beam_pos_load", self._ctrl)
+
+    @common_tx_beam_state.setter
+    def common_tx_beam_state(self, value):
+        """Get/Set the Tx beam position used by RAM when all
+        channels point to a common state. Valid states are 0-120."""
+        self._set_iio_dev_attr_str("static_tx_beam_pos_load", value, self._ctrl)
+
+    @property
     def external_tr_pin(self):
         """ Get/Set which external T/R switch driver is used ("positive" = TR_SW_POS, "negative" = TR_SW_NEG) """
         value = bool(self._get_iio_dev_attr("sw_drv_tr_mode_sel", self._ctrl))
@@ -641,6 +675,16 @@ class adar1000(attribute, context_manager):
     def pol_switch_enable(self, value):
         """ Get/Set polarity switch driver enable state """
         self._set_iio_dev_attr_str("sw_drv_en_pol", int(value), self._ctrl)
+
+    @property
+    def rx_bias_state(self):
+        """ Get/Set the Rx bias memory position when loading from RAM. Valid states are 1-7. """
+        return self._get_iio_attr("voltage0", "bias_set_load", False, self._ctrl)
+
+    @rx_bias_state.setter
+    def rx_bias_state(self, value):
+        """ Get/Set the Rx bias memory position when loading from RAM. Valid states are 1-7. """
+        self._set_iio_attr("voltage0", "bias_set_load", False, value, self._ctrl)
 
     @property
     def rx_enable(self):
@@ -808,6 +852,16 @@ class adar1000(attribute, context_manager):
     def tr_switch_enable(self, value):
         """ Get/Set T/R switch driver enable state """
         self._set_iio_dev_attr_str("sw_drv_en_tr", int(value), self._ctrl)
+
+    @property
+    def tx_bias_state(self):
+        """ Get/Set the Tx bias memory position when loading from RAM. Valid states are 1-7. """
+        return self._get_iio_attr("voltage0", "bias_set_load", True, self._ctrl)
+
+    @tx_bias_state.setter
+    def tx_bias_state(self, value):
+        """ Get/Set the Tx bias memory position when loading from RAM. Valid states are 1-7. """
+        self._set_iio_attr("voltage0", "bias_set_load", True, value, self._ctrl)
 
     @property
     def tx_enable(self):
@@ -993,46 +1047,6 @@ class adar1000(attribute, context_manager):
     def latch_tx_settings(self):
         """ Latch in new Gain/Phase settings for the Tx """
         self._set_iio_dev_attr_str("tx_load_spi", 1, self._ctrl)
-
-    def load_common_rx_beam(self, state):
-        """Load a common Rx beam position from RAM
-
-        parameters:
-            state: int
-                State number to load. Valid options are 0 to 120
-        """
-
-        self._set_iio_dev_attr_str("static_rx_beam_pos", state, self._ctrl)
-
-    def load_common_tx_beam(self, state):
-        """Load a common Tx beam position from RAM
-
-        parameters:
-            state: int
-                State number to load. Valid options are 0 to 120
-        """
-
-        self._set_iio_dev_attr_str("static_tx_beam_pos", state, self._ctrl)
-
-    def load_rx_bias(self, state):
-        """Load an Rx bias from a memory position
-
-        parameters:
-            state: int
-                State number to load. Valid options are 1 to 7
-        """
-
-        self._set_iio_attr("voltage0", "bias_set_load", False, state, self._ctrl)
-
-    def load_tx_bias(self, state):
-        """Load a Tx bias from a memory position
-
-        parameters:
-            state: int
-                State number to load. Valid options are 1 to 7
-        """
-
-        self._set_iio_attr("voltage0", "bias_set_load", True, state, self._ctrl)
 
     def reset(self):
         """ Reset ADAR1000 to default settings """
