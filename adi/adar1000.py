@@ -31,6 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from math import pi, sin
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
@@ -41,6 +43,8 @@ class adar1000(attribute, context_manager):
     parameters:
         uri: type=string
             URI of IIO context with ADAR1000(s)
+        context: type=iio.Context
+            IIO Context for the device. Only required if using adar1000_array.
         chip_id: type=string
             String identifying desired chip select and hardware ID for the
             ADAR1000. This string is the label coinciding with each chip
@@ -48,25 +52,348 @@ class adar1000(attribute, context_manager):
             The csb line can be any number depending on how many are used in the
             system. The chip number will typically be 1-4 because each CSB line
             can control up to four ADAR1000s.
-        context_handle: type=iio.Context
-            IIO context handle. Not used unless creating an array of chips.
+        device_number: type=int
+            Integer indicating the device number in the array
+        array_element_map: type=list[list[int]]
+            List with the map of where the ADAR1000 channels are in the array.
+            Each entry in the map represents a row of array channels referenced
+            by element number. For example, a map:
+                | [[1, 5, 9, 13],
+                |   [2, 6, 10, 14],
+                |   [3, 7, 11, 15],
+                |   [4, 8, 12, 16]]
+            represents an array of 16 elements in a square array.
+        channel_element_map: type=list[int]
+            List of integers relating the array element numbers to the channels
+            of the ADAR1000. Each number in the list is the element number in the
+            larger array, in order of the ADAR1000 channels. For example, a list
+            [10, 14, 13, 9] indicates that the ADAR1000's channels are the
+            following elements in the full array:
+                | Channel 1: Element # 10
+                | Channel 2: Element # 14
+                | Channel 3: Element # 13
+                | Channel 4: Element # 9
     """
 
     _device_name = ""
     _BIAS_CODE_TO_VOLTAGE_SCALE = -0.018824
 
-    def __init__(self, uri="", chip_id="csb1_chip1", context_handle=None):
+    class adar1000_channel:
+        """Class for each channel of the ADAR1000. This class is not meant
+        to be instantiated directly. adar1000 objects will create their
+        own handles of this class, one for each channel
+
+        parameters:
+            adar1000_parent: type=adar1000
+                Parent ADAR1000 instance
+            adar_channel: type=int
+                Channel number of the parent corresponding to this channel
+            array_element: type=int
+                Element number of the array corresponding to this channel
+            row: int
+                Row number in the array
+            column: int
+                Column number in the array
+        """
+
+        def __init__(self, adar_parent, adar_channel, array_element, row, column):
+            self._adar1000_parent = adar_parent
+            self._adar1000_channel = adar_channel
+            self._array_element_number = array_element
+            self._row = row
+            self._column = column
+
+        def __repr__(self):
+            """ Representation of the ADAR1000 element class """
+            return f"ADAR1000 array element #{self.array_element_number}"
+
+        """ Channel Properties """
+
+        @property
+        def adar1000_channel(self):
+            return self._adar1000_channel
+
+        @property
+        def adar1000_parent(self):
+            return self._adar1000_parent
+
+        @property
+        def array_element_number(self):
+            """ Element number in the array """
+            return self._array_element_number
+
+        @property
+        def column(self):
+            """ Element column number in the array """
+            return self._column
+
+        @property
+        def detector_enable(self):
+            """ Get/Set the detector enable bit for the associated channel """
+            return bool(
+                self.adar1000_parent._get_iio_attr(
+                    f"voltage{self.adar1000_channel}", "detector_en", True
+                )
+            )
+
+        @detector_enable.setter
+        def detector_enable(self, value):
+            """ Get/Set Channel 1 detector enable bit """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "detector_en", True, int(value)
+            )
+
+        @property
+        def detector_power(self):
+            """ Get the detector power reading for the associated channel """
+            return self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "raw", True
+            )
+
+        @property
+        def pa_bias_off(self):
+            """ Get/Set PA_BIAS_OFF in voltage for the associated channel """
+            dac_code = self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "pa_bias_off", True
+            )
+            return dac_code * self.adar1000_parent._BIAS_CODE_TO_VOLTAGE_SCALE
+
+        @pa_bias_off.setter
+        def pa_bias_off(self, value):
+            """ Get/Set PA_BIAS_OFF in voltage for the associated channel """
+            dac_code = int(value / self.adar1000_parent._BIAS_CODE_TO_VOLTAGE_SCALE)
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "pa_bias_off", True, dac_code
+            )
+
+        @property
+        def pa_bias_on(self):
+            """ Get/Set PA_BIAS_ON in voltage for the associated channel """
+            dac_code = self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "pa_bias_on", True
+            )
+            return dac_code * self.adar1000_parent._BIAS_CODE_TO_VOLTAGE_SCALE
+
+        @pa_bias_on.setter
+        def pa_bias_on(self, value):
+            """ Get/Set PA_BIAS_ON in voltage for the associated channel """
+            dac_code = int(value / self.adar1000_parent._BIAS_CODE_TO_VOLTAGE_SCALE)
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "pa_bias_on", True, dac_code
+            )
+
+        @property
+        def row(self):
+            """ Element row number in the array """
+            return self._row
+
+        @property
+        def rx_attenuator(self):
+            """ Get/Set Rx Attenuator state for the associated channel """
+            return bool(
+                1
+                - self.adar1000_parent._get_iio_attr(
+                    f"voltage{self.adar1000_channel}", "attenuation", False
+                )
+            )
+
+        @rx_attenuator.setter
+        def rx_attenuator(self, value):
+            """ Get/Set Rx Attenuator state for the associated channel """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "attenuation", False, 1 - int(value)
+            )
+
+        @property
+        def rx_enable(self):
+            """ Get/Set the Rx enable state for the associated channel """
+            return bool(
+                1
+                - self.adar1000_parent._get_iio_attr(
+                    f"voltage{self.adar1000_channel}", "powerdown", False
+                )
+            )
+
+        @rx_enable.setter
+        def rx_enable(self, value):
+            """ Get/Set the Rx enable state for the associated channel """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "powerdown", False, 1 - int(value)
+            )
+
+        @property
+        def rx_gain(self):
+            """ Get/Set the Rx Gain for the associated channel """
+            return self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "hardwaregain", False
+            )
+
+        @rx_gain.setter
+        def rx_gain(self, value):
+            """ Get/Set the Rx Gain for the associated channel """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "hardwaregain", False, value
+            )
+
+        @property
+        def rx_phase(self):
+            """ Get/Set the Rx Phase for the associated channel """
+            return self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "phase", False
+            )
+
+        @rx_phase.setter
+        def rx_phase(self, value):
+            """ Get/Set the Rx Phase for the associated channel """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "phase", False, value
+            )
+
+        @property
+        def tx_attenuator(self):
+            """ Get/Set the Tx Attenuator state for the associated channel """
+            return bool(
+                1
+                - self.adar1000_parent._get_iio_attr(
+                    f"voltage{self.adar1000_channel}", "attenuation", True
+                )
+            )
+
+        @tx_attenuator.setter
+        def tx_attenuator(self, value):
+            """ Get/Set the Tx Attenuator state for the associated channel """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "attenuation", True, 1 - int(value)
+            )
+
+        @property
+        def tx_enable(self):
+            """ Get/Set the Tx enable state for the associated channel """
+            return bool(
+                1
+                - self.adar1000_parent._get_iio_attr(
+                    f"voltage{self.adar1000_channel}", "powerdown", True
+                )
+            )
+
+        @tx_enable.setter
+        def tx_enable(self, value):
+            """ Get/Set the Tx enable state for the associated channel """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "powerdown", True, 1 - int(value)
+            )
+
+        @property
+        def tx_gain(self):
+            """ Get/Set the Tx Gain for the associated channel """
+            return self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "hardwaregain", True
+            )
+
+        @tx_gain.setter
+        def tx_gain(self, value):
+            """ Get/Set the Tx Gain for the associated channel """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "hardwaregain", True, value
+            )
+
+        @property
+        def tx_phase(self):
+            """ Get/Set the Tx Phase for the associated channel """
+            return self.adar1000_parent._get_iio_attr(
+                f"voltage{self.adar1000_channel}", "phase", True
+            )
+
+        @tx_phase.setter
+        def tx_phase(self, value):
+            """ Get/Set the Tx Phase for the associated channel """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "phase", True, value
+            )
+
+        """ Public Methods """
+
+        def load_rx_beam(self, state):
+            """Load an Rx beam from a memory position
+
+            parameters:
+                state: int
+                    State number to load. Valid options are 0 to 120
+            """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "beam_pos_load", False, state
+            )
+
+        def load_tx_beam(self, state):
+            """Load a Tx beam from a memory position
+
+            parameters:
+                state: int
+                    State number to load. Valid options are 0 to 120
+            """
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "beam_pos_load", True, state
+            )
+
+        def save_rx_beam(self, state, attenuator, gain, phase):
+            """Save a beam to an Rx memory position
+
+            parameters:
+                state: int
+                    State number to save. Valid options are 0 to 120
+                attenuator: bool
+                    Attenuator state for the beam position. True means the attenuator is in place.
+                gain: int
+                    Gain value for the beam position. Valid settings are 0 to 127.
+                phase: float
+                    Phase value for the beam position.
+            """
+            save_string = f"{state}, {attenuator}, {gain}, {phase}"
+
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "beam_pos_save", False, save_string
+            )
+
+        def save_tx_beam(self, state, attenuator, gain, phase):
+            """Save a beam to a Tx memory position
+
+            parameters:
+                state: int
+                    State number to save. Valid options are 0 to 120
+                attenuator: bool
+                    Attenuator state for the beam position. True means the attenuator is in place.
+                gain: int
+                    Gain value for the beam position. Valid settings are 0 to 127.
+                phase: float
+                    Phase value for the beam position.
+            """
+            save_string = f"{state}, {attenuator}, {gain}, {phase}"
+
+            self.adar1000_parent._set_iio_attr(
+                f"voltage{self.adar1000_channel}", "beam_pos_save", True, save_string
+            )
+
+    def __init__(
+        self,
+        uri="",
+        context=None,
+        chip_id="csb1_chip1",
+        device_number=1,
+        array_element_map=None,
+        channel_element_map=None,
+    ):
 
         # Use the given context if possible, otherwise lookup the context
-        if context_handle is not None:
-            self._ctx = context_handle
-        else:
+        if context is None:
             context_manager.__init__(self, uri, self._device_name)
+        else:
+            self._ctx = context
 
         self._ctrl = None
         self._chip_id = chip_id
+        self._array_device_number = device_number
 
-        # Raise an error if the chip_id is a list. Suggest using the array class
+        # Raise an error if the chip_id is an iterable
         if isinstance(chip_id, (list, tuple, set)):
             raise Exception(
                 '"chip_id" can\'t be an iterable. '
@@ -86,15 +413,37 @@ class adar1000(attribute, context_manager):
         if not self._ctrl:
             raise Exception(f"Device not found for {chip_id}")
 
-    @property
-    def chip_id(self):
-        """
-        Chip ID including CSB and hardware address. Of the form "csbX_chipX" where csbX indicates the CSB
-        line for the IC and chipX indicating the hardware address of the chip, 1-4.
-        """
-        return self._chip_id
+        # Determine the row and column numbers for the elements using the maps given
+        element_numbers = channel_element_map
+        element_rows_cols = {}
+        for element_number in element_numbers:
+            for r, row in enumerate(array_element_map):
+                for c, map_value in enumerate(row):
+                    if map_value == element_number:
+                        element_rows_cols[element_number] = (r, c)
 
-    """ Device attributes """
+        # Create the channel instances
+        self._channels = []
+        for i in range(4):
+            element_number = element_numbers[i]
+            row, column = element_rows_cols[element_number]
+            self._channels.append(
+                self.adar1000_channel(self, i, element_number, row, column)
+            )
+
+    def __repr__(self):
+        """ Representation of the ADAR1000 class """
+        return (
+            f"ADAR1000 #{self.array_device_number} controlling array elements:\n"
+            f"\t{', '.join([str(channel.array_element_number) for channel in self.channels])}"
+        )
+
+    """ Device Properties """
+
+    @property
+    def array_device_number(self):
+        """ Device number in the array """
+        return self._array_device_number
 
     @property
     def beam_mem_enable(self):
@@ -152,6 +501,39 @@ class adar1000(attribute, context_manager):
     def bias_mem_enable(self, value):
         """ Get/Set enable bit for RAM control vs. SPI control of the bias state """
         self._set_iio_dev_attr_str("bias_mem_enable", int(value), self._ctrl)
+
+    @property
+    def channel1(self):
+        """ Handle for the ADAR1000's channel 1 object """
+        return self._channels[0]
+
+    @property
+    def channel2(self):
+        """ Handle for the ADAR1000's channel 2 object """
+        return self._channels[1]
+
+    @property
+    def channel3(self):
+        """ Handle for the ADAR1000's channel 3 object """
+        return self._channels[2]
+
+    @property
+    def channel4(self):
+        """ Handle for the ADAR1000's channel 4 object """
+        return self._channels[3]
+
+    @property
+    def channels(self):
+        """ List of the ADAR1000's channels, in order from 1 to 4 """
+        return self._channels
+
+    @property
+    def chip_id(self):
+        """
+        Chip ID including CSB and hardware address. Of the form "csbX_chipX" where csbX indicates the CSB
+        line for the IC and chipX indicating the hardware address of the chip, 1-4.
+        """
+        return self._chip_id
 
     @property
     def common_mem_enable(self):
@@ -215,7 +597,7 @@ class adar1000(attribute, context_manager):
     @lna_bias_off.setter
     def lna_bias_off(self, value):
         """ Get/Set LNA_BIAS_OFF in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = int(value / self._BIAS_CODE_TO_VOLTAGE_SCALE)
         self._set_iio_dev_attr_str("lna_bias_off", dac_code, self._ctrl)
 
     @property
@@ -227,7 +609,7 @@ class adar1000(attribute, context_manager):
     @lna_bias_on.setter
     def lna_bias_on(self, value):
         """ Get/Set LNA_BIAS_ON in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        dac_code = int(value / self._BIAS_CODE_TO_VOLTAGE_SCALE)
         self._set_iio_dev_attr_str("lna_bias_on", dac_code, self._ctrl)
 
     @property
@@ -291,6 +673,26 @@ class adar1000(attribute, context_manager):
         self._set_iio_dev_attr_str("rx_lna_enable", int(value), self._ctrl)
 
     @property
+    def rx_sequencer_start(self):
+        """ Get/Set the Rx Sequencer's starting position """
+        return self._get_iio_attr("voltage0", "sequence_start", False)
+
+    @rx_sequencer_start.setter
+    def rx_sequencer_start(self, value):
+        """ Get/Set the Rx Sequencer's starting position """
+        self._set_iio_attr("voltage0", "sequence_start", False, value)
+
+    @property
+    def rx_sequencer_stop(self):
+        """ Get/Set the Rx Sequencer's ending position """
+        return self._get_iio_attr("voltage0", "sequence_end", False)
+
+    @rx_sequencer_stop.setter
+    def rx_sequencer_stop(self, value):
+        """ Get/Set the Rx Sequencer's ending position """
+        self._set_iio_attr("voltage0", "sequence_end", False, value)
+
+    @property
     def rx_to_tx_delay_1(self):
         """ Get/Set Rx to Tx Delay 1 """
         return self._get_iio_dev_attr("rx_to_tx_delay_1", self._ctrl)
@@ -349,6 +751,11 @@ class adar1000(attribute, context_manager):
     def sequencer_enable(self, value):
         """ Get/Set sequencer enable status """
         self._set_iio_dev_attr_str("sequencer_enable", int(value), self._ctrl)
+
+    @property
+    def temperature(self):
+        """ Get the temperature reading from the device """
+        return self._get_iio_attr("temp0", "raw", False)
 
     @property
     def tr_source(self):
@@ -433,6 +840,26 @@ class adar1000(attribute, context_manager):
         self._set_iio_dev_attr_str("tx_drv_enable", int(value), self._ctrl)
 
     @property
+    def tx_sequencer_start(self):
+        """ Get/Set the Tx Sequencer's starting position """
+        return self._get_iio_attr("voltage0", "sequence_start", True)
+
+    @tx_sequencer_start.setter
+    def tx_sequencer_start(self, value):
+        """ Get/Set the Tx Sequencer's starting position """
+        self._set_iio_attr("voltage0", "sequence_start", True, value)
+
+    @property
+    def tx_sequencer_stop(self):
+        """ Get/Set the Tx Sequencer's ending position """
+        return self._get_iio_attr("voltage0", "sequence_end", True)
+
+    @tx_sequencer_stop.setter
+    def tx_sequencer_stop(self, value):
+        """ Get/Set the Tx Sequencer's ending position """
+        self._set_iio_attr("voltage0", "sequence_end", True, value)
+
+    @property
     def tx_to_rx_delay_1(self):
         """ Get/Set Tx to Rx Delay 1 """
         return self._get_iio_dev_attr("tx_to_rx_delay_1", self._ctrl)
@@ -482,650 +909,82 @@ class adar1000(attribute, context_manager):
         """ Get/Set Tx Vector Modulator enable status """
         self._set_iio_dev_attr_str("tx_vm_enable", int(value), self._ctrl)
 
-    """ Channel attributes """
-
-    @property
-    def ch1_detector_enable(self):
-        """ Get/Set Channel 1 detector enable bit """
-        return bool(self._get_iio_attr("voltage0", "detector_en", True, self._ctrl))
-
-    @ch1_detector_enable.setter
-    def ch1_detector_enable(self, value):
-        """ Get/Set Channel 1 detector enable bit """
-        self._set_iio_attr("voltage0", "detector_en", True, int(value), self._ctrl)
-
-    @property
-    def ch2_detector_enable(self):
-        """ Get/Set Channel 2 detector enable bit """
-        return bool(self._get_iio_attr("voltage1", "detector_en", True, self._ctrl))
-
-    @ch2_detector_enable.setter
-    def ch2_detector_enable(self, value):
-        """ Get/Set Channel 2 detector enable bit """
-        self._set_iio_attr("voltage1", "detector_en", True, int(value), self._ctrl)
-
-    @property
-    def ch3_detector_enable(self):
-        """ Get/Set Channel 3 detector enable bit """
-        return bool(self._get_iio_attr("voltage2", "detector_en", True, self._ctrl))
-
-    @ch3_detector_enable.setter
-    def ch3_detector_enable(self, value):
-        """ Get/Set Channel 3 detector enable bit """
-        self._set_iio_attr("voltage2", "detector_en", True, int(value), self._ctrl)
-
-    @property
-    def ch4_detector_enable(self):
-        """ Get/Set Channel 4 detector enable bit """
-        return bool(self._get_iio_attr("voltage3", "detector_en", True, self._ctrl))
-
-    @ch4_detector_enable.setter
-    def ch4_detector_enable(self, value):
-        """ Get/Set Channel 4 detector enable bit """
-        self._set_iio_attr("voltage3", "detector_en", True, int(value), self._ctrl)
-
-    @property
-    def ch1_detector_power(self):
-        """ Get Channel 1 detector power reading """
-        return self._get_iio_attr("voltage0", "raw", True, self._ctrl)
-
-    @property
-    def ch2_detector_power(self):
-        """ Get Channel 2 detector power reading """
-        return self._get_iio_attr("voltage1", "raw", True, self._ctrl)
-
-    @property
-    def ch3_detector_power(self):
-        """ Get Channel 3 detector power reading """
-        return self._get_iio_attr("voltage2", "raw", True, self._ctrl)
-
-    @property
-    def ch4_detector_power(self):
-        """ Get Channel 4 detector power reading """
-        return self._get_iio_attr("voltage3", "raw", True, self._ctrl)
-
-    @property
-    def ch1_pa_bias_off(self):
-        """ Get/Set Channel 1 PA_BIAS_OFF in voltage """
-        dac_code = self._get_iio_attr("voltage0", "pa_bias_off", True, self._ctrl)
-        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
-
-    @ch1_pa_bias_off.setter
-    def ch1_pa_bias_off(self, value):
-        """ Get/Set Channel 1 PA_BIAS_OFF in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        self._set_iio_attr("voltage0", "pa_bias_off", True, dac_code, self._ctrl)
-
-    @property
-    def ch2_pa_bias_off(self):
-        """ Get/Set Channel 2 PA_BIAS_OFF in voltage """
-        dac_code = self._get_iio_attr("voltage1", "pa_bias_off", True, self._ctrl)
-        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
-
-    @ch2_pa_bias_off.setter
-    def ch2_pa_bias_off(self, value):
-        """ Get/Set Channel 2 PA_BIAS_OFF in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        self._set_iio_attr("voltage1", "pa_bias_off", True, dac_code, self._ctrl)
-
-    @property
-    def ch3_pa_bias_off(self):
-        """ Get/Set Channel 3 PA_BIAS_OFF in voltage """
-        dac_code = self._get_iio_attr("voltage2", "pa_bias_off", True, self._ctrl)
-        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
-
-    @ch3_pa_bias_off.setter
-    def ch3_pa_bias_off(self, value):
-        """ Get/Set Channel 3 PA_BIAS_OFF in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        self._set_iio_attr("voltage2", "pa_bias_off", True, dac_code, self._ctrl)
-
-    @property
-    def ch4_pa_bias_off(self):
-        """ Get/Set Channel 4 PA_BIAS_OFF in voltage """
-        dac_code = self._get_iio_attr("voltage3", "pa_bias_off", True, self._ctrl)
-        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
-
-    @ch4_pa_bias_off.setter
-    def ch4_pa_bias_off(self, value):
-        """ Get/Set Channel 4 PA_BIAS_OFF in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        self._set_iio_attr("voltage3", "pa_bias_off", True, dac_code, self._ctrl)
-
-    @property
-    def ch1_pa_bias_on(self):
-        """ Get/Set Channel 1 PA_BIAS_ON in voltage """
-        dac_code = self._get_iio_attr("voltage0", "pa_bias_on", True, self._ctrl)
-        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
-
-    @ch1_pa_bias_on.setter
-    def ch1_pa_bias_on(self, value):
-        """ Get/Set Channel 1 PA_BIAS_ON in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        self._set_iio_attr("voltage0", "pa_bias_on", True, dac_code, self._ctrl)
-
-    @property
-    def ch2_pa_bias_on(self):
-        """ Get/Set Channel 2 PA_BIAS_ON in voltage """
-        dac_code = self._get_iio_attr("voltage1", "pa_bias_on", True, self._ctrl)
-        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
-
-    @ch2_pa_bias_on.setter
-    def ch2_pa_bias_on(self, value):
-        """ Get/Set Channel 2 PA_BIAS_ON in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        self._set_iio_attr("voltage1", "pa_bias_on", True, dac_code, self._ctrl)
-
-    @property
-    def ch3_pa_bias_on(self):
-        """ Get/Set Channel 3 PA_BIAS_ON in voltage """
-        dac_code = self._get_iio_attr("voltage2", "pa_bias_on", True, self._ctrl)
-        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
-
-    @ch3_pa_bias_on.setter
-    def ch3_pa_bias_on(self, value):
-        """ Get/Set Channel 3 PA_BIAS_ON in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        self._set_iio_attr("voltage2", "pa_bias_on", True, dac_code, self._ctrl)
-
-    @property
-    def ch4_pa_bias_on(self):
-        """ Get/Set Channel 4 PA_BIAS_ON in voltage """
-        dac_code = self._get_iio_attr("voltage3", "pa_bias_on", True, self._ctrl)
-        return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
-
-    @ch4_pa_bias_on.setter
-    def ch4_pa_bias_on(self, value):
-        """ Get/Set Channel 4 PA_BIAS_ON in voltage """
-        dac_code = value // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        self._set_iio_attr("voltage3", "pa_bias_on", True, dac_code, self._ctrl)
-
-    @property
-    def ch1_rx_attenuator(self):
-        """ Get/Set Channel 1 Rx Attenuator state """
-        return bool(
-            1 - self._get_iio_attr("voltage0", "attenuation", False, self._ctrl)
-        )
-
-    @ch1_rx_attenuator.setter
-    def ch1_rx_attenuator(self, value):
-        """ Get/Set Channel 1 Rx Attenuator state """
-        self._set_iio_attr("voltage0", "attenuation", False, 1 - int(value), self._ctrl)
-
-    @property
-    def ch2_rx_attenuator(self):
-        """ Get/Set Channel 2 Rx Attenuator state """
-        return bool(
-            1 - self._get_iio_attr("voltage1", "attenuation", False, self._ctrl)
-        )
-
-    @ch2_rx_attenuator.setter
-    def ch2_rx_attenuator(self, value):
-        """ Get/Set Channel 2 Rx Attenuator state """
-        self._set_iio_attr("voltage1", "attenuation", False, 1 - int(value), self._ctrl)
-
-    @property
-    def ch3_rx_attenuator(self):
-        """ Get/Set Channel 3 Rx Attenuator state """
-        return bool(
-            1 - self._get_iio_attr("voltage2", "attenuation", False, self._ctrl)
-        )
-
-    @ch3_rx_attenuator.setter
-    def ch3_rx_attenuator(self, value):
-        """ Get/Set Channel 3 Rx Attenuator state """
-        self._set_iio_attr("voltage2", "attenuation", False, 1 - int(value), self._ctrl)
-
-    @property
-    def ch4_rx_attenuator(self):
-        """ Get/Set Channel 4 Rx Attenuator state """
-        return bool(
-            1 - self._get_iio_attr("voltage3", "attenuation", False, self._ctrl)
-        )
-
-    @ch4_rx_attenuator.setter
-    def ch4_rx_attenuator(self, value):
-        """ Get/Set Channel 4 Rx Attenuator state """
-        self._set_iio_attr("voltage3", "attenuation", False, 1 - int(value), self._ctrl)
-
-    @property
-    def ch1_rx_gain(self):
-        """ Get/Set Channel 1 Rx Gain """
-        return self._get_iio_attr("voltage0", "hardwaregain", False, self._ctrl)
-
-    @ch1_rx_gain.setter
-    def ch1_rx_gain(self, value):
-        """ Get/Set Channel 1 Rx Gain """
-        self._set_iio_attr("voltage0", "hardwaregain", False, value, self._ctrl)
-
-    @property
-    def ch2_rx_gain(self):
-        """ Get/Set Channel 2 Rx Gain """
-        return self._get_iio_attr("voltage1", "hardwaregain", False, self._ctrl)
-
-    @ch2_rx_gain.setter
-    def ch2_rx_gain(self, value):
-        """ Get/Set Channel 2 Rx Gain """
-        self._set_iio_attr("voltage1", "hardwaregain", False, value, self._ctrl)
-
-    @property
-    def ch3_rx_gain(self):
-        """ Get/Set Channel 3 Rx Gain """
-        return self._get_iio_attr("voltage2", "hardwaregain", False, self._ctrl)
-
-    @ch3_rx_gain.setter
-    def ch3_rx_gain(self, value):
-        """ Get/Set Channel 3 Rx Gain """
-        self._set_iio_attr("voltage2", "hardwaregain", False, value, self._ctrl)
-
-    @property
-    def ch4_rx_gain(self):
-        """ Get/Set Channel 4 Rx Gain """
-        return self._get_iio_attr("voltage3", "hardwaregain", False, self._ctrl)
-
-    @ch4_rx_gain.setter
-    def ch4_rx_gain(self, value):
-        """ Get/Set Channel 4 Rx Gain """
-        self._set_iio_attr("voltage3", "hardwaregain", False, value, self._ctrl)
-
-    @property
-    def ch1_rx_phase(self):
-        """ Get/Set Channel 1 Rx Phase """
-        return self._get_iio_attr("voltage0", "phase", False, self._ctrl)
-
-    @ch1_rx_phase.setter
-    def ch1_rx_phase(self, value):
-        """ Get/Set Channel 1 Rx Phase """
-        self._set_iio_attr("voltage0", "phase", False, value, self._ctrl)
-
-    @property
-    def ch2_rx_phase(self):
-        """ Get/Set Channel 2 Rx Phase """
-        return self._get_iio_attr("voltage1", "phase", False, self._ctrl)
-
-    @ch2_rx_phase.setter
-    def ch2_rx_phase(self, value):
-        """ Get/Set Channel 2 Rx Phase """
-        self._set_iio_attr("voltage1", "phase", False, value, self._ctrl)
-
-    @property
-    def ch3_rx_phase(self):
-        """ Get/Set Channel 3 Rx Phase """
-        return self._get_iio_attr("voltage2", "phase", False, self._ctrl)
-
-    @ch3_rx_phase.setter
-    def ch3_rx_phase(self, value):
-        """ Get/Set Channel 3 Rx Phase """
-        self._set_iio_attr("voltage2", "phase", False, value, self._ctrl)
-
-    @property
-    def ch4_rx_phase(self):
-        """ Get/Set Channel 4 Rx Phase """
-        return self._get_iio_attr("voltage3", "phase", False, self._ctrl)
-
-    @ch4_rx_phase.setter
-    def ch4_rx_phase(self, value):
-        """ Get/Set Channel 4 Rx Phase """
-        self._set_iio_attr("voltage3", "phase", False, value, self._ctrl)
-
-    @property
-    def ch1_rx_powerdown(self):
-        """ Get/Set Channel 1 Rx Powerdown """
-        return bool(self._get_iio_attr("voltage0", "powerdown", False, self._ctrl))
-
-    @ch1_rx_powerdown.setter
-    def ch1_rx_powerdown(self, value):
-        """ Get/Set Channel 1 Rx Powerdown """
-        self._set_iio_attr("voltage0", "powerdown", False, int(value), self._ctrl)
-
-    @property
-    def ch2_rx_powerdown(self):
-        """ Get/Set Channel 2 Rx Powerdown """
-        return bool(self._get_iio_attr("voltage1", "powerdown", False, self._ctrl))
-
-    @ch2_rx_powerdown.setter
-    def ch2_rx_powerdown(self, value):
-        """ Get/Set Channel 2 Rx Powerdown """
-        self._set_iio_attr("voltage1", "powerdown", False, int(value), self._ctrl)
-
-    @property
-    def ch3_rx_powerdown(self):
-        """ Get/Set Channel 3 Rx Powerdown """
-        return bool(self._get_iio_attr("voltage2", "powerdown", False, self._ctrl))
-
-    @ch3_rx_powerdown.setter
-    def ch3_rx_powerdown(self, value):
-        """ Get/Set Channel 3 Rx Powerdown """
-        self._set_iio_attr("voltage2", "powerdown", False, int(value), self._ctrl)
-
-    @property
-    def ch4_rx_powerdown(self):
-        """ Get/Set Channel 4 Rx Powerdown """
-        return bool(self._get_iio_attr("voltage3", "powerdown", False, self._ctrl))
-
-    @ch4_rx_powerdown.setter
-    def ch4_rx_powerdown(self, value):
-        """ Get/Set Channel 4 Rx Powerdown """
-        self._set_iio_attr("voltage3", "powerdown", False, int(value), self._ctrl)
-
-    @property
-    def ch1_tx_attenuator(self):
-        """ Get/Set Channel 1 Tx Attenuator state """
-        return bool(1 - self._get_iio_attr("voltage0", "attenuation", True, self._ctrl))
-
-    @ch1_tx_attenuator.setter
-    def ch1_tx_attenuator(self, value):
-        """ Get/Set Channel 1 Tx Attenuator state """
-        self._set_iio_attr("voltage0", "attenuation", True, 1 - int(value), self._ctrl)
-
-    @property
-    def ch2_tx_attenuator(self):
-        """ Get/Set Channel 2 Tx Attenuator state """
-        return bool(1 - self._get_iio_attr("voltage1", "attenuation", True, self._ctrl))
-
-    @ch2_tx_attenuator.setter
-    def ch2_tx_attenuator(self, value):
-        """ Get/Set Channel 2 Tx Attenuator state """
-        self._set_iio_attr("voltage1", "attenuation", True, 1 - int(value), self._ctrl)
-
-    @property
-    def ch3_tx_attenuator(self):
-        """ Get/Set Channel 3 Tx Attenuator state """
-        return bool(1 - self._get_iio_attr("voltage2", "attenuation", True, self._ctrl))
-
-    @ch3_tx_attenuator.setter
-    def ch3_tx_attenuator(self, value):
-        """ Get/Set Channel 3 Tx Attenuator state """
-        self._set_iio_attr("voltage2", "attenuation", True, 1 - int(value), self._ctrl)
-
-    @property
-    def ch4_tx_attenuator(self):
-        """ Get/Set Channel 4 Tx Attenuator state """
-        return bool(1 - self._get_iio_attr("voltage3", "attenuation", True, self._ctrl))
-
-    @ch4_tx_attenuator.setter
-    def ch4_tx_attenuator(self, value):
-        """ Get/Set Channel 4 Tx Attenuator state """
-        self._set_iio_attr("voltage3", "attenuation", True, 1 - int(value), self._ctrl)
-
-    @property
-    def ch1_tx_gain(self):
-        """ Get/Set Channel 1 Tx Gain """
-        return self._get_iio_attr("voltage0", "hardwaregain", True, self._ctrl)
-
-    @ch1_tx_gain.setter
-    def ch1_tx_gain(self, value):
-        """ Get/Set Channel 1 Tx Gain """
-        self._set_iio_attr("voltage0", "hardwaregain", True, value, self._ctrl)
-
-    @property
-    def ch2_tx_gain(self):
-        """ Get/Set Channel 2 Tx Gain """
-        return self._get_iio_attr("voltage1", "hardwaregain", True, self._ctrl)
-
-    @ch2_tx_gain.setter
-    def ch2_tx_gain(self, value):
-        """ Get/Set Channel 2 Tx Gain """
-        self._set_iio_attr("voltage1", "hardwaregain", True, value, self._ctrl)
-
-    @property
-    def ch3_tx_gain(self):
-        """ Get/Set Channel 3 Tx Gain """
-        return self._get_iio_attr("voltage2", "hardwaregain", True, self._ctrl)
-
-    @ch3_tx_gain.setter
-    def ch3_tx_gain(self, value):
-        """ Get/Set Channel 3 Tx Gain """
-        self._set_iio_attr("voltage2", "hardwaregain", True, value, self._ctrl)
-
-    @property
-    def ch4_tx_gain(self):
-        """ Get/Set Channel 4 Tx Gain """
-        return self._get_iio_attr("voltage3", "hardwaregain", True, self._ctrl)
-
-    @ch4_tx_gain.setter
-    def ch4_tx_gain(self, value):
-        """ Get/Set Channel 4 Tx Gain """
-        self._set_iio_attr("voltage3", "hardwaregain", True, value, self._ctrl)
-
-    @property
-    def ch1_tx_phase(self):
-        """ Get/Set Channel 1 Tx Phase """
-        return self._get_iio_attr("voltage0", "phase", True, self._ctrl)
-
-    @ch1_tx_phase.setter
-    def ch1_tx_phase(self, value):
-        """ Get/Set Channel 1 Tx Phase """
-        self._set_iio_attr("voltage0", "phase", True, value, self._ctrl)
-
-    @property
-    def ch2_tx_phase(self):
-        """ Get/Set Channel 2 Tx Phase """
-        return self._get_iio_attr("voltage1", "phase", True, self._ctrl)
-
-    @ch2_tx_phase.setter
-    def ch2_tx_phase(self, value):
-        """ Get/Set Channel 2 Tx Phase """
-        self._set_iio_attr("voltage1", "phase", True, value, self._ctrl)
-
-    @property
-    def ch3_tx_phase(self):
-        """ Get/Set Channel 3 Tx Phase """
-        return self._get_iio_attr("voltage2", "phase", True, self._ctrl)
-
-    @ch3_tx_phase.setter
-    def ch3_tx_phase(self, value):
-        """ Get/Set Channel 3 Tx Phase """
-        self._set_iio_attr("voltage2", "phase", True, value, self._ctrl)
-
-    @property
-    def ch4_tx_phase(self):
-        """ Get/Set Channel 4 Tx Phase """
-        return self._get_iio_attr("voltage3", "phase", True, self._ctrl)
-
-    @ch4_tx_phase.setter
-    def ch4_tx_phase(self, value):
-        """ Get/Set Channel 4 Tx Phase """
-        self._set_iio_attr("voltage3", "phase", True, value, self._ctrl)
-
-    @property
-    def ch1_tx_powerdown(self):
-        """ Get/Set Channel 1 Tx Powerdown """
-        return bool(self._get_iio_attr("voltage0", "powerdown", True, self._ctrl))
-
-    @ch1_tx_powerdown.setter
-    def ch1_tx_powerdown(self, value):
-        """ Get/Set Channel 1 Tx Powerdown """
-        self._set_iio_attr("voltage0", "powerdown", True, int(value), self._ctrl)
-
-    @property
-    def ch2_tx_powerdown(self):
-        """ Get/Set Channel 2 Tx Powerdown """
-        return bool(self._get_iio_attr("voltage1", "powerdown", True, self._ctrl))
-
-    @ch2_tx_powerdown.setter
-    def ch2_tx_powerdown(self, value):
-        """ Get/Set Channel 2 Tx Powerdown """
-        self._set_iio_attr("voltage1", "powerdown", True, int(value), self._ctrl)
-
-    @property
-    def ch3_tx_powerdown(self):
-        """ Get/Set Channel 3 Tx Powerdown """
-        return bool(self._get_iio_attr("voltage2", "powerdown", True, self._ctrl))
-
-    @ch3_tx_powerdown.setter
-    def ch3_tx_powerdown(self, value):
-        """ Get/Set Channel 3 Tx Powerdown """
-        self._set_iio_attr("voltage2", "powerdown", True, int(value), self._ctrl)
-
-    @property
-    def ch4_tx_powerdown(self):
-        """ Get/Set Channel 4 Tx Powerdown """
-        return bool(self._get_iio_attr("voltage3", "powerdown", True, self._ctrl))
-
-    @ch4_tx_powerdown.setter
-    def ch4_tx_powerdown(self, value):
-        """ Get/Set Channel 4 Tx Powerdown """
-        self._set_iio_attr("voltage3", "powerdown", True, int(value), self._ctrl)
-
-    @property
-    def rx_sequencer_start(self):
-        """ Get/Set the Rx Sequencer's starting position """
-        return self._get_iio_attr("voltage0", "sequence_start", False, self._ctrl)
-
-    @rx_sequencer_start.setter
-    def rx_sequencer_start(self, value):
-        """ Get/Set the Rx Sequencer's starting position """
-        self._sequence_start("rx", value)
-
-    @property
-    def rx_sequencer_stop(self):
-        """ Get/Set the Rx Sequencer's ending position """
-        return self._get_iio_attr("voltage0", "sequence_end", False, self._ctrl)
-
-    @rx_sequencer_stop.setter
-    def rx_sequencer_stop(self, value):
-        """ Get/Set the Rx Sequencer's ending position """
-        self._sequence_stop("rx", value)
-
-    @property
-    def temperature(self):
-        """ Get the temperature reading from the device """
-        return self._get_iio_attr("temp0", "raw", False, self._ctrl)
-
-    @property
-    def tx_sequencer_start(self):
-        """ Get/Set the Tx Sequencer's starting position """
-        return self._get_iio_attr("voltage0", "sequence_start", True, self._ctrl)
-
-    @tx_sequencer_start.setter
-    def tx_sequencer_start(self, value):
-        """ Get/Set the Tx Sequencer's starting position """
-        self._sequence_start("tx", value)
-
-    @property
-    def tx_sequencer_stop(self):
-        """ Get/Set the Tx Sequencer's ending position """
-        return self._get_iio_attr("voltage0", "sequence_end", True, self._ctrl)
-
-    @tx_sequencer_stop.setter
-    def tx_sequencer_stop(self, value):
-        """ Get/Set the Tx Sequencer's ending position """
-        self._sequence_stop("tx", value)
-
-    """ Private Methods """
-
-    def _load_beam(self, rx_or_tx, channel, state):
-        """Load a beam from a memory position
-
-        parameters:
-            rx_or_tx: string
-                String indicating whether to load an Rx or Tx beam state. Valid options are "rx" and "tx"
-            channel: int, string
-                Channel number to load (1-4) or "X" to load from CHX_{rx_or_tx}
-            state: int
-                State number to load. Valid options are 0 to 120
-        """
-
-        if rx_or_tx.lower() == "rx":
-            output = False
-        else:
-            output = True
-
-        if isinstance(channel, int):
-            self._set_iio_attr(
-                f"voltage{channel - 1}", "beam_pos_load", output, state, self._ctrl
-            )
-        else:
-            self._set_iio_dev_attr_str(
-                f"static_{rx_or_tx.lower()}_beam_pos", state, self._ctrl
-            )
-
-    def _load_bias(self, rx_or_tx, state):
-        """Load a bias from a memory position
-
-        parameters:
-            rx_or_tx: string
-                String indicating whether to load an Rx or Tx bias state. Valid options are "rx" and "tx"
-            state: int
-                State number to load. Valid options are 1 to 7
-        """
-
-        if rx_or_tx.lower() == "rx":
-            output = False
-        else:
-            output = True
-
-        self._set_iio_attr("voltage0", "bias_set_load", output, state, self._ctrl)
-
-    def _save_beam(self, rx_or_tx, channel, state, attenuator, gain, phase):
-        """Save a beam to a memory position
-
-        parameters:
-            rx_or_tx: string
-                String indicating whether to load an Rx or Tx beam state. Valid options are "rx" and "tx"
-            channel: int
-                Channel number to save (1-4)
-            state: int
-                State number to save. Valid options are 0 to 120
-            attenuator: bool
-                Attenuator state for the beam position. True means the attenuator is in place.
-            gain: int
-                Gain value for the beam position. Valid settings are 0 to 127.
-            phase: float
-                Phase value for the beam position.
-        """
-
-        if rx_or_tx.lower() == "rx":
-            output = False
-        else:
-            output = True
-
-        save_string = f"{state}, {attenuator}, {gain}, {phase}"
-
-        self._set_iio_attr(
-            f"voltage{channel - 1}", "beam_pos_save", output, save_string, self._ctrl
-        )
-
-    def _sequence_start(self, rx_or_tx, state):
-        """Set the sequencer's start position
-
-        parameters:
-            rx_or_tx: string
-                String indicating whether to load an Rx or Tx bias state. Valid options are "rx" and "tx"
-            state: int
-                State number to set. Valid options are 0 to 120
-        """
-
-        if rx_or_tx.lower() == "rx":
-            output = False
-        else:
-            output = True
-
-        self._set_iio_attr("voltage0", "sequence_start", output, state, self._ctrl)
-
-    def _sequence_stop(self, rx_or_tx, state):
-        """Set the sequencer's stop position
-
-        parameters:
-            rx_or_tx: string
-                String indicating whether to load an Rx or Tx bias state. Valid options are "rx" and "tx"
-            state: int
-                State number to set. Valid options are 0 to 120
-        """
-
-        if rx_or_tx.lower() == "rx":
-            output = False
-        else:
-            output = True
-
-        self._set_iio_attr("voltage0", "sequence_end", output, state, self._ctrl)
-
     """ Public Methods """
 
     def generate_clocks(self):
         """ Generate CLK cycles before pulsing RX_LOAD or TX_LOAD """
         self._set_iio_dev_attr_str("gen_clk_cycles", "", self._ctrl)
+
+    def initialize(self, pa_off=-2.5, lna_off=-2):
+        """Suggested initialization routine after powerup
+
+        parameters:
+            pa_off: float
+                Voltage to set the PA_BIAS_ON and PA_BIAS_OFF values to during initialization
+            lna_off: float
+                Voltage to set the LNA_BIAS_ON and LNA_BIAS_OFF values to during initialization
+        """
+        # Put the part in a known state
+        self.reset()
+
+        # Set the bias currents to nominal
+        self.rx_lna_bias_current = 0x08
+        self.rx_vga_vm_bias_current = 0x55
+        self.tx_vga_vm_bias_current = 0x2D
+        self.tx_pa_bias_current = 0x06
+
+        # Disable RAM control
+        self.beam_mem_enable = False
+        self.bias_mem_enable = False
+        self.common_mem_enable = False
+
+        # Enable all internal amplifiers
+        self.rx_vga_enable = True
+        self.rx_vm_enable = True
+        self.rx_lna_enable = True
+        self.tx_vga_enable = True
+        self.tx_vm_enable = True
+        self.tx_pa_enable = True
+
+        # Disable Tx/Rx paths
+        self.rx_enable = False
+        self.tx_enable = False
+
+        # Enable the PA/LNA bias DACs
+        self.lna_bias_out_enable = True
+        self.bias_dac_enable = True
+        self.bias_dac_mode = "toggle"
+
+        # Configure the external switch control
+        self.external_tr_polarity = True
+        self.tr_switch_enable = True
+
+        # Set the default LNA bias
+        self.lna_bias_off = lna_off
+        self.lna_bias_on = lna_off
+
+        # Settings for each channel
+        for channel in self.channels:
+            # Default channel enable
+            channel.rx_enable = True
+            channel.tx_enable = True
+
+            # Default PA bias
+            channel.pa_bias_off = pa_off
+            channel.pa_bias_on = pa_off
+
+            # Default attenuator, gain, and phase
+            channel.rx_attenuator = False
+            channel.rx_gain = 127
+            channel.rx_phase = 0
+            channel.tx_attenuator = False
+            channel.tx_gain = 127
+            channel.tx_phase = 0
+
+        # Latch in the new settings
+        self.latch_rx_settings()
+        self.latch_tx_settings()
+        return
 
     def latch_rx_settings(self):
         """ Latch in new Gain/Phase settings for the Rx """
@@ -1135,27 +994,25 @@ class adar1000(attribute, context_manager):
         """ Latch in new Gain/Phase settings for the Tx """
         self._set_iio_dev_attr_str("tx_load_spi", 1, self._ctrl)
 
-    def load_rx_beam(self, channel, state):
-        """Load an Rx beam from a memory position
+    def load_common_rx_beam(self, state):
+        """Load a common Rx beam position from RAM
 
         parameters:
-            channel: int
-                Channel number to load
             state: int
                 State number to load. Valid options are 0 to 120
         """
-        self._load_beam("rx", channel, state)
 
-    def load_tx_beam(self, channel, state):
-        """Load a Tx beam from a memory position
+        self._set_iio_dev_attr_str("static_rx_beam_pos", state, self._ctrl)
+
+    def load_common_tx_beam(self, state):
+        """Load a common Tx beam position from RAM
 
         parameters:
-            channel: int
-                Channel number to load
             state: int
                 State number to load. Valid options are 0 to 120
         """
-        self._load_beam("tx", channel, state)
+
+        self._set_iio_dev_attr_str("static_tx_beam_pos", state, self._ctrl)
 
     def load_rx_bias(self, state):
         """Load an Rx bias from a memory position
@@ -1164,7 +1021,8 @@ class adar1000(attribute, context_manager):
             state: int
                 State number to load. Valid options are 1 to 7
         """
-        self._load_bias("rx", state)
+
+        self._set_iio_attr("voltage0", "bias_set_load", False, state, self._ctrl)
 
     def load_tx_bias(self, state):
         """Load a Tx bias from a memory position
@@ -1173,28 +1031,12 @@ class adar1000(attribute, context_manager):
             state: int
                 State number to load. Valid options are 1 to 7
         """
-        self._load_bias("tx", state)
+
+        self._set_iio_attr("voltage0", "bias_set_load", True, state, self._ctrl)
 
     def reset(self):
         """ Reset ADAR1000 to default settings """
-        self._set_iio_dev_attr_str("reset", "1", self._ctrl)
-
-    def save_rx_beam(self, channel, state, attenuator, gain, phase):
-        """Save a beam to an Rx memory position
-
-        parameters:
-            channel: int
-                Channel number to save (1-4)
-            state: int
-                State number to save. Valid options are 0 to 120
-            attenuator: bool
-                Attenuator state for the beam position. True means the attenuator is in place.
-            gain: int
-                Gain value for the beam position. Valid settings are 0 to 127.
-            phase: float
-                Phase value for the beam position.
-        """
-        self._save_beam("rx", channel, state, attenuator, gain, phase)
+        self._set_iio_dev_attr("reset", 1, self._ctrl)
 
     def save_rx_bias(
         self,
@@ -1220,29 +1062,12 @@ class adar1000(attribute, context_manager):
         """
 
         # Convert the LNA bias settings to dac codes:
-        lna_off_dac_code = lna_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        lna_on_dac_code = lna_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        lna_off_dac_code = int(lna_bias_off / self._BIAS_CODE_TO_VOLTAGE_SCALE)
+        lna_on_dac_code = int(lna_bias_on / self._BIAS_CODE_TO_VOLTAGE_SCALE)
 
         save_string = f"{state}, {lna_off_dac_code}, {lna_on_dac_code}, {rx_vga_vm_bias_current}, {rx_lna_bias_current}"
 
         self._set_iio_attr("voltage0", "bias_set_save", False, save_string, self._ctrl)
-
-    def save_tx_beam(self, channel, state, attenuator, gain, phase):
-        """Save a beam to a Tx memory position
-
-        parameters:
-            channel: int
-                Channel number to save (1-4)
-            state: int
-                State number to save. Valid options are 0 to 120
-            attenuator: bool
-                Attenuator state for the beam position. True means the attenuator is in place.
-            gain: int
-                Gain value for the beam position. Valid settings are 0 to 127.
-            phase: float
-                Phase value for the beam position.
-        """
-        self._save_beam("tx", channel, state, attenuator, gain, phase)
 
     def save_tx_bias(
         self,
@@ -1286,14 +1111,14 @@ class adar1000(attribute, context_manager):
         """
 
         # Convert the PA bias settings to dac codes:
-        pa1_off_dac_code = pa1_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        pa2_off_dac_code = pa2_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        pa3_off_dac_code = pa3_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        pa4_off_dac_code = pa4_bias_off // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        pa1_on_dac_code = pa1_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        pa2_on_dac_code = pa2_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        pa3_on_dac_code = pa3_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
-        pa4_on_dac_code = pa4_bias_on // self._BIAS_CODE_TO_VOLTAGE_SCALE
+        pa1_off_dac_code = int(pa1_bias_off / self._BIAS_CODE_TO_VOLTAGE_SCALE)
+        pa2_off_dac_code = int(pa2_bias_off / self._BIAS_CODE_TO_VOLTAGE_SCALE)
+        pa3_off_dac_code = int(pa3_bias_off / self._BIAS_CODE_TO_VOLTAGE_SCALE)
+        pa4_off_dac_code = int(pa4_bias_off / self._BIAS_CODE_TO_VOLTAGE_SCALE)
+        pa1_on_dac_code = int(pa1_bias_on / self._BIAS_CODE_TO_VOLTAGE_SCALE)
+        pa2_on_dac_code = int(pa2_bias_on / self._BIAS_CODE_TO_VOLTAGE_SCALE)
+        pa3_on_dac_code = int(pa3_bias_on / self._BIAS_CODE_TO_VOLTAGE_SCALE)
+        pa4_on_dac_code = int(pa4_bias_on / self._BIAS_CODE_TO_VOLTAGE_SCALE)
 
         save_string = (
             f"{state}, {pa1_off_dac_code}, {pa2_off_dac_code}, {pa3_off_dac_code}, {pa4_off_dac_code}, "
@@ -1316,97 +1141,234 @@ class adar1000_array(context_manager):
             each chip select and hardware address and are typically in the
             form csbX_chipX. The csb line can be any number depending on how
             many are used in the system. The chip number will typically be
-            1-4 because each CSB line can control up to four ADAR1000s. Use
-            a list when multiple chips are to be controlled.
+            1-4 because each CSB line can control up to four ADAR1000s. Note
+            that the order of the devices listed will correspond to the
+            device numbers in the array map directly.
+        device_map: type=list[list[int]]
+            List with the map of where the ADAR1000s are in the array. Each
+            entry in the map represents a row of ADAR1000s referenced by
+            device number. For example, a map:
+                [[1, 3, 5, 7],
+                [2, 4, 6, 8]]
+            represents an array of 8 ADAR1000s 4 wide and 2 tall.
+        element_map: type=list[list[int]]
+            List with the map of where the ADAR1000 channels are in the array.
+            Each entry in the map represents a row of array channels referenced
+            by element number. For example, a map:
+                [[1, 5, 9, 13],
+                [2, 6, 10, 14],
+                [3, 7, 11, 15],
+                [4, 8, 12, 16]]
+            represents an array of 16 elements in a square array.
+        device_element_map: type=dict[int, list[int]]
+            Dictionary with the map of ADAR1000 to array element references. Each
+            key in the map is a device number. The corresponding list of integers
+            represents the array element numbers connected to that ADAR1000, in
+            order of the ADAR1000's channels. For example, an entry of
+            {3: [10, 14, 13, 9]} connects ADAR1000 #3 to array elements 10, 14, 13,
+            and 9. Element #10 is on the ADAR1000's channel 1 while element #13 is
+            on the ADAR1000's channel 3.
     """
 
     _device_name = ""
 
     def __init__(
-        self, uri="", chip_ids=("csb1_chip1", "csb1_chip2", "csb1_chip3", "csb1_chip4")
+        self,
+        uri="",
+        chip_ids=None,
+        device_map=None,
+        element_map=None,
+        device_element_map=None,
     ):
+        # Check that the number of chips matches for all the inputs
+        chip_ids_len = len(chip_ids)
+        adar1000_map_len = len([num for row in device_map for num in row])
+        element_map_len = len([num for row in element_map for num in row]) / 4
+        device_element_map_len = len(device_element_map)
+        if not (
+            chip_ids_len
+            == adar1000_map_len
+            == element_map_len
+            == device_element_map_len
+        ):
+            raise ValueError("The number of chips must match for all the inputs")
+
+        # Get the context
         context_manager.__init__(self, uri, self._device_name)
 
-        self._ctrls = []
+        # Initialize the devices dictionary
+        self._devices = {}
 
-        for chip_id in chip_ids:
-            # Get an ADAR1000 handle for each chip ID using the context already found
-            self._ctrls.append(adar1000(uri, chip_id, self._ctx))
+        # Get an ADAR1000 handle for each chip ID using the context already found
+        for i, chip_id in enumerate(chip_ids):
+            device_number = i + 1
+            self._devices[chip_id] = adar1000(
+                uri,
+                self._ctx,
+                chip_id,
+                device_number,
+                element_map,
+                device_element_map[device_number],
+            )
 
-        if len(self._ctrls) != len(chip_ids):
-            raise Exception(f"Couldn't find all devices in {', '.join(chip_ids)}")
+        if len(self.devices) != len(chip_ids):
+            raise Exception(
+                f"Couldn't find all devices in the array {', '.join(chip_ids)}"
+            )
+
+        # Initialize some class fields
+        self._chip_ids = chip_ids
+        self._device_map = device_map
+        self._element_map = element_map
+        self._element_spacing = 0.015
+        self._frequency = 10e9
+        self._mode = "disabled"
+        self._rx_azimuth = 0
+        self._rx_azimuth_phi = 0
+        self._rx_elevation = 0
+        self._rx_elevation_phi = 0
+        self._tx_azimuth = 0
+        self._tx_azimuth_phi = 0
+        self._tx_elevation = 0
+        self._tx_elevation_phi = 0
 
     def __repr__(self):
         """ Representation of the ADAR1000 array class """
-        return f"ADAR1000 array containing {len(self.devices)} ADAR1000 instances:\n\t{', '.join(self.devices)}"
+        return f"ADAR1000 array containing {len(self.devices)} ADAR1000 instances:\n\t{', '.join(self._chip_ids)}"
+
+    """ Array Properties """
+
+    @property
+    def all_rx_attenuators(self):
+        """Get/Set all Rx Attenuator settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        attenuator_map = []
+        for r, row in enumerate(self.element_map):
+            attenuator_map.append([])
+            for element in row:
+                attenuator_map[r].append(self.elements[element].rx_attenuator)
+
+        return attenuator_map
+
+    @all_rx_attenuators.setter
+    def all_rx_attenuators(self, value):
+        """Get/Set all Rx Attenuator settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        for r, row in enumerate(self.element_map):
+            for e, element in enumerate(row):
+                self.elements[element].rx_attenuator = value[r][e]
 
     @property
     def all_rx_gains(self):
-        """ Get/Set all Rx Gain settings in the array. """
-        return {
-            f"{chip.chip_id}_ch{ch}": getattr(chip, f"ch{ch}_rx_gain")
-            for chip in self.devices.values()
-            for ch in range(1, 5)
-        }
+        """Get/Set all Rx Gain settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        gain_map = []
+        for r, row in enumerate(self.element_map):
+            gain_map.append([])
+            for element in row:
+                gain_map[r].append(self.elements[element].rx_gain)
+
+        return gain_map
 
     @all_rx_gains.setter
     def all_rx_gains(self, value):
-        """ Get/Set all Rx Gain settings in the array. """
-        for id_string, gain in value.items():
-            chip_id = "_".join(id_string.split("_")[:2])
-            channel = id_string.split("_")[-1]
-            setattr(self.devices[chip_id], f"{channel}_rx_gain", gain)
+        """Get/Set all Rx Gain settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        for r, row in enumerate(self.element_map):
+            for e, element in enumerate(row):
+                self.elements[element].rx_gain = value[r][e]
 
     @property
     def all_rx_phases(self):
-        """ Get/Set all Rx Phase settings in the array. """
-        return {
-            f"{chip.chip_id}_ch{ch}": getattr(chip, f"ch{ch}_rx_phase")
-            for chip in self.devices.values()
-            for ch in range(1, 5)
-        }
+        """Get/Set all Rx Phase settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        phase_map = []
+        for r, row in enumerate(self.element_map):
+            phase_map.append([])
+            for element in row:
+                phase_map[r].append(self.elements[element].rx_phase)
+
+        return phase_map
 
     @all_rx_phases.setter
     def all_rx_phases(self, value):
-        """ Get/Set all Rx Phase settings in the array. """
-        for id_string, gain in value.items():
-            chip_id = "_".join(id_string.split("_")[:2])
-            channel = id_string.split("_")[-1]
-            setattr(self.devices[chip_id], f"{channel}_rx_phase", gain)
+        """Get/Set all Rx Phase settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        for r, row in enumerate(self.element_map):
+            for e, element in enumerate(row):
+                self.elements[element].rx_phase = value[r][e]
+
+    @property
+    def all_tx_attenuators(self):
+        """Get/Set all Tx Attenuator settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        attenuator_map = []
+        for r, row in enumerate(self.element_map):
+            attenuator_map.append([])
+            for element in row:
+                attenuator_map[r].append(self.elements[element].tx_attenuator)
+
+        return attenuator_map
+
+    @all_tx_attenuators.setter
+    def all_tx_attenuators(self, value):
+        """Get/Set all Tx Attenuator settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        for r, row in enumerate(self.element_map):
+            for e, element in enumerate(row):
+                self.elements[element].tx_attenuator = value[r][e]
 
     @property
     def all_tx_gains(self):
-        """ Get/Set all Tx Gain settings in the array. """
-        return {
-            f"{chip.chip_id}_ch{ch}": getattr(chip, f"ch{ch}_tx_gain")
-            for chip in self.devices.values()
-            for ch in range(1, 5)
-        }
+        """Get/Set all Tx Gain settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        gain_map = []
+        for r, row in enumerate(self.element_map):
+            gain_map.append([])
+            for element in row:
+                gain_map[r].append(self.elements[element].tx_gain)
+
+        return gain_map
 
     @all_tx_gains.setter
     def all_tx_gains(self, value):
-        """ Get/Set all Tx Gain settings in the array. """
-        for id_string, gain in value.items():
-            chip_id = "_".join(id_string.split("_")[:2])
-            channel = id_string.split("_")[-1]
-            setattr(self.devices[chip_id], f"{channel}_tx_gain", gain)
+        """Get/Set all Tx Gain settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        for r, row in enumerate(self.element_map):
+            for e, element in enumerate(row):
+                self.elements[element].tx_gain = value[r][e]
 
     @property
     def all_tx_phases(self):
-        """ Get/Set all Tx Phase settings in the array. """
-        return {
-            f"{chip.chip_id}_ch{ch}": getattr(chip, f"ch{ch}_tx_phase")
-            for chip in self.devices.values()
-            for ch in range(1, 5)
-        }
+        """Get/Set all Tx Phase settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        phase_map = []
+        for r, row in enumerate(self.element_map):
+            phase_map.append([])
+            for element in row:
+                phase_map[r].append(self.elements[element].tx_phase)
+
+        return phase_map
 
     @all_tx_phases.setter
     def all_tx_phases(self, value):
-        """ Get/Set all Tx Phase settings in the array. """
-        for id_string, gain in value.items():
-            chip_id = "_".join(id_string.split("_")[:2])
-            channel = id_string.split("_")[-1]
-            setattr(self.devices[chip_id], f"{channel}_tx_phase", gain)
+        """Get/Set all Tx Phase settings in the array.
+        The format is a list of lists where each row in the
+        array is a list entry in the larger list."""
+        for r, row in enumerate(self.element_map):
+            for e, element in enumerate(row):
+                self.elements[element].tx_phase = value[r][e]
 
     @property
     def devices(self):
@@ -1414,4 +1376,270 @@ class adar1000_array(context_manager):
         Dictionary representing all of the connected ADAR1000s.
         The dictionary key is the chip_id for each device.
         """
-        return {chip.chip_id: chip for chip in self._ctrls}
+        return {device.array_device_number: device for device in self._devices.values()}
+
+    @property
+    def device_map(self):
+        """ Get the map of ADAR1000s in the array """
+        return self._device_map
+
+    @property
+    def elements(self):
+        """
+        Dictionary representing all of the connected ADAR1000 elements sorted by element number.
+        The dictionary key is the element number for each device.
+        """
+        dictionary = {
+            el.array_element_number: el
+            for dev in self.devices.values()
+            for el in dev.channels
+        }
+        return {k: v for k, v in sorted(dictionary.items(), key=lambda x: x[0])}
+
+    @property
+    def element_map(self):
+        """ Get the map of elements in the array """
+        return self._element_map
+
+    @property
+    def element_spacing(self):
+        """ Get/Set the element spacing for the array in meters """
+        return self._element_spacing
+
+    @element_spacing.setter
+    def element_spacing(self, value):
+        """ Get/Set the element spacing for the array in meters """
+        self._element_spacing = value
+
+    @property
+    def frequency(self):
+        """ Get/Set the board frequency in Hz """
+        return self._frequency
+
+    @frequency.setter
+    def frequency(self, value):
+        """ Get/Set the board frequency in Hz """
+        self._frequency = value
+
+    @property
+    def mode(self):
+        """ Get/Set the mode of operation for the array. Valid options are "rx", "tx", and "disabled" """
+        return self._mode
+
+    @mode.setter
+    def mode(self, value):
+        """ Get/Set the mode of operation for the array. Valid options are "rx", "tx", and "disabled" """
+        mode = value.strip().lower()
+        if mode not in ("rx", "tx", "disabled",):
+            raise ValueError(
+                'Mode of operation must be either "rx", "tx", or "disabled"'
+            )
+
+        self._mode = mode
+
+        if mode == "disabled":
+            for device in self.devices.values():
+                device.rx_enable = False
+                device.tx_enable = False
+        elif mode == "rx":
+            for device in self.devices.values():
+                device.rx_enable = True
+                device.tx_enable = False
+        else:
+            for device in self.devices.values():
+                device.rx_enable = False
+                device.tx_enable = True
+
+        if mode != "disabled":
+            self.tr = mode
+
+    @property
+    def rx_azimuth(self):
+        """ Get the Rx azimuth angle for the array in degrees """
+        return self._rx_azimuth
+
+    @property
+    def rx_azimuth_phi(self):
+        """ Get the Rx azimuth phi angle for the array in degrees """
+        return self._rx_azimuth_phi
+
+    @property
+    def rx_elevation(self):
+        """ Get the Rx elevation angle for the array in degrees """
+        return self._rx_elevation
+
+    @property
+    def rx_elevation_phi(self):
+        """ Get the Rx elevation phi angle for the array in degrees """
+        return self._rx_elevation_phi
+
+    @property
+    def temperatures(self):
+        """ Get the temperature readings of the ADAR1000s in a dictionary """
+        return {chip_id: device.temperature for chip_id, device in self.devices.items()}
+
+    @property
+    def tr(self):
+        """Get/Set the T/R input to the array. Valid options are "tx" or "rx". This property must be overwritten to
+        use the external T/R input, as the GPIO control is not included.
+        """
+
+        if self.tr_source == "external":
+            raise NotImplementedError(
+                "External T/R control is not implemented in this driver. Overwrite this "
+                "property in a subclass to allow for GPIO control of the ADAR1000's T/R input"
+            )
+
+        return self.devices[0].tr_spi
+
+    @tr.setter
+    def tr(self, value):
+        """Get/Set the T/R input to the array. Valid options are "tx" or "rx". This property must be overwritten to
+        use the external T/R input, as the GPIO control is not included.
+        """
+
+        if self.tr_source == "external":
+            raise NotImplementedError(
+                "External T/R control is not implemented in this driver. Overwrite this "
+                "property in a subclass to allow for GPIO control of the ADAR1000's T/R input"
+            )
+
+        for device in self.devices.values():
+            device.tr_spi = value
+        return
+
+    @property
+    def tr_source(self):
+        """ Get/Set the T/R source for the array. Valid options are "external" or "spi". """
+        return self.devices[1].tr_source
+
+    @tr_source.setter
+    def tr_source(self, value):
+        """ Get/Set the T/R source for the array. Valid options are "external" or "spi". """
+        for device in self.devices.values():
+            device.tr_source = value
+
+    @property
+    def tx_azimuth(self):
+        """ Get the Tx azimuth angle for the array in degrees """
+        return self._tx_azimuth
+
+    @property
+    def tx_azimuth_phi(self):
+        """ Get the Tx azimuth phi angle for the array in degrees """
+        return self._tx_azimuth_phi
+
+    @property
+    def tx_elevation(self):
+        """ Get the Tx elevation angle for the array in degrees """
+        return self._tx_elevation
+
+    @property
+    def tx_elevation_phi(self):
+        """ Get the Tx elevation phi angle for the array in degrees """
+        return self._tx_elevation_phi
+
+    """ Private Methods """
+
+    def _calculate_phi(self, azimuth, elevation):
+        """Calculate the Φ angles to steer the array in a particular direction. This method assumes that the entire
+        array is one analog beam.
+
+        parameters:
+            azimuth: float
+                Desired beam angle in degrees for the horizontal direction.
+            elevation: float
+                Desired beam angle in degrees for the vertical direction.
+        """
+
+        # Convert the input angles to radians
+        az_rads = azimuth * pi / 180
+        el_rads = elevation * pi / 180
+
+        # Calculate the phase increment (Φ) for each element in the array in both directions (in degrees)
+        az_phi = 2 * self.frequency * self.element_spacing * sin(az_rads) * 180 / 3e8
+        el_phi = 2 * self.frequency * self.element_spacing * sin(el_rads) * 180 / 3e8
+
+        return az_phi, el_phi
+
+    """ Public Methods """
+
+    def initialize_devices(self):
+        """ Initialize the ADAR1000s in the array """
+        for device in self.devices.values():
+            device.initialize()
+        return
+
+    def latch_rx_settings(self):
+        """ Latch in new Gain/Phase settings for the Rx """
+        for device in self.devices.values():
+            device.latch_rx_settings()
+        return
+
+    def latch_tx_settings(self):
+        """ Latch in new Gain/Phase settings for the Tx """
+        for device in self.devices.values():
+            device.latch_tx_settings()
+        return
+
+    def steer_rx(self, azimuth, elevation):
+        """Steer the Rx array in a particular direction. This method assumes that the entire array is one analog beam.
+
+        parameters:
+            azimuth: float
+                Desired beam angle in degrees for the horizontal direction.
+            elevation: float
+                Desired beam angle in degrees for the vertical direction.
+        """
+
+        # Calculate the Φ angles for each element in both directions (in degrees)
+        azimuth_phi, elevation_phi = self._calculate_phi(azimuth, elevation)
+
+        # Update the class variables
+        self._rx_azimuth = azimuth
+        self._rx_elevation = elevation
+        self._rx_azimuth_phi = azimuth_phi
+        self._rx_elevation_phi = elevation_phi
+
+        # Steer the elements in the array
+        for element in self.elements.values():
+            # Calculate the row and column phases
+            column_phase = element.column * azimuth_phi
+            row_phase = element.row * elevation_phi
+
+            element.rx_phase = column_phase + row_phase
+
+        # Latch in the new phases
+        self.latch_rx_settings()
+        return
+
+    def steer_tx(self, azimuth, elevation):
+        """Steer the Tx array in a particular direction. This method assumes that the entire array is one analog beam.
+
+        parameters:
+            azimuth: float
+                Desired beam angle in degrees for the horizontal direction.
+            elevation: float
+                Desired beam angle in degrees for the vertical direction.
+        """
+
+        # Calculate the Φ angles for each element in both directions (in degrees)
+        azimuth_phi, elevation_phi = self._calculate_phi(azimuth, elevation)
+
+        # Update the class variables
+        self._tx_azimuth = azimuth
+        self._tx_elevation = elevation
+        self._tx_azimuth_phi = azimuth_phi
+        self._tx_elevation_phi = elevation_phi
+
+        # Steer the elements in the array
+        for element in self.elements.values():
+            # Calculate the row and column phases
+            column_phase = element.column * azimuth_phi
+            row_phase = element.row * elevation_phi
+
+            element.tx_phase = column_phase + row_phase
+
+        # Latch in the new phases
+        self.latch_tx_settings()
+        return
