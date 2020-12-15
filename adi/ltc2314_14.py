@@ -31,11 +31,11 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
 
 
-class ltc2314_14(rx, context_manager):
+class ltc2314_14(attribute, context_manager):
     """LTC2314-14 14-Bit, 4.5Msps Serial Sampling ADC
 
     parameters:
