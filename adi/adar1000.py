@@ -1504,7 +1504,7 @@ class adar1000_array(context_manager):
                 "property in a subclass to allow for GPIO control of the ADAR1000's T/R input"
             )
 
-        return self.devices[0].tr_spi
+        return self.devices[1].tr_spi
 
     @tr.setter
     def tr(self, value):
