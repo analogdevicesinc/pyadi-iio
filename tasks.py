@@ -166,6 +166,7 @@ def checkparts(c):
         "adrv9009_zu11eg",
         "adrv9009_zu11eg_multi",
         "adrv9009_zu11eg_fmcomms8",
+        "adar1000_array",
     ]
     for c in dir(mod):
         if c[:2] == "ad" and not c in ignored_parts:
