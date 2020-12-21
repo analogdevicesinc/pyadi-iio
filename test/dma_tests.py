@@ -296,6 +296,12 @@ def cw_loopback(uri, classname, channel, param_set):
     time.sleep(1)
     # Verify still set
     for p in param_set.keys():
+        if p == "calibrate" and classname in [
+            "adi.adrv9009",
+            "adi.adrv9009_zu11eg",
+            "adi.adrv9009_zu11eg_fmcomms8",
+        ]:
+            continue
         if isinstance(param_set[p], str):
             assert getattr(sdr, p) == param_set[p]
         else:
