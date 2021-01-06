@@ -59,10 +59,10 @@ class adar1000(attribute, context_manager):
             Each entry in the map represents a row of array channels referenced
             by element number. For example, a map:
                 | [[1, 5, 9, 13],
-                |   [2, 6, 10, 14],
-                |   [3, 7, 11, 15],
-                |   [4, 8, 12, 16]]
-            represents an array of 16 elements in a square array.
+                | [2, 6, 10, 14],
+                | [3, 7, 11, 15],
+                | [4, 8, 12, 16]]
+            represents an array of 16 elements (4 ADAR1000s) in a square array.
         channel_element_map: type=list[int]
             List of integers relating the array element numbers to the channels
             of the ADAR1000. Each number in the list is the element number in the
@@ -657,6 +657,54 @@ class adar1000(attribute, context_manager):
         self._set_iio_dev_attr_str("lna_bias_out_enable", int(value), self._ctrl)
 
     @property
+    def mode(self):
+        """ Get/Set the mode of operation for the device. Valid options are "rx", "tx", and "disabled" """
+
+        # Check for Rx mode
+        if self.rx_enable and not self.tx_enable:
+            if self._tr == "rx":
+                return "rx"
+            else:
+                return "disabled"
+
+        # Check for Tx mode
+        elif self.tx_enable and not self.rx_enable:
+            if self._tr == "tx":
+                return "tx"
+            else:
+                return "disabled"
+
+        # Check mode if both device enables are high
+        elif self.rx_enable and self.tx_enable:
+            return self._tr
+
+        # Device is disabled
+        else:
+            return "disabled"
+
+    @mode.setter
+    def mode(self, value):
+        """ Get/Set the mode of operation for the device. Valid options are "rx", "tx", and "disabled" """
+        mode = value.strip().lower()
+        if mode not in ("rx", "tx", "disabled",):
+            raise ValueError(
+                'Mode of operation must be either "rx", "tx", or "disabled"'
+            )
+
+        if mode == "disabled":
+            self.rx_enable = False
+            self.tx_enable = False
+        elif mode == "rx":
+            self.rx_enable = True
+            self.tx_enable = False
+        else:
+            self.rx_enable = False
+            self.tx_enable = True
+
+        if mode != "disabled":
+            self._tr = mode
+
+    @property
     def pol_state(self):
         """ Get/Set polarity switch state. True outputs -5V, False outputs 0V """
         return bool(self._get_iio_dev_attr("pol", self._ctrl))
@@ -800,6 +848,38 @@ class adar1000(attribute, context_manager):
     def temperature(self):
         """ Get the temperature reading from the device """
         return self._get_iio_attr("temp0", "raw", False)
+
+    @property
+    def _tr(self):
+        """Get/Set the status of the T/R input to the device. Valid options are "tx" or "rx". This property must be
+        overwritten to use the external T/R input, as GPIO control is not included in this wrapper. This property
+        should not be used directly, as it is controlled by the "mode" property.
+        """
+
+        if self.tr_source == "external":
+            raise NotImplementedError(
+                "External T/R control is not implemented in this wrapper. Overwrite this "
+                "property in a subclass to allow for GPIO control of the ADAR1000's T/R input pin"
+            )
+
+        else:
+            return self.tr_spi
+
+    @_tr.setter
+    def _tr(self, value):
+        """Get/Set the status of the T/R input to the device. Valid options are "tx" or "rx". This property must be
+        overwritten to use the external T/R input, as GPIO control is not included in this wrapper. This property
+        should not be used directly, as it is controlled by the "mode" property.
+        """
+
+        if self.tr_source == "external":
+            raise NotImplementedError(
+                "External T/R control is not implemented in this wrapper. Overwrite this "
+                "property in a subclass to allow for GPIO control of the ADAR1000's T/R input pin"
+            )
+
+        else:
+            self.tr_spi = value
 
     @property
     def tr_source(self):
@@ -969,14 +1049,18 @@ class adar1000(attribute, context_manager):
         """ Generate CLK cycles before pulsing RX_LOAD or TX_LOAD """
         self._set_iio_dev_attr_str("gen_clk_cycles", "", self._ctrl)
 
-    def initialize(self, pa_off=-2.5, lna_off=-2):
+    def initialize(self, pa_off=-2.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
         """Suggested initialization routine after powerup
 
         parameters:
             pa_off: float
-                Voltage to set the PA_BIAS_ON and PA_BIAS_OFF values to during initialization
+                Voltage to set the PA_BIAS_OFF values to during initialization
+            pa_on: float
+                Voltage to set the PA_BIAS_ON values to during initialization
             lna_off: float
-                Voltage to set the LNA_BIAS_ON and LNA_BIAS_OFF values to during initialization
+                Voltage to set the LNA_BIAS_OFF values to during initialization
+            lna_on: float
+                Voltage to set the LNA_BIAS_ON values to during initialization
         """
         # Put the part in a known state
         self.reset()
@@ -1000,7 +1084,7 @@ class adar1000(attribute, context_manager):
         self.tx_vm_enable = True
         self.tx_pa_enable = True
 
-        # Disable Tx/Rx paths
+        # Disable Tx/Rx paths for the device
         self.rx_enable = False
         self.tx_enable = False
 
@@ -1015,24 +1099,24 @@ class adar1000(attribute, context_manager):
 
         # Set the default LNA bias
         self.lna_bias_off = lna_off
-        self.lna_bias_on = lna_off
+        self.lna_bias_on = lna_on
 
         # Settings for each channel
         for channel in self.channels:
             # Default channel enable
-            channel.rx_enable = True
-            channel.tx_enable = True
+            channel.rx_enable = False
+            channel.tx_enable = False
 
             # Default PA bias
             channel.pa_bias_off = pa_off
-            channel.pa_bias_on = pa_off
+            channel.pa_bias_on = pa_on
 
             # Default attenuator, gain, and phase
             channel.rx_attenuator = False
-            channel.rx_gain = 127
+            channel.rx_gain = 0x7F
             channel.rx_phase = 0
             channel.tx_attenuator = False
-            channel.tx_gain = 127
+            channel.tx_gain = 0x7F
             channel.tx_phase = 0
 
         # Latch in the new settings
@@ -1162,18 +1246,18 @@ class adar1000_array(context_manager):
             List with the map of where the ADAR1000s are in the array. Each
             entry in the map represents a row of ADAR1000s referenced by
             device number. For example, a map:
-                [[1, 3, 5, 7],
-                [2, 4, 6, 8]]
+                | [[1, 3, 5, 7],
+                | [2, 4, 6, 8]]
             represents an array of 8 ADAR1000s 4 wide and 2 tall.
         element_map: type=list[list[int]]
             List with the map of where the ADAR1000 channels are in the array.
             Each entry in the map represents a row of array channels referenced
             by element number. For example, a map:
-                [[1, 5, 9, 13],
-                [2, 6, 10, 14],
-                [3, 7, 11, 15],
-                [4, 8, 12, 16]]
-            represents an array of 16 elements in a square array.
+                | [[1, 5, 9, 13],
+                | [2, 6, 10, 14],
+                | [3, 7, 11, 15],
+                | [4, 8, 12, 16]]
+            represents an array of 16 elements (4 ADAR1000s) in a square array.
         device_element_map: type=dict[int, list[int]]
             Dictionary with the map of ADAR1000 to array element references. Each
             key in the map is a device number. The corresponding list of integers
@@ -1236,7 +1320,6 @@ class adar1000_array(context_manager):
         self._element_map = element_map
         self._element_spacing = 0.015
         self._frequency = 10e9
-        self._mode = "disabled"
         self._rx_azimuth = 0
         self._rx_azimuth_phi = 0
         self._rx_elevation = 0
@@ -1436,38 +1519,6 @@ class adar1000_array(context_manager):
         self._frequency = value
 
     @property
-    def mode(self):
-        """ Get/Set the mode of operation for the array. Valid options are "rx", "tx", and "disabled" """
-        return self._mode
-
-    @mode.setter
-    def mode(self, value):
-        """ Get/Set the mode of operation for the array. Valid options are "rx", "tx", and "disabled" """
-        mode = value.strip().lower()
-        if mode not in ("rx", "tx", "disabled",):
-            raise ValueError(
-                'Mode of operation must be either "rx", "tx", or "disabled"'
-            )
-
-        self._mode = mode
-
-        if mode == "disabled":
-            for device in self.devices.values():
-                device.rx_enable = False
-                device.tx_enable = False
-        elif mode == "rx":
-            for device in self.devices.values():
-                device.rx_enable = True
-                device.tx_enable = False
-        else:
-            for device in self.devices.values():
-                device.rx_enable = False
-                device.tx_enable = True
-
-        if mode != "disabled":
-            self.tr = mode
-
-    @property
     def rx_azimuth(self):
         """ Get the Rx azimuth angle for the array in degrees """
         return self._rx_azimuth
@@ -1491,47 +1542,6 @@ class adar1000_array(context_manager):
     def temperatures(self):
         """ Get the temperature readings of the ADAR1000s in a dictionary """
         return {chip_id: device.temperature for chip_id, device in self.devices.items()}
-
-    @property
-    def tr(self):
-        """Get/Set the T/R input to the array. Valid options are "tx" or "rx". This property must be overwritten to
-        use the external T/R input, as the GPIO control is not included.
-        """
-
-        if self.tr_source == "external":
-            raise NotImplementedError(
-                "External T/R control is not implemented in this driver. Overwrite this "
-                "property in a subclass to allow for GPIO control of the ADAR1000's T/R input"
-            )
-
-        return self.devices[1].tr_spi
-
-    @tr.setter
-    def tr(self, value):
-        """Get/Set the T/R input to the array. Valid options are "tx" or "rx". This property must be overwritten to
-        use the external T/R input, as the GPIO control is not included.
-        """
-
-        if self.tr_source == "external":
-            raise NotImplementedError(
-                "External T/R control is not implemented in this driver. Overwrite this "
-                "property in a subclass to allow for GPIO control of the ADAR1000's T/R input"
-            )
-
-        for device in self.devices.values():
-            device.tr_spi = value
-        return
-
-    @property
-    def tr_source(self):
-        """ Get/Set the T/R source for the array. Valid options are "external" or "spi". """
-        return self.devices[1].tr_source
-
-    @tr_source.setter
-    def tr_source(self, value):
-        """ Get/Set the T/R source for the array. Valid options are "external" or "spi". """
-        for device in self.devices.values():
-            device.tr_source = value
 
     @property
     def tx_azimuth(self):
