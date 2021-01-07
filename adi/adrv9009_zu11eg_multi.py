@@ -408,7 +408,7 @@ class adrv9009_zu11eg_multi(object):
             except:  # noqa: E722
                 print("Re-initializing due to lock-up")
                 self.reinitialize()
-            raise Exception("Unable to initialize (Board reboot required)")
+        raise Exception("Unable to initialize (Board reboot required)")
 
     def rx(self):
         """ Receive data from multiple hardware buffers for each channel index in
