@@ -660,27 +660,33 @@ class adar1000(attribute, context_manager):
     def mode(self):
         """ Get/Set the mode of operation for the device. Valid options are "rx", "tx", and "disabled" """
 
-        # Check for Rx mode
-        if self.rx_enable and not self.tx_enable:
-            if self._tr == "rx":
-                return "rx"
-            else:
-                return "disabled"
+        # There are different paths for spi vs. external T/R control
 
-        # Check for Tx mode
-        elif self.tx_enable and not self.rx_enable:
-            if self._tr == "tx":
-                return "tx"
-            else:
-                return "disabled"
-
-        # Check mode if both device enables are high
-        elif self.rx_enable and self.tx_enable:
+        if self.tr_source == "external":
             return self._tr
 
-        # Device is disabled
         else:
-            return "disabled"
+            # Check for Rx mode
+            if self._rx_enable and not self._tx_enable:
+                if self._tr == "rx":
+                    return "rx"
+                else:
+                    return "disabled"
+
+            # Check for Tx mode
+            elif self._tx_enable and not self._rx_enable:
+                if self._tr == "tx":
+                    return "tx"
+                else:
+                    return "disabled"
+
+            # Check mode if both device enables are high
+            elif self._rx_enable and self._tx_enable:
+                return self._tr
+
+            # Device is disabled
+            else:
+                return "disabled"
 
     @mode.setter
     def mode(self, value):
@@ -692,17 +698,23 @@ class adar1000(attribute, context_manager):
             )
 
         if mode == "disabled":
-            self.rx_enable = False
-            self.tx_enable = False
-        elif mode == "rx":
-            self.rx_enable = True
-            self.tx_enable = False
-        else:
-            self.rx_enable = False
-            self.tx_enable = True
+            self.tr_source = "spi"
+            self._rx_enable = False
+            self._tx_enable = False
 
-        if mode != "disabled":
+        else:
+            # Set the T/R state to the correct mode
             self._tr = mode
+
+            if mode == "rx":
+                self._rx_enable = True
+                self._tx_enable = False
+
+            # Tx mode
+            else:
+                self._rx_enable = False
+                if self.tr_source == "spi":
+                    self._tx_enable = True
 
     @property
     def pol_state(self):
@@ -735,13 +747,13 @@ class adar1000(attribute, context_manager):
         self._set_iio_attr("voltage0", "bias_set_load", False, value, self._ctrl)
 
     @property
-    def rx_enable(self):
-        """ Get/Set enable for entire Rx chain """
+    def _rx_enable(self):
+        """ Get/Set enable for entire Rx chain. Should not be used directly, the mode property controls this. """
         return bool(self._get_iio_dev_attr("rx_en", self._ctrl))
 
-    @rx_enable.setter
-    def rx_enable(self, value):
-        """ Get/Set enable for entire Rx chain """
+    @_rx_enable.setter
+    def _rx_enable(self, value):
+        """ Get/Set enable for entire Rx chain. Should not be used directly, the mode property controls this. """
         self._set_iio_dev_attr_str("rx_en", int(value), self._ctrl)
 
     @property
@@ -944,13 +956,13 @@ class adar1000(attribute, context_manager):
         self._set_iio_attr("voltage0", "bias_set_load", True, value, self._ctrl)
 
     @property
-    def tx_enable(self):
-        """ Get/Set enable for entire Tx chain """
+    def _tx_enable(self):
+        """ Get/Set enable for entire Tx chain. Should not be used directly, the mode property controls this. """
         return bool(self._get_iio_dev_attr("tx_en", self._ctrl))
 
-    @tx_enable.setter
-    def tx_enable(self, value):
-        """ Get/Set enable for entire Tx chain """
+    @_tx_enable.setter
+    def _tx_enable(self, value):
+        """ Get/Set enable for entire Tx chain. Should not be used directly, the mode property controls this. """
         self._set_iio_dev_attr_str("tx_en", int(value), self._ctrl)
 
     @property
@@ -1085,8 +1097,7 @@ class adar1000(attribute, context_manager):
         self.tx_pa_enable = True
 
         # Disable Tx/Rx paths for the device
-        self.rx_enable = False
-        self.tx_enable = False
+        self.mode = "disabled"
 
         # Enable the PA/LNA bias DACs
         self.lna_bias_out_enable = True
