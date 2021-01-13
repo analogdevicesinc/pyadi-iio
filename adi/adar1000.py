@@ -128,7 +128,7 @@ class adar1000(attribute, context_manager):
             return self._column
 
         @property
-        def detector_enable(self):
+        def _detector_enable(self):
             """ Get/Set the detector enable bit for the associated channel """
             return bool(
                 self.adar1000_parent._get_iio_attr(
@@ -136,8 +136,8 @@ class adar1000(attribute, context_manager):
                 )
             )
 
-        @detector_enable.setter
-        def detector_enable(self, value):
+        @_detector_enable.setter
+        def _detector_enable(self, value):
             """ Get/Set Channel 1 detector enable bit """
             self.adar1000_parent._set_iio_attr(
                 f"voltage{self.adar1000_channel}", "detector_en", True, int(value)
@@ -146,9 +146,16 @@ class adar1000(attribute, context_manager):
         @property
         def detector_power(self):
             """ Get the detector power reading for the associated channel """
-            return self.adar1000_parent._get_iio_attr(
+
+            self._detector_enable = True
+
+            readback = self.adar1000_parent._get_iio_attr(
                 f"voltage{self.adar1000_channel}", "raw", True
             )
+
+            self._detector_enable = False
+
+            return readback
 
         @property
         def pa_bias_off(self):
