@@ -20,8 +20,8 @@ lte_14_stream = profile_path + "lte_1_4_cmos_fdd_api_29_2_9.stream"
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
-        ("rx_hardwaregain_chan0", 0, 30, 0.5, 0),
-        ("rx_hardwaregain_chan1", 0, 30, 0.5, 0),
+        ("rx_hardwaregain_chan0", 0, 34, 0.5, 0),
+        ("rx_hardwaregain_chan1", 0, 34, 0.5, 0),
         ("tx_hardwaregain_chan0", -40, 0.0, 0.05, 0),
         ("tx_hardwaregain_chan1", -40, 0.0, 0.05, 0),
         ("tx0_lo", 30000000, 6000000000, 1, 8),
