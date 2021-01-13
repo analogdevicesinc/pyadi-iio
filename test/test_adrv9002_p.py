@@ -7,10 +7,11 @@ hardware = "adrv9002"
 classname = "adi.adrv9002"
 profile_path = dirname(realpath(__file__)) + "/adrv9002_profiles/"
 nco_test_profile = profile_path + "lte_10_lvds_nco_api_39_0_7.json"
-lvds_test_profiles = [
-    profile_path + "lte_20_lvds_api_39_0_7.json",
-    profile_path + "lte_40_lvds_api_39_0_7.json",
-]
+nco_test_stream = profile_path + "lte_10_lvds_nco_api_39_0_7.stream"
+lte_20_lvds_profile = profile_path + "lte_20_lvds_api_39_0_7.json"
+lte_20_lvds_stream = profile_path + "lte_20_lvds_api_39_0_7.stream"
+lte_40_lvds_profile = profile_path + "lte_40_lvds_api_39_0_7.json"
+lte_40_lvds_stream = profile_path + "lte_40_lvds_api_39_0_7.stream"
 lte_14_profile = profile_path + "lte_1_4_cmos_fdd_api_39_0_7.json"
 lte_14_stream = profile_path + "lte_1_4_cmos_fdd_api_39_0_7.stream"
 
@@ -235,24 +236,43 @@ def test_adrv9002_interface_gain_narrowband(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
-    "files", lvds_test_profiles,
+    "profile_file, depends",
+    [
+        (lte_40_lvds_profile, {"write_stream": lte_40_lvds_stream}),
+        (lte_20_lvds_profile, {"write_stream": lte_20_lvds_stream}),
+    ],
 )
 def test_adrv9002_profile_write(
-    test_attribute_write_only_str, iio_uri, classname, attr, files
+    test_attribute_write_only_str_with_depends,
+    iio_uri,
+    classname,
+    attr,
+    profile_file,
+    depends,
 ):
-    test_attribute_write_only_str(iio_uri, classname, attr, files)
+    test_attribute_write_only_str_with_depends(
+        iio_uri, classname, attr, profile_file, depends
+    )
 
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
-    "attr, file", [("profile", nco_test_profile),],
+    "profile_file, depends", [(nco_test_profile, {"write_stream": nco_test_stream})]
 )
 def test_adrv9002_nco_write_profile(
-    test_attribute_write_only_str, iio_uri, classname, attr, file
+    test_attribute_write_only_str_with_depends,
+    iio_uri,
+    classname,
+    attr,
+    profile_file,
+    depends,
 ):
-    test_attribute_write_only_str(iio_uri, classname, attr, file)
+    test_attribute_write_only_str_with_depends(
+        iio_uri, classname, attr, profile_file, depends
+    )
 
 
 #########################################
