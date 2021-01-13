@@ -6,13 +6,13 @@ import pytest
 hardware = "adrv9002"
 classname = "adi.adrv9002"
 profile_path = dirname(realpath(__file__)) + "/adrv9002_profiles/"
-nco_test_profile = profile_path + "FDD_9MHz_2rx_2tx_LO_2_4G_NCO.json"
+nco_test_profile = profile_path + "lte_10_lvds_nco_api_39_0_7.json"
 lvds_test_profiles = [
-    profile_path + "FDD_20MHz_2rx_2tx_LO_2_4G.json",
-    profile_path + "FDD_40MHz_2rx_2tx_LO_2_4G.json",
+    profile_path + "lte_20_lvds_api_39_0_7.json",
+    profile_path + "lte_40_lvds_api_39_0_7.json",
 ]
-lte_14_profile = profile_path + "lte_1_4_cmos_fdd_api_29_2_9.json"
-lte_14_stream = profile_path + "lte_1_4_cmos_fdd_api_29_2_9.stream"
+lte_14_profile = profile_path + "lte_1_4_cmos_fdd_api_39_0_7.json"
+lte_14_stream = profile_path + "lte_1_4_cmos_fdd_api_39_0_7.stream"
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
