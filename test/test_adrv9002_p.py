@@ -252,7 +252,7 @@ def test_adrv9002_profile_write(
 def test_adrv9002_nco_write_profile(
     test_attribute_write_only_str, iio_uri, classname, attr, file
 ):
-    test_attribute_write_only_str(iio_uri, classname, hardware, attr, file)
+    test_attribute_write_only_str(iio_uri, classname, attr, file)
 
 
 #########################################
