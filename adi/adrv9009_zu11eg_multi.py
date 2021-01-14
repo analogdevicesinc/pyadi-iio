@@ -364,12 +364,13 @@ class adrv9009_zu11eg_multi(object):
             dev._set_iio_debug_attr_str(
                 "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_b
             )
-            dev._set_iio_debug_attr_str(
-                "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_c
-            )
-            dev._set_iio_debug_attr_str(
-                "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_d
-            )
+            if self.fmcomms8:
+                dev._set_iio_debug_attr_str(
+                    "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_c
+                )
+                dev._set_iio_debug_attr_str(
+                    "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_d
+                )
 
     def __refill_samples(self, dev, is_primary):
         if is_primary:
