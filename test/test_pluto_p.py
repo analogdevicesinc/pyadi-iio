@@ -197,3 +197,11 @@ def test_pluto_dds_loopback(
 )
 def test_pluto_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param_set):
     test_iq_loopback(iio_uri, classname, channel, param_set)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0])
+def test_pluto_loopback_zeros(test_dma_dac_zeros, iio_uri, classname, channel):
+    test_dma_dac_zeros(iio_uri, classname, channel)
