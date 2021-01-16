@@ -89,6 +89,8 @@ class rx(attribute):
 
     @rx_enabled_channels.setter
     def rx_enabled_channels(self, value):
+        if not value:
+            raise Exception("rx_enabled_channels cannot be empty")
         if self._complex_data:
             if max(value) > ((self._num_rx_channels) / 2 - 1):
                 raise Exception("RX mapping exceeds available channels")
@@ -235,13 +237,13 @@ class rx(attribute):
         return sig
 
     def rx(self):
-        """ Receive data from hardware buffers for each channel index in
-            rx_enabled_channels.
+        """Receive data from hardware buffers for each channel index in
+        rx_enabled_channels.
 
-            returns: type=numpy.array or list of numpy.array
-                An array or list of arrays when more than one receive channel
-                is enabled containing samples from a channel or set of channels.
-                Data will be complex when using a complex data device.
+        returns: type=numpy.array or list of numpy.array
+            An array or list of arrays when more than one receive channel
+            is enabled containing samples from a channel or set of channels.
+            Data will be complex when using a complex data device.
         """
         if self._rx_unbuffered_data:
             return self.__rx_unbuffered_data()
@@ -300,6 +302,9 @@ class tx(dds, attribute):
 
     @tx_enabled_channels.setter
     def tx_enabled_channels(self, value):
+        if not value:
+            self.__tx_enabled_channels = value
+            return
         if self._complex_data:
             if max(value) > ((self._num_tx_channels) / 2 - 1):
                 raise Exception("TX mapping exceeds available channels")
@@ -327,15 +332,28 @@ class tx(dds, attribute):
             self._txdac, self._tx_buffer_size, self.__tx_cyclic_buffer
         )
 
-    def tx(self, data_np):
-        """ Transmit data to hardware buffers for each channel index in
-            tx_enabled_channels.
+    def tx(self, data_np=None):
+        """Transmit data to hardware buffers for each channel index in
+        tx_enabled_channels.
 
-            args: type=numpy.array or list of numpy.array
-                An array or list of arrays when more than one transmit channel
-                is enabled containing samples from a channel or set of channels.
-                Data must be complex when using a complex data device.
+        args: type=numpy.array or list of numpy.array
+            An array or list of arrays when more than one transmit channel
+            is enabled containing samples from a channel or set of channels.
+            Data must be complex when using a complex data device.
         """
+        if not self.__tx_enabled_channels and data_np:
+            raise Exception(
+                "When tx_enabled_channels is None or empty,"
+                + " the input to tx() must be None or empty or not provided"
+            )
+        if not self.__tx_enabled_channels:
+            # Set TX DAC to zero source
+            for chan in self._txdac.channels:
+                if chan.output:
+                    chan.attrs["raw"].value = "0"
+                    return
+            raise Exception("No DDS channels found for TX, TX zeroing does not apply")
+
         if self.__txbuf and self.tx_cyclic_buffer:
             raise Exception(
                 "TX buffer has been submitted in cyclic mode. "
