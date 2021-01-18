@@ -39,40 +39,53 @@ from adi.context_manager import context_manager
 
 class adar1000(attribute, context_manager):
     """ADAR1000 Beamformer
-
     parameters:
         uri: type=string
-            URI of IIO context with ADAR1000(s)
+            Optional parameter for the URI of IIO context with ADAR1000(s). If
+            not given,
         context: type=iio.Context
-            IIO Context for the device. Only required if using adar1000_array.
+            Optional parameter for IIO Context handle for the device. Don't use if
+            instantiating the adar1000 class directly. The adar1000_array class
+            will handle this if creating an array instance.
         chip_id: type=string
-            String identifying desired chip select and hardware ID for the
-            ADAR1000. This string is the label coinciding with each chip
-            select and hardware address and are typically in the form csbX_chipX.
-            The csb line can be any number depending on how many are used in the
-            system. The chip number will typically be 1-4 because each CSB line
-            can control up to four ADAR1000s.
+            Required string identifying the desired chip select and hardware ID
+            for the ADAR1000. If creating a single adar1000 instance, you can
+            typically leave the default value of "csb1_chip1" as long as the
+            device tree label matches. If creating an adar1000_array instance,
+            the array class will handle the instantiation of individual adar1000
+            handles.
         device_number: type=int
-            Integer indicating the device number in the array
+            Required integer indicating the device number in the array. If creating
+            a single adar1000 instance, this value should be 1. If creating an
+            adar1000_array instance, the array class will handle the instantiation
+            of individual adar1000 handles.
         array_element_map: type=list[list[int]]
-            List with the map of where the ADAR1000 channels are in the array.
-            Each entry in the map represents a row of array channels referenced
-            by element number. For example, a map:
+            Required list of lists with the map of where the array elements are
+            located in the physical array. Each entry in the map represents a
+            row of elements referenced by element number. For example, a map:
                 | [[1, 5, 9, 13],
                 | [2, 6, 10, 14],
                 | [3, 7, 11, 15],
                 | [4, 8, 12, 16]]
-            represents an array of 16 elements (4 ADAR1000s) in a square array.
+            represents an array of 16 elements (4 ADAR1000s) in a 4x4 array.
+            If creating a single adar1000 instance, the elements should be 1-4 in
+            whatever configuration the physical array is (1x4, 2x2, 4x1, etc.). If
+            creating an adar1000_array instance, the array class will handle the
+            instantiation of indivdual adar1000 handles.
         channel_element_map: type=list[int]
-            List of integers relating the array element numbers to the channels
-            of the ADAR1000. Each number in the list is the element number in the
-            larger array, in order of the ADAR1000 channels. For example, a list
-            [10, 14, 13, 9] indicates that the ADAR1000's channels are the
-            following elements in the full array:
+            Required list of integers relating the array element numbers to the
+            channels of the ADAR1000 instance. Each number in the list is the
+            element number in the larger array, in order of the ADAR1000's channels.
+            For example, a list [10, 14, 13, 9] indicates that the ADAR1000's
+            channels are the following elements in the full array:
                 | Channel 1: Element # 10
                 | Channel 2: Element # 14
                 | Channel 3: Element # 13
                 | Channel 4: Element # 9
+            If creating a single adar1000 instance, the elements should be 1-4 in
+            order of the ADAR1000's channels related to the array elements. If
+            creating an adar1000_array instance, the array class will handle the
+            instantiation of indivdual adar1000 handles.
     """
 
     _device_name = ""
@@ -1268,9 +1281,9 @@ class adar1000_array(context_manager):
                 | [2, 4, 6, 8]]
             represents an array of 8 ADAR1000s 4 wide and 2 tall.
         element_map: type=list[list[int]]
-            List with the map of where the ADAR1000 channels are in the array.
-            Each entry in the map represents a row of array channels referenced
-            by element number. For example, a map:
+            List of lists with the map of where the array elements are in the
+            physical array. Each entry in the map represents a row of array
+            channels referenced by element number. For example, a map:
                 | [[1, 5, 9, 13],
                 | [2, 6, 10, 14],
                 | [3, 7, 11, 15],
