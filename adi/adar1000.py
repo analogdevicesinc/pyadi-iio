@@ -91,11 +91,10 @@ class adar1000(attribute, context_manager):
     _device_name = ""
     _BIAS_CODE_TO_VOLTAGE_SCALE = -0.018824
 
-    class adar1000_channel:
+    class _adar1000_channel:
         """Class for each channel of the ADAR1000. This class is not meant
         to be instantiated directly. adar1000 objects will create their
         own handles of this class, one for each channel
-
         parameters:
             adar1000_parent: type=adar1000
                 Parent ADAR1000 instance
@@ -367,7 +366,6 @@ class adar1000(attribute, context_manager):
 
         def save_rx_beam(self, state, attenuator, gain, phase):
             """Save a beam to an Rx memory position
-
             parameters:
                 state: int
                     State number to save. Valid options are 0 to 120
@@ -386,7 +384,6 @@ class adar1000(attribute, context_manager):
 
         def save_tx_beam(self, state, attenuator, gain, phase):
             """Save a beam to a Tx memory position
-
             parameters:
                 state: int
                     State number to save. Valid options are 0 to 120
@@ -458,7 +455,7 @@ class adar1000(attribute, context_manager):
             element_number = element_numbers[i]
             row, column = element_rows_cols[element_number]
             self._channels.append(
-                self.adar1000_channel(self, i, element_number, row, column)
+                self._adar1000_channel(self, i, element_number, row, column)
             )
 
     def __repr__(self):
@@ -1083,7 +1080,6 @@ class adar1000(attribute, context_manager):
 
     def initialize(self, pa_off=-2.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
         """Suggested initialization routine after powerup
-
         parameters:
             pa_off: float
                 Voltage to set the PA_BIAS_OFF values to during initialization
@@ -1176,7 +1172,6 @@ class adar1000(attribute, context_manager):
         rx_lna_bias_current,
     ):
         """Save a bias setting to an Rx memory position
-
         parameters:
             state: int
                 State number to save. Valid options are 1 to 7
@@ -1213,7 +1208,6 @@ class adar1000(attribute, context_manager):
         tx_pa_bias_current,
     ):
         """Save a bias setting to a Tx memory position
-
         parameters:
             state: int
                 State number to save. Valid options are 1 to 7
@@ -1260,7 +1254,6 @@ class adar1000(attribute, context_manager):
 
 class adar1000_array(context_manager):
     """ADAR1000 Beamformer Array
-
     parameters:
         uri: type=string
             URI of IIO context with ADAR1000 array
@@ -1599,7 +1592,6 @@ class adar1000_array(context_manager):
     def _calculate_phi(self, azimuth, elevation):
         """Calculate the Φ angles to steer the array in a particular direction. This method assumes that the entire
         array is one analog beam.
-
         parameters:
             azimuth: float
                 Desired beam angle in degrees for the horizontal direction.
@@ -1623,7 +1615,6 @@ class adar1000_array(context_manager):
         """ Initialize the ADAR1000s in the array """
         for device in self.devices.values():
             device.initialize()
-        return
 
     def latch_rx_settings(self):
         """ Latch in new Gain/Phase settings for the Rx """
@@ -1639,7 +1630,6 @@ class adar1000_array(context_manager):
 
     def steer_rx(self, azimuth, elevation):
         """Steer the Rx array in a particular direction. This method assumes that the entire array is one analog beam.
-
         parameters:
             azimuth: float
                 Desired beam angle in degrees for the horizontal direction.
@@ -1670,7 +1660,6 @@ class adar1000_array(context_manager):
 
     def steer_tx(self, azimuth, elevation):
         """Steer the Tx array in a particular direction. This method assumes that the entire array is one analog beam.
-
         parameters:
             azimuth: float
                 Desired beam angle in degrees for the horizontal direction.
