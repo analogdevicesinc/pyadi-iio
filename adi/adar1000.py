@@ -91,7 +91,7 @@ class adar1000(attribute, context_manager):
     _device_name = ""
     _BIAS_CODE_TO_VOLTAGE_SCALE = -0.018824
 
-    class _adar1000_channel:
+    class adar1000_channel:
         """Class for each channel of the ADAR1000. This class is not meant
         to be instantiated directly. adar1000 objects will create their
         own handles of this class, one for each channel
@@ -114,6 +114,8 @@ class adar1000(attribute, context_manager):
             self._array_element_number = array_element
             self._row = row
             self._column = column
+
+            self._BIAS_CODE_TO_VOLTAGE_SCALE = adar1000._BIAS_CODE_TO_VOLTAGE_SCALE
 
         def __repr__(self):
             """ Representation of the ADAR1000 element class """
@@ -175,12 +177,12 @@ class adar1000(attribute, context_manager):
             dac_code = self.adar1000_parent._get_iio_attr(
                 f"voltage{self.adar1000_channel}", "pa_bias_off", True
             )
-            return dac_code * self.adar1000_parent._BIAS_CODE_TO_VOLTAGE_SCALE
+            return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
         @pa_bias_off.setter
         def pa_bias_off(self, value):
             """ Get/Set PA_BIAS_OFF in voltage for the associated channel """
-            dac_code = int(value / self.adar1000_parent._BIAS_CODE_TO_VOLTAGE_SCALE)
+            dac_code = int(value / self._BIAS_CODE_TO_VOLTAGE_SCALE)
             self.adar1000_parent._set_iio_attr(
                 f"voltage{self.adar1000_channel}", "pa_bias_off", True, dac_code
             )
@@ -191,12 +193,12 @@ class adar1000(attribute, context_manager):
             dac_code = self.adar1000_parent._get_iio_attr(
                 f"voltage{self.adar1000_channel}", "pa_bias_on", True
             )
-            return dac_code * self.adar1000_parent._BIAS_CODE_TO_VOLTAGE_SCALE
+            return dac_code * self._BIAS_CODE_TO_VOLTAGE_SCALE
 
         @pa_bias_on.setter
         def pa_bias_on(self, value):
             """ Get/Set PA_BIAS_ON in voltage for the associated channel """
-            dac_code = int(value / self.adar1000_parent._BIAS_CODE_TO_VOLTAGE_SCALE)
+            dac_code = int(value / self._BIAS_CODE_TO_VOLTAGE_SCALE)
             self.adar1000_parent._set_iio_attr(
                 f"voltage{self.adar1000_channel}", "pa_bias_on", True, dac_code
             )
@@ -420,12 +422,11 @@ class adar1000(attribute, context_manager):
         self._chip_id = chip_id
         self._array_device_number = device_number
 
-        # Raise an error if the chip_id is an iterable
-        if isinstance(chip_id, (list, tuple, set)):
-            raise Exception(
-                '"chip_id" can\'t be an iterable. '
-                "Please use the adar1000_array class for instantiating multiple devices"
-            )
+        # Check for the presence of array and channel element maps
+        if array_element_map is None:
+            raise Exception('"array_element_map" argument must be provided!')
+        if channel_element_map is None:
+            raise Exception('"channel_element_map" argument must be provided!')
 
         # Look for the matching device in the context
         for dev in self._ctx.devices:
@@ -455,7 +456,7 @@ class adar1000(attribute, context_manager):
             element_number = element_numbers[i]
             row, column = element_rows_cols[element_number]
             self._channels.append(
-                self._adar1000_channel(self, i, element_number, row, column)
+                self.adar1000_channel(self, i, element_number, row, column)
             )
 
     def __repr__(self):
@@ -709,7 +710,7 @@ class adar1000(attribute, context_manager):
     def mode(self, value):
         """ Get/Set the mode of operation for the device. Valid options are "rx", "tx", and "disabled" """
         mode = value.strip().lower()
-        if mode not in ("rx", "tx", "disabled",):
+        if mode not in ("rx", "tx", "disabled"):
             raise ValueError(
                 'Mode of operation must be either "rx", "tx", or "disabled"'
             )
@@ -1149,7 +1150,6 @@ class adar1000(attribute, context_manager):
         # Latch in the new settings
         self.latch_rx_settings()
         self.latch_tx_settings()
-        return
 
     def latch_rx_settings(self):
         """ Latch in new Gain/Phase settings for the Rx """
