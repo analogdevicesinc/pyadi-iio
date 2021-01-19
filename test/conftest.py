@@ -129,3 +129,8 @@ def test_attribute_write_only_str_with_depends(request):
 @pytest.fixture
 def test_attribute_write_only_str(request):
     yield attribute_write_only_str
+
+
+@pytest.fixture()
+def test_dma_dac_zeros(request):
+    yield dma_dac_zeros

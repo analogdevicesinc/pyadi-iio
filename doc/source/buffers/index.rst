@@ -12,6 +12,8 @@ For transmitters this is the **tx** method. How data is sent and therefore must 
 
 * **tx_enabled_channels**: This is an array of integers and the number of elements in the array will determine the number of items in list to be submitted to **tx**. Like for **rx_enabled_channels**, devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.
 
+**rx_enabled_channels** must have a length greater than zero but **tx_enabled_channels** can be set to None or an empty list. In this case when **tx** is called it must be called without inputs. This is a special case and will connect a zero source into the TX input stream within the FPGA for FPGA based devices. For background on how this internally works with FPGA based devices reference the generic `DAC driver <https://wiki.analog.com/resources/tools-software/linux-drivers/iio-dds/axi-dac-dds-hdl>`_.
+
 Cyclic Mode
 --------------
 In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to. To complement these use cases it is possible to create transmit buffer which repeats, which we call **cylic buffers**. Cyclic buffers are identical or normal or non-cylic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:
