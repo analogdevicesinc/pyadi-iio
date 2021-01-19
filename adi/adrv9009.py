@@ -189,3 +189,46 @@ class adrv9009(rx_tx, context_manager):
     @trx_lo.setter
     def trx_lo(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value)
+
+
+    ########################
+    @property
+    def rx_powerdown_chan0(self):
+        """rx_powerdown_chan0: Powerdown RX channel 0 """
+        return self._get_iio_attr("voltage0", "powerdown", False)
+
+    @rx_powerdown_chan0.setter
+    def rx_powerdown_chan0(self, value):
+        self._set_iio_attr("voltage0", "powerdown", False, value)
+
+    @property
+    def rx_powerdown_chan1(self):
+        """rx_powerdown_chan1: Powerdown RX channel 1 """
+        return self._get_iio_attr("voltage1", "powerdown", False)
+
+    @rx_powerdown_chan1.setter
+    def rx_powerdown_chan1(self, value):
+        self._set_iio_attr("voltage1", "powerdown", False, value)
+
+
+
+    @property
+    def obs_powerdown_chan0(self):
+        """obs_powerdown_chan0: Powerdown OBSRX channel 0 """
+        return self._get_iio_attr("voltage2", "powerdown", False)
+
+    @obs_powerdown_chan0.setter
+    def obs_powerdown_chan0(self, value):
+        self._set_iio_attr("voltage2", "powerdown", False, value)
+
+    @property
+    def obs_powerdown_chan1(self):
+        """obs_powerdown_chan1: Powerdown OBSRX channel 1 """
+        return self._get_iio_attr("voltage3", "powerdown", False)
+
+    @obs_powerdown_chan1.setter
+    def obs_powerdown_chan1(self, value):
+        self._set_iio_attr("voltage3", "powerdown", False, value)
+
+
+

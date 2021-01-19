@@ -306,7 +306,17 @@ def gain_check(
     if channel==7:
         rssi = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_d)
 
-    print(rssi)
+    rssi1 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl)
+    rssi2 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl)
+    rssi3 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_b)
+    rssi4 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_b)
+    rssi5 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_c)
+    rssi6 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_c)
+    rssi7 = sdr._get_iio_attr("voltage0", "rssi", False, sdr._ctrl_d)
+    rssi8 = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_d)
+    #print(rssi1,rssi2,rssi3,rssi4,rssi5,rssi6,rssi7,rssi8)
+
+    print("RSSI:",rssi,"Channel:",channel,"DDS Scale:",dds_scale)
     assert rssi >= min_rssi
     assert rssi <= max_rssi
 

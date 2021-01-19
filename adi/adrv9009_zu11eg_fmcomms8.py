@@ -343,3 +343,81 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
     @trx_lo_chip_d.setter
     def trx_lo_chip_d(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl_d)
+
+    @property
+    def rx_powerdown_chan0_chip_c(self):
+        """rx_powerdown_chan0_chip_c: Powerdown RX channel 0 chip C """
+        return self._get_iio_attr("voltage0", "powerdown", False, self._ctrl_c)
+
+    @rx_powerdown_chan0_chip_c.setter
+    def rx_powerdown_chan0_chip_c(self, value):
+        self._set_iio_attr("voltage0", "powerdown", False, value, self._ctrl_c)
+
+    @property
+    def rx_powerdown_chan1_chip_c(self):
+        """rx_powerdown_chan1_chip_c: Powerdown RX channel 1 chip C """
+        return self._get_iio_attr("voltage1", "powerdown", False, self._ctrl_c)
+
+    @rx_powerdown_chan1_chip_c.setter
+    def rx_powerdown_chan1_chip_c(self, value):
+        self._set_iio_attr("voltage1", "powerdown", False, value, self._ctrl_c)
+
+
+    @property
+    def rx_powerdown_chan0_chip_d(self):
+        """rx_powerdown_chan0_chip_d: Powerdown RX channel 0 chip D """
+        return self._get_iio_attr("voltage0", "powerdown", False, self._ctrl_d)
+
+    @rx_powerdown_chan0_chip_d.setter
+    def rx_powerdown_chan0_chip_d(self, value):
+        self._set_iio_attr("voltage0", "powerdown", False, value, self._ctrl_d)
+
+    @property
+    def rx_powerdown_chan1_chip_d(self):
+        """rx_powerdown_chan1_chip_d: Powerdown RX channel 1 chip D """
+        return self._get_iio_attr("voltage1", "powerdown", False, self._ctrl_d)
+
+    @rx_powerdown_chan1_chip_d.setter
+    def rx_powerdown_chan1_chip_d(self, value):
+        self._set_iio_attr("voltage1", "powerdown", False, value, self._ctrl_d)
+
+
+
+    ###############################
+    @property
+    def obs_powerdown_chan0_chip_c(self):
+        """obs_powerdown_chan0_chip_c: Powerdown OBSRX channel 0 chip C """
+        return self._get_iio_attr("voltage2", "powerdown", False, self._ctrl_c)
+
+    @obs_powerdown_chan0_chip_c.setter
+    def obs_powerdown_chan0_chip_c(self, value):
+        self._set_iio_attr("voltage2", "powerdown", False, value, self._ctrl_c)
+
+    @property
+    def obs_powerdown_chan1_chip_c(self):
+        """obs_powerdown_chan1_chip_c: Powerdown OBSRX channel 1 chip C """
+        return self._get_iio_attr("voltage3", "powerdown", False, self._ctrl_c)
+
+    @obs_powerdown_chan1_chip_c.setter
+    def obs_powerdown_chan1_chip_c(self, value):
+        self._set_iio_attr("voltage3", "powerdown", False, value, self._ctrl_c)
+
+
+    @property
+    def obs_powerdown_chan0_chip_d(self):
+        """obs_powerdown_chan0_chip_d: Powerdown OBSRX channel 0 chip D """
+        return self._get_iio_attr("voltage2", "powerdown", False, self._ctrl_d)
+
+    @obs_powerdown_chan0_chip_d.setter
+    def obs_powerdown_chan0_chip_d(self, value):
+        self._set_iio_attr("voltage2", "powerdown", False, value, self._ctrl_d)
+
+    @property
+    def obs_powerdown_chan1_chip_d(self):
+        """obs_powerdown_chan1_chip_d: Powerdown OBSRX channel 1 chip D """
+        return self._get_iio_attr("voltage3", "powerdown", False, self._ctrl_d)
+
+    @obs_powerdown_chan1_chip_d.setter
+    def obs_powerdown_chan1_chip_d(self, value):
+        self._set_iio_attr("voltage3", "powerdown", False, value, self._ctrl_d)
+
