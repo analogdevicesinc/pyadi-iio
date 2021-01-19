@@ -76,6 +76,49 @@ def dma_tx(uri, classname, channel):
     del sdr
 
 
+def dma_dac_zeros(uri, classname, channel):
+    """dma_dac_zeros: Test DMA digital loopback with a zeros.
+        This test requires a AD936x or similar device with internal loopback
+        modes. The TX cores are put into zero source mode in cases when no
+        output is desired
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            classname: type=string
+                Name of pyadi interface class which contain attribute
+            channel: type=list
+                List of integers or list of list of integers of channels to
+                enable through tx_enabled_channels
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    if classname == "adi.FMComms5" and (channel in [2, 3]):
+        sdr.loopback_chip_b = 1
+    else:
+        sdr.loopback = 1
+    sdr.tx_cyclic_buffer = True
+    # Create a ramp signal with different values for I and Q
+    sdr.tx_enabled_channels = None
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = 2 ** 11 * 2 * len(sdr.rx_enabled_channels)
+    try:
+        sdr.tx()
+        # Flush buffers
+        for _ in range(100):
+            data = sdr.rx()
+        # Turn off loopback (for other tests)
+        if classname == "adi.FMComms5" and (channel in [2, 3]):
+            sdr.loopback_chip_b = 0
+        else:
+            sdr.loopback = 0
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    # Check data
+    assert sum(np.abs(data)) == 0
+
+
 def dma_loopback(uri, classname, channel):
     """ dma_loopback: Test DMA digital loopback with a triangle waveforms.
         This test requires a AD936x or similar device with internal loopback
