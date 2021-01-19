@@ -1609,6 +1609,52 @@ class adar1000_array(context_manager):
 
         return az_phi, el_phi
 
+    def _steer(self, rx_or_tx, azimuth, elevation):
+        """Steer the array
+        parameters:
+            rx_or_tx: string
+                Sets which parameters are updated, Rx or Tx.
+            azimuth: float
+                Desired beam angle in degrees for the horizontal direction
+            elevation: float
+                Desired beam angle in degrees for the vertical direction
+        """
+
+        # Clean up the rx_or_tx variable
+        rx_or_tx = rx_or_tx.strip().lower()
+
+        # Calculate the Φ angles for each element in both directions (in degrees)
+        azimuth_phi, elevation_phi = self._calculate_phi(azimuth, elevation)
+
+        # Update the class variables
+        if rx_or_tx == "rx":
+            self._rx_azimuth = azimuth
+            self._rx_elevation = elevation
+            self._rx_azimuth_phi = azimuth_phi
+            self._rx_elevation_phi = elevation_phi
+        else:
+            self._tx_azimuth = azimuth
+            self._tx_elevation = elevation
+            self._tx_azimuth_phi = azimuth_phi
+            self._tx_elevation_phi = elevation_phi
+
+        # Steer the elements in the array
+        for element in self.elements.values():
+            # Calculate the row and column phases
+            column_phase = element.column * azimuth_phi
+            row_phase = element.row * elevation_phi
+
+            if rx_or_tx == "rx":
+                element.rx_phase = column_phase + row_phase
+            else:
+                element.tx_phase = column_phase + row_phase
+
+        # Latch in the new phases
+        if rx_or_tx == "rx":
+            self.latch_rx_settings()
+        else:
+            self.latch_tx_settings()
+
     """ Public Methods """
 
     def initialize_devices(self):
@@ -1620,13 +1666,11 @@ class adar1000_array(context_manager):
         """ Latch in new Gain/Phase settings for the Rx """
         for device in self.devices.values():
             device.latch_rx_settings()
-        return
 
     def latch_tx_settings(self):
         """ Latch in new Gain/Phase settings for the Tx """
         for device in self.devices.values():
             device.latch_tx_settings()
-        return
 
     def steer_rx(self, azimuth, elevation):
         """Steer the Rx array in a particular direction. This method assumes that the entire array is one analog beam.
@@ -1637,26 +1681,7 @@ class adar1000_array(context_manager):
                 Desired beam angle in degrees for the vertical direction.
         """
 
-        # Calculate the Φ angles for each element in both directions (in degrees)
-        azimuth_phi, elevation_phi = self._calculate_phi(azimuth, elevation)
-
-        # Update the class variables
-        self._rx_azimuth = azimuth
-        self._rx_elevation = elevation
-        self._rx_azimuth_phi = azimuth_phi
-        self._rx_elevation_phi = elevation_phi
-
-        # Steer the elements in the array
-        for element in self.elements.values():
-            # Calculate the row and column phases
-            column_phase = element.column * azimuth_phi
-            row_phase = element.row * elevation_phi
-
-            element.rx_phase = column_phase + row_phase
-
-        # Latch in the new phases
-        self.latch_rx_settings()
-        return
+        self._steer("rx", azimuth, elevation)
 
     def steer_tx(self, azimuth, elevation):
         """Steer the Tx array in a particular direction. This method assumes that the entire array is one analog beam.
@@ -1667,23 +1692,4 @@ class adar1000_array(context_manager):
                 Desired beam angle in degrees for the vertical direction.
         """
 
-        # Calculate the Φ angles for each element in both directions (in degrees)
-        azimuth_phi, elevation_phi = self._calculate_phi(azimuth, elevation)
-
-        # Update the class variables
-        self._tx_azimuth = azimuth
-        self._tx_elevation = elevation
-        self._tx_azimuth_phi = azimuth_phi
-        self._tx_elevation_phi = elevation_phi
-
-        # Steer the elements in the array
-        for element in self.elements.values():
-            # Calculate the row and column phases
-            column_phase = element.column * azimuth_phi
-            row_phase = element.row * elevation_phi
-
-            element.tx_phase = column_phase + row_phase
-
-        # Latch in the new phases
-        self.latch_tx_settings()
-        return
+        self._steer("tx", azimuth, elevation)
