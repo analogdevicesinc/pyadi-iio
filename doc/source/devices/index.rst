@@ -33,4 +33,6 @@ Supported Devices
    adi.fmclidar1
    adi.fmcomms5
    adi.jesd
+   adi.ltc2314_14
    adi.ltc2983
+   adi.one_bit_adc_dac
