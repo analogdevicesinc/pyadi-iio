@@ -38,7 +38,8 @@ from adi.context_manager import context_manager
 
 
 class adar1000(attribute, context_manager):
-    """ADAR1000 Beamformer
+    """ ADAR1000 Beamformer
+
     parameters:
         uri: type=string
             Optional parameter for the URI of IIO context with ADAR1000(s). If
@@ -63,29 +64,33 @@ class adar1000(attribute, context_manager):
             Required list of lists with the map of where the array elements are
             located in the physical array. Each entry in the map represents a
             row of elements referenced by element number. For example, a map:
+
                 | [[1, 5, 9, 13],
                 | [2, 6, 10, 14],
                 | [3, 7, 11, 15],
                 | [4, 8, 12, 16]]
+
             represents an array of 16 elements (4 ADAR1000s) in a 4x4 array.
             If creating a single adar1000 instance, the elements should be 1-4 in
             whatever configuration the physical array is (1x4, 2x2, 4x1, etc.). If
             creating an adar1000_array instance, the array class will handle the
-            instantiation of indivdual adar1000 handles.
+            instantiation of individual adar1000 handles.
         channel_element_map: type=list[int]
             Required list of integers relating the array element numbers to the
             channels of the ADAR1000 instance. Each number in the list is the
             element number in the larger array, in order of the ADAR1000's channels.
             For example, a list [10, 14, 13, 9] indicates that the ADAR1000's
             channels are the following elements in the full array:
+
                 | Channel 1: Element # 10
                 | Channel 2: Element # 14
                 | Channel 3: Element # 13
                 | Channel 4: Element # 9
+
             If creating a single adar1000 instance, the elements should be 1-4 in
             order of the ADAR1000's channels related to the array elements. If
             creating an adar1000_array instance, the array class will handle the
-            instantiation of indivdual adar1000 handles.
+            instantiation of individual adar1000 handles.
     """
 
     _device_name = ""
@@ -95,6 +100,7 @@ class adar1000(attribute, context_manager):
         """Class for each channel of the ADAR1000. This class is not meant
         to be instantiated directly. adar1000 objects will create their
         own handles of this class, one for each channel
+
         parameters:
             adar1000_parent: type=adar1000
                 Parent ADAR1000 instance
@@ -368,6 +374,7 @@ class adar1000(attribute, context_manager):
 
         def save_rx_beam(self, state, attenuator, gain, phase):
             """Save a beam to an Rx memory position
+
             parameters:
                 state: int
                     State number to save. Valid options are 0 to 120
@@ -386,6 +393,7 @@ class adar1000(attribute, context_manager):
 
         def save_tx_beam(self, state, attenuator, gain, phase):
             """Save a beam to a Tx memory position
+
             parameters:
                 state: int
                     State number to save. Valid options are 0 to 120
@@ -1081,6 +1089,7 @@ class adar1000(attribute, context_manager):
 
     def initialize(self, pa_off=-2.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
         """Suggested initialization routine after powerup
+
         parameters:
             pa_off: float
                 Voltage to set the PA_BIAS_OFF values to during initialization
@@ -1172,6 +1181,7 @@ class adar1000(attribute, context_manager):
         rx_lna_bias_current,
     ):
         """Save a bias setting to an Rx memory position
+
         parameters:
             state: int
                 State number to save. Valid options are 1 to 7
@@ -1208,6 +1218,7 @@ class adar1000(attribute, context_manager):
         tx_pa_bias_current,
     ):
         """Save a bias setting to a Tx memory position
+
         parameters:
             state: int
                 State number to save. Valid options are 1 to 7
@@ -1254,6 +1265,7 @@ class adar1000(attribute, context_manager):
 
 class adar1000_array(context_manager):
     """ADAR1000 Beamformer Array
+
     parameters:
         uri: type=string
             URI of IIO context with ADAR1000 array
@@ -1270,17 +1282,21 @@ class adar1000_array(context_manager):
             List with the map of where the ADAR1000s are in the array. Each
             entry in the map represents a row of ADAR1000s referenced by
             device number. For example, a map:
+
                 | [[1, 3, 5, 7],
                 | [2, 4, 6, 8]]
+
             represents an array of 8 ADAR1000s 4 wide and 2 tall.
         element_map: type=list[list[int]]
             List of lists with the map of where the array elements are in the
             physical array. Each entry in the map represents a row of array
             channels referenced by element number. For example, a map:
+
                 | [[1, 5, 9, 13],
                 | [2, 6, 10, 14],
                 | [3, 7, 11, 15],
                 | [4, 8, 12, 16]]
+
             represents an array of 16 elements (4 ADAR1000s) in a square array.
         device_element_map: type=dict[int, list[int]]
             Dictionary with the map of ADAR1000 to array element references. Each
@@ -1674,6 +1690,7 @@ class adar1000_array(context_manager):
 
     def steer_rx(self, azimuth, elevation):
         """Steer the Rx array in a particular direction. This method assumes that the entire array is one analog beam.
+
         parameters:
             azimuth: float
                 Desired beam angle in degrees for the horizontal direction.
@@ -1685,6 +1702,7 @@ class adar1000_array(context_manager):
 
     def steer_tx(self, azimuth, elevation):
         """Steer the Tx array in a particular direction. This method assumes that the entire array is one analog beam.
+
         parameters:
             azimuth: float
                 Desired beam angle in degrees for the horizontal direction.
