@@ -71,7 +71,7 @@ class adar1000(attribute, context_manager):
             If creating a single adar1000 instance, the elements should be 1-4 in
             whatever configuration the physical array is (1x4, 2x2, 4x1, etc.). If
             creating an adar1000_array instance, the array class will handle the
-            instantiation of indivdual adar1000 handles.
+            instantiation of individual adar1000 handles.
         channel_element_map: type=list[int]
             Required list of integers relating the array element numbers to the
             channels of the ADAR1000 instance. Each number in the list is the
@@ -85,7 +85,7 @@ class adar1000(attribute, context_manager):
             If creating a single adar1000 instance, the elements should be 1-4 in
             order of the ADAR1000's channels related to the array elements. If
             creating an adar1000_array instance, the array class will handle the
-            instantiation of indivdual adar1000 handles.
+            instantiation of individual adar1000 handles.
     """
 
     _device_name = ""
@@ -1670,7 +1670,9 @@ class adar1000_array(context_manager):
                 Voltage to set the LNA_BIAS_ON values to during initialization
         """
         for device in self.devices.values():
-            device.initialize(pa_off=pa_off, pa_on=pa_on, lna_off=lna_off, lna_on=lna_on)
+            device.initialize(
+                pa_off=pa_off, pa_on=pa_on, lna_off=lna_off, lna_on=lna_on
+            )
 
     def latch_rx_settings(self):
         """ Latch in new Gain/Phase settings for the Rx """
