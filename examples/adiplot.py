@@ -50,16 +50,10 @@ class ADIPlotter(object):
         sp_xaxis.setLabel(units="Hz")
 
         self.waveform = self.win.addPlot(
-            title="WAVEFORM",
-            row=1,
-            col=1,
-            axisItems={"bottom": wf_xaxis},
+            title="WAVEFORM", row=1, col=1, axisItems={"bottom": wf_xaxis},
         )
         self.spectrum = self.win.addPlot(
-            title="SPECTRUM",
-            row=2,
-            col=1,
-            axisItems={"bottom": sp_xaxis},
+            title="SPECTRUM", row=2, col=1, axisItems={"bottom": sp_xaxis},
         )
         self.waveform.showGrid(x=True, y=True)
         self.spectrum.showGrid(x=True, y=True)
@@ -106,9 +100,7 @@ class ADIPlotter(object):
                 else:
                     start = -1 * self.stream.sample_rate / 2
                 self.spectrum.setXRange(
-                    start,
-                    self.stream.sample_rate / 2,
-                    padding=0.005,
+                    start, self.stream.sample_rate / 2, padding=0.005,
                 )
             elif name == "waveform":
                 self.traces[name] = self.waveform.plot(pen="c", width=3)
@@ -123,9 +115,7 @@ class ADIPlotter(object):
         while not self.q.empty():
             wf_data = self.q.get()
             self.set_plotdata(
-                name="waveform",
-                data_x=self.x,
-                data_y=np.real(wf_data),
+                name="waveform", data_x=self.x, data_y=np.real(wf_data),
             )
             sp_data = np.fft.fft(wf_data)
             sp_data = np.abs(np.fft.fftshift(sp_data)) / self.stream.rx_buffer_size
