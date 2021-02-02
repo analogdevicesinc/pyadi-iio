@@ -181,6 +181,16 @@ class ad9081(rx_tx, context_manager):
         """
         return self._path_map
 
+    @pfilt_config.setter
+    def pfilt_config(self, value):
+        """ Load a new PFILT configuration
+            Input is path to PFILT configuration file. Please see
+            driver documentation about PFILT generation and limitations
+        """
+        with open(value, "r") as file:
+            data = file.read()
+        self._set_iio_dev_attr_str("filter_fir_config", data)
+
     @property
     def rx_channel_nco_frequencies(self):
         """rx_channel_nco_frequencies: Receive path fine DDC NCO frequencies
