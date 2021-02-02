@@ -157,6 +157,18 @@ class ad9081(rx_tx, context_manager):
         """
         return self._path_map
 
+    def write_pfilt_config(self, value):
+        """ Load a new PFILT configuration file
+            Input is path to PFILT configuration file. Please see
+            driver documentation about PFILT generation and limitations
+        """
+        with open(value, "r") as file:
+            data = file.read()
+        self._set_iio_dev_attr_str("filter_fir_config", data)
+
+    # we cannot really get the profile. The driver will just throw EPERM
+    pfilt_config = property(None, write_pfilt_config)
+
     @property
     def rx_channel_nco_frequencies(self):
         """rx_channel_nco_frequencies: Receive path fine DDC NCO frequencies
