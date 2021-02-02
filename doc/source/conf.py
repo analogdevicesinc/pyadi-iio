@@ -26,7 +26,7 @@ copyright = "2019, Analog Devices, Inc"
 author = "Travis Collins"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.3"
+release = "0.0.7"
 
 
 # -- General configuration ---------------------------------------------------
