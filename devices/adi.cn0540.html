@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ad5627 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>cn0540 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ad5686" href="adi.ad5686.html" />
-    <link rel="prev" title="Supported Devices" href="index.html" /> 
+    <link rel="next" title="daq2" href="adi.daq2.html" />
+    <link rel="prev" title="cn0532" href="adi.cn0532.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,7 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Supported Devices</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
@@ -110,7 +110,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">cn0540</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
@@ -175,13 +175,13 @@
         
           <li><a href="index.html">Supported Devices</a> &raquo;</li>
         
-      <li>ad5627</li>
+      <li>cn0540</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/devices/adi.ad5627.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/devices/adi.cn0540.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -194,23 +194,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-adi.ad5627">
-<span id="ad5627"></span><h1>ad5627<a class="headerlink" href="#module-adi.ad5627" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-adi.cn0540">
+<span id="cn0540"></span><h1>cn0540<a class="headerlink" href="#module-adi.cn0540" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="adi.ad5627.ad5627">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad5627.</code><code class="sig-name descname">ad5627</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5627.ad5627" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
-<p>AD5627 Low Power Dual nanoDAC</p>
+<dt id="adi.cn0540.cn0540">
+<em class="property">class </em><code class="sig-prename descclassname">adi.cn0540.</code><code class="sig-name descname">cn0540</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0540.cn0540" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>CN0540 CBM DAQ Board</p>
 <dl class="py method">
-<dt id="adi.ad5627.ad5627.apdbias">
-<em class="property">property </em><code class="sig-name descname">apdbias</code><a class="headerlink" href="#adi.ad5627.ad5627.apdbias" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the APD Bias.</p>
+<dt id="adi.cn0540.cn0540.blue_led_enable">
+<em class="property">property </em><code class="sig-name descname">blue_led_enable</code><a class="headerlink" href="#adi.cn0540.cn0540.blue_led_enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>blue_led_enable: Enable blue LED on board</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.ad5627.ad5627.tiltvoltage">
-<em class="property">property </em><code class="sig-name descname">tiltvoltage</code><a class="headerlink" href="#adi.ad5627.ad5627.tiltvoltage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Tilt Voltage.</p>
+<dt id="adi.cn0540.cn0540.calibrate">
+<code class="sig-name descname">calibrate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0540.cn0540.calibrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tune LTC2606 to make AD7768-1 ADC codes zero mean</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.cn0540.cn0540.fda_disable_status">
+<em class="property">property </em><code class="sig-name descname">fda_disable_status</code><a class="headerlink" href="#adi.cn0540.cn0540.fda_disable_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>fda_disable_status: Amplifier disable status</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.cn0540.cn0540.fda_mode">
+<em class="property">property </em><code class="sig-name descname">fda_mode</code><a class="headerlink" href="#adi.cn0540.cn0540.fda_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>fda_mode: Amplifier mode. Options are low-power or full-power</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.cn0540.cn0540.input_voltage">
+<em class="property">property </em><code class="sig-name descname">input_voltage</code><a class="headerlink" href="#adi.cn0540.cn0540.input_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>input_voltage: Input voltage in mV from ADC before shift voltage applied</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.cn0540.cn0540.monitor_powerup">
+<em class="property">property </em><code class="sig-name descname">monitor_powerup</code><a class="headerlink" href="#adi.cn0540.cn0540.monitor_powerup" title="Permalink to this definition">¶</a></dt>
+<dd><p>monitor_powerup: Shutdown pin is tied to active-low inputs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.cn0540.cn0540.red_led_enable">
+<em class="property">property </em><code class="sig-name descname">red_led_enable</code><a class="headerlink" href="#adi.cn0540.cn0540.red_led_enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>red_led_enable: Enable red LED on board</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.cn0540.cn0540.sensor_voltage">
+<em class="property">property </em><code class="sig-name descname">sensor_voltage</code><a class="headerlink" href="#adi.cn0540.cn0540.sensor_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>sensor_voltage: Sensor voltage in mV read from ADC after biasing</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.cn0540.cn0540.shift_voltage">
+<em class="property">property </em><code class="sig-name descname">shift_voltage</code><a class="headerlink" href="#adi.cn0540.cn0540.shift_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>shift_voltage: Shift voltage in mV from LTC2606 to bias sensor data</p>
 </dd></dl>
 
 </dd></dl>
@@ -223,8 +265,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="adi.ad5686.html" class="btn btn-neutral float-right" title="ad5686" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="index.html" class="btn btn-neutral float-left" title="Supported Devices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="adi.daq2.html" class="btn btn-neutral float-right" title="daq2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="adi.cn0532.html" class="btn btn-neutral float-left" title="cn0532" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

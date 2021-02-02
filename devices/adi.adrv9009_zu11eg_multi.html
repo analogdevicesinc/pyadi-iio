@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>adrv9009_zu11eg_multi &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="adxl345" href="adi.adxl345.html" />
+    <link rel="prev" title="adrv9009_zu11eg_fmcomms8" href="adi.adrv9009_zu11eg_fmcomms8.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Analog Devices Hardware Python Interfaces
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Supported Devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9371.html">ad9371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/index.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Analog Devices Hardware Python Interfaces</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Supported Devices</a> &raquo;</li>
+        
+      <li>adrv9009_zu11eg_multi</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/devices/adi.adrv9009_zu11eg_multi.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-adi.adrv9009_zu11eg_multi">
+<span id="adrv9009-zu11eg-multi"></span><h1>adrv9009_zu11eg_multi<a class="headerlink" href="#module-adi.adrv9009_zu11eg_multi" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi">
+<em class="property">class </em><code class="sig-prename descclassname">adi.adrv9009_zu11eg_multi.</code><code class="sig-name descname">adrv9009_zu11eg_multi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_uri</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">secondary_uris</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">primary_jesd</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">secondary_jesds</span><span class="o">=</span><span class="default_value">[None]</span></em>, <em class="sig-param"><span class="n">fmcomms8</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ADRV9009-ZU11EG Multi-SOM Manager</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>primary_uri: type=string</dt><dd><p>URI of primary ADRV9009-ZU11EG. Parent HMC7044 is connected
+to this SOM</p>
+</dd>
+<dt>secondary_uris: type=list[string]</dt><dd><p>URI(s) of secondary ADRV9009-ZU11EG(s).</p>
+</dd>
+<dt>primary_jesd: type=adi.jesd</dt><dd><p>JESD object associated with primary ADRV9009-ZU11EG</p>
+</dd>
+<dt>secondary_jesds: type=list[adi.jesd]</dt><dd><p>JESD object(s) associated with secondary ADRV9009-ZU11EG(s)</p>
+</dd>
+<dt>fmcomms8: type=boolean</dt><dd><p>Boolean flag to idenify is FMComms8(s) are attached to SOMs</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_cap_sel">
+<code class="sig-name descname">hmc7044_cap_sel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_cap_sel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_car_output_delay">
+<code class="sig-name descname">hmc7044_car_output_delay</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chan</span></em>, <em class="sig-param"><span class="n">digital</span></em>, <em class="sig-param"><span class="n">analog_ps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_car_output_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>hmc7044_car_output_delay:</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>digital: type=int</dt><dd><p>Digital delay. Adjusts the phase of the divider signal
+by up to 17 half cycles of the VCO.</p>
+</dd>
+<dt>analog_ps: type=int</dt><dd><p>Analog delay. Adjusts the delay of the divider signal in
+increments of ~25 ps. Range is from 100ps to 700ps.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_ext_output_delay">
+<code class="sig-name descname">hmc7044_ext_output_delay</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chan</span></em>, <em class="sig-param"><span class="n">digital</span></em>, <em class="sig-param"><span class="n">analog_ps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_ext_output_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>hmc7044_ext_output_delay:</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>digital: type=int</dt><dd><p>Digital delay. Adjusts the phase of the divider signal
+by up to 17 half cycles of the VCO.</p>
+</dd>
+<dt>analog_ps: type=int</dt><dd><p>Analog delay. Adjusts the delay of the divider signal in
+increments of ~25 ps. Range is from 100ps to 700ps.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_set_cap_sel">
+<code class="sig-name descname">hmc7044_set_cap_sel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vals</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_set_cap_sel" title="Permalink to this definition">¶</a></dt>
+<dd><p>hmc7044_set_cap_sel:</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>vals: type=list</dt><dd><p>Forces certain Capacitor bank seletions.
+Typically the list returned form hmc7044_cap_sel</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.reinitialize">
+<code class="sig-name descname">reinitialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.reinitialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>reinitialize: reinitialize all transceivers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.rx">
+<code class="sig-name descname">rx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.rx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive data from multiple hardware buffers for each channel index in
+rx_enabled_channels of each child object (primary,secondaries[indx]).</p>
+<dl class="simple">
+<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
+is enabled containing samples from a channel or set of channels.
+Data will be complex when using a complex data device.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.rx_buffer_size">
+<em class="property">property </em><code class="sig-name descname">rx_buffer_size</code><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.rx_buffer_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_buffer_size: Size of receive buffer in samples for each device</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.secondaries">
+<code class="sig-name descname">secondaries</code><em class="property">: List<span class="p">[</span><a class="reference internal" href="adi.adrv9009_zu11eg.html#adi.adrv9009_zu11eg.adrv9009_zu11eg" title="adi.adrv9009_zu11eg.adrv9009_zu11eg">adi.adrv9009_zu11eg.adrv9009_zu11eg</a><span class="p">]</span></em><em class="property"> = []</em><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.secondaries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.set_trx_lo_frequency">
+<code class="sig-name descname">set_trx_lo_frequency</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">freq</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.set_trx_lo_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>set_trx_lo_frequency:</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>freq: type=int</dt><dd><p>Frequency in hertz to be applied to all LOs</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.sysref_request">
+<code class="sig-name descname">sysref_request</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.sysref_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>sysref_request: Sysref request for parent HMC7044</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="adi.adxl345.html" class="btn btn-neutral float-right" title="adxl345" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="adi.adrv9009_zu11eg_fmcomms8.html" class="btn btn-neutral float-left" title="adrv9009_zu11eg_fmcomms8" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2019, Analog Devices, Inc.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

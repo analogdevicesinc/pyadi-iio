@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Buffers &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -29,7 +32,6 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -37,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="FPGA Features" href="../fpga/index.html" />
-    <link rel="prev" title="ltc2983" href="../devices/adi.ltc2983.html" /> 
+    <link rel="prev" title="one_bit_adc_dac" href="../devices/adi.one_bit_adc_dac.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -51,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Analog Devices Hardware Python Interfaces
+            <a href="../index.html" class="icon icon-home"> Analog Devices Hardware Python Interfaces
           
 
           
@@ -137,6 +139,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -148,7 +152,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/buffers/index.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -174,6 +178,7 @@
 <ul class="simple">
 <li><p><strong>tx_enabled_channels</strong>: This is an array of integers and the number of elements in the array will determine the number of items in list to be submitted to <strong>tx</strong>. Like for <strong>rx_enabled_channels</strong>, devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.</p></li>
 </ul>
+<p><strong>rx_enabled_channels</strong> must have a length greater than zero but <strong>tx_enabled_channels</strong> can be set to None or an empty list. In this case when <strong>tx</strong> is called it must be called without inputs. This is a special case and will connect a zero source into the TX input stream within the FPGA for FPGA based devices. For background on how this internally works with FPGA based devices reference the generic <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-drivers/iio-dds/axi-dac-dds-hdl">DAC driver</a>.</p>
 <div class="section" id="cyclic-mode">
 <h2>Cyclic Mode<a class="headerlink" href="#cyclic-mode" title="Permalink to this headline">¶</a></h2>
 <p>In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to. To complement these use cases it is possible to create transmit buffer which repeats, which we call <strong>cylic buffers</strong>. Cyclic buffers are identical or normal or non-cylic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:</p>
@@ -246,7 +251,7 @@ Data will be complex when using a complex data device.</p>
 <dd><p>Buffer handling for transmit devices</p>
 <dl class="py method">
 <dt id="adi.rx_tx.tx.tx">
-<code class="sig-name descname">tx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_np</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_np</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transmit data to hardware buffers for each channel index in
 tx_enabled_channels.</p>
 <dl class="simple">
@@ -332,37 +337,29 @@ Data must be complex when using a complex data device.</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../fpga/index.html" class="btn btn-neutral float-right" title="FPGA Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../devices/adi.ltc2983.html" class="btn btn-neutral float-left" title="ltc2983" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="../fpga/index.html" class="btn btn-neutral float-right" title="FPGA Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../devices/adi.one_bit_adc_dac.html" class="btn btn-neutral float-left" title="one_bit_adc_dac" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2019, Analog Devices, Inc
+        &#169; Copyright 2019, Analog Devices, Inc.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

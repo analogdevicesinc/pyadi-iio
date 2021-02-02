@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ad5627 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>one_bit_adc_dac &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ad5686" href="adi.ad5686.html" />
-    <link rel="prev" title="Supported Devices" href="index.html" /> 
+    <link rel="next" title="Buffers" href="../buffers/index.html" />
+    <link rel="prev" title="ltc2983" href="adi.ltc2983.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,7 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Supported Devices</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
@@ -118,7 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314-14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">one_bit_adc_dac</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -175,13 +175,13 @@
         
           <li><a href="index.html">Supported Devices</a> &raquo;</li>
         
-      <li>ad5627</li>
+      <li>one_bit_adc_dac</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/devices/adi.ad5627.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/devices/adi.one_bit_adc_dac.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -194,25 +194,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-adi.ad5627">
-<span id="ad5627"></span><h1>ad5627<a class="headerlink" href="#module-adi.ad5627" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-adi.one_bit_adc_dac">
+<span id="one-bit-adc-dac"></span><h1>one_bit_adc_dac<a class="headerlink" href="#module-adi.one_bit_adc_dac" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="adi.ad5627.ad5627">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad5627.</code><code class="sig-name descname">ad5627</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5627.ad5627" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
-<p>AD5627 Low Power Dual nanoDAC</p>
-<dl class="py method">
-<dt id="adi.ad5627.ad5627.apdbias">
-<em class="property">property </em><code class="sig-name descname">apdbias</code><a class="headerlink" href="#adi.ad5627.ad5627.apdbias" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the APD Bias.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="adi.ad5627.ad5627.tiltvoltage">
-<em class="property">property </em><code class="sig-name descname">tiltvoltage</code><a class="headerlink" href="#adi.ad5627.ad5627.tiltvoltage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Tilt Voltage.</p>
-</dd></dl>
-
+<dt id="adi.one_bit_adc_dac.one_bit_adc_dac">
+<em class="property">class </em><code class="sig-prename descclassname">adi.one_bit_adc_dac.</code><code class="sig-name descname">one_bit_adc_dac</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'one-bit-adc-dac'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.one_bit_adc_dac.one_bit_adc_dac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>One bit ADC/DAC (GPIO). This driver will create a handle for the
+GPIO device as well as properties for each GPIO pin it accesses.
+Each GPIO pin name will be lowercase and of the format:</p>
+<blockquote>
+<div><p>“gpio_{pin name}”</p>
+</div></blockquote>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context with GPIO pins</p>
+</dd>
+<dt>name: type=string</dt><dd><p>String identifying the device by name from the device tree.
+Dynamic class properties will be created for each channel.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -223,8 +226,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="adi.ad5686.html" class="btn btn-neutral float-right" title="ad5686" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="index.html" class="btn btn-neutral float-left" title="Supported Devices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../buffers/index.html" class="btn btn-neutral float-right" title="Buffers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="adi.ltc2983.html" class="btn btn-neutral float-left" title="ltc2983" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
