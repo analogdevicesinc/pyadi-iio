@@ -33,13 +33,13 @@
 
 from typing import Dict, List
 
+from adi.ad9081 import ad9081
+from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
-from adi.ad9081 import ad9081
 
 
 def _map_to_dict(paths, ch, dev_name):
-    # print(ch.attrs["label"].value)
     if "buffer_only" in ch.attrs["label"].value:
         return paths, False
     fddc, cddc, adc = ch.attrs["label"].value.split("->")
@@ -90,12 +90,22 @@ def _find_dev_with_buffers(ctx, output=False, contains=""):
             if chan.output == output and chan.scan_element and contains in dev.name:
                 return dev
 
-        #     if chan.isoutput
-        # print(dev.name)
-
 
 class ad9081_mc(ad9081):
-    """ AD9081 Mixed-Signal Front End (MxFE) Multi-Chip Interface """
+    """AD9081 Mixed-Signal Front End (MxFE) Multi-Chip Interface
+
+        This class is a generic interface for boards that utilize multiple AD9081
+        devices.
+
+    parameters:
+        uri: type=string
+            Optional parameter for the URI of IIO context with AD9081(s).
+        phy_dev_name: type=string
+            Optional parameter name of main control driver for multi-AD9081 board.
+            If no argument is given the driver with the most channel attributes is
+            assumed to be the main PHY driver
+
+    """
 
     _complex_data = True
     _rx_channel_names: List[str] = []
@@ -113,12 +123,23 @@ class ad9081_mc(ad9081):
 
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
-    def __init__(self, uri="", phy_dev_name="axi-ad9081-rx-3"):
+    def __init__(self, uri="", phy_dev_name=""):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        # Default device for attribute writes
+        if not phy_dev_name:
+            # Get ad9081 dev name with most channel attributes
+            channel_attr_count = {
+                dev.name: sum(len(chan.attrs) for chan in dev.channels)
+                for dev in self._ctx.devices
+                if "ad9081" in dev.name
+            }
+            phy_dev_name = max(channel_attr_count, key=channel_attr_count.get)
+
         self._ctrl = self._ctx.find_device(phy_dev_name)
+        if not self._ctrl:
+            raise Exception("phy_dev_name not found with name: {}".format(phy_dev_name))
+
         # Find device with buffers
         self._txdac = _find_dev_with_buffers(self._ctx, True, "axi-ad9081")
         self._rxadc = _find_dev_with_buffers(self._ctx, False, "axi-ad9081")
@@ -127,7 +148,6 @@ class ad9081_mc(ad9081):
         # Labels span all devices so they must all be processed
         paths = {}
         self._default_ctrl_names = []
-
         for dev in self._ctx.devices:
             if "ad9081" not in dev.name:
                 continue
@@ -139,7 +159,7 @@ class ad9081_mc(ad9081):
                     self._default_ctrl_names.append(dev.name)
 
         self._default_ctrl_names = sorted(self._default_ctrl_names)
-        print(self._default_ctrl_names)
+        self._ctrls = [self._ctx.find_device(dn) for dn in self._default_ctrl_names]
         self._path_map = paths
 
         # Get data + DDS channels
@@ -158,12 +178,18 @@ class ad9081_mc(ad9081):
         self._dds_channel_names = _sortconv(self._dds_channel_names, dds=True)
 
         # Map unique attributes to channel properties
+        self._map_unique(paths)
+
+        # Bring up DMA and DDS interfaces
+        rx_tx.__init__(self)
+        self.rx_buffer_size = 2 ** 16
+
+    def _map_unique(self, paths):
         self._rx_fine_ddc_channel_names = {}
         self._rx_coarse_ddc_channel_names = {}
         self._tx_fine_duc_channel_names = {}
         self._tx_coarse_duc_channel_names = {}
         for chip in paths:
-            print(chip)
             for converter in paths[chip]:
                 for cdc in paths[chip][converter]:
                     channels = []
@@ -188,22 +214,7 @@ class ad9081_mc(ad9081):
                         self._tx_coarse_duc_channel_names[chip].append(channels[0])
                         self._tx_fine_duc_channel_names[chip] += channels
 
-        rx_tx.__init__(self)
-        self.rx_buffer_size = 2 ** 16
-
-    def _get_iio_attr_vec(self, channel_names_dict, attr, output):
-        return {
-            dev: ad9081._get_iio_attr_vec(
-                self,
-                channel_names_dict[dev],
-                attr,
-                output,
-                self._ctx.find_device(dev),
-            )
-            for dev in channel_names_dict
-        }
-
-    def _set_iio_attr_int_vec(self, channel_names_dict, attr, output, values):
+    def _map_inputs_to_dict(self, channel_names_dict, attr, output, values):
         if not isinstance(values, dict):
             # If passed an array it must be split across the devices
             # Check to make sure length is accurate
@@ -214,11 +225,34 @@ class ad9081_mc(ad9081):
             h = {}
             c = 0
             for dev in self._default_ctrl_names:
-                l = len(d[dev])
-                h[dev] = values[c : c + l]
-                c += l
+                data_index = len(d[dev])
+                h[dev] = values[c : c + data_index]
+                c += data_index
             values = h
+        return values
 
+    def _map_inputs_to_dict_single(self, channel_names_dict, values):
+        if not isinstance(values, dict):
+            # If passed an array it must be split across the devices
+            # Check to make sure length is accurate
+            t_len = len(channel_names_dict)
+            if len(values) != t_len:
+                raise Exception("Input must be of length {}".format(t_len))
+            h = {dev: values[i] for i, dev in enumerate(self._default_ctrl_names)}
+            values = h
+        return values
+
+    # Vector function intercepts
+    def _get_iio_attr_vec(self, channel_names_dict, attr, output):
+        return {
+            dev: ad9081._get_iio_attr_vec(
+                self, channel_names_dict[dev], attr, output, self._ctx.find_device(dev),
+            )
+            for dev in channel_names_dict
+        }
+
+    def _set_iio_attr_int_vec(self, channel_names_dict, attr, output, values):
+        values = self._map_inputs_to_dict(channel_names_dict, attr, output, values)
         for dev in channel_names_dict:
             ad9081._set_iio_attr_int_vec(
                 self,
@@ -230,6 +264,7 @@ class ad9081_mc(ad9081):
             )
 
     def _set_iio_attr_float_vec(self, channel_names_dict, attr, output, values):
+        values = self._map_inputs_to_dict(channel_names_dict, attr, output, values)
         for dev in channel_names_dict:
             ad9081._set_iio_attr_float_vec(
                 self,
@@ -240,112 +275,69 @@ class ad9081_mc(ad9081):
                 self._ctx.find_device(dev),
             )
 
-    @property
-    def rx_test_mode(self):
-        """rx_test_mode: NCO Test Mode """
-        return self._get_iio_attr_str("voltage0_i", "test_mode", False)
-
-    @rx_test_mode.setter
-    def rx_test_mode(self, value):
-        self._set_iio_attr(
-            "voltage0_i",
-            "test_mode",
-            False,
-            value,
-        )
-
-    @property
-    def rx_nyquist_zone(self):
-        """rx_nyquist_zone: ADC nyquist zone. Options are: odd, even """
-        return self._get_iio_attr_str("voltage0_i", "nyquist_zone", False)
-
-    @rx_nyquist_zone.setter
-    def rx_nyquist_zone(self, value):
-        self._set_iio_attr(
-            "voltage0_i",
-            "nyquist_zone",
-            False,
-            value,
-        )
-
-    @property
-    def tx_main_ffh_frequency(self):
-        """tx_main_ffh_frequency: Transmitter fast frequency hop frequency. This will set
-        The NCO frequency of the NCO selected from the bank defined by tx_main_ffh_index
-        """
-        return self._get_iio_attr("voltage0_i", "main_ffh_frequency", True)
-
-    @tx_main_ffh_frequency.setter
-    def tx_main_ffh_frequency(self, value):
-        if self.tx_main_ffh_index == 0:
-            raise Exception(
-                "To set a FFH NCO bank frequency, tx_main_ffh_index must > 0"
+    # Singleton function intercepts
+    def _get_iio_attr_str_single(self, channel_name, attr, output):
+        channel_names_dict = self._rx_coarse_ddc_channel_names
+        return {
+            dev: attribute._get_iio_attr_str(
+                self, channel_name, attr, output, self._ctx.find_device(dev)
             )
-        self._set_iio_attr(
-            "voltage0_i",
-            "main_ffh_frequency",
-            True,
-            value,
-        )
+            for dev in channel_names_dict
+        }
+
+    def _get_iio_attr_single(self, channel_name, attr, output):
+        channel_names_dict = self._rx_coarse_ddc_channel_names
+        return {
+            dev: attribute._get_iio_attr(
+                self, channel_name, attr, output, self._ctx.find_device(dev)
+            )
+            for dev in channel_names_dict
+        }
+
+    def _set_iio_attr_single(self, channel_name, attr, output, values):
+        channel_names_dict = self._rx_coarse_ddc_channel_names
+        values = self._map_inputs_to_dict_single(channel_names_dict, values)
+        for dev in channel_names_dict:
+            self._set_iio_attr(
+                channel_name, attr, output, values[dev], self._ctx.find_device(dev)
+            )
+
+    def _get_iio_dev_attr_single(self, attr):
+        channel_names_dict = self._rx_coarse_ddc_channel_names
+        return {
+            dev: attribute._get_iio_dev_attr(self, attr, self._ctx.find_device(dev))
+            for dev in channel_names_dict
+        }
+
+    def _set_iio_dev_attr_single(self, attr, values):
+        channel_names_dict = self._rx_coarse_ddc_channel_names
+        values = self._map_inputs_to_dict_single(channel_names_dict, values)
+        for dev in channel_names_dict:
+            self._set_iio_dev_attr(attr, values[dev], self._ctx.find_device(dev))
+
+
+def QuadMxFE(ad9081_mc):
+    """Quad AD9081 Mixed-Signal Front End (MxFE) Development System
+
+    parameters:
+        uri: type=string
+            Optional parameter for the URI of IIO context with QuadMxFE.
+    """
+
+    def __init__(self, uri="", calibration_board_attached=False):
+        ad9081_mc.__init__(self, uri=uri, phy_dev_name="axi-ad9081-rx-3")
+
+        self._rx_dsa = self._ctx.find_device("hmc425a")
+
+        if calibration_board_attached:
+            self._ad5592r = self._ctx.find_device("ad5592r")
+            self._cb_gpio = self._ctx.find_device("one-bit-adc-dac")
 
     @property
-    def tx_main_ffh_index(self):
-        """tx_main_ffh_index: Transmitter fast frequency hop NCO bank index"""
-        return self._get_iio_attr("voltage0_i", "main_ffh_index", True)
+    def rx_dsa_gain(self):
+        """rx_dsa_gain: Receiver digital step attenuator gain"""
+        return self._get_iio_attr("voltage0", "hardwaregain", True, self._rx_dsa)
 
-    @tx_main_ffh_index.setter
-    def tx_main_ffh_index(self, value):
-        self._set_iio_attr(
-            "voltage0_i",
-            "main_ffh_index",
-            True,
-            value,
-        )
-
-    @property
-    def tx_main_ffh_mode(self):
-        """tx_main_ffh_mode: Set hop transition mode of NCOs Options are:
-        phase_continuous, phase_incontinuous, and phase_coherent
-        """
-        return self._get_iio_attr_str("voltage0_i", "main_ffh_mode", True)
-
-    @tx_main_ffh_mode.setter
-    def tx_main_ffh_mode(self, value):
-        self._set_iio_attr(
-            "voltage0_i",
-            "main_ffh_mode",
-            True,
-            value,
-        )
-
-    @property
-    def loopback_mode(self):
-        """loopback_mode: Enable loopback mode RX->TX"""
-        return self._get_iio_dev_attr("loopback_mode")
-
-    @loopback_mode.setter
-    def loopback_mode(self, value):
-        self._set_iio_dev_attr(
-            "loopback_mode",
-            value,
-        )
-
-    @property
-    def rx_sample_rate(self):
-        """rx_sampling_frequency: Sample rate after decimation"""
-        return self._get_iio_attr("voltage0_i", "sampling_frequency", False)
-
-    @property
-    def adc_frequency(self):
-        """adc_frequency: ADC frequency in Hz"""
-        return self._get_iio_attr("voltage0_i", "adc_frequency", False)
-
-    @property
-    def tx_sample_rate(self):
-        """tx_sampling_frequency: Sample rate before interpolation"""
-        return self._get_iio_attr("voltage0_i", "sampling_frequency", True)
-
-    @property
-    def dac_frequency(self):
-        """dac_frequency: DAC frequency in Hz"""
-        return self._get_iio_attr("voltage0_i", "dac_frequency", True)
+    @rx_dsa_gain.setter
+    def rx_dsa_gain(self, value):
+        self._set_iio_attr("voltage0", "hardwaregain", True, value, self._rx_dsa)
