@@ -1,7 +1,7 @@
 ad9081\_mc
 =====================
 
-The multi-chip python interface for AD9081 is scaleable to any number of AD9081s within a single libIIO context. It will automatically determine the correct main driver, manage the CDDC/FDDC/CDUC/FDUC arrangement uniquely for each chip, and DMA/DDS IP. However, the interface a bit unique with **pyadi-iio** since it is almost identical to the single AD9081 class but it exposes properties in a slightly different way.
+The multi-chip python interface for AD9081 is scalable to any number of AD9081s within a single libIIO context. It will automatically determine the correct main driver, manage the CDDC/FDDC/CDUC/FDUC arrangement uniquely for each chip, and DMA/DDS IP. However, the interface a bit unique with **pyadi-iio** since it is almost identical to the single AD9081 class but it exposes properties in a slightly different way.
 
 When using **adi.ad9081**, properties are generally simple types like strings, ints, floats, or lists of these types. For example, when reading back the **rx_channel_nco_frequencies** you would observe something like:
 
