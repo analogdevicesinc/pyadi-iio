@@ -1,4 +1,4 @@
-# Copyright (C) 2020 Analog Devices, Inc.
+# Copyright (C) 2021 Xiphos Systems Corp.
 #
 # All rights reserved.
 #
@@ -31,75 +31,46 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .sshfs import sshfs
+import paramiko
+from contextlib import suppress
 
+class sshfs:
+    """Minimal sshfs replacement"""
 
-class jesd:
-    """ JESD Monitoring """
-
-    def __init__(self, address, username="root", password="analog"):
-        if "ip:" in address:
+    def __init__(self, address, username, password, sshargs=None):
+        if address.startswith('ip:'):
             address = address[3:]
         self.address = address
         self.username = username
         self.password = password
-        self.rootdir = "/sys/bus/platform/devices/"
+        self.ssh = paramiko.SSHClient()
 
-        # Connect
-        self.fs = sshfs(address, username, password)
+        self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+        if password is None:
+            with suppress(paramiko.ssh_exception.AuthenticationException):
+                self.ssh.connect(self.address, username=self.username,
+                    password=None)
 
-        self.find_jesd_dir()
-        self.find_lanes()
+            self.ssh.get_transport().auth_none(self.username)
+        else:
+            self.ssh.connect(self.address, username=self.username,
+                password=self.password)
 
-    def find_lanes(self):
-        self.lanes = {}
-        for dir in self.dirs:
-            if "-rx" in dir:
-                self.lanes[dir] = []
-                lanIndx = 0
-                while 1:
-                    li = "/lane{}_info".format(lanIndx)
-                    if self.fs.isfile(self.rootdir + dir + li):
-                        self.lanes[dir].append(li)
-                        lanIndx += 1
-                    else:
-                        break
+    def _run(self, cmd):
+        (_, out, err) = self.ssh.exec_command(cmd)
+        stdout = out.read().decode().strip()
+        stderr = err.read().decode().strip()
 
-    def find_jesd_dir(self):
-        dirs = self.fs.listdir(self.rootdir)
-        self.dirs = []
-        for dir in dirs:
-            if "jesd" in dir:
-                self.dirs.append(dir)
+        return stdout, stderr
 
-    def decode_status(self, status):
-        status = status.split("\n")
-        link_status = {}
-        for s in status:
-            if ":" in s:
-                o = s.split(":")
-                link_status[o[0]] = o[1].strip()
-            if "Link is" in s:
-                link_status["enabled"] = s.split(" ")[-1].strip()
+    def isfile(self, path):
+        stdout, _ = self._run(f'test -f {path}; echo $?')
+        return stdout == '0'
 
-        return link_status
+    def listdir(self, path):
+        stdout, _ = self._run(f'ls -1 {path}')
+        return stdout.split()
 
-    def get_status(self, dir):
-        return self.fs.gettext(self.rootdir + dir + "/status")
-
-    def get_dev_lane_info(self, dir):
-        return {
-            ldir: self.decode_status(self.fs.gettext(self.rootdir + dir + "/" + ldir))
-            for ldir in self.lanes[dir]
-        }
-
-    def get_all_link_statuses(self):
-        statuses = dict()
-        for dir in self.dirs:
-            if "-rx" in dir:
-                statuses[dir] = self.get_dev_lane_info(dir)
-                # print(statuses[dir])
-        return statuses
-
-    def get_all_statuses(self):
-        return {dir: self.decode_status(self.get_status(dir)) for dir in self.dirs}
+    def gettext(self, path, *kargs, **kwargs):
+        stdout, _ = self._run(f'cat {path}')
+        return stdout
