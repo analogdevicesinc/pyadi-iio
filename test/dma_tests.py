@@ -312,24 +312,28 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     assert tone_peaks[indx] > peak_min
 
 
-def cw_loopback(uri, classname, channel, param_set):
-    """ cw_loopback: Test CW loopback with connected loopback cables.
-        This test requires a devices with TX and RX onboard where the transmit
-        signal can be recovered. Sinuoidal data is passed to DMAs which is then
-        estimated on the RX side. The receive tone must be within
-        1% of its expected frequency at the max peak found
+def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False):
+    """cw_loopback: Test CW loopback with connected loopback cables.
+    This test requires a devices with TX and RX onboard where the transmit
+    signal can be recovered. Sinuoidal data is passed to DMAs which is then
+    estimated on the RX side. The receive tone must be within
+    1% of its expected frequency at the max peak found
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            param_set: type=dict
-                Dictionary of attribute and values to be set before tone is
-                generated and received
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+        use_tx2: type=bool
+            Boolean if set will use tx2() as tx method
+        use_rx2: type=bool
+            Boolean if set will use rx2() as rx method
     """
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -347,19 +351,30 @@ def cw_loopback(uri, classname, channel, param_set):
                 < 4
             )
     # Set common buffer settings
-    sdr.tx_cyclic_buffer = True
     N = 2 ** 14
-    sdr.tx_enabled_channels = [channel]
-    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
-    sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+    if use_tx2:
+        sdr.tx2_cyclic_buffer = True
+        sdr.tx2_enabled_channels = [channel]
+        sdr.tx2_buffer_size = N * 2 * len(sdr.tx2_enabled_channels)
+    else:
+        sdr.tx_cyclic_buffer = True
+        sdr.tx_enabled_channels = [channel]
+        sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
+
+    if use_rx2:
+        sdr.rx2_enabled_channels = [channel]
+        sdr.rx2_buffer_size = N * 2 * len(sdr.rx2_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = [channel]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
     elif hasattr(sdr, "rx_sample_rate"):
         RXFS = int(sdr.rx_sample_rate)
     else:
-        """ no sample_rate nor rx_sample_rate. Let's try something like
+        """no sample_rate nor rx_sample_rate. Let's try something like
         rx($channel)_sample_rate"""
         attr = "rx" + str(channel) + "_sample_rate"
         RXFS = int(getattr(sdr, attr))
@@ -379,9 +394,12 @@ def cw_loopback(uri, classname, channel, param_set):
 
     # Pass through SDR
     try:
-        sdr.tx(cw)
+        if use_tx2:
+            sdr.tx2(cw)
+        else:
+            sdr.tx(cw)
         for _ in range(30):  # Wait to stabilize
-            data = sdr.rx()
+            data = sdr.rx2() if use_rx2 else sdr.rx()
     except Exception as e:
         del sdr
         raise Exception(e)

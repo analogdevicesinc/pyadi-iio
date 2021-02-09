@@ -80,7 +80,7 @@ class adrv9002(rx_tx, context_manager):
 
         if len(rxdevs) > 1:
             self._rx_dma_mode = "split"
-            self._rxadc = self._ctx.find_device("axi-adrv9002-rx1-lpc")
+            self._rxadc = self._ctx.find_device("axi-adrv9002-rx-lpc")
             self._rxadc2 = self._ctx.find_device("axi-adrv9002-rx2-lpc")
             self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
             setattr(adrv9002, "rx1", rx1)

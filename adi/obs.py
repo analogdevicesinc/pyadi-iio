@@ -53,18 +53,14 @@ def remap(object_source, old, new, classname):
     method_list = [
         func
         for func in dir(object_source)
-        if (getattr(object_source, func))
-        and not func.startswith("__")
-        and not func.startswith("_")
+        if not func.startswith("__") and not func.startswith("_")
     ]
     for method in method_list:
         if old not in method:
             continue
         new_method = method.replace(old, new)
         setattr(
-            classname,
-            new_method,
-            _property_remap(method, object_source),
+            classname, new_method, _property_remap(method, object_source),
         )
 
 
