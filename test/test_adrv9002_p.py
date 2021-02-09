@@ -364,3 +364,31 @@ def test_adrv9002_rx_data(test_dma_rx, iio_uri, classname, channel):
 )
 def test_adrv9002_cw_loopback(test_cw_loopback, iio_uri, classname, channel, param_set):
     test_cw_loopback(iio_uri, classname, channel, param_set)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        dict(
+            tx0_lo=1000000000,
+            rx0_lo=1000000000,
+            tx1_lo=1000000000,
+            rx1_lo=1000000000,
+            rx_ensm_mode_chan0="rf_enabled",
+            rx_ensm_mode_chan1="rf_enabled",
+            tx_hardwaregain_chan0=-20,
+            tx_hardwaregain_chan1=-20,
+            tx_ensm_mode_chan0="rf_enabled",
+            tx_ensm_mode_chan1="rf_enabled",
+        )
+    ],
+)
+@pytest.mark.parametrize("use_tx2rx2", [False, True])
+def test_adrv9002_cw_loopback_split_dma(
+    test_cw_loopback, iio_uri, classname, channel, param_set, use_tx2rx2
+):
+    test_cw_loopback(iio_uri, classname, channel, param_set, use_tx2rx2, use_tx2rx2)
