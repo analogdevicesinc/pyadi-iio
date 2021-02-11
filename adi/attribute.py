@@ -45,6 +45,20 @@ def get_numbers(s):
 
 
 class attribute:
+    def _get_iio_attr_str_multi_dev(self, channel_names, attr_name, output, ctrls):
+        """ Get the same channel attribute across multiple devices
+            which are assumed to be strings
+        """
+        if not isinstance(channel_names, list):
+            channel_names = [channel_names]
+        return {
+            ctrl.name: [
+                self._get_iio_attr_str(chan_name, attr_name, output, ctrl)
+                for chan_name in channel_names
+            ]
+            for ctrl in ctrls
+        }
+
     def _set_iio_attr_multi_dev(self, channel_names, attr_name, output, values, ctrls):
         """ Set the same channel attribute across multiple devices
             Unique parameters:

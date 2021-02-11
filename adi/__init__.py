@@ -49,6 +49,8 @@ from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
 
 from adi.ad9081 import ad9081
 
+from adi.ad9081_mc import ad9081_mc, QuadMxFE
+
 from adi.ad9094 import ad9094
 
 from adi.ad9680 import ad9680
