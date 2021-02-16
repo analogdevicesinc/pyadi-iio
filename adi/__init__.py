@@ -73,6 +73,8 @@ from adi.ad7124 import ad7124
 
 from adi.adxl345 import adxl345
 
+from adi.adxrs290 import adxrs290
+
 from adi.fmclidar1 import fmclidar1
 
 from adi.ad5686 import ad5686
