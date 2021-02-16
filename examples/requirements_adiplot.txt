@@ -1,3 +1,4 @@
 pyqtgraph
 scipy
 PyQt5
+matplotlib
