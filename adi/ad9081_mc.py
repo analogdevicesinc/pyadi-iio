@@ -328,6 +328,8 @@ class QuadMxFE(ad9081_mc):
         ad9081_mc.__init__(self, uri=uri, phy_dev_name="axi-ad9081-rx-3")
 
         self._rx_dsa = self._ctx.find_device("hmc425a")
+        if not self._rx_dsa:
+            self._rx_dsa = self._ctx.find_device("hmc540s")
 
         if calibration_board_attached:
             self._ad5592r = self._ctx.find_device("ad5592r")
