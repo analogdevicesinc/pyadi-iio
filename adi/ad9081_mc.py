@@ -37,6 +37,7 @@ from adi.ad9081 import ad9081
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
+from adi.one_bit_adc_dac import one_bit_adc_dac
 
 
 def _map_to_dict(paths, ch, dev_name):
@@ -326,6 +327,7 @@ class QuadMxFE(ad9081_mc):
 
     def __init__(self, uri="", calibration_board_attached=False):
         ad9081_mc.__init__(self, uri=uri, phy_dev_name="axi-ad9081-rx-3")
+        one_bit_adc_dac.__init__(self, uri)
 
         self._rx_dsa = self._ctx.find_device("hmc425a")
         if not self._rx_dsa:
