@@ -316,7 +316,7 @@ class ad9081_mc(ad9081):
             self._set_iio_dev_attr(attr, values[dev], self._ctx.find_device(dev))
 
 
-def QuadMxFE(ad9081_mc):
+class QuadMxFE(ad9081_mc):
     """Quad AD9081 Mixed-Signal Front End (MxFE) Development System
 
     parameters:
