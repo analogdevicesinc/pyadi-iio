@@ -36,6 +36,7 @@ from typing import Dict, List
 from adi.ad9081 import ad9081
 from adi.attribute import attribute
 from adi.context_manager import context_manager
+from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.rx_tx import rx_tx
 
 
@@ -316,7 +317,7 @@ class ad9081_mc(ad9081):
             self._set_iio_dev_attr(attr, values[dev], self._ctx.find_device(dev))
 
 
-def QuadMxFE(ad9081_mc):
+class QuadMxFE(ad9081_mc):
     """Quad AD9081 Mixed-Signal Front End (MxFE) Development System
 
     parameters:
@@ -326,8 +327,11 @@ def QuadMxFE(ad9081_mc):
 
     def __init__(self, uri="", calibration_board_attached=False):
         ad9081_mc.__init__(self, uri=uri, phy_dev_name="axi-ad9081-rx-3")
+        one_bit_adc_dac.__init__(self, uri)
 
         self._rx_dsa = self._ctx.find_device("hmc425a")
+        if not self._rx_dsa:
+            self._rx_dsa = self._ctx.find_device("hmc540s")
 
         if calibration_board_attached:
             self._ad5592r = self._ctx.find_device("ad5592r")
