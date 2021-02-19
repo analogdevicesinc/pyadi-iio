@@ -36,8 +36,8 @@ from typing import Dict, List
 from adi.ad9081 import ad9081
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx_tx
 from adi.one_bit_adc_dac import one_bit_adc_dac
+from adi.rx_tx import rx_tx
 
 
 def _map_to_dict(paths, ch, dev_name):
