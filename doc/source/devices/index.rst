@@ -29,7 +29,6 @@ Supported Devices
    adi.adxl345
    adi.cn0532
    adi.cn0540
-   adi.adxrs290
    adi.daq2
    adi.daq3
    adi.fmclidar1
@@ -38,3 +37,4 @@ Supported Devices
    adi.ltc2314_14
    adi.ltc2983
    adi.one_bit_adc_dac
+   adi.ad7606
