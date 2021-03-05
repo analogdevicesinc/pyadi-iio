@@ -83,13 +83,8 @@ class ad7606(rx, context_manager):
             or self.rx_output_type == "raw"
         ):
             return sig
-        else:
-            mv_sig = []
-
-            for signal in sig:
-                mv_sig.append(signal / 1000)
-
-            return mv_sig
+            
+        return [signal/1000 for signal in sig]
 
     @property
     def scale_available(self):

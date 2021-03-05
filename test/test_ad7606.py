@@ -8,15 +8,15 @@ classname = "adi.ad7606"
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, start, stop, step, tol",
+    "attr, max_pow, tol",
     [
-        ("oversampling_ratio", 1, 2, 1, 0),
+        ("oversampling_ratio", 6, 0),
     ],
 )
 def test_ad7606_attr(
-    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
+    attribute_single_value_pow2, iio_uri, classname, attr, max_pow, tol
 ):
-    test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
+    attribute_single_value_pow2(iio_uri, classname, attr, max_pow, tol)
 
 
 #########################################
