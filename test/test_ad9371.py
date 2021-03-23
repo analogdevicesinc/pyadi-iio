@@ -10,6 +10,9 @@ from scipy import signal
 hardware = "ad9371"
 classname = "adi.ad9371"
 
+profile_path = dirname(realpath(__file__)) + "/ad9371_5_profiles/"
+test_profiles = [join(profile_path, f) for f in listdir(profile_path)]
+
 params = [
     dict(   # One CW Tone, Manual
         ensm_mode="radio_on",
@@ -454,3 +457,16 @@ def test_ad9371_dds_gain_check_vary_power(
 @pytest.mark.parametrize("sfdr_min", [40])
 def test_ad9371_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("attr", ["profile"])
+@pytest.mark.parametrize(
+    "files", test_profiles,
+)
+def test_ad9371_profile_write(
+    test_attribute_write_only_str, iio_uri, classname, attr, files
+):
+    test_attribute_write_only_str(iio_uri, classname, attr, files)
