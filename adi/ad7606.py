@@ -74,17 +74,6 @@ class ad7606(rx, context_manager):
 
         rx.__init__(self)
 
-    def rx(self):
-        sig = super().rx()
-
-        if (
-            self._rx_unbuffered_data
-            or self._complex_data
-            or self.rx_output_type == "raw"
-        ):
-            return sig
-            
-        return [signal/1000 for signal in sig]
 
     @property
     def scale_available(self):
