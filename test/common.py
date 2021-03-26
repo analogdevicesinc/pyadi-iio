@@ -39,14 +39,10 @@ def pytest_collection_modifyitems(items):
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--username",
-        default="root",
-        help="SSH login username",
+        "--username", default="root", help="SSH login username",
     )
     parser.addoption(
-        "--password",
-        default="analog",
-        help="SSH login password",
+        "--password", default="analog", help="SSH login password",
     )
 
 
