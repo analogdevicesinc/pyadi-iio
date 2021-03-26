@@ -33,6 +33,7 @@
 
 from adi.context_manager import context_manager
 from adi.obs import obs
+from adi.jesd import jesd
 from adi.rx_tx import rx_tx
 
 
@@ -45,7 +46,7 @@ class ad9371(rx_tx, context_manager):
     _obs_channel_names = ["voltage0_i", "voltage0_q"]
     _device_name = ""
 
-    def __init__(self, uri=""):
+    def __init__(self, uri="", username="root", password="analog"):
 
         context_manager.__init__(self, uri, self._device_name)
 
@@ -53,6 +54,7 @@ class ad9371(rx_tx, context_manager):
         self._rxadc = self._ctx.find_device("axi-ad9371-rx-hpc")
         self._rxobs = self._ctx.find_device("axi-ad9371-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-ad9371-tx-hpc")
+        self._jesd = jesd(uri, username=username, password=password)
 
         rx_tx.__init__(self)
 
@@ -224,3 +226,7 @@ class ad9371(rx_tx, context_manager):
     @obs_rf_port_select.setter
     def obs_rf_port_select(self, value):
         self._set_iio_attr("voltage2", "rf_port_select", False, value)
+
+    @property
+    def jesd204_statuses(self):
+        return self._jesd.get_all_statuses()
