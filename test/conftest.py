@@ -2,8 +2,13 @@ import random
 import test.rf.spec as spec
 import time
 from test.attr_tests import *
-from test.common import dev_interface, pytest_collection_modifyitems, \
-        pytest_configure, pytest_generate_tests, pytest_addoption
+from test.common import (
+    dev_interface,
+    pytest_addoption,
+    pytest_collection_modifyitems,
+    pytest_configure,
+    pytest_generate_tests,
+)
 from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
