@@ -32,11 +32,12 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+from decimal import Decimal
+
 import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
-from decimal import Decimal
 
 
 class ad7606(rx, context_manager):
@@ -50,7 +51,14 @@ class ad7606(rx, context_manager):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad7605-4", "ad7606-4", "ad7606-6", "ad7606-8", "ad7606b", "ad7616"]
+        compatible_parts = [
+            "ad7605-4",
+            "ad7606-4",
+            "ad7606-6",
+            "ad7606-8",
+            "ad7606b",
+            "ad7616",
+        ]
 
         self._ctrl = None
 
@@ -73,7 +81,6 @@ class ad7606(rx, context_manager):
             self.channel.append(self._channel(self._ctrl, name))
 
         rx.__init__(self)
-
 
     @property
     def scale_available(self):

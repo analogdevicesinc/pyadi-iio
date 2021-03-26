@@ -32,8 +32,8 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
-from adi.obs import obs
 from adi.jesd import jesd
+from adi.obs import obs
 from adi.rx_tx import rx_tx
 
 
