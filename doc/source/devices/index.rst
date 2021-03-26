@@ -38,3 +38,4 @@ Supported Devices
    adi.ltc2314_14
    adi.ltc2983
    adi.one_bit_adc_dac
+   adi.ad7606

@@ -67,3 +67,4 @@
 - FMCLIDAR1
 - FMComms8
 - LTC2983
+- AD7606
