@@ -37,6 +37,26 @@ def pytest_collection_modifyitems(items):
                     break
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--username",
+        default="root",
+        help="SSH login username",
+    )
+    parser.addoption(
+        "--password",
+        default="analog",
+        help="SSH login password",
+    )
+
+
+def pytest_generate_tests(metafunc):
+    if "username" in metafunc.fixturenames:
+        metafunc.parametrize("username", [metafunc.config.getoption("username")])
+    if "password" in metafunc.fixturenames:
+        metafunc.parametrize("password", [metafunc.config.getoption("password")])
+
+
 #################################################
 def dev_interface(uri, classname, val, attr, tol):
     sdr = eval(classname + "(uri='" + uri + "')")
