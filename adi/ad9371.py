@@ -289,7 +289,7 @@ class ad9371(rx_tx, context_manager):
             self._set_iio_attr("voltage2", "hardwaregain", False, value)
 
     @property
-    def obs_temp_comp_gain0(self):
+    def obs_temp_comp_gain(self):
         """obs_temp_comp_gain: """
         return self._get_iio_attr("voltage2", "temp_comp_gain", False)
 
