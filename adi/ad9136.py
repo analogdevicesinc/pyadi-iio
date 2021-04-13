@@ -31,72 +31,37 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import ad9361, ad9363, ad9364, Pluto
+from adi.context_manager import context_manager
+from adi.rx_tx import tx
+from adi.jesd import jesd
 
-from adi.fmcomms5 import FMComms5
 
-from adi.ad9371 import ad9371
+class ad9136(tx, context_manager):
+    """ AD9136 High-Speed DAC """
 
-from adi.adrv9002 import adrv9002
+    _complex_data = False
+    _tx_channel_names = ["voltage0", "voltage1"]
+    _device_name = ""
 
-from adi.adrv9009 import adrv9009
+    def __init__(self, uri="", username="root", password="analog"):
 
-from adi.adrv9009_zu11eg import adrv9009_zu11eg
+        context_manager.__init__(self, uri, self._device_name)
 
-from adi.adrv9009_zu11eg_multi import adrv9009_zu11eg_multi
+        self._txdac = self._ctx.find_device("axi-ad9136-tx-hpc")
+        self._jesd = jesd(uri, username='root', password=None)
 
-from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
+        tx.__init__(self)
 
-from adi.ad9081 import ad9081
+    @property
+    def sample_rate(self):
+        """sample_rate: Sample rate RX and TX paths in samples per second."""
+        return self._get_iio_attr("voltage0", "sampling_frequency", True, self._txdac)
 
-from adi.ad9081_mc import ad9081_mc, QuadMxFE
+    @sample_rate.setter
+    def sample_rate(self, value):
+        self._set_iio_attr("voltage0", "sampling_frequency", True, value, self._txdac)
 
-from adi.ad9094 import ad9094
-
-from adi.ad9680 import ad9680
-
-from adi.ad9136 import ad9136
-
-from adi.ad9144 import ad9144
-
-from adi.ad9152 import ad9152
-
-from adi.cn0532 import cn0532
-
-from adi.daq2 import DAQ2
-
-from adi.daq3 import DAQ3
-
-from adi.adis16460 import adis16460
-
-from adi.adis16507 import adis16507
-
-from adi.ad7124 import ad7124
-
-from adi.adxl345 import adxl345
-
-from adi.adxrs290 import adxrs290
-
-from adi.fmclidar1 import fmclidar1
-
-from adi.ad5686 import ad5686
-
-from adi.adar1000 import adar1000, adar1000_array
-
-from adi.ltc2983 import ltc2983
-
-from adi.one_bit_adc_dac import one_bit_adc_dac
-
-from adi.ltc2314_14 import ltc2314_14
-
-from adi.ad7606 import ad7606
-
-from adi.ad7799 import ad7799
-
-try:
-    from adi.jesd import jesd
-except ImportError:
-    pass
-
-__version__ = "0.0.8"
-name = "Analog Devices Hardware Interfaces"
+    @property
+    def jesd204_statuses(self):
+        """jesd204_statuses: JESD204 low-level driver data."""
+        return self._jesd.get_all_statuses()
