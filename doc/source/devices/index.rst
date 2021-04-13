@@ -10,6 +10,7 @@ Supported Devices
    adi.ad5627
    adi.ad5686
    adi.ad7124
+   adi.ad7799
    adi.ad9081
    adi.ad9081_mc
    adi.ad9094
