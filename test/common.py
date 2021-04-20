@@ -37,6 +37,24 @@ def pytest_collection_modifyitems(items):
                     break
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--obs-enable",
+        action="store_true",
+        help="Run tests that use observation data paths",
+    )
+
+
+def pytest_runtest_setup(item):
+    # Handle observation based devices
+    obs = item.config.getoption("--obs-enable")
+    marks = [mark.name for mark in item.iter_markers()]
+    if not obs and "obs_required" in marks:
+        pytest.skip(
+            "Testing requiring observation disabled. Use --obs-enable flag to enable"
+        )
+
+
 #################################################
 def dev_interface(uri, classname, val, attr, tol):
     sdr = eval(classname + "(uri='" + uri + "')")
