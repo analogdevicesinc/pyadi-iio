@@ -22,6 +22,7 @@ Supported Devices
    adi.adar1000
    adi.adis16460
    adi.adis16507
+   adi.adpd410x
    adi.adrv9002
    adi.adrv9009
    adi.adrv9009_zu11eg
