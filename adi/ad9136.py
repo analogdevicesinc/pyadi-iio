@@ -32,8 +32,8 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
-from adi.rx_tx import tx
 from adi.jesd import jesd
+from adi.rx_tx import tx
 
 
 class ad9136(tx, context_manager):
@@ -48,7 +48,7 @@ class ad9136(tx, context_manager):
         context_manager.__init__(self, uri, self._device_name)
 
         self._txdac = self._ctx.find_device("axi-ad9136-tx-hpc")
-        self._jesd = jesd(uri, username='root', password=None)
+        self._jesd = jesd(uri, username="root", password=None)
 
         tx.__init__(self)
 
