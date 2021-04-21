@@ -1,13 +1,8 @@
-import heapq
-import test.rf.spec as spec
-import time
 from os import listdir
 from os.path import dirname, join, realpath
 
-import adi
-import numpy as np
 import pytest
-from scipy import signal
+
 
 hardware = "ad9371"
 classname = "adi.ad9371"
