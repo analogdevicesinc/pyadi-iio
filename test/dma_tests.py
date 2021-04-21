@@ -1,9 +1,11 @@
+import heapq
 import test.rf.spec as spec
 import time
 
 import adi
 import numpy as np
 import pytest
+from scipy import signal
 
 
 def dma_rx(uri, classname, channel):
@@ -282,7 +284,7 @@ def dds_two_tone(uri, classname, param_set, channel, frequency1, scale1, peak_mi
 
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + iio_uri + "')")
+    sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
