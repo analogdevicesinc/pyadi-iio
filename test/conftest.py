@@ -4,10 +4,10 @@ import time
 from test.attr_tests import *
 from test.common import (
     dev_interface,
+    pytest_addoption,
     pytest_collection_modifyitems,
     pytest_configure,
     pytest_runtest_setup,
-    pytest_addoption,
 )
 from test.dma_tests import *
 from test.generics import iio_attribute_single_value
@@ -140,3 +140,8 @@ def test_attribute_write_only_str(request):
 @pytest.fixture()
 def test_dma_dac_zeros(request):
     yield dma_dac_zeros
+
+
+@pytest.fixture()
+def test_dds_two_tone(request):
+    yield dds_two_tone
