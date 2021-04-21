@@ -278,6 +278,7 @@ def test_ad9371_dds_loopback(
     [(params["one_cw_tone_auto"], 1000000, 0.06, -21, 2000000, 0.12, -15)],
 )
 def test_ad9371_two_tone_loopback(
+    test_dds_two_tone,
     iio_uri,
     classname,
     channel,
@@ -289,66 +290,9 @@ def test_ad9371_two_tone_loopback(
     scale2,
     peak_min2,
 ):
-    # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + iio_uri + "')")
-    # Set custom device parameters
-    for p in param_set.keys():
-        setattr(sdr, p, param_set[p])
-    # Set common buffer settings
-    sdr.tx_cyclic_buffer = True
-    N = 2 ** 14
-    # Create a sinewave waveform
-    if hasattr(sdr, "sample_rate"):
-        RXFS = int(sdr.sample_rate)
-    else:
-        RXFS = int(sdr.rx_sample_rate)
-
-    sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
-    sdr.dds_dual_tone(frequency1, scale1, frequency2, scale2, channel)
-
-    # Pass through SDR
-    try:
-        for _ in range(10):  # Wait
-            data = sdr.rx()
-    except Exception as e:
-        del sdr
-        raise Exception(e)
-    del sdr
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
-    indx = heapq.nlargest(2, range(len(tone_peaks)), tone_peaks.__getitem__)
-    print("Peak 1: " + str(tone_peaks[indx[0]]) + " @ " + str(tone_freqs[indx[0]]))
-    print("Peak 2: " + str(tone_peaks[indx[1]]) + " @ " + str(tone_freqs[indx[1]]))
-
-    try:
-        if (abs(frequency1 - tone_freqs[indx[0]]) <= (frequency1 * 0.01)) and (
-            abs(frequency2 - tone_freqs[indx[1]]) <= (frequency2 * 0.01)
-        ):
-            diff1 = np.abs(tone_freqs[indx[0]] - frequency1)
-            diff2 = np.abs(tone_freqs[indx[1]] - frequency2)
-            # print(frequency1, frequency2)
-            # print(tone_freqs[indx[0]], tone_freqs[indx[1]])
-            # print(tone_peaks[indx[0]], tone_peaks[indx[1]])
-            # print(diff1, diff2)
-            assert (frequency1 * 0.01) > diff1
-            assert (frequency2 * 0.01) > diff2
-            assert tone_peaks[indx[0]] > peak_min1
-            assert tone_peaks[indx[1]] > peak_min2
-        elif (abs(frequency2 - tone_freqs[indx[0]]) <= (frequency2 * 0.01)) and (
-            abs(frequency1 - tone_freqs[indx[1]]) <= (frequency1 * 0.01)
-        ):
-            diff1 = np.abs(tone_freqs[indx[0]] - frequency2)
-            diff2 = np.abs(tone_freqs[indx[1]] - frequency1)
-            # print(frequency1, frequency2)
-            # print(tone_freqs[indx[0]], tone_freqs[indx[1]])
-            # print(tone_peaks[indx[0]], tone_peaks[indx[1]])
-            # print(diff1, diff2)
-            assert (frequency2 * 0.01) > diff1
-            assert (frequency1 * 0.01) > diff2
-            assert tone_peaks[indx[1]] > peak_min1
-            assert tone_peaks[indx[0]] > peak_min2
-    except Exception as e:
-        raise Exception(e)
+    test_dds_two_tone(
+        iio_uri, classname, channel, param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2
+    )
 
 
 #########################################
