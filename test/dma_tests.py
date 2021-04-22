@@ -1,9 +1,11 @@
+import heapq
 import test.rf.spec as spec
 import time
 
 import adi
 import numpy as np
 import pytest
+from scipy import signal
 
 
 def dma_rx(uri, classname, channel):
@@ -250,6 +252,94 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
     print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
+
+
+def dds_two_tone(uri, classname, channel, param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2):
+    """
+        dds_two_tone: Test DDS loopback with connected loopback cables.
+        This test requires a devices with TX and RX onboard where the transmit
+        signal can be recovered. TX FPGA DDSs are used to generate two sinusoids
+        which are then estimated on the RX side. The receive tones must be within
+        1% of its respective expected frequency with a specified peak.
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            classname: type=string
+                Name of pyadi interface class which contain attribute
+            param_set: type=dict
+                Dictionary of attribute and values to be set before tone is
+                generated and received
+            channel: type=list
+                List of integers or list of list of integers of channels to
+                enable through tx_enabled_channels
+            frequency1: type=integer
+                Frequency in Hz of the first transmitted tone
+            scale1: type=float
+                Scale of the first DDS tone. Range [0,1]
+            peak_min1: type=float
+                Minimum acceptable value of maximum peak in dBFS of the received first tone
+            frequency2: type=integer
+                Frequency in Hz of the second transmitted tone
+            scale2: type=float
+                Scale of the second DDS tone. Range [0,1]
+            peak_min2: type=float
+                Minimum acceptable value of maximum peak in dBFS of the received second tone
+
+    """
+    # See if we can tone using DMAs
+    sdr = eval(classname + "(uri='" + uri + "')")
+    # Set custom device parameters
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+    # Set common buffer settings
+    sdr.tx_cyclic_buffer = True
+    N = 2 ** 14
+    # Create a sinewave waveform
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    else:
+        RXFS = int(sdr.rx_sample_rate)
+
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+    sdr.dds_dual_tone(frequency1, scale1, frequency2, scale2, channel)
+
+    # Pass through SDR
+    try:
+        for _ in range(10):  # Wait
+            data = sdr.rx()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    indx = heapq.nlargest(2, range(len(tone_peaks)), tone_peaks.__getitem__)
+    print("Peak 1: " + str(tone_peaks[indx[0]]) + " @ " + str(tone_freqs[indx[0]]))
+    print("Peak 2: " + str(tone_peaks[indx[1]]) + " @ " + str(tone_freqs[indx[1]]))
+
+    if (abs(frequency1 - tone_freqs[indx[0]]) <= (frequency1 * 0.01)) and (
+        abs(frequency2 - tone_freqs[indx[1]]) <= (frequency2 * 0.01)
+    ):
+        diff1 = np.abs(tone_freqs[indx[0]] - frequency1)
+        diff2 = np.abs(tone_freqs[indx[1]] - frequency2)
+        # print(frequency1, frequency2)
+        # print(tone_freqs[indx[0]], tone_freqs[indx[1]])
+        # print(tone_peaks[indx[0]], tone_peaks[indx[1]])
+        # print(diff1, diff2)
+        assert (frequency1 * 0.01) > diff1
+        assert (frequency2 * 0.01) > diff2
+        assert tone_peaks[indx[0]] > peak_min1
+        assert tone_peaks[indx[1]] > peak_min2
+    elif (abs(frequency2 - tone_freqs[indx[0]]) <= (frequency2 * 0.01)) and (
+        abs(frequency1 - tone_freqs[indx[1]]) <= (frequency1 * 0.01)
+    ):
+        diff1 = np.abs(tone_freqs[indx[0]] - frequency2)
+        diff2 = np.abs(tone_freqs[indx[1]] - frequency1)
+        assert (frequency2 * 0.01) > diff1
+        assert (frequency1 * 0.01) > diff2
+        assert tone_peaks[indx[1]] > peak_min1
+        assert tone_peaks[indx[0]] > peak_min2
 
 
 def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
