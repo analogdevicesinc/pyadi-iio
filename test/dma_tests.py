@@ -256,7 +256,11 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
 
 def dds_two_tone(uri, classname, channel, param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2):
     """
-        dds_two_tone: Definition
+        dds_two_tone: Test DDS loopback with connected loopback cables.
+        This test requires a devices with TX and RX onboard where the transmit
+        signal can be recovered. TX FPGA DDSs are used to generate two sinusoids
+        which are then estimated on the RX side. The receive tones must be within
+        1% of its respective expected frequency with a specified peak.
 
         parameters:
             uri: type=string
