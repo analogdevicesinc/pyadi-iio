@@ -254,7 +254,7 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
     assert tone_peaks[indx] > peak_min
 
 
-def dds_two_tone(uri, classname, param_set, channel, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2):
+def dds_two_tone(uri, classname, channel, param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2):
     """
         dds_two_tone: Definition
 
@@ -314,31 +314,28 @@ def dds_two_tone(uri, classname, param_set, channel, frequency1, scale1, peak_mi
     print("Peak 1: " + str(tone_peaks[indx[0]]) + " @ " + str(tone_freqs[indx[0]]))
     print("Peak 2: " + str(tone_peaks[indx[1]]) + " @ " + str(tone_freqs[indx[1]]))
 
-    try:
-        if (abs(frequency1 - tone_freqs[indx[0]]) <= (frequency1 * 0.01)) and (
-            abs(frequency2 - tone_freqs[indx[1]]) <= (frequency2 * 0.01)
-        ):
-            diff1 = np.abs(tone_freqs[indx[0]] - frequency1)
-            diff2 = np.abs(tone_freqs[indx[1]] - frequency2)
-            # print(frequency1, frequency2)
-            # print(tone_freqs[indx[0]], tone_freqs[indx[1]])
-            # print(tone_peaks[indx[0]], tone_peaks[indx[1]])
-            # print(diff1, diff2)
-            assert (frequency1 * 0.01) > diff1
-            assert (frequency2 * 0.01) > diff2
-            assert tone_peaks[indx[0]] > peak_min1
-            assert tone_peaks[indx[1]] > peak_min2
-        elif (abs(frequency2 - tone_freqs[indx[0]]) <= (frequency2 * 0.01)) and (
-            abs(frequency1 - tone_freqs[indx[1]]) <= (frequency1 * 0.01)
-        ):
-            diff1 = np.abs(tone_freqs[indx[0]] - frequency2)
-            diff2 = np.abs(tone_freqs[indx[1]] - frequency1)
-            assert (frequency2 * 0.01) > diff1
-            assert (frequency1 * 0.01) > diff2
-            assert tone_peaks[indx[1]] > peak_min1
-            assert tone_peaks[indx[0]] > peak_min2
-    except Exception as e:
-        raise Exception(e)
+    if (abs(frequency1 - tone_freqs[indx[0]]) <= (frequency1 * 0.01)) and (
+        abs(frequency2 - tone_freqs[indx[1]]) <= (frequency2 * 0.01)
+    ):
+        diff1 = np.abs(tone_freqs[indx[0]] - frequency1)
+        diff2 = np.abs(tone_freqs[indx[1]] - frequency2)
+        # print(frequency1, frequency2)
+        # print(tone_freqs[indx[0]], tone_freqs[indx[1]])
+        # print(tone_peaks[indx[0]], tone_peaks[indx[1]])
+        # print(diff1, diff2)
+        assert (frequency1 * 0.01) > diff1
+        assert (frequency2 * 0.01) > diff2
+        assert tone_peaks[indx[0]] > peak_min1
+        assert tone_peaks[indx[1]] > peak_min2
+    elif (abs(frequency2 - tone_freqs[indx[0]]) <= (frequency2 * 0.01)) and (
+        abs(frequency1 - tone_freqs[indx[1]]) <= (frequency1 * 0.01)
+    ):
+        diff1 = np.abs(tone_freqs[indx[0]] - frequency2)
+        diff2 = np.abs(tone_freqs[indx[1]] - frequency1)
+        assert (frequency2 * 0.01) > diff1
+        assert (frequency1 * 0.01) > diff2
+        assert tone_peaks[indx[1]] > peak_min1
+        assert tone_peaks[indx[0]] > peak_min2
 
 
 def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
