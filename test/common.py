@@ -22,7 +22,8 @@ def pytest_configure(config):
 
     # Add custom marks to ini for OBS channels
     config.addinivalue_line(
-        "markers", "obs_required: mark tests that require observation data paths")
+        "markers", "obs_required: mark tests that require observation data paths"
+    )
 
 
 def pytest_collection_modifyitems(items):

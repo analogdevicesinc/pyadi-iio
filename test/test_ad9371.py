@@ -309,7 +309,16 @@ def test_ad9371_two_tone_loopback(
     peak_min2,
 ):
     test_dds_two_tone(
-        iio_uri, classname, channel, param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2
+        iio_uri,
+        classname,
+        channel,
+        param_set,
+        frequency1,
+        scale1,
+        peak_min1,
+        frequency2,
+        scale2,
+        peak_min2,
     )
 
 
@@ -336,7 +345,16 @@ def test_ad9371_two_tone_loopback_with_obs(
     peak_min2,
 ):
     test_dds_two_tone(
-        iio_uri, classname, channel, param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2
+        iio_uri,
+        classname,
+        channel,
+        param_set,
+        frequency1,
+        scale1,
+        peak_min1,
+        frequency2,
+        scale2,
+        peak_min2,
     )
 
 
