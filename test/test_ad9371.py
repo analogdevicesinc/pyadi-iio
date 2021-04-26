@@ -3,7 +3,6 @@ from os.path import dirname, join, realpath
 
 import pytest
 
-
 hardware = "ad9371"
 classname = "adi.ad9371"
 
@@ -232,24 +231,48 @@ def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
         (params["change_rf_gain_20dB_manual"], 2000000, 0.25, -9),
         (params["change_temp_gain_up"], 2000000, 0.25, -16),
         (params["change_temp_gain_down"], 2000000, 0.25, -22),
-        # peak_min when the ADRV9371 setup has a splitter between RX and ORX
-        # (params["one_cw_tone_manual"], 2000000, 0.5, -33),
-        # (params["one_cw_tone_manual"], 2000000, 0.12, -45),
-        # (params["one_cw_tone_manual"], 2000000, 0.25, -39),
-        # (params["one_cw_tone_auto"], 1000000, 0.12, -34.7),
-        # (params["one_cw_tone_auto"], 2000000, 0.12, -34.7),
-        # (params["one_cw_tone_auto"], 500000, 0.12, -34.7),
-        # (params["change_attenuation_5dB_manual"], 2000000, 0.25, -43.8),
-        # (params["change_attenuation_10dB_manual"], 2000000, 0.25, -48.75),
-        # (params["change_attenuation_0dB_auto"], 1000000, 0.12, -29),
-        # (params["change_attenuation_20dB_auto"], 1000000, 0.12, -44.7),
-        # (params["change_rf_gain_0dB_manual"], 2000000, 0.25, -49),
-        # (params["change_rf_gain_20dB_manual"], 2000000, 0.25, -29),
-        # (params["change_temp_gain_up"], 2000000, 0.25, -36),
-        # (params["change_temp_gain_down"], 2000000, 0.25, -42),
     ],
 )
 def test_ad9371_dds_loopback(
+    test_dds_loopback,
+    iio_uri,
+    classname,
+    param_set,
+    channel,
+    frequency,
+    scale,
+    peak_min,
+):
+    test_dds_loopback(
+        iio_uri, classname, param_set, channel, frequency, scale, peak_min
+    )
+
+
+########################################
+@pytest.mark.obs_required
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize(
+    "param_set, frequency, scale, peak_min",
+    [
+        (params["one_cw_tone_manual"], 2000000, 0.5, -33),
+        (params["one_cw_tone_manual"], 2000000, 0.12, -45),
+        (params["one_cw_tone_manual"], 2000000, 0.25, -39),
+        (params["one_cw_tone_auto"], 1000000, 0.12, -34.7),
+        (params["one_cw_tone_auto"], 2000000, 0.12, -34.7),
+        (params["one_cw_tone_auto"], 500000, 0.12, -34.7),
+        (params["change_attenuation_5dB_manual"], 2000000, 0.25, -43.8),
+        (params["change_attenuation_10dB_manual"], 2000000, 0.25, -48.75),
+        (params["change_attenuation_0dB_auto"], 1000000, 0.12, -29),
+        (params["change_attenuation_20dB_auto"], 1000000, 0.12, -44.7),
+        (params["change_rf_gain_0dB_manual"], 2000000, 0.25, -49),
+        (params["change_rf_gain_20dB_manual"], 2000000, 0.25, -29),
+        (params["change_temp_gain_up"], 2000000, 0.25, -36),
+        (params["change_temp_gain_down"], 2000000, 0.25, -42),
+    ],
+)
+def test_ad9371_dds_loopback_with_obs(
     test_dds_loopback,
     iio_uri,
     classname,
@@ -286,7 +309,52 @@ def test_ad9371_two_tone_loopback(
     peak_min2,
 ):
     test_dds_two_tone(
-        iio_uri, classname, channel, param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2
+        iio_uri,
+        classname,
+        channel,
+        param_set,
+        frequency1,
+        scale1,
+        peak_min1,
+        frequency2,
+        scale2,
+        peak_min2,
+    )
+
+
+#########################################
+@pytest.mark.obs_required
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize(
+    "param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2",
+    [(params["one_cw_tone_auto"], 1000000, 0.06, -41, 2000000, 0.12, -35)],
+)
+def test_ad9371_two_tone_loopback_with_obs(
+    test_dds_two_tone,
+    iio_uri,
+    classname,
+    channel,
+    param_set,
+    frequency1,
+    scale1,
+    peak_min1,
+    frequency2,
+    scale2,
+    peak_min2,
+):
+    test_dds_two_tone(
+        iio_uri,
+        classname,
+        channel,
+        param_set,
+        frequency1,
+        scale1,
+        peak_min1,
+        frequency2,
+        scale2,
+        peak_min2,
     )
 
 
@@ -327,6 +395,43 @@ def test_ad9371_dds_gain_check_vary_power(
 
 
 #########################################
+@pytest.mark.obs_required
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize(
+    "param_set, dds_scale, min_rssi, max_rssi",
+    [
+        (params["one_cw_tone_manual"], 0.5, 30, 31),
+        (params["one_cw_tone_manual"], 0.12, 42.5, 43.5),
+        (params["one_cw_tone_manual"], 0.25, 35.5, 36.5),
+        (params["one_cw_tone_auto"], 0.12, 32.5, 33.5),
+        (params["change_attenuation_5dB_manual"], 0.25, 41, 42),
+        (params["change_attenuation_10dB_manual"], 0.25, 44, 45),
+        (params["change_attenuation_0dB_auto"], 0.12, 22.75, 23.75),
+        (params["change_attenuation_20dB_auto"], 0.12, 42, 43),
+        (params["change_rf_gain_0dB_manual"], 0.25, 45.5, 46.5),
+        (params["change_rf_gain_20dB_manual"], 0.25, 26, 27),
+        (params["change_temp_gain_up"], 0.25, 35.75, 36.75),
+        (params["change_temp_gain_down"], 0.25, 35.75, 36.75),
+    ],
+)
+def test_ad9371_dds_gain_check_vary_power_with_obs(
+    test_gain_check,
+    iio_uri,
+    classname,
+    channel,
+    param_set,
+    dds_scale,
+    min_rssi,
+    max_rssi,
+):
+    test_gain_check(
+        iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
+    )
+
+
+#########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
@@ -345,8 +450,35 @@ def test_ad9371_dds_gain_check_vary_power(
         params["change_temp_gain_down"],
     ],
 )
-@pytest.mark.parametrize("sfdr_min", [40])
+@pytest.mark.parametrize("sfdr_min", [50])
 def test_ad9371_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
+    test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
+
+
+#########################################
+@pytest.mark.obs_required
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        params["one_cw_tone_manual"],
+        params["one_cw_tone_auto"],
+        params["change_attenuation_5dB_manual"],
+        params["change_attenuation_10dB_manual"],
+        params["change_attenuation_0dB_auto"],
+        params["change_attenuation_20dB_auto"],
+        params["change_rf_gain_0dB_manual"],
+        params["change_rf_gain_20dB_manual"],
+        params["change_temp_gain_up"],
+        params["change_temp_gain_down"],
+    ],
+)
+@pytest.mark.parametrize("sfdr_min", [50])
+def test_ad9371_sfdr_with_obs(
+    test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
+):
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
 
