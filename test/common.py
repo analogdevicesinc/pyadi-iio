@@ -20,6 +20,10 @@ def pytest_configure(config):
     for k in keys:
         config.addinivalue_line("markers", k.replace("-", "_"))
 
+    # Add custom marks to ini for OBS channels
+    config.addinivalue_line(
+        "markers", "obs_required: mark tests that require observation data paths")
+
 
 def pytest_collection_modifyitems(items):
     # Map HDL project names to tests as markers
