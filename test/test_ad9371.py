@@ -450,7 +450,7 @@ def test_ad9371_dds_gain_check_vary_power_with_obs(
         params["change_temp_gain_down"],
     ],
 )
-@pytest.mark.parametrize("sfdr_min", [50])
+@pytest.mark.parametrize("sfdr_min", [45])
 def test_ad9371_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
@@ -475,7 +475,7 @@ def test_ad9371_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
         params["change_temp_gain_down"],
     ],
 )
-@pytest.mark.parametrize("sfdr_min", [50])
+@pytest.mark.parametrize("sfdr_min", [45])
 def test_ad9371_sfdr_with_obs(
     test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 ):
