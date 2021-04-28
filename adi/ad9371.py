@@ -60,7 +60,7 @@ class ad9371(rx_tx, context_manager):
 
     @property
     def ensm_mode(self):
-        """ensm_mode: Enable State Machine State Allows real time control over 
+        """ensm_mode: Enable State Machine State Allows real time control over
         the current state of the device. Options are: radio_on, radio_off"""
         return self._get_iio_dev_attr_str("ensm_mode")
 
@@ -268,13 +268,13 @@ class ad9371(rx_tx, context_manager):
         self._set_iio_attr("altvoltage2", "RX_SN_LO_frequency", True, value)
 
     @property
-    def obs_gain_control_mode(self):  # To check if for chan0 only or not
+    def obs_gain_control_mode(self):
         """obs_gain_control_mode: Mode of Obs/Sniffer receive path AGC. Options are:
         automatic, hybrid, manual"""
         return self._get_iio_attr_str("voltage2", "gain_control_mode", False)
 
     @obs_gain_control_mode.setter
-    def obs_gain_control_mode(self, value):  # To check if for chan0 only or not
+    def obs_gain_control_mode(self, value):
         self._set_iio_attr("voltage2", "gain_control_mode", False, value)
 
     @property
