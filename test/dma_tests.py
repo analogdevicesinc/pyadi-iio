@@ -194,7 +194,17 @@ def freq_est(y, fs):
     return xf[indx]
 
 
-def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min):
+def dds_loopback(
+    uri,
+    classname,
+    param_set,
+    channel,
+    frequency,
+    scale,
+    peak_min,
+    use_obs=False,
+    use_rx2=False,
+):
     """ dds_loopback: Test DDS loopback with connected loopback cables.
         This test requires a devices with TX and RX onboard where the transmit
         signal can be recovered. TX FPGA DDSs are used to generate a sinusoid
@@ -228,20 +238,32 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
     N = 2 ** 14
+
+    if use_obs and use_rx2:
+        raise Exception("Both RX2 and OBS are selected. Select one at a time.")
+
+    if use_rx2:
+        sdr.rx2_enabled_channels = [channel]
+        sdr.rx2_buffer_size = N * 2 * len(sdr.rx2_enabled_channels)
+    elif use_obs:
+        sdr.obs.rx_enabled_channels = [0]
+        sdr.obs.rx_buffer_size = N * 2 * len(sdr.obs.rx_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = [channel]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
     else:
         RXFS = int(sdr.rx_sample_rate)
 
-    sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
     sdr.dds_single_tone(frequency, scale, channel)
 
     # Pass through SDR
     try:
         for _ in range(10):  # Wait
-            data = sdr.rx()
+            data = sdr.rx2() if use_rx2 else sdr.obs.rx() if use_obs else sdr.rx()
     except Exception as e:
         del sdr
         raise Exception(e)
@@ -520,7 +542,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def t_sfdr(uri, classname, channel, param_set, sfdr_min, full_scale=0.9):
+def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9):
     """ t_sfdr: Test SFDR loopback of tone with connected loopback cables.
         This test requires a devices with TX and RX onboard where the transmit
         signal can be recovered. Sinuoidal data is passed to DMAs which is then
@@ -553,8 +575,14 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, full_scale=0.9):
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
     sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
-    sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
+    if use_obs:
+        sdr.obs.rx_enabled_channels = [0]
+        sdr.obs.rx_buffer_size = N * 2 * len(sdr.obs.rx_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = [channel]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
@@ -574,7 +602,7 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, full_scale=0.9):
         sdr.tx(iq)
         time.sleep(3)
         for _ in range(10):  # Wait for IQ correction to stabilize
-            data = sdr.rx()
+            data = sdr.obs.rx() if use_obs else sdr.rx()
     except Exception as e:
         del sdr
         raise Exception(e)
