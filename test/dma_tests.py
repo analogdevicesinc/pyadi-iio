@@ -289,13 +289,15 @@ def dds_two_tone(
             scale1: type=float
                 Scale of the first DDS tone. Range [0,1]
             peak_min1: type=float
-                Minimum acceptable value of maximum peak in dBFS of the received first tone
+                Minimum acceptable value of maximum peak in dBFS of the received
+                first tone
             frequency2: type=integer
                 Frequency in Hz of the second transmitted tone
             scale2: type=float
                 Scale of the second DDS tone. Range [0,1]
             peak_min2: type=float
-                Minimum acceptable value of maximum peak in dBFS of the received second tone
+                Minimum acceptable value of maximum peak in dBFS of the received
+                second tone
 
     """
     # See if we can tone using DMAs
