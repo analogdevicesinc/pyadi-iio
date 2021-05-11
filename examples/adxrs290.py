@@ -55,9 +55,9 @@ print("Y Angular Velocity: " + str(mygyro.anglvel_y.raw))
 print("Chip Temperature: " + str(mygyro.temp.raw))
 
 # Setting and Reading the band pass filter
-mygyro.hpf_3db_frequency = 0.044000
+mygyro.hpf_3db_frequency = 0.000000
 print("High pass filter 3D frequency: " + str(mygyro.hpf_3db_frequency))
-mygyro.lpf_3db_frequency = 160.000000
+mygyro.lpf_3db_frequency = 480.000000
 print("Low pass filter 3D frequency: " + str(mygyro.lpf_3db_frequency))
 
 # Read using RX.
