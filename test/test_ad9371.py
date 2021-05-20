@@ -557,27 +557,29 @@ def test_ad9371_dds_loopback_with_10dB_splitter(
 @pytest.mark.obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
-    "param_set, frequency, scale, peak_min, use_obs",
+    "channel, param_set",
     [
-        (params_obs["obs_orx1_manual"], 5000000, 0.25, -40.5, True),
-        (params_obs["obs_orx1_change_rf_gain_10dB"], 5000000, 0.25, -40.5, True),
-        (params_obs["obs_orx1_change_rf_gain_5dB"], 5000000, 0.25, -40.5, True),
-        (params_obs["obs_orx1_change_temp_gain_up"], 5000000, 0.25, -40.5, True),
-        (params_obs["obs_orx1_change_temp_gain_down"], 5000000, 0.25, -40.5, True),
-        (params_obs["obs_orx2_manual"], 5000000, 0.25, -41, True),
-        (params_obs["obs_orx2_change_rf_gain_10dB"], 5000000, 0.25, -40.5, True),
-        (params_obs["obs_orx2_change_rf_gain_5dB"], 5000000, 0.25, -40.5, True),
-        (params_obs["obs_orx2_change_temp_gain_up"], 5000000, 0.25, -40.5, True),
-        (params_obs["obs_orx2_change_temp_gain_down"], 5000000, 0.25, -40.5, True),
-        (params_obs["snf_orx1_manual"], 5000000, 0.25, -40.5, True),
-        (params_obs["snf_orx1_change_rf_gain_10dB"], 5000000, 0.25, -40.5, True),
-        (params_obs["snf_orx1_change_rf_gain_5dB"], 5000000, 0.25, -40.5, True),
-        (params_obs["snf_orx2_manual"], 5000000, 0.25, -40.5, True),
-        (params_obs["snf_orx2_change_rf_gain_10dB"], 5000000, 0.25, -40.5, True),
-        (params_obs["snf_orx2_change_rf_gain_5dB"], 5000000, 0.25, -40.5, True),
+        (0, params_obs["obs_orx1_manual"]),
+        (0, params_obs["obs_orx1_change_rf_gain_10dB"]),
+        (0, params_obs["obs_orx1_change_rf_gain_5dB"]),
+        (0, params_obs["obs_orx1_change_temp_gain_up"]),
+        (0, params_obs["obs_orx1_change_temp_gain_down"]),
+        (1, params_obs["obs_orx2_manual"]),
+        (1, params_obs["obs_orx2_change_rf_gain_10dB"]),
+        (1, params_obs["obs_orx2_change_rf_gain_5dB"]),
+        (1, params_obs["obs_orx2_change_temp_gain_up"]),
+        (1, params_obs["obs_orx2_change_temp_gain_down"]),
+        (0, params_obs["snf_orx1_manual"]),
+        (0, params_obs["snf_orx1_change_rf_gain_10dB"]),
+        (0, params_obs["snf_orx1_change_rf_gain_5dB"]),
+        (1, params_obs["snf_orx2_manual"]),
+        (1, params_obs["snf_orx2_change_rf_gain_10dB"]),
+        (1, params_obs["snf_orx2_change_rf_gain_5dB"]),
     ],
+)
+@pytest.mark.parametrize(
+    "frequency, scale, peak_min, use_obs", [(5000000, 0.25, -40.5, True)]
 )
 def test_ad9371_dds_loopback_for_obs(
     test_dds_loopback,

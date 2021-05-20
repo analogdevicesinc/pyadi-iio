@@ -233,6 +233,14 @@ class ad9371(rx_tx, context_manager):
         return self._get_iio_attr("voltage0", "sampling_frequency", False) / dec
 
     @property
+    def orx_sample_rate(self):
+        """orx_sample_rate: Sample rate ORX path in samples per second
+            This value will reflect the correct value when 8x decimator is enabled
+        """
+        dec = 8 if self.rx_enable_dec8 else 1
+        return self._get_iio_attr("voltage2", "sampling_frequency", False) / dec
+
+    @property
     def tx_sample_rate(self):
         """tx_sample_rate: Sample rate TX path in samples per second
             This value will reflect the correct value when 8x interpolator is enabled
