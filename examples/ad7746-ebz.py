@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2021 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,76 +31,40 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import ad9361, ad9363, ad9364, Pluto
+import sys
+from time import sleep
 
-from adi.fmcomms5 import FMComms5
+import adi
 
-from adi.ad9371 import ad9371
+VIN = "voltage0"
+VIN_VDD = "voltage1"
+TEMP_INT = "temp0"
+TEMP_EXT = "temp1"
+CIN1 = "capacitance0"
+CIN1_DIFF = "capacitance0-capacitance2"
+CIN2 = "capacitance1"
+CIN2_DIFF = "capacitance1-capacitance3"
 
-from adi.adrv9002 import adrv9002
+# Set up AD7746
+dev = adi.ad7746(uri="serial:/dev/ttyACM0,115200,8n1", device_name="ad7746")
+dev.channel[CIN1].offset = 66
 
-from adi.adrv9009 import adrv9009
+input("[CALIB] 1. Remove the ruler and press ENTER. ")
+m = dev.channel[CIN1].raw
+input("[CALIB] 2. Place ruler to 51mm (2inch) and press ENTER.")
+M = dev.channel[CIN1].raw
 
-from adi.adrv9009_zu11eg import adrv9009_zu11eg
+mm = (M - m) / 51
 
-from adi.adrv9009_zu11eg_multi import adrv9009_zu11eg_multi
+print(
+    "[DEMO] Move the ruler around, its position will is read and displayed every 2 seconds.\n"
+)
 
-from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
-
-from adi.ad9081 import ad9081
-
-from adi.ad9081_mc import ad9081_mc, QuadMxFE
-
-from adi.ad9094 import ad9094
-
-from adi.ad9680 import ad9680
-
-from adi.ad9136 import ad9136
-
-from adi.ad9144 import ad9144
-
-from adi.ad9152 import ad9152
-
-from adi.cn0532 import cn0532
-
-from adi.daq2 import DAQ2
-
-from adi.daq3 import DAQ3
-
-from adi.adis16460 import adis16460
-
-from adi.adis16507 import adis16507
-
-from adi.ad7124 import ad7124
-
-from adi.adxl345 import adxl345
-
-from adi.adxrs290 import adxrs290
-
-from adi.fmclidar1 import fmclidar1
-
-from adi.ad5686 import ad5686
-
-from adi.adar1000 import adar1000, adar1000_array
-
-from adi.ltc2983 import ltc2983
-
-from adi.one_bit_adc_dac import one_bit_adc_dac
-
-from adi.ltc2314_14 import ltc2314_14
-
-from adi.ad7606 import ad7606
-
-from adi.ad7799 import ad7799
-
-from adi.ad7746 import ad7746
-
-from adi.adpd410x import adpd410x
-
-try:
-    from adi.jesd import jesd
-except ImportError:
-    pass
-
-__version__ = "0.0.8"
-name = "Analog Devices Hardware Interfaces"
+while True:
+    capData = dev.channel[CIN1].raw
+    capData -= m
+    capData /= mm
+    temperature = dev.channel[TEMP_INT].input
+    temperature /= 1000.0
+    print("Position: {} mm, Temperature: {} *C".format(int(capData), temperature))
+    sleep(2)

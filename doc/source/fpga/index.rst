@@ -32,9 +32,9 @@ To configure DDSs individually a list of scales can be passed to the properties 
  sdr.dds_enabled = [True] * n
  # Set all DDSs to same frequency, scale, and phase
  dds_freq_hz = 10000
- sdr.dds_phase = [0] * n
- sdr.dds_frequency = [dds_freq_hz] * n
- sdr.dds_scale = [0.9] * n
+ sdr.dds_phases = [0] * n
+ sdr.dds_frequencies = [dds_freq_hz] * n
+ sdr.dds_scales = [0.9] * n
 
 Methods
 ---------------------------
