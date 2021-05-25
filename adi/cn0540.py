@@ -84,6 +84,18 @@ class cn0540(rx, context_manager):
             time.sleep(0.01)
 
     @property
+    def sample_rate(self):
+        """sample_rate: Sample rate in samples per second.
+        Valid options are:
+        '256000','128000','64000','32000','16000','8000','4000','2000','1000'
+        """
+        return self._get_iio_dev_attr("sampling_frequency")
+
+    @sample_rate.setter
+    def sample_rate(self, value):
+        self._set_iio_dev_attr_str("sampling_frequency", value)
+
+    @property
     def input_voltage(self):
         """input_voltage: Input voltage in mV from ADC before shift voltage applied """
         adc_chan = self._rxadc

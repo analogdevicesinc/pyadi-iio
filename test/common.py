@@ -48,6 +48,12 @@ def pytest_addoption(parser):
         action="store_true",
         help="Run tests that use observation data paths",
     )
+    parser.addoption(
+        "--username", default="root", help="SSH login username",
+    )
+    parser.addoption(
+        "--password", default="analog", help="SSH login password",
+    )
 
 
 def pytest_runtest_setup(item):
@@ -58,6 +64,13 @@ def pytest_runtest_setup(item):
         pytest.skip(
             "Testing requiring observation disabled. Use --obs-enable flag to enable"
         )
+
+
+def pytest_generate_tests(metafunc):
+    if "username" in metafunc.fixturenames:
+        metafunc.parametrize("username", [metafunc.config.getoption("username")])
+    if "password" in metafunc.fixturenames:
+        metafunc.parametrize("password", [metafunc.config.getoption("password")])
 
 
 #################################################
