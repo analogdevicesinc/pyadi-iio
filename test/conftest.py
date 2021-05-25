@@ -7,6 +7,7 @@ from test.common import (
     pytest_addoption,
     pytest_collection_modifyitems,
     pytest_configure,
+    pytest_runtest_setup,
     pytest_generate_tests,
 )
 from test.dma_tests import *
@@ -140,3 +141,8 @@ def test_attribute_write_only_str(request):
 @pytest.fixture()
 def test_dma_dac_zeros(request):
     yield dma_dac_zeros
+
+
+@pytest.fixture()
+def test_dds_two_tone(request):
+    yield dds_two_tone
