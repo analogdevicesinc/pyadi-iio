@@ -7,8 +7,8 @@ from test.common import (
     pytest_addoption,
     pytest_collection_modifyitems,
     pytest_configure,
-    pytest_runtest_setup,
     pytest_generate_tests,
+    pytest_runtest_setup,
 )
 from test.dma_tests import *
 from test.generics import iio_attribute_single_value
