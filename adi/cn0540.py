@@ -165,9 +165,11 @@ class cn0540(rx, context_manager):
 
     @fda_mode.setter
     def fda_mode(self, value):
-        if value not in ['full-power','low-power']:
-            raise Exception('fda_mode must be low-power or full-power')
-        self._set_iio_attr_int("voltage6", "raw", True, int(value=='full-power'), self._gpio)
+        if value not in ["full-power", "low-power"]:
+            raise Exception("fda_mode must be low-power or full-power")
+        self._set_iio_attr_int(
+            "voltage6", "raw", True, int(value == "full-power"), self._gpio
+        )
 
     @property
     def red_led_enable(self):
