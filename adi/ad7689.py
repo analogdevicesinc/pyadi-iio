@@ -80,7 +80,6 @@ class ad7689(rx, context_manager):
 
         rx.__init__(self)
 
-
     class _channel(attribute):
         """AD7689 channel"""
 
@@ -101,7 +100,6 @@ class ad7689(rx, context_manager):
         @scale.setter
         def scale(self, value):
             self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
-
 
     def to_volts(self, index, val):
         """Converts raw value to SI"""
