@@ -58,6 +58,7 @@ class cn0540(rx, context_manager):
         context_manager.__init__(self, uri, self._device_name)
 
         self._rxadc = self._ctx.find_device("ad7768-1")
+        self._ctrl = self._ctx.find_device("ad7768-1")
         self._ltc2606 = self._ctx.find_device("ltc2606")
         self._gpio = self._ctx.find_device("one-bit-adc-dac")
         self._ltc2308 = self._ctx.find_device("ltc2308")
