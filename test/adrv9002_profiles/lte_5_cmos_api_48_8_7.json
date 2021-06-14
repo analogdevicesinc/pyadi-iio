@@ -98,10 +98,10 @@
                 "dpInFifoTestDataSel": 0
               },
               "rxNbNco": {
-                "rxNbNcoEn": 0,
+                "rxNbNcoEn": 1,
                 "rxNbNcoConfig": {
                   "freq": 0,
-                  "sampleFreq": 0,
+                  "sampleFreq": 7680000,
                   "phase": 0,
                   "realOut": 0
                 }
@@ -206,10 +206,10 @@
                 "dpInFifoTestDataSel": 0
               },
               "rxNbNco": {
-                "rxNbNcoEn": 0,
+                "rxNbNcoEn": 1,
                 "rxNbNcoConfig": {
                   "freq": 0,
-                  "sampleFreq": 0,
+                  "sampleFreq": 7680000,
                   "phase": 0,
                   "realOut": 0
                 }
@@ -967,7 +967,7 @@
             "txRoundEn": 1
           },
           "txIqdmDuc": {
-            "iqdmDucMode": 0,
+            "iqdmDucMode": 2,
             "iqdmDev": 0,
             "iqdmDevOffset": 0,
             "iqdmScalar": 0,
@@ -1064,7 +1064,7 @@
             "txRoundEn": 1
           },
           "txIqdmDuc": {
-            "iqdmDucMode": 0,
+            "iqdmDucMode": 2,
             "iqdmDev": 0,
             "iqdmDevOffset": 0,
             "iqdmScalar": 0,
