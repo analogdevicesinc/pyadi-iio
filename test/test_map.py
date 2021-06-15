@@ -70,5 +70,13 @@ def get_test_map():
         "zynq-adrv9364-z7020-bob-cmos",
         "zynq-zed-adv7511-ad9364-fmcomms4",
     ]
+    test_map["adrv9002"] = [
+        "zynq-zed-adrv9002",
+        "zynq-zed-adrv9002-rx2tx2",
+        "zynqmp-zcu102-rev10-adrv9002-cmos",
+        "zynqmp-zcu102-rev10-adrv9002-rx2tx2-cmos",
+        "zynqmp-zcu102-rev10-adrv9002-lvds",
+        "zynqmp-zcu102-rev10-adrv9002-rx2tx2-lvds",
+    ]
 
     return test_map

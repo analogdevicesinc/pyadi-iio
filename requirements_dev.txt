@@ -8,5 +8,5 @@ scapy
 scipy
 pytest-cov
 coveralls
-pytest-libiio
+pytest-libiio>=0.0.4
 bump2version
