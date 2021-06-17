@@ -80,17 +80,21 @@ class adrv9009_zu11eg(adrv9009):
 
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize both transceivers """
-        # Turn off continuous SYSREF, and enable GPI SYSREF request
-        self._clock_chip.reg_write(0x5A, 0)
-        for i in range(12):
-            try:
-                self._set_iio_dev_attr_str("multichip_sync", i)
-            except OSError:
-                pass
-            try:
-                self._set_iio_dev_attr_str("multichip_sync", i, self._ctrl_b)
-            except OSError:
-                pass
+        try:
+            test = self.jesd204_fsm_ctrl
+            # We're JESD204-fsm enabled - do nothing
+        except:
+            # Turn off continuous SYSREF, and enable GPI SYSREF request
+            self._clock_chip.reg_write(0x5A, 0)
+            for i in range(12):
+                try:
+                    self._set_iio_dev_attr_str("multichip_sync", i)
+                except OSError:
+                    pass
+                try:
+                    self._set_iio_dev_attr_str("multichip_sync", i, self._ctrl_b)
+                except OSError:
+                    pass
 
     @property
     def frequency_hopping_mode_chip_b(self):
