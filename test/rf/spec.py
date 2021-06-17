@@ -128,6 +128,7 @@ def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.01):
 
 def sfdr(x, fs=1, ref=2 ** 15, plot=False):
     amp, freqs = spec_est(x, fs=fs, ref=ref, plot=plot)
+    amp_org = amp
     amp = fftshift(amp)
     peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.1))
 
@@ -158,7 +159,7 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
         plt.tight_layout()
         plt.show()
 
-    return sfdr
+    return sfdr, amp_org, freqs
 
 
 def main():

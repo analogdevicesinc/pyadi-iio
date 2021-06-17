@@ -10,3 +10,5 @@ pytest-cov
 coveralls
 pytest-libiio
 bump2version
+pytest-html
+plotly-express
