@@ -13,6 +13,7 @@ from test.common import (
 from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
+from test.html import pytest_html_report_title, pytest_runtest_makereport
 
 import adi
 import numpy as np
