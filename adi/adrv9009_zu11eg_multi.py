@@ -80,6 +80,7 @@ class adrv9009_zu11eg_multi(object):
         self._clk_chip_show_cap_bank_sel = False
         self._resync_tx = False
         self._rx_initialized = False
+        self._request_sysref_carrier = False
         self.fmcomms8 = fmcomms8
         if fmcomms8:
             self.primary = adrv9009_zu11eg_fmcomms8(
@@ -350,7 +351,10 @@ class adrv9009_zu11eg_multi(object):
 
     def sysref_request(self):
         """ sysref_request: Sysref request for parent HMC7044 """
-        self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
+        if self._request_sysref_carrier:
+            self.primary._clock_chip_carrier.attrs["sysref_request"].value = "1"
+        else:
+            self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
 
     def set_trx_lo_frequency(self, freq):
         """ set_trx_lo_frequency:
