@@ -55,7 +55,7 @@ class sshfs:
             self.ssh.get_transport().auth_none(self.username)
         else:
             self.ssh.connect(
-                self.address, username=self.username, password=self.password
+                self.address, username=self.username, password=self.password, look_for_keys=False, allow_agent=False,
             )
 
     def _run(self, cmd):
