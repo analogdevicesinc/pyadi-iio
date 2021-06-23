@@ -58,6 +58,7 @@ class cn0540(rx, context_manager):
         context_manager.__init__(self, uri, self._device_name)
 
         self._rxadc = self._ctx.find_device("ad7768-1")
+        self._ctrl = self._ctx.find_device("ad7768-1")
         self._ltc2606 = self._ctx.find_device("ltc2606")
         self._gpio = self._ctx.find_device("one-bit-adc-dac")
         self._ltc2308 = self._ctx.find_device("ltc2308")
@@ -82,6 +83,18 @@ class cn0540(rx, context_manager):
                 "voltage0", "raw", True, int(dac_voltage), dac_chan
             )
             time.sleep(0.01)
+
+    @property
+    def sample_rate(self):
+        """sample_rate: Sample rate in samples per second.
+        Valid options are:
+        '256000','128000','64000','32000','16000','8000','4000','2000','1000'
+        """
+        return self._get_iio_dev_attr("sampling_frequency")
+
+    @sample_rate.setter
+    def sample_rate(self, value):
+        self._set_iio_dev_attr_str("sampling_frequency", value)
 
     @property
     def input_voltage(self):
@@ -153,7 +166,11 @@ class cn0540(rx, context_manager):
 
     @fda_mode.setter
     def fda_mode(self, value):
-        self._set_iio_attr_int("voltage6", "raw", True, value, self._gpio)
+        if value not in ["full-power", "low-power"]:
+            raise Exception("fda_mode must be low-power or full-power")
+        self._set_iio_attr_int(
+            "voltage6", "raw", True, int(value == "full-power"), self._gpio
+        )
 
     @property
     def red_led_enable(self):

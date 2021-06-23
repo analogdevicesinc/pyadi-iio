@@ -20,6 +20,11 @@ def pytest_configure(config):
     for k in keys:
         config.addinivalue_line("markers", k.replace("-", "_"))
 
+    # Add custom marks to ini for OBS channels
+    config.addinivalue_line(
+        "markers", "obs_required: mark tests that require observation data paths"
+    )
+
 
 def pytest_collection_modifyitems(items):
     # Map HDL project names to tests as markers
@@ -35,6 +40,37 @@ def pytest_collection_modifyitems(items):
                     for marker in test_map[key]:
                         item.add_marker(marker.replace("-", "_"))
                     break
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--obs-enable",
+        action="store_true",
+        help="Run tests that use observation data paths",
+    )
+    parser.addoption(
+        "--username", default="root", help="SSH login username",
+    )
+    parser.addoption(
+        "--password", default="analog", help="SSH login password",
+    )
+
+
+def pytest_runtest_setup(item):
+    # Handle observation based devices
+    obs = item.config.getoption("--obs-enable")
+    marks = [mark.name for mark in item.iter_markers()]
+    if not obs and "obs_required" in marks:
+        pytest.skip(
+            "Testing requiring observation disabled. Use --obs-enable flag to enable"
+        )
+
+
+def pytest_generate_tests(metafunc):
+    if "username" in metafunc.fixturenames:
+        metafunc.parametrize("username", [metafunc.config.getoption("username")])
+    if "password" in metafunc.fixturenames:
+        metafunc.parametrize("password", [metafunc.config.getoption("password")])
 
 
 #################################################
