@@ -83,6 +83,8 @@ from adi.one_bit_adc_dac import one_bit_adc_dac
 
 from adi.ltc2314_14 import ltc2314_14
 
+from adi.adf4371 import adf4371
+
 try:
     from adi.jesd import jesd
 except ImportError:
