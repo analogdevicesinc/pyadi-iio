@@ -174,8 +174,3 @@ class adf4371(attribute, context_manager):
     def rf32_frequency(self, value):
         """Get/Set the frequency of the 32GHz RF output"""
         self._set_iio_attr("altvoltage3", "frequency", True, value, self._ctrl)
-
-    @property
-    def temperature(self):
-        """Get the temperature of the device"""
-        return self._get_iio_attr("altvoltage2", "frequency", True, self._ctrl)
