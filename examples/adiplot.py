@@ -12,16 +12,20 @@ from pyqtgraph.Qt import QtCore, QtGui
 from scipy import signal
 from scipy.fftpack import fft
 
+REAL_DEV_NAME = "cn05".lower()
+
 
 class ADIPlotter(object):
     def __init__(self, classname, uri):
 
+        self.classname = classname
         self.q = Queue(maxsize=20)
         self.stream = eval("adi." + classname + "(uri='" + uri + "')")
         self.stream.sample_rate = 10000000
-        self.stream.rx_lo = 1000000000
-        self.stream.tx_lo = 1000000000
-        self.stream.dds_single_tone(3000000, 0.9)
+        if REAL_DEV_NAME not in classname.lower():
+            self.stream.rx_lo = 1000000000
+            self.stream.tx_lo = 1000000000
+            self.stream.dds_single_tone(3000000, 0.9)
         self.stream.rx_buffer_size = 2 ** 12
         self.stream.rx_enabled_channels = [0]
 
@@ -35,7 +39,10 @@ class ADIPlotter(object):
         wf_xaxis = pg.AxisItem(orientation="bottom")
         wf_xaxis.setLabel(units="Seconds")
 
-        wf_ylabels = [(-2 * 11, "-2047"), (0, "0"), (2 ** 11, "2047")]
+        if REAL_DEV_NAME in classname.lower():
+            wf_ylabels = [(0, "0"), (2 ** 11, "2047")]
+        else:
+            wf_ylabels = [(-2 * 11, "-2047"), (0, "0"), (2 ** 11, "2047")]
         wf_yaxis = pg.AxisItem(orientation="left")
         wf_yaxis.setTicks([wf_ylabels])
 
@@ -88,10 +95,12 @@ class ADIPlotter(object):
                 self.traces[name] = self.spectrum.plot(pen="m", width=3)
                 self.spectrum.setLogMode(x=False, y=False)
                 self.spectrum.setYRange(self.min, 5, padding=0)
+                if REAL_DEV_NAME in self.classname.lower():
+                    start = 0
+                else:
+                    start = -1 * self.stream.sample_rate / 2
                 self.spectrum.setXRange(
-                    -1 * self.stream.sample_rate / 2,
-                    self.stream.sample_rate / 2,
-                    padding=0.005,
+                    start, self.stream.sample_rate / 2, padding=0.005,
                 )
             elif name == "waveform":
                 self.traces[name] = self.waveform.plot(pen="c", width=3)
@@ -130,8 +139,8 @@ if __name__ == "__main__":
     parser.add_argument("uri", help="URI of target device", action="store")
     args = vars(parser.parse_args())
 
-    if args["class"] not in ["Pluto", "ad9361", "ad9364", "ad9363"]:
-        raise Exception("Only AD936x based devices supported")
+    if args["class"] not in ["Pluto", "ad9361", "ad9364", "ad9363", "cn0532"]:
+        raise Exception("Only AD936x based devices or CN0532 are supported")
 
     app = ADIPlotter(args["class"], args["uri"])
     app.animation()

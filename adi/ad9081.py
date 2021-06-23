@@ -150,12 +150,48 @@ class ad9081(rx_tx, context_manager):
         rx_tx.__init__(self)
         self.rx_buffer_size = 2 ** 16
 
+    def _get_iio_attr_str_single(self, channel_name, attr, output):
+        # This is overridden by subclasses
+        return self._get_iio_attr_str(channel_name, attr, output)
+
+    def _set_iio_attr_str_single(self, channel_name, attr, output, value):
+        # This is overridden by subclasses
+        return self._set_iio_attr(channel_name, attr, output, value)
+
+    def _get_iio_attr_single(self, channel_name, attr, output):
+        # This is overridden by subclasses
+        return self._get_iio_attr(channel_name, attr, output)
+
+    def _set_iio_attr_single(self, channel_name, attr, output, value):
+        # This is overridden by subclasses
+        return self._set_iio_attr(channel_name, attr, output, value)
+
+    def _get_iio_dev_attr_single(self, attr):
+        # This is overridden by subclasses
+        return self._get_iio_dev_attr(attr)
+
+    def _set_iio_dev_attr_single(self, attr, value):
+        # This is overridden by subclasses
+        return self._set_iio_dev_attr(attr, value)
+
     @property
     def path_map(self):
         """ path_map: Map of channelizers both coarse and fine to
             individual driver channel names
         """
         return self._path_map
+
+    def write_pfilt_config(self, value):
+        """ Load a new PFILT configuration file
+            Input is path to PFILT configuration file. Please see
+            driver documentation about PFILT generation and limitations
+        """
+        with open(value, "r") as file:
+            data = file.read()
+        self._set_iio_dev_attr_str("filter_fir_config", data)
+
+    # we cannot really get the profile. The driver will just throw EPERM
+    pfilt_config = property(None, write_pfilt_config)
 
     @property
     def rx_channel_nco_frequencies(self):
@@ -216,22 +252,22 @@ class ad9081(rx_tx, context_manager):
     @property
     def rx_test_mode(self):
         """rx_test_mode: NCO Test Mode """
-        return self._get_iio_attr_str("voltage0_i", "test_mode", False)
+        return self._get_iio_attr_str_single("voltage0_i", "test_mode", False)
 
     @rx_test_mode.setter
     def rx_test_mode(self, value):
-        self._set_iio_attr(
+        self._set_iio_attr_single(
             "voltage0_i", "test_mode", False, value,
         )
 
     @property
     def rx_nyquist_zone(self):
         """rx_nyquist_zone: ADC nyquist zone. Options are: odd, even """
-        return self._get_iio_attr_str("voltage0_i", "nyquist_zone", False)
+        return self._get_iio_attr_str_single("voltage0_i", "nyquist_zone", False)
 
     @rx_nyquist_zone.setter
     def rx_nyquist_zone(self, value):
-        self._set_iio_attr(
+        self._set_iio_attr_single(
             "voltage0_i", "nyquist_zone", False, value,
         )
 
@@ -369,7 +405,7 @@ class ad9081(rx_tx, context_manager):
         """tx_main_ffh_frequency: Transmitter fast frequency hop frequency. This will set
             The NCO frequency of the NCO selected from the bank defined by tx_main_ffh_index
         """
-        return self._get_iio_attr("voltage0_i", "main_ffh_frequency", True)
+        return self._get_iio_attr_single("voltage0_i", "main_ffh_frequency", True)
 
     @tx_main_ffh_frequency.setter
     def tx_main_ffh_frequency(self, value):
@@ -377,7 +413,7 @@ class ad9081(rx_tx, context_manager):
             raise Exception(
                 "To set a FFH NCO bank frequency, tx_main_ffh_index must > 0"
             )
-        self._set_iio_attr(
+        self._set_iio_attr_single(
             "voltage0_i", "main_ffh_frequency", True, value,
         )
 
@@ -385,11 +421,11 @@ class ad9081(rx_tx, context_manager):
     def tx_main_ffh_index(self):
         """tx_main_ffh_index: Transmitter fast frequency hop NCO bank index
         """
-        return self._get_iio_attr("voltage0_i", "main_ffh_index", True)
+        return self._get_iio_attr_single("voltage0_i", "main_ffh_index", True)
 
     @tx_main_ffh_index.setter
     def tx_main_ffh_index(self, value):
-        self._set_iio_attr(
+        self._set_iio_attr_single(
             "voltage0_i", "main_ffh_index", True, value,
         )
 
@@ -398,11 +434,11 @@ class ad9081(rx_tx, context_manager):
         """tx_main_ffh_mode: Set hop transition mode of NCOs Options are:
             phase_continuous, phase_incontinuous, and phase_coherent
         """
-        return self._get_iio_attr_str("voltage0_i", "main_ffh_mode", True)
+        return self._get_iio_attr_str_single("voltage0_i", "main_ffh_mode", True)
 
     @tx_main_ffh_mode.setter
     def tx_main_ffh_mode(self, value):
-        self._set_iio_attr(
+        self._set_iio_attr_single(
             "voltage0_i", "main_ffh_mode", True, value,
         )
 
@@ -410,30 +446,30 @@ class ad9081(rx_tx, context_manager):
     def loopback_mode(self):
         """loopback_mode: Enable loopback mode RX->TX
         """
-        return self._get_iio_dev_attr("loopback_mode")
+        return self._get_iio_dev_attr_single("loopback_mode")
 
     @loopback_mode.setter
     def loopback_mode(self, value):
-        self._set_iio_dev_attr(
+        self._set_iio_dev_attr_single(
             "loopback_mode", value,
         )
 
     @property
     def rx_sample_rate(self):
         """rx_sampling_frequency: Sample rate after decimation"""
-        return self._get_iio_attr("voltage0_i", "sampling_frequency", False)
+        return self._get_iio_attr_single("voltage0_i", "sampling_frequency", False)
 
     @property
     def adc_frequency(self):
         """adc_frequency: ADC frequency in Hz"""
-        return self._get_iio_attr("voltage0_i", "adc_frequency", False)
+        return self._get_iio_attr_single("voltage0_i", "adc_frequency", False)
 
     @property
     def tx_sample_rate(self):
         """tx_sampling_frequency: Sample rate before interpolation"""
-        return self._get_iio_attr("voltage0_i", "sampling_frequency", True)
+        return self._get_iio_attr_single("voltage0_i", "sampling_frequency", True)
 
     @property
     def dac_frequency(self):
         """dac_frequency: DAC frequency in Hz"""
-        return self._get_iio_attr("voltage0_i", "dac_frequency", True)
+        return self._get_iio_attr_single("voltage0_i", "dac_frequency", True)

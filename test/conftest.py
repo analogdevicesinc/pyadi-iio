@@ -2,10 +2,18 @@ import random
 import test.rf.spec as spec
 import time
 from test.attr_tests import *
-from test.common import dev_interface, pytest_collection_modifyitems, pytest_configure
+from test.common import (
+    dev_interface,
+    pytest_addoption,
+    pytest_collection_modifyitems,
+    pytest_configure,
+    pytest_generate_tests,
+    pytest_runtest_setup,
+)
 from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
+from test.html import pytest_html_report_title, pytest_runtest_makereport
 
 import adi
 import numpy as np
@@ -134,3 +142,8 @@ def test_attribute_write_only_str(request):
 @pytest.fixture()
 def test_dma_dac_zeros(request):
     yield dma_dac_zeros
+
+
+@pytest.fixture()
+def test_dds_two_tone(request):
+    yield dds_two_tone

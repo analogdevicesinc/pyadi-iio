@@ -57,7 +57,7 @@ def tx1(self, data):
 
 def tx2(self, data):
     """tx2: Transmit data on channel 1 """
-    self._tx2.tx()
+    self._tx2.tx(data)
 
 
 class adrv9002(rx_tx, context_manager):
@@ -80,7 +80,7 @@ class adrv9002(rx_tx, context_manager):
 
         if len(rxdevs) > 1:
             self._rx_dma_mode = "split"
-            self._rxadc = self._ctx.find_device("axi-adrv9002-rx1-lpc")
+            self._rxadc = self._ctx.find_device("axi-adrv9002-rx-lpc")
             self._rxadc2 = self._ctx.find_device("axi-adrv9002-rx2-lpc")
             self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
             setattr(adrv9002, "rx1", rx1)
@@ -99,12 +99,13 @@ class adrv9002(rx_tx, context_manager):
 
         if len(txdevs) > 1:
             self._tx_dma_mode = "split"
-            self._txdac = self._ctx.find_device("axi-adrv9002-tx1-lpc")
+            self._txdac = self._ctx.find_device("axi-adrv9002-tx-lpc")
             self._txdac2 = self._ctx.find_device("axi-adrv9002-tx2-lpc")
             self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
             setattr(adrv9002, "tx1", tx1)
             setattr(adrv9002, "tx2", tx2)
             remap(self._tx2, "tx_", "tx2_", type(self))
+            remap(self._tx2, "dds_", "dds2_", type(self))
 
         else:
             self._tx_dma_mode = "combined"

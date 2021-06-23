@@ -31,8 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import fs
-import fs.sshfs
+from .sshfs import sshfs
 
 
 class jesd:
@@ -45,15 +44,10 @@ class jesd:
         self.username = username
         self.password = password
         self.rootdir = "/sys/bus/platform/devices/"
-        self.sshargs = (
-            "?StrictHostKeyChecking=no&CheckHostIP=no&UserKnownHostsFile=/dev/null"
-        )
+
         # Connect
-        self.fs = fs.open_fs(
-            "ssh://{}:{}@{}/{}".format(
-                self.username, self.password, self.address, self.sshargs
-            )
-        )
+        self.fs = sshfs(address, username, password)
+
         self.find_jesd_dir()
         self.find_lanes()
 
