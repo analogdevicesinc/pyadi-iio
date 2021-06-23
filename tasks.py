@@ -60,13 +60,13 @@ def add_libiio(do_prints=False, add_to_path=False):
 
 @task
 def libiiopath(c):
-    """ Search for libiio python bindings """
+    """Search for libiio python bindings"""
     add_libiio(do_prints=True)
 
 
 @task
 def setup(c):
-    """ Install required python packages for development through pip """
+    """Install required python packages for development through pip"""
     c.run("pip3 install -r requirements.txt")
     c.run("pip3 install -r requirements_dev.txt")
     c.run("pip3 install -r requirements_doc.txt")
@@ -75,13 +75,13 @@ def setup(c):
 
 @task
 def builddoc(c):
-    """ Build sphinx doc """
+    """Build sphinx doc"""
     c.run("sphinx-build doc/source doc/build")
 
 
 @task(builddoc)
 def build(c, docs=False):
-    """ Build python package """
+    """Build python package"""
     c.run("python setup.py build")
 
 
@@ -92,15 +92,15 @@ def build(c, docs=False):
     }
 )
 def createrelease(c, message=None, inc="rev"):
-    """ Create GitHub release
+    """Create GitHub release
 
-        The following is performed:
-        1. Test are run to check passing
-        2. Tag is created
-        3. __version__ file is updated with bumped version
-        4. Commit is created for updated __version__ file
+    The following is performed:
+    1. Test are run to check passing
+    2. Tag is created
+    3. __version__ file is updated with bumped version
+    4. Commit is created for updated __version__ file
 
-        Note that nothing is pushed!
+    Note that nothing is pushed!
     """
     # Check all tests are passing
     import pytest
@@ -146,7 +146,7 @@ def createrelease(c, message=None, inc="rev"):
 
 @task
 def test(c):
-    """ Run pytest tests """
+    """Run pytest tests"""
     if not add_libiio(do_prints=True):
         print("---libiio not on path. Need to add first before testing")
     else:
@@ -155,7 +155,7 @@ def test(c):
 
 @task
 def checkparts(c):
-    """ Check for missing parts in supported_parts.md """
+    """Check for missing parts in supported_parts.md"""
     print("Running supported_parts check")
     mod = __import__("adi")
     parts = []
@@ -169,7 +169,10 @@ def checkparts(c):
         "adar1000_array",
     ]
     for c in dir(mod):
-        if c[:2] == "ad" and not c in ignored_parts:
+        if (
+            any(c.lower().startswith(pre) for pre in ("ad", "hmc", "lt"))
+            and not c in ignored_parts
+        ):
             parts.append(c)
     # Check if in README
     with open("supported_parts.md") as reader:
@@ -190,13 +193,13 @@ def checkparts(c):
 
 @task(checkparts)
 def precommit(c):
-    """ Run precommit checks """
+    """Run precommit checks"""
     c.run("pre-commit run --all-files")
 
 
 @task
 def changelog(c, since=None):
-    """ Print changelog from last release """
+    """Print changelog from last release"""
     if not since:
         r = c.run(f"git describe --abbrev=0 --tags", encoding="utf-8", hide=True)
         since = r.stdout.splitlines()[0]
