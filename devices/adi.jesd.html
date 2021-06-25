@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>jesd &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>jesd &mdash; Analog Devices Hardware Python Interfaces 0.0.8 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -93,7 +96,9 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
@@ -103,6 +108,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd410x.html">adpd410x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9002.html">adrv9002</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
@@ -111,6 +117,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
@@ -119,6 +126,8 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314-14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -197,43 +206,43 @@
   <div class="section" id="module-adi.jesd">
 <span id="jesd"></span><h1>jesd<a class="headerlink" href="#module-adi.jesd" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="adi.jesd.jesd">
-<em class="property">class </em><code class="sig-prename descclassname">adi.jesd.</code><code class="sig-name descname">jesd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">address</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">'root'</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">'analog'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.jesd.jesd">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.jesd.</span></span><span class="sig-name descname"><span class="pre">jesd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>JESD Monitoring</p>
 <dl class="py method">
-<dt id="adi.jesd.jesd.decode_status">
-<code class="sig-name descname">decode_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.decode_status" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.jesd.jesd.decode_status">
+<span class="sig-name descname"><span class="pre">decode_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.decode_status" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="adi.jesd.jesd.find_jesd_dir">
-<code class="sig-name descname">find_jesd_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.find_jesd_dir" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.jesd.jesd.find_jesd_dir">
+<span class="sig-name descname"><span class="pre">find_jesd_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.find_jesd_dir" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="adi.jesd.jesd.find_lanes">
-<code class="sig-name descname">find_lanes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.find_lanes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.jesd.jesd.find_lanes">
+<span class="sig-name descname"><span class="pre">find_lanes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.find_lanes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="adi.jesd.jesd.get_all_link_statuses">
-<code class="sig-name descname">get_all_link_statuses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.get_all_link_statuses" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.jesd.jesd.get_all_link_statuses">
+<span class="sig-name descname"><span class="pre">get_all_link_statuses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.get_all_link_statuses" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="adi.jesd.jesd.get_all_statuses">
-<code class="sig-name descname">get_all_statuses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.get_all_statuses" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.jesd.jesd.get_all_statuses">
+<span class="sig-name descname"><span class="pre">get_all_statuses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.get_all_statuses" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="adi.jesd.jesd.get_dev_lane_info">
-<code class="sig-name descname">get_dev_lane_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.get_dev_lane_info" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.jesd.jesd.get_dev_lane_info">
+<span class="sig-name descname"><span class="pre">get_dev_lane_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.get_dev_lane_info" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="adi.jesd.jesd.get_status">
-<code class="sig-name descname">get_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.get_status" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.jesd.jesd.get_status">
+<span class="sig-name descname"><span class="pre">get_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.jesd.jesd.get_status" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -254,7 +263,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Analog Devices, Inc.
+        &#169; Copyright 2019-2021, Analog Devices, Inc.
 
     </p>
   </div>

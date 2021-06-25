@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>DMA Tests &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>DMA Tests &mdash; Analog Devices Hardware Python Interfaces 0.0.8 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -105,6 +108,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#set-up-isolated-environment">Set Up Isolated Environment</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
@@ -181,8 +185,8 @@
 <h1>DMA Tests<a class="headerlink" href="#dma-tests" title="Permalink to this headline">¶</a></h1>
 <p>Functions used by test fixtures for evaluating receive and transmit DMA/buffers</p>
 <span class="target" id="module-test.dma_tests"></span><dl class="py function">
-<dt id="test.dma_tests.cw_loopback">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">cw_loopback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cw_loopback" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.cw_loopback">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">cw_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cw_loopback" title="Permalink to this definition">¶</a></dt>
 <dd><p>cw_loopback: Test CW loopback with connected loopback cables.
 This test requires a devices with TX and RX onboard where the transmit
 signal can be recovered. Sinuoidal data is passed to DMAs which is then
@@ -200,14 +204,18 @@ enable through tx_enabled_channels</p>
 <dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
 generated and received</p>
 </dd>
+<dt>use_tx2: type=bool</dt><dd><p>Boolean if set will use tx2() as tx method</p>
+</dd>
+<dt>use_rx2: type=bool</dt><dd><p>Boolean if set will use rx2() as rx method</p>
+</dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.cyclic_buffer">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">cyclic_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.cyclic_buffer">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">cyclic_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>cyclic_buffer: Construct Cyclic TX buffers and verify
 no errors occur when pushed. This is performed twice
 without closing the context</p>
@@ -229,8 +237,8 @@ generated</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.cyclic_buffer_exception">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">cyclic_buffer_exception</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer_exception" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.cyclic_buffer_exception">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">cyclic_buffer_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>cyclic_buffer_exception: Construct Cyclic TX buffers and verify
 errors occur when pushed. This is performed twice
 without closing the context and with resetting the TX buffers
@@ -253,8 +261,8 @@ generated</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.dds_loopback">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dds_loopback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">param_set</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">frequency</span></em>, <em class="sig-param"><span class="n">scale</span></em>, <em class="sig-param"><span class="n">peak_min</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dds_loopback" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.dds_loopback">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dds_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dds_loopback" title="Permalink to this definition">¶</a></dt>
 <dd><p>dds_loopback: Test DDS loopback with connected loopback cables.
 This test requires a devices with TX and RX onboard where the transmit
 signal can be recovered. TX FPGA DDSs are used to generate a sinusoid
@@ -284,8 +292,47 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.dma_dac_zeros">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dma_dac_zeros</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_dac_zeros" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.dds_two_tone">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dds_two_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dds_two_tone" title="Permalink to this definition">¶</a></dt>
+<dd><p>dds_two_tone: Test DDS loopback with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. TX FPGA DDSs are used to generate two sinusoids
+which are then estimated on the RX side. The receive tones must be within
+1% of its respective expected frequency with a specified peak.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>frequency1: type=integer</dt><dd><p>Frequency in Hz of the first transmitted tone</p>
+</dd>
+<dt>scale1: type=float</dt><dd><p>Scale of the first DDS tone. Range [0,1]</p>
+</dd>
+<dt>peak_min1: type=float</dt><dd><p>Minimum acceptable value of maximum peak in dBFS of the received
+first tone</p>
+</dd>
+<dt>frequency2: type=integer</dt><dd><p>Frequency in Hz of the second transmitted tone</p>
+</dd>
+<dt>scale2: type=float</dt><dd><p>Scale of the second DDS tone. Range [0,1]</p>
+</dd>
+<dt>peak_min2: type=float</dt><dd><p>Minimum acceptable value of maximum peak in dBFS of the received
+second tone</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.dma_dac_zeros">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_dac_zeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_dac_zeros" title="Permalink to this definition">¶</a></dt>
 <dd><p>dma_dac_zeros: Test DMA digital loopback with a zeros.
 This test requires a AD936x or similar device with internal loopback
 modes. The TX cores are put into zero source mode in cases when no
@@ -305,8 +352,8 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.dma_loopback">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dma_loopback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_loopback" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.dma_loopback">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_loopback" title="Permalink to this definition">¶</a></dt>
 <dd><p>dma_loopback: Test DMA digital loopback with a triangle waveforms.
 This test requires a AD936x or similar device with internal loopback
 modes. A triangle wave is generated on I and Q or real1 and real2
@@ -327,8 +374,8 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.dma_rx">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dma_rx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_rx" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.dma_rx">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_rx" title="Permalink to this definition">¶</a></dt>
 <dd><p>dma_rx: Construct RX buffers and verify data is non-zero when pulled.
 Collected buffer is of size 2**15 and 10 buffers are checked</p>
 <dl class="simple">
@@ -346,8 +393,8 @@ enable through rx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.dma_tx">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">dma_tx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_tx" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.dma_tx">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_tx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_tx" title="Permalink to this definition">¶</a></dt>
 <dd><p>dma_tx: Construct TX buffers and verify no errors occur when pushed.
 Buffer is of size 2**15 and 10 buffers are pushed</p>
 <dl class="simple">
@@ -365,8 +412,8 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.gain_check">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">gain_check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em>, <em class="sig-param"><span class="n">dds_scale</span></em>, <em class="sig-param"><span class="n">min_rssi</span></em>, <em class="sig-param"><span class="n">max_rssi</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.gain_check" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.gain_check">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">gain_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dds_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_rssi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rssi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.gain_check" title="Permalink to this definition">¶</a></dt>
 <dd><p>gain_check: Test DDS loopback with connected loopback cables and verify
 calculated RSSI. This is only applicable for devices with RSSI calculations
 onboard. This test also requires a devices with TX and RX onboard where the
@@ -397,8 +444,8 @@ generated and received</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.nco_loopback">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">nco_loopback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">param_set</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">frequency</span></em>, <em class="sig-param"><span class="n">peak_min</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.nco_loopback" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.nco_loopback">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">nco_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.nco_loopback" title="Permalink to this definition">¶</a></dt>
 <dd><p>nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
 This test requires a devices with TX and RX onboard where the transmit
 signal can be recovered. TX/DAC internal NCOs are used to generate a sinusoid
@@ -426,8 +473,8 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.stress_context_creation">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">stress_context_creation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">repeats</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_context_creation" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.stress_context_creation">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_context_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_context_creation" title="Permalink to this definition">¶</a></dt>
 <dd><p>stress_context_creation: Repeatedly create and destroy a context</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -446,8 +493,8 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.stress_rx_buffer_creation">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">stress_rx_buffer_creation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">repeats</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_creation" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.stress_rx_buffer_creation">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_rx_buffer_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_creation" title="Permalink to this definition">¶</a></dt>
 <dd><p>stress_rx_buffer_creation: Repeatedly create and destroy buffers</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -466,8 +513,8 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.stress_rx_buffer_length">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">stress_rx_buffer_length</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">buffer_sizes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_length" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.stress_rx_buffer_length">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_rx_buffer_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_sizes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_length" title="Permalink to this definition">¶</a></dt>
 <dd><p>stress_rx_buffer_length: Repeatedly create and destroy buffers across different buffer sizes</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -486,8 +533,8 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.stress_tx_buffer_creation">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">stress_tx_buffer_creation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">repeats</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_tx_buffer_creation" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.stress_tx_buffer_creation">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_tx_buffer_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_tx_buffer_creation" title="Permalink to this definition">¶</a></dt>
 <dd><p>stress_tx_buffer_creation: Repeatedly create and destroy TX buffers</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -506,8 +553,8 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="test.dma_tests.t_sfdr">
-<code class="sig-prename descclassname">test.dma_tests.</code><code class="sig-name descname">t_sfdr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">classname</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">param_set</span></em>, <em class="sig-param"><span class="n">sfdr_min</span></em>, <em class="sig-param"><span class="n">full_scale</span><span class="o">=</span><span class="default_value">0.9</span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.t_sfdr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="test.dma_tests.t_sfdr">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">t_sfdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sfdr_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.t_sfdr" title="Permalink to this definition">¶</a></dt>
 <dd><p>t_sfdr: Test SFDR loopback of tone with connected loopback cables.
 This test requires a devices with TX and RX onboard where the transmit
 signal can be recovered. Sinuoidal data is passed to DMAs which is then
@@ -548,7 +595,7 @@ generated and received</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Analog Devices, Inc.
+        &#169; Copyright 2019-2021, Analog Devices, Inc.
 
     </p>
   </div>

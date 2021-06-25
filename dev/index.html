@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Developers &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>Developers &mdash; Analog Devices Hardware Python Interfaces 0.0.8 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -103,6 +106,11 @@
 <li class="toctree-l4"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-isolated-environment">Set Up Isolated Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-pyenv">Install pyenv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-isolated-install-with-pipenv">Create isolated install with pipenv</a></li>
 </ul>
 </li>
 </ul>
@@ -244,6 +252,46 @@
 </div>
 </div>
 </div>
+<div class="section" id="set-up-isolated-environment">
+<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Permalink to this headline">¶</a></h2>
+<p>This section will discussion a method to do isolated development with the correct package versions. The main purpose here is to eliminate any discrepancies that can arise (especially with the linting tools) when running precommit and other checks. This is also useful to not pollute your local global packages. The approach here relies upon leveraging <strong>pyenv</strong> and <strong>pipenv</strong> together.</p>
+<div class="section" id="install-pyenv">
+<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this headline">¶</a></h3>
+<p><strong>pyenv</strong> is a handy tool for installing different and isolated versions of python on your system. Since distributions can ship with rather random versions of python, pyenv can help us install exactly the versions we want. The quick way to install pyenv is with their bash script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl https://pyenv.run <span class="p">|</span> bash
+</pre></div>
+</div>
+<p>Add to your path and shell startup script (.bashrc, .zshrc, …)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/home/&lt;username&gt;/.pyenv/bin:</span><span class="nv">$PATH</span><span class="s2"></span>
+<span class="s2">eval &quot;</span><span class="k">$(</span>pyenv init -<span class="k">)</span><span class="s2">&quot;</span>
+<span class="s2">eval &quot;</span><span class="k">$(</span>pyenv virtualenv-init -<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Install the desired python version</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pyenv install <span class="m">3</span>.6.9
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-isolated-install-with-pipenv">
+<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this headline">¶</a></h3>
+<p>Get the repo, set python version, and setup env</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install -U pipenv
+pyenv <span class="nb">local</span> <span class="m">3</span>.6.9
+git clone git@github.com:analogdevicesinc/pyadi-iio.git
+pipenv install
+pipenv shell
+pipenv install -r requirements.txt
+pipenv install -r requirements_dev.txt
+</pre></div>
+</div>
+<p>Now at this point we have all the necessary development packages to start working. If you close the current shell you will lose the environment. To return to it, go to the project folder and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> &lt;project folder&gt;
+pyenv <span class="nb">local</span> <span class="m">3</span>.6.9
+pipenv shell
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -260,7 +308,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Analog Devices, Inc.
+        &#169; Copyright 2019-2021, Analog Devices, Inc.
 
     </p>
   </div>

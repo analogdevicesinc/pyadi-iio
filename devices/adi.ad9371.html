@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ad9371 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>ad9371 &mdash; Analog Devices Hardware Python Interfaces 0.0.8 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -93,7 +96,9 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
@@ -103,6 +108,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd410x.html">adpd410x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9002.html">adrv9002</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
@@ -111,6 +117,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
@@ -119,6 +126,8 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314-14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -197,20 +206,52 @@
   <div class="section" id="module-adi.ad9371">
 <span id="ad9371"></span><h1>ad9371<a class="headerlink" href="#module-adi.ad9371" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="adi.ad9371.ad9371">
-<em class="property">class </em><code class="sig-prename descclassname">adi.ad9371.</code><code class="sig-name descname">ad9371</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9371.ad9371" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.ad9371.ad9371">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.ad9371.</span></span><span class="sig-name descname"><span class="pre">ad9371</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9371.ad9371" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_tx" title="adi.rx_tx.rx_tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx_tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
 <p>AD9371 Transceiver</p>
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.gain_control_mode">
-<em class="property">property </em><code class="sig-name descname">gain_control_mode</code><a class="headerlink" href="#adi.ad9371.ad9371.gain_control_mode" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.ensm_mode">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">ensm_mode</span></span><a class="headerlink" href="#adi.ad9371.ad9371.ensm_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>ensm_mode: Enable State Machine State Allows real time control over
+the current state of the device. Options are: radio_on, radio_off</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.gain_control_mode">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">gain_control_mode</span></span><a class="headerlink" href="#adi.ad9371.ad9371.gain_control_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>gain_control_mode: Mode of receive path AGC. Options are:
 automatic, hybrid, manual</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.obs_rf_port_select">
-<em class="property">property </em><code class="sig-name descname">obs_rf_port_select</code><a class="headerlink" href="#adi.ad9371.ad9371.obs_rf_port_select" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.jesd204_statuses">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">jesd204_statuses</span></span><a class="headerlink" href="#adi.ad9371.ad9371.jesd204_statuses" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.obs_gain_control_mode">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">obs_gain_control_mode</span></span><a class="headerlink" href="#adi.ad9371.ad9371.obs_gain_control_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>obs_gain_control_mode: Mode of Obs/Sniffer receive path AGC. Options are:
+automatic, hybrid, manual</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.obs_hardwaregain">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">obs_hardwaregain</span></span><a class="headerlink" href="#adi.ad9371.ad9371.obs_hardwaregain" title="Permalink to this definition">¶</a></dt>
+<dd><p>obs_hardwaregain: Gain applied to Obs/Sniffer receive path chan0. Only applicable when
+obs_gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.obs_quadrature_tracking_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">obs_quadrature_tracking_en</span></span><a class="headerlink" href="#adi.ad9371.ad9371.obs_quadrature_tracking_en" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Quadrature tracking calibration for OBS chan0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.obs_rf_port_select">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">obs_rf_port_select</span></span><a class="headerlink" href="#adi.ad9371.ad9371.obs_rf_port_select" title="Permalink to this definition">¶</a></dt>
 <dd><p>obs_rf_port_select: Observation path source. Options are:</p>
 <ul class="simple">
 <li><p>OFF - SnRx path is disabled</p></li>
@@ -226,84 +267,133 @@ automatic, hybrid, manual</p>
 </ul>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.rx_enable_dec8">
-<em class="property">property </em><code class="sig-name descname">rx_enable_dec8</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_enable_dec8" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.obs_temp_comp_gain">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">obs_temp_comp_gain</span></span><a class="headerlink" href="#adi.ad9371.ad9371.obs_temp_comp_gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>obs_temp_comp_gain:</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.orx_sample_rate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">orx_sample_rate</span></span><a class="headerlink" href="#adi.ad9371.ad9371.orx_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>orx_sample_rate: Sample rate ORX path in samples per second
+This value will reflect the correct value when 8x decimator is enabled</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_enable_dec8">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_enable_dec8</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_enable_dec8" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_enable_dec8: Enable x8 decimation filter in RX path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.rx_hardwaregain_chan0">
-<em class="property">property </em><code class="sig-name descname">rx_hardwaregain_chan0</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_hardwaregain_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
 gain_control_mode is set to ‘manual’</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.rx_hardwaregain_chan1">
-<em class="property">property </em><code class="sig-name descname">rx_hardwaregain_chan1</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_hardwaregain_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
 gain_control_mode is set to ‘manual’</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.rx_lo">
-<em class="property">property </em><code class="sig-name descname">rx_lo</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_lo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_lo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_lo</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_lo: Carrier frequency of RX path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.rx_rf_bandwidth">
-<em class="property">property </em><code class="sig-name descname">rx_rf_bandwidth</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_quadrature_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_quadrature_tracking_en_chan0</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_quadrature_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Quadrature tracking calibration for RX1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_quadrature_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_quadrature_tracking_en_chan1</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_quadrature_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Quadrature tracking calibration for RX2</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_rf_bandwidth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_rf_bandwidth</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.rx_sample_rate">
-<em class="property">property </em><code class="sig-name descname">rx_sample_rate</code><a class="headerlink" href="#adi.ad9371.ad9371.rx_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_sample_rate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_sample_rate</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_sample_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_sample_rate: Sample rate RX path in samples per second
 This value will reflect the correct value when 8x decimator is enabled</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.sn_lo">
-<em class="property">property </em><code class="sig-name descname">sn_lo</code><a class="headerlink" href="#adi.ad9371.ad9371.sn_lo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_temp_comp_gain_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_temp_comp_gain_chan0</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_temp_comp_gain_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_temp_comp_gain_chan0:</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.rx_temp_comp_gain_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_temp_comp_gain_chan1</span></span><a class="headerlink" href="#adi.ad9371.ad9371.rx_temp_comp_gain_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>rx_temp_comp_gain_chan1:</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.sn_lo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">sn_lo</span></span><a class="headerlink" href="#adi.ad9371.ad9371.sn_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>sn_lo: Carrier frequency of Sniffer/ORx path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.tx_enable_int8">
-<em class="property">property </em><code class="sig-name descname">tx_enable_int8</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_enable_int8" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.tx_enable_int8">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_enable_int8</span></span><a class="headerlink" href="#adi.ad9371.ad9371.tx_enable_int8" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_enable_int8: Enable x8 interpolation filter in TX path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.tx_hardwaregain_chan0">
-<em class="property">property </em><code class="sig-name descname">tx_hardwaregain_chan0</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.tx_hardwaregain_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.ad9371.ad9371.tx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_hardwaregain: Attenuation applied to TX path channel 0</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.tx_hardwaregain_chan1">
-<em class="property">property </em><code class="sig-name descname">tx_hardwaregain_chan1</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.tx_hardwaregain_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.ad9371.ad9371.tx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_hardwaregain: Attenuation applied to TX path channel 1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.tx_lo">
-<em class="property">property </em><code class="sig-name descname">tx_lo</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_lo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.tx_lo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_lo</span></span><a class="headerlink" href="#adi.ad9371.ad9371.tx_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_lo: Carrier frequency of TX path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.tx_rf_bandwidth">
-<em class="property">property </em><code class="sig-name descname">tx_rf_bandwidth</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.tx_quadrature_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_quadrature_tracking_en_chan0</span></span><a class="headerlink" href="#adi.ad9371.ad9371.tx_quadrature_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Quadrature tracking calibration for TX1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.tx_quadrature_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_quadrature_tracking_en_chan1</span></span><a class="headerlink" href="#adi.ad9371.ad9371.tx_quadrature_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Quadrature tracking calibration for TX2</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.tx_rf_bandwidth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_rf_bandwidth</span></span><a class="headerlink" href="#adi.ad9371.ad9371.tx_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.ad9371.ad9371.tx_sample_rate">
-<em class="property">property </em><code class="sig-name descname">tx_sample_rate</code><a class="headerlink" href="#adi.ad9371.ad9371.tx_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9371.ad9371.tx_sample_rate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_sample_rate</span></span><a class="headerlink" href="#adi.ad9371.ad9371.tx_sample_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_sample_rate: Sample rate TX path in samples per second
 This value will reflect the correct value when 8x interpolator is enabled</p>
 </dd></dl>
@@ -326,7 +416,7 @@ This value will reflect the correct value when 8x interpolator is enabled</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Analog Devices, Inc.
+        &#169; Copyright 2019-2021, Analog Devices, Inc.
 
     </p>
   </div>

@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>fmclidar1 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>fmclidar1 &mdash; Analog Devices Hardware Python Interfaces 0.0.8 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -93,7 +96,9 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
@@ -103,6 +108,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd410x.html">adpd410x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9002.html">adrv9002</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
@@ -111,6 +117,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">fmclidar1</a></li>
@@ -119,6 +126,8 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314-14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -197,74 +206,74 @@
   <div class="section" id="module-adi.fmclidar1">
 <span id="fmclidar1"></span><h1>fmclidar1<a class="headerlink" href="#module-adi.fmclidar1" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="adi.fmclidar1.fmclidar1">
-<em class="property">class </em><code class="sig-prename descclassname">adi.fmclidar1.</code><code class="sig-name descname">fmclidar1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span></em>, <em class="sig-param"><span class="n">pulse_capture_address</span><span class="o">=</span><span class="default_value">'7c700000'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.fmclidar1.</span></span><span class="sig-name descname"><span class="pre">fmclidar1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pulse_capture_address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'7c700000'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="adi.ad5627.html#adi.ad5627.ad5627" title="adi.ad5627.ad5627"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad5627.ad5627</span></code></a>, <a class="reference internal" href="adi.ad9094.html#adi.ad9094.ad9094" title="adi.ad9094.ad9094"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad9094.ad9094</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.phy</span></code></p>
 <p>LiDAR</p>
-<dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.channel_sequencer_enable_disable">
-<em class="property">property </em><code class="sig-name descname">channel_sequencer_enable_disable</code><a class="headerlink" href="#adi.fmclidar1.fmclidar1.channel_sequencer_enable_disable" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.channel_sequencer_enable_disable">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">channel_sequencer_enable_disable</span></span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.channel_sequencer_enable_disable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the status of the channel sequencer (enable/disable).</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.channel_sequencer_opmode">
-<em class="property">property </em><code class="sig-name descname">channel_sequencer_opmode</code><a class="headerlink" href="#adi.fmclidar1.fmclidar1.channel_sequencer_opmode" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.channel_sequencer_opmode">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">channel_sequencer_opmode</span></span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.channel_sequencer_opmode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the channel sequencer operation mode.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.channel_sequencer_order_auto_mode">
-<em class="property">property </em><code class="sig-name descname">channel_sequencer_order_auto_mode</code><a class="headerlink" href="#adi.fmclidar1.fmclidar1.channel_sequencer_order_auto_mode" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.channel_sequencer_order_auto_mode">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">channel_sequencer_order_auto_mode</span></span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.channel_sequencer_order_auto_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the channels order when in auto mode.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.channel_sequencer_order_manual_mode">
-<em class="property">property </em><code class="sig-name descname">channel_sequencer_order_manual_mode</code><a class="headerlink" href="#adi.fmclidar1.fmclidar1.channel_sequencer_order_manual_mode" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.channel_sequencer_order_manual_mode">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">channel_sequencer_order_manual_mode</span></span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.channel_sequencer_order_manual_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the channels order when in manual mode.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.laser_disable">
-<code class="sig-name descname">laser_disable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.laser_disable" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.laser_disable">
+<span class="sig-name descname"><span class="pre">laser_disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.laser_disable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disable the laser.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.laser_enable">
-<code class="sig-name descname">laser_enable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.laser_enable" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.laser_enable">
+<span class="sig-name descname"><span class="pre">laser_enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.laser_enable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable the laser.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.laser_frequency">
-<em class="property">property </em><code class="sig-name descname">laser_frequency</code><a class="headerlink" href="#adi.fmclidar1.fmclidar1.laser_frequency" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.laser_frequency">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">laser_frequency</span></span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.laser_frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the laser frequency.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.laser_pulse_width">
-<em class="property">property </em><code class="sig-name descname">laser_pulse_width</code><a class="headerlink" href="#adi.fmclidar1.fmclidar1.laser_pulse_width" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.laser_pulse_width">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">laser_pulse_width</span></span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.laser_pulse_width" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the laser pulse width, in ns.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.rx">
-<code class="sig-name descname">rx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.rx" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.rx">
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.rx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the buffers for all the enabled channels, except Channel4 which should
 be all zeroes and not relevant for the user.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.sequencer_pulse_delay">
-<em class="property">property </em><code class="sig-name descname">sequencer_pulse_delay</code><a class="headerlink" href="#adi.fmclidar1.fmclidar1.sequencer_pulse_delay" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.sequencer_pulse_delay">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">sequencer_pulse_delay</span></span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.sequencer_pulse_delay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the delay of the pulse sequencer, in nanoseconds</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.fmclidar1.fmclidar1.set_all_iio_attrs_to_default_values">
-<code class="sig-name descname">set_all_iio_attrs_to_default_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.set_all_iio_attrs_to_default_values" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.fmclidar1.fmclidar1.set_all_iio_attrs_to_default_values">
+<span class="sig-name descname"><span class="pre">set_all_iio_attrs_to_default_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmclidar1.fmclidar1.set_all_iio_attrs_to_default_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set all the Lidar attributes to reasonable default values.</p>
 </dd></dl>
 
@@ -286,7 +295,7 @@ be all zeroes and not relevant for the user.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Analog Devices, Inc.
+        &#169; Copyright 2019-2021, Analog Devices, Inc.
 
     </p>
   </div>

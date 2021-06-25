@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>FPGA Features &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>FPGA Features &mdash; Analog Devices Hardware Python Interfaces 0.0.8 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -190,22 +193,22 @@
 <span class="n">sdr</span><span class="o">.</span><span class="n">dds_enabled</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
 <span class="c1"># Set all DDSs to same frequency, scale, and phase</span>
 <span class="n">dds_freq_hz</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">dds_phase</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">dds_frequency</span> <span class="o">=</span> <span class="p">[</span><span class="n">dds_freq_hz</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">dds_scale</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_phases</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_frequencies</span> <span class="o">=</span> <span class="p">[</span><span class="n">dds_freq_hz</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_scales</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="module-adi.dds">
 <span id="methods"></span><h2>Methods<a class="headerlink" href="#module-adi.dds" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="adi.dds.dds">
-<em class="property">class </em><code class="sig-prename descclassname">adi.dds.</code><code class="sig-name descname">dds</code><a class="headerlink" href="#adi.dds.dds" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.dds.dds">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.dds.</span></span><span class="sig-name descname"><span class="pre">dds</span></span><a class="headerlink" href="#adi.dds.dds" title="Permalink to this definition">¶</a></dt>
 <dd><p>DDS Signal generators: Each reference design contains two DDSs per channel.
 this allows for two complex tones to be generated per complex channel.</p>
 <dl class="py method">
-<dt id="adi.dds.dds.dds_dual_tone">
-<code class="sig-name descname">dds_dual_tone</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency1</span></em>, <em class="sig-param"><span class="n">scale1</span></em>, <em class="sig-param"><span class="n">frequency2</span></em>, <em class="sig-param"><span class="n">scale2</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.dds.dds.dds_dual_tone">
+<span class="sig-name descname"><span class="pre">dds_dual_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate two tones simultaneously using the DDSs
 For complex data devices this will create two complex
 or single sided tones spectrally using four DDSs.
@@ -234,35 +237,35 @@ the index of the individual converters.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.dds.dds.dds_enabled">
-<em class="property">property </em><code class="sig-name descname">dds_enabled</code><a class="headerlink" href="#adi.dds.dds.dds_enabled" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_enabled">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dds_enabled</span></span><a class="headerlink" href="#adi.dds.dds.dds_enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>DDS generator enable state</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.dds.dds.dds_frequencies">
-<em class="property">property </em><code class="sig-name descname">dds_frequencies</code><a class="headerlink" href="#adi.dds.dds.dds_frequencies" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_frequencies">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dds_frequencies</span></span><a class="headerlink" href="#adi.dds.dds.dds_frequencies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frequencies of DDSs in Hz</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.dds.dds.dds_phases">
-<em class="property">property </em><code class="sig-name descname">dds_phases</code><a class="headerlink" href="#adi.dds.dds.dds_phases" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_phases">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dds_phases</span></span><a class="headerlink" href="#adi.dds.dds.dds_phases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Phases of DDS signal generators.
 Range in millidegrees [0,360000]</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.dds.dds.dds_scales">
-<em class="property">property </em><code class="sig-name descname">dds_scales</code><a class="headerlink" href="#adi.dds.dds.dds_scales" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_scales">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dds_scales</span></span><a class="headerlink" href="#adi.dds.dds.dds_scales" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale of DDS signal generators
 Ranges [0,1]</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.dds.dds.dds_single_tone">
-<code class="sig-name descname">dds_single_tone</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency</span></em>, <em class="sig-param"><span class="n">scale</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.dds.dds.dds_single_tone">
+<span class="sig-name descname"><span class="pre">dds_single_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a single tone using the DDSs
 For complex data devices this will create a complex
 or single sided tone spectrally using two DDSs.
@@ -304,7 +307,7 @@ the index of the individual converters.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Analog Devices, Inc.
+        &#169; Copyright 2019-2021, Analog Devices, Inc.
 
     </p>
   </div>

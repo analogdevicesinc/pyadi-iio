@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>adrv9002 &mdash; Analog Devices Hardware Python Interfaces 0.0.3 documentation</title>
+  <title>adrv9002 &mdash; Analog Devices Hardware Python Interfaces 0.0.8 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -39,7 +42,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="adrv9009" href="adi.adrv9009.html" />
-    <link rel="prev" title="adis16507" href="adi.adis16507.html" /> 
+    <link rel="prev" title="adpd410x" href="adi.adpd410x.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,7 +96,9 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
@@ -103,6 +108,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd410x.html">adpd410x</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">adrv9002</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
@@ -111,6 +117,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
@@ -119,6 +126,8 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314-14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -197,294 +206,294 @@
   <div class="section" id="module-adi.adrv9002">
 <span id="adrv9002"></span><h1>adrv9002<a class="headerlink" href="#module-adi.adrv9002" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="adi.adrv9002.adrv9002">
-<em class="property">class </em><code class="sig-prename descclassname">adi.adrv9002.</code><code class="sig-name descname">adrv9002</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.adrv9002.</span></span><span class="sig-name descname"><span class="pre">adrv9002</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_tx" title="adi.rx_tx.rx_tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx_tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
 <p>ADRV9002 Transceiver</p>
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.agc_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">agc_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.agc_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.agc_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">agc_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.agc_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable AGC on the fly tracking calibration for RX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.agc_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">agc_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.agc_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.agc_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">agc_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.agc_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable AGC on the fly tracking calibration for RX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.atten_control_mode_chan0">
-<em class="property">property </em><code class="sig-name descname">atten_control_mode_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.atten_control_mode_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.atten_control_mode_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">atten_control_mode_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.atten_control_mode_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Control TX1 attenuation mode. Options are: bypass, spi, pin</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.atten_control_mode_chan1">
-<em class="property">property </em><code class="sig-name descname">atten_control_mode_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.atten_control_mode_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.atten_control_mode_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">atten_control_mode_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.atten_control_mode_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Control TX2 attenuation mode. Options are: bypass, spi, pin</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">bbdc_rejection_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">bbdc_rejection_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Enable Baseband DC rejection on the fly tracking calibration for RX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">bbdc_rejection_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">bbdc_rejection_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Enable Baseband DC rejection on the fly tracking calibration for RX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">close_loop_gain_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">close_loop_gain_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Close Loop Gain tracking calibration for TX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">close_loop_gain_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">close_loop_gain_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Close Loop Gain tracking calibration for TX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.digital_gain_control_mode_chan0">
-<em class="property">property </em><code class="sig-name descname">digital_gain_control_mode_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.digital_gain_control_mode_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.digital_gain_control_mode_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">digital_gain_control_mode_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.digital_gain_control_mode_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Digital gain control mode for RX2. Option are: Gain_Correction_manual_control
 Gain_Compensation_manual_control Gain_Correction_automatic_control
 Gain_Compensation_automatic_control</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.digital_gain_control_mode_chan1">
-<em class="property">property </em><code class="sig-name descname">digital_gain_control_mode_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.digital_gain_control_mode_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.digital_gain_control_mode_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">digital_gain_control_mode_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.digital_gain_control_mode_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Digital gain control mode for RX2. Option are: Gain_Correction_manual_control
 Gain_Compensation_manual_control Gain_Correction_automatic_control
 Gain_Compensation_automatic_control</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.gain_control_mode_chan0">
-<em class="property">property </em><code class="sig-name descname">gain_control_mode_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.gain_control_mode_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.gain_control_mode_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">gain_control_mode_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.gain_control_mode_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>gain_control_mode_chan0: Mode of receive path AGC. Options are:
 manual_spi, manual_pin, automatic</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.gain_control_mode_chan1">
-<em class="property">property </em><code class="sig-name descname">gain_control_mode_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.gain_control_mode_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.gain_control_mode_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">gain_control_mode_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.gain_control_mode_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>gain_control_mode_chan1: Mode of receive path AGC. Options are:
 manual_spi, manual_pin, automatic</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.hd_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">hd_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.hd_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.hd_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">hd_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.hd_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Enable Harmonic Distortion on the fly tracking calibration for RX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.hd_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">hd_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.hd_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.hd_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">hd_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.hd_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Enable Harmonic Distortion on the fly tracking calibration for RX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.interface_gain_chan0">
-<em class="property">property </em><code class="sig-name descname">interface_gain_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.interface_gain_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.interface_gain_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">interface_gain_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.interface_gain_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>interface_gain_chan0: Fixed input gain stage for channel 0.
 Options are: 18dB 12dB 6dB 0dB -6dB -12dB -18dB -24dB -30dB -36dB</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.interface_gain_chan1">
-<em class="property">property </em><code class="sig-name descname">interface_gain_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.interface_gain_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.interface_gain_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">interface_gain_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.interface_gain_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>interface_gain_chan0: Fixed input gain stage for channel 0.
 Options are: 18dB 12dB 6dB 0dB -6dB -12dB -18dB -24dB -30dB -36dB</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">lo_leakage_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">lo_leakage_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable LO Leakage tracking calibration for TX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">lo_leakage_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">lo_leakage_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable LO Leakage tracking calibration for TX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.loopback_delay_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">loopback_delay_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.loopback_delay_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.loopback_delay_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">loopback_delay_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.loopback_delay_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Loopback delay tracking calibration for TX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.loopback_delay_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">loopback_delay_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.loopback_delay_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.loopback_delay_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">loopback_delay_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.loopback_delay_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Loopback delay tracking calibration for TX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.pa_correction_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">pa_correction_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.pa_correction_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.pa_correction_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">pa_correction_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.pa_correction_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable PA Correction tracking calibration for TX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.pa_correction_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">pa_correction_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.pa_correction_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.pa_correction_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">pa_correction_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.pa_correction_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable PA Correction tracking calibration for TX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.profile">
-<em class="property">property </em><code class="sig-name descname">profile</code><a class="headerlink" href="#adi.adrv9002.adrv9002.profile" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.profile">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">profile</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.profile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.quadrature_fic_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">quadrature_fic_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_fic_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.quadrature_fic_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">quadrature_fic_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_fic_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Quadrature Error Correction Narrowband FIC on the fly tracking
 calibration for RX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.quadrature_fic_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">quadrature_fic_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_fic_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.quadrature_fic_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">quadrature_fic_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_fic_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Quadrature Error Correction Narrowband FIC on the fly tracking
 calibration for RX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.quadrature_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">quadrature_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.quadrature_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">quadrature_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Quadrature tracking calibration for TX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.quadrature_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">quadrature_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.quadrature_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">quadrature_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Quadrature tracking calibration for TX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.quadrature_w_poly_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">quadrature_w_poly_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_w_poly_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.quadrature_w_poly_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">quadrature_w_poly_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_w_poly_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Quadrature Error Correction Wideband Poly on the fly tracking
 calibration for RX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.quadrature_w_poly_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">quadrature_w_poly_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_w_poly_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.quadrature_w_poly_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">quadrature_w_poly_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.quadrature_w_poly_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable Quadrature Error Correction Wideband Poly on the fly tracking
 calibration for RX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rfdc_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">rfdc_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rfdc_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rfdc_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rfdc_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rfdc_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Enable RF DC on the fly tracking calibration for RX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rfdc_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">rfdc_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rfdc_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rfdc_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rfdc_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rfdc_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Enable RF DC on the fly tracking calibration for RX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rssi_tracking_en_chan0">
-<em class="property">property </em><code class="sig-name descname">rssi_tracking_en_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rssi_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rssi_tracking_en_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rssi_tracking_en_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rssi_tracking_en_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Enable RSSI on the fly tracking calibration for RX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rssi_tracking_en_chan1">
-<em class="property">property </em><code class="sig-name descname">rssi_tracking_en_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rssi_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rssi_tracking_en_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rssi_tracking_en_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rssi_tracking_en_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Enable RSSI on the fly tracking calibration for RX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx0_en">
-<em class="property">property </em><code class="sig-name descname">rx0_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_en" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx0_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx0_en</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>Control RX1 Power state</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx0_lo">
-<em class="property">property </em><code class="sig-name descname">rx0_lo</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_lo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx0_lo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx0_lo</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx0_lo: Carrier frequency of RX1 path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx0_nco_frequency">
-<em class="property">property </em><code class="sig-name descname">rx0_nco_frequency</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_nco_frequency" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx0_nco_frequency">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx0_nco_frequency</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_nco_frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>NCO correction frequency for RX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx0_port_en">
-<em class="property">property </em><code class="sig-name descname">rx0_port_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_port_en" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx0_port_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx0_port_en</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_port_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>Control Port RF Enable mode for RX1. Options are: pin and spi</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx0_rf_bandwidth">
-<em class="property">property </em><code class="sig-name descname">rx0_rf_bandwidth</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx0_rf_bandwidth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx0_rf_bandwidth</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx0_sample_rate">
-<em class="property">property </em><code class="sig-name descname">rx0_sample_rate</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx0_sample_rate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx0_sample_rate</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx0_sample_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_sample_rate: Sample rate RX1 path in samples per second</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx1_en">
-<em class="property">property </em><code class="sig-name descname">rx1_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_en" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx1_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx1_en</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Control RX2 Power state</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx1_lo">
-<em class="property">property </em><code class="sig-name descname">rx1_lo</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_lo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx1_lo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx1_lo</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx1_lo: Carrier frequency of RX2 path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx1_nco_frequency">
-<em class="property">property </em><code class="sig-name descname">rx1_nco_frequency</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_nco_frequency" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx1_nco_frequency">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx1_nco_frequency</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_nco_frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>NCO correction frequency for RX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx1_port_en">
-<em class="property">property </em><code class="sig-name descname">rx1_port_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_port_en" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx1_port_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx1_port_en</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_port_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>Control Port RF Enable mode for RX2. Options are: pin and spi</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx1_rf_bandwidth">
-<em class="property">property </em><code class="sig-name descname">rx1_rf_bandwidth</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx1_rf_bandwidth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx1_rf_bandwidth</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX2 path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx1_sample_rate">
-<em class="property">property </em><code class="sig-name descname">rx1_sample_rate</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx1_sample_rate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx1_sample_rate</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx1_sample_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_sample_rate: Sample rate RX2 path in samples per second</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx_dma_mode">
-<em class="property">property </em><code class="sig-name descname">rx_dma_mode</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_dma_mode" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx_dma_mode">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_dma_mode</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_dma_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_dma_mode: DMA configuration for RX path. Options are:
 combined: RX1 and RX2 share the same rx method
 split: RX1 and RX2 have separate rx methods rx1 and rx2. Typically
@@ -492,114 +501,114 @@ used when they are at different rates. In this case the standard rx
 method has the same effect as the rx1 method.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx_ensm_mode_chan0">
-<em class="property">property </em><code class="sig-name descname">rx_ensm_mode_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_ensm_mode_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx_ensm_mode_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_ensm_mode_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_ensm_mode_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_ensm_mode_chan0: RX Enable State Machine State Channel 0. Options are:
 calibrated, primed, rf_enabled</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx_ensm_mode_chan1">
-<em class="property">property </em><code class="sig-name descname">rx_ensm_mode_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_ensm_mode_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx_ensm_mode_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_ensm_mode_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_ensm_mode_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_ensm_mode_chan1: RX Enable State Machine State Channel 1. Options are:
 calibrated, primed, rf_enabled</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx_hardwaregain_chan0">
-<em class="property">property </em><code class="sig-name descname">rx_hardwaregain_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx_hardwaregain_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
 gain_control_mode is set to ‘spi’</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.rx_hardwaregain_chan1">
-<em class="property">property </em><code class="sig-name descname">rx_hardwaregain_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.rx_hardwaregain_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.rx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
 gain_control_mode is set to ‘spi’</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.stream">
-<em class="property">property </em><code class="sig-name descname">stream</code><a class="headerlink" href="#adi.adrv9002.adrv9002.stream" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.stream">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">stream</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.stream" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx0_en">
-<em class="property">property </em><code class="sig-name descname">tx0_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_en" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx0_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx0_en</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Control TX1 Power state</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx0_lo">
-<em class="property">property </em><code class="sig-name descname">tx0_lo</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_lo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx0_lo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx0_lo</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx1_lo: Carrier frequency of TX1 path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx0_nco_frequency">
-<em class="property">property </em><code class="sig-name descname">tx0_nco_frequency</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_nco_frequency" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx0_nco_frequency">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx0_nco_frequency</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_nco_frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>NCO correction frequency for TX1</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx0_port_en">
-<em class="property">property </em><code class="sig-name descname">tx0_port_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_port_en" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx0_port_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx0_port_en</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_port_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>Control Port RF Enable mode for TX1. Options are: pin and spi</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx0_rf_bandwidth">
-<em class="property">property </em><code class="sig-name descname">tx0_rf_bandwidth</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx0_rf_bandwidth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx0_rf_bandwidth</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX1 path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx0_sample_rate">
-<em class="property">property </em><code class="sig-name descname">tx0_sample_rate</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx0_sample_rate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx0_sample_rate</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx0_sample_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_sample_rate: Sample rate TX1 path in samples per second</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx1_en">
-<em class="property">property </em><code class="sig-name descname">tx1_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_en" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx1_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx1_en</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Control TX2 Power state</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx1_lo">
-<em class="property">property </em><code class="sig-name descname">tx1_lo</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_lo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx1_lo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx1_lo</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_lo" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx1_lo: Carrier frequency of TX2 path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx1_nco_frequency">
-<em class="property">property </em><code class="sig-name descname">tx1_nco_frequency</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_nco_frequency" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx1_nco_frequency">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx1_nco_frequency</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_nco_frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>NCO correction frequency for TX2</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx1_port_en">
-<em class="property">property </em><code class="sig-name descname">tx1_port_en</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_port_en" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx1_port_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx1_port_en</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_port_en" title="Permalink to this definition">¶</a></dt>
 <dd><p>Control Port RF Enable mode for TX2. Options are: pin and spi</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx1_rf_bandwidth">
-<em class="property">property </em><code class="sig-name descname">tx1_rf_bandwidth</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx1_rf_bandwidth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx1_rf_bandwidth</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_rf_bandwidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX2 path</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx1_sample_rate">
-<em class="property">property </em><code class="sig-name descname">tx1_sample_rate</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx1_sample_rate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx1_sample_rate</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx1_sample_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_sample_rate: Sample rate TX2 path in samples per second</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx_dma_mode">
-<em class="property">property </em><code class="sig-name descname">tx_dma_mode</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_dma_mode" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx_dma_mode">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_dma_mode</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_dma_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_dma_mode: DMA configuration for TX path. Options are:
 combined: TX1 and TX2 share the same tx method
 split: TX1 and TX2 have separate tx methods tx1 and tx2.
@@ -607,77 +616,77 @@ Typically used when they are at different rates. In this case
 the standard tx method has the same effect as the tx1 method.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx_ensm_mode_chan0">
-<em class="property">property </em><code class="sig-name descname">tx_ensm_mode_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_ensm_mode_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx_ensm_mode_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_ensm_mode_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_ensm_mode_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_ensm_mode_chan0: TX Enable State Machine State Channel 0. Options are:
 calibrated, primed, rf_enabled</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx_ensm_mode_chan1">
-<em class="property">property </em><code class="sig-name descname">tx_ensm_mode_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_ensm_mode_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx_ensm_mode_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_ensm_mode_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_ensm_mode_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_ensm_mode_chan1: TX Enable State Machine State Channel 1. Options are:
 calibrated, primed, rf_enabled</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx_hardwaregain_chan0">
-<em class="property">property </em><code class="sig-name descname">tx_hardwaregain_chan0</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx_hardwaregain_chan0">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_hardwaregain_chan0" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_hardwaregain: Attenuation applied to TX path channel 0</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="adi.adrv9002.adrv9002.tx_hardwaregain_chan1">
-<em class="property">property </em><code class="sig-name descname">tx_hardwaregain_chan1</code><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.tx_hardwaregain_chan1">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.adrv9002.adrv9002.tx_hardwaregain_chan1" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx_hardwaregain: Attenuation applied to TX path channel 1</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.adrv9002.adrv9002.write_profile">
-<code class="sig-name descname">write_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_profile" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.write_profile">
+<span class="sig-name descname"><span class="pre">write_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a new profile on the device
 Stream related to profile should be loaded first.
 Please see driver documentation about profile generation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.adrv9002.adrv9002.write_stream">
-<code class="sig-name descname">write_stream</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_stream" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.write_stream">
+<span class="sig-name descname"><span class="pre">write_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_stream" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a new stream on the device
 Stream becomes active once accompanying profile is loaded
 Please see driver documentation about stream generation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="adi.adrv9002.adrv9002.write_stream_profile">
-<code class="sig-name descname">write_stream_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stream</span></em>, <em class="sig-param"><span class="n">profile</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_stream_profile" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.adrv9002.adrv9002.write_stream_profile">
+<span class="sig-name descname"><span class="pre">write_stream_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.adrv9002.write_stream_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a new profile and stream on the device</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="adi.adrv9002.rx1">
-<code class="sig-prename descclassname">adi.adrv9002.</code><code class="sig-name descname">rx1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.rx1" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.adrv9002.rx1">
+<span class="sig-prename descclassname"><span class="pre">adi.adrv9002.</span></span><span class="sig-name descname"><span class="pre">rx1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.rx1" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx1: Receive data on channel 0 (Same as rx() method)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="adi.adrv9002.rx2">
-<code class="sig-prename descclassname">adi.adrv9002.</code><code class="sig-name descname">rx2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.rx2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.adrv9002.rx2">
+<span class="sig-prename descclassname"><span class="pre">adi.adrv9002.</span></span><span class="sig-name descname"><span class="pre">rx2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.rx2" title="Permalink to this definition">¶</a></dt>
 <dd><p>rx2: Receive data on channel 1</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="adi.adrv9002.tx1">
-<code class="sig-prename descclassname">adi.adrv9002.</code><code class="sig-name descname">tx1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.tx1" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.adrv9002.tx1">
+<span class="sig-prename descclassname"><span class="pre">adi.adrv9002.</span></span><span class="sig-name descname"><span class="pre">tx1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.tx1" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx1: Transmit data on channel 0 (Same as tx() method)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="adi.adrv9002.tx2">
-<code class="sig-prename descclassname">adi.adrv9002.</code><code class="sig-name descname">tx2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.tx2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="adi.adrv9002.tx2">
+<span class="sig-prename descclassname"><span class="pre">adi.adrv9002.</span></span><span class="sig-name descname"><span class="pre">tx2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9002.tx2" title="Permalink to this definition">¶</a></dt>
 <dd><p>tx2: Transmit data on channel 1</p>
 </dd></dl>
 
@@ -690,14 +699,14 @@ Please see driver documentation about stream generation.</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="adi.adrv9009.html" class="btn btn-neutral float-right" title="adrv9009" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="adi.adis16507.html" class="btn btn-neutral float-left" title="adis16507" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="adi.adpd410x.html" class="btn btn-neutral float-left" title="adpd410x" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Analog Devices, Inc.
+        &#169; Copyright 2019-2021, Analog Devices, Inc.
 
     </p>
   </div>
