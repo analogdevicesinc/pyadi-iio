@@ -94,9 +94,9 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize all four transceivers """
         try:
-            test = self.jesd204_fsm_ctrl
+            _ = self.jesd204_fsm_ctrl
             # We're JESD204-fsm enabled - do nothing
-        except:
+        except:  # noqa: E722
             # Turn off continuous SYSREF, and enable GPI SYSREF request
             self._clock_chip_carrier.reg_write(0x5A, 0)
             chips = [self._ctrl, self._ctrl_b, self._ctrl_c, self._ctrl_d]

@@ -81,9 +81,9 @@ class adrv9009_zu11eg(adrv9009):
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize both transceivers """
         try:
-            test = self.jesd204_fsm_ctrl
+            _ = self.jesd204_fsm_ctrl
             # We're JESD204-fsm enabled - do nothing
-        except:
+        except:  # noqa: E722
             # Turn off continuous SYSREF, and enable GPI SYSREF request
             self._clock_chip.reg_write(0x5A, 0)
             for i in range(12):
