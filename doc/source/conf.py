@@ -19,14 +19,16 @@ import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath("../.."))
 sys.setrecursionlimit(1500)
 
+import adi  # isort:skip
+
 # -- Project information -----------------------------------------------------
 
 project = "Analog Devices Hardware Python Interfaces"
-copyright = "2019, Analog Devices, Inc"
+copyright = "2019-2021, Analog Devices, Inc"
 author = "Travis Collins"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.3"
+release = adi.__version__
 
 
 # -- General configuration ---------------------------------------------------
