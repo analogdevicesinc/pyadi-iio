@@ -27,11 +27,11 @@
 <img alt="GitHub Pages" src="https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg">
 </a>
 
-<a href="https://ez.analog.com/sw-interface-tools/f/q-a)">
+<a href="https://ez.analog.com/sw-interface-tools/f/q-a">
 <img alt="EngineerZone" src="https://img.shields.io/badge/Support-on%20EngineerZone-blue.svg">
 </a>
 
-<a href="https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio)">
+<a href="https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio">
 <img alt="Analog Wiki" src="https://img.shields.io/badge/Wiki-on%20wiki.analog.com-blue.svg">
 </a>
 </p>
