@@ -88,9 +88,7 @@ dds_freq = 7000000
 primary_jesd = adi.jesd(primary)
 
 print("--Connecting to devices")
-multi = adi.adrv9009_zu11eg_multi(
-    primary, [], primary_jesd, [], fmcomms8=has_fmcomms8
-)
+multi = adi.adrv9009_zu11eg_multi(primary, [], primary_jesd, [], fmcomms8=has_fmcomms8)
 
 multi._dma_show_arming = False
 multi._jesd_show_status = True
@@ -100,16 +98,16 @@ multi._resync_tx = True
 multi._request_sysref_carrier = True
 multi.rx_buffer_size = 2 ** 10
 
-#multi.hmc7044_ext_output_delay(5, 4, 0)
-#multi.hmc7044_ext_output_delay(6, 4, 0)
+# multi.hmc7044_ext_output_delay(5, 4, 0)
+# multi.hmc7044_ext_output_delay(6, 4, 0)
 
-#multi.hmc7044_car_output_delay(5, 4, 0)
-#multi.hmc7044_car_output_delay(6, 4, 0)
+# multi.hmc7044_car_output_delay(5, 4, 0)
+# multi.hmc7044_car_output_delay(6, 4, 0)
 
 # multi.hmc7044_set_cap_sel([14, 14, 14, 13, 13, 14, 13])
 
 if has_fmcomms8:
-    enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7] #[0, 2, 4, 6]
+    enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7]  # [0, 2, 4, 6]
     dds_single_tone_channel = 4
 else:
     enabled_channels = [0, 1, 2, 3]
@@ -207,7 +205,7 @@ for r in range(R):
 
     for i in range(C):
         plt.errorbar(x, rx_m[i][x], yerr=rx_v[i][x], label=chan_desc[i])
-        #plt.errorbar(x, rx_m[i][x], yerr=0, label=chan_desc[i])
+        # plt.errorbar(x, rx_m[i][x], yerr=0, label=chan_desc[i])
     plt.xlim([-1, x[-1] + 1])
     plt.xlabel("Measurement Index")
     plt.ylabel("Phase Difference (Degrees)")
