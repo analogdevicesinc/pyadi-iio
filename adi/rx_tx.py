@@ -48,7 +48,7 @@ class phy(attribute):
 
 
 class rx(attribute):
-    """ Buffer handling for receive devices """
+    """Buffer handling for receive devices"""
 
     _rxadc: iio.Device = []
     _rx_channel_names: List[str] = []
@@ -185,11 +185,31 @@ class rx(attribute):
             return sig[0]
         return sig
 
+    def __multi_type_rx(self, data):
+        """Process buffers with multiple data types"""
+        # Process each channel at a time
+        channel_bytes = [np.dtype(k).itemsize for k in self._rx_data_type]
+        offset = 0
+        stride = sum(channel_bytes)
+        sig = []
+        for indx, chan_bytes in enumerate(channel_bytes):
+            bar = bytearray()
+            for bytesI in range(offset, self.__rx_buffer_size, stride):
+                bar.extend(data[bytesI : bytesI + chan_bytes])
+
+            sig.append(np.frombuffer(bar, dtype=self._rx_data_type[indx]))
+            offset += chan_bytes
+        return sig
+
     def __rx_non_complex(self):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
         data = self.__rxbuf.read()
+
+        if len(self._rx_data_type) > 1:
+            return self.__multi_type_rx(data)
+
         x = np.frombuffer(data, dtype=self._rx_data_type)
         if self._rx_mask != 0:
             x = np.bitwise_and(x, self._rx_mask)
@@ -255,7 +275,7 @@ class rx(attribute):
 
 
 class tx(dds, attribute):
-    """ Buffer handling for transmit devices """
+    """Buffer handling for transmit devices"""
 
     _tx_buffer_size = 1024
     _txdac: iio.Device = []
