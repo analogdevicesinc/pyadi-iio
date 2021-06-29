@@ -79,6 +79,8 @@ from adi.adxrs290 import adxrs290
 
 from adi.fmclidar1 import fmclidar1
 
+from adi.ad4630 import ad4630
+
 from adi.ad5686 import ad5686
 
 from adi.adar1000 import adar1000, adar1000_array
