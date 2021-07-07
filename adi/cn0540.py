@@ -133,11 +133,10 @@ class cn0540(rx, context_manager):
         vsensor_mv -= raw * adc_scale
         return vsensor_mv
 
-    # Not functional with current hardware
-    # @property
-    # def sw_ff_status(self):
-    #     """sw_ff_status: Fault flag status """
-    #     return self._get_iio_attr("voltage0", "raw", False, self._gpio)
+    @property
+    def sw_ff_status(self):
+        """sw_ff_status: Fault flag status """
+        return self._get_iio_attr("voltage0", "raw", False, self._gpio)
 
     @property
     def monitor_powerup(self):
