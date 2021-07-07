@@ -133,11 +133,10 @@ class cn0540(rx, context_manager):
         vsensor_mv -= raw * adc_scale
         return vsensor_mv
 
-    # Not functional with current hardware
-    # @property
-    # def sw_ff_status(self):
-    #     """sw_ff_status: Fault flag status """
-    #     return self._get_iio_attr("voltage0", "raw", False, self._gpio)
+    @property
+    def sw_ff_status(self):
+        """sw_ff_status: Fault flag status """
+        return self._get_iio_attr("voltage0", "raw", False, self._gpio)
 
     @property
     def monitor_powerup(self):
@@ -182,10 +181,10 @@ class cn0540(rx, context_manager):
         self._set_iio_attr_int("voltage1", "raw", True, value, self._gpio)
 
     @property
-    def blue_led_enable(self):
-        """blue_led_enable: Enable blue LED on board """
+    def sw_cc(self):
+        """sw_cc: Enable SW_CC. This will also illuminate the blue LED."""
         return self._get_iio_attr("voltage0", "raw", True, self._gpio)
 
-    @blue_led_enable.setter
-    def blue_led_enable(self, value):
+    @sw_cc.setter
+    def sw_cc(self, value):
         self._set_iio_attr_int("voltage0", "raw", True, value, self._gpio)
