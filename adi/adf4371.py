@@ -178,4 +178,4 @@ class adf4371(attribute, context_manager):
     @property
     def temperature(self):
         """Get the temperature reading"""
-        return self._get_iio_attr("temp0", "raw", False)
+        return self._get_iio_attr("temp0", "input", False)
