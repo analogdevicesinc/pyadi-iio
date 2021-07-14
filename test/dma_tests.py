@@ -15,7 +15,7 @@ except:
     do_html_log = False
 
 
-def dma_rx(uri, classname, channel):
+def dma_rx(uri, classname, channel, use_rx2=False):
     """dma_rx: Construct RX buffers and verify data is non-zero when pulled.
     Collected buffer is of size 2**15 and 10 buffers are checked
 
@@ -30,11 +30,17 @@ def dma_rx(uri, classname, channel):
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     N = 2 ** 15
-    sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
-    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+
+    if use_rx2:
+        sdr.rx2_enabled_channels = channel if isinstance(channel, list) else [channel]
+        sdr.rx2_buffer_size = N * len(sdr.rx2_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
+        sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+
     try:
         for _ in range(10):
-            data = sdr.rx()
+            data = sdr.rx2() if use_rx2 else sdr.rx()
             if isinstance(data, list):
                 for chan in data:
                     assert np.sum(np.abs(chan)) > 0
@@ -47,7 +53,7 @@ def dma_rx(uri, classname, channel):
     del sdr
 
 
-def dma_tx(uri, classname, channel):
+def dma_tx(uri, classname, channel, use_tx2=False):
     """dma_tx: Construct TX buffers and verify no errors occur when pushed.
     Buffer is of size 2**15 and 10 buffers are pushed
 
@@ -68,16 +74,24 @@ def dma_tx(uri, classname, channel):
     fc = 10000
     d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
 
-    if not isinstance(channel, list):
-        sdr.tx_enabled_channels = [channel]
+    if use_tx2:
+        if not isinstance(channel, list):
+            sdr.tx2_enabled_channels = [channel]
+        else:
+            sdr.tx2_enabled_channels = channel
+            d = [d] * len(channel)
+        sdr.tx2_buffer_size = N * len(sdr.tx2_enabled_channels)
     else:
-        sdr.tx_enabled_channels = channel
-        d = [d] * len(channel)
-    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+        if not isinstance(channel, list):
+            sdr.tx_enabled_channels = [channel]
+        else:
+            sdr.tx_enabled_channels = channel
+            d = [d] * len(channel)
+        sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
 
     try:
         for _ in range(10):
-            sdr.tx(d)
+            sdr.tx2(d) if use_tx2 else sdr.tx(d)
     except Exception as e:
         del sdr
         raise Exception(e)
