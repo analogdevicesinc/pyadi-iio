@@ -232,6 +232,7 @@ def test_adrv9002_interface_gain_narrowband(
 
 
 #########################################
+@pytest.mark.lvds_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
@@ -256,6 +257,7 @@ def test_adrv9002_profile_write(
 
 
 #########################################
+@pytest.mark.lvds_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
@@ -276,6 +278,7 @@ def test_adrv9002_nco_write_profile(
 
 
 #########################################
+@pytest.mark.cmos_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
@@ -296,6 +299,7 @@ def test_adrv9002_stream_profile_write(
 
 
 #########################################
+@pytest.mark.cmos_test
 @pytest.mark.iio_hardware(hardware)
 def test_adrv9002_stream_profile_write_both(iio_uri):
     import adi
@@ -307,6 +311,7 @@ def test_adrv9002_stream_profile_write_both(iio_uri):
 #########################################
 # It depends on test_adrv9002_nco_write_profile to be run first.
 # Maybe we should think in adding something like pytest-dependency
+@pytest.mark.lvds_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
