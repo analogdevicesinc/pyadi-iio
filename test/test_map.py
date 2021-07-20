@@ -1,3 +1,6 @@
+from os import sendfile
+
+
 def get_test_map():
     # Keys are substrings of test function names (and usually filenames)
     # Any board-fmc name will run a specific tests with key as name
@@ -69,6 +72,14 @@ def get_test_map():
         "zynq-adrv9364-z7020-bob",
         "zynq-adrv9364-z7020-bob-cmos",
         "zynq-zed-adv7511-ad9364-fmcomms4",
+    ]
+    test_map["adrv9002"] = [
+        "zynq-zc706-adv7511-adrv9002",
+        "zynq-zc706-adv7511-adrv9002-rx2tx2",
+        "zynq-zed-adv7511-adrv9002",
+        "zynq-zed-adv7511-adrv9002-rx2tx2",
+        "zynqmp-zcu102-rev10-adrv9002",
+        "zynqmp-zcu102-rev10-adrv9002-rx2tx2",
     ]
 
     return test_map
