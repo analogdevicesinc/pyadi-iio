@@ -81,21 +81,24 @@ def pytest_runtest_setup(item):
             "Testing requiring observation disabled. Use --obs-enable flag to enable"
         )
 
-    # Handle LVDS tests
+    # Handle CMOS and LVDS tests
+    cmos = item.config.getoption("--cmos")
     lvds = item.config.getoption("--lvds")
     marks = [mark.name for mark in item.iter_markers()]
-    if not lvds and "lvds_test" in marks:
+    if cmos and lvds:
+        pytest.skip(
+            "CMOS and LVDS tests can't be performed simultaneously. Use either the --cmos or the --lvds flag one at a time.",
+            allow_module_level=True
+        )
+    elif not cmos and "cmos_test" in marks:
+        pytest.skip(
+            "CMOS testing disabled. Use --cmos flag to enable"
+        )
+    elif not lvds and "lvds_test" in marks:
         pytest.skip(
             "LVDS testing disabled. Use --lvds flag to enable"
         )
 
-    # Handle CMOS tests
-    cmos = item.config.getoption("--cmos")
-    marks = [mark.name for mark in item.iter_markers()]
-    if not cmos and "cmos_test" in marks:
-        pytest.skip(
-            "CMOS testing disabled. Use --cmos flag to enable"
-        )
 
 
 def pytest_generate_tests(metafunc):
