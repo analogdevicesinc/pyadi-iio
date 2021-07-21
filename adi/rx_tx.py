@@ -194,7 +194,7 @@ class rx(attribute):
         sig = []
         for indx, chan_bytes in enumerate(channel_bytes):
             bar = bytearray()
-            for bytesI in range(offset, self.__rx_buffer_size, stride):
+            for bytesI in range(offset, len(data), stride):
                 bar.extend(data[bytesI : bytesI + chan_bytes])
 
             sig.append(np.frombuffer(bar, dtype=self._rx_data_type[indx]))
