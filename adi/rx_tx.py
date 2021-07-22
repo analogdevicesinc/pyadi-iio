@@ -188,7 +188,11 @@ class rx(attribute):
     def __multi_type_rx(self, data):
         """Process buffers with multiple data types"""
         # Process each channel at a time
-        channel_bytes = [np.dtype(k).itemsize for k in self._rx_data_type]
+        channel_bytes = []
+        curated_rx_type = []
+        for en_ch in self.rx_enabled_channels:
+            channel_bytes += [np.dtype(self._rx_data_type[en_ch]).itemsize]
+            curated_rx_type += [self._rx_data_type[en_ch]]
         offset = 0
         stride = sum(channel_bytes)
         sig = []
@@ -197,7 +201,7 @@ class rx(attribute):
             for bytesI in range(offset, len(data), stride):
                 bar.extend(data[bytesI : bytesI + chan_bytes])
 
-            sig.append(np.frombuffer(bar, dtype=self._rx_data_type[indx]))
+            sig.append(np.frombuffer(bar, dtype=curated_rx_type[indx]))
             offset += chan_bytes
         return sig
 
