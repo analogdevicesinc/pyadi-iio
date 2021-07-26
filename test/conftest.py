@@ -118,6 +118,16 @@ def test_gain_check(request):
 
 
 @pytest.fixture()
+def test_hardwaregain(request):
+    yield hardwaregain
+
+
+@pytest.fixture()
+def test_harmonics(request):
+    yield harmonic_vals
+
+
+@pytest.fixture()
 def test_attribute_multipe_values(request):
     yield attribute_multipe_values
 

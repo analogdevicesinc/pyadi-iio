@@ -4,6 +4,7 @@ import time
 import adi
 import numpy as np
 import pytest
+from numpy.fft import fft, fftfreq, fftshift
 
 
 def dma_rx(uri, classname, channel):
@@ -244,7 +245,7 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
         del sdr
         raise Exception(e)
     del sdr
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15, plot=False)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - frequency)
     print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
@@ -409,7 +410,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # print("Peak: @"+str(tone_freq) )
     # assert (fc * 0.01) > diff
 
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=False)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - fc)
     print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
@@ -541,6 +542,147 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     print(rssi)
     assert rssi >= min_rssi
     assert rssi <= max_rssi
+
+
+def hardwaregain(
+    uri, classname, channel, dds_scale, frequency, hardwaregain_low, hardwaregain_high
+):
+    """ hadwaregain: Test loopback with connected cables and verify
+        calculated hardware gain, by measuring changes in the AGC. This is only applicable
+        for devices with RSSI calculations onboard. This test also requires a devices
+        with TX and RX onboard where the transmit signal can be recovered. TX FPGA
+        DDSs are used to generate a sinusoid which is then received on the RX side.
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            classname: type=string
+                Name of pyadi interface class which contain attribute
+            channel: type=list
+                List of integers or list of list of integers of channels to
+                enable through tx_enabled_channels
+            dds_scale: type=float
+                Scale of DDS tone. Range [0,1]
+            frequency:
+                Frequency in hertz of the generated tone. This must be
+                less than 1/2 the sample rate.
+            hardwaregain_low: type=float
+                Minimum acceptable value of hardwaregain attribute
+            hardwaregain_high: type=float
+                Maximum acceptable value of hardwaregain attribute
+
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr.dds_single_tone(frequency, dds_scale, channel)
+    time.sleep(3)
+
+    chname = "voltage" + str(channel)
+    hwgain = sdr._get_iio_attr(chname, "hardwaregain", False, sdr._ctrl)
+    print(hwgain)
+    assert hardwaregain_low <= hwgain <= hardwaregain_high
+
+
+def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
+    """ harmonic_vals: Test first five harmonics and check to be within
+        certain intervals. This test also requires a devices with TX and RX
+        onboard where thetransmit signal can be recovered.Sinuoidal data is
+        passed to DMAs, which is then estimated on the RX side.
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            classname: type=string
+                Name of pyadi interface class which contain attribute
+            channel: type=list
+                List of integers or list of list of integers of channels to
+                enable through tx_enabled_channels
+            param_set: type=dict
+                Dictionary of attribute and values to be set before tone is
+                generated and received
+            low: type=list
+                List of minimum values for certain harmonics
+            high: type=list
+                List of maximum values for certain harmonics
+            plot: type=boolean
+                Boolean, if set the values are also plotted
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+
+    time.sleep(3)
+
+    N = 2 ** 15
+    sdr.tx_cyclic_buffer = True
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+
+    ref = 2 ** 12
+
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    else:
+        RXFS = int(sdr.rx_sample_rate)
+
+    fc = RXFS * 0.1
+    fc = int(fc / (RXFS / N)) * (RXFS / N)
+
+    full_scale = 0.9
+    ts = 1 / float(RXFS)
+    t = np.arange(0, N * ts, ts)
+    i = np.cos(2 * np.pi * t * fc) * ref * full_scale
+    q = np.sin(2 * np.pi * t * fc) * ref * full_scale
+    iq = i + 1j * q
+
+    try:
+        sdr.tx(iq)
+        time.sleep(3)
+        for _ in range(10):
+            data = sdr.rx()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    time.sleep(3)
+
+    L = len(data)
+
+    ampl = 1 / L * np.absolute(fft(data))
+    ampl = 20 * np.log10(ampl / ref + 10 ** -20)
+
+    freqs = fftfreq(L, 1 / RXFS)
+
+    _, ml, hm, indxs = spec.find_harmonics(
+        fftshift(ampl), fftshift(freqs), num_harmonics=10, tolerance=0.2
+    )
+
+    ffreqs = fftshift(freqs)
+    ffampl = fftshift(ampl)
+    if plot:
+        import matplotlib.pyplot as plt
+
+        plt.subplot(2, 1, 1)
+        plt.plot(data, ".-")
+        plt.plot(1, 1, "r.")
+        plt.margins(0.1, 0.1)
+        plt.xlabel("Time [s]")
+
+        plt.subplot(2, 1, 2)
+        plt.plot(fftshift(freqs), fftshift(ampl))
+        plt.plot(ffreqs[ml], ffampl[ml], "y.")
+        plt.plot(ffreqs[indxs[0 : len(hm)]], hm[0 : len(hm)], "y.")
+
+        plt.margins(0.1, 0.1)
+        plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
+        plt.xlabel("Frequency [Hz]")
+        plt.tight_layout()
+        plt.show()
+
+    assert low[0] <= ffampl[ml] <= high[0]
+    for i in range(1, len(low)):
+        assert low[i] <= hm[i - 1] <= high[i]
 
 
 def cyclic_buffer(uri, classname, channel, param_set):
