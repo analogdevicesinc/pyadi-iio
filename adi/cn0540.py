@@ -38,8 +38,21 @@ from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
 
+def reset_buffer(func):
+    """Wrapper for set calls which require the SPI engine.
+    Without disabling the buffer the DMA would block forever
+    """
+
+    def wrapper(*args, **kwargs):
+        if args[0]._reset_on_spi_writes:
+            args[0].rx_destroy_buffer()
+        func(*args, **kwargs)
+
+    return wrapper
+
+
 class cn0540(rx, context_manager):
-    """ CN0540 CBM DAQ Board """
+    """CN0540 CBM DAQ Board"""
 
     _rx_data_type = np.int32
     _rx_data_si_type = np.float
@@ -52,6 +65,7 @@ class cn0540(rx, context_manager):
     _g = 0.3
     _fda_gain = 2.667
     _fda_vocm_mv = 2500
+    _reset_on_spi_writes = True
 
     def __init__(self, uri=""):
 
@@ -65,8 +79,9 @@ class cn0540(rx, context_manager):
 
         rx.__init__(self)
 
+    @reset_buffer
     def calibrate(self):
-        """ Tune LTC2606 to make AD7768-1 ADC codes zero mean """
+        """Tune LTC2606 to make AD7768-1 ADC codes zero mean"""
         adc_chan = self._rxadc
         dac_chan = self._ltc2606
         adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
@@ -93,12 +108,13 @@ class cn0540(rx, context_manager):
         return self._get_iio_dev_attr("sampling_frequency")
 
     @sample_rate.setter
+    @reset_buffer
     def sample_rate(self, value):
         self._set_iio_dev_attr_str("sampling_frequency", value)
 
     @property
     def input_voltage(self):
-        """input_voltage: Input voltage in mV from ADC before shift voltage applied """
+        """input_voltage: Input voltage in mV from ADC before shift voltage applied"""
         adc_chan = self._rxadc
         adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
         raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
@@ -106,13 +122,14 @@ class cn0540(rx, context_manager):
 
     @property
     def shift_voltage(self):
-        """shift_voltage: Shift voltage in mV from LTC2606 to bias sensor data """
+        """shift_voltage: Shift voltage in mV from LTC2606 to bias sensor data"""
         dac_chan = self._ltc2606
         dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
         raw = self._get_iio_attr("voltage0", "raw", True, dac_chan)
         return raw * dac_scale * self._dac_buffer_gain
 
     @shift_voltage.setter
+    @reset_buffer
     def shift_voltage(self, value):
         dac_chan = self._ltc2606
         dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
@@ -121,7 +138,7 @@ class cn0540(rx, context_manager):
 
     @property
     def sensor_voltage(self):
-        """sensor_voltage: Sensor voltage in mV read from ADC after biasing """
+        """sensor_voltage: Sensor voltage in mV read from ADC after biasing"""
         adc_chan = self._rxadc
         adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
         raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
@@ -135,12 +152,12 @@ class cn0540(rx, context_manager):
 
     @property
     def sw_ff_status(self):
-        """sw_ff_status: Fault flag status """
+        """sw_ff_status: Fault flag status"""
         return self._get_iio_attr("voltage0", "raw", False, self._gpio)
 
     @property
     def monitor_powerup(self):
-        """monitor_powerup: Shutdown pin is tied to active-low inputs """
+        """monitor_powerup: Shutdown pin is tied to active-low inputs"""
         return self._get_iio_attr("voltage2", "raw", True, self._gpio)
 
     @monitor_powerup.setter
@@ -149,16 +166,17 @@ class cn0540(rx, context_manager):
 
     @property
     def fda_disable_status(self):
-        """fda_disable_status: Amplifier disable status """
+        """fda_disable_status: Amplifier disable status"""
         return self._get_iio_attr("voltage5", "raw", True, self._gpio)
 
     @fda_disable_status.setter
+    @reset_buffer
     def fda_disable_status(self, value):
         self._set_iio_attr_int("voltage5", "raw", True, value, self._gpio)
 
     @property
     def fda_mode(self):
-        """fda_mode: Amplifier mode. Options are low-power or full-power """
+        """fda_mode: Amplifier mode. Options are low-power or full-power"""
         return self._fda_mode_options[
             int(self._get_iio_attr("voltage6", "raw", True, self._gpio))
         ]
@@ -173,7 +191,7 @@ class cn0540(rx, context_manager):
 
     @property
     def red_led_enable(self):
-        """red_led_enable: Enable red LED on board """
+        """red_led_enable: Enable red LED on board"""
         return self._get_iio_attr("voltage1", "raw", True, self._gpio)
 
     @red_led_enable.setter
