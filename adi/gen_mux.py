@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2021 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,92 +31,43 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import ad9361, ad9363, ad9364, Pluto
+from adi.attribute import attribute
+from adi.context_manager import context_manager
 
-from adi.fmcomms5 import FMComms5
+class genmux(attribute, context_manager):
+    """GEN-MUX Generic IIO Mux device
 
-from adi.ad9371 import ad9371
+    parameters:
+        uri: type=string
+            URI of IIO context with GEN-MUX
+    """
 
-from adi.adrv9002 import adrv9002
+    _device_name = "gen-mux"
 
-from adi.adrv9009 import adrv9009
+    def __init__(self, uri="", device_name=""):
 
-from adi.adrv9009_zu11eg import adrv9009_zu11eg
+        context_manager.__init__(self, uri, self._device_name)
 
-from adi.adrv9009_zu11eg_multi import adrv9009_zu11eg_multi
+        self._device_name = device_name
+        # Find the device
+        self._ctrl = self._ctx.find_device(self._device_name)
 
-from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
+        # Raise an exception if the device isn't found
+        if not self._ctrl:
+            raise Exception("GEN-MUX device not found")
 
-from adi.ad9081 import ad9081
+    @property
+    def select_available(self):
+        """Get available MUX options"""
+        return self._get_iio_dev_attr_str("mux_select_available", self._ctrl)
 
-from adi.ad9081_mc import ad9081_mc, QuadMxFE
+    @property
+    def select(self):
+        """Get/Set the MUX select"""
+        return self._get_iio_dev_attr_str("mux_select", self._ctrl)
 
-from adi.ad9083 import ad9083
+    @select.setter
+    def select(self, value):
+        """Get/Set the MUX select"""
+        self._set_iio_dev_attr_str("mux_select", value, self._ctrl)
 
-from adi.ad9094 import ad9094
-
-from adi.ad9680 import ad9680
-
-from adi.ad9136 import ad9136
-
-from adi.ad9144 import ad9144
-
-from adi.ad9152 import ad9152
-
-from adi.cn0532 import cn0532
-
-from adi.daq2 import DAQ2
-
-from adi.daq3 import DAQ3
-
-from adi.adis16460 import adis16460
-
-from adi.adis16507 import adis16507
-
-from adi.ad7124 import ad7124
-
-from adi.adxl345 import adxl345
-
-from adi.adxrs290 import adxrs290
-
-from adi.fmclidar1 import fmclidar1
-
-from adi.ad5686 import ad5686
-
-from adi.adar1000 import adar1000, adar1000_array
-
-from adi.ltc2983 import ltc2983
-
-from adi.one_bit_adc_dac import one_bit_adc_dac
-
-from adi.ltc2314_14 import ltc2314_14
-
-from adi.ad7606 import ad7606
-
-from adi.ad7799 import ad7799
-
-from adi.ad7746 import ad7746
-
-from adi.adpd410x import adpd410x
-
-from adi.ad7689 import ad7689
-
-from adi.adf4371 import adf4371
-
-from adi.adrf5720 import adrf5720
-
-from adi.admv8818 import admv8818
-
-from adi.adf5610 import adf5610
-
-from adi.adl5960 import adl5960
-
-from adi.gen_mux import genmux
-
-try:
-    from adi.jesd import jesd
-except ImportError:
-    pass
-
-__version__ = "0.0.9"
-name = "Analog Devices Hardware Interfaces"
