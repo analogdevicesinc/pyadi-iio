@@ -204,6 +204,153 @@ params = dict(
     ),
 )
 
+# params_obs = dict(
+#     obs_tx=dict(
+#         ensm_mode="radio_on",
+#         trx_lo=2500000000,
+#         rx_powerdown_en_chan0=1,
+#         rx_powerdown_en_chan1=1,
+#         obs_powerdown_en=0,
+#         tx_hardwaregain_chan0=0,
+#         tx_hardwaregain_chan1=0,
+#         tx_quadrature_tracking_en_chan0=1,
+#         tx_quadrature_tracking_en_chan1=1,
+#         aux_obs_lo=2500000000,
+#         obs_quadrature_tracking_en=1,
+#         obs_rf_port_select="OBS_TX_LO",
+#         obs_hardwaregain=0,
+#         calibrate_rx_qec_en=1,
+#         calibrate_tx_qec_en=1,
+#         calibrate=1,
+#     ),
+#     obs_tx_change_attenuation_10dB=dict(
+#         ensm_mode="radio_on",
+#         trx_lo=2500000000,
+#         rx_powerdown_en_chan0=1,
+#         rx_powerdown_en_chan1=1,
+#         obs_powerdown_en=0,
+#         tx_hardwaregain_chan0=-10,
+#         tx_hardwaregain_chan1=-10,
+#         tx_quadrature_tracking_en_chan0=1,
+#         tx_quadrature_tracking_en_chan1=1,
+#         aux_obs_lo=2500000000,
+#         obs_quadrature_tracking_en=1,
+#         obs_rf_port_select="OBS_TX_LO",
+#         obs_hardwaregain=0,
+#         calibrate_rx_qec_en=1,
+#         calibrate_tx_qec_en=1,
+#         calibrate=1,
+#     ),
+#     obs_tx_change_rf_gain_10dB=dict(
+#         ensm_mode="radio_on",
+#         trx_lo=2500000000,
+#         rx_powerdown_en_chan0=1,
+#         rx_powerdown_en_chan1=1,
+#         obs_powerdown_en=0,
+#         tx_hardwaregain_chan0=0,
+#         tx_hardwaregain_chan1=0,
+#         tx_quadrature_tracking_en_chan0=1,
+#         tx_quadrature_tracking_en_chan1=1,
+#         aux_obs_lo=2500000000,
+#         obs_quadrature_tracking_en=1,
+#         obs_rf_port_select="OBS_TX_LO",
+#         obs_hardwaregain=10,
+#         calibrate_rx_qec_en=1,
+#         calibrate_tx_qec_en=1,
+#         calibrate=1,
+#     ),
+#     obs_tx_change_rf_gain_5dB=dict(
+#         ensm_mode="radio_on",
+#         trx_lo=2500000000,
+#         rx_powerdown_en_chan0=1,
+#         rx_powerdown_en_chan1=1,
+#         obs_powerdown_en=0,
+#         tx_hardwaregain_chan0=0,
+#         tx_hardwaregain_chan1=0,
+#         tx_quadrature_tracking_en_chan0=1,
+#         tx_quadrature_tracking_en_chan1=1,
+#         aux_obs_lo=2500000000,
+#         obs_quadrature_tracking_en=1,
+#         obs_rf_port_select="OBS_TX_LO",
+#         obs_hardwaregain=5,
+#         calibrate_rx_qec_en=1,
+#         calibrate_tx_qec_en=1,
+#         calibrate=1,
+#     ),
+#     obs_aux=dict(
+#         ensm_mode="radio_on",
+#         trx_lo=2500000000,
+#         rx_powerdown_en_chan0=1,
+#         rx_powerdown_en_chan1=1,
+#         obs_powerdown_en=0,
+#         tx_hardwaregain_chan0=0,
+#         tx_hardwaregain_chan1=0,
+#         tx_quadrature_tracking_en_chan0=1,
+#         tx_quadrature_tracking_en_chan1=1,
+#         aux_obs_lo=2500000000,
+#         obs_quadrature_tracking_en=1,
+#         obs_rf_port_select="OBS_AUX_LO",
+#         obs_hardwaregain=0,
+#         calibrate_rx_qec_en=1,
+#         calibrate_tx_qec_en=1,
+#         calibrate=1,
+#     ),
+#     obs_aux_change_attenuation_10dB=dict(
+#         ensm_mode="radio_on",
+#         trx_lo=2500000000,
+#         rx_powerdown_en_chan0=1,
+#         rx_powerdown_en_chan1=1,
+#         obs_powerdown_en=0,
+#         tx_hardwaregain_chan0=-10,
+#         tx_hardwaregain_chan1=-10,
+#         tx_quadrature_tracking_en_chan0=1,
+#         tx_quadrature_tracking_en_chan1=1,
+#         aux_obs_lo=2500000000,
+#         obs_quadrature_tracking_en=1,
+#         obs_rf_port_select="OBS_AUX_LO",
+#         obs_hardwaregain=0,
+#         calibrate_rx_qec_en=1,
+#         calibrate_tx_qec_en=1,
+#         calibrate=1,
+#     ),
+#     obs_aux_change_rf_gain_10dB=dict(
+#         ensm_mode="radio_on",
+#         trx_lo=2500000000,
+#         rx_powerdown_en_chan0=1,
+#         rx_powerdown_en_chan1=1,
+#         obs_powerdown_en=0,
+#         tx_hardwaregain_chan0=0,
+#         tx_hardwaregain_chan1=0,
+#         tx_quadrature_tracking_en_chan0=1,
+#         tx_quadrature_tracking_en_chan1=1,
+#         aux_obs_lo=2500000000,
+#         obs_quadrature_tracking_en=1,
+#         obs_rf_port_select="OBS_AUX_LO",
+#         obs_hardwaregain=10,
+#         calibrate_rx_qec_en=1,
+#         calibrate_tx_qec_en=1,
+#         calibrate=1,
+#     ),
+#     obs_aux_change_rf_gain_5dB=dict(
+#         ensm_mode="radio_on",
+#         trx_lo=2500000000,
+#         rx_powerdown_en_chan0=1,
+#         rx_powerdown_en_chan1=1,
+#         obs_powerdown_en=0,
+#         tx_hardwaregain_chan0=0,
+#         tx_hardwaregain_chan1=0,
+#         tx_quadrature_tracking_en_chan0=1,
+#         tx_quadrature_tracking_en_chan1=1,
+#         aux_obs_lo=2500000000,
+#         obs_quadrature_tracking_en=1,
+#         obs_rf_port_select="OBS_AUX_LO",
+#         obs_hardwaregain=5,
+#         calibrate_rx_qec_en=1,
+#         calibrate_tx_qec_en=1,
+#         calibrate=1,
+#     ),
+# )
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -301,6 +448,42 @@ def test_adrv9009_dds_loopback_with_10dB_splitter(
     test_dds_loopback(
         iio_uri, classname, param_set, channel, frequency, scale, peak_min
     )
+
+
+########################################
+# @pytest.mark.obs_required
+# @pytest.mark.iio_hardware(hardware)
+# @pytest.mark.parametrize("classname", [(classname)])
+# @pytest.mark.parametrize(
+#     "channel, param_set",
+#     [
+#         (0, params_obs["obs_tx"]),
+#         (0, params_obs["obs_tx_change_attenuation_10dB"]),
+#         (0, params_obs["obs_tx_change_rf_gain_10dB"]),
+#         (0, params_obs["obs_tx_change_rf_gain_5dB"]),
+#         (0, params_obs["obs_aux"]),
+#         (0, params_obs["obs_aux_change_attenuation_10dB"]),
+#         (0, params_obs["obs_aux_change_rf_gain_10dB"]),
+#         (0, params_obs["obs_aux_change_rf_gain_5dB"]),
+#     ],
+# )
+# @pytest.mark.parametrize(
+#     "frequency, scale, peak_min, use_obs", [(50000000, 0.25, -40.5, True)]
+# )
+# def test_adrv9009_dds_loopback_for_obs(
+#     test_dds_loopback,
+#     iio_uri,
+#     classname,
+#     param_set,
+#     channel,
+#     frequency,
+#     scale,
+#     peak_min,
+#     use_obs,
+# ):
+#     test_dds_loopback(
+#         iio_uri, classname, param_set, channel, frequency, scale, peak_min, use_obs
+#     )
 
 
 #########################################
@@ -425,6 +608,32 @@ def test_adrv9009_sfdr_with_10dB_splitter(
     test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 ):
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
+
+
+#########################################
+# @pytest.mark.obs_required
+# @pytest.mark.iio_hardware(hardware)
+# @pytest.mark.parametrize("classname", [(classname)])
+# @pytest.mark.parametrize("channel", [0, 1])
+# @pytest.mark.parametrize(
+#     "param_set",
+#     [
+#         params_obs["obs_tx"],
+#         params_obs["obs_tx_change_attenuation_10dB"],
+#         params_obs["obs_tx_change_rf_gain_10dB"],
+#         params_obs["obs_tx_change_rf_gain_5dB"],
+#         params_obs["obs_aux"],
+#         params_obs["obs_aux_change_attenuation_10dB"],
+#         params_obs["obs_aux_change_rf_gain_10dB"],
+#         params_obs["obs_aux_change_rf_gain_5dB"],
+#     ],
+# )
+# @pytest.mark.parametrize("sfdr_min", [45])
+# @pytest.mark.parametrize("use_obs", [True])
+# def test_adrv9009_sfdr_for_obs(
+#     test_sfdr, iio_uri, classname, channel, param_set, sfdr_min, use_obs
+# ):
+#     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min, use_obs)
 
 
 #########################################
