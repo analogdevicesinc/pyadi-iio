@@ -31,6 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from typing import Dict, List
+
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
@@ -39,7 +41,8 @@ class ad9083(rx, context_manager):
     """AD9083 High-Speed Multi-channel ADC"""
 
     _complex_data = False
-    _rx_channel_names = [f"voltage{i}" for i in range(16)]
+    _rx_channel_names: List[str] = []
+
     _device_name = ""
 
     def __init__(self, uri=""):
@@ -50,4 +53,28 @@ class ad9083(rx, context_manager):
         if not self._rxadc:
             raise Exception("Cannot find device axi-ad9083-rx-hpc")
 
+        for ch in self._rxadc.channels:
+            if ch.scan_element and not ch.output:
+                self._rx_channel_names.append(ch._id)
+
+        for name in self._rx_channel_names:
+            if "_i" or "_q" in name:
+                self._complex_data = True
+
         rx.__init__(self)
+
+    @property
+    def rx_sample_rate(self):
+        """rx_sampling_frequency: Sample rate after decimation"""
+        return self._get_iio_attr(
+            "voltage0_i", "sampling_frequency", False, self._rxadc
+        )
+
+    def reg_read(self, reg):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", reg, self._rxadc)
+        return self._get_iio_debug_attr_str("direct_reg_access", self._rxadc)
+
+    def reg_write(self, reg, value):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", f"{reg} {value}", self._rxadc)
