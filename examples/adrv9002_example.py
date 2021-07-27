@@ -6,6 +6,8 @@ import numpy as np
 from scipy import signal
 
 sdr = adi.adrv9002(uri="ip:192.168.86.58")
+sdr.digital_gain_control_mode_chan0 = "Gain_Compensation_manual_control"
+sdr.digital_gain_control_mode_chan1 = "Gain_Compensation_manual_control"
 sdr.interface_gain_chan0 = "-12dB"
 sdr.interface_gain_chan1 = "-12dB"
 sdr.rx_ensm_mode_chan0 = "rf_enabled"
