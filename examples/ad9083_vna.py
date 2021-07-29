@@ -51,6 +51,7 @@ from numpy import (
     multiply,
     pi,
     mean,
+    average,
 )
 
 def spec_est(x, fs, ref=2 ** 15, plot=False, title=""):
@@ -70,12 +71,15 @@ def spec_est(x, fs, ref=2 ** 15, plot=False, title=""):
 
     if plot:
         # Plot signal, showing how endpoints wrap from one chunk to the next
-        import matplotlib.pyplot as plt
-
         plt.figure(title)
         plt.subplot(2, 1, 1)
         plt.plot(x.real,  color='green', label='RE', linewidth=1, alpha=0.5)
         plt.plot(x.imag,  color='red', label='IM', linewidth=1, alpha=0.5)
+        i_avg = average(x.imag)
+        r_avg = average(x.real)
+        plt.axhline(y=r_avg, linewidth=1, color='g')
+        plt.axhline(y=i_avg, linewidth=1, color='r')
+        print (r_avg, i_avg)
         plt.margins(0.1, 0.1)
         plt.xlabel("Time [s]")
         # Plot shifted data on a shifted axis
@@ -112,7 +116,7 @@ for i in range (0, 8):
 
 #Capture all 32 channels
 vna.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-vna.rx_buffer_size = 2 ** 10
+vna.rx_buffer_size = 2 ** 12
 fs = int(vna.rx_sample_rate)
 
 # Collect data
