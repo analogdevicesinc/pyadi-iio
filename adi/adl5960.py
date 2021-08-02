@@ -92,6 +92,11 @@ class adl5960(attribute, context_manager):
         """Get/Set the Frequency in Hz"""
         return self._get_iio_attr("altvoltage1", "frequency", False, self._ctrl)
 
+    @offset_frequency.setter
+    def offset_frequency(self, value):
+        """Get/Set the Frequency in Hz"""
+        self._set_iio_attr("altvoltage1", "frequency", False, value, self._ctrl)
+
     @property
     def offset_mode_available(self):
         """Get available offset modes"""
