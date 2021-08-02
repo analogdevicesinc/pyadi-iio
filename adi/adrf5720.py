@@ -34,6 +34,7 @@
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
+
 class adrf5720(context_manager, attribute):
     """ ADRF5720 Digital Attenuator """
 
@@ -45,7 +46,11 @@ class adrf5720(context_manager, attribute):
         context_manager.__init__(self, uri, self._device_name)
         # Dictionary with all compatible parts. The key of each entry is the device's id and it's value
         # is the number of bits the device supports.
-        compatible_parts = ["adrf5720", "adrf5730", "adrf5731",]
+        compatible_parts = [
+            "adrf5720",
+            "adrf5730",
+            "adrf5731",
+        ]
 
         self._ctrl = None
 
@@ -62,8 +67,9 @@ class adrf5720(context_manager, attribute):
     @attenuation.setter
     def attenuation(self, value):
         for ch in self.channel:
-            # Using set_iio_attr to set attenuation writes value=-31.5-input. 
+            # Using set_iio_attr to set attenuation writes value=-31.5-input.
             # Adding this to reflect desired property value to device attribute.
-            write_value=-31.5-value 
-            self._set_iio_attr(self.channel, "hardwaregain", True, write_value, self._ctrl)
-            
+            write_value = -31.5 - value
+            self._set_iio_attr(
+                self.channel, "hardwaregain", True, write_value, self._ctrl
+            )
