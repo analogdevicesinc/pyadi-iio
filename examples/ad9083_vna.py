@@ -105,9 +105,14 @@ vna.lo_mux.select = 'bypass'
 vna.rfin_mux.select = 'd1'
 vna.lo.frequency = 3e9
 
+offset_frequency = 3906250
+
+vna.nco0_frequency = offset_frequency
+
 for i in range (0, 8):
     vna.frontend[i].lo_mode = 'x1'
-    vna.frontend[i].offset_mode = 'x1'
+    vna.frontend[i].offset_mode = '/4'
+    vna.frontend[i].offset_frequency = offset_frequency
     vna.frontend[i].forward_gain = 6
     vna.frontend[i].reflected_gain = 6
     vna.frontend[i].if_filter_cutoff = vna.frontend[i].offset_frequency
@@ -118,6 +123,8 @@ for i in range (0, 8):
 vna.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 vna.rx_buffer_size = 2 ** 12
 fs = int(vna.rx_sample_rate)
+
+print("NCO0", vna.nco0_frequency, "Hz")
 
 # Collect data
 for f in range (int(3e9), int(8e9), int(100e6)):
