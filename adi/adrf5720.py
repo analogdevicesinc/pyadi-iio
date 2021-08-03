@@ -44,8 +44,7 @@ class adrf5720(context_manager, attribute):
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, self._device_name)
-        # Dictionary with all compatible parts. The key of each entry is the device's id and it's value
-        # is the number of bits the device supports.
+
         compatible_parts = [
             "adrf5720",
             "adrf5730",
@@ -59,17 +58,17 @@ class adrf5720(context_manager, attribute):
                 self._ctrl = device
                 break
 
+        # Raise an exception if the device isn't found
+        if not self._ctrl:
+            raise Exception("ADRF5720 device not found")
+
     @property
     def attenuation(self):
         """Sets attenuation of the ADRF5720"""
-        return self._get_iio_attr(self.channel, "hardwaregain", True, self._ctrl)
+        return abs(self._get_iio_attr("voltage0", "hardwaregain", True, self._ctrl))
 
     @attenuation.setter
     def attenuation(self, value):
-        for ch in self.channel:
-            # Using set_iio_attr to set attenuation writes value=-31.5-input.
-            # Adding this to reflect desired property value to device attribute.
-            write_value = -31.5 - value
-            self._set_iio_attr(
-                self.channel, "hardwaregain", True, write_value, self._ctrl
-            )
+        self._set_iio_attr(
+            "voltage0", "hardwaregain", True, -1 * abs(value), self._ctrl
+        )
