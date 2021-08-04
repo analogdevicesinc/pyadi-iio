@@ -90,27 +90,37 @@ class adl5960(attribute, context_manager):
     @property
     def offset_frequency(self):
         """Get/Set the Frequency in Hz"""
-        return self._get_iio_attr("altvoltage1", "frequency", False, self._ctrl)
+        return self._get_iio_attr("altvoltage1", "offset_frequency", False, self._ctrl)
 
     @offset_frequency.setter
     def offset_frequency(self, value):
         """Get/Set the Frequency in Hz"""
-        self._set_iio_attr("altvoltage1", "frequency", False, value, self._ctrl)
+        self._set_iio_attr("altvoltage1", "offset_frequency", False, value, self._ctrl)
+
+    @property
+    def if_frequency(self):
+        """Get/Set the IF Frequency in Hz"""
+        return self._get_iio_attr("altvoltage1", "if_frequency", False, self._ctrl)
+
+    @if_frequency.setter
+    def if_frequency(self, value):
+        """Get/Set the IF Frequency in Hz"""
+        self._set_iio_attr("altvoltage1", "if_frequency", False, value, self._ctrl)
 
     @property
     def offset_mode_available(self):
         """Get available offset modes"""
-        return self._get_iio_attr_str("altvoltage1", "mode_available", False, self._ctrl)
+        return self._get_iio_attr_str("altvoltage1", "offset_mode_available", False, self._ctrl)
 
     @property
     def offset_mode(self):
         """Get/Set offset mode"""
-        return self._get_iio_attr_str("altvoltage1", "mode", False, self._ctrl)
+        return self._get_iio_attr_str("altvoltage1", "offset_mode", False, self._ctrl)
 
     @offset_mode.setter
     def offset_mode(self, value):
         """Get/Set offset mode"""
-        self._set_iio_attr("altvoltage1", "mode", False, value, self._ctrl)
+        self._set_iio_attr("altvoltage1", "offset_mode", False, value, self._ctrl)
 
     # Forward
 
