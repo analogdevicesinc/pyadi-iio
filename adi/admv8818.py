@@ -64,7 +64,7 @@ class admv8818(attribute, context_manager):
     @low_pass_3db_frequency.setter
     def low_pass_3db_frequency(self, value):
         """Get/Set the Low Pass 3dB Frequency in MHz"""
-        self._set_iio_attr("voltage0", "filter_low_pass_3db_frequency", True, value, self._ctrl)
+        self._set_iio_attr_int("voltage0", "filter_low_pass_3db_frequency", True, int(value), self._ctrl)
 
     @property
     def high_pass_3db_frequency(self):
@@ -74,7 +74,7 @@ class admv8818(attribute, context_manager):
     @high_pass_3db_frequency.setter
     def high_pass_3db_frequency(self, value):
         """Get/Set the Low Pass 3dB Frequency in MHz"""
-        self._set_iio_attr("voltage0", "filter_high_pass_3db_frequency", True, value, self._ctrl)
+        self._set_iio_attr_int("voltage0", "filter_high_pass_3db_frequency", True, int(value), self._ctrl)
 
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""
