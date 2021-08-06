@@ -95,7 +95,7 @@ class adl5960(attribute, context_manager):
     @offset_frequency.setter
     def offset_frequency(self, value):
         """Get/Set the Frequency in Hz"""
-        self._set_iio_attr("altvoltage1", "offset_frequency", False, value, self._ctrl)
+        self._set_iio_attr_int("altvoltage1", "offset_frequency", False, int(value), self._ctrl)
 
     @property
     def if_frequency(self):
@@ -105,7 +105,7 @@ class adl5960(attribute, context_manager):
     @if_frequency.setter
     def if_frequency(self, value):
         """Get/Set the IF Frequency in Hz"""
-        self._set_iio_attr("altvoltage1", "if_frequency", False, value, self._ctrl)
+        self._set_iio_attr_int("altvoltage1", "if_frequency", False, int(value), self._ctrl)
 
     @property
     def offset_mode_available(self):
@@ -132,7 +132,7 @@ class adl5960(attribute, context_manager):
     @forward_gain.setter
     def forward_gain(self, value):
         """Get/Set Forward Gain"""
-        self._set_iio_attr("voltage0", "forward_hardwaregain", True, value, self._ctrl)
+        self._set_iio_attr_int("voltage0", "forward_hardwaregain", True, int(value), self._ctrl)
 
     # Reflected
 
@@ -144,7 +144,7 @@ class adl5960(attribute, context_manager):
     @reflected_gain.setter
     def reflected_gain(self, value):
         """Get/Set Reflected Gain"""
-        self._set_iio_attr("voltage1", "reverse_hardwaregain", True, value, self._ctrl)
+        self._set_iio_attr_int("voltage1", "reverse_hardwaregain", True, int(value), self._ctrl)
 
     # IF Filter cutoff
 
@@ -156,7 +156,7 @@ class adl5960(attribute, context_manager):
     @if_filter_cutoff.setter
     def if_filter_cutoff(self, value):
         """Get/Set LPF 3db cutoff frequency (controls CIF1, CIF2)"""
-        self._set_iio_attr("voltage0", "filter_low_pass_3db_frequency", True, value, self._ctrl)
+        self._set_iio_attr_int("voltage0", "filter_low_pass_3db_frequency", True, int(value), self._ctrl)
 
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""
