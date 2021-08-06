@@ -198,6 +198,15 @@ def precommit(c):
 
 
 @task
+def gen_changelog(c, since=None):
+    """Generate changelog since last release"""
+    if not since:
+        r = c.run(f"git describe --abbrev=0 --tags", encoding="utf-8", hide=True)
+        since = r.stdout.splitlines()[0]
+    r = c.run(f'git shortlog -n --format="- %h %s" {since}...HEAD')
+
+
+@task
 def changelog(c, since=None):
     """Print changelog from last release"""
     if not since:
