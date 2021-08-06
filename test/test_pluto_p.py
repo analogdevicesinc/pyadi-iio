@@ -205,3 +205,27 @@ def test_pluto_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param_
 @pytest.mark.parametrize("channel", [0])
 def test_pluto_loopback_zeros(test_dma_dac_zeros, iio_uri, classname, channel):
     test_dma_dac_zeros(iio_uri, classname, channel)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize("buffer_size", [2 ** 20])
+@pytest.mark.parametrize("sample_rate", [600e3])
+def test_pluto_verify_overflow(
+    test_verify_overflow, iio_uri, classname, channel, buffer_size, sample_rate
+):
+    test_verify_overflow(iio_uri, classname, channel, buffer_size, sample_rate)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize("buffer_size", [2 ** 20])
+@pytest.mark.parametrize("sample_rate", [600e3])
+def test_pluto_verify_underflow(
+    test_verify_underflow, iio_uri, classname, channel, buffer_size, sample_rate
+):
+    test_verify_underflow(iio_uri, classname, channel, buffer_size, sample_rate)

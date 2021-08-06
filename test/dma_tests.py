@@ -1021,3 +1021,125 @@ def stress_tx_buffer_creation(uri, classname, channel, repeats):
         raise Exception(e)
 
     del sdr
+
+
+def verify_underflow(uri, classname, channel, buffer_size, sample_rate):
+    """verify_overflow: Verify overflow flags occur as expected
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        buffer_size type=int
+            List of buffer size to create and collect
+        sample_rate=int
+            Value to set sample rate of device in samples per second
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    TXFS = 1000
+    N = buffer_size
+    ts = 1 / float(TXFS)
+    t = np.arange(0, N * ts, ts)
+    fc = 10000
+    d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+
+    if not isinstance(channel, list):
+        sdr.tx_enabled_channels = [channel]
+    else:
+        sdr.tx_enabled_channels = channel
+        d = [d] * len(channel)
+    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+
+    # Set low rate so we can keep up
+    sdr.sample_rate = sample_rate
+    # Clear status register
+    sdr._rxadc.reg_write(0x80000088, 0x6)
+
+    # Flush
+    sdr.tx(d)
+    for k in range(30):
+        v = sdr._txdac.reg_read(0x80000088)
+        if v & 1:
+            sdr._txdac.reg_write(0x80000088, v)
+
+    for _ in range(5):
+        sdr.tx(d)
+    v = sdr._txdac.reg_read(0x80000088)
+    if v & 1:
+        del sdr
+        assert 0, "Unexpected underflow occurred"
+
+    # Force an underflow
+    sdr.tx(d)
+    underflow_occured = False
+    time.sleep(30)
+    sdr.tx(d)
+    for k in range(30):
+        v = sdr._txdac.reg_read(0x80000088)
+        if v & 1:
+            underflow_occured = True
+            sdr._txdac.reg_write(0x80000088, v)  # Clear
+
+    del sdr
+    assert underflow_occured, "No underflow occurred, but one was expected"
+
+
+def verify_overflow(uri, classname, channel, buffer_size, sample_rate):
+    """verify_overflow: Verify overflow flags occur as expected
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        buffer_size type=int
+            List of buffer size to create and collect
+        sample_rate=int
+            Value to set sample rate of device in samples per second
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
+    sdr.rx_buffer_size = 2 ** 20
+
+    # Set low rate so we can keep up
+    sdr.sample_rate = sample_rate
+    # Clear status register
+    sdr._rxadc.reg_write(0x80000088, 0x6)
+
+    v = sdr._rxadc.reg_read(0x80000088)
+
+    # Flush
+    _ = sdr.rx()
+    for k in range(100):
+        v = sdr._rxadc.reg_read(0x80000088)
+        if v & 4:
+            # print(f"Overflow 1 {v} {k}")
+            sdr._rxadc.reg_write(0x80000088, v)
+
+    _ = sdr.rx()
+    for k in range(30):
+        v = sdr._rxadc.reg_read(0x80000088)
+        if v & 4:
+            del sdr
+            assert 0, "Unexpected overflow occurred"
+
+    # Force an overflow
+    _ = sdr.rx()
+    overflow_occured = False
+    time.sleep(10)
+    for k in range(30):
+        v = sdr._rxadc.reg_read(0x80000088)
+        if v & 4:
+            overflow_occured = True
+            sdr._rxadc.reg_write(0x80000088, v)  # Clear
+
+    del sdr
+
+    assert overflow_occured, "No overflow occurred, but one was expected"
