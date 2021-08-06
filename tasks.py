@@ -91,6 +91,46 @@ def build(c, docs=False):
         "inc": "Revision class increment position. major=X.2.3, minor==1.X.3, rev==1.2.X. Defaults to rev",
     }
 )
+def createprerelease(c, message=None, inc="rev"):
+    """Create GitHub pre-release
+
+    The following is performed:
+    1. Test are run to check passing
+    2. Create pre-release
+
+    """
+    # Check all tests are passing
+    import pytest
+
+    e = pytest.main(["-q"])
+    if e:
+        raise Exception("Some tests are failing, cannot create release")
+
+    r = c.run(f"git describe --abbrev=0 --tags", encoding="utf-8", hide=True)
+    since = r.stdout.splitlines()[0]
+    r = c.run(
+        f'git shortlog -n --format="- [%h](https://github.com/analogdevicesinc/pyadio-iio/commit/%h) %s" {since}...HEAD'
+    )
+    with open("changelog.txt", "w") as file:
+        file.write(str(r.stdout))
+
+    # Create pre-release from version
+    import adi
+
+    v = adi.__version__
+    if not message:
+        message = "Beta release v{}".format(v)
+    cmd = 'gh release create v{} -F changelog.txt -p -t "Pre-{}"'.format(v, message)
+    print("Creating pre-release")
+    c.run(cmd)
+
+
+@task(
+    help={
+        "message": "Custom message for tag. Defaults to `Beta release vXX`, where XX is auto determined",
+        "inc": "Revision class increment position. major=X.2.3, minor==1.X.3, rev==1.2.X. Defaults to rev",
+    }
+)
 def createrelease(c, message=None, inc="rev"):
     """Create GitHub release
 
@@ -109,14 +149,22 @@ def createrelease(c, message=None, inc="rev"):
     if e:
         raise Exception("Some tests are failing, cannot create release")
 
+    r = c.run(f"git describe --abbrev=0 --tags", encoding="utf-8", hide=True)
+    since = r.stdout.splitlines()[0]
+    r = c.run(
+        f'git shortlog -n --format="- [%h](https://github.com/analogdevicesinc/pyadio-iio/commit/%h) %s" {since}...HEAD'
+    )
+    with open("changelog.txt", "w") as file:
+        file.write(str(r.stdout))
+
     # Create tag from version
     import adi
 
     v = adi.__version__
     if not message:
         message = "Beta release v{}".format(v)
-    cmd = 'git tag -a v{} -m "{}"'.format(v, message)
-    print("Creating tagged commit")
+    cmd = 'gh release create v{} -F changelog.txt -t "{}"'.format(v, message)
+    print("Creating release")
     c.run(cmd)
 
     # Bump version and create commit
@@ -203,7 +251,11 @@ def gen_changelog(c, since=None):
     if not since:
         r = c.run(f"git describe --abbrev=0 --tags", encoding="utf-8", hide=True)
         since = r.stdout.splitlines()[0]
-    r = c.run(f'git shortlog -n --format="- %h %s" {since}...HEAD')
+    r = c.run(
+        f'git shortlog -n --format="- [%h](https://github.com/analogdevicesinc/pyadio-iio/commit/%h) %s" {since}...HEAD'
+    )
+    with open("changelog.txt", "w") as file:
+        file.write(str(r.stdout))
 
 
 @task
