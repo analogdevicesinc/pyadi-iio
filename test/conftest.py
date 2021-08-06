@@ -147,3 +147,13 @@ def test_dma_dac_zeros(request):
 @pytest.fixture()
 def test_dds_two_tone(request):
     yield dds_two_tone
+
+
+@pytest.fixture()
+def test_verify_overflow(request):
+    yield verify_overflow
+
+
+@pytest.fixture()
+def test_verify_underflow(request):
+    yield verify_underflow
