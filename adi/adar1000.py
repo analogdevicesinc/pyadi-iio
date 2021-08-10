@@ -1605,26 +1605,6 @@ class adar1000_array(context_manager):
 
     """ Private Methods """
 
-    def _calculate_phi(self, azimuth, elevation):
-        """Calculate the Φ angles to steer the array in a particular direction. This method assumes that the entire
-        array is one analog beam.
-        parameters:
-            azimuth: float
-                Desired beam angle in degrees for the horizontal direction.
-            elevation: float
-                Desired beam angle in degrees for the vertical direction.
-        """
-
-        # Convert the input angles to radians
-        az_rads = azimuth * pi / 180
-        el_rads = elevation * pi / 180
-
-        # Calculate the phase increment (Φ) for each element in the array in both directions (in degrees)
-        az_phi = 2 * self.frequency * self.element_spacing * sin(az_rads) * 180 / 3e8
-        el_phi = 2 * self.frequency * self.element_spacing * sin(el_rads) * 180 / 3e8
-
-        return az_phi, el_phi
-
     def _steer(self, rx_or_tx, azimuth, elevation):
         """Steer the array
         parameters:
@@ -1640,7 +1620,7 @@ class adar1000_array(context_manager):
         rx_or_tx = rx_or_tx.strip().lower()
 
         # Calculate the Φ angles for each element in both directions (in degrees)
-        azimuth_phi, elevation_phi = self._calculate_phi(azimuth, elevation)
+        azimuth_phi, elevation_phi = self.calculate_phi(azimuth, elevation)
 
         # Update the class variables
         if rx_or_tx == "rx":
@@ -1673,10 +1653,42 @@ class adar1000_array(context_manager):
 
     """ Public Methods """
 
-    def initialize_devices(self):
-        """ Initialize the ADAR1000s in the array """
+    def calculate_phi(self, azimuth, elevation):
+        """Calculate the Φ angles to steer the array in a particular direction. This method assumes that the entire
+        array is one analog beam.
+        parameters:
+            azimuth: float
+                Desired beam angle in degrees for the horizontal direction.
+            elevation: float
+                Desired beam angle in degrees for the vertical direction.
+        """
+
+        # Convert the input angles to radians
+        az_rads = azimuth * pi / 180
+        el_rads = elevation * pi / 180
+
+        # Calculate the phase increment (Φ) for each element in the array in both directions (in degrees)
+        az_phi = 2 * self.frequency * self.element_spacing * sin(az_rads) * 180 / 3e8
+        el_phi = 2 * self.frequency * self.element_spacing * sin(el_rads) * 180 / 3e8
+
+        return az_phi, el_phi
+
+    def initialize_devices(self, pa_off=-2.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
+        """Suggested initialization routine after powerup
+        parameters:
+            pa_off: float
+                Voltage to set the PA_BIAS_OFF values to during initialization
+            pa_on: float
+                Voltage to set the PA_BIAS_ON values to during initialization
+            lna_off: float
+                Voltage to set the LNA_BIAS_OFF values to during initialization
+            lna_on: float
+                Voltage to set the LNA_BIAS_ON values to during initialization
+        """
         for device in self.devices.values():
-            device.initialize()
+            device.initialize(
+                pa_off=pa_off, pa_on=pa_on, lna_off=lna_off, lna_on=lna_on
+            )
 
     def latch_rx_settings(self):
         """ Latch in new Gain/Phase settings for the Rx """

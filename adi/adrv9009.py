@@ -32,6 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
+from adi.obs import obs
 from adi.rx_tx import rx_tx
 
 
@@ -59,6 +60,7 @@ class adrv9009(rx_tx, context_manager):
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
+    _obs_channel_names = ["voltage0_i", "voltage0_q"]
     _device_name = ""
 
     def __init__(self, uri="", jesd_monitor=False, jesd=None):
@@ -72,6 +74,27 @@ class adrv9009(rx_tx, context_manager):
         self._ctx.set_timeout(30000)  # Needed for loading profiles
         self._jesd = jesd or _import_jesd(uri) if jesd_monitor else None
         rx_tx.__init__(self)
+        self.obs = obs(self._ctx, self._rxobs, self._obs_channel_names)
+
+    @property
+    def ensm_mode(self):
+        """ensm_mode: Enable State Machine State Allows real time control over
+        the current state of the device. Options are: radio_on, radio_off"""
+        return self._get_iio_dev_attr_str("ensm_mode")
+
+    @ensm_mode.setter
+    def ensm_mode(self, value):
+        self._set_iio_dev_attr_str("ensm_mode", value)
+
+    @property
+    def ensm_mode(self):
+        """ensm_mode: Enable State Machine State Allows real time control over
+        the current state of the device. Options are: radio_on, radio_off"""
+        return self._get_iio_dev_attr_str("ensm_mode")
+
+    @ensm_mode.setter
+    def ensm_mode(self, value):
+        self._set_iio_dev_attr_str("ensm_mode", value)
 
     @property
     def profile(self):
@@ -163,6 +186,44 @@ class adrv9009(rx_tx, context_manager):
         self._set_iio_attr("voltage1", "gain_control_mode", False, value)
 
     @property
+    def rx_quadrature_tracking_en_chan0(self):
+        """Enable Quadrature tracking calibration for RX1"""
+        return self._get_iio_attr("voltage0", "quadrature_tracking_en", False)
+
+    @rx_quadrature_tracking_en_chan0.setter
+    def rx_quadrature_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "quadrature_tracking_en", False, value)
+
+    @property
+    def rx_quadrature_tracking_en_chan1(self):
+        """Enable Quadrature tracking calibration for RX2"""
+        return self._get_iio_attr("voltage1", "quadrature_tracking_en", False)
+
+    @rx_quadrature_tracking_en_chan1.setter
+    def rx_quadrature_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "quadrature_tracking_en", False, value)
+
+    @property
+    def rx_powerdown_en_chan0(self):
+        """rx_powerdown_en_chan0: Enables/disables the RX1 signal paths
+        while in the ENSM radio_on state"""
+        return self._get_iio_attr("voltage0", "powerdown", False)
+
+    @rx_powerdown_en_chan0.setter
+    def rx_powerdown_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "powerdown", False, value)
+
+    @property
+    def rx_powerdown_en_chan1(self):
+        """rx_powerdown_en_chan1: Enables/disables the RX2 signal paths
+        while in the ENSM radio_on state"""
+        return self._get_iio_attr("voltage1", "powerdown", False)
+
+    @rx_powerdown_en_chan1.setter
+    def rx_powerdown_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "powerdown", False, value)
+
+    @property
     def rx_hardwaregain_chan0(self):
         """rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
         gain_control_mode is set to 'manual'"""
@@ -183,6 +244,76 @@ class adrv9009(rx_tx, context_manager):
     def rx_hardwaregain_chan1(self, value):
         if self.gain_control_mode_chan1 == "manual":
             self._set_iio_attr("voltage1", "hardwaregain", False, value)
+
+    @property
+    def obs_powerdown_en(self):
+        """obs_powerdown_en: Enables/disables the ORX signal paths
+        while in the ENSM radio_on state"""
+        return self._get_iio_attr("voltage2", "powerdown", False)
+
+    @obs_powerdown_en.setter
+    def obs_powerdown_en(self, value):
+        self._set_iio_attr("voltage2", "powerdown", False, value)
+
+    @property
+    def aux_obs_lo(self):
+        """aux_obs_lo: Carrier frequency of ORx path"""
+        return self._get_iio_attr("altvoltage1", "AUX_OBS_RX_LO_frequency", True)
+
+    @aux_obs_lo.setter
+    def aux_obs_lo(self, value):
+        self._set_iio_attr("altvoltage1", "AUX_OBS_RX_LO_frequency", True, value)
+
+    @property
+    def obs_quadrature_tracking_en(self):
+        """Enable Quadrature tracking calibration for ORX"""
+        return self._get_iio_attr("voltage2", "quadrature_tracking_en", False)
+
+    @obs_quadrature_tracking_en.setter
+    def obs_quadrature_tracking_en(self, value):
+        self._set_iio_attr("voltage2", "quadrature_tracking_en", False, value)
+
+    @property
+    def obs_rf_port_select(self):
+        """obs_rf_port_select: Observation path source for ORX. Options are:
+
+        - OBS_TX_LO -
+        - OBS_AUX_LO -
+
+        """
+        return self._get_iio_attr_str("voltage2", "rf_port_select", False)
+
+    @obs_rf_port_select.setter
+    def obs_rf_port_select(self, value):
+        self._set_iio_attr("voltage2", "rf_port_select", False, value)
+
+    @property
+    def obs_hardwaregain(self):
+        """obs_hardwaregain: Gain applied to Obs/Sniffer receive path ORX1."""
+        return self._get_iio_attr("voltage2", "hardwaregain", False)
+
+    @obs_hardwaregain.setter
+    def obs_hardwaregain(self, value):
+        # if self.obs_gain_control_mode == "manual":
+        self._set_iio_attr("voltage2", "hardwaregain", False, value)
+
+    @property
+    def tx_quadrature_tracking_en_chan0(self):
+        """Enable Quadrature tracking calibration for TX1"""
+        return self._get_iio_attr("voltage0", "quadrature_tracking_en", True)
+
+    @tx_quadrature_tracking_en_chan0.setter
+    def tx_quadrature_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "quadrature_tracking_en", True, value)
+
+    @property
+    def tx_quadrature_tracking_en_chan1(self):
+        """Enable Quadrature tracking calibration for TX2"""
+        return self._get_iio_attr("voltage1", "quadrature_tracking_en", True)
+
+    @tx_quadrature_tracking_en_chan1.setter
+    def tx_quadrature_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "quadrature_tracking_en", True, value)
 
     @property
     def tx_hardwaregain_chan0(self):
@@ -216,6 +347,13 @@ class adrv9009(rx_tx, context_manager):
     def rx_sample_rate(self):
         """rx_sample_rate: Sample rate RX path in samples per second"""
         return self._get_iio_attr("voltage0", "sampling_frequency", False)
+
+    @property
+    def orx_sample_rate(self):
+        """orx_sample_rate: Sample rate ORX path in samples per second
+            This value will reflect the correct value when 8x decimator is enabled
+        """
+        return self._get_iio_attr("voltage2", "sampling_frequency", False)
 
     @property
     def tx_sample_rate(self):
