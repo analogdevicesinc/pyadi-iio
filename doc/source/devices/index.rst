@@ -20,6 +20,7 @@ Supported Devices
    adi.ad9371
    adi.ad9680
    adi.adar1000
+   adi.adf4371
    adi.adis16460
    adi.adis16507
    adi.adpd410x
@@ -41,3 +42,4 @@ Supported Devices
    adi.ltc2983
    adi.one_bit_adc_dac
    adi.ad7606
+   adi.ad7689

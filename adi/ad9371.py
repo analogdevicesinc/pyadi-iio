@@ -61,6 +61,16 @@ class ad9371(rx_tx, context_manager):
         self.obs = obs(self._ctx, self._rxobs, self._obs_channel_names)
 
     @property
+    def ensm_mode(self):
+        """ensm_mode: Enable State Machine State Allows real time control over
+        the current state of the device. Options are: radio_on, radio_off"""
+        return self._get_iio_dev_attr_str("ensm_mode")
+
+    @ensm_mode.setter
+    def ensm_mode(self, value):
+        self._set_iio_dev_attr_str("ensm_mode", value)
+
+    @property
     def gain_control_mode(self):
         """gain_control_mode: Mode of receive path AGC. Options are:
         automatic, hybrid, manual"""
@@ -69,6 +79,24 @@ class ad9371(rx_tx, context_manager):
     @gain_control_mode.setter
     def gain_control_mode(self, value):
         self._set_iio_attr("voltage0", "gain_control_mode", False, value)
+
+    @property
+    def rx_quadrature_tracking_en_chan0(self):
+        """Enable Quadrature tracking calibration for RX1"""
+        return self._get_iio_attr("voltage0", "quadrature_tracking_en", False)
+
+    @rx_quadrature_tracking_en_chan0.setter
+    def rx_quadrature_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "quadrature_tracking_en", False, value)
+
+    @property
+    def rx_quadrature_tracking_en_chan1(self):
+        """Enable Quadrature tracking calibration for RX2"""
+        return self._get_iio_attr("voltage1", "quadrature_tracking_en", False)
+
+    @rx_quadrature_tracking_en_chan1.setter
+    def rx_quadrature_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "quadrature_tracking_en", False, value)
 
     @property
     def rx_hardwaregain_chan0(self):
@@ -91,6 +119,42 @@ class ad9371(rx_tx, context_manager):
     def rx_hardwaregain_chan1(self, value):
         if self.gain_control_mode == "manual":
             self._set_iio_attr("voltage1", "hardwaregain", False, value)
+
+    @property
+    def rx_temp_comp_gain_chan0(self):
+        """rx_temp_comp_gain_chan0: """
+        return self._get_iio_attr("voltage0", "temp_comp_gain", False)
+
+    @rx_temp_comp_gain_chan0.setter
+    def rx_temp_comp_gain_chan0(self, value):
+        self._set_iio_attr("voltage0", "temp_comp_gain", False, value)
+
+    @property
+    def rx_temp_comp_gain_chan1(self):
+        """rx_temp_comp_gain_chan1: """
+        return self._get_iio_attr("voltage1", "temp_comp_gain", False)
+
+    @rx_temp_comp_gain_chan1.setter
+    def rx_temp_comp_gain_chan1(self, value):
+        self._set_iio_attr("voltage1", "temp_comp_gain", False, value)
+
+    @property
+    def tx_quadrature_tracking_en_chan0(self):
+        """Enable Quadrature tracking calibration for TX1"""
+        return self._get_iio_attr("voltage0", "quadrature_tracking_en", True)
+
+    @tx_quadrature_tracking_en_chan0.setter
+    def tx_quadrature_tracking_en_chan0(self, value):
+        self._set_iio_attr("voltage0", "quadrature_tracking_en", True, value)
+
+    @property
+    def tx_quadrature_tracking_en_chan1(self):
+        """Enable Quadrature tracking calibration for TX2"""
+        return self._get_iio_attr("voltage1", "quadrature_tracking_en", True)
+
+    @tx_quadrature_tracking_en_chan1.setter
+    def tx_quadrature_tracking_en_chan1(self, value):
+        self._set_iio_attr("voltage1", "quadrature_tracking_en", True, value)
 
     @property
     def tx_hardwaregain_chan0(self):
@@ -171,6 +235,14 @@ class ad9371(rx_tx, context_manager):
         return self._get_iio_attr("voltage0", "sampling_frequency", False) / dec
 
     @property
+    def orx_sample_rate(self):
+        """orx_sample_rate: Sample rate ORX path in samples per second
+            This value will reflect the correct value when 8x decimator is enabled
+        """
+        dec = 8 if self.rx_enable_dec8 else 1
+        return self._get_iio_attr("voltage2", "sampling_frequency", False) / dec
+
+    @property
     def tx_sample_rate(self):
         """tx_sample_rate: Sample rate TX path in samples per second
             This value will reflect the correct value when 8x interpolator is enabled
@@ -204,6 +276,45 @@ class ad9371(rx_tx, context_manager):
     @sn_lo.setter
     def sn_lo(self, value):
         self._set_iio_attr("altvoltage2", "RX_SN_LO_frequency", True, value)
+
+    @property
+    def obs_gain_control_mode(self):
+        """obs_gain_control_mode: Mode of Obs/Sniffer receive path AGC. Options are:
+        automatic, hybrid, manual"""
+        return self._get_iio_attr_str("voltage2", "gain_control_mode", False)
+
+    @obs_gain_control_mode.setter
+    def obs_gain_control_mode(self, value):
+        self._set_iio_attr("voltage2", "gain_control_mode", False, value)
+
+    @property
+    def obs_hardwaregain(self):
+        """obs_hardwaregain: Gain applied to Obs/Sniffer receive path chan0. Only applicable when
+        obs_gain_control_mode is set to 'manual'"""
+        return self._get_iio_attr("voltage2", "hardwaregain", False)
+
+    @obs_hardwaregain.setter
+    def obs_hardwaregain(self, value):
+        if self.obs_gain_control_mode == "manual":
+            self._set_iio_attr("voltage2", "hardwaregain", False, value)
+
+    @property
+    def obs_temp_comp_gain(self):
+        """obs_temp_comp_gain: """
+        return self._get_iio_attr("voltage2", "temp_comp_gain", False)
+
+    @obs_temp_comp_gain.setter
+    def obs_temp_comp_gain(self, value):
+        self._set_iio_attr("voltage2", "temp_comp_gain", False, value)
+
+    @property
+    def obs_quadrature_tracking_en(self):
+        """Enable Quadrature tracking calibration for OBS chan0"""
+        return self._get_iio_attr("voltage2", "quadrature_tracking_en", False)
+
+    @obs_quadrature_tracking_en.setter
+    def obs_quadrature_tracking_en(self, value):
+        self._set_iio_attr("voltage2", "quadrature_tracking_en", False, value)
 
     @property
     def obs_rf_port_select(self):

@@ -1,3 +1,4 @@
+import heapq
 import test.rf.spec as spec
 import time
 
@@ -5,28 +6,42 @@ import adi
 import numpy as np
 import pytest
 from numpy.fft import fft, fftfreq, fftshift
+from scipy import signal
+
+try:
+    from .plot_logger import gen_line_plot_html
+
+    do_html_log = True
+except:
+    do_html_log = False
 
 
-def dma_rx(uri, classname, channel):
-    """ dma_rx: Construct RX buffers and verify data is non-zero when pulled.
-        Collected buffer is of size 2**15 and 10 buffers are checked
+def dma_rx(uri, classname, channel, use_rx2=False):
+    """dma_rx: Construct RX buffers and verify data is non-zero when pulled.
+    Collected buffer is of size 2**15 and 10 buffers are checked
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through rx_enabled_channels
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through rx_enabled_channels
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     N = 2 ** 15
-    sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
-    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+
+    if use_rx2:
+        sdr.rx2_enabled_channels = channel if isinstance(channel, list) else [channel]
+        sdr.rx2_buffer_size = N * len(sdr.rx2_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
+        sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+
     try:
         for _ in range(10):
-            data = sdr.rx()
+            data = sdr.rx2() if use_rx2 else sdr.rx()
             if isinstance(data, list):
                 for chan in data:
                     assert np.sum(np.abs(chan)) > 0
@@ -39,18 +54,18 @@ def dma_rx(uri, classname, channel):
     del sdr
 
 
-def dma_tx(uri, classname, channel):
-    """ dma_tx: Construct TX buffers and verify no errors occur when pushed.
-        Buffer is of size 2**15 and 10 buffers are pushed
+def dma_tx(uri, classname, channel, use_tx2=False):
+    """dma_tx: Construct TX buffers and verify no errors occur when pushed.
+    Buffer is of size 2**15 and 10 buffers are pushed
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     TXFS = 1000
@@ -60,16 +75,24 @@ def dma_tx(uri, classname, channel):
     fc = 10000
     d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
 
-    if not isinstance(channel, list):
-        sdr.tx_enabled_channels = [channel]
+    if use_tx2:
+        if not isinstance(channel, list):
+            sdr.tx2_enabled_channels = [channel]
+        else:
+            sdr.tx2_enabled_channels = channel
+            d = [d] * len(channel)
+        sdr.tx2_buffer_size = N * len(sdr.tx2_enabled_channels)
     else:
-        sdr.tx_enabled_channels = channel
-        d = [d] * len(channel)
-    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+        if not isinstance(channel, list):
+            sdr.tx_enabled_channels = [channel]
+        else:
+            sdr.tx_enabled_channels = channel
+            d = [d] * len(channel)
+        sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
 
     try:
         for _ in range(10):
-            sdr.tx(d)
+            sdr.tx2(d) if use_tx2 else sdr.tx(d)
     except Exception as e:
         del sdr
         raise Exception(e)
@@ -79,18 +102,18 @@ def dma_tx(uri, classname, channel):
 
 def dma_dac_zeros(uri, classname, channel):
     """dma_dac_zeros: Test DMA digital loopback with a zeros.
-        This test requires a AD936x or similar device with internal loopback
-        modes. The TX cores are put into zero source mode in cases when no
-        output is desired
+    This test requires a AD936x or similar device with internal loopback
+    modes. The TX cores are put into zero source mode in cases when no
+    output is desired
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
@@ -121,20 +144,20 @@ def dma_dac_zeros(uri, classname, channel):
 
 
 def dma_loopback(uri, classname, channel):
-    """ dma_loopback: Test DMA digital loopback with a triangle waveforms.
-        This test requires a AD936x or similar device with internal loopback
-        modes. A triangle wave is generated on I and Q or real1 and real2
-        and multiple periods are compared for missing samples within a buffer
-        and delay between buffers.
+    """dma_loopback: Test DMA digital loopback with a triangle waveforms.
+    This test requires a AD936x or similar device with internal loopback
+    modes. A triangle wave is generated on I and Q or real1 and real2
+    and multiple periods are compared for missing samples within a buffer
+    and delay between buffers.
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
@@ -193,30 +216,145 @@ def freq_est(y, fs):
     return xf[indx]
 
 
-def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min):
-    """ dds_loopback: Test DDS loopback with connected loopback cables.
-        This test requires a devices with TX and RX onboard where the transmit
-        signal can be recovered. TX FPGA DDSs are used to generate a sinusoid
-        which is then estimated on the RX side. The receive tone must be within
-        1% of its expected frequency with a specified peak
+def dds_loopback(
+    uri,
+    classname,
+    param_set,
+    channel,
+    frequency,
+    scale,
+    peak_min,
+    use_obs=False,
+    use_rx2=False,
+):
+    """dds_loopback: Test DDS loopback with connected loopback cables.
+    This test requires a devices with TX and RX onboard where the transmit
+    signal can be recovered. TX FPGA DDSs are used to generate a sinusoid
+    which is then estimated on the RX side. The receive tone must be within
+    1% of its expected frequency with a specified peak
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            param_set: type=dict
-                Dictionary of attribute and values to be set before tone is
-                generated and received
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            frequency: type=integer
-                Frequency in Hz of transmitted tone
-            scale: type=float
-                Scale of DDS tone. Range [0,1]
-            peak_min: type=float
-                Minimum acceptable value of maximum peak in dBFS of received tone
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        frequency: type=integer
+            Frequency in Hz of transmitted tone
+        scale: type=float
+            Scale of DDS tone. Range [0,1]
+        peak_min: type=float
+            Minimum acceptable value of maximum peak in dBFS of received tone
+
+    """
+    # See if we can tone using DMAs
+    sdr = eval(classname + "(uri='" + uri + "')")
+    # Set custom device parameters
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+    # Set common buffer settings
+    sdr.tx_cyclic_buffer = True
+    N = 2 ** 14
+
+    if use_obs and use_rx2:
+        raise Exception("Both RX2 and OBS are selected. Select one at a time.")
+
+    if use_rx2:
+        sdr.rx2_enabled_channels = [channel]
+        sdr.rx2_buffer_size = N * 2 * len(sdr.rx2_enabled_channels)
+    elif use_obs:
+        sdr.obs.rx_enabled_channels = [0]
+        sdr.obs.rx_buffer_size = N * 2 * len(sdr.obs.rx_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = [channel]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
+    # Create a sinewave waveform
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    else:
+        RXFS = int(sdr.orx_sample_rate) if use_obs else int(sdr.rx_sample_rate)
+
+    sdr.dds_single_tone(frequency, scale, channel)
+
+    # Pass through SDR
+    try:
+        for _ in range(10):  # Wait
+            data = sdr.rx2() if use_rx2 else sdr.obs.rx() if use_obs else sdr.rx()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15, plot=False)
+    indx = np.argmax(tone_peaks)
+    diff = np.abs(tone_freqs[indx] - frequency)
+    s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
+    print(s)
+
+    if do_html_log:
+        pytest.data_log = {
+            "html": gen_line_plot_html(
+                tone_freqs,
+                tone_peaks,
+                "Frequency (Hz)",
+                "Amplitude (dBFS)",
+                "{} ({})".format(s, classname),
+            )
+        }
+
+    assert (frequency * 0.01) > diff
+    assert tone_peaks[indx] > peak_min
+
+
+def dds_two_tone(
+    uri,
+    classname,
+    channel,
+    param_set,
+    frequency1,
+    scale1,
+    peak_min1,
+    frequency2,
+    scale2,
+    peak_min2,
+):
+    """
+    dds_two_tone: Test DDS loopback with connected loopback cables.
+    This test requires a devices with TX and RX onboard where the transmit
+    signal can be recovered. TX FPGA DDSs are used to generate two sinusoids
+    which are then estimated on the RX side. The receive tones must be within
+    1% of its respective expected frequency with a specified peak.
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        frequency1: type=integer
+            Frequency in Hz of the first transmitted tone
+        scale1: type=float
+            Scale of the first DDS tone. Range [0,1]
+        peak_min1: type=float
+            Minimum acceptable value of maximum peak in dBFS of the received
+            first tone
+        frequency2: type=integer
+            Frequency in Hz of the second transmitted tone
+        scale2: type=float
+            Scale of the second DDS tone. Range [0,1]
+        peak_min2: type=float
+            Minimum acceptable value of maximum peak in dBFS of the received
+            second tone
 
     """
     # See if we can tone using DMAs
@@ -235,7 +373,7 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
 
     sdr.rx_enabled_channels = [channel]
     sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
-    sdr.dds_single_tone(frequency, scale, channel)
+    sdr.dds_dual_tone(frequency1, scale1, frequency2, scale2, channel)
 
     # Pass through SDR
     try:
@@ -245,36 +383,70 @@ def dds_loopback(uri, classname, param_set, channel, frequency, scale, peak_min)
         del sdr
         raise Exception(e)
     del sdr
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15, plot=False)
-    indx = np.argmax(tone_peaks)
-    diff = np.abs(tone_freqs[indx] - frequency)
-    print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
-    assert (frequency * 0.01) > diff
-    assert tone_peaks[indx] > peak_min
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    indx = heapq.nlargest(2, range(len(tone_peaks)), tone_peaks.__getitem__)
+    s1 = "Peak 1: " + str(tone_peaks[indx[0]]) + " @ " + str(tone_freqs[indx[0]])
+    s2 = "Peak 2: " + str(tone_peaks[indx[1]]) + " @ " + str(tone_freqs[indx[1]])
+    print(s1)
+    print(s2)
+
+    if do_html_log:
+        pytest.data_log = {
+            "html": gen_line_plot_html(
+                tone_freqs,
+                tone_peaks,
+                "Frequency (Hz)",
+                "Amplitude (dBFS)",
+                "{}\n{} ({})".format(s1, s2, classname),
+            )
+        }
+
+    if (abs(frequency1 - tone_freqs[indx[0]]) <= (frequency1 * 0.01)) and (
+        abs(frequency2 - tone_freqs[indx[1]]) <= (frequency2 * 0.01)
+    ):
+        diff1 = np.abs(tone_freqs[indx[0]] - frequency1)
+        diff2 = np.abs(tone_freqs[indx[1]] - frequency2)
+        # print(frequency1, frequency2)
+        # print(tone_freqs[indx[0]], tone_freqs[indx[1]])
+        # print(tone_peaks[indx[0]], tone_peaks[indx[1]])
+        # print(diff1, diff2)
+        assert (frequency1 * 0.01) > diff1
+        assert (frequency2 * 0.01) > diff2
+        assert tone_peaks[indx[0]] > peak_min1
+        assert tone_peaks[indx[1]] > peak_min2
+    elif (abs(frequency2 - tone_freqs[indx[0]]) <= (frequency2 * 0.01)) and (
+        abs(frequency1 - tone_freqs[indx[1]]) <= (frequency1 * 0.01)
+    ):
+        diff1 = np.abs(tone_freqs[indx[0]] - frequency2)
+        diff2 = np.abs(tone_freqs[indx[1]] - frequency1)
+        assert (frequency2 * 0.01) > diff1
+        assert (frequency1 * 0.01) > diff2
+        assert tone_peaks[indx[1]] > peak_min1
+        assert tone_peaks[indx[0]] > peak_min2
 
 
 def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
-    """ nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
-        This test requires a devices with TX and RX onboard where the transmit
-        signal can be recovered. TX/DAC internal NCOs are used to generate a sinusoid
-        which is then estimated on the RX side. The receive tone must be within
-        1% of its expected frequency with a specified peak
+    """nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
+    This test requires a devices with TX and RX onboard where the transmit
+    signal can be recovered. TX/DAC internal NCOs are used to generate a sinusoid
+    which is then estimated on the RX side. The receive tone must be within
+    1% of its expected frequency with a specified peak
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            param_set: type=dict
-                Dictionary of attribute and values to be set before tone is
-                generated and received
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            frequency: type=integer
-                Frequency in Hz of transmitted tone
-            peak_min: type=float
-                Minimum acceptable value of maximum peak in dBFS of received tone
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        frequency: type=integer
+            Frequency in Hz of transmitted tone
+        peak_min: type=float
+            Minimum acceptable value of maximum peak in dBFS of received tone
 
     """
     # See if we can tone using DMAs
@@ -292,7 +464,7 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     elif hasattr(sdr, "rx_sample_rate"):
         RXFS = int(sdr.rx_sample_rate)
     else:
-        """ no sample_rate nor rx_sample_rate. Let's try something like
+        """no sample_rate nor rx_sample_rate. Let's try something like
         rx($channel)_sample_rate"""
         attr = "rx" + str(channel) + "_sample_rate"
         RXFS = int(getattr(sdr, attr))
@@ -308,7 +480,19 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - frequency)
-    print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
+    s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
+    print(s)
+    if do_html_log:
+        pytest.data_log = {
+            "html": gen_line_plot_html(
+                tone_freqs,
+                tone_peaks,
+                "Frequency (Hz)",
+                "Amplitude (dBFS)",
+                "{} ({})".format(s, classname),
+            )
+        }
+
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
 
@@ -413,31 +597,44 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=False)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - fc)
-    print("Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx]))
+    s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
+    print(s)
+
+    if do_html_log:
+        pytest.data_log = {
+            "html": gen_line_plot_html(
+                tone_freqs,
+                tone_peaks,
+                "Frequency (Hz)",
+                "Amplitude (dBFS)",
+                "{} ({})".format(s, classname),
+            )
+        }
+
     assert (fc * 0.01) > diff
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def t_sfdr(uri, classname, channel, param_set, sfdr_min, full_scale=0.9):
-    """ t_sfdr: Test SFDR loopback of tone with connected loopback cables.
-        This test requires a devices with TX and RX onboard where the transmit
-        signal can be recovered. Sinuoidal data is passed to DMAs which is then
-        estimated on the RX side. The peak and second peak are determined in
-        the received signal to determine the sfdr.
+def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9):
+    """t_sfdr: Test SFDR loopback of tone with connected loopback cables.
+    This test requires a devices with TX and RX onboard where the transmit
+    signal can be recovered. Sinuoidal data is passed to DMAs which is then
+    estimated on the RX side. The peak and second peak are determined in
+    the received signal to determine the sfdr.
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            param_set: type=dict
-                Dictionary of attribute and values to be set before tone is
-                generated and received
-            sfdr_min: type=float
-                Minimum acceptable value of SFDR in dB
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+        sfdr_min: type=float
+            Minimum acceptable value of SFDR in dB
 
     """
     # See if we can tone using DMAs
@@ -451,8 +648,14 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, full_scale=0.9):
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
     sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
-    sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
+    if use_obs:
+        sdr.obs.rx_enabled_channels = [0]
+        sdr.obs.rx_buffer_size = N * 2 * len(sdr.obs.rx_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = [channel]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
@@ -472,40 +675,51 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, full_scale=0.9):
         sdr.tx(iq)
         time.sleep(3)
         for _ in range(10):  # Wait for IQ correction to stabilize
-            data = sdr.rx()
+            data = sdr.obs.rx() if use_obs else sdr.rx()
     except Exception as e:
         del sdr
         raise Exception(e)
     del sdr
-    val = spec.sfdr(data, plot=False)
+    val, amp, freqs = spec.sfdr(data, plot=False)
+    if do_html_log:
+        pytest.data_log = {
+            "html": gen_line_plot_html(
+                freqs,
+                amp,
+                "Frequency (Hz)",
+                "Amplitude (dBFS)",
+                "SDFR {} dBc ({})".format(val, classname),
+            )
+        }
+    print("SFDR:", val, "dB")
     assert val > sfdr_min
 
 
 def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi):
-    """ gain_check: Test DDS loopback with connected loopback cables and verify
-        calculated RSSI. This is only applicable for devices with RSSI calculations
-        onboard. This test also requires a devices with TX and RX onboard where the
-        transmit signal can be recovered. TX FPGA DDSs are used to generate a
-        sinusoid which is then received on the RX side. RSSI is captured during
-        this reception. The generated tone is at 10% RX sample rate.
+    """gain_check: Test DDS loopback with connected loopback cables and verify
+    calculated RSSI. This is only applicable for devices with RSSI calculations
+    onboard. This test also requires a devices with TX and RX onboard where the
+    transmit signal can be recovered. TX FPGA DDSs are used to generate a
+    sinusoid which is then received on the RX side. RSSI is captured during
+    this reception. The generated tone is at 10% RX sample rate.
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            param_set: type=dict
-                Dictionary of attribute and values to be set before tone is
-                generated and received
-            dds_scale: type=float
-                Scale of DDS tone. Range [0,1]
-            min_rssi: type=float
-                Minimum acceptable value of RSSI attribute
-            max_rssi: type=float
-                Maximum acceptable value of RSSI attribute
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+        dds_scale: type=float
+            Scale of DDS tone. Range [0,1]
+        min_rssi: type=float
+            Minimum acceptable value of RSSI attribute
+        max_rssi: type=float
+            Maximum acceptable value of RSSI attribute
 
     """
     # See if we can tone using DMAs
@@ -686,21 +900,21 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
 
 def cyclic_buffer(uri, classname, channel, param_set):
-    """ cyclic_buffer: Construct Cyclic TX buffers and verify
-        no errors occur when pushed. This is performed twice
-        without closing the context
+    """cyclic_buffer: Construct Cyclic TX buffers and verify
+    no errors occur when pushed. This is performed twice
+    without closing the context
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            param_set: type=dict
-                Dictionary of attribute and values to be set before tone is
-                generated
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated
     """
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -743,22 +957,22 @@ def cyclic_buffer(uri, classname, channel, param_set):
 
 
 def cyclic_buffer_exception(uri, classname, channel, param_set):
-    """ cyclic_buffer_exception: Construct Cyclic TX buffers and verify
-        errors occur when pushed. This is performed twice
-        without closing the context and with resetting the TX buffers
-        which should cause an exception
+    """cyclic_buffer_exception: Construct Cyclic TX buffers and verify
+    errors occur when pushed. This is performed twice
+    without closing the context and with resetting the TX buffers
+    which should cause an exception
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            param_set: type=dict
-                Dictionary of attribute and values to be set before tone is
-                generated
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated
     """
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -807,18 +1021,18 @@ def cyclic_buffer_exception(uri, classname, channel, param_set):
 
 
 def stress_context_creation(uri, classname, channel, repeats):
-    """ stress_context_creation: Repeatedly create and destroy a context
+    """stress_context_creation: Repeatedly create and destroy a context
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            repeats: type=integer
-                Number of times to re-create contexts
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        repeats: type=integer
+            Number of times to re-create contexts
     """
     for _ in range(repeats):
         # bi = BoardInterface(classname, devicename)
@@ -843,18 +1057,18 @@ def stress_context_creation(uri, classname, channel, repeats):
 
 
 def stress_rx_buffer_length(uri, classname, channel, buffer_sizes):
-    """ stress_rx_buffer_length: Repeatedly create and destroy buffers across different buffer sizes
+    """stress_rx_buffer_length: Repeatedly create and destroy buffers across different buffer sizes
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            buffer_sizes: type=list
-                List of buffer size to create and collect
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        buffer_sizes: type=list
+            List of buffer size to create and collect
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
@@ -878,18 +1092,18 @@ def stress_rx_buffer_length(uri, classname, channel, buffer_sizes):
 
 
 def stress_rx_buffer_creation(uri, classname, channel, repeats):
-    """ stress_rx_buffer_creation: Repeatedly create and destroy buffers
+    """stress_rx_buffer_creation: Repeatedly create and destroy buffers
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            repeats: type=integer
-                Number of times to re-create contexts
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        repeats: type=integer
+            Number of times to re-create contexts
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     N = 2 ** 15
@@ -912,18 +1126,18 @@ def stress_rx_buffer_creation(uri, classname, channel, repeats):
 
 
 def stress_tx_buffer_creation(uri, classname, channel, repeats):
-    """ stress_tx_buffer_creation: Repeatedly create and destroy TX buffers
+    """stress_tx_buffer_creation: Repeatedly create and destroy TX buffers
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            repeats: type=integer
-                Number of times to re-create buffers
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        repeats: type=integer
+            Number of times to re-create buffers
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     TXFS = 1000
@@ -949,3 +1163,125 @@ def stress_tx_buffer_creation(uri, classname, channel, repeats):
         raise Exception(e)
 
     del sdr
+
+
+def verify_underflow(uri, classname, channel, buffer_size, sample_rate):
+    """verify_overflow: Verify overflow flags occur as expected
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        buffer_size type=int
+            List of buffer size to create and collect
+        sample_rate=int
+            Value to set sample rate of device in samples per second
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    TXFS = 1000
+    N = buffer_size
+    ts = 1 / float(TXFS)
+    t = np.arange(0, N * ts, ts)
+    fc = 10000
+    d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+
+    if not isinstance(channel, list):
+        sdr.tx_enabled_channels = [channel]
+    else:
+        sdr.tx_enabled_channels = channel
+        d = [d] * len(channel)
+    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+
+    # Set low rate so we can keep up
+    sdr.sample_rate = sample_rate
+    # Clear status register
+    sdr._rxadc.reg_write(0x80000088, 0x6)
+
+    # Flush
+    sdr.tx(d)
+    for k in range(30):
+        v = sdr._txdac.reg_read(0x80000088)
+        if v & 1:
+            sdr._txdac.reg_write(0x80000088, v)
+
+    for _ in range(5):
+        sdr.tx(d)
+    v = sdr._txdac.reg_read(0x80000088)
+    if v & 1:
+        del sdr
+        assert 0, "Unexpected underflow occurred"
+
+    # Force an underflow
+    sdr.tx(d)
+    underflow_occured = False
+    time.sleep(30)
+    sdr.tx(d)
+    for k in range(30):
+        v = sdr._txdac.reg_read(0x80000088)
+        if v & 1:
+            underflow_occured = True
+            sdr._txdac.reg_write(0x80000088, v)  # Clear
+
+    del sdr
+    assert underflow_occured, "No underflow occurred, but one was expected"
+
+
+def verify_overflow(uri, classname, channel, buffer_size, sample_rate):
+    """verify_overflow: Verify overflow flags occur as expected
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        buffer_size type=int
+            List of buffer size to create and collect
+        sample_rate=int
+            Value to set sample rate of device in samples per second
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
+    sdr.rx_buffer_size = 2 ** 20
+
+    # Set low rate so we can keep up
+    sdr.sample_rate = sample_rate
+    # Clear status register
+    sdr._rxadc.reg_write(0x80000088, 0x6)
+
+    v = sdr._rxadc.reg_read(0x80000088)
+
+    # Flush
+    _ = sdr.rx()
+    for k in range(100):
+        v = sdr._rxadc.reg_read(0x80000088)
+        if v & 4:
+            # print(f"Overflow 1 {v} {k}")
+            sdr._rxadc.reg_write(0x80000088, v)
+
+    _ = sdr.rx()
+    for k in range(30):
+        v = sdr._rxadc.reg_read(0x80000088)
+        if v & 4:
+            del sdr
+            assert 0, "Unexpected overflow occurred"
+
+    # Force an overflow
+    _ = sdr.rx()
+    overflow_occured = False
+    time.sleep(10)
+    for k in range(30):
+        v = sdr._rxadc.reg_read(0x80000088)
+        if v & 4:
+            overflow_occured = True
+            sdr._rxadc.reg_write(0x80000088, v)  # Clear
+
+    del sdr
+
+    assert overflow_occured, "No overflow occurred, but one was expected"
