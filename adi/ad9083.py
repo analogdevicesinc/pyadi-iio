@@ -65,7 +65,11 @@ class ad9083(rx, context_manager):
     @property
     def rx_sample_rate(self):
         """rx_sampling_frequency: Sample rate after decimation"""
-        return self._get_iio_attr("voltage0_i", "sampling_frequency", False, self._rxadc)
+        return self._get_iio_attr(
+            "voltage0_i",
+            "sampling_frequency",
+            False,
+            self._rxadc)
 
     @property
     def nco0_frequency(self):
@@ -74,7 +78,12 @@ class ad9083(rx, context_manager):
 
     @nco0_frequency.setter
     def nco0_frequency(self, value):
-        self._set_iio_attr_int("altvoltage0", "frequency", True, int(value), self._rxadc)
+        self._set_iio_attr_int(
+            "altvoltage0",
+            "frequency",
+            True,
+            int(value),
+            self._rxadc)
 
     @property
     def nco1_frequency(self):
@@ -83,7 +92,12 @@ class ad9083(rx, context_manager):
 
     @nco1_frequency.setter
     def nco1_frequency(self, value):
-        self._set_iio_attr_int("altvoltage1", "frequency", True, int(value), self._rxadc)
+        self._set_iio_attr_int(
+            "altvoltage1",
+            "frequency",
+            True,
+            int(value),
+            self._rxadc)
 
     @property
     def nco2_frequency(self):
@@ -92,7 +106,12 @@ class ad9083(rx, context_manager):
 
     @nco2_frequency.setter
     def nco2_frequency(self, value):
-        self._set_iio_attr_int("altvoltage2", "frequency", True, int(value), self._rxadc)
+        self._set_iio_attr_int(
+            "altvoltage2",
+            "frequency",
+            True,
+            int(value),
+            self._rxadc)
 
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""

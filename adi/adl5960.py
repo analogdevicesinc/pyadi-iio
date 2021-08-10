@@ -34,6 +34,7 @@
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
+
 class adl5960(attribute, context_manager):
     """ADL5960 10 MHz to 20 GHz, Integrated Vector Network Analyzer Front-End
 
@@ -73,7 +74,8 @@ class adl5960(attribute, context_manager):
     @property
     def lo_mode_available(self):
         """Get available LO modes"""
-        return self._get_iio_attr_str("altvoltage0", "mode_available", False, self._ctrl)
+        return self._get_iio_attr_str(
+            "altvoltage0", "mode_available", False, self._ctrl)
 
     @property
     def lo_mode(self):
@@ -95,7 +97,12 @@ class adl5960(attribute, context_manager):
     @offset_frequency.setter
     def offset_frequency(self, value):
         """Get/Set the Frequency in Hz"""
-        self._set_iio_attr_int("altvoltage1", "offset_frequency", False, int(value), self._ctrl)
+        self._set_iio_attr_int(
+            "altvoltage1",
+            "offset_frequency",
+            False,
+            int(value),
+            self._ctrl)
 
     @property
     def if_frequency(self):
@@ -105,12 +112,21 @@ class adl5960(attribute, context_manager):
     @if_frequency.setter
     def if_frequency(self, value):
         """Get/Set the IF Frequency in Hz"""
-        self._set_iio_attr_int("altvoltage1", "if_frequency", False, int(value), self._ctrl)
+        self._set_iio_attr_int(
+            "altvoltage1",
+            "if_frequency",
+            False,
+            int(value),
+            self._ctrl)
 
     @property
     def offset_mode_available(self):
         """Get available offset modes"""
-        return self._get_iio_attr_str("altvoltage1", "offset_mode_available", False, self._ctrl)
+        return self._get_iio_attr_str(
+            "altvoltage1",
+            "offset_mode_available",
+            False,
+            self._ctrl)
 
     @property
     def offset_mode(self):
@@ -132,7 +148,12 @@ class adl5960(attribute, context_manager):
     @forward_gain.setter
     def forward_gain(self, value):
         """Get/Set Forward Gain"""
-        self._set_iio_attr_int("voltage0", "forward_hardwaregain", True, int(value), self._ctrl)
+        self._set_iio_attr_int(
+            "voltage0",
+            "forward_hardwaregain",
+            True,
+            int(value),
+            self._ctrl)
 
     # Reflected
 
@@ -144,19 +165,33 @@ class adl5960(attribute, context_manager):
     @reflected_gain.setter
     def reflected_gain(self, value):
         """Get/Set Reflected Gain"""
-        self._set_iio_attr_int("voltage1", "reverse_hardwaregain", True, int(value), self._ctrl)
+        self._set_iio_attr_int(
+            "voltage1",
+            "reverse_hardwaregain",
+            True,
+            int(value),
+            self._ctrl)
 
     # IF Filter cutoff
 
     @property
     def if_filter_cutoff(self):
         """Get/Set LPF 3db cutoff frequency (controls CIF1, CIF2)"""
-        return self._get_iio_attr("voltage0", "filter_low_pass_3db_frequency", True, self._ctrl)
+        return self._get_iio_attr(
+            "voltage0",
+            "filter_low_pass_3db_frequency",
+            True,
+            self._ctrl)
 
     @if_filter_cutoff.setter
     def if_filter_cutoff(self, value):
         """Get/Set LPF 3db cutoff frequency (controls CIF1, CIF2)"""
-        self._set_iio_attr_int("voltage0", "filter_low_pass_3db_frequency", True, int(value), self._ctrl)
+        self._set_iio_attr_int(
+            "voltage0",
+            "filter_low_pass_3db_frequency",
+            True,
+            int(value),
+            self._ctrl)
 
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""

@@ -34,6 +34,7 @@
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
+
 class admv8818(attribute, context_manager):
     """ADMV8818 2 GHz to 18 GHz, Digitally Tunable, High-Pass and Low-Pass Filter
 
@@ -59,22 +60,40 @@ class admv8818(attribute, context_manager):
     @property
     def low_pass_3db_frequency(self):
         """Get/Set the Low Pass 3dB Frequency in MHz"""
-        return self._get_iio_attr("altvoltage0", "filter_low_pass_3db_frequency", True, self._ctrl)
+        return self._get_iio_attr(
+            "altvoltage0",
+            "filter_low_pass_3db_frequency",
+            True,
+            self._ctrl)
 
     @low_pass_3db_frequency.setter
     def low_pass_3db_frequency(self, value):
         """Get/Set the Low Pass 3dB Frequency in MHz"""
-        self._set_iio_attr_int("altvoltage0", "filter_low_pass_3db_frequency", True, int(value), self._ctrl)
+        self._set_iio_attr_int(
+            "altvoltage0",
+            "filter_low_pass_3db_frequency",
+            True,
+            int(value),
+            self._ctrl)
 
     @property
     def high_pass_3db_frequency(self):
         """Get/Set the Low Pass 3dB Frequency in MHz"""
-        return self._get_iio_attr("altvoltage0", "filter_high_pass_3db_frequency", True, self._ctrl)
+        return self._get_iio_attr(
+            "altvoltage0",
+            "filter_high_pass_3db_frequency",
+            True,
+            self._ctrl)
 
     @high_pass_3db_frequency.setter
     def high_pass_3db_frequency(self, value):
         """Get/Set the Low Pass 3dB Frequency in MHz"""
-        self._set_iio_attr_int("altvoltage0", "filter_high_pass_3db_frequency", True, int(value), self._ctrl)
+        self._set_iio_attr_int(
+            "altvoltage0",
+            "filter_high_pass_3db_frequency",
+            True,
+            int(value),
+            self._ctrl)
 
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""

@@ -34,6 +34,7 @@
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
+
 class genmux(attribute, context_manager):
     """GEN-MUX Generic IIO Mux device
 
@@ -70,4 +71,3 @@ class genmux(attribute, context_manager):
     def select(self, value):
         """Get/Set the MUX select"""
         self._set_iio_dev_attr_str("mux_select", value, self._ctrl)
-

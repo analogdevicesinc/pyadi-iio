@@ -34,6 +34,7 @@
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
+
 class adrf5720(attribute, context_manager):
     """ADRF5720 0.5 dB LSB, 6-Bit, Silicon Digital Attenuator, 9 kHz to 40 GHz
 
@@ -64,5 +65,5 @@ class adrf5720(attribute, context_manager):
     @attenuation.setter
     def attenuation(self, value):
         """Get/Set the hardwaregain in dB"""
-        self._set_iio_attr("voltage0", "hardwaregain", True, -1 * abs(value), self._ctrl)
-
+        self._set_iio_attr("voltage0", "hardwaregain",
+                           True, -1 * abs(value), self._ctrl)
