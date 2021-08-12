@@ -14,6 +14,7 @@ from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
 from test.html import pytest_html_report_title, pytest_runtest_makereport
+from test.scpi import dcxo_calibrate
 
 import adi
 import numpy as np
@@ -127,6 +128,11 @@ def test_hardwaregain(request):
 @pytest.fixture()
 def test_harmonics(request):
     yield harmonic_vals
+
+
+@pytest.fixture()
+def test_dcxo_calibration(request):
+    yield dcxo_calibrate
 
 
 @pytest.fixture()
