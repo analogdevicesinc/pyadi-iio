@@ -55,7 +55,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
 def find_peaks_cust(x, num_peaks=4):
 
     loc = argmax(x)
-    print(x[loc : loc + 10])
+    print(x[loc: loc + 10])
     for p in range(1, num_peaks):
         l_loc = loc - 1
         r_loc = loc + 1
