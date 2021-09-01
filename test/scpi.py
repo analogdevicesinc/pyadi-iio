@@ -1,4 +1,5 @@
 import time
+from weakref import finalize
 
 import iio
 
@@ -55,7 +56,6 @@ def select_channel(instr):
 
 def get_freq(instr):
     # set gate time to 600 for better precision
-    instr.write("SMT600")
     xmt = select_channel(instr)
     frq_str = xmt.split(" ", 2)
     scale = 1
@@ -75,7 +75,7 @@ def get_clk_rate(classname, iio_uri):
 
     full_uri = iio_uri.split(":", 2)
     if full_uri[0] != "ip":
-        print("Tuning currently supported only for ip URIs")
+        pytest.skip("Tuning currently supported only for ip URIs")
     ip = full_uri[1]
 
     ssh_client = paramiko.SSHClient()
@@ -93,14 +93,89 @@ def get_clk_rate(classname, iio_uri):
     return float(clk_rate)
 
 
+def save_to_eeprom(iio_uri, coarse, fine):
+    full_uri = iio_uri.split(":", 2)
+    if full_uri[0] != "ip":
+        pytest.skip("Tuning currently supported only for ip URIs")
+    ip = full_uri[1]
+
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh_client.connect(ip, username="root", password="analog")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
+        "find /sys/ -name eeprom"
+    )
+    eeprom_path = ssh_stdout.readline().rstrip("\n")
+
+    if ssh_stderr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException("find_eeprom command did not execute properly")
+
+    hc = hex(coarse).lstrip("0x").rstrip("L")
+    if coarse <= 16:
+        hc = "0" + hc
+    hf = hex(fine).lstrip("0x").rstrip("L")
+    h = hc + hf
+    cmd = (
+        "fru-dump -i " + eeprom_path + " -o " + eeprom_path + " -t " + str(h) + " 2>&1"
+    )
+    sshin, sshout, ssherr = ssh_client.exec_command(cmd)
+    if ssherr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException("fru-dump command did not execute properly")
+
+    ssh_client.close()
+
+
+def load_from_eeprom(iio_uri):
+    full_uri = iio_uri.split(":", 2)
+    if full_uri[0] != "ip":
+        pytest.skip("Tuning currently supported only for ip URIs")
+    ip = full_uri[1]
+
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh_client.connect(ip, username="root", password="analog")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
+        "find /sys/ -name eeprom"
+    )
+    eeprom_path = ssh_stdout.readline().rstrip("\n")
+
+    if ssh_stderr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException("find_eeprom command did not execute properly")
+
+    cmdin, cmdout, cmderr = ssh_client.exec_command(
+        "fru-dump -i " + eeprom_path + " -b"
+    )
+    if cmderr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException(
+            "fru-dump board info command did not execute properly"
+        )
+
+    field = cmdout.readline()
+    k = 0
+    while field[:6] != "Tuning":
+        field = cmdout.readline()
+        k += 1
+        # in case tuning parameters are not set, we shouldn't stay in the loop
+        if k >= 20:
+            print("No saved tuning values were found. Using defaults.")
+
+    field = field[6:].lstrip(" \t: ")
+    coarse = int("0x" + field[:2], 16)
+    fine = int("0x" + field[2:], 16)
+    return coarse, fine
+
+
 def dcxo_calibrate(classname, iio_uri):
     prev_diff = 0
     diff = 0
-    coarse = 0
-    fine = 4095
     finetune = False
     step = 1
     direction = -2
+    coarse, fine = load_from_eeprom(iio_uri)
+    # setting initial values at half the value from eeprom to make the tuning process faster
+    coarse = round(coarse / 2)
+    fine = 4095 + round((fine - 4090) / 2)
+
     instr = find_instrument()
     if instr is None:
         pytest.skip("No supported instrument found")
@@ -116,7 +191,7 @@ def dcxo_calibrate(classname, iio_uri):
 
         prev_diff = diff
         diff = target_frq - current_frq
-        if round(diff) == 0:
+        if abs(round(diff)) < 20:
             print("Close to target value:", current_frq)
             break
         if direction == -2:
@@ -142,5 +217,6 @@ def dcxo_calibrate(classname, iio_uri):
             pytest.fail("Outside tuning bounds")
             break
 
+    save_to_eeprom(iio_uri, coarse, fine)
     # End clean
     del sdr
