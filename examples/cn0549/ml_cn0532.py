@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-from tensorflow import keras
 from keras import losses, metrics, optimizers
 from keras.layers import Dense, Dropout, Flatten, Input
 from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.models import Model, Sequential
 from keras.utils import np_utils
 from scipy import signal
+from tensorflow import keras
 
 
 def readfile(filename, label):
@@ -135,9 +135,7 @@ def create_model_cnn(x_train, y_train, x_test, y_test, n_outputs):
     # Compile
     opt = keras.optimizers.Adam()
     model.compile(
-        loss=losses.categorical_crossentropy,
-        optimizer=opt,
-        metrics=["accuracy"],
+        loss=losses.categorical_crossentropy, optimizer=opt, metrics=["accuracy"],
     )
     print(model.summary())
     # Train and test
@@ -162,5 +160,5 @@ converter = tf.lite.TFLiteConverter.from_keras_model(model)
 tflite_model = converter.convert()
 
 # Save the model.
-with open('model.tflite', 'wb') as f:
-  f.write(tflite_model)
+with open("model.tflite", "wb") as f:
+    f.write(tflite_model)
