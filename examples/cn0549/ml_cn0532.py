@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+from tensorflow import keras
 from keras import losses, metrics, optimizers
 from keras.layers import Dense, Dropout, Flatten, Input
 from keras.layers.convolutional import Conv2D, MaxPooling2D
@@ -132,9 +133,10 @@ def create_model_cnn(x_train, y_train, x_test, y_test, n_outputs):
     model.add(Dropout(0.1))
     model.add(Dense(num_classes, activation="softmax"))
     # Compile
+    opt = keras.optimizers.Adam()
     model.compile(
         loss=losses.categorical_crossentropy,
-        optimizer=optimizers.adam(),
+        optimizer=opt,
         metrics=["accuracy"],
     )
     print(model.summary())
@@ -143,12 +145,22 @@ def create_model_cnn(x_train, y_train, x_test, y_test, n_outputs):
         x_train,
         y_train,
         batch_size=8,
-        epochs=100,
+        epochs=40,
         verbose=1,
         validation_data=(x_test, y_test),
     )
 
+    return model
+
 
 # Import data and run model
 x_train, y_train, x_test, y_test, num_classes = get_data()
-create_model_cnn(x_train, y_train, x_test, y_test, num_classes)
+model = create_model_cnn(x_train, y_train, x_test, y_test, num_classes)
+
+# Export to TFlite
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+tflite_model = converter.convert()
+
+# Save the model.
+with open('model.tflite', 'wb') as f:
+  f.write(tflite_model)
