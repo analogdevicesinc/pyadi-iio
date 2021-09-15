@@ -211,7 +211,7 @@ class rx(attribute):
         self.__rxbuf.refill()
         data = self.__rxbuf.read()
 
-        if len(self._rx_data_type) > 1:
+        if isinstance(self._rx_data_type, list):
             return self.__multi_type_rx(data)
 
         x = np.frombuffer(data, dtype=self._rx_data_type)
