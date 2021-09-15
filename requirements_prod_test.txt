@@ -1,0 +1,16 @@
+black
+codespell
+flake8
+pre-commit
+isort
+pytest>=4.6
+scapy
+scipy
+pytest-cov
+coveralls
+pytest-libiio
+bump2version
+pytest-html
+plotly-express
+pyvisa
+tkinter
