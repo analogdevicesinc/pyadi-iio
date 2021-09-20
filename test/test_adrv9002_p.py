@@ -93,24 +93,8 @@ def test_adrv9002_boolean_attr(
         ("tx_ensm_mode_chan1", ["calibrated", "primed", "rf_enabled"]),
         ("rx_ensm_mode_chan0", ["calibrated", "primed", "rf_enabled"]),
         ("rx_ensm_mode_chan1", ["calibrated", "primed", "rf_enabled"]),
-        (
-            "digital_gain_control_mode_chan0",
-            [
-                "Gain_Correction_manual_control",
-                "Gain_Compensation_manual_control",
-                "Gain_Correction_automatic_control",
-                "Gain_Compensation_automatic_control",
-            ],
-        ),
-        (
-            "digital_gain_control_mode_chan1",
-            [
-                "Gain_Correction_manual_control",
-                "Gain_Compensation_manual_control",
-                "Gain_Correction_automatic_control",
-                "Gain_Compensation_automatic_control",
-            ],
-        ),
+        ("digital_gain_control_mode_chan0", ["automatic", "spi"]),
+        ("digital_gain_control_mode_chan1", ["automatic", "spi"]),
         ("gain_control_mode_chan0", ["pin", "automatic", "spi"]),
         ("gain_control_mode_chan1", ["pin", "automatic", "spi"]),
         ("atten_control_mode_chan0", ["bypass", "pin", "spi"]),
@@ -124,41 +108,6 @@ def test_adrv9002_str_attr(
 
 
 #########################################
-# baseband rx sample rate should be > 1MHz to run this test
-
-
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize(
-    "attr, val, depends",
-    [
-        (
-            "interface_gain_chan0",
-            ["-36dB", "-30dB", "-24dB", "-18dB", "-12dB", "-6dB", "0dB"],
-            dict(
-                digital_gain_control_mode_chan0="Gain_Compensation_manual_control",
-                rx_ensm_mode_chan0="rf_enabled",
-            ),
-        ),
-        (
-            "interface_gain_chan1",
-            ["-36dB", "-30dB", "-24dB", "-18dB", "-12dB", "-6dB", "0dB"],
-            dict(
-                digital_gain_control_mode_chan1="Gain_Compensation_manual_control",
-                rx_ensm_mode_chan1="rf_enabled",
-            ),
-        ),
-    ],
-)
-def test_adrv9002_interface_gain_wideband(
-    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
-):
-    test_attribute_multipe_values_with_depends(
-        iio_uri, classname, attr, depends, val, 0
-    )
-
-
-#########################################
 # baseband rx sample rate should be < 1MHz to run this test
 
 
@@ -169,56 +118,16 @@ def test_adrv9002_interface_gain_wideband(
     [
         (
             "interface_gain_chan0",
-            [
-                "-36dB",
-                "-30dB",
-                "-24dB",
-                "-18dB",
-                "-12dB",
-                "-6dB",
-                "0dB",
-                "6dB",
-                "12dB",
-                "18dB",
-            ],
-            dict(
-                digital_gain_control_mode_chan0="Gain_Compensation_manual_control",
-                rx_ensm_mode_chan0="rf_enabled",
-            ),
-        ),
-        (
-            "interface_gain_chan1",
-            [
-                "-36dB",
-                "-30dB",
-                "-24dB",
-                "-18dB",
-                "-12dB",
-                "-6dB",
-                "0dB",
-                "6dB",
-                "12dB",
-                "18dB",
-            ],
-            dict(
-                digital_gain_control_mode_chan0="Gain_Compensation_manual_control",
-                rx_ensm_mode_chan0="rf_enabled",
-            ),
-        ),
-        (
-            "interface_gain_chan0",
             ["0dB", "6dB", "12dB", "18dB"],
             dict(
-                digital_gain_control_mode_chan0="Gain_Correction_manual_control",
-                rx_ensm_mode_chan0="rf_enabled",
+                digital_gain_control_mode_chan0="spi", rx_ensm_mode_chan0="rf_enabled",
             ),
         ),
         (
             "interface_gain_chan1",
             ["0dB", "6dB", "12dB", "18dB"],
             dict(
-                digital_gain_control_mode_chan0="Gain_Correction_manual_control",
-                rx_ensm_mode_chan0="rf_enabled",
+                digital_gain_control_mode_chan1="spi", rx_ensm_mode_chan1="rf_enabled",
             ),
         ),
     ],
