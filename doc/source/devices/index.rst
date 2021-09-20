@@ -22,6 +22,7 @@ Supported Devices
    adi.adar1000
    adi.adf4371
    adi.adis16460
+   adi.adis16495
    adi.adis16507
    adi.adpd410x
    adi.adpd188
