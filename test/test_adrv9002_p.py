@@ -3,7 +3,7 @@ from os.path import dirname, join, realpath
 
 import pytest
 
-hardware = ["adrv9002-rx1tx1", "adrv9002-rx2tx2"]
+hardware = "adrv9002"
 classname = "adi.adrv9002"
 profile_path = dirname(realpath(__file__)) + "/adrv9002_profiles/"
 nco_test_profile = profile_path + "lte_10_lvds_nco_api_48_26_4.json"
@@ -239,66 +239,46 @@ def test_adrv9002_nco(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware[0])
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0])
-def test_adrv9002_tx_data_rx1tx1(test_dma_tx, iio_uri, classname, channel):
-    test_dma_tx(iio_uri, classname, channel)
-
-
-#########################################
-@pytest.mark.iio_hardware(hardware[1])
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
-@pytest.mark.parametrize("use_tx2", [True])
-def test_adrv9002_tx_data_rx2tx2(test_dma_tx, iio_uri, classname, channel, use_tx2):
+@pytest.mark.parametrize("use_tx2", [False, True])
+def test_adrv9002_tx_data(test_dma_tx, iio_uri, classname, channel, use_tx2):
+    import adi
+
+    # The point here is to skip tests that do not make sense. For combined DMA
+    # we do not have any tx2/rx2 devices so that the test would fail with tx2/rx2 flags.
+    # For split mode, we just have one complex channel per device so that the tests with
+    # channel > 0 would also fail. This logic is also used in the rest of the DMA
+    # tests.
+    sdr = adi.adrv9002(iio_uri)
+    if sdr._tx_dma_mode == "combined" and use_tx2:
+        pytest.skip("Combined DMA mode does not have TX2 DDS")
+    elif sdr._tx_dma_mode == "split" and channel > 0:
+        pytest.skip("Split DMA mode does not have more than one channel per DDS")
+
     test_dma_tx(iio_uri, classname, channel, use_tx2)
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware[0])
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0])
-def test_adrv9002_rx_data_rx1tx1(test_dma_rx, iio_uri, classname, channel):
-    test_dma_rx(iio_uri, classname, channel)
-
-
-#########################################
-@pytest.mark.iio_hardware(hardware[1])
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
-@pytest.mark.parametrize("use_rx2", [True])
-def test_adrv9002_rx_data_rx2tx2(test_dma_rx, iio_uri, classname, channel, use_rx2):
+@pytest.mark.parametrize("use_rx2", [False, True])
+def test_adrv9002_rx_data(test_dma_rx, iio_uri, classname, channel, use_rx2):
+    import adi
+
+    sdr = adi.adrv9002(iio_uri)
+    if sdr._rx_dma_mode == "combined" and use_rx2:
+        pytest.skip("Combined DMA mode does not have RX2 ADC")
+    elif sdr._rx_dma_mode == "split" and channel > 0:
+        pytest.skip("Split DMA mode does not have more than one channel per ADC")
+
     test_dma_rx(iio_uri, classname, channel, use_rx2)
 
 
-########################################
-@pytest.mark.iio_hardware(hardware[0])
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0])
-@pytest.mark.parametrize(
-    "param_set",
-    [
-        dict(
-            tx0_lo=1000000000,
-            rx0_lo=1000000000,
-            tx1_lo=1000000000,
-            rx1_lo=1000000000,
-            rx_ensm_mode_chan0="rf_enabled",
-            rx_ensm_mode_chan1="rf_enabled",
-            tx_hardwaregain_chan0=-20,
-            tx_hardwaregain_chan1=-20,
-            tx_ensm_mode_chan0="rf_enabled",
-            tx_ensm_mode_chan1="rf_enabled",
-        )
-    ],
-)
-def test_adrv9002_cw_loopback(test_cw_loopback, iio_uri, classname, channel, param_set):
-    test_cw_loopback(iio_uri, classname, channel, param_set)
-
-
 #########################################
-@pytest.mark.iio_hardware(hardware[1])
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -322,4 +302,13 @@ def test_adrv9002_cw_loopback(test_cw_loopback, iio_uri, classname, channel, par
 def test_adrv9002_cw_loopback_split_dma(
     test_cw_loopback, iio_uri, classname, channel, param_set, use_tx2rx2
 ):
+    import adi
+
+    sdr = adi.adrv9002(iio_uri)
+    # it's safe to only look at TX as we cannot TX in MIMO and RX in split mode
+    if sdr._tx_dma_mode == "combined" and use_tx2rx2:
+        pytest.skip("Combined DMA mode does not have RX2/TX2 ADC/DDS")
+    elif sdr._tx_dma_mode == "split" and channel > 0:
+        pytest.skip("Split DMA mode does not have more than one channel per ADC/DDS")
+
     test_cw_loopback(iio_uri, classname, channel, param_set, use_tx2rx2, use_tx2rx2)
