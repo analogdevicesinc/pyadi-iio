@@ -71,6 +71,8 @@ from adi.daq3 import DAQ3
 
 from adi.adis16460 import adis16460
 
+from adi.adis16495 import adis16495
+
 from adi.adis16507 import adis16507
 
 from adi.ad7124 import ad7124
