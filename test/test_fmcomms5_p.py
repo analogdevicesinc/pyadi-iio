@@ -10,7 +10,7 @@ classname = "adi.FMComms5"
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
-        ("tx_hardwaregain", -86, 0.0, 0.25, 0),
+        ("tx_hardwaregain_chan0", -86, 0.0, 0.25, 0),
         ("rx_lo", 70000000, 6000000000, 1, 8),
         ("tx_lo", 47000000, 6000000000, 1, 8),
         ("sample_rate", 2084000, 61440000, 1, 4),
@@ -162,7 +162,7 @@ def test_fmcomms5_iq_loopback(test_iq_loopback, iio_uri, classname, channel, par
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
-        ("tx_hardwaregain_chip_b", -86, 0.0, 0.25, 0),
+        ("tx_hardwaregain_chip_b_chan0", -86, 0.0, 0.25, 0),
         ("rx_lo_chip_b", 70000000, 6000000000, 1, 8),
         ("tx_lo_chip_b", 47000000, 6000000000, 1, 8),
         ("sample_rate", 2084000, 61440000, 1, 4),
@@ -247,7 +247,7 @@ def test_fmcomms5_dds_chip_b_loopback(
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [3])
+@pytest.mark.parametrize("channel", [2])
 @pytest.mark.parametrize(
     "param_set",
     [
