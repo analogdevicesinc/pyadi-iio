@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Attributes &mdash; Analog Devices Hardware Python Interfaces 0.0.9 documentation</title>
+  <title>ad9083 &mdash; Analog Devices Hardware Python Interfaces 0.0.9 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,9 +17,7 @@
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Examples" href="../guides/examples.html" />
-    <link rel="prev" title="Quick Start" href="../guides/quick.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,12 +35,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../devices/index.html">Supported Devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Supported Devices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/index.html">Developers</a></li>
@@ -63,9 +61,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Attributes</li>
+      <li>ad9083</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/attr/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/devices/adi.ad9083.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -73,37 +71,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="attributes">
-<h1>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h1>
-<p>To simplify hardware configuration through different IIO drivers, basic class properties are exposed at the top-level of each device specific class. These properties abstract away the need to know a specific channel name, attribute type, source device name, and other details required in the libIIO API. Instead properties have easy to understand names, documentation, and error handling to help manage interfacing with different hardware. Property data can be read and written as follows from a given device interface class:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+  <section id="module-adi.ad9083">
+<span id="ad9083"></span><h1>ad9083<a class="headerlink" href="#module-adi.ad9083" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad9083.ad9083">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.ad9083.</span></span><span class="sig-name descname"><span class="pre">ad9083</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9083.ad9083" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>AD9083 High-Speed Multi-channel ADC</p>
+</dd></dl>
 
-<span class="n">lidar</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">fmclidar1</span><span class="p">()</span>
-<span class="c1"># Read current pulse width</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">lidar</span><span class="o">.</span><span class="n">laser_pulse_width</span><span class="p">)</span>
-<span class="c1"># Change laser frequency to 1 MHz</span>
-<span class="n">lidar</span><span class="o">.</span><span class="n">laser_frequency</span> <span class="o">=</span> <span class="mi">1000000</span>
-</pre></div>
-</div>
-<p>If more detail is required about a specific property it can be directly inspected in the class definitions documnentation or in python itself through the help methods:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python3
-&gt;&gt;&gt; import adi
-&gt;&gt;&gt; help(adi.Pluto.gain_control_mode_chan0)
-Help on property:
-    gain_control_mode_chan0: Mode of receive path AGC. Options are:
-    slow_attack, fast_attack, manual
-</pre></div>
-</div>
-<p>For complete documentation about class properties reference the <a class="reference internal" href="../devices/index.html"><span class="doc">supported devices</span></a> classes.</p>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../guides/quick.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../guides/examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

@@ -1,73 +1,34 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Developers &mdash; Analog Devices Hardware Python Interfaces 0.0.8 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Developers &mdash; Analog Devices Hardware Python Interfaces 0.0.9 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Attribute Tests" href="test_attr.html" />
     <link rel="prev" title="FPGA Features" href="../fpga/index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> Analog Devices Hardware Python Interfaces
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -75,18 +36,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
@@ -118,80 +68,39 @@
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Analog Devices Hardware Python Interfaces</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Developers</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/dev/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="developers">
-<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="developers">
+<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this headline"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This section is only for developers and advanced users.</p>
 </div>
 <p>When submitting code or running tests, there are a few ways things are done in pyadi-iio.</p>
-<div class="section" id="invoke">
-<h2>Invoke<a class="headerlink" href="#invoke" title="Permalink to this headline">¶</a></h2>
+<section id="invoke">
+<h2>Invoke<a class="headerlink" href="#invoke" title="Permalink to this headline"></a></h2>
 <p>To make repetitve tasks easier, pyadi-iio utilizes pyinvoke. To see the available options (once pyinvoke is installed) run:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke --list</span>
 <span class="go">Available tasks:</span>
@@ -207,9 +116,9 @@
 <span class="go">  test            Run pytest tests</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="precommit">
-<h2>Precommit<a class="headerlink" href="#precommit" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="precommit">
+<h2>Precommit<a class="headerlink" href="#precommit" title="Permalink to this headline"></a></h2>
 <p><strong>pre-commit</strong> is heavily relied on for keeping code in order and for eliminating certain bugs. Be sure to run these checks before submitting code. This can be run through pyinvoke or directly from the repo root as:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke precommit</span>
 </pre></div>
@@ -217,9 +126,9 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pre-commit run --all-files</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline"></a></h2>
 <p>Testing pyadi-iio requires hardware, but fortunately by default it assumes no hardware is connected unless found. It will only load specific tests for hardware it can find and skip all other tests. <strong>pytest</strong>, which is the framework pyadi-iio uses, can be call as following:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke test</span>
 </pre></div>
@@ -227,8 +136,8 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pytest &lt;add more arguments as needed&gt;</span>
 </pre></div>
 </div>
-<div class="section" id="test-configuration">
-<h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Permalink to this headline">¶</a></h3>
+<section id="test-configuration">
+<h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Permalink to this headline"></a></h3>
 <p>There are several advanced features of pytest that are utilized by pyadi-iio. Specifically custom markers and custom plugins.</p>
 <p>Markers are a way of labeling tests, which can be then used to filter specific tests. Markers are provided through the <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/test/test_map.py">test_map.py</a> file in the test directory. These markers are used to map FPGA based boards with daughtercards to specific tests. <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/embedded_arm_images">Reference design folder names</a> from the ADI SD cards are using as the markers, which them can be passed through the <em>-m</em> flag to enabled certain tests. For example, the following would enable all tests related to <em>ADRV9009</em>, assuming the hardware is available:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pytest -m zynqmp-zcu102-rev10-adrv9009</span>
@@ -239,9 +148,9 @@
 </pre></div>
 </div>
 <p>If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps">pytest-libiio CLI</a>.</p>
-</div>
-<div class="section" id="test-functions-and-fixtures">
-<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="test-functions-and-fixtures">
+<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this headline"></a></h3>
 <p>pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links belows to the different test categories:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -250,13 +159,13 @@
 <li class="toctree-l1"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
 </ul>
 </div>
-</div>
-</div>
-<div class="section" id="set-up-isolated-environment">
-<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="set-up-isolated-environment">
+<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Permalink to this headline"></a></h2>
 <p>This section will discussion a method to do isolated development with the correct package versions. The main purpose here is to eliminate any discrepancies that can arise (especially with the linting tools) when running precommit and other checks. This is also useful to not pollute your local global packages. The approach here relies upon leveraging <strong>pyenv</strong> and <strong>pipenv</strong> together.</p>
-<div class="section" id="install-pyenv">
-<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this headline">¶</a></h3>
+<section id="install-pyenv">
+<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this headline"></a></h3>
 <p><strong>pyenv</strong> is a handy tool for installing different and isolated versions of python on your system. Since distributions can ship with rather random versions of python, pyenv can help us install exactly the versions we want. The quick way to install pyenv is with their bash script:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl https://pyenv.run <span class="p">|</span> bash
 </pre></div>
@@ -271,9 +180,9 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pyenv install <span class="m">3</span>.6.9
 </pre></div>
 </div>
-</div>
-<div class="section" id="create-isolated-install-with-pipenv">
-<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="create-isolated-install-with-pipenv">
+<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this headline"></a></h3>
 <p>Get the repo, set python version, and setup env</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install -U pipenv
 pyenv <span class="nb">local</span> <span class="m">3</span>.6.9
@@ -290,56 +199,39 @@ pyenv <span class="nb">local</span> <span class="m">3</span>.6.9
 pipenv shell
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="test_attr.html" class="btn btn-neutral float-right" title="Attribute Tests" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../fpga/index.html" class="btn btn-neutral float-left" title="FPGA Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test_attr.html" class="btn btn-neutral float-right" title="Attribute Tests" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2019-2021, Analog Devices, Inc.
-
-    </p>
+    <p>&#169; Copyright 2019-2021, Analog Devices, Inc.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
