@@ -808,8 +808,22 @@ def hardwaregain(
     sdr.dds_single_tone(frequency, dds_scale, channel)
     time.sleep(3)
 
-    chname = "voltage" + str(channel)
-    hwgain = sdr._get_iio_attr(chname, "hardwaregain", False, sdr._ctrl)
+    if channel == 0:
+        hwgain = sdr._get_iio_attr("voltage0", "hardwaregain", False, sdr._ctrl)
+    if channel == 1:
+        hwgain = sdr._get_iio_attr("voltage1", "hardwaregain", False, sdr._ctrl)
+    if channel == 2:
+        hwgain = sdr._get_iio_attr("voltage0", "hardwaregain", False, sdr._ctrl_b)
+    if channel == 3:
+        hwgain = sdr._get_iio_attr("voltage1", "hardwaregain", False, sdr._ctrl_b)
+    if channel == 4:
+        hwgain = sdr._get_iio_attr("voltage0", "hardwaregain", False, sdr._ctrl_c)
+    if channel == 5:
+        hwgain = sdr._get_iio_attr("voltage1", "hardwaregain", False, sdr._ctrl_c)
+    if channel == 6:
+        hwgain = sdr._get_iio_attr("voltage0", "hardwaregain", False, sdr._ctrl_d)
+    if channel == 7:
+        hwgain = sdr._get_iio_attr("voltage1", "hardwaregain", False, sdr._ctrl_d)
     print(hwgain)
     assert hardwaregain_low <= hwgain <= hardwaregain_high
 
@@ -886,10 +900,11 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     freqs = fftfreq(L, 1 / RXFS)
 
-    _, ml, hm, indxs = spec.find_harmonics(
-        fftshift(ampl), fftshift(freqs), num_harmonics=10, tolerance=0.2
-    )
-
+    # _, ml, hm, indxs = spec.find_harmonics(
+    #     fftshift(ampl), fftshift(freqs), num_harmonics=20, tolerance=0.2
+    # )
+    hm, indxs = spec.measure_peaks(fftshift(ampl), 20)
+    ml = indxs[0]
     ffreqs = fftshift(freqs)
     ffampl = fftshift(ampl)
     if plot:
@@ -914,7 +929,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     assert low[0] <= ffampl[ml] <= high[0]
     for i in range(1, len(low)):
-        assert low[i] <= hm[i - 1] <= high[i]
+        assert low[i] <= hm[i] <= high[i]
 
 
 def cyclic_buffer(uri, classname, channel, param_set):
