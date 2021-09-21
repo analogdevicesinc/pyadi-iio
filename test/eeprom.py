@@ -1,6 +1,7 @@
 import tkinter as tk
 from datetime import date, datetime
 from tkinter import Button, Entry, Label
+from tkinter.constants import FALSE
 
 import paramiko
 import pytest
@@ -18,7 +19,7 @@ def save_to_eeprom(iio_uri, coarse, fine, temp):
     ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
         "find /sys/ -name eeprom"
     )
-    eeprom_path = ssh_stdout.readline().rstrip("\n")
+    eeprom_path = ssh_stdout.readlines()
 
     if ssh_stderr.channel.recv_exit_status() != 0:
         raise paramiko.SSHException("find_eeprom command did not execute properly")
@@ -41,22 +42,29 @@ def save_to_eeprom(iio_uri, coarse, fine, temp):
     if 0 <= temp <= 16:
         ht = "0" + ht
     h = hc + hf + ht
-    cmd = (
-        "fru-dump -i "
-        + eeprom_path
-        + " -o "
-        + eeprom_path
-        + " -s "
-        + sn
-        + " -d "
-        + datetime.now().strftime("%Y-%m-%dT%H:%M:%S-05:00")
-        + " -t "
-        + str(h)
-    )
-    sshin, sshout, ssherr = ssh_client.exec_command(cmd)
-    if ssherr.channel.recv_exit_status() != 0:
-        raise paramiko.SSHException("fru-dump command did not execute properly")
+    err = False
+    for i in range(0, len(eeprom_path)):
+        cmd = (
+            "fru-dump -i "
+            + eeprom_path[i].rstrip("\n")
+            + " -o "
+            + eeprom_path[i].rstrip("\n")
+            + " -s "
+            + sn
+            + " -d "
+            + datetime.now().strftime("%Y-%m-%dT%H:%M:%S-05:00")
+            + " -t "
+            + str(h)
+        )
+        sshin, sshout, ssherr = ssh_client.exec_command(cmd)
+        if ssherr.channel.recv_exit_status() != 0:
+            err = True
+        else:
+            err = False
+            break
 
+    if err:
+        raise paramiko.SSHException("fru-dump command did not execute properly")
     ssh_client.close()
 
 
@@ -72,7 +80,7 @@ def save_to_eeprom_rate(iio_uri, clk_rate):
     ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
         "find /sys/ -name eeprom"
     )
-    eeprom_path = ssh_stdout.readline().rstrip("\n")
+    eeprom_path = ssh_stdout.readlines()
 
     if ssh_stderr.channel.recv_exit_status() != 0:
         raise paramiko.SSHException("find_eeprom command did not execute properly")
@@ -86,24 +94,29 @@ def save_to_eeprom_rate(iio_uri, clk_rate):
     sn = popup_txt()
 
     h = hex(clk_rate).lstrip("0x").rstrip("L")
+    err = False
+    for i in range(0, len(eeprom_path)):
+        cmd = (
+            "fru-dump -i "
+            + eeprom_path[i].rstrip("\n")
+            + " -o "
+            + eeprom_path[i].rstrip("\n")
+            + " -s "
+            + sn
+            + " -d "
+            + datetime.now().strftime("%Y-%m-%dT%H:%M:%S-05:00")
+            + " -t "
+            + str(h)
+        )
+        sshin, sshout, ssherr = ssh_client.exec_command(cmd)
+        if ssherr.channel.recv_exit_status() != 0:
+            err = True
+        else:
+            err = False
+            break
 
-    cmd = (
-        "fru-dump -i "
-        + eeprom_path
-        + " -o "
-        + eeprom_path
-        + " -s "
-        + sn
-        + " -d "
-        + datetime.now().strftime("%Y-%m-%dT%H:%M:%S-05:00")
-        + " -t "
-        + str(h)
-        + " 2>&1"
-    )
-    sshin, sshout, ssherr = ssh_client.exec_command(cmd)
-    if ssherr.channel.recv_exit_status() != 0:
+    if err:
         raise paramiko.SSHException("fru-dump command did not execute properly")
-
     ssh_client.close()
 
 
@@ -160,6 +173,7 @@ def load_from_eeprom(iio_uri):
         # in case tuning parameters are not set, we shouldn't stay in the loop
         if k >= 20:
             print("No saved tuning values were found. Using defaults.")
+            return 8, 4000, 25
 
     field = field[6:].lstrip(" \t: ")
     coarse = int("0x" + field[:2], 16)
