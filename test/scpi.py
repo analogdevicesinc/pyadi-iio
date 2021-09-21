@@ -1,5 +1,5 @@
 import time
-from test.eeprom import load_from_eeprom, save_to_eeprom
+from test.eeprom import load_from_eeprom, save_to_eeprom, save_to_eeprom_rate
 from tkinter.font import BOLD
 from weakref import finalize
 
@@ -36,7 +36,7 @@ def find_instrument():
             if idn in supported_instruments:
                 break
             else:
-                print("This instrument is currently not supported!")
+                pytest.skip("This instrument is currently not supported!")
         except Exception as e:
             my_instrument = None
             continue
@@ -83,9 +83,9 @@ def get_clk_rate(classname, iio_uri):
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh_client.connect(ip, username="root", password="analog")
-    dev = classname[4:]
+
     ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
-        "cat /sys/kernel/debug/clk/" + dev + "_ext_refclk/clk_rate"
+        "cat /sys/kernel/debug/clk/ad9361_ext_refclk/clk_rate"
     )
 
     if ssh_stderr.channel.recv_exit_status() != 0:
@@ -102,51 +102,108 @@ def dcxo_calibrate(classname, iio_uri):
     finetune = False
     step = 1
     direction = -2
-
+    current_frq = 0
     # setting initial values at half the value from eeprom to make the tuning process faster
-    coarse = 4
-    fine = 4095
+    coarse = 0  # table default for desired frequency is 8
+    fine = 4000
+    direction = 0  # coarse 0 -> higher value
 
     instr = find_instrument()
     if instr is None:
         pytest.skip("No supported instrument found")
         return
     target_frq = get_clk_rate(classname, iio_uri)
+    if classname == "adi.FMComms5":
+        save_to_eeprom_rate(iio_uri, target_frq)
+        return
+
     sdr = eval(classname + "(uri='" + iio_uri + "')")
 
     sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
     sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+
+    frq_c0 = get_freq(instr)
+    coarse = 15
+    sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
+    frq_c15 = get_freq(instr)
+
     while 1:
-        current_frq = get_freq(instr)
-
-        prev_diff = diff
-        diff = target_frq - current_frq
-        if abs(round(diff)) < 20:
-            print("Close to target value:", current_frq)
+        if (
+            (frq_c0 > target_frq and frq_c15 < target_frq)
+            or (frq_c0 < target_frq and frq_c15 > target_frq)
+            or coarse == 63
+        ):
             break
-        if direction == -2:
-            direction = np.sign(diff)
-        if finetune:
-            step = int(round(-1 * diff / 2))
-            if step == 0:
-                step = -1 * direction
-            fine += step
-            fine = int(fine)
         else:
-            if step != 0:
-                if prev_diff != 0 and prev_diff != diff:
-                    step = int(round(-1 * ((step * diff) / abs(diff - prev_diff)) / 2))
-                coarse += step
-            else:
-                finetune = True
+            coarse = coarse + 1
+            sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
+            frq_c0 = get_freq(instr)
+            coarse = coarse + 15
+            if coarse > 63:
+                coarse = 63
+            sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
+            frq_c15 = get_freq(instr)
 
-        sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
-        sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+    if frq_c15 < frq_c0:
+        frq_step = (frq_c0 - frq_c15) / 16
+        direction = 0
+    else:
+        frq_step = (frq_c15 - frq_c0) / 16
+        direction = 1
+    if direction == 0:
+        coarse = int((frq_c0 - target_frq) / frq_step)
+    else:
+        coarse = int((frq_c15 - target_frq) / frq_step)
 
-        if coarse < 0 or coarse > 63 or fine < 0 or fine > 8191:
-            pytest.fail("Outside tuning bounds")
-            break
+    sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
+    current_frq = get_freq(instr)
 
-    save_to_eeprom(iio_uri, coarse, fine)
+    while abs(target_frq - current_frq) > 80:
+        if (target_frq > current_frq and direction == 0) or (
+            target_frq < current_frq and direction == 1
+        ):
+            coarse = coarse - 1
+            sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
+            current_frq = get_freq(instr)
+        else:
+            coarse = coarse + 1
+            sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
+            current_frq = get_freq(instr)
+
+    fine = 0
+    sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+    frq_f0 = get_freq(instr)
+    fine = 4000
+    sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+    frq_fmax = get_freq(instr)
+    if frq_f0 > frq_fmax:
+        fine_step = (frq_f0 - frq_fmax) / 4001
+        direction = 0
+    else:
+        fine_step = (frq_fmax - frq_f0) / 4001
+        direction = 1
+    if frq_f0 > target_frq:
+        fine = int((frq_f0 - target_frq) / fine_step)
+    else:
+        fine = int((frq_fmax - target_frq) / fine_step)
+
+    sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+    current_frq = get_freq(instr)
+
+    while abs(target_frq - current_frq) > 5:
+        if (target_frq > current_frq and direction == 0) or (
+            target_frq < current_frq and direction == 1
+        ):
+            fine = fine - 5
+            sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+            current_frq = get_freq(instr)
+        else:
+            fine = fine + 5
+            sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+            current_frq = get_freq(instr)
+
+    temp = sdr._get_iio_attr("temp0", "input", False)
+    temp = int(temp / 1000)  # to get celsius value
+    save_to_eeprom(iio_uri, coarse, fine, temp)
     # End clean
     del sdr

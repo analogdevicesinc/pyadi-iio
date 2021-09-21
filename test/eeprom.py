@@ -6,7 +6,7 @@ import paramiko
 import pytest
 
 
-def save_to_eeprom(iio_uri, coarse, fine):
+def save_to_eeprom(iio_uri, coarse, fine, temp):
     full_uri = iio_uri.split(":", 2)
     if full_uri[0] != "ip":
         pytest.skip("Tuning currently supported only for ip URIs")
@@ -35,7 +35,57 @@ def save_to_eeprom(iio_uri, coarse, fine):
     if coarse <= 16:
         hc = "0" + hc
     hf = hex(fine).lstrip("0x").rstrip("L")
-    h = hc + hf
+    if fine <= 4096:
+        hf = "0" + hf
+    ht = hex(temp).lstrip("0x").rstrip("L")
+    if 0 <= temp <= 16:
+        ht = "0" + ht
+    h = hc + hf + ht
+    cmd = (
+        "fru-dump -i "
+        + eeprom_path
+        + " -o "
+        + eeprom_path
+        + " -s "
+        + sn
+        + " -d "
+        + datetime.now().strftime("%Y-%m-%dT%H:%M:%S-05:00")
+        + " -t "
+        + str(h)
+    )
+    sshin, sshout, ssherr = ssh_client.exec_command(cmd)
+    if ssherr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException("fru-dump command did not execute properly")
+
+    ssh_client.close()
+
+
+def save_to_eeprom_rate(iio_uri, clk_rate):
+    full_uri = iio_uri.split(":", 2)
+    if full_uri[0] != "ip":
+        pytest.skip("Tuning currently supported only for ip URIs")
+    ip = full_uri[1]
+
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh_client.connect(ip, username="root", password="analog")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
+        "find /sys/ -name eeprom"
+    )
+    eeprom_path = ssh_stdout.readline().rstrip("\n")
+
+    if ssh_stderr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException("find_eeprom command did not execute properly")
+
+    this_day = date.today()
+    if this_day.year <= 1995:
+        pytest.skip(
+            "System date and time not in order. Please connect the device to internet to update."
+        )
+
+    sn = popup_txt()
+
+    h = hex(clk_rate).lstrip("0x").rstrip("L")
 
     cmd = (
         "fru-dump -i "
@@ -113,5 +163,6 @@ def load_from_eeprom(iio_uri):
 
     field = field[6:].lstrip(" \t: ")
     coarse = int("0x" + field[:2], 16)
-    fine = int("0x" + field[2:], 16)
-    return coarse, fine
+    fine = int("0x" + field[2:6], 16)
+    temp = int("0x" + field[6:8], 16)
+    return coarse, fine, temp
