@@ -34,6 +34,7 @@
 from adi.ad936x import ad9361
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
+import ad9361 as libad9361
 
 
 class FMComms5(ad9361):
@@ -72,7 +73,8 @@ class FMComms5(ad9361):
         self._rxadc_chip_b = self._ctx.find_device("cf-ad9361-B")
         self._txdac_chip_b = self._ctx.find_device("cf-ad9361-dds-core-B")
         rx_tx.__init__(self)
-
+        libad9361.fmcomms5_multichip_sync(self._ctx, 2)
+        
     @property
     def filter(self):
         """Load FIR filter file. Provide path to filter file to attribute"""
@@ -104,7 +106,7 @@ class FMComms5(ad9361):
     def gain_control_mode_chip_b_chan0(self):
         """gain_control_mode_chip_b_chan0: Mode of receive path AGC of second transceiver.
         Options are: slow_attack, fast_attack, manual"""
-        return self._get_iio_attr("voltage0", "gain_control_mode", False, self._ctrl_b)
+        return self._get_iio_attr_str("voltage0", "gain_control_mode", False, self._ctrl_b)
 
     @gain_control_mode_chip_b_chan0.setter
     def gain_control_mode_chip_b_chan0(self, value):
@@ -114,7 +116,7 @@ class FMComms5(ad9361):
     def gain_control_mode_chip_b_chan1(self):
         """gain_control_mode_chip_b_chan1: Mode of receive path AGC of second transceiver.
         Options are: slow_attack, fast_attack, manual"""
-        return self._get_iio_attr("voltage1", "gain_control_mode", False, self._ctrl_b)
+        return self._get_iio_attr_str("voltage1", "gain_control_mode", False, self._ctrl_b)
 
     @gain_control_mode_chip_b_chan1.setter
     def gain_control_mode_chip_b_chan1(self, value):
