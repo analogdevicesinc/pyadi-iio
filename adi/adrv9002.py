@@ -284,9 +284,7 @@ class adrv9002(rx_tx, context_manager):
     @interface_gain_chan0.setter
     def interface_gain_chan0(self, value):
         if (
-            self.digital_gain_control_mode_chan0 == "Gain_Correction_manual_control"
-            or self.digital_gain_control_mode_chan0
-            == "Gain_Compensation_manual_control"
+            self.digital_gain_control_mode_chan0 == "spi"
         ) and self.rx_ensm_mode_chan0 == "rf_enabled":
             self._set_iio_attr("voltage0", "interface_gain", False, value)
 
@@ -299,9 +297,7 @@ class adrv9002(rx_tx, context_manager):
     @interface_gain_chan1.setter
     def interface_gain_chan1(self, value):
         if (
-            self.digital_gain_control_mode_chan1 == "Gain_Correction_manual_control"
-            or self.digital_gain_control_mode_chan1
-            == "Gain_Compensation_manual_control"
+            self.digital_gain_control_mode_chan1 == "spi"
         ) and self.rx_ensm_mode_chan1 == "rf_enabled":
             self._set_iio_attr("voltage1", "interface_gain", False, value)
 
@@ -527,9 +523,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def digital_gain_control_mode_chan0(self):
-        """Digital gain control mode for RX2. Option are: Gain_Correction_manual_control
-        Gain_Compensation_manual_control Gain_Correction_automatic_control
-        Gain_Compensation_automatic_control"""
+        """Digital gain control mode for RX1. Option are: automatic spi."""
         return self._get_iio_attr_str("voltage0", "digital_gain_control_mode", False)
 
     @digital_gain_control_mode_chan0.setter
@@ -538,9 +532,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def digital_gain_control_mode_chan1(self):
-        """ Digital gain control mode for RX2. Option are: Gain_Correction_manual_control
-        Gain_Compensation_manual_control Gain_Correction_automatic_control
-        Gain_Compensation_automatic_control"""
+        """ Digital gain control mode for RX2. Option are: automatic spi."""
         return self._get_iio_attr_str("voltage1", "digital_gain_control_mode", False)
 
     @digital_gain_control_mode_chan1.setter
