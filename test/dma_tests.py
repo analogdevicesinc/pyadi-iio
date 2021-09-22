@@ -16,7 +16,7 @@ except:
     do_html_log = False
 
 
-def dma_rx(uri, classname, channel, use_rx2=False):
+def dma_rx(uri, classname, channel, use_rx2=False, sample_cnt=2 ** 15):
     """dma_rx: Construct RX buffers and verify data is non-zero when pulled.
     Collected buffer is of size 2**15 and 10 buffers are checked
 
@@ -28,16 +28,17 @@ def dma_rx(uri, classname, channel, use_rx2=False):
         channel: type=list
             List of integers or list of list of integers of channels to
             enable through rx_enabled_channels
+        sample_cnt: type=int
+            Number of samples to capture
     """
     sdr = eval(classname + "(uri='" + uri + "')")
-    N = 2 ** 15
 
     if use_rx2:
         sdr.rx2_enabled_channels = channel if isinstance(channel, list) else [channel]
-        sdr.rx2_buffer_size = N * len(sdr.rx2_enabled_channels)
+        sdr.rx2_buffer_size = sample_cnt
     else:
         sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
-        sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+        sdr.rx_buffer_size = sample_cnt
 
     try:
         for _ in range(10):
