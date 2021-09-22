@@ -45,9 +45,8 @@ def test_adis16495_attr(
     test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
-@pytest.mark.skip(reason="Test is currently failing...")
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5])
 def test_adis16495_rx_data(test_dma_rx, iio_uri, classname, channel):
-    test_dma_rx(iio_uri, classname, channel)
+    test_dma_rx(iio_uri, classname, channel, False, 1024)
