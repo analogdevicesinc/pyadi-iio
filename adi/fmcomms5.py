@@ -31,10 +31,14 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import ad9361 as libad9361
 from adi.ad936x import ad9361
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
+
+try:
+    import ad9361 as libad9361
+except ImportError:
+    libad9361 = None
 
 
 class FMComms5(ad9361):
@@ -73,7 +77,8 @@ class FMComms5(ad9361):
         self._rxadc_chip_b = self._ctx.find_device("cf-ad9361-B")
         self._txdac_chip_b = self._ctx.find_device("cf-ad9361-dds-core-B")
         rx_tx.__init__(self)
-        libad9361.fmcomms5_multichip_sync(self._ctx, 3)
+        if libad9361:
+            libad9361.fmcomms5_multichip_sync(self._ctx, 3)
 
     @property
     def filter(self):
