@@ -174,6 +174,14 @@ class ad9081(rx_tx, context_manager):
         # This is overridden by subclasses
         return self._set_iio_dev_attr(attr, value)
 
+    def _get_iio_dev_attr_str_single(self, attr):
+        # This is overridden by subclasses
+        return self._get_iio_dev_attr_str(attr)
+
+    def _set_iio_dev_attr_str_single(self, attr, value):
+        # This is overridden by subclasses
+        return self._set_iio_dev_attr_str(attr, value)
+
     @property
     def path_map(self):
         """ path_map: Map of channelizers both coarse and fine to
@@ -473,3 +481,36 @@ class ad9081(rx_tx, context_manager):
     def dac_frequency(self):
         """dac_frequency: DAC frequency in Hz"""
         return self._get_iio_attr_single("voltage0_i", "dac_frequency", True)
+
+    @property
+    def jesd204_fsm_ctrl(self):
+        """jesd204_fsm_ctrl: jesd204-fsm control"""
+        return self._get_iio_dev_attr("jesd204_fsm_ctrl", self._rxadc)
+
+    @jesd204_fsm_ctrl.setter
+    def jesd204_fsm_ctrl(self, value):
+        self._set_iio_dev_attr("jesd204_fsm_ctrl", value, self._rxadc)
+
+    @property
+    def jesd204_fsm_resume(self):
+        """jesd204_fsm_resume: jesd204-fsm resume"""
+        return self._get_iio_dev_attr("jesd204_fsm_resume", self._rxadc)
+
+    @jesd204_fsm_resume.setter
+    def jesd204_fsm_resume(self, value):
+        self._set_iio_dev_attr_str("jesd204_fsm_resume", value, self._rxadc)
+
+    @property
+    def jesd204_fsm_state(self):
+        """jesd204_fsm_state: jesd204-fsm state"""
+        return self._get_iio_dev_attr_str("jesd204_fsm_state", self._rxadc)
+
+    @property
+    def jesd204_fsm_paused(self):
+        """jesd204_fsm_paused: jesd204-fsm paused"""
+        return self._get_iio_dev_attr("jesd204_fsm_paused", self._rxadc)
+
+    @property
+    def jesd204_fsm_error(self):
+        """jesd204_fsm_error: jesd204-fsm error"""
+        return self._get_iio_dev_attr("jesd204_fsm_error", self._rxadc)
