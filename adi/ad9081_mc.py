@@ -126,6 +126,7 @@ class ad9081_mc(ad9081):
 
     def __init__(self, uri="", phy_dev_name=""):
 
+        self._rx_channel_names: List[str] = []
         context_manager.__init__(self, uri, self._device_name)
 
         if not phy_dev_name:
@@ -328,6 +329,8 @@ class QuadMxFE(ad9081_mc):
     def __init__(self, uri="", calibration_board_attached=False):
         ad9081_mc.__init__(self, uri=uri, phy_dev_name="axi-ad9081-rx-3")
         one_bit_adc_dac.__init__(self, uri)
+
+        self._clock_chip = self._ctx.find_device("hmc7043")
 
         self._rx_dsa = self._ctx.find_device("hmc425a")
         if not self._rx_dsa:
