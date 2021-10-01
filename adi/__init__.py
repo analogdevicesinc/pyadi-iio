@@ -107,6 +107,8 @@ from adi.adf4371 import adf4371
 
 from adi.adpd188 import adpd188
 
+from adi.QuadMxFE_multi import QuadMxFE_multi
+
 try:
     from adi.jesd import jesd
 except ImportError:
