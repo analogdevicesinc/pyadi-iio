@@ -109,6 +109,8 @@ from adi.adpd188 import adpd188
 
 from adi.QuadMxFE_multi import QuadMxFE_multi
 
+from adi.adrf5720 import adrf5720
+
 from adi.admv8818 import admv8818
 
 from adi.adf5610 import adf5610

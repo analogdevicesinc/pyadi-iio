@@ -35,7 +35,7 @@ from adi.attribute import attribute
 from adi.context_manager import context_manager
 
 
-class adrf5720(context_manager, attribute):
+class adrf5720(attribute, context_manager):
     """ ADRF5720 Digital Attenuator """
 
     _complex_data = False
