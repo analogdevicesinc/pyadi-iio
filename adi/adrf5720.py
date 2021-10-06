@@ -42,7 +42,7 @@ class adrf5720(attribute, context_manager):
     channel = "voltage0"
     _device_name = ""
 
-    def __init__(self, uri=""):
+    def __init__(self, uri="", device_name=""):
         context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = [
@@ -54,7 +54,7 @@ class adrf5720(attribute, context_manager):
         self._ctrl = None
 
         for device in self._ctx.devices:
-            if device.name in compatible_parts:
+            if device.name in [device_name] + compatible_parts:
                 self._ctrl = device
                 break
 
