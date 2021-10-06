@@ -167,11 +167,6 @@ class QuadMxFE_multi(object):
         cnt = 0
         for index, dev in enumerate([self.primary] + self.secondaries):
             ret = self._device_is_running(dev, index, 0)
-            if index == 0:
-                statep = dev.jesd204_fsm_state
-            else:
-                state = dev.jesd204_fsm_state
-                assert state == statep
 
             if ret == "done":
                 cnt += 1
@@ -187,6 +182,12 @@ class QuadMxFE_multi(object):
 
             for index, dev in enumerate(self.secondaries + [self.primary]):
                 ret = self._device_is_running(dev, index, self._jesd_fsm_show_status)
+                if index == 0:
+                    statep = dev.jesd204_fsm_state
+                else:
+                    state = dev.jesd204_fsm_state
+                    assert state == statep
+
                 if ret == "paused":
                     dev.jesd204_fsm_resume = "1"
 
