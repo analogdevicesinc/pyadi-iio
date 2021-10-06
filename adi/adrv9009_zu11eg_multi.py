@@ -209,7 +209,7 @@ class adrv9009_zu11eg_multi(object):
         if (state_last == 1) and (paused == 0):
             return "done"
 
-        return "undef"
+        assert False
 
     def __jesd204_fsm_is_done(self):
         cnt = 0
@@ -228,6 +228,12 @@ class adrv9009_zu11eg_multi(object):
 
             for index, dev in enumerate(self.secondaries + [self.primary]):
                 ret = self._device_is_running(dev, index, self._jesd_fsm_show_status)
+                if index == 0:
+                    statep = dev.jesd204_fsm_state
+                else:
+                    state = dev.jesd204_fsm_state
+                    assert state == statep
+
                 if ret == "paused":
                     dev.jesd204_fsm_resume = "1"
 
