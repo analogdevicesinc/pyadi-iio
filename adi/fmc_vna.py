@@ -48,8 +48,8 @@ class fmcvna(adrf5720, ad9083, admv8818, genmux, adf5610, adl5960):
 
     def __init__(self, uri):
         self.lo = adf5610(uri, device_name="adf5610")
-        self.rfin_attenuator = adrf5720(uri, device_name="adrf5720")
-        self.lo_attenuator = adrf5720(uri, device_name="adrf5720")
+        self.rfin_attenuator = adrf5720(uri, device_name="adrf5720-rfin")
+        self.lo_attenuator = adrf5720(uri, device_name="adrf5720-lo")
         self.rfin_bpf = admv8818(uri, device_name="admv8818-2")
         self.lo_bpf = admv8818(uri, device_name="admv8818-1")
         self.rfin_mux = genmux(uri, device_name="mux-rfin")
