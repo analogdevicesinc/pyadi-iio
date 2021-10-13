@@ -1,5 +1,6 @@
 from __future__ import division
 
+import numpy as np
 from numpy import (
     absolute,
     argmax,
@@ -31,6 +32,11 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
 
     # FFT frequency bins
     freqs = fftfreq(N, 1 / fs)
+
+    # ampl and freqs for real data
+    if not np.iscomplexobj(x):
+        ampl = ampl[0 : len(ampl) // 2]
+        freqs = freqs[0 : len(freqs) // 2]
 
     if plot:
         # Plot signal, showing how endpoints wrap from one chunk to the next
