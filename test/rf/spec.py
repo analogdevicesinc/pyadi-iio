@@ -1,5 +1,6 @@
 from __future__ import division
 
+import numpy as np
 from numpy import (
     absolute,
     argmax,
@@ -15,7 +16,6 @@ from numpy import (
 from numpy.fft import fft, fftfreq, fftshift
 from scipy import signal
 from scipy.signal import find_peaks
-import numpy as np
 
 
 def spec_est(x, fs, ref=2 ** 15, plot=False):
@@ -35,8 +35,8 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
 
     # ampl and freqs for real data
     if not np.iscomplexobj(x):
-        ampl = ampl[0:len(ampl) // 2]
-        freqs = freqs[0:len(freqs) // 2]
+        ampl = ampl[0 : len(ampl) // 2]
+        freqs = freqs[0 : len(freqs) // 2]
 
     if plot:
         # Plot signal, showing how endpoints wrap from one chunk to the next
@@ -61,7 +61,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
 def find_peaks_cust(x, num_peaks=4):
 
     loc = argmax(x)
-    print(x[loc: loc + 10])
+    print(x[loc : loc + 10])
     for p in range(1, num_peaks):
         l_loc = loc - 1
         r_loc = loc + 1
