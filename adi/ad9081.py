@@ -438,7 +438,15 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def loopback_mode(self):
-        """loopback_mode: Enable loopback mode RX->TX"""
+        """loopback_mode: Enable loopback mode RX->TX
+
+        When enabled JESD RX FIFO is connected to JESD TX FIFO,
+        making the entire datasource for the TX path the RX path. No
+        data is passed into the TX path from off-chip when 1. For
+        this mode to function correctly the JESD configuration
+        between RX and TX must be identical and only use a single
+        link.
+        """
         return self._get_iio_dev_attr_single("loopback_mode")
 
     @loopback_mode.setter
