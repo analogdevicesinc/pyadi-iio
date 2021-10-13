@@ -79,7 +79,7 @@ def _sortconv(chans_names, noq=False, dds=False):
 
 
 class ad9081(rx_tx, context_manager):
-    """ AD9081 Mixed-Signal Front End (MxFE) """
+    """AD9081 Mixed-Signal Front End (MxFE)"""
 
     _complex_data = True
     _rx_channel_names: List[str] = []
@@ -184,15 +184,15 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def path_map(self):
-        """ path_map: Map of channelizers both coarse and fine to
-            individual driver channel names
+        """path_map: Map of channelizers both coarse and fine to
+        individual driver channel names
         """
         return self._path_map
 
     def write_pfilt_config(self, value):
-        """ Load a new PFILT configuration file
-            Input is path to PFILT configuration file. Please see
-            driver documentation about PFILT generation and limitations
+        """Load a new PFILT configuration file
+        Input is path to PFILT configuration file. Please see
+        driver documentation about PFILT generation and limitations
         """
         with open(value, "r") as file:
             data = file.read()
@@ -203,8 +203,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def rx_channel_nco_frequencies(self):
-        """rx_channel_nco_frequencies: Receive path fine DDC NCO frequencies
-        """
+        """rx_channel_nco_frequencies: Receive path fine DDC NCO frequencies"""
         return self._get_iio_attr_vec(
             self._rx_fine_ddc_channel_names, "channel_nco_frequency", False
         )
@@ -217,8 +216,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def rx_channel_nco_phases(self):
-        """rx_channel_nco_phases: Receive path fine DDC NCO phases
-        """
+        """rx_channel_nco_phases: Receive path fine DDC NCO phases"""
         return self._get_iio_attr_vec(
             self._rx_fine_ddc_channel_names, "channel_nco_phase", False
         )
@@ -231,8 +229,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def rx_main_nco_frequencies(self):
-        """rx_main_nco_frequencies: Receive path coarse DDC NCO frequencies
-        """
+        """rx_main_nco_frequencies: Receive path coarse DDC NCO frequencies"""
         return self._get_iio_attr_vec(
             self._rx_coarse_ddc_channel_names, "main_nco_frequency", False
         )
@@ -245,8 +242,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def rx_main_nco_phases(self):
-        """rx_main_nco_phases: Receive path coarse DDC NCO phases
-        """
+        """rx_main_nco_phases: Receive path coarse DDC NCO phases"""
         return self._get_iio_attr_vec(
             self._rx_coarse_ddc_channel_names, "main_nco_phase", False
         )
@@ -259,7 +255,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def rx_test_mode(self):
-        """rx_test_mode: NCO Test Mode """
+        """rx_test_mode: NCO Test Mode"""
         return self._get_iio_attr_str_single("voltage0_i", "test_mode", False)
 
     @rx_test_mode.setter
@@ -270,7 +266,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def rx_nyquist_zone(self):
-        """rx_nyquist_zone: ADC nyquist zone. Options are: odd, even """
+        """rx_nyquist_zone: ADC nyquist zone. Options are: odd, even"""
         return self._get_iio_attr_str_single("voltage0_i", "nyquist_zone", False)
 
     @rx_nyquist_zone.setter
@@ -281,8 +277,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_channel_nco_frequencies(self):
-        """tx_channel_nco_frequencies: Transmit path fine DUC NCO frequencies
-        """
+        """tx_channel_nco_frequencies: Transmit path fine DUC NCO frequencies"""
         return self._get_iio_attr_vec(
             self._tx_fine_duc_channel_names, "channel_nco_frequency", True
         )
@@ -295,8 +290,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_channel_nco_phases(self):
-        """tx_channel_nco_phases: Transmit path fine DUC NCO phases
-        """
+        """tx_channel_nco_phases: Transmit path fine DUC NCO phases"""
         return self._get_iio_attr_vec(
             self._tx_fine_duc_channel_names, "channel_nco_phase", True
         )
@@ -309,8 +303,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_channel_nco_test_tone_en(self):
-        """tx_channel_nco_test_tone_en: Transmit path fine DUC NCO test tone enable
-        """
+        """tx_channel_nco_test_tone_en: Transmit path fine DUC NCO test tone enable"""
         return self._get_iio_attr_vec(
             self._tx_coarse_duc_channel_names, "channel_nco_test_tone_en", True
         )
@@ -323,8 +316,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_channel_nco_test_tone_scales(self):
-        """tx_channel_nco_test_tone_scales: Transmit path fine DUC NCO test tone scale
-        """
+        """tx_channel_nco_test_tone_scales: Transmit path fine DUC NCO test tone scale"""
         return self._get_iio_attr_vec(
             self._tx_coarse_duc_channel_names, "channel_nco_test_tone_scale", True
         )
@@ -340,8 +332,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_channel_nco_gain_scales(self):
-        """tx_channel_nco_gain_scales Transmit path fine DUC NCO gain scale
-        """
+        """tx_channel_nco_gain_scales Transmit path fine DUC NCO gain scale"""
         return self._get_iio_attr_vec(
             self._tx_coarse_duc_channel_names, "channel_nco_gain_scale", True
         )
@@ -354,8 +345,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_main_nco_frequencies(self):
-        """tx_main_nco_frequencies: Transmit path coarse DUC NCO frequencies
-        """
+        """tx_main_nco_frequencies: Transmit path coarse DUC NCO frequencies"""
         return self._get_iio_attr_vec(
             self._tx_coarse_duc_channel_names, "main_nco_frequency", True
         )
@@ -368,8 +358,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_main_nco_phases(self):
-        """tx_main_nco_phases: Transmit path coarse DUC NCO phases
-        """
+        """tx_main_nco_phases: Transmit path coarse DUC NCO phases"""
         return self._get_iio_attr_vec(
             self._tx_coarse_duc_channel_names, "main_nco_phase", True
         )
@@ -382,8 +371,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_main_nco_test_tone_en(self):
-        """tx_main_nco_test_tone_en: Transmit path coarse DUC NCO test tone enable
-        """
+        """tx_main_nco_test_tone_en: Transmit path coarse DUC NCO test tone enable"""
         return self._get_iio_attr_vec(
             self._tx_coarse_duc_channel_names, "main_nco_test_tone_en", True
         )
@@ -396,8 +384,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_main_nco_test_tone_scales(self):
-        """tx_main_nco_test_tone_scales: Transmit path coarse DUC NCO test tone scale
-        """
+        """tx_main_nco_test_tone_scales: Transmit path coarse DUC NCO test tone scale"""
         return self._get_iio_attr_vec(
             self._tx_coarse_duc_channel_names, "main_nco_test_tone_scale", True
         )
@@ -411,7 +398,7 @@ class ad9081(rx_tx, context_manager):
     @property
     def tx_main_ffh_frequency(self):
         """tx_main_ffh_frequency: Transmitter fast frequency hop frequency. This will set
-            The NCO frequency of the NCO selected from the bank defined by tx_main_ffh_index
+        The NCO frequency of the NCO selected from the bank defined by tx_main_ffh_index
         """
         return self._get_iio_attr_single("voltage0_i", "main_ffh_frequency", True)
 
@@ -427,8 +414,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def tx_main_ffh_index(self):
-        """tx_main_ffh_index: Transmitter fast frequency hop NCO bank index
-        """
+        """tx_main_ffh_index: Transmitter fast frequency hop NCO bank index"""
         return self._get_iio_attr_single("voltage0_i", "main_ffh_index", True)
 
     @tx_main_ffh_index.setter
@@ -440,7 +426,7 @@ class ad9081(rx_tx, context_manager):
     @property
     def tx_main_ffh_mode(self):
         """tx_main_ffh_mode: Set hop transition mode of NCOs Options are:
-            phase_continuous, phase_incontinuous, and phase_coherent
+        phase_continuous, phase_incontinuous, and phase_coherent
         """
         return self._get_iio_attr_str_single("voltage0_i", "main_ffh_mode", True)
 
@@ -452,8 +438,7 @@ class ad9081(rx_tx, context_manager):
 
     @property
     def loopback_mode(self):
-        """loopback_mode: Enable loopback mode RX->TX
-        """
+        """loopback_mode: Enable loopback mode RX->TX"""
         return self._get_iio_dev_attr_single("loopback_mode")
 
     @loopback_mode.setter
@@ -461,6 +446,21 @@ class ad9081(rx_tx, context_manager):
         self._set_iio_dev_attr_single(
             "loopback_mode", value,
         )
+
+    @property
+    def tx_ddr_offload(self):
+        """tx_ddr_offload: Enable DDR offload
+
+        When true the DMA will pass buffers into the BRAM FIFO for data repeating.
+        This is necessary when operating at high DAC sample rates. This can reduce
+        the maximum buffer size but data passed to DACs in cyclic mode will not
+        underflow due to memory bottlenecks.
+        """
+        return self._get_iio_debug_attr("pl_ddr_fifo_enable", self._txdac)
+
+    @tx_ddr_offload.setter
+    def tx_ddr_offload(self, value):
+        self._set_iio_debug_attr_str("pl_ddr_fifo_enable", str(value * 1), self._txdac)
 
     @property
     def rx_sample_rate(self):
