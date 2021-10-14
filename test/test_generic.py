@@ -43,10 +43,10 @@ def test_attribute_changes(context_desc):
     drivers_to_ignore = "xadc"
 
     # Set initial state
-    ctx.find_device("ad9361-phy").find_channel("RX_LO").attrs[
+    ctx.find_device("ad9361-phy").find_channel("RX_LO", True).attrs[
         "frequency"
     ].value = "1000000000"
-    ctx.find_device("ad9361-phy").find_channel("TX_LO").attrs[
+    ctx.find_device("ad9361-phy").find_channel("TX_LO", True).attrs[
         "frequency"
     ].value = "1000000000"
 
@@ -54,10 +54,10 @@ def test_attribute_changes(context_desc):
     state1 = get_states(ctx, drivers_to_ignore)
 
     # Change LOs
-    ctx.find_device("ad9361-phy").find_channel("RX_LO").attrs[
+    ctx.find_device("ad9361-phy").find_channel("RX_LO", True).attrs[
         "frequency"
     ].value = "2000000000"
-    ctx.find_device("ad9361-phy").find_channel("TX_LO").attrs[
+    ctx.find_device("ad9361-phy").find_channel("TX_LO", True).attrs[
         "frequency"
     ].value = "2000000000"
 
