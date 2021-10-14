@@ -109,6 +109,10 @@ class rx(attribute):
 
     def __del__(self):
         self.__rxbuf = []
+        if hasattr("self", "_rxadc") and self._rxadc:
+            for m in self._rx_channel_names:
+                v = self._rxadc.find_channel(m)
+                v.enabled = False
         self._rxadc = []
 
     def _rx_init_channels(self):
@@ -299,6 +303,11 @@ class tx(dds, attribute):
         dds.__init__(self)
 
     def __del__(self):
+        self.__txbuf = []
+        if hasattr("self", "_txdac") and self._txdac:
+            for m in self._tx_channel_names:
+                v = self._txdac.find_channel(m)
+                v.enabled = False
         self._txdac = []
 
     @property
