@@ -30,7 +30,7 @@ setuptools.setup(
     url="https://github.com/analogdevicesinc/pyadi-iio",
     packages=setuptools.find_packages(exclude=["test*"]),
     python_requires=">=3.6",
-    install_requires=["numpy", "pylibiio==0.23", "paramiko"],
+    install_requires=["numpy", "pylibiio==0.23.1", "paramiko"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: BSD License",
