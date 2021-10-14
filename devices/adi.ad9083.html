@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ad9083 &mdash; Analog Devices Hardware Python Interfaces 0.0.9 documentation</title>
+  <title>ad9083 &mdash; Analog Devices Hardware Python Interfaces 0.0.10 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -78,6 +78,42 @@
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.ad9083.</span></span><span class="sig-name descname"><span class="pre">ad9083</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9083.ad9083" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
 <p>AD9083 High-Speed Multi-channel ADC</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9083.ad9083.nco0_frequency">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">nco0_frequency</span></span><a class="headerlink" href="#adi.ad9083.ad9083.nco0_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>nco0_frequency: Get/Set NCO0 frequency</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9083.ad9083.nco1_frequency">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">nco1_frequency</span></span><a class="headerlink" href="#adi.ad9083.ad9083.nco1_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>nco0_frequency: Get/Set NCO1 frequency</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9083.ad9083.nco2_frequency">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">nco2_frequency</span></span><a class="headerlink" href="#adi.ad9083.ad9083.nco2_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>nco0_frequency: Get/Set NCO2 frequency</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad9083.ad9083.reg_read">
+<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9083.ad9083.reg_read" title="Permalink to this definition"></a></dt>
+<dd><p>Direct Register Access via debugfs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad9083.ad9083.reg_write">
+<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9083.ad9083.reg_write" title="Permalink to this definition"></a></dt>
+<dd><p>Direct Register Access via debugfs</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9083.ad9083.rx_sample_rate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_sample_rate</span></span><a class="headerlink" href="#adi.ad9083.ad9083.rx_sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p>rx_sampling_frequency: Sample rate after decimation</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
