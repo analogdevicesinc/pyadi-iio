@@ -20,6 +20,7 @@ jobs:
         run: |
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
+          pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emu
 
       - name: Test
         run: pytest -v --cov=adi
@@ -33,6 +34,7 @@ jobs:
   Test-Emulate:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
 
@@ -48,11 +50,12 @@ jobs:
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_iioemu.sh
           bash ./.github/scripts/install_pydeps.sh
-          sudo pip install git+https://github.com/tfcollins/pytest-libiio.git@dev-mock
+          pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emu
 
 
       - name: Test
-        run: pytest -k "not stress and not dds and not sfdr and not overflow and not underflow" -v --scan-verbose --adi-hw-map --emu --emu-xml=pluto.xml
+        run: |
+                IIO_EMU_URI="ip:127.0.0.1" pytest -k "not stress and not dds and not sfdr and not overflow and not underflow" -vs --scan-verbose --adi-hw-map --emu --emu-xml=pluto.xml
 
       # - name: Report coverage
       #   if: matrix.python-version == 3.6
