@@ -1,6 +1,6 @@
 import pytest
 
-hardware = ["pluto", "adrv9361", "fmcomms2"]
+hardware = ["pluto", "adrv9361", "fmcomms2", "pluto_rev_c"]
 classname = "adi.Pluto"
 
 
