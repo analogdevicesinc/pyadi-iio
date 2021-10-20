@@ -55,7 +55,7 @@ jobs:
 
       - name: Test
         run: |
-                IIO_EMU_URI="ip:127.0.0.1" pytest -k "not stress and not dds and not sfdr and not overflow and not underflow" -vs --scan-verbose --adi-hw-map --emu --emu-xml=pluto.xml
+                sudo pytest -k "not stress and not dds and not sfdr and not overflow and not underflow" -vs --scan-verbose --adi-hw-map --emu --emu-xml=pluto.xml
 
       # - name: Report coverage
       #   if: matrix.python-version == 3.6
