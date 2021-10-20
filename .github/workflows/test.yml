@@ -47,10 +47,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_iioemu.sh
-          bash ./.github/scripts/install_pydeps.sh
-          pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emu
+          sudo bash ./.github/scripts/install_libiio.sh
+          sudo bash ./.github/scripts/install_iioemu.sh
+          sudo bash ./.github/scripts/install_pydeps.sh
+          sudo pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emu
 
 
       - name: Test
