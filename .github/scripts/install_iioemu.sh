@@ -10,7 +10,7 @@ sudo make install
 sudo ldconfig
 cd ../..
 
-git clone https://github.com/analogdevicesinc/iio-emu.git
+git clone -b generic_adc_dac https://github.com/analogdevicesinc/iio-emu.git
 cd iio-emu
 mkdir build && cd build
 cmake ..
