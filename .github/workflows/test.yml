@@ -56,7 +56,7 @@ jobs:
 
       - name: Test
         run: |
-                sudo pytest -k "not stress and not dds and not sfdr and not overflow and not underflow" -vs --scan-verbose --adi-hw-map --emu --emu-xml=pluto.xml
+                sudo pytest -k "not stress and not dds and not sfdr and not overflow and not underflow" -vs --scan-verbose --adi-hw-map --emu
 
       # - name: Report coverage
       #   if: matrix.python-version == 3.6
