@@ -50,6 +50,7 @@ jobs:
           sudo bash ./.github/scripts/install_libiio.sh
           sudo bash ./.github/scripts/install_iioemu.sh
           sudo bash ./.github/scripts/install_pydeps.sh
+          sudo apt install -y python3-tk
           sudo pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emu
 
 
