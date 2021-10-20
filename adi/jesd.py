@@ -35,7 +35,7 @@ from .sshfs import sshfs
 
 
 class jesd:
-    """ JESD Monitoring """
+    """JESD Monitoring"""
 
     def __init__(self, address, username="root", password="analog"):
         if "ip:" in address:
@@ -73,12 +73,13 @@ class jesd:
                 self.dirs.append(dir)
 
     def decode_status(self, status):
+        status = status.replace(",", "\n")
         status = status.split("\n")
         link_status = {}
         for s in status:
             if ":" in s:
                 o = s.split(":")
-                link_status[o[0]] = o[1].strip()
+                link_status[o[0].strip().replace("/", "")] = o[1].strip()
             if "Link is" in s:
                 link_status["enabled"] = s.split(" ")[-1].strip()
 
@@ -89,7 +90,9 @@ class jesd:
 
     def get_dev_lane_info(self, dir):
         return {
-            ldir: self.decode_status(self.fs.gettext(self.rootdir + dir + "/" + ldir))
+            ldir.replace("/", ""): self.decode_status(
+                self.fs.gettext(self.rootdir + dir + "/" + ldir)
+            )
             for ldir in self.lanes[dir]
         }
 
