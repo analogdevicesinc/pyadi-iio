@@ -20,7 +20,7 @@ jobs:
         run: |
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
-          pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emu
+          pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emulation
 
       - name: Test
         run: pytest -v --cov=adi
@@ -31,7 +31,7 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: coveralls
 
-  Test-Emulate:
+  Test-Emulated-HW:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -47,16 +47,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo bash ./.github/scripts/install_libiio.sh
-          sudo bash ./.github/scripts/install_iioemu.sh
-          sudo bash ./.github/scripts/install_pydeps.sh
+          bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_iioemu.sh
+          bash ./.github/scripts/install_pydeps.sh
           sudo apt install -y python3-tk
-          sudo pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emu
+          pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emulation
 
 
       - name: Test
         run: |
-                sudo pytest -k "not stress and not dds and not sfdr and not overflow and not underflow" -vs --scan-verbose --adi-hw-map --emu --emu-xml=pluto.xml
+                pytest -vs --scan-verbose --adi-hw-map --emu
 
       # - name: Report coverage
       #   if: matrix.python-version == 3.6
