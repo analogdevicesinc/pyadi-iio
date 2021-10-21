@@ -441,7 +441,7 @@ class adar1000(attribute, context_manager):
             if (
                 "label" in dev.attrs
                 and dev.attrs["label"].value.lower() == chip_id.lower()
-            ):
+            ) or (hasattr(dev, "label") and dev.label.lower() == chip_id.lower()):
                 self._ctrl = dev
                 break
 
