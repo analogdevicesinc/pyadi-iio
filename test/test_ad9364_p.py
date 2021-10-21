@@ -34,7 +34,7 @@ def test_ad9364_loopback_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 def test_ad9364_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -94,7 +94,7 @@ def test_ad9364_cyclic_buffers_exception(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 def test_ad9364_loopback(test_dma_loopback, iio_uri, classname, channel):
@@ -102,7 +102,7 @@ def test_ad9364_loopback(test_dma_loopback, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
@@ -123,7 +123,7 @@ def test_ad9364_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
@@ -156,7 +156,7 @@ def test_ad9364_dds_loopback(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
