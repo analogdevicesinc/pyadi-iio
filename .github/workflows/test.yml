@@ -20,7 +20,6 @@ jobs:
         run: |
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
-          pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emulation
 
       - name: Test
         run: pytest -v --cov=adi
@@ -51,8 +50,6 @@ jobs:
           bash ./.github/scripts/install_iioemu.sh
           bash ./.github/scripts/install_pydeps.sh
           sudo apt install -y python3-tk
-          pip install git+https://github.com/tfcollins/pytest-libiio.git@mock-dev-emulation
-
 
       - name: Test
         run: |
