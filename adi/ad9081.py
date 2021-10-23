@@ -276,6 +276,35 @@ class ad9081(rx_tx, context_manager):
         )
 
     @property
+    def rx_main_6dB_digital_gains(self):
+        """rx_main_6dB_digital_gains: Enable 6dB of gain per CDDC"""
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_6db_digital_gain_en", False
+        )
+
+    @rx_main_6dB_digital_gains.setter
+    def rx_main_6dB_digital_gains(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_coarse_ddc_channel_names, "main_6db_digital_gain_en", False, value,
+        )
+
+    @property
+    def rx_channel_6dB_digital_gains(self):
+        """rx_channel_6dB_digital_gains: Enable 6dB of gain per FDDC"""
+        return self._get_iio_attr_vec(
+            self._rx_fine_ddc_channel_names, "channel_6db_digital_gain_en", False
+        )
+
+    @rx_channel_6dB_digital_gains.setter
+    def rx_channel_6dB_digital_gains(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_fine_ddc_channel_names,
+            "channel_6db_digital_gain_en",
+            False,
+            value,
+        )
+
+    @property
     def tx_channel_nco_frequencies(self):
         """tx_channel_nco_frequencies: Transmit path fine DUC NCO frequencies"""
         return self._get_iio_attr_vec(
@@ -435,6 +464,28 @@ class ad9081(rx_tx, context_manager):
         self._set_iio_attr_single(
             "voltage0_i", "main_ffh_mode", True, value,
         )
+
+    @property
+    def tx_dac_en(self):
+        """tx_dac_en: Enable DACs"""
+        return self._get_iio_attr_vec(self._tx_coarse_duc_channel_names, "en", True)
+
+    @tx_dac_en.setter
+    def tx_dac_en(self, value):
+        self._set_iio_attr_int_vec(
+            self._tx_coarse_duc_channel_names, "en", True, value,
+        )
+
+    @property
+    def tx_dac_full_scale_current(self):
+        """tx_dac_full_scale_current: Set full scale current of DACs. This value
+        is in microamps.
+        """
+        return self._get_iio_debug_attr("dac-full-scale-current-ua", self._rxadc)
+
+    @tx_dac_full_scale_current.setter
+    def tx_dac_full_scale_current(self, value):
+        self._set_iio_debug_attr("dac-full-scale-current-ua", value, self._rxadc)
 
     @property
     def loopback_mode(self):
