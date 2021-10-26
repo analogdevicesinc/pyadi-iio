@@ -1,6 +1,6 @@
 import pytest
 
-hardware = ["pluto", "adrv9361", "fmcomms2"]
+hardware = ["pluto", "adrv9361", "fmcomms2", "pluto_rev_c"]
 classname = "adi.Pluto"
 
 
@@ -44,7 +44,7 @@ def test_pluto_loopback_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 def test_pluto_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -104,7 +104,7 @@ def test_pluto_cyclic_buffers_exception(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 def test_pluto_loopback(test_dma_loopback, iio_uri, classname, channel):
@@ -112,7 +112,7 @@ def test_pluto_loopback(test_dma_loopback, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
@@ -133,7 +133,7 @@ def test_pluto_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min)
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
@@ -166,7 +166,7 @@ def test_pluto_dds_loopback(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
@@ -200,7 +200,7 @@ def test_pluto_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param_
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 def test_pluto_loopback_zeros(test_dma_dac_zeros, iio_uri, classname, channel):
@@ -208,7 +208,7 @@ def test_pluto_loopback_zeros(test_dma_dac_zeros, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize("buffer_size", [2 ** 20])
@@ -220,7 +220,7 @@ def test_pluto_verify_overflow(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize("buffer_size", [2 ** 20])
