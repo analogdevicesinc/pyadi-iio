@@ -47,7 +47,7 @@ jobs:
 
       - name: Test
         run: |
-                pytest -vs --cov=adi --scan-verbose --adi-hw-map --emu
+                pytest -vs --cov=adi --scan-verbose --emu --emu-xml-dir=test/contexts --custom-hw-map=hardware_map.yml
 
       - name: Report coverage
         if: matrix.python-version == 3.6
