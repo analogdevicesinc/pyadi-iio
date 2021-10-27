@@ -3,7 +3,7 @@ from os.path import dirname, join, realpath
 
 import pytest
 
-hardware = "ad9371"
+hardware = ["ad9371", "adrv9371"]
 classname = "adi.ad9371"
 
 profile_path = dirname(realpath(__file__)) + "/ad9371_5_profiles/"
@@ -469,7 +469,7 @@ def test_ad9371_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", range(2))
 def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -477,7 +477,7 @@ def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -669,7 +669,7 @@ def test_ad9371_two_tone_loopback_with_10dB_splitter(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -742,7 +742,7 @@ def test_ad9371_dds_gain_check_vary_power_with_10dB_splitter(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -767,7 +767,7 @@ def test_ad9371_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -794,7 +794,7 @@ def test_ad9371_sfdr_with_10dB_splitter(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "channel, param_set, sfdr_min",

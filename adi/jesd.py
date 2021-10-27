@@ -31,6 +31,8 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import os
+
 from .sshfs import sshfs
 
 
@@ -38,6 +40,10 @@ class jesd:
     """JESD Monitoring"""
 
     def __init__(self, address, username="root", password="analog"):
+
+        # Disable if in emulation test mode
+        if os.environ.get("PYADI_EMU_TEST"):
+            return
         if "ip:" in address:
             address = address[3:]
         self.address = address
