@@ -19,6 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_genalyzer.sh
           bash ./.github/scripts/install_pydeps.sh
 
       - name: Test
