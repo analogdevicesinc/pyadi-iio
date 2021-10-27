@@ -1,0 +1,84 @@
+# FMC and Eval
+fmcomms2:
+  - ad7291
+  - ad9361-phy
+  - cf-ad9361-lpc,4
+fmcomms4:
+  - ad7291
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+fmcomms5:
+  - ad9361-phy
+  - ad9361-phy-b
+  - cf-ad9361-A,8
+  - cf-ad9361-B,4
+pluto:
+  - adm1177
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+  - emulate:
+    - filename: pluto.xml
+    - data_devices:
+        - iio:device2
+        - iio:device3
+pluto_rev_c:
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+  - ctx_attr:
+    - hw_model: Analog Devices PlutoSDR Rev.C
+  - emulate:
+    - filename: pluto.xml
+    - data_devices:
+        - iio:device2
+        - iio:device3
+daq2:
+  - axi-ad9144-hpc,4
+  - axi-ad9680-hpc,2
+daq3:
+  - axi-ad9152-hpc,2
+  - axi-ad9680-hpc,2
+ad9081:
+  - axi-ad9081-tx-hpc
+  - axi-ad9081-rx-hpc
+  - emulate:
+    - filename: ad9081.xml
+    - data_devices:
+        - iio:device2
+        - iio:device3
+
+# SOMS
+adrv9361:
+  - ad7291
+  - ad9517-3
+  - ad9361-phy
+  - cf-ad9361-lpc,4
+adrv9364:
+  - ad7291-bob
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+packrf:
+  - ad7291-ccbox
+  - ad9361-phy
+  - cf-ad9361-lpc,4
+
+# Generics
+ad9361:
+  - ad9361-phy
+  - cf-ad9361-lpc,4
+ad9364:
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+adrv9002:
+  - adrv9002-phy
+adrv9009:
+  - adrv9009-phy
+adrv9009-dual:
+  - adrv9009-phy
+  - adrv9009-phy-b
+adrv9371:
+  - ad9371-phy
+  - emulate:
+    - filename: ad9371.xml
+    - data_devices:
+        - iio:device4
+        - iio:device6
