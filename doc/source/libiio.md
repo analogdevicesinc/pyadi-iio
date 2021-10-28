@@ -13,8 +13,8 @@ import iio
 sdr = adi.Pluto("ip:pluto.local")
 ctx = iio.Context("ip:pluto.local")
 
-for d1,d2 in zip(sdr.ctx.devices,ctx.devices):
-    print(d1.name,"|",d2.name)
+for d1, d2 in zip(sdr.ctx.devices, ctx.devices):
+    print(d1.name, "|", d2.name)
 ```
 Output:
 ```bash
@@ -39,13 +39,13 @@ sdr = adi.Pluto()
 
 phy = sdr.ctx.find_device("ad9361-phy")
 # View current mode
-print(phy.attrs['ensm_mode'].value)
+print(phy.attrs["ensm_mode"].value)
 # View options
-print(phy.attrs['ensm_mode_available'].value)
+print(phy.attrs["ensm_mode_available"].value)
 # Update mode
-phy.attrs['ensm_mode'].value = 'alert'
+phy.attrs["ensm_mode"].value = "alert"
 # View new mode
-print(phy.attrs['ensm_mode'].value)
+print(phy.attrs["ensm_mode"].value)
 ```
 Output:
 ```bash
@@ -62,7 +62,7 @@ sdr = adi.Pluto()
 
 phy = sdr.ctx.find_device("ad9361-phy")
 for dattr in phy.debug_attrs:
-    print(dattr,phy.debug_attrs[dattr])
+    print(dattr, phy.debug_attrs[dattr])
 ```
 Output:
 ```bash
