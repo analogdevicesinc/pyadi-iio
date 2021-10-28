@@ -330,18 +330,17 @@ def main():
 
     # import adi
 
-    sdr = adi.ad9361("ip:10.42.0.162")
-    sdr.rx_buffer_size = 2 ** 18
-    sdr.sample_rate = 10000000
-    sdr.dds_single_tone(1000000, 0.1)
-    sdr.tx_lo = 1000000000
-    sdr.rx_lo = 1000000000
-    sdr.gain_control = 'slow_attack'
-    sdr.tx_hardwaregain = -10
-    sdr.rx_enabled_channels = [0]
-    fs = sdr.sample_rate
-    for k in range(10):
-        a = sdr.rx()
+    # sdr = adi.Pluto("ip:192.168.2.1")
+    # sdr.rx_buffer_size = 2 ** 18
+    # sdr.sample_rate = 10000000
+    # sdr.dds_single_tone(1000000, 0.1)
+    # sdr.tx_lo = 1000000000
+    # sdr.rx_lo = 1000000000
+    # sdr.gain_control = 'slow_attack'
+    # sdr.tx_hardwaregain = -10
+    # fs = sdr.sample_rate
+    # for k in range(10):
+    #     a = sdr.rx()
 
     # Time is from 0 to 1 seconds, but leave off the endpoint, so
     # that 1.0 seconds is the first sample of the *next* chunk
