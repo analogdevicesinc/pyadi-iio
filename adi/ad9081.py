@@ -476,16 +476,16 @@ class ad9081(rx_tx, context_manager):
             self._tx_coarse_duc_channel_names, "en", True, value,
         )
 
-    @property
-    def tx_dac_full_scale_current(self):
+    def set_tx_dac_full_scale_current(self, value):
         """tx_dac_full_scale_current: Set full scale current of DACs. This value
         is in microamps.
         """
-        return self._get_iio_debug_attr("dac-full-scale-current-ua", self._rxadc)
+        self._set_iio_debug_attr_str(
+            "dac-full-scale-current-ua", str(value), self._rxadc
+        )
 
-    @tx_dac_full_scale_current.setter
-    def tx_dac_full_scale_current(self, value):
-        self._set_iio_debug_attr("dac-full-scale-current-ua", value, self._rxadc)
+    # we cannot read current as the driver will just throw EPERM
+    tx_dac_full_scale_current = property(None, set_tx_dac_full_scale_current)
 
     @property
     def loopback_mode(self):
