@@ -38,6 +38,11 @@ class context_manager(object):
     _uri_auto = "ip:analog"
     _ctx = None
 
+    @property
+    def ctx(self) -> iio.Context:
+        """IIO Context"""
+        return self._ctx
+
     def __init__(self, uri="", _device_name=""):
         if self._ctx:
             return
