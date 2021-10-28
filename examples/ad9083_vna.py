@@ -127,6 +127,12 @@ for i in range(0, 8):
     print("ADL5960-", i, "REG 0x25 =", vna.frontend[i].reg_read(0x25))
 
 
+print("AMV8818 modes available:", vna.lo_bpf.mode_available)
+print("AMV8818 current mode:", vna.lo_bpf.mode)
+
+vna.lo_bpf.band_pass_bandwidth_3db_frequency = 200
+vna.rfin_bpf.band_pass_bandwidth_3db_frequency = 200
+
 vna.gpio_adl5960x_sync = 1
 vna.gpio_adl5960x_sync = 0
 
@@ -149,17 +155,31 @@ for f in range(int(3e9), int(18e9), int(1000e6)):
     print("ADL5960-", i, "CT2 REG 0x21 =", vna.frontend[0].reg_read(0x21))
     # ADMV8818 should update automatically as long as the LO doubler is not used
     print(
-        "LO   HPF",
+        "LO      HPF",
         vna.lo_bpf.high_pass_3db_frequency,
         "MHz, LPF",
         vna.lo_bpf.low_pass_3db_frequency,
         "MHz",
     )
     print(
-        "RFIN HPF",
+        "LO   Center",
+        vna.lo_bpf.band_pass_center_frequency,
+        "MHz,  BW",
+        vna.lo_bpf.band_pass_bandwidth_3db_frequency,
+        "MHz",
+    )
+    print(
+        "RFIN    HPF",
         vna.rfin_bpf.high_pass_3db_frequency,
         "MHz, LPF",
         vna.rfin_bpf.low_pass_3db_frequency,
+        "MHz",
+    )
+    print(
+        "RFIN Center",
+        vna.rfin_bpf.band_pass_center_frequency,
+        "MHz,  BW",
+        vna.rfin_bpf.band_pass_bandwidth_3db_frequency,
         "MHz",
     )
     for r in range(2):
