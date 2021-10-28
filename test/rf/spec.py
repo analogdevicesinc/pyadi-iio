@@ -132,6 +132,49 @@ def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.01):
     return main, main_loc, harmonics_vals, harmonics_locs
 
 
+def find_harmonics_from_main(
+    x, freqs, fs, num_harmonics=6, tolerance=0.01, plot=False
+):
+    """Find harmonic tone magnitudes based on found fundamental"""
+    vals, indxs = measure_peaks(x, num_harmonics)
+    main = freqs[indxs[0]]
+    main_loc = indxs[0]
+    # Calculate other harmonic locations
+    harmonic_freqz = [main * harmonic for harmonic in range(2, num_harmonics + 2)]
+    harmonic_freqz_neg = [main - h for h in harmonic_freqz]
+    # print("Main", main)
+    # print(f"Estimated harmonics {harmonic_freqz}")
+    # print(f"Estimated negative harmonics {harmonic_freqz_neg}")
+    harmonics_locs = []
+    harmonics_vals = []
+    lx = len(x)
+    bin_width = fs / lx
+    for freq in harmonic_freqz + harmonic_freqz_neg:
+        if absolute(freq) < (bin_width / 2):
+            print("DC ignored", freq)
+            continue
+        # Get closest index
+        indx = np.argmin(absolute(freqs - freq))
+        if absolute(freqs[indx] - freq) < (bin_width / 2):
+            # print(f"Harmonic found at {freqs[indx]} with mag {x[indx]}")
+            harmonics_locs.append(indx)
+            harmonics_vals.append(x[indx])
+
+    if plot:
+        import matplotlib.pyplot as plt
+
+        # Plot shifted data on a shifted axis
+        plt.plot(freqs, x)
+        plt.plot(main, x[main_loc], "+")
+        plt.plot(freqs[harmonics_locs], harmonics_vals, "x")
+        plt.margins(0.1, 0.1)
+        plt.xlabel("Frequency [Hz]")
+        plt.tight_layout()
+        plt.show()
+
+    return main, main_loc, harmonics_vals, harmonics_locs
+
+
 def sfdr(x, fs=1, ref=2 ** 15, plot=False):
     amp, freqs = spec_est(x, fs=fs, ref=ref, plot=plot)
     amp_org = amp
@@ -171,8 +214,9 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
 def main():
 
     # import adi
-    # sdr = adi.ad9361()
-    # sdr.rx_buffer_size = 2**18
+
+    # sdr = adi.Pluto("ip:192.168.2.1")
+    # sdr.rx_buffer_size = 2 ** 18
     # sdr.sample_rate = 10000000
     # sdr.dds_single_tone(1000000, 0.1)
     # sdr.tx_lo = 1000000000
@@ -181,7 +225,7 @@ def main():
     # sdr.tx_hardwaregain = -10
     # fs = sdr.sample_rate
     # for k in range(10):
-    #     a = sdr.rx()[0]
+    #     a = sdr.rx()
 
     # Time is from 0 to 1 seconds, but leave off the endpoint, so
     # that 1.0 seconds is the first sample of the *next* chunk
@@ -195,8 +239,13 @@ def main():
     # a = cos(2 * pi * f * t) * 2 ** 15
     a = exp(1j * 2 * pi * f * t) * 2 ** 15
 
+    # fs = sdr.sample_rate
+
     amp, freqs = spec_est(a, fs, ref=2 ** 15, plot=True)
-    _, ml, vals, locs = find_harmonics(fftshift(amp), fftshift(freqs))
+    # freqs = np.flip(freqs)
+    _, ml, vals, locs = find_harmonics_from_main(
+        fftshift(amp), fftshift(freqs), fs, plot=True
+    )
     freqs_s = fftshift(freqs)
     amp_s = fftshift(amp)
 
