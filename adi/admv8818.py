@@ -89,6 +89,57 @@ class admv8818(attribute, context_manager):
             self._ctrl,
         )
 
+    @property
+    def band_pass_bandwidth_3db_frequency(self):
+        """Get/Set the Band Pass 3dB Frequency in MHz"""
+        return self._get_iio_attr(
+            "altvoltage0", "filter_band_pass_bandwidth_3db_frequency", True, self._ctrl
+        )
+
+    @band_pass_bandwidth_3db_frequency.setter
+    def band_pass_bandwidth_3db_frequency(self, value):
+        """Get/Set the Band Pass 3dB Frequency in MHz"""
+        self._set_iio_attr_int(
+            "altvoltage0",
+            "filter_band_pass_bandwidth_3db_frequency",
+            True,
+            int(value),
+            self._ctrl,
+        )
+
+    @property
+    def band_pass_center_frequency(self):
+        """Get/Set the Band Pass Center Frequency in MHz"""
+        return self._get_iio_attr(
+            "altvoltage0", "filter_band_pass_center_frequency", True, self._ctrl
+        )
+
+    @band_pass_center_frequency.setter
+    def band_pass_center_frequency(self, value):
+        """Get/Set the Band Pass Center Frequency in MHz"""
+        self._set_iio_attr_int(
+            "altvoltage0",
+            "filter_band_pass_center_frequency",
+            True,
+            int(value),
+            self._ctrl,
+        )
+
+    @property
+    def mode_available(self):
+        """Get available modes"""
+        return self._get_iio_attr_str("altvoltage0", "mode_available", True, self._ctrl)
+
+    @property
+    def mode(self):
+        """Get/Set mode"""
+        return self._get_iio_attr_str("altvoltage0", "mode", True, self._ctrl)
+
+    @mode.setter
+    def mode(self, value):
+        """Get/Set mode"""
+        self._set_iio_attr("altvoltage0", "mode", True, value, self._ctrl)
+
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""
         self._set_iio_debug_attr_str("direct_reg_access", reg, self._ctrl)
