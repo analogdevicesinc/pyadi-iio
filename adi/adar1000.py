@@ -1655,7 +1655,7 @@ class adar1000_array(context_manager):
 
     def calculate_phi(self, azimuth, elevation):
         """Calculate the Φ angles to steer the array in a particular direction. This method assumes that the entire
-        array is one analog beam.
+            array is one analog beam.
         parameters:
             azimuth: float
                 Desired beam angle in degrees for the horizontal direction.
@@ -1675,6 +1675,7 @@ class adar1000_array(context_manager):
 
     def initialize_devices(self, pa_off=-2.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
         """Suggested initialization routine after powerup
+
         parameters:
             pa_off: float
                 Voltage to set the PA_BIAS_OFF values to during initialization
