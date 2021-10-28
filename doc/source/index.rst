@@ -36,6 +36,7 @@ Sections
    buffers/index
    fpga/index
    dev/index
+   libiio
    support
 
 Indices and tables
