@@ -60,12 +60,12 @@ class adf5610(attribute, context_manager):
     @property
     def frequency(self):
         """Get/Set the Frequency in Hz"""
-        return self._get_iio_attr("altvoltage0", "frequency", False, self._ctrl)
+        return self._get_iio_attr("altvoltage0", "frequency", True, self._ctrl)
 
     @frequency.setter
     def frequency(self, value):
         """Get/Set the Frequency in Hz"""
-        self._set_iio_attr("altvoltage0", "frequency", False, int(value), self._ctrl)
+        self._set_iio_attr("altvoltage0", "frequency", True, int(value), self._ctrl)
 
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""
