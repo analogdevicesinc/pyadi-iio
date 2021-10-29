@@ -48,13 +48,19 @@ jobs:
 
       - name: Test
         run: |
-                pytest -vs --cov=adi --scan-verbose --adi-hw-map --emu
+                pytest -vs --cov=adi --scan-verbose --adi-hw-map --emu --junitxml="results.xml"
 
       - name: Report coverage
         if: matrix.python-version == 3.6
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: coveralls
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: results.xml
 
   Lint:
     runs-on: ubuntu-latest
