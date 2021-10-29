@@ -126,5 +126,5 @@ try:
 except ImportError:
     pass
 
-__version__ = "0.0.11"
+__version__ = "0.0.12"
 name = "Analog Devices Hardware Interfaces"
