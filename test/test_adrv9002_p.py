@@ -278,7 +278,7 @@ def test_adrv9002_rx_data(test_dma_rx, iio_uri, classname, channel, use_rx2):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
