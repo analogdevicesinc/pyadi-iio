@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>libiio Direct Access &mdash; Analog Devices Hardware Python Interfaces 0.0.11 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Support" href="support.html" />
+    <link rel="prev" title="Generic Tests" href="dev/test_generics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Analog Devices Hardware Python Interfaces
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices/index.html">Supported Devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Developers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">libiio Direct Access</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#libiio-entry-points">libiio Entry Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Analog Devices Hardware Python Interfaces</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>libiio Direct Access</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/libiio.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="libiio-direct-access">
+<h1>libiio Direct Access<a class="headerlink" href="#libiio-direct-access" title="Permalink to this headline"></a></h1>
+<p><strong>pyadi-iio</strong> is built on-top of <strong>libiio</strong>, specifically its python bindings <a class="reference external" href="https://pypi.org/project/pylibiio/">pylibiio</a>. However, <strong>pyadi-iio</strong> tries to limit or shape the top-level access of certain properties of drivers exposed by <em>libiio</em> and its structure so users do not have to understand how <strong>libiio</strong> works. This is great until you need access to something not directly exposed by one of <strong>pyadi-iio</strong>’s classes. Fortunately, there is an easy way to directly access the <a class="reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html">libiio python API</a> when necessary.</p>
+<section id="libiio-entry-points">
+<h2>libiio Entry Points<a class="headerlink" href="#libiio-entry-points" title="Permalink to this headline"></a></h2>
+<p>The main object interface to <strong>libiio</strong> is through the <strong>ctx</strong> property, which is available in every device-specific class. The context is used internally by <strong>ctx</strong> to do all <strong>libiio</strong> specific operations. Here is an example of using the <strong>ctx</strong> property with <strong>pyadi-iio</strong> and <strong>libiio</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<span class="kn">import</span> <span class="nn">iio</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="s2">&quot;ip:pluto.local&quot;</span><span class="p">)</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">iio</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="s2">&quot;ip:pluto.local&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">devices</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">devices</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">d1</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">d2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ad9361-phy <span class="p">|</span> ad9361-phy
+xadc <span class="p">|</span> xadc
+cf-ad9361-dds-core-lpc <span class="p">|</span> cf-ad9361-dds-core-lpc
+cf-ad9361-lpc <span class="p">|</span> cf-ad9361-lpc
+</pre></div>
+</div>
+<p>By convention device-specific classes will populate the main control driver as property <strong>_ctrl</strong>, the RX driver associated with data (DMA) as <strong>_rxadc</strong>, and the TX driver associated with data (DMA) and DDSs as <strong>_txdac</strong>. However, this is not always guaranteed depending on class implementation.</p>
+<p>Please refer to the <a class="reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html">libiio python API</a> for documentation on using <strong>libiio</strong> directly.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<p>Here is an example of setting the enable state machine on Pluto through the <strong>libiio</strong> API through <strong>pyadi-iio</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
+
+<span class="n">phy</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">find_device</span><span class="p">(</span><span class="s2">&quot;ad9361-phy&quot;</span><span class="p">)</span>
+<span class="c1"># View current mode</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phy</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;ensm_mode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="c1"># View options</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phy</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;ensm_mode_available&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="c1"># Update mode</span>
+<span class="n">phy</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;ensm_mode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;alert&quot;</span>
+<span class="c1"># View new mode</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phy</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;ensm_mode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fdd
+sleep <span class="nb">wait</span> alert fdd pinctrl pinctrl_fdd_indep
+alert
+</pre></div>
+</div>
+<p>Here we can print all <strong>libiio</strong> debug attributes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
+
+<span class="n">phy</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">find_device</span><span class="p">(</span><span class="s2">&quot;ad9361-phy&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">dattr</span> <span class="ow">in</span> <span class="n">phy</span><span class="o">.</span><span class="n">debug_attrs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dattr</span><span class="p">,</span> <span class="n">phy</span><span class="o">.</span><span class="n">debug_attrs</span><span class="p">[</span><span class="n">dattr</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>digital_tune digital_tune
+calibration_switch_control calibration_switch_control
+multichip_sync multichip_sync
+gaininfo_rx2 gaininfo_rx2
+gaininfo_rx1 gaininfo_rx1
+bist_timing_analysis bist_timing_analysis
+gpo_set gpo_set
+bist_tone bist_tone
+bist_prbs bist_prbs
+loopback loopback
+initialize initialize
+adi,bb-clk-change-dig-tune-enable adi,bb-clk-change-dig-tune-enable
+adi,axi-half-dac-rate-enable adi,axi-half-dac-rate-enable
+adi,txmon-2-lo-cm adi,txmon-2-lo-cm
+adi,txmon-1-lo-cm adi,txmon-1-lo-cm
+adi,txmon-2-front-end-gain adi,txmon-2-front-end-gain
+adi,txmon-1-front-end-gain adi,txmon-1-front-end-gain
+...
+</pre></div>
+</div>
+<p>On some devices it is possible to access registers. This must be done through the Device classes of the context:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
+
+<span class="n">phy</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">find_device</span><span class="p">(</span><span class="s2">&quot;ad9361-phy&quot;</span><span class="p">)</span>
+<span class="c1"># Read product ID register</span>
+<span class="n">pi</span> <span class="o">=</span> <span class="n">phy</span><span class="o">.</span><span class="n">reg_read</span><span class="p">(</span><span class="mh">0x37</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Enable near-end loopback in the HDL core</span>
+<span class="n">rxfpga</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">find_device</span><span class="p">(</span><span class="s2">&quot;cf-ad9361-lpc&quot;</span><span class="p">)</span>
+<span class="n">rxfpga</span><span class="o">.</span><span class="n">reg_write</span><span class="p">(</span><span class="mh">0x80000418</span><span class="p">,</span> <span class="mh">0x1</span><span class="p">)</span>  <span class="c1"># I channel</span>
+<span class="n">rxfpga</span><span class="o">.</span><span class="n">reg_write</span><span class="p">(</span><span class="mh">0x80000458</span><span class="p">,</span> <span class="mh">0x1</span><span class="p">)</span>  <span class="c1"># Q channel</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ID: 0xa
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dev/test_generics.html" class="btn btn-neutral float-left" title="Generic Tests" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="support.html" class="btn btn-neutral float-right" title="Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019-2021, Analog Devices, Inc.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

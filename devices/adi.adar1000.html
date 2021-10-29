@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>adar1000 &mdash; Analog Devices Hardware Python Interfaces 0.0.10 documentation</title>
+  <title>adar1000 &mdash; Analog Devices Hardware Python Interfaces 0.0.11 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
@@ -86,6 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/index.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
@@ -841,17 +843,17 @@ array is a list entry in the larger list.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adar1000.adar1000_array.calculate_phi">
 <span class="sig-name descname"><span class="pre">calculate_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elevation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array.calculate_phi" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the Φ angles to steer the array in a particular direction. This method assumes that the entire
-array is one analog beam.
-parameters:</p>
-<blockquote>
-<div><dl class="simple">
+<dd><dl class="simple">
+<dt>Calculate the Φ angles to steer the array in a particular direction. This method assumes that the entire</dt><dd><p>array is one analog beam.</p>
+</dd>
+<dt>parameters:</dt><dd><dl class="simple">
 <dt>azimuth: float</dt><dd><p>Desired beam angle in degrees for the horizontal direction.</p>
 </dd>
 <dt>elevation: float</dt><dd><p>Desired beam angle in degrees for the vertical direction.</p>
 </dd>
 </dl>
-</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -895,10 +897,9 @@ The dictionary key is the element number for each device.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adar1000.adar1000_array.initialize_devices">
 <span class="sig-name descname"><span class="pre">initialize_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lna_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lna_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array.initialize_devices" title="Permalink to this definition"></a></dt>
-<dd><p>Suggested initialization routine after powerup
-parameters:</p>
-<blockquote>
-<div><dl class="simple">
+<dd><p>Suggested initialization routine after powerup</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
 <dt>pa_off: float</dt><dd><p>Voltage to set the PA_BIAS_OFF values to during initialization</p>
 </dd>
 <dt>pa_on: float</dt><dd><p>Voltage to set the PA_BIAS_ON values to during initialization</p>
@@ -908,7 +909,8 @@ parameters:</p>
 <dt>lna_on: float</dt><dd><p>Voltage to set the LNA_BIAS_ON values to during initialization</p>
 </dd>
 </dl>
-</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

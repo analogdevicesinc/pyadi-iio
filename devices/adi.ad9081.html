@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ad9081 &mdash; Analog Devices Hardware Python Interfaces 0.0.10 documentation</title>
+  <title>ad9081 &mdash; Analog Devices Hardware Python Interfaces 0.0.11 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
@@ -86,6 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/index.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
@@ -188,6 +190,12 @@ individual driver channel names</p>
 <dd></dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_channel_6dB_digital_gains">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_channel_6dB_digital_gains</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_channel_6dB_digital_gains" title="Permalink to this definition"></a></dt>
+<dd><p>rx_channel_6dB_digital_gains: Enable 6dB of gain per FDDC</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_channel_nco_frequencies">
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_channel_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_channel_nco_frequencies" title="Permalink to this definition"></a></dt>
 <dd><p>rx_channel_nco_frequencies: Receive path fine DDC NCO frequencies</p>
@@ -197,6 +205,12 @@ individual driver channel names</p>
 <dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_channel_nco_phases">
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_channel_nco_phases</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_channel_nco_phases" title="Permalink to this definition"></a></dt>
 <dd><p>rx_channel_nco_phases: Receive path fine DDC NCO phases</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_main_6dB_digital_gains">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_main_6dB_digital_gains</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_main_6dB_digital_gains" title="Permalink to this definition"></a></dt>
+<dd><p>rx_main_6dB_digital_gains: Enable 6dB of gain per CDDC</p>
 </dd></dl>
 
 <dl class="py property">
@@ -229,6 +243,13 @@ individual driver channel names</p>
 <dd><p>rx_test_mode: NCO Test Mode</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad9081.ad9081.set_tx_dac_full_scale_current">
+<span class="sig-name descname"><span class="pre">set_tx_dac_full_scale_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9081.ad9081.set_tx_dac_full_scale_current" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dac_full_scale_current: Set full scale current of DACs. This value
+is in microamps.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_channel_nco_frequencies">
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_channel_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9081.ad9081.tx_channel_nco_frequencies" title="Permalink to this definition"></a></dt>
@@ -258,6 +279,17 @@ individual driver channel names</p>
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_channel_nco_test_tone_scales</span></span><a class="headerlink" href="#adi.ad9081.ad9081.tx_channel_nco_test_tone_scales" title="Permalink to this definition"></a></dt>
 <dd><p>tx_channel_nco_test_tone_scales: Transmit path fine DUC NCO test tone scale</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_dac_en">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_dac_en</span></span><a class="headerlink" href="#adi.ad9081.ad9081.tx_dac_en" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dac_en: Enable DACs</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_dac_full_scale_current">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_dac_full_scale_current</span></span><a class="headerlink" href="#adi.ad9081.ad9081.tx_dac_full_scale_current" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_ddr_offload">

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>one_bit_adc_dac &mdash; Analog Devices Hardware Python Interfaces 0.0.10 documentation</title>
+  <title>one_bit_adc_dac &mdash; Analog Devices Hardware Python Interfaces 0.0.11 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
@@ -86,6 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev/index.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
@@ -120,13 +122,11 @@
 <dt class="sig sig-object py" id="adi.one_bit_adc_dac.one_bit_adc_dac">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.one_bit_adc_dac.</span></span><span class="sig-name descname"><span class="pre">one_bit_adc_dac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'one-bit-adc-dac'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.one_bit_adc_dac.one_bit_adc_dac" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
-<p>One bit ADC/DAC (GPIO). This driver will create a handle for the
-GPIO device as well as properties for each GPIO pin it accesses.
-Each GPIO pin name will be lowercase and of the format:</p>
-<blockquote>
-<div><p>“gpio_{pin name}”</p>
-</div></blockquote>
 <dl class="simple">
+<dt>One bit ADC/DAC (GPIO). This driver will create a handle for the</dt><dd><p>GPIO device as well as properties for each GPIO pin it accesses.
+Each GPIO pin name will be lowercase and of the format:
+“gpio_{pin name}”</p>
+</dd>
 <dt>parameters:</dt><dd><dl class="simple">
 <dt>uri: type=string</dt><dd><p>URI of IIO context with GPIO pins</p>
 </dd>
