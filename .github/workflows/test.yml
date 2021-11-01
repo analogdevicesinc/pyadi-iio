@@ -105,6 +105,36 @@ jobs:
           cd doc && make html
           cd ..
 
+  DeployMasterDoc:
+    runs-on: ubuntu-latest
+    needs: [Test,Lint,Doc]
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Install dependencies
+        run: |
+          bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_pydeps.sh
+          pip install -r requirements_doc.txt
+
+      - name: Build doc and release
+        run: |
+          cd doc && make html
+          cd ..
+
+      - name: Publish doc
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doc/build/html
+          destination_dir: master
+
   Deploy:
     runs-on: ubuntu-latest
     needs: [Test,Lint,Doc]
