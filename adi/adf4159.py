@@ -32,7 +32,6 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-from decimal import Decimal
 import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
@@ -124,4 +123,3 @@ class adf4159(rx, context_manager, attribute):
     def freq_dev_time(self, value):
         """Get/Set the PLL frequency deviation time"""
         self._set_iio_attr("altvoltage0", "frequency_deviation_time", True, value, self._ctrl)
-        
