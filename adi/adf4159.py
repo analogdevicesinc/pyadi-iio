@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2021 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -32,19 +32,14 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
 
 
-class adf4159(rx, context_manager, attribute):
+class adf4159(context_manager, attribute):
     """ ADF4159 is a 13 GHz Fractional-N Frequency Synthesizer """
 
     _device_name = "adf4159"
-    _rx_data_type = np.int32
-    _rx_unbuffered_data = True
-    _rx_data_si_type = np.float
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, self._device_name)
