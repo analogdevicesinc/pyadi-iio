@@ -121,6 +121,8 @@ from adi.gen_mux import genmux
 
 from adi.fmc_vna import fmcvna
 
+from adi.adf4159 import adf4159
+
 try:
     from adi.jesd import jesd
 except ImportError:
