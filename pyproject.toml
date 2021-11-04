@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools >= 40.9.0","wheel"]
+build-backend = "setuptools.build_meta"
+
+[metadata]
+name = "pyadi-iio"
+version = "0.0.12"
+description = "Interfaces to stream data from ADI hardware"
+classifiers = ["Programming Language :: Python :: 3", "License :: OSI Approved :: BSD License", "Operating System :: OS Independent"]
+homepage = "https://github.com/analogdevicesinc/pyadi-iio"
+authors = ["Travis F. Collins <travis.collins@analog.com>"]
+readme = "README.md"
+
+[project.dependencies]
+python = "^3.6"
+numpy = "*"
+paramiko = "*"
+pylibiio = "==0.23.1"
+
+[project.dev-dependencies]
+pytest = ">=4.6"
+
+[tool.isort]
+profile = "black"
+multi_line_output = "3"
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+
+[tool.mypy]
+ignore_missing_imports = true
