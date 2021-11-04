@@ -32,8 +32,9 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-import adi
 import time
+
+import adi
 
 # create pll instance
 pll = adi.adf4159()
@@ -63,4 +64,3 @@ while True:
     print("single_ramp_burst")
     time.sleep(5)
     print("Done")
-    
