@@ -230,7 +230,6 @@ def find_harmonics_reduced(x, freqs, num_harmonics=6, tolerance=0.01):
             print("DC ignored", freqs[indxs[indx]])
             continue
         dif = absolute(freqs[indxs[indx]]) % main
-        #dif = int((2*main_loc + lx/2)%lx)
         if dif < main * tolerance:
             harmonics_locs.append(indxs[indx])
             harmonics_vals.append(vals[indx])
