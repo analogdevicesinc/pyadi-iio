@@ -131,6 +131,15 @@ class attribute:
         for i, v in enumerate(values):
             self._set_iio_attr_int(channel_names[i], attr_name, output, v, _ctrl)
 
+    def _set_iio_attr_str_vec(
+        self, channel_names, attr_name, output, values, _ctrl=None
+    ):
+        """ Set channel attribute with list of strings """
+        if not isinstance(values, list):
+            raise Exception("Value must be a list")
+        for i, v in enumerate(list(values)):
+            self._set_iio_attr(channel_names[i], attr_name, output, v, _ctrl)
+
     def _get_iio_attr_str(self, channel_name, attr_name, output, _ctrl=None):
         """ Get channel attribute as string """
         if _ctrl:
@@ -152,6 +161,14 @@ class attribute:
         vals = []
         for chn in channel_names:
             v = self._get_iio_attr(chn, attr_name, output, _ctrl)
+            vals.append(v)
+        return vals
+
+    def _get_iio_attr_str_vec(self, channel_names, attr_name, output, _ctrl=None):
+        """ Get channel attributes as list of numbers """
+        vals = []
+        for chn in channel_names:
+            v = self._get_iio_attr_str(chn, attr_name, output, _ctrl)
             vals.append(v)
         return vals
 
