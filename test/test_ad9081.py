@@ -104,7 +104,7 @@ def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
     [
         dict(
             loopback_mode=0,
-            rx_nyquist_zone="odd",
+            rx_nyquist_zone=["odd", "odd", "odd", "odd"],
             tx_channel_nco_gain_scales=[0.5, 0.5, 0.5, 0.5],
             rx_main_nco_frequencies=[1000000000, 1000000000, 1000000000, 1000000000],
             tx_main_nco_frequencies=[1000000000, 1000000000, 1000000000, 1000000000],
