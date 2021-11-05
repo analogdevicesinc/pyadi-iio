@@ -855,7 +855,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     sdr = eval(classname + "(uri='" + uri + "')")
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
-
+    
     time.sleep(3)
 
     N = 2 ** 15
@@ -900,11 +900,15 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     freqs = fftfreq(L, 1 / RXFS)
 
-    # _, ml, hm, indxs = spec.find_harmonics(
-    #     fftshift(ampl), fftshift(freqs), num_harmonics=20, tolerance=0.2
+    # _, ml, hm, indxs = spec.find_harmonics_from_main(
+    #     fftshift(ampl), fftshift(freqs), full_scale, num_harmonics=10, tolerance=0.1, plot=plot
     # )
-    hm, indxs = spec.measure_peaks(fftshift(ampl), 20)
-    ml = indxs[0]
+
+    _, ml, hm, indxs = spec.find_harmonics_reduced(
+        fftshift(ampl), fftshift(freqs), num_harmonics=15, tolerance=0.2
+    )
+    # hm, indxs = spec.measure_peaks(fftshift(ampl), 20)
+    # ml = indxs[0]
     ffreqs = fftshift(freqs)
     ffampl = fftshift(ampl)
     if plot:
@@ -919,7 +923,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.subplot(2, 1, 2)
         plt.plot(fftshift(freqs), fftshift(ampl))
         plt.plot(ffreqs[ml], ffampl[ml], "y.")
-        plt.plot(ffreqs[indxs[0 : len(hm)]], hm[0 : len(hm)], "y.")
+        plt.plot(ffreqs[indxs[0 : len(hm)]], ffampl[indxs[0 : len(hm)]], "y.")
 
         plt.margins(0.1, 0.1)
         plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
@@ -927,8 +931,12 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.tight_layout()
         plt.show()
 
+    print("HArmonics:")
+    print(hm)
+    print("Locs: ")
+    print(indxs)
     assert low[0] <= ffampl[ml] <= high[0]
-    for i in range(1, len(low)):
+    for i in range(1, min(len(low), len(hm))):
         assert low[i] <= hm[i] <= high[i]
 
 
