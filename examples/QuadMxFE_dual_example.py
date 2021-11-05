@@ -131,7 +131,7 @@ multi.hmc7044_car_output_delay(9, 1, 0)
 for dev in multi.secondaries + [multi.primary]:
 
     # Number of MxFE Devices
-    D = len(dev.rx_nyquist_zone)
+    D = len(dev.rx_test_mode)
 
     # Total number of channels
     N_RX = len(dev.rx_channel_nco_frequencies["axi-ad9081-rx-3"]) * D
@@ -179,7 +179,7 @@ for dev in multi.secondaries + [multi.primary]:
 
     dev.rx_enabled_channels = RX_CHAN_EN
     dev.tx_enabled_channels = [1] * N_TX
-    dev.rx_nyquist_zone = ["even"] * D
+    dev.rx_nyquist_zone = ["even"] * NM_TX
 
     dev.rx_buffer_size = 2 ** 12
     dev.tx_cyclic_buffer = True

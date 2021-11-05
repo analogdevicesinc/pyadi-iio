@@ -51,7 +51,7 @@ dev.tx_main_nco_frequencies = [1000000000] * 4
 
 dev.rx_enabled_channels = [0]
 dev.tx_enabled_channels = [0]
-dev.rx_nyquist_zone = "odd"
+dev.rx_nyquist_zone = ["odd"] * 4
 
 dev.rx_buffer_size = 2 ** 16
 dev.tx_cyclic_buffer = True
