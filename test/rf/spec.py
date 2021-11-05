@@ -129,6 +129,29 @@ def measure_peaks(x, num_peaks=4):
     return peak_vals, peak_indxs
 
 
+def measure_peaks_without_center(x, num_peaks=4):
+    peak_indxs = []
+    peak_vals = []
+    x_t = x.copy()
+    m = min(x_t)
+    main_diff = 700
+    indx = 0
+    while indx < num_peaks:
+        loc = argmax(x_t)
+        if indx == 0:
+            ml = loc
+            peak_vals.append(x_t[loc])
+            peak_indxs.append(loc)
+            indx += 1
+        # print(x_t[loc], x[loc], loc)
+        if indx > 0 and absolute(ml - loc) > main_diff:
+            peak_vals.append(x_t[loc])
+            peak_indxs.append(loc)
+            indx += 1
+        x_t[loc] = m
+    return peak_vals, peak_indxs
+
+
 def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.01):
     vals, indxs = measure_peaks(x, num_harmonics)
     main = absolute(freqs[indxs[0]])
@@ -189,7 +212,27 @@ def find_harmonics_from_main(
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
         plt.show()
+    
+    return main, main_loc, harmonics_vals, harmonics_locs
 
+def find_harmonics_reduced(x, freqs, num_harmonics=6, tolerance=0.01):
+    vals, indxs = measure_peaks_without_center(x, num_harmonics)
+    main = absolute(freqs[indxs[0]])
+    main_loc = indxs[0]
+    # print("Main",main)
+    harmonics_locs = []
+    harmonics_vals = []
+    lx = len(x)
+    dc_loc = floor(lx / 2)
+    for indx in range(1, len(vals)):
+        if absolute(indx - dc_loc) < (tolerance * lx):
+            print("DC ignored", freqs[indxs[indx]])
+            continue
+        dif = absolute(freqs[indxs[indx]]) % main
+        if dif < main * tolerance:
+            harmonics_locs.append(indxs[indx])
+            harmonics_vals.append(vals[indx])
+            # print("Harmonic",freqs[indxs[indx]])
     return main, main_loc, harmonics_vals, harmonics_locs
 
 
