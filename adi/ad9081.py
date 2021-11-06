@@ -267,12 +267,14 @@ class ad9081(rx_tx, context_manager):
     @property
     def rx_nyquist_zone(self):
         """rx_nyquist_zone: ADC nyquist zone. Options are: odd, even"""
-        return self._get_iio_attr_str_single("voltage0_i", "nyquist_zone", False)
+        return self._get_iio_attr_str_vec(
+            self._rx_coarse_ddc_channel_names, "nyquist_zone", False
+        )
 
     @rx_nyquist_zone.setter
     def rx_nyquist_zone(self, value):
-        self._set_iio_attr_single(
-            "voltage0_i", "nyquist_zone", False, value,
+        self._set_iio_attr_str_vec(
+            self._rx_coarse_ddc_channel_names, "nyquist_zone", False, value,
         )
 
     @property
