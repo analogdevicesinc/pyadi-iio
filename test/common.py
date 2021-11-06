@@ -111,9 +111,14 @@ def dev_interface(uri, classname, val, attr, tol):
     setattr(sdr, attr, val)
     rval = getattr(sdr, attr)
 
+    del sdr
+
     if not isinstance(rval, str) and not is_list:
         rval = float(rval)
-    del sdr
+
+    if is_list and isinstance(rval[0], str):
+        return val == rval
+
     if not isinstance(val, str):
         abs_val = np.argmax(abs(np.array(val) - np.array(rval)))
         if abs_val > tol:
