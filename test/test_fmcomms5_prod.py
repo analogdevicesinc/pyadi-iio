@@ -198,8 +198,77 @@ def test_rssi_chip_b(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
-    "dds_scale, frequency, hardwaregain_low, hardwaregain_high",
-    [(0.0, 999859, 50, 80), (0.89, 999859, 0.0, 28)],
+    "dds_scale, frequency, hardwaregain_low, hardwaregain_high, param_set",
+    [
+        (
+            0.0,
+            999859,
+            50,
+            80,
+            dict(
+                gain_control_mode_chan0="slow_attack",
+                gain_control_mode_chan1="slow_attack",
+                rx_lo=2400000000,
+                tx_lo=2400000000,
+                tx_hardwaregain_chan0=-10,
+                tx_hardwaregain_chan1=-10,
+                sample_rate=30720000,
+                rx_rf_bandwidth=18000000,
+                tx_rf_bandwidth=18000000,
+            ),
+        ),
+        (
+            0.0,
+            999859,
+            50,
+            80,
+            dict(
+                gain_control_mode_chip_b_chan0="slow_attack",
+                gain_control_mode_chip_b_chan1="slow_attack",
+                rx_lo_chip_b=2400000000,
+                tx_lo_chip_b=2400000000,
+                tx_hardwaregain_chip_b_chan0=-10,
+                tx_hardwaregain_chip_b_chan1=-10,
+                sample_rate=30720000,
+                rx_rf_bandwidth_chip_b=18000000,
+                tx_rf_bandwidth_chip_b=18000000,
+            ),
+        ),
+        (
+            0.89,
+            999859,
+            0.0,
+            28,
+            dict(
+                gain_control_mode_chan0="slow_attack",
+                gain_control_mode_chan1="slow_attack",
+                rx_lo=2400000000,
+                tx_lo=2400000000,
+                tx_hardwaregain_chan0=-10,
+                tx_hardwaregain_chan1=-10,
+                sample_rate=30720000,
+                rx_rf_bandwidth=18000000,
+                tx_rf_bandwidth=18000000,
+            ),
+        ),
+        (
+            0.89,
+            999859,
+            0.0,
+            28,
+            dict(
+                gain_control_mode_chip_b_chan0="slow_attack",
+                gain_control_mode_chip_b_chan1="slow_attack",
+                rx_lo_chip_b=2400000000,
+                tx_lo_chip_b=2400000000,
+                tx_hardwaregain_chip_b_chan0=-10,
+                tx_hardwaregain_chip_b_chan1=-10,
+                sample_rate=30720000,
+                rx_rf_bandwidth_chip_b=18000000,
+                tx_rf_bandwidth_chip_b=18000000,
+            ),
+        ),
+    ],
 )
 def test_hardware_gain(
     test_hardwaregain,
@@ -210,6 +279,7 @@ def test_hardware_gain(
     frequency,
     hardwaregain_low,
     hardwaregain_high,
+    param_set,
 ):
     test_hardwaregain(
         iio_uri,
@@ -219,6 +289,7 @@ def test_hardware_gain(
         frequency,
         hardwaregain_low,
         hardwaregain_high,
+        param_set,
     )
 
 

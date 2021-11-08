@@ -36,7 +36,7 @@ def spec_est(x, fs, ref=2 ** 15, num_ffts=2, enable_windowing=False, plot=False)
 
         # Apply window
         if enable_windowing:
-            window = signal.kaiser(fft_len, beta=38)
+            window = np.hanning(fft_len)
             seg = multiply(seg, window)
 
         # Use FFT to get the amplitude of the spectrum
@@ -230,6 +230,7 @@ def find_harmonics_reduced(x, freqs, num_harmonics=6, tolerance=0.01):
             print("DC ignored", freqs[indxs[indx]])
             continue
         dif = absolute(freqs[indxs[indx]]) % main
+        #dif = int((2*main_loc + lx/2)%lx)
         if dif < main * tolerance:
             harmonics_locs.append(indxs[indx])
             harmonics_vals.append(vals[indx])
@@ -329,17 +330,18 @@ def main():
 
     # import adi
 
-    # sdr = adi.Pluto("ip:192.168.2.1")
-    # sdr.rx_buffer_size = 2 ** 18
-    # sdr.sample_rate = 10000000
-    # sdr.dds_single_tone(1000000, 0.1)
-    # sdr.tx_lo = 1000000000
-    # sdr.rx_lo = 1000000000
-    # sdr.gain_control = 'slow_attack'
-    # sdr.tx_hardwaregain = -10
-    # fs = sdr.sample_rate
-    # for k in range(10):
-    #     a = sdr.rx()
+    sdr = adi.ad9361("ip:10.42.0.162")
+    sdr.rx_buffer_size = 2 ** 18
+    sdr.sample_rate = 10000000
+    sdr.dds_single_tone(1000000, 0.1)
+    sdr.tx_lo = 1000000000
+    sdr.rx_lo = 1000000000
+    sdr.gain_control = 'slow_attack'
+    sdr.tx_hardwaregain = -10
+    sdr.rx_enabled_channels = [0]
+    fs = sdr.sample_rate
+    for k in range(10):
+        a = sdr.rx()
 
     # Time is from 0 to 1 seconds, but leave off the endpoint, so
     # that 1.0 seconds is the first sample of the *next* chunk

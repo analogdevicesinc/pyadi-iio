@@ -1,6 +1,6 @@
 import heapq
 import test.rf.spec as spec
-import genalyzer
+#import genalyzer
 import time
 
 import adi
@@ -589,7 +589,6 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
             sdr.tx2(cw)
         else:
             sdr.tx(cw)
-        time.sleep(1)
         for _ in range(60):  # Wait to stabilize
             data = sdr.rx2() if use_rx2 else sdr.rx()
     except Exception as e:
@@ -682,8 +681,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, frequency, scale, pl
         freq = 0
         for i in range(8):
             data = sdr.rx()
-            time.sleep(1)
-            amps, freq = spec.spec_est(data, fs=RXFS, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
+            amps, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
             amp += amps
         amp /= 8
     except Exception as e:
@@ -715,7 +713,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, frequency, scale, pl
         plt.subplot(2, 1, 2)
         plt.plot(ffreq_shift, ffampl_shift)
         plt.plot(freq[ml], amp[ml], "y.")
-        plt.plot(freq[indxs[1:n]], amp[indxs[1:n]], "y.")
+        plt.plot(freq[indxs[1:3]], amp[indxs[1:3]], "y.")
 
         plt.margins(0.1, 0.1)
         plt.annotate("Fundamental", (freq[ml], amp[ml]))
@@ -866,7 +864,7 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     else:
         fs = int(sdr.rx_sample_rate)
     sdr.dds_single_tone(np.floor(fs * 0.1), dds_scale, channel)
-    time.sleep(3)
+    time.sleep(5)
 
     # Check RSSI
     if channel == 0:
@@ -1018,8 +1016,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, frequency, scal
         ffreqs = 0
         for i in range(8):
             data = sdr.rx()
-            #time.sleep(1)
-            amp, ffreqs = spec.spec_est(data, fs=RXFS, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
+            amp, ffreqs = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
             ffampl += amp
         ffampl/= 8
     except Exception as e:
@@ -1065,7 +1062,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, frequency, scal
     print("Main should be between ", low[0], high[0])
     print("Main is at ", ffampl[ml], ffreqs[ml])
     assert low[0] <= ffampl[ml] <= high[0]
-    for i in range(n):
+    for i in range(3):
         print("Harmonic should be between ", low[i+1], high[i+1])
         print("Harmonic is ", peaks[i], ffreqs[indxs[i]])
         assert low[i+1] <= peaks[i] <= high[i+1]
