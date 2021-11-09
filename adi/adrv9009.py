@@ -87,16 +87,6 @@ class adrv9009(rx_tx, context_manager):
         self._set_iio_dev_attr_str("ensm_mode", value)
 
     @property
-    def ensm_mode(self):
-        """ensm_mode: Enable State Machine State Allows real time control over
-        the current state of the device. Options are: radio_on, radio_off"""
-        return self._get_iio_dev_attr_str("ensm_mode")
-
-    @ensm_mode.setter
-    def ensm_mode(self, value):
-        self._set_iio_dev_attr_str("ensm_mode", value)
-
-    @property
     def profile(self):
         """Load profile file. Provide path to profile file to attribute"""
         return self._get_iio_dev_attr("profile_config")
