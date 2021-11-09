@@ -13,8 +13,8 @@
 <img src="https://badge.fury.io/py/pyadi-iio.svg" alt="PyPI version">
 </a>
 
-<a href="https://www.codacy.com/app/travis.collins/pyadi-iio?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade">
-<img src="https://api.codacy.com/project/badge/Grade/4bd027bfc5774029a30a9e1cedf5a434" alt="Codacy Badge">
+<a href="https://www.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade">
+<img src="https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077" alt="Codacy Badge">
 </a>
 
 <a href="https://www.python.org/download/releases/3.6.0/">
