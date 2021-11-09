@@ -63,7 +63,7 @@ class sshfs:
             )
 
     def _run(self, cmd):
-        (_, out, err) = self.ssh.exec_command(cmd)
+        (_, out, err) = self.ssh.exec_command(cmd)  # pylint: ignore=B601
         stdout = out.read().decode().strip()
         stderr = err.read().decode().strip()
 
