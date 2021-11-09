@@ -53,14 +53,14 @@ class jesd:
 
     def find_lanes(self):
         self.lanes = {}
-        for dir in self.dirs:
-            if "-rx" in dir:
-                self.lanes[dir] = []
+        for dr in self.dirs:
+            if "-rx" in dr:
+                self.lanes[dr] = []
                 lanIndx = 0
                 while 1:
                     li = "/lane{}_info".format(lanIndx)
-                    if self.fs.isfile(self.rootdir + dir + li):
-                        self.lanes[dir].append(li)
+                    if self.fs.isfile(self.rootdir + dr + li):
+                        self.lanes[dr].append(li)
                         lanIndx += 1
                     else:
                         break
@@ -68,9 +68,9 @@ class jesd:
     def find_jesd_dir(self):
         dirs = self.fs.listdir(self.rootdir)
         self.dirs = []
-        for dir in dirs:
-            if "jesd" in dir:
-                self.dirs.append(dir)
+        for dr in dirs:
+            if "jesd" in dr:
+                self.dirs.append(dr)
 
     def decode_status(self, status):
         status = status.replace(",", "\n")
@@ -85,24 +85,23 @@ class jesd:
 
         return link_status
 
-    def get_status(self, dir):
-        return self.fs.gettext(self.rootdir + dir + "/status")
+    def get_status(self, dr):
+        return self.fs.gettext(self.rootdir + dr + "/status")
 
-    def get_dev_lane_info(self, dir):
+    def get_dev_lane_info(self, dr):
         return {
             ldir.replace("/", ""): self.decode_status(
-                self.fs.gettext(self.rootdir + dir + "/" + ldir)
+                self.fs.gettext(self.rootdir + dr + "/" + ldir)
             )
-            for ldir in self.lanes[dir]
+            for ldir in self.lanes[dr]
         }
 
     def get_all_link_statuses(self):
         statuses = dict()
-        for dir in self.dirs:
-            if "-rx" in dir:
-                statuses[dir] = self.get_dev_lane_info(dir)
-                # print(statuses[dir])
+        for dr in self.dirs:
+            if "-rx" in dr:
+                statuses[dr] = self.get_dev_lane_info(dr)
         return statuses
 
     def get_all_statuses(self):
-        return {dir: self.decode_status(self.get_status(dir)) for dir in self.dirs}
+        return {dr: self.decode_status(self.get_status(dr)) for dr in self.dirs}

@@ -92,7 +92,7 @@ class one_bit_adc_dac(attribute, context_manager):
         if not self._ctrl:
             raise Exception(f"No device found for {name}")
 
-        for i, chan in enumerate(self._ctrl.channels):
+        for chan in self._ctrl.channels:
             setattr(
                 type(self),
                 f"gpio_{chan.attrs['label'].value.lower()}",

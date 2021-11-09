@@ -76,7 +76,7 @@ class FMComms5(ad9361):
         self._txdac = self._ctx.find_device("cf-ad9361-dds-core-lpc")
         self._rxadc_chip_b = self._ctx.find_device("cf-ad9361-B")
         self._txdac_chip_b = self._ctx.find_device("cf-ad9361-dds-core-B")
-        rx_tx.__init__(self)
+        rx_tx.__init__(self)  # pylint: disable=W0233
         if libad9361:
             libad9361.fmcomms5_multichip_sync(self._ctx, 3)
 
