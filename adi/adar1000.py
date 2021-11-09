@@ -1603,8 +1603,6 @@ class adar1000_array(context_manager):
         """ Get the Tx elevation phi angle for the array in degrees """
         return self._tx_elevation_phi
 
-    """ Private Methods """
-
     def _steer(self, rx_or_tx, azimuth, elevation):
         """Steer the array
         parameters:
