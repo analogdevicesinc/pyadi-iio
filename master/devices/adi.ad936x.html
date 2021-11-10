@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad9371" href="adi.ad9371.html" /><link rel="prev" title="ad9152" href="adi.ad9152.html" />
 
-    <meta name="generator" content="sphinx-4.2.0, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.0, furo 2021.10.09"/>
         <title>ad936x - Analog Devices Hardware Python Interfaces 0.0.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -241,95 +241,95 @@
 <span id="ad936x"></span><h1>ad936x<a class="headerlink" href="#module-adi.ad936x" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad936x.Pluto">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.ad936x.</span></span><span class="sig-name descname"><span class="pre">Pluto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.Pluto" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad936x.</span></span><span class="sig-name descname"><span class="pre">Pluto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.Pluto" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.ad936x.ad9364" title="adi.ad936x.ad9364"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad936x.ad9364</span></code></a></p>
 <p>PlutoSDR Evaluation Platform</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad936x.ad9361">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.ad936x.</span></span><span class="sig-name descname"><span class="pre">ad9361</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9361" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad936x.</span></span><span class="sig-name descname"><span class="pre">ad9361</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9361" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.ad936x.ad9364" title="adi.ad936x.ad9364"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad936x.ad9364</span></code></a></p>
 <p>AD9361 Transceiver</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9361.gain_control_mode_chan1">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">gain_control_mode_chan1</span></span><a class="headerlink" href="#adi.ad936x.ad9361.gain_control_mode_chan1" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_control_mode_chan1</span></span><a class="headerlink" href="#adi.ad936x.ad9361.gain_control_mode_chan1" title="Permalink to this definition"></a></dt>
 <dd><p>gain_control_mode_chan1: Mode of receive path AGC. Options are:
 slow_attack, fast_attack, manual</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9361.rx_hardwaregain_chan1">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.ad936x.ad9361.rx_hardwaregain_chan1" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.ad936x.ad9361.rx_hardwaregain_chan1" title="Permalink to this definition"></a></dt>
 <dd><p>rx_hardwaregain_chan1: Gain applied to RX path. Only applicable when
 gain_control_mode is set to ‘manual’</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9361.tx_hardwaregain_chan1">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.ad936x.ad9361.tx_hardwaregain_chan1" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.ad936x.ad9361.tx_hardwaregain_chan1" title="Permalink to this definition"></a></dt>
 <dd><p>tx_hardwaregain_chan1: Attenuation applied to TX path</p>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad936x.ad9363">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.ad936x.</span></span><span class="sig-name descname"><span class="pre">ad9363</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9363" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad936x.</span></span><span class="sig-name descname"><span class="pre">ad9363</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9363" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.ad936x.ad9361" title="adi.ad936x.ad9361"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad936x.ad9361</span></code></a></p>
 <p>AD9363 Transceiver</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adi.ad936x.</span></span><span class="sig-name descname"><span class="pre">ad9364</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9364" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad936x.</span></span><span class="sig-name descname"><span class="pre">ad9364</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad936x.ad9364" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_tx" title="adi.rx_tx.rx_tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx_tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
 <p>AD9364 Transceiver</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.filter">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">filter</span></span><a class="headerlink" href="#adi.ad936x.ad9364.filter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter</span></span><a class="headerlink" href="#adi.ad936x.ad9364.filter" title="Permalink to this definition"></a></dt>
 <dd><p>Load FIR filter file. Provide path to filter file to attribute</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.gain_control_mode_chan0">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">gain_control_mode_chan0</span></span><a class="headerlink" href="#adi.ad936x.ad9364.gain_control_mode_chan0" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_control_mode_chan0</span></span><a class="headerlink" href="#adi.ad936x.ad9364.gain_control_mode_chan0" title="Permalink to this definition"></a></dt>
 <dd><p>gain_control_mode_chan0: Mode of receive path AGC. Options are:
 slow_attack, fast_attack, manual</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.loopback">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">loopback</span></span><a class="headerlink" href="#adi.ad936x.ad9364.loopback" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loopback</span></span><a class="headerlink" href="#adi.ad936x.ad9364.loopback" title="Permalink to this definition"></a></dt>
 <dd><p>loopback: Set loopback mode. Options are:
 0 (Disable), 1 (Digital), 2 (RF)</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.rx_hardwaregain_chan0">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.ad936x.ad9364.rx_hardwaregain_chan0" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.ad936x.ad9364.rx_hardwaregain_chan0" title="Permalink to this definition"></a></dt>
 <dd><p>rx_hardwaregain_chan0: Gain applied to RX path. Only applicable when
 gain_control_mode is set to ‘manual’</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.rx_lo">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_lo</span></span><a class="headerlink" href="#adi.ad936x.ad9364.rx_lo" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_lo</span></span><a class="headerlink" href="#adi.ad936x.ad9364.rx_lo" title="Permalink to this definition"></a></dt>
 <dd><p>rx_lo: Carrier frequency of RX path</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.rx_rf_bandwidth">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rx_rf_bandwidth</span></span><a class="headerlink" href="#adi.ad936x.ad9364.rx_rf_bandwidth" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_rf_bandwidth</span></span><a class="headerlink" href="#adi.ad936x.ad9364.rx_rf_bandwidth" title="Permalink to this definition"></a></dt>
 <dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.sample_rate">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad936x.ad9364.sample_rate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad936x.ad9364.sample_rate" title="Permalink to this definition"></a></dt>
 <dd><p>sample_rate: Sample rate RX and TX paths in samples per second</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.tx_hardwaregain_chan0">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.ad936x.ad9364.tx_hardwaregain_chan0" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.ad936x.ad9364.tx_hardwaregain_chan0" title="Permalink to this definition"></a></dt>
 <dd><p>tx_hardwaregain_chan0: Attenuation applied to TX path</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.tx_lo">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_lo</span></span><a class="headerlink" href="#adi.ad936x.ad9364.tx_lo" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_lo</span></span><a class="headerlink" href="#adi.ad936x.ad9364.tx_lo" title="Permalink to this definition"></a></dt>
 <dd><p>tx_lo: Carrier frequency of TX path</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad936x.ad9364.tx_rf_bandwidth">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">tx_rf_bandwidth</span></span><a class="headerlink" href="#adi.ad936x.ad9364.tx_rf_bandwidth" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_rf_bandwidth</span></span><a class="headerlink" href="#adi.ad936x.ad9364.tx_rf_bandwidth" title="Permalink to this definition"></a></dt>
 <dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path</p>
 </dd></dl>
 </dd></dl>
