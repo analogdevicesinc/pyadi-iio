@@ -1,4 +1,4 @@
-name: CI Pushes
+name: Linux Tests
 
 on: [push, pull_request]
 
