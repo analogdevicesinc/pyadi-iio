@@ -25,10 +25,11 @@ jobs:
         run: conda list
       - name: Dependencies
         run: |
+          conda activate test
+          python --version
           conda install -c conda-forge pylibiio
           conda install pip
           pip install -r requirements_dev.txt
           pip install paramiko
       - name: Run tests
         run: python -m pytest
-

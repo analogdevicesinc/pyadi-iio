@@ -1,4 +1,4 @@
-from os import sendfile
+"""Test marker map for ADI reference designs"""
 
 
 def get_test_map():
