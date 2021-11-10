@@ -155,7 +155,7 @@ def test_ad9361_loopback_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, [0, 1]])
 def test_ad9361_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -171,7 +171,7 @@ def test_ad9361_tx_data(test_dma_tx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 def test_ad9361_loopback(test_dma_loopback, iio_uri, classname, channel):
@@ -179,7 +179,7 @@ def test_ad9361_loopback(test_dma_loopback, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
@@ -213,7 +213,7 @@ def test_ad9361_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -293,7 +293,7 @@ def test_ad9361_dds_gain_check_vary_power(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -320,7 +320,7 @@ def test_ad9361_dds_gain_check_agc(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -360,7 +360,7 @@ def test_ad9361_dds_loopback(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
