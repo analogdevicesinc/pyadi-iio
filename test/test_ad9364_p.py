@@ -3,6 +3,94 @@ import pytest
 hardware = ["fmcomms4", "adrv9364", "pluto", "adrv9361"]
 classname = "adi.ad9364"
 
+params = dict(
+    one_cw_tone_manual=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=30720000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="manual",
+        rx_hardwaregain_chan0=0,
+        tx_hardwaregain_chan0=0,
+    ),
+    change_attenuation_10dB_manual=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=30720000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="manual",
+        rx_hardwaregain_chan0=0,
+        tx_hardwaregain_chan0=-10,
+    ),
+    change_attenuation_5dB_manual=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=30720000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="manual",
+        rx_hardwaregain_chan0=0,
+        tx_hardwaregain_chan0=-5,
+    ),
+    change_rf_gain_5dB_manual=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=30720000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="manual",
+        rx_hardwaregain_chan0=5,
+        tx_hardwaregain_chan0=0,
+    ),
+    one_cw_tone_slow_attack=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=30720000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="slow_attack",
+        tx_hardwaregain_chan0=-10,
+    ),
+    change_sampling_rate_60MSPS_slow_attack=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=60710000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="slow_attack",
+        tx_hardwaregain_chan0=-10,
+    ),
+    change_sampling_rate_15MSPS_slow_attack=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=15000000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="slow_attack",
+        tx_hardwaregain_chan0=-10,
+    ),
+    change_attenuation_0dB_slow_attack=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=30720000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="slow_attack",
+        tx_hardwaregain_chan0=0,
+    ),
+    change_attenuation_20dB_slow_attack=dict(
+        tx_lo=2300000000,
+        rx_lo=2300000000,
+        sample_rate=30720000,
+        tx_rf_bandwidth=18000000,
+        rx_rf_bandwidth=18000000,
+        gain_control_mode_chan0="slow_attack",
+        tx_hardwaregain_chan0=-20,
+    ),
+)
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -101,45 +189,133 @@ def test_ad9364_loopback(test_dma_loopback, iio_uri, classname, channel):
     test_dma_loopback(iio_uri, classname, channel)
 
 
-#########################################
+########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
-    "param_set",
+    "param_set, sfdr_min",
     [
-        dict(
-            tx_lo=1000000000,
-            rx_lo=1000000000,
-            gain_control_mode_chan0="slow_attack",
-            tx_hardwaregain_chan0=-20,
-            sample_rate=4000000,
-        )
+        (
+            dict(
+                tx_lo=1000000000,
+                rx_lo=1000000000,
+                gain_control_mode_chan0="slow_attack",
+                tx_hardwaregain_chan0=-20,
+                sample_rate=4000000,
+            ),
+            40,
+        ),
+        (params["one_cw_tone_manual"], 27),
+        (params["one_cw_tone_slow_attack"], 40),
+        (params["change_attenuation_20dB_slow_attack"], 44),
+        (params["change_attenuation_0dB_slow_attack"], 27),
+        (params["change_sampling_rate_60MSPS_slow_attack"], 49),
+        (params["change_sampling_rate_15MSPS_slow_attack"], 51),
+        (params["change_attenuation_10dB_manual"], 40),
+        (params["change_attenuation_5dB_manual"], 32),
+        (params["change_rf_gain_5dB_manual"], 28),
     ],
 )
-@pytest.mark.parametrize("sfdr_min", [40])
 def test_ad9364_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
 
+########################################
+@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize(
+    "param_set, dds_scale, min_rssi, max_rssi",
+    [
+        (params["one_cw_tone_manual"], 0.12, 24, 27),
+        (params["one_cw_tone_manual"], 0.25, 18, 21),
+        (params["one_cw_tone_manual"], 0.25, 17.5, 21.5),
+        (params["one_cw_tone_manual"], 0.06, 30, 32.5),
+        (params["change_rf_gain_5dB_manual"], 0.25, 21, 24),
+        (params["change_attenuation_10dB_manual"], 0.25, 27, 30),
+        (params["change_attenuation_5dB_manual"], 0.25, 22.5, 25.5),
+    ],
+)
+def test_ad9364_dds_gain_check_vary_power(
+    test_gain_check,
+    iio_uri,
+    classname,
+    channel,
+    param_set,
+    dds_scale,
+    min_rssi,
+    max_rssi,
+):
+    test_gain_check(
+        iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
+    )
+
+
 #########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
-@pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
 @pytest.mark.parametrize(
-    "param_set",
+    "param_set, dds_scale, min_rssi, max_rssi",
     [
-        dict(
-            tx_lo=1000000000,
-            rx_lo=1000000000,
-            gain_control_mode_chan0="slow_attack",
-            tx_hardwaregain_chan0=-30,
-            sample_rate=4000000,
-        )
+        (params["one_cw_tone_slow_attack"], 0.06, 42.5, 45.5),
+        (params["change_attenuation_20dB_slow_attack"], 0.06, 53.5, 55.5),
+        (params["change_attenuation_0dB_slow_attack"], 0.06, 33.5, 35.5),
     ],
 )
-@pytest.mark.parametrize("peak_min", [-40])
+def test_ad9364_dds_gain_check_agc(
+    test_gain_check,
+    iio_uri,
+    classname,
+    channel,
+    param_set,
+    dds_scale,
+    min_rssi,
+    max_rssi,
+):
+    test_gain_check(
+        iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
+    )
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize(
+    "param_set, frequency, scale, peak_min",
+    [
+        (
+            dict(
+                tx_lo=1000000000,
+                rx_lo=1000000000,
+                gain_control_mode_chan0="slow_attack",
+                tx_hardwaregain_chan0=-30,
+                sample_rate=4000000,
+            ),
+            1000000,
+            0.9,
+            -40,
+        ),
+        (params["one_cw_tone_manual"], 2000000, 0.12, -45),
+        (params["one_cw_tone_manual"], 2000000, 0.25, -39),
+        (params["one_cw_tone_manual"], 2000000, 0.06, -51),
+        (params["change_attenuation_10dB_manual"], 2000000, 0.25, -47.5),
+        (params["change_attenuation_5dB_manual"], 2000000, 0.25, -43.5),
+        (params["change_rf_gain_5dB_manual"], 2000000, 0.25, -34),
+        (params["one_cw_tone_slow_attack"], 500000, 0.06, -40),
+        (params["one_cw_tone_slow_attack"], 1000000, 0.06, -40),
+        (params["one_cw_tone_slow_attack"], 2000000, 0.06, -40),
+        (params["one_cw_tone_slow_attack"], 2000000, 0.12, -40),
+        (params["one_cw_tone_slow_attack"], 3000000, 0.25, -40),
+        (params["one_cw_tone_slow_attack"], 4000000, 0.5, -40),
+        (params["change_sampling_rate_60MSPS_slow_attack"], 2000000, 0.06, -40),
+        (params["change_sampling_rate_15MSPS_slow_attack"], 2000000, 0.06, -40),
+        (params["change_attenuation_20dB_slow_attack"], 1000000, 0.06, -40),
+        (params["change_attenuation_0dB_slow_attack"], 1000000, 0.06, -40),
+    ],
+)
 def test_ad9364_dds_loopback(
     test_dds_loopback,
     iio_uri,
@@ -183,7 +359,51 @@ def test_ad9364_dds_loopback(
             tx_hardwaregain_chan0=-20,
             sample_rate=4000000,
         ),
+        params["one_cw_tone_manual"],
+        params["change_attenuation_10dB_manual"],
+        params["change_attenuation_5dB_manual"],
+        params["change_rf_gain_5dB_manual"],
+        params["one_cw_tone_slow_attack"],
+        params["change_attenuation_20dB_slow_attack"],
+        params["change_attenuation_0dB_slow_attack"],
+        params["change_sampling_rate_60MSPS_slow_attack"],
+        params["change_sampling_rate_15MSPS_slow_attack"],
     ],
 )
 def test_ad9364_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param_set):
     test_iq_loopback(iio_uri, classname, channel, param_set)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize(
+    "param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2",
+    [(params["one_cw_tone_slow_attack"], 1000000, 0.06, -20, 2000000, 0.12, -40,)],
+)
+def test_ad9364_two_tone_loopback(
+    test_dds_two_tone,
+    iio_uri,
+    classname,
+    channel,
+    param_set,
+    frequency1,
+    scale1,
+    peak_min1,
+    frequency2,
+    scale2,
+    peak_min2,
+):
+    test_dds_two_tone(
+        iio_uri,
+        classname,
+        channel,
+        param_set,
+        frequency1,
+        scale1,
+        peak_min1,
+        frequency2,
+        scale2,
+        peak_min2,
+    )
