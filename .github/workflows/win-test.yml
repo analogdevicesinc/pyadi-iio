@@ -1,0 +1,34 @@
+name: Windows Tests
+
+on: [push, pull_request]
+
+jobs:
+  CondaBased:
+    name: Test (${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["windows-latest"]
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+      - name: Conda info
+        shell: bash -l {0}
+        run: conda info
+      - name: Conda list
+        shell: pwsh
+        run: conda list
+      - name: Dependencies
+        run: |
+          conda install -c conda-forge pylibiio
+          conda install pip
+          pip install -r requirements_dev.txt
+          pip install paramiko
+      - name: Run tests
+        run: python -m pytest
+
