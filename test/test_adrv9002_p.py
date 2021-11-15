@@ -15,6 +15,7 @@ lte_40_lvds_stream = profile_path + "lte_40_lvds_api_48_26_4.stream"
 lte_5_cmos_profile = profile_path + "lte_5_cmos_api_48_26_4.json"
 lte_5_cmos_stream = profile_path + "lte_5_cmos_api_48_26_4.stream"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
