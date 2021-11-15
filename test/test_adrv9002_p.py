@@ -136,6 +136,20 @@ def test_adrv9002_str_attr(
 def test_adrv9002_interface_gain_narrowband(
     test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
 ):
+    from adi.adrv9002 import adrv9002
+
+    sdr = adrv9002(iio_uri)
+    if attr == "interface_gain_chan0":
+        if sdr.rx0_sample_rate > 1000000:
+            pytest.skip(
+                "Baseband RX1 Sample Rate should be less than 1MHz to run this test."
+            )
+    elif attr == "interface_gain_chan1":
+        if sdr.rx1_sample_rate > 1000000:
+            pytest.skip(
+                "Baseband RX2 Sample Rate should be less than 1MHz to run this test."
+            )
+
     test_attribute_multipe_values_with_depends(
         iio_uri, classname, attr, depends, val, 0
     )
