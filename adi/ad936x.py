@@ -88,6 +88,28 @@ class ad9364(rx_tx, context_manager):
         self._set_iio_attr("voltage0", "gain_control_mode", False, value)
 
     @property
+    def rx_rf_port_select(self):
+        """rx_rf_port_select:
+
+        Select the port for RF for FMCOMMS4. Available: A_BALANCED B_BALANCED."""
+        return self._get_iio_attr_str("voltage0", "rf_port_select", False)
+
+    @rx_rf_port_select.setter
+    def rx_rf_port_select(self, value):
+        self._set_iio_attr("voltage0", "rf_port_select", False, value)
+
+    @property
+    def tx_rf_port_select(self):
+        """tx_rf_port_select:
+
+        Select the port for RF for FMCOMMS4. Available: A B."""
+        return self._get_iio_attr_str("voltage0", "rf_port_select", True)
+
+    @tx_rf_port_select.setter
+    def tx_rf_port_select(self, value):
+        self._set_iio_attr("voltage0", "rf_port_select", True, value)
+
+    @property
     def rx_hardwaregain_chan0(self):
         """rx_hardwaregain_chan0: Gain applied to RX path. Only applicable when
         gain_control_mode is set to 'manual'"""
