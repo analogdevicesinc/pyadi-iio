@@ -1,0 +1,60 @@
+name: Documentation Tests
+
+on: [push, pull_request]
+
+jobs:
+  CheckDocs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Install dependencies
+        run: |
+          bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_pydeps.sh
+          pip install -r requirements_doc.txt
+
+      - name: Check doc build
+        run: |
+          cd doc
+          make html SPHINXOPTS="-W"
+          cd ..
+
+      - name: Check doc coverage
+        run: |
+          cd doc
+          make coverage
+          cat build/coverage/python.txt
+          cat build/coverage/python.txt | wc -l | xargs -I % test % -eq 2
+          cd ..
+
+      - name: Check doc links
+        run: |
+          cd doc
+          make linkcheck
+
+  CheckParts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Install dependencies
+        run: |
+          bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_pydeps.sh
+          pip install -r requirements_doc.txt
+          pip install invoke
+
+      - name: Check if supported parts missing
+        run: |
+          invoke checkparts
