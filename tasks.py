@@ -175,6 +175,7 @@ def checkparts(c):
         ):
             parts.append(c)
     # Check if in README
+    count = 1
     with open("supported_parts.md") as reader:
         rm = reader.read()
         s = rm.find("### Currently supported hardware")
@@ -189,6 +190,7 @@ def checkparts(c):
             print("No parts missing from supported_parts.md")
 
     print("------------------------")
+    sys.exit(count)
 
 
 @task(checkparts)

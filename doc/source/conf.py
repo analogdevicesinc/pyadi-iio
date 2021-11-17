@@ -41,6 +41,7 @@ master_doc = "index"
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
     "sphinx_rtd_theme",
     "myst_parser",
@@ -54,6 +55,10 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns: List[str] = []
 
+# Configuration of sphinx.ext.coverage
+coverage_show_missing_items = True
+coverage_ignore_classes = ["phy"]
+coverage_ignore_modules = ["test.dma_tests", "test.generics"]
 
 # -- Options for HTML output -------------------------------------------------
 
