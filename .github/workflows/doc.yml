@@ -29,6 +29,7 @@ jobs:
         run: |
           cd doc
           make coverage
+          cat build/coverage/python.txt
           cat build/coverage/python.txt | wc -l | xargs -I % test % -eq 2
           cd ..
 
