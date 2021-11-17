@@ -3,7 +3,7 @@ name: Documentation Tests
 on: [push, pull_request]
 
 jobs:
-  CheckDoc:
+  CheckDocCoverage:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,10 +19,19 @@ jobs:
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
+      - name: Check doc build
+        run: |
+          cd doc
+          make html SPHINXOPTS="-W"
+
       - name: Check doc coverage
         run: |
-          cd doc && make coverage
+          make coverage
           cat build/coverage/python.txt | wc -l | xargs -I % test % -eq 2
+
+      - name: Check doc links
+        run: |
+          make linkcheck
 
   CheckParts:
     runs-on: ubuntu-latest
