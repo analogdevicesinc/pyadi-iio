@@ -241,14 +241,14 @@
           <section id="analog-devices-hardware-python-interfaces">
 <h1>Analog Devices Hardware Python Interfaces<a class="headerlink" href="#analog-devices-hardware-python-interfaces" title="Permalink to this headline"></a></h1>
 <p><strong>pyadi-iio</strong> is a python abstraction module for ADI hardware with IIO drivers to make them easier to use. The libIIO interface although extremely flexible can be cumbersome to use due to the amount of boilerplate code required for even simple examples, especially when interfacing with buffers. This module has custom interfaces classes for specific parts and development systems which can generally make them easier to understand and use. To get up and running with a device can be as simple as a few lines of code:</p>
-<dl>
-<dt>… code-block:: python</dt><dd><p>import adi</p>
-<p># Create device from specific uri address
-sdr = adi.ad9361(uri=”ip:192.168.2.1”)
-# Get data from transceiver
-data = sdr.rx()</p>
-</dd>
-</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="c1"># Create device from specific uri address</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">"ip:192.168.2.1"</span><span class="p">)</span>
+<span class="c1"># Get data from transceiver</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
+</pre></div>
+</div>
 <figure class="align-default">
 <img alt="_images/PyADI-IIO_Logo_72.png" src="_images/PyADI-IIO_Logo_72.png"/>
 </figure>
