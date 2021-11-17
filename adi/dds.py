@@ -79,7 +79,7 @@ class dds(attribute):
         return values
 
     def disable_dds(self):
-        """ Disable all DDS channels and set all output sources to zero. """
+        """Disable all DDS channels and set all output sources to zero."""
         self.dds_enabled = np.zeros(self._num_tx_channels * 2, dtype=bool)
 
     @property
