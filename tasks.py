@@ -167,6 +167,7 @@ def checkparts(c):
         "adrv9009_zu11eg_multi",
         "adrv9009_zu11eg_fmcomms8",
         "adar1000_array",
+        "ad9081_mc",
     ]
     for c in dir(mod):
         if (
@@ -175,6 +176,7 @@ def checkparts(c):
         ):
             parts.append(c)
     # Check if in README
+    count = 1
     with open("supported_parts.md") as reader:
         rm = reader.read()
         s = rm.find("### Currently supported hardware")
@@ -182,6 +184,7 @@ def checkparts(c):
         rm = rm[s:e]
         count = 0
         for p in parts:
+            p = p.replace("_", "-")
             if not p in rm.lower():
                 count += 1
                 print("Missing", p, "from README")
@@ -189,6 +192,7 @@ def checkparts(c):
             print("No parts missing from supported_parts.md")
 
     print("------------------------")
+    sys.exit(count)
 
 
 @task(checkparts)
