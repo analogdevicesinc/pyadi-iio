@@ -139,8 +139,35 @@ def test_rssi(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
-    "dds_scale, frequency, hardwaregain_low, hardwaregain_high",
-    [(0.0, 999859, 50, 80), (0.4, 999859, 0.0, 28)],
+    "dds_scale, frequency, hardwaregain_low, hardwaregain_high, param_set",
+    [
+        (
+            0.0,
+            999859,
+            50,
+            80,
+            dict(
+                tx_lo=2400000000,
+                rx_lo=2400000000,
+                tx_hardwaregain_chan0=-10,
+                tx_hardwaregain_chan1=-10,
+                sample_rate=30720000,
+            ),
+        ),
+        (
+            0.4,
+            999859,
+            0.0,
+            28,
+            dict(
+                tx_lo=2400000000,
+                rx_lo=2400000000,
+                tx_hardwaregain_chan0=-10,
+                tx_hardwaregain_chan1=-10,
+                sample_rate=30720000,
+            ),
+        ),
+    ],
 )
 def test_hardware_gain(
     test_hardwaregain,
@@ -151,6 +178,7 @@ def test_hardware_gain(
     frequency,
     hardwaregain_low,
     hardwaregain_high,
+    param_set,
 ):
     test_hardwaregain(
         iio_uri,
@@ -160,6 +188,7 @@ def test_hardware_gain(
         frequency,
         hardwaregain_low,
         hardwaregain_high,
+        param_set,
     )
 
 
