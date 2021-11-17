@@ -3,7 +3,7 @@ name: Documentation Tests
 on: [push, pull_request]
 
 jobs:
-  CheckDocCoverage:
+  CheckDocs:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,14 +23,18 @@ jobs:
         run: |
           cd doc
           make html SPHINXOPTS="-W"
+          cd ..
 
       - name: Check doc coverage
         run: |
+          cd doc
           make coverage
           cat build/coverage/python.txt | wc -l | xargs -I % test % -eq 2
+          cd ..
 
       - name: Check doc links
         run: |
+          cd doc
           make linkcheck
 
   CheckParts:
