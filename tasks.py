@@ -167,6 +167,7 @@ def checkparts(c):
         "adrv9009_zu11eg_multi",
         "adrv9009_zu11eg_fmcomms8",
         "adar1000_array",
+        "ad9081_mc",
     ]
     for c in dir(mod):
         if (
@@ -183,6 +184,7 @@ def checkparts(c):
         rm = rm[s:e]
         count = 0
         for p in parts:
+            p = p.replace("_", "-")
             if not p in rm.lower():
                 count += 1
                 print("Missing", p, "from README")
