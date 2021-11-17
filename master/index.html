@@ -5,11 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Quick Start" href="guides/quick.html" />
 
-    <meta name="generator" content="sphinx-4.3.0, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.0, furo 2021.11.16"/>
         <title>Analog Devices Hardware Python Interfaces 0.0.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=916d6ed8f59335acffa15474ff504849343d4c76" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=0af69da206d614734f649b27d4cdc2dd6c31f41d" />
     
     
 
@@ -174,6 +174,7 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9371.html">ad9371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9680.html">ad9680</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4371.html">adf4371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16495.html">adis16495</a></li>
@@ -240,6 +241,14 @@
           <section id="analog-devices-hardware-python-interfaces">
 <h1>Analog Devices Hardware Python Interfaces<a class="headerlink" href="#analog-devices-hardware-python-interfaces" title="Permalink to this headline"></a></h1>
 <p><strong>pyadi-iio</strong> is a python abstraction module for ADI hardware with IIO drivers to make them easier to use. The libIIO interface although extremely flexible can be cumbersome to use due to the amount of boilerplate code required for even simple examples, especially when interfacing with buffers. This module has custom interfaces classes for specific parts and development systems which can generally make them easier to understand and use. To get up and running with a device can be as simple as a few lines of code:</p>
+<dl>
+<dt>… code-block:: python</dt><dd><p>import adi</p>
+<p># Create device from specific uri address
+sdr = adi.ad9361(uri=”ip:192.168.2.1”)
+# Get data from transceiver
+data = sdr.rx()</p>
+</dd>
+</dl>
 <figure class="align-default">
 <img alt="_images/PyADI-IIO_Logo_72.png" src="_images/PyADI-IIO_Logo_72.png"/>
 </figure>
@@ -280,6 +289,7 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9371.html">ad9371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9680.html">ad9680</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4371.html">adf4371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16495.html">adis16495</a></li>
@@ -362,11 +372,9 @@
 
         <div class="related-information">
               Copyright &#169; 2019-2021, Analog Devices, Inc |
-            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
-              and
-              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-              <a href="https://github.com/pradyunsg/furo">Furo theme</a>. |
-            <a class="muted-link" href="_sources/index.rst.txt"
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="_sources/index.rst.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -403,6 +411,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/scripts/main.js"></script>
+    <script src="_static/scripts/furo.js"></script>
     </body>
 </html>
