@@ -584,7 +584,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
             sdr.tx2(cw)
         else:
             sdr.tx(cw)
-        for _ in range(30):  # Wait to stabilize
+        for _ in range(60):  # Wait to stabilize
             data = sdr.rx2() if use_rx2 else sdr.rx()
     except Exception as e:
         del sdr
@@ -600,7 +600,10 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     diff = np.abs(tone_freqs[indx] - fc)
     s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
     print(s)
-
+    print("Freqs:")
+    print(tone_freqs)
+    print("Amps: ")
+    print(tone_peaks)
     if do_html_log:
         pytest.data_log = {
             "html": gen_line_plot_html(
@@ -751,7 +754,7 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     else:
         fs = int(sdr.rx_sample_rate)
     sdr.dds_single_tone(np.floor(fs * 0.1), dds_scale, channel)
-    time.sleep(3)
+    time.sleep(5)
 
     # Check RSSI
     if channel == 0:
@@ -777,7 +780,14 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
 
 
 def hardwaregain(
-    uri, classname, channel, dds_scale, frequency, hardwaregain_low, hardwaregain_high
+    uri,
+    classname,
+    channel,
+    dds_scale,
+    frequency,
+    hardwaregain_low,
+    hardwaregain_high,
+    param_set,
 ):
     """ hadwaregain: Test loopback with connected cables and verify
         calculated hardware gain, by measuring changes in the AGC. This is only applicable
@@ -805,8 +815,14 @@ def hardwaregain(
 
     """
     sdr = eval(classname + "(uri='" + uri + "')")
+
+    # set custom attrs
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+
     sdr.dds_single_tone(frequency, dds_scale, channel)
-    time.sleep(3)
+
+    time.sleep(5)
 
     if channel == 0:
         hwgain = sdr._get_iio_attr("voltage0", "hardwaregain", False, sdr._ctrl)
@@ -855,7 +871,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     sdr = eval(classname + "(uri='" + uri + "')")
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
-    
+
     time.sleep(3)
 
     N = 2 ** 15
@@ -884,8 +900,8 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     try:
         sdr.tx(iq)
-        time.sleep(3)
-        for _ in range(10):
+        time.sleep(5)
+        for _ in range(30):
             data = sdr.rx()
     except Exception as e:
         del sdr
@@ -900,17 +916,12 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     freqs = fftfreq(L, 1 / RXFS)
 
-    # _, ml, hm, indxs = spec.find_harmonics_from_main(
-    #     fftshift(ampl), fftshift(freqs), full_scale, num_harmonics=10, tolerance=0.1, plot=plot
-    # )
-
     _, ml, hm, indxs = spec.find_harmonics_reduced(
         fftshift(ampl), fftshift(freqs), num_harmonics=15, tolerance=0.2
     )
-    # hm, indxs = spec.measure_peaks(fftshift(ampl), 20)
-    # ml = indxs[0]
     ffreqs = fftshift(freqs)
     ffampl = fftshift(ampl)
+
     if plot:
         import matplotlib.pyplot as plt
 
@@ -929,9 +940,10 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        plt.show()
+        k = np.random.randint(1,10000)
+        plt.savefig("./results_log/test" + str(k) + ".png")
 
-    print("HArmonics:")
+    print("Harmonics:")
     print(hm)
     print("Locs: ")
     print(indxs)
