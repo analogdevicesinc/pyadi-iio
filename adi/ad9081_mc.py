@@ -41,7 +41,7 @@ from adi.rx_tx import rx_tx
 
 
 def _map_to_dict(paths, ch, dev_name):
-    if "buffer_only" in ch.attrs["label"].value:
+    if "label" in ch.attrs and "buffer_only" in ch.attrs["label"].value:
         return paths, False
     fddc, cddc, adc = ch.attrs["label"].value.split("->")
     if dev_name not in paths.keys():
@@ -88,7 +88,12 @@ def _sortconv(chans_names, noq=False, dds=False):
 def _find_dev_with_buffers(ctx, output=False, contains=""):
     for dev in ctx.devices:
         for chan in dev.channels:
-            if chan.output == output and chan.scan_element and contains in dev.name:
+            if (
+                chan.output == output
+                and chan.scan_element
+                and dev.name
+                and contains in dev.name
+            ):
                 return dev
 
 
@@ -134,7 +139,7 @@ class ad9081_mc(ad9081):
             channel_attr_count = {
                 dev.name: sum(len(chan.attrs) for chan in dev.channels)
                 for dev in self._ctx.devices
-                if "ad9081" in dev.name
+                if dev.name and "ad9081" in dev.name
             }
             phy_dev_name = max(channel_attr_count, key=channel_attr_count.get)
 
@@ -151,7 +156,7 @@ class ad9081_mc(ad9081):
         paths = {}
         self._default_ctrl_names = []
         for dev in self._ctx.devices:
-            if "ad9081" not in dev.name:
+            if dev.name and "ad9081" not in dev.name:
                 continue
             for ch in dev.channels:
                 not_buffer = False
