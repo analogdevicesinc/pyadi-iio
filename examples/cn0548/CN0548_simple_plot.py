@@ -2,7 +2,7 @@
 # Description: CN0548 data logging and real-time plot
 # Author: Harvey De Chavez (harveyjohn.dechavez@analog.com)
 #
-# Copyright 2020(c) Analog Devices, Inc.
+# Copyright 2021(c) Analog Devices, Inc.
 #
 # All rights reserved.
 #
