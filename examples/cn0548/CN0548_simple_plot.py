@@ -51,7 +51,7 @@ style = ("Arial", 10)
 style2 = ("Arial", 20, "bold")
 
 
-def draw_rec(x, y, x_len, y_len, fill):                     # for easier drawing of jumper map
+def draw_rec(x, y, x_len, y_len, fill):  # for easier drawing of jumper map
     turtle.setpos(x, y)
     turtle.down()
     if fill == 1:
@@ -67,7 +67,7 @@ def draw_rec(x, y, x_len, y_len, fill):                     # for easier drawing
     turtle.up()
 
 
-def draw_jumpers():                                         # drawing the jumpers
+def draw_jumpers():  # drawing the jumpers
     jumper = ["P1", "P3", "P10", "P8", "P9", "P11", "P13", "P14", "P12", "P7"]
     turtle.hideturtle()
     turtle.speed(0)
@@ -142,7 +142,7 @@ def draw_jumpers():                                         # drawing the jumper
         turtle.write(jumper[j + 8], font=style, align="center")
 
 
-def gain_config(jumper):                                    # draws the jumper locations for the desired gain
+def gain_config(jumper):  # draws the jumper locations for the desired gain
     # P1
     if jumper[0] == 1:
         draw_rec(x_init + 4, y_init - 4 - unit, 40, 16, 1)
@@ -187,27 +187,29 @@ def gain_config(jumper):                                    # draws the jumper l
         draw_rec(x_init + 4 + 6 * unit, y_init - 4 - 8 * unit, 16, 40, 1)
 
 
-def c_uni():                                                # jumper config for unilateral current measurement
+def c_uni():  # jumper config for unilateral current measurement
     draw_rec(x_init + 4 + unit, y_init - 4 - 12 * unit, 16, 40, 1)
     draw_rec(x_init + 4 - 3 * unit, y_init - 4 - 13 * unit, 40, 16, 1)
 
 
-def c_bi():                                                 # jumper config for bilateral current measurement
+def c_bi():  # jumper config for bilateral current measurement
     draw_rec(x_init + 4 + unit, y_init - 4 - 13 * unit, 16, 40, 1)
     draw_rec(x_init + 4 - 2 * unit, y_init - 4 - 13 * unit, 40, 16, 1)
 
 
-def v_uni():                                                # jumper config for unilateral voltage measurement
+def v_uni():  # jumper config for unilateral voltage measurement
     draw_rec(x_init + 4 + 6 * unit, y_init - 4 - 12 * unit, 16, 40, 1)
     draw_rec(x_init + 4 + 9 * unit, y_init - 4 - 13 * unit, 40, 16, 1)
 
 
-def v_bi():                                                 # jumper config for bilateral voltage measurement
+def v_bi():  # jumper config for bilateral voltage measurement
     draw_rec(x_init + 4 + 6 * unit, y_init - 4 - 13 * unit, 16, 40, 1)
     draw_rec(x_init + 4 + 8 * unit, y_init - 4 - 13 * unit, 40, 16, 1)
 
 
-def isint(x, lower, upper):                                 # determine whether number is an integer within the range [lower,upper]
+def isint(
+    x, lower, upper
+):  # determine whether number is an integer within the range [lower,upper]
     try:
         val = int(x)
         if upper == "x":
@@ -224,7 +226,9 @@ def isint(x, lower, upper):                                 # determine whether 
         return 2
 
 
-def input_int(text, lower, upper):                          # determine whether input is an integer within the range [lower,upper]
+def input_int(
+    text, lower, upper
+):  # determine whether input is an integer within the range [lower,upper]
     while True:
         x = input(text)
         if isint(x, lower, upper) == 0:
@@ -239,7 +243,7 @@ def input_int(text, lower, upper):                          # determine whether 
     return user_input
 
 
-def compute_bounds(data):                                   # compute the lower and upper limits to be used for plotting
+def compute_bounds(data):  # compute the lower and upper limits to be used for plotting
     span = max(data) - min(data)
     if span != 0:
         lower = min(data) - span / 16
@@ -505,8 +509,8 @@ if en == 1:
             )
         new_record.append(str(samples) + " - samples to retain (>=5)")
 
-    fig, ax1 = plt.subplots()                       # Create figure for plotting
-    ax2 = ax1.twinx()                               # Same y-axis
+    fig, ax1 = plt.subplots()  # Create figure for plotting
+    ax2 = ax1.twinx()  # Same y-axis
     xs: List[float] = []
     ys: List[float] = []
     if mode == 2:
@@ -514,11 +518,11 @@ if en == 1:
             xs.append(0)
             ys.append(0)
 
-    def animate(i, volt, curr):                     # function for animation
-        v_reading = (                               # get new voltage reading
+    def animate(i, volt, curr):  # function for animation
+        v_reading = (  # get new voltage reading
             ad7799.channel[2].value * v_gain[v_max] / 1000
-        )  
-        i_reading = ad7799.channel[0].value * 5     # get new current reading
+        )
+        i_reading = ad7799.channel[0].value * 5  # get new current reading
         volt.append(v_reading)
         curr.append(i_reading)
         print(
@@ -537,11 +541,11 @@ if en == 1:
                 print(
                     "Data point not logged, consider lowering your sample rate to match your machine specs."
                 )
-        if mode == 2:                               # number of recent samples to be retained
+        if mode == 2:  # number of recent samples to be retained
             volt = volt[-samples:]
             curr = curr[-samples:]
 
-        ax1.clear()                                 # Plot config
+        ax1.clear()  # Plot config
         bounds = compute_bounds(volt)
         ax1.set_ylim([bounds[0], bounds[1]])
         color = "tab:orange"
@@ -634,10 +638,10 @@ if en == 1:
 
 else:
     while True:
-        v_reading = (                               # get new voltage reading
+        v_reading = (  # get new voltage reading
             ad7799.channel[2].value * v_gain[v_max] / 1000
-        )  
-        i_reading = ad7799.channel[0].value * 5     # get new current reading
+        )
+        i_reading = ad7799.channel[0].value * 5  # get new current reading
         print(
             "Voltage reading: "
             + str(v_reading)
