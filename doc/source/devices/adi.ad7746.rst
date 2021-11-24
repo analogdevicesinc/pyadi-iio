@@ -1,7 +1,7 @@
-adf4371
-==================
+ad7746
+=================
 
-.. automodule:: adi.adf4371
+.. automodule:: adi.ad7746
    :members:
    :undoc-members:
    :show-inheritance:

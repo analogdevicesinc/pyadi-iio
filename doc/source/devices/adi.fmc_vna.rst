@@ -1,7 +1,7 @@
-adxrs290
+fmc\_vna
 ===================
 
-.. automodule:: adi.adxrs290
+.. automodule:: adi.fmc_vna
    :members:
    :undoc-members:
    :show-inheritance:

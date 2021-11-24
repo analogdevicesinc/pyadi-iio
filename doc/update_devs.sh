@@ -1,4 +1,4 @@
-rm source/devices/adi.*
+rm $(find source/devices/ -name "adi.*" ! -name "adi.ad9081_mc.rst") 
 rm source/devices/modules.rst
 sphinx-apidoc -T -e -o source/devices ../adi
 
@@ -7,11 +7,14 @@ find source/devices -mindepth 1 -type f -exec sed -i '1 s/adi\.//g' {} \;
 find source/devices -mindepth 1 -type f -exec sed -i 's/\ module//g' {} \;
 
 # Remove classes we shouldn't document
-list="obs attribute context_manager dds rx_tx"
+list="obs attribute context_manager dds rx_tx sshfs"
+skips=""
 for val in $list; do
     echo $val
     sed -i "/$val/d" source/devices/adi.rst
-    rm source/devices/adi.${val}.rst
+    if ! $(echo $skips | grep -w -q $val) ;then
+    	rm source/devices/adi.${val}.rst
+    fi
 done
 
 # Remove extra text

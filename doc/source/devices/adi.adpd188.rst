@@ -1,5 +1,5 @@
 adpd188
-=================
+==================
 
 .. automodule:: adi.adpd188
    :members:
