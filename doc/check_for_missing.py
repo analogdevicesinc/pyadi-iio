@@ -1,9 +1,9 @@
 """Utility script to check for missing classes"""
 
-import os
 import glob
-import update_devs
+import os
 
+import update_devs
 
 root = os.path.dirname(os.path.abspath(__file__))
 path = os.path.join(root, "source", "devices", "adi.*.rst")

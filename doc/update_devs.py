@@ -3,6 +3,7 @@
 import glob
 import os
 
+
 def update_devs():
     root = os.path.dirname(os.path.abspath(__file__))
     devices = glob.glob(os.path.join(root, "source", "devices", "adi.*.rst"))
@@ -60,6 +61,7 @@ def update_devs():
         f.write(txt)
 
     os.remove(adi_rst_path)
+
 
 if __name__ == "__main__":
     update_devs()
