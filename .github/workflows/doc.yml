@@ -37,6 +37,12 @@ jobs:
         run: |
           cd doc
           make linkcheck
+          cd ..
+
+      - name: Check missing docs
+        run: |
+          cd doc
+          python check_for_missing.py
 
   CheckParts:
     runs-on: ubuntu-latest

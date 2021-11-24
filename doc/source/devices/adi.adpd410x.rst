@@ -1,5 +1,5 @@
 adpd410x
-=================
+===================
 
 .. automodule:: adi.adpd410x
    :members:

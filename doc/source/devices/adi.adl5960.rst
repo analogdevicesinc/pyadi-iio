@@ -1,7 +1,7 @@
-adf4371
+adl5960
 ==================
 
-.. automodule:: adi.adf4371
+.. automodule:: adi.adl5960
    :members:
    :undoc-members:
    :show-inheritance:
