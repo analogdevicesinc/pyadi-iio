@@ -1,7 +1,7 @@
-adxrs290
+gen\_mux
 ===================
 
-.. automodule:: adi.adxrs290
+.. automodule:: adi.gen_mux
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,7 +1,7 @@
-adxrs290
+adrf5720
 ===================
 
-.. automodule:: adi.adxrs290
+.. automodule:: adi.adrf5720
    :members:
    :undoc-members:
    :show-inheritance:
