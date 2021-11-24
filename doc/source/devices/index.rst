@@ -57,3 +57,9 @@ Supported Devices
    adi.ltc2983
    adi.one_bit_adc_dac
 
+-----
+
+.. automodule:: adi
+   :members:
+   :undoc-members:
+   :show-inheritance:
