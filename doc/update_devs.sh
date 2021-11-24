@@ -1,4 +1,4 @@
-rm $(find source/devices/ -name "adi.*" ! -name "adi.ad9081_mc.rst") 
+rm $(find source/devices/ -name "adi.*" ! -name "adi.ad9081_mc.rst")
 rm source/devices/modules.rst
 sphinx-apidoc -T -e -o source/devices ../adi
 
