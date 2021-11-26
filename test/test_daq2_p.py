@@ -26,16 +26,17 @@ def test_daq2_rx_data(test_dma_rx, iio_uri, classname, channel):
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize("param_set", [dict()])
 @pytest.mark.parametrize(
-    "frequency, scale, peak_min",
+    "frequency, scale",
     [
-        (5000000, 0.12, -21),
-        (10000000, 0.06, -27),
-        (10000000, 0.12, -21),
-        (15000000, 0.12, -21),
-        (15000000, 0.5, -15),
-        (200000000, 0.5, -40),
+        (5000000, 0.12),
+        (10000000, 0.06),
+        (10000000, 0.12),
+        (15000000, 0.12),
+        (15000000, 0.5),
+        (200000000, 0.5),
     ],
 )
+@pytest.mark.parametrize("peak_min", [-45])
 def test_daq2_dds_loopback(
     test_dds_loopback,
     iio_uri,
