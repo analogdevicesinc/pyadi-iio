@@ -204,7 +204,7 @@ def test_ad9361_loopback(test_dma_loopback, iio_uri, classname, channel):
         (params["one_cw_tone_slow_attack"], 23),
         (params["change_attenuation_20dB_slow_attack"], 43),
         (params["change_attenuation_0dB_slow_attack"], 23),
-        (params["change_sampling_rate_60MSPS_slow_attack"], 51),
+        (params["change_sampling_rate_60MSPS_slow_attack"], 48),
         (params["change_sampling_rate_15MSPS_slow_attack"], 52),
     ],
 )
@@ -268,13 +268,12 @@ def test_ad9361_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
     [
-        (params["one_cw_tone_manual"], 0.12, 23.25, 25.25),
-        (params["one_cw_tone_manual"], 0.25, 17, 20),
-        (params["one_cw_tone_manual"], 0.25, 17, 20),
-        (params["one_cw_tone_manual"], 0.06, 28, 31.5),
-        (params["change_rf_gain_5dB_manual"], 0.25, 21, 23),
-        (params["change_attenuation_10dB_manual"], 0.25, 25, 28),
-        (params["change_attenuation_5dB_manual"], 0.25, 21, 24),
+        (params["one_cw_tone_manual"], 0.12, 23.25, 27.5),
+        (params["one_cw_tone_manual"], 0.25, 17, 23),
+        (params["one_cw_tone_manual"], 0.06, 28, 34.5),
+        (params["change_rf_gain_5dB_manual"], 0.25, 21, 25.5),
+        (params["change_attenuation_10dB_manual"], 0.25, 25, 32),
+        (params["change_attenuation_5dB_manual"], 0.25, 21, 26.5),
     ],
 )
 def test_ad9361_dds_gain_check_vary_power(
@@ -299,9 +298,9 @@ def test_ad9361_dds_gain_check_vary_power(
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
     [
-        (params["one_cw_tone_slow_attack"], 0.06, 42.75, 45.75),
+        (params["one_cw_tone_slow_attack"], 0.06, 42.75, 50),
         (params["change_attenuation_20dB_slow_attack"], 0.06, 53.75, 56.75),
-        (params["change_attenuation_0dB_slow_attack"], 0.06, 32, 35),
+        (params["change_attenuation_0dB_slow_attack"], 0.06, 32, 37.5),
     ],
 )
 def test_ad9361_dds_gain_check_agc(
@@ -326,12 +325,12 @@ def test_ad9361_dds_gain_check_agc(
 @pytest.mark.parametrize(
     "param_set, frequency, scale, peak_min",
     [
-        (params["one_cw_tone_manual"], 2000000, 0.12, -45),
-        (params["one_cw_tone_manual"], 2000000, 0.25, -40),
-        (params["one_cw_tone_manual"], 2000000, 0.06, -50),
-        (params["change_attenuation_10dB_manual"], 2000000, 0.25, -48),
-        (params["change_attenuation_5dB_manual"], 2000000, 0.25, -43.5),
-        (params["change_rf_gain_5dB_manual"], 2000000, 0.25, -34),
+        (params["one_cw_tone_manual"], 2000000, 0.12, -47),
+        (params["one_cw_tone_manual"], 2000000, 0.25, -43),
+        (params["one_cw_tone_manual"], 2000000, 0.06, -53),
+        (params["change_attenuation_10dB_manual"], 2000000, 0.25, -50),
+        (params["change_attenuation_5dB_manual"], 2000000, 0.25, -45.5),
+        (params["change_rf_gain_5dB_manual"], 2000000, 0.25, -36),
         (params["one_cw_tone_slow_attack"], 500000, 0.06, -41.5),
         (params["one_cw_tone_slow_attack"], 1000000, 0.06, -41.5),
         (params["one_cw_tone_slow_attack"], 2000000, 0.06, -41.5),
