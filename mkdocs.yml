@@ -1,0 +1,43 @@
+site_name: pyadi-iio
+site_description: Analog Devices python interfaces for hardware with Industrial I/O drivers
+site_author: Analog Devices, Inc.
+
+theme:
+  name: material
+  logo: images/cpu.svg
+  features:
+    - content.code.annotate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep orange
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep orange
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+nav:
+    - Home: index.md
+    - Data Buffers: buffers.md
+    - FPGA Features: fpga.md
+    - Support: support.md
+
+repo_url: https://github.com/analogdevicesinc/pyadi-iio
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets
+
+plugins:
+  - search
+  - mkdocstrings
+
+extra_css:
+  - stylesheets/extra.css

@@ -2,3 +2,6 @@ sphinx>=2.0
 sphinx-rtd-theme
 myst-parser
 furo
+
+mkdocs-material
+mkdocstrings

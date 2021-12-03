@@ -1,0 +1,43 @@
+.doc.doc-heading {
+    color: red !important;
+    background-color: rgba(180, 178, 178, 0.1);
+    padding-left: 5px;
+}
+
+.doc.doc-object.doc-class {
+    background-color: rgba(180, 178, 178, 0.1);
+    padding-left: 5px;
+}
+
+.doc.doc-object.doc-class table {
+    background-color: rgba(180, 178, 178, 0.1);
+    ;
+
+}
+
+.doc.doc-contents p {
+    padding-left: 15px;
+}
+
+.doc.doc-object.doc-method table p {
+    padding-left: 0px;
+}
+
+/* Logo dark mode toggle */
+[data-md-color-scheme="default"] {
+    --logo-dark-color: block;
+    --logo-light-color: none;
+}
+
+[data-md-color-scheme="slate"] {
+    --logo-dark-color: none;
+    --logo-light-color: block;
+}
+
+#logo_light_mode {
+    display: var(--logo-light-color);
+}
+
+#logo_dark_mode {
+    display: var(--logo-dark-color);
+}
