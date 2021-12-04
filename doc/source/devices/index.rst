@@ -43,6 +43,7 @@ Supported Devices
    adi.adrv9009_zu11eg_fmcomms8
    adi.adrv9009_zu11eg_multi
    adi.adxl345
+   adi.adxl355
    adi.adxrs290
    adi.cn0532
    adi.cn0540
