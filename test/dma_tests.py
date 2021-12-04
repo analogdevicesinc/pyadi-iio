@@ -16,7 +16,9 @@ except:
     do_html_log = False
 
 
-def dma_rx(uri, classname, channel, use_rx2=False):
+def dma_rx(
+    uri, classname, channel, use_rx2=False, buffer_size=2 ** 15, annotated=False
+):
     """dma_rx: Construct RX buffers and verify data is non-zero when pulled.
     Collected buffer is of size 2**15 and 10 buffers are checked
 
@@ -28,9 +30,15 @@ def dma_rx(uri, classname, channel, use_rx2=False):
         channel: type=list
             List of integers or list of list of integers of channels to
             enable through rx_enabled_channels
+        use_rx2: type=bool
+            If True, use rx2() instead of rx()
+        buffer_size: type=int
+            Size of RX buffer in samples. Defaults to 2**15
+        annotated: type=bool
+            If True, annotated output is provided (dict)
     """
     sdr = eval(classname + "(uri='" + uri + "')")
-    N = 2 ** 15
+    N = buffer_size
 
     if use_rx2:
         sdr.rx2_enabled_channels = channel if isinstance(channel, list) else [channel]
@@ -39,14 +47,23 @@ def dma_rx(uri, classname, channel, use_rx2=False):
         sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
         sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
 
+    sdr.rx_annotated = annotated
     try:
         for _ in range(10):
             data = sdr.rx2() if use_rx2 else sdr.rx()
-            if isinstance(data, list):
-                for chan in data:
-                    assert np.sum(np.abs(chan)) > 0
+            if annotated:
+                print(data)
+                assert list(data.keys()) == [
+                    sdr._rx_channel_names[ec] for ec in sdr.rx_enabled_channels
+                ]
+                for ci in sdr.rx_enabled_channels:
+                    assert np.sum(np.abs(data[sdr._rx_channel_names[ci]])) > 0
             else:
-                assert np.sum(np.abs(data)) > 0
+                if isinstance(data, list):
+                    for chan in data:
+                        assert np.sum(np.abs(chan)) > 0
+                else:
+                    assert np.sum(np.abs(data)) > 0
     except Exception as e:
         del sdr
         raise Exception(e)
@@ -761,29 +778,29 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
 def hardwaregain(
     uri, classname, channel, dds_scale, frequency, hardwaregain_low, hardwaregain_high
 ):
-    """ hadwaregain: Test loopback with connected cables and verify
-        calculated hardware gain, by measuring changes in the AGC. This is only applicable
-        for devices with RSSI calculations onboard. This test also requires a devices
-        with TX and RX onboard where the transmit signal can be recovered. TX FPGA
-        DDSs are used to generate a sinusoid which is then received on the RX side.
+    """hadwaregain: Test loopback with connected cables and verify
+    calculated hardware gain, by measuring changes in the AGC. This is only applicable
+    for devices with RSSI calculations onboard. This test also requires a devices
+    with TX and RX onboard where the transmit signal can be recovered. TX FPGA
+    DDSs are used to generate a sinusoid which is then received on the RX side.
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            dds_scale: type=float
-                Scale of DDS tone. Range [0,1]
-            frequency:
-                Frequency in hertz of the generated tone. This must be
-                less than 1/2 the sample rate.
-            hardwaregain_low: type=float
-                Minimum acceptable value of hardwaregain attribute
-            hardwaregain_high: type=float
-                Maximum acceptable value of hardwaregain attribute
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        dds_scale: type=float
+            Scale of DDS tone. Range [0,1]
+        frequency:
+            Frequency in hertz of the generated tone. This must be
+            less than 1/2 the sample rate.
+        hardwaregain_low: type=float
+            Minimum acceptable value of hardwaregain attribute
+        hardwaregain_high: type=float
+            Maximum acceptable value of hardwaregain attribute
 
     """
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -797,28 +814,28 @@ def hardwaregain(
 
 
 def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
-    """ harmonic_vals: Test first five harmonics and check to be within
-        certain intervals. This test also requires a devices with TX and RX
-        onboard where thetransmit signal can be recovered.Sinuoidal data is
-        passed to DMAs, which is then estimated on the RX side.
+    """harmonic_vals: Test first five harmonics and check to be within
+    certain intervals. This test also requires a devices with TX and RX
+    onboard where thetransmit signal can be recovered.Sinuoidal data is
+    passed to DMAs, which is then estimated on the RX side.
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=list
-                List of integers or list of list of integers of channels to
-                enable through tx_enabled_channels
-            param_set: type=dict
-                Dictionary of attribute and values to be set before tone is
-                generated and received
-            low: type=list
-                List of minimum values for certain harmonics
-            high: type=list
-                List of maximum values for certain harmonics
-            plot: type=boolean
-                Boolean, if set the values are also plotted
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+        low: type=list
+            List of minimum values for certain harmonics
+        high: type=list
+            List of maximum values for certain harmonics
+        plot: type=boolean
+            Boolean, if set the values are also plotted
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     for p in param_set.keys():
@@ -1045,9 +1062,9 @@ def stress_context_creation(uri, classname, channel, repeats):
                 data = sdr.rx()
                 if isinstance(data, list):
                     for chan in data:
-                        assert np.sum(np.abs(chan)) > 0
+                        assert np.max(np.abs(chan)) > 0
                 else:
-                    assert np.sum(np.abs(data)) > 0
+                    assert np.max(np.abs(data)) > 0
                 sdr.rx_destroy_buffer()
         except Exception as e:
             del sdr
@@ -1079,10 +1096,10 @@ def stress_rx_buffer_length(uri, classname, channel, buffer_sizes):
             if isinstance(data, list):
                 for chan in data:
                     assert len(chan) == size
-                    assert np.sum(np.abs(chan)) > 0
+                    assert np.max(np.abs(chan)) > 0
             else:
                 assert len(data) == size
-                assert np.sum(np.abs(data)) > 0
+                assert np.max(np.abs(data)) > 0
             sdr.rx_destroy_buffer()
     except Exception as e:
         del sdr
@@ -1114,9 +1131,9 @@ def stress_rx_buffer_creation(uri, classname, channel, repeats):
             data = sdr.rx()
             if isinstance(data, list):
                 for chan in data:
-                    assert np.sum(np.abs(chan)) > 0
+                    assert np.max(np.abs(chan)) > 0
             else:
-                assert np.sum(np.abs(data)) > 0
+                assert np.max(np.abs(data)) > 0
             sdr.rx_destroy_buffer()
     except Exception as e:
         del sdr

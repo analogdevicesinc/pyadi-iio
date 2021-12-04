@@ -96,7 +96,7 @@ def pytest_generate_tests(metafunc):
 
 
 #################################################
-def dev_interface(uri, classname, val, attr, tol):
+def dev_interface(uri, classname, val, attr, tol, sub_channel=None):
     sdr = eval(classname + "(uri='" + uri + "')")
     # Check hardware
     if not hasattr(sdr, attr):
@@ -110,6 +110,42 @@ def dev_interface(uri, classname, val, attr, tol):
 
     setattr(sdr, attr, val)
     rval = getattr(sdr, attr)
+
+    del sdr
+
+    if not isinstance(rval, str) and not is_list:
+        rval = float(rval)
+
+    if is_list and isinstance(rval[0], str):
+        return val == rval
+
+    if not isinstance(val, str):
+        abs_val = np.argmax(abs(np.array(val) - np.array(rval)))
+        if abs_val > tol:
+            print("Failed to set: " + attr)
+            print("Set: " + str(val))
+            print("Got: " + str(rval))
+        return abs_val
+    else:
+        return val == str(rval)
+
+
+def dev_interface_sub_channel(uri, classname, sub_channel, val, attr, tol):
+    sdr = eval(classname + "(uri='" + uri + "')")
+    # Check hardware
+    if not hasattr(sdr, sub_channel):
+        raise AttributeError(sub_channel + " not defined in " + classname)
+    if not hasattr(getattr(sdr, sub_channel), attr):
+        raise AttributeError(attr + " not defined in " + classname)
+
+    rval = getattr(getattr(sdr, sub_channel), attr)
+    is_list = isinstance(rval, list)
+    if is_list:
+        l = len(rval)
+        val = [val] * l
+
+    setattr(getattr(sdr, sub_channel), attr, val)
+    rval = getattr(getattr(sdr, sub_channel), attr)
 
     del sdr
 
