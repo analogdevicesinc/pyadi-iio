@@ -940,8 +940,12 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        k = np.random.randint(1,10000)
-        plt.savefig("./results_log/test" + str(k) + ".png")
+        if channel == 1 or param_set["rf_port_select"] == 'B':
+            k=1
+        else:
+            k=0
+        plt.savefig("./results_log/graph" + str(k) + ".png")
+        plt.close()
 
     print("Harmonics:")
     print(hm)
