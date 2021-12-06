@@ -940,7 +940,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        if channel == 1 or param_set["rf_port_select"] == 'B':
+        if channel == 1 or param_set["tx_rf_port_select"] == 'B':
             k=1
         else:
             k=0
