@@ -285,7 +285,7 @@ v_rating = {
     24: "+/-20V",
     25: "+/-40V",
 }
-c_rating = {1: "20A", 2: "+/-10A"}
+c_rating = {1: "10A", 2: "+/-10A"}
 v_gain = {1: 4, 2: 5, 3: 20 / 3, 4: 10, 5: 20}
 jumper = {
     1: [3, 3, 1, 3, 3, 2],
@@ -411,7 +411,7 @@ if new_session == 1:
     new_record.append(str(v_max) + " - 16V | 20V | 27V | 40V | 80V")
 
     print(
-        "\n\n----- Setting up the hardware for AD8410 -----\n-Step 1 of 1: Type of measurement-\n\t(1) Unidirectional: The board expects positive current flow only. Board is configured to handle 0 to 20A.\n\t(2) Bidirectional: The board expects both positive and negative current flow. Board is configured to handle -10A to 10A.\n"
+        "\n\n----- Setting up the hardware for AD8410 -----\n-Step 1 of 1: Type of measurement-\n\t(1) Unidirectional: The board expects positive current flow only. Board is configured to handle 0 to 10A.\n\t(2) Bidirectional: The board expects both positive and negative current flow. Board is configured to handle -10A to 10A.\n"
     )
     c_type = input_int("Type of current measurement (1 or 2): ", 1, 2)
     new_record.append(str(c_type) + " - Unidirectional | Birectional")
@@ -438,7 +438,7 @@ if new_session == 1:
         )
     if c_type == 1:
         c_uni()
-        c_text = "Current measurement: Unidirectional      (Effective range: 0 to 20A)"
+        c_text = "Current measurement: Unidirectional      (Effective range: 0 to 10A)"
     elif c_type == 2:
         c_bi()
         c_text = (
