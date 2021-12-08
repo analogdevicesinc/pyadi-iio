@@ -32,3 +32,7 @@ repos:
     rev: v1.3.0
     hooks:
     -   id: blacken-docs
+-   repo: https://github.com/pycqa/pylint
+    rev: pylint-2.7.1
+    hooks:
+    -   id: pylint
