@@ -45,6 +45,7 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx_rtd_theme",
     "myst_parser",
+    "sphinx-favicon",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -67,7 +68,10 @@ coverage_ignore_modules = ["test.dma_tests", "test.generics"]
 #
 html_theme = "furo"
 
+html_title = f"{project} {release}"
+favicons = ["favicon.png"]
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ["_static"]
