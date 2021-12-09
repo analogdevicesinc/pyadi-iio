@@ -18,25 +18,43 @@ from scipy import signal
 from scipy.signal import find_peaks
 
 
-def spec_est(x, fs, ref=2 ** 15, plot=False):
+def spec_est(x, fs, ref=2 ** 15, num_ffts=2, enable_windowing=False, plot=False):
 
     N = len(x)
+    fft_len = int(np.floor(N/num_ffts))
+    possible_ffts = num_ffts
 
-    # Apply window
-    window = signal.kaiser(N, beta=38)
-    # x = multiply(x, window)
+    indx = 0
+    ampl_ave = np.zeros(fft_len)
+    freqs_ave = np.zeros(fft_len)
 
-    # Use FFT to get the amplitude of the spectrum
-    ampl = 1 / N * absolute(fft(x))
-    ampl = 20 * log10(ampl / ref + 10 ** -20)
+    for n_fft in range(num_ffts):
 
-    # FFT frequency bins
-    freqs = fftfreq(N, 1 / fs)
+        seg = x[indx:indx+fft_len]
+        indx += fft_len
+
+        # Apply window
+        if enable_windowing:
+            window = signal.kaiser(fft_len, beta=38)
+            seg = multiply(seg, window)
+
+        # Use FFT to get the amplitude of the spectrum
+        ampl = 1 / N * absolute(fft(seg))
+        ampl = 20 * log10(ampl / ref + 10 ** -20)
+
+        # FFT frequency bins
+        freqs = fftfreq(len(ampl), 1 / fs)
+
+        ampl_ave += ampl
+        freqs_ave += freqs
+
+    ampl_ave /= num_ffts
+    freqs_ave /= num_ffts
 
     # ampl and freqs for real data
     if not np.iscomplexobj(x):
-        ampl = ampl[0 : len(ampl) // 2]
-        freqs = freqs[0 : len(freqs) // 2]
+        ampl_ave = ampl[0 : len(ampl_ave) // 2]
+        freqs_ave = freqs_ave[0 : len(freqs_ave) // 2]
 
     if plot:
         # Plot signal, showing how endpoints wrap from one chunk to the next
@@ -49,13 +67,13 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
         plt.xlabel("Time [s]")
         # Plot shifted data on a shifted axis
         plt.subplot(2, 1, 2)
-        plt.plot(fftshift(freqs), fftshift(ampl))
+        plt.plot(fftshift(freqs_ave), fftshift(ampl_ave))
         plt.margins(0.1, 0.1)
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
         plt.show()
 
-    return ampl, freqs
+    return ampl_ave, freqs_ave
 
 
 def find_peaks_cust(x, num_peaks=4):
@@ -238,6 +256,7 @@ def main():
     f = 10  # Hz
     # a = cos(2 * pi * f * t) * 2 ** 15
     a = exp(1j * 2 * pi * f * t) * 2 ** 15
+    print(f"Input shape {a.shape}")
 
     # fs = sdr.sample_rate
 
