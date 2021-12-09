@@ -37,9 +37,10 @@ import paramiko
 
 
 class sshfs:
+
     """Minimal sshfs replacement"""
 
-    def __init__(self, address, username, password, sshargs=None):
+    def __init__(self, address: str, username: str, password: str):
         if address.startswith("ip:"):
             address = address[3:]
         self.address = address
@@ -63,20 +64,44 @@ class sshfs:
             )
 
     def _run(self, cmd):
-        (_, out, err) = self.ssh.exec_command(cmd)  # pylint: ignore=B601
+        (_, out, err) = self.ssh.exec_command(cmd)
         stdout = out.read().decode().strip()
         stderr = err.read().decode().strip()
 
         return stdout, stderr
 
-    def isfile(self, path):
+    def isfile(self, path: str):
+        """Verify remote path exists
+
+        Args:
+            path (str): Path to check exists
+
+        Return:
+            bool: True is path exists, False otherwise
+        """
         stdout, _ = self._run(f"test -f {path}; echo $?")
         return stdout == "0"
 
-    def listdir(self, path):
+    def listdir(self, path: str):
+        """List contexts of remote path. This will run 'ls -l' on provided path
+
+        Args:
+            path (str): Path to remote to run ls -l command on
+
+        Return:
+            str: Output of ls -l command
+        """
         stdout, _ = self._run(f"ls -1 {path}")
         return stdout.split()
 
-    def gettext(self, path, *kargs, **kwargs):
+    def gettext(self, path: str):
+        """Get text of specific path. This will run cat on provided path
+
+        Args:
+            path (str): Path to remote to run cat command on
+
+        Return:
+            str: Output of cat command
+        """
         stdout, _ = self._run(f"cat {path}")
         return stdout
