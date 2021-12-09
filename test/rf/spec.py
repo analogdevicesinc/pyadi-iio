@@ -36,7 +36,11 @@ def spec_est(x, fs, ref=2 ** 15, num_ffts=2, enable_windowing=False, plot=False)
 
         # Apply window
         if enable_windowing:
+<<<<<<< HEAD
             window = np.hanning(fft_len)
+=======
+            window = signal.kaiser(fft_len, beta=38)
+>>>>>>> 0bf52eef... Enable averaging of FFTs
             seg = multiply(seg, window)
 
         # Use FFT to get the amplitude of the spectrum
