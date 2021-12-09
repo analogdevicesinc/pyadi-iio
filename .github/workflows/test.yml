@@ -76,7 +76,20 @@ jobs:
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
 
-      - name: Lint
+      - name: pylint
+        run: |
+          pip install -r requirements_dev.txt
+          mkdir report
+          pylint adi | pylint-json2html -o report/pylint.html
+
+      - name: pylint Report Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./report
+          destination_dir: reports/pylint/${GITHUB_REF##*/}
+
+      - name: Precommit Lint
         run: |
           pre-commit run --all-files 2> /dev/null
           ec=$?

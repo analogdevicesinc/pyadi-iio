@@ -13,3 +13,5 @@ bump2version
 pytest-html
 plotly-express
 pyvisa
+pylint
+pylint-json2html
