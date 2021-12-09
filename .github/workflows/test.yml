@@ -87,7 +87,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./report
-          destination_dir: reports/pylint/${GITHUB_REF##*/}
+          destination_dir: reports/pylint/${{ github.ref_name }}
 
       - name: Precommit Lint
         run: |
