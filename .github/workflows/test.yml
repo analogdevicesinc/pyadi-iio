@@ -89,6 +89,12 @@ jobs:
           publish_dir: ./report
           destination_dir: reports/pylint/${{ github.ref_name }}
 
+      - name: Add PR report message
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            Generated pylint report [available here](https://analogdevicesinc.github.io/pyadi-iio/reports/pylint/${{ github.ref_name }}/pylint.html)
+
       - name: Precommit Lint
         run: |
           pre-commit run --all-files 2> /dev/null
