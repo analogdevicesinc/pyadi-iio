@@ -44,7 +44,7 @@ def reset_buffer(func):
     """
 
     def wrapper(*args, **kwargs):
-        if args[0]._reset_on_spi_writes:
+        if args[0]._reset_on_spi_writes:  # pylint: disable=W0212
             args[0].rx_destroy_buffer()
         func(*args, **kwargs)
 
