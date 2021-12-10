@@ -31,7 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from typing import Dict, List
+from typing import List
 
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
@@ -58,7 +58,7 @@ class ad9083(rx, context_manager):
                 self._rx_channel_names.append(ch._id)
 
         for name in self._rx_channel_names:
-            if "_i" or "_q" in name:
+            if "_i" in name or "_q" in name:
                 self._complex_data = True
 
         rx.__init__(self)
