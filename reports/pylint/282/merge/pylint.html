@@ -454,60 +454,6 @@
             
         </table>
         
-        <h3>Module <code>adi.ad5686</code> (<code>adi/ad5686.py</code>)</h3>
-        <table>
-            <tr>
-                <th>Line</th>
-                <th>Col.</th>
-                <th>Type</th>
-                <th>Symbol</th>
-                <th>ID</th>
-                <th>Obj</th>
-                <th>Message</th>
-            </tr>
-            
-            <tr>
-                <td>39</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>ad5686</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>49</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (103/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>88</td>
-                <td>16</td>
-                <td>refactor</td>
-                <td><code>no-else-break</code></td>
-                <td>R1723</td>
-                <td>ad5686.__init__</td>
-                <td><pre>Unnecessary &#34;else&#34; after &#34;break&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>135</td>
-                <td>12</td>
-                <td>error</td>
-                <td><code>no-member</code></td>
-                <td>E1101</td>
-                <td>ad5686._channel.powerdown_mode</td>
-                <td><pre>Instance of &#39;_channel&#39; has no &#39;_set_iio_attr_str&#39; member; maybe &#39;_get_iio_attr_str&#39;?</pre></td>
-            </tr>
-            
-        </table>
-        
         <h3>Module <code>adi.ad7124</code> (<code>adi/ad7124.py</code>)</h3>
         <table>
             <tr>
@@ -608,16 +554,6 @@
                 <td><pre>Formatting a regular string which could be a f-string</pre></td>
             </tr>
             
-            <tr>
-                <td>88</td>
-                <td>4</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>ad7746._temp_channel</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
-            </tr>
-            
         </table>
         
         <h3>Module <code>adi.ad7799</code> (<code>adi/ad7799.py</code>)</h3>
@@ -640,16 +576,6 @@
                 <td>W0231</td>
                 <td>ad7799.__init__</td>
                 <td><pre>__init__ method from base class &#39;rx&#39; is not called</pre></td>
-            </tr>
-            
-            <tr>
-                <td>66</td>
-                <td>4</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>ad7799._channel</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
             </tr>
             
         </table>
@@ -1772,39 +1698,6 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.adrv9002:[215:236]
-==adi.adrv9009:[157:178]
-    @property
-    def gain_control_mode_chan0(self):
-        &#34;&#34;&#34;gain_control_mode_chan0: Mode of receive path AGC. Options are:
-        slow_attack, manual&#34;&#34;&#34;
-        return self._get_iio_attr_str(&#34;voltage0&#34;, &#34;gain_control_mode&#34;, False)
-
-    @gain_control_mode_chan0.setter
-    def gain_control_mode_chan0(self, value):
-        self._set_iio_attr(&#34;voltage0&#34;, &#34;gain_control_mode&#34;, False, value)
-
-    @property
-    def gain_control_mode_chan1(self):
-        &#34;&#34;&#34;gain_control_mode_chan1: Mode of receive path AGC. Options are:
-        slow_attack, manual&#34;&#34;&#34;
-        return self._get_iio_attr_str(&#34;voltage1&#34;, &#34;gain_control_mode&#34;, False)
-
-    @gain_control_mode_chan1.setter
-    def gain_control_mode_chan1(self, value):
-        self._set_iio_attr(&#34;voltage1&#34;, &#34;gain_control_mode&#34;, False, value)
-
-    @property</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
 ==adi.ad9081:[83:99]
 ==adi.ad9081_mc:[115:131]
     _complex_data = True
@@ -1900,6 +1793,39 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
+==adi.adrv9002:[215:236]
+==adi.adrv9009:[157:178]
+    @property
+    def gain_control_mode_chan0(self):
+        &#34;&#34;&#34;gain_control_mode_chan0: Mode of receive path AGC. Options are:
+        slow_attack, manual&#34;&#34;&#34;
+        return self._get_iio_attr_str(&#34;voltage0&#34;, &#34;gain_control_mode&#34;, False)
+
+    @gain_control_mode_chan0.setter
+    def gain_control_mode_chan0(self, value):
+        self._set_iio_attr(&#34;voltage0&#34;, &#34;gain_control_mode&#34;, False, value)
+
+    @property
+    def gain_control_mode_chan1(self):
+        &#34;&#34;&#34;gain_control_mode_chan1: Mode of receive path AGC. Options are:
+        slow_attack, manual&#34;&#34;&#34;
+        return self._get_iio_attr_str(&#34;voltage1&#34;, &#34;gain_control_mode&#34;, False)
+
+    @gain_control_mode_chan1.setter
+    def gain_control_mode_chan1(self, value):
+        self._set_iio_attr(&#34;voltage1&#34;, &#34;gain_control_mode&#34;, False, value)
+
+    @property</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
 ==adi.ad7124:[111:132]
 ==adi.ad7689:[82:103]
     class _channel(attribute):
@@ -1963,6 +1889,31 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
+==adi.adrv9009_zu11eg:[58:71]
+==adi.fmcomms5:[57:70]
+    ]
+    _tx_channel_names = [
+        &#34;voltage0&#34;,
+        &#34;voltage1&#34;,
+        &#34;voltage2&#34;,
+        &#34;voltage3&#34;,
+        &#34;voltage4&#34;,
+        &#34;voltage5&#34;,
+        &#34;voltage6&#34;,
+        &#34;voltage7&#34;,
+    ]
+    _device_name = &#34;&#34;
+</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
 ==adi.QuadMxFE_multi:[63:77]
 ==adi.adrv9009_zu11eg_multi:[68:82]
     ):
@@ -2014,21 +1965,19 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.adrv9009_zu11eg:[58:71]
-==adi.fmcomms5:[57:70]
-    ]
-    _tx_channel_names = [
-        &#34;voltage0&#34;,
-        &#34;voltage1&#34;,
-        &#34;voltage2&#34;,
-        &#34;voltage3&#34;,
-        &#34;voltage4&#34;,
-        &#34;voltage5&#34;,
-        &#34;voltage6&#34;,
-        &#34;voltage7&#34;,
+==adi.adis16460:[41:53]
+==adi.adis16507:[41:52]
+    _complex_data = False
+    _rx_channel_names = [
+        &#34;anglvel_x&#34;,
+        &#34;anglvel_y&#34;,
+        &#34;anglvel_z&#34;,
+        &#34;accel_x&#34;,
+        &#34;accel_y&#34;,
+        &#34;accel_z&#34;,
     ]
     _device_name = &#34;&#34;
-</pre></td>
+    _rx_data_type = &#34;&gt;i4&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2067,29 +2016,6 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.adis16460:[41:53]
-==adi.adis16507:[41:52]
-    _complex_data = False
-    _rx_channel_names = [
-        &#34;anglvel_x&#34;,
-        &#34;anglvel_y&#34;,
-        &#34;anglvel_z&#34;,
-        &#34;accel_x&#34;,
-        &#34;accel_y&#34;,
-        &#34;accel_z&#34;,
-    ]
-    _device_name = &#34;&#34;
-    _rx_data_type = &#34;&gt;i4&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
 ==adi.adrv9009_zu11eg:[58:68]
 ==adi.adrv9009_zu11eg_fmcomms8:[66:76]
     ]
@@ -2102,6 +2028,34 @@ def _sortconv(chans_names, noq=False, dds=False):
         &#34;voltage5&#34;,
         &#34;voltage6&#34;,
         &#34;voltage7&#34;,</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad7124:[57:71]
+==adi.adpd188:[52:68]
+        self._ctrl = None
+        index = 0
+
+        # Selecting the device_index-th device from the adpd188 family as working device.
+        for device in self._ctx.devices:
+            if device.name in compatible_parts:
+                if index == device_index:
+                    self._ctrl = device
+                    self._rxadc = device
+                    break
+                else:
+                    index += 1
+
+        # dynamically get channels and sorting them after the color
+        # self._ctrl.channels.sort(key=lambda x: str(x.id[14:]))
+</pre></td>
             </tr>
             
             <tr>
@@ -2141,70 +2095,17 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad7124:[57:71]
-==adi.adpd188:[52:68]
-        self._ctrl = None
-        index = 0
-
-        # Selecting the device_index-th device from the adpd188 family as working device.
-        for device in self._ctx.devices:
-            if device.name in compatible_parts:
-                if index == device_index:
-                    self._ctrl = device
-                    self._rxadc = device
-                    break
-                else:
-                    index += 1
-
-        # dynamically get channels and sorting them after the color
-        # self._ctrl.channels.sort(key=lambda x: str(x.id[14:]))
-</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.adrv9009_zu11eg:[49:58]
-==adi.adrv9009_zu11eg_fmcomms8:[49:58]
-    _rx_channel_names = [
-        &#34;voltage0_i&#34;,
-        &#34;voltage0_q&#34;,
-        &#34;voltage1_i&#34;,
-        &#34;voltage1_q&#34;,
-        &#34;voltage2_i&#34;,
-        &#34;voltage2_q&#34;,
-        &#34;voltage3_i&#34;,
-        &#34;voltage3_q&#34;,</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.adis16460:[59:72]
-==adi.adis16507:[65:78]
-        rx.__init__(self)
-        self.rx_buffer_size = 16  # Make default buffer smaller
-
-    @property
-    def sample_rate(self):
-        &#34;&#34;&#34;sample_rate: Sample rate in samples per second&#34;&#34;&#34;
-        return self._get_iio_dev_attr(&#34;sampling_frequency&#34;)
-
-    @sample_rate.setter
-    def sample_rate(self, value):
-        self._set_iio_dev_attr_str(&#34;sampling_frequency&#34;, value)
-
-    @property</pre></td>
+==adi.adrv9009_zu11eg:[60:69]
+==adi.fmcomms5:[49:58]
+        &#34;voltage0&#34;,
+        &#34;voltage1&#34;,
+        &#34;voltage2&#34;,
+        &#34;voltage3&#34;,
+        &#34;voltage4&#34;,
+        &#34;voltage5&#34;,
+        &#34;voltage6&#34;,
+        &#34;voltage7&#34;,
+    ]</pre></td>
             </tr>
             
             <tr>
@@ -2241,6 +2142,31 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
+==adi.adis16460:[59:72]
+==adi.adis16507:[65:78]
+        rx.__init__(self)
+        self.rx_buffer_size = 16  # Make default buffer smaller
+
+    @property
+    def sample_rate(self):
+        &#34;&#34;&#34;sample_rate: Sample rate in samples per second&#34;&#34;&#34;
+        return self._get_iio_dev_attr(&#34;sampling_frequency&#34;)
+
+    @sample_rate.setter
+    def sample_rate(self, value):
+        self._set_iio_dev_attr_str(&#34;sampling_frequency&#34;, value)
+
+    @property</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
 ==adi.ad936x:[55:66]
 ==adi.fmcomms5:[82:93]
     @property
@@ -2264,17 +2190,17 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.adrv9009_zu11eg:[60:69]
-==adi.fmcomms5:[49:58]
-        &#34;voltage0&#34;,
-        &#34;voltage1&#34;,
-        &#34;voltage2&#34;,
-        &#34;voltage3&#34;,
-        &#34;voltage4&#34;,
-        &#34;voltage5&#34;,
-        &#34;voltage6&#34;,
-        &#34;voltage7&#34;,
-    ]</pre></td>
+==adi.adrv9009_zu11eg:[49:58]
+==adi.adrv9009_zu11eg_fmcomms8:[49:58]
+    _rx_channel_names = [
+        &#34;voltage0_i&#34;,
+        &#34;voltage0_q&#34;,
+        &#34;voltage1_i&#34;,
+        &#34;voltage1_q&#34;,
+        &#34;voltage2_i&#34;,
+        &#34;voltage2_q&#34;,
+        &#34;voltage3_i&#34;,
+        &#34;voltage3_q&#34;,</pre></td>
             </tr>
             
             <tr>
@@ -2301,31 +2227,6 @@ def _sortconv(chans_names, noq=False, dds=False):
             &#34;&#34;&#34;AD7746 channel scale.&#34;&#34;&#34;
             return float(self._get_iio_attr_str(self.name, &#34;scale&#34;, False))
 </pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad7606:[138:151]
-==adi.ad7689:[103:116]
-    def to_volts(self, index, val):
-        &#34;&#34;&#34;Converts raw value to SI&#34;&#34;&#34;
-        _scale = self.channel[index].scale
-
-        ret = None
-
-        if isinstance(val, np.int16):
-            ret = val * _scale
-
-        if isinstance(val, np.ndarray):
-            ret = [x * _scale for x in val]
-
-        return ret</pre></td>
             </tr>
             
             <tr>
@@ -2400,6 +2301,31 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
+==adi.ad7606:[138:151]
+==adi.ad7689:[103:116]
+    def to_volts(self, index, val):
+        &#34;&#34;&#34;Converts raw value to SI&#34;&#34;&#34;
+        _scale = self.channel[index].scale
+
+        ret = None
+
+        if isinstance(val, np.int16):
+            ret = val * _scale
+
+        if isinstance(val, np.ndarray):
+            ret = [x * _scale for x in val]
+
+        return ret</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
 ==adi.ad7124:[111:124]
 ==adi.adpd188:[93:107]
     class _channel(attribute):
@@ -2426,12 +2352,54 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
+==adi.ad7746:[102:112]
+==adi.adpd188:[97:107]
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property
+        def raw(self):
+            &#34;&#34;&#34;ADPD188 channel raw value.&#34;&#34;&#34;
+            return self._get_iio_attr(self.name, &#34;raw&#34;, False)
+
+        @property</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad936x:[202:210]
+==adi.fmcomms5:[273:280]
+        fir_config_string = &#34;&#34;
+        fir_config_string += &#34;RX 3 GAIN -6 DEC &#34; + str(dec) + &#34;\n&#34;
+        fir_config_string += &#34;TX 3 GAIN 0 INT &#34; + str(dec) + &#34;\n&#34;
+        for i in range(taps):
+            fir_config_string += str(fir[i]) + &#34;,&#34; + str(fir[i]) + &#34;\n&#34;
+        fir_config_string += &#34;\n&#34;
+        self._set_iio_dev_attr_str(&#34;filter_fir_config&#34;, fir_config_string)
+</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
 ==adi.ad936x:[248:259]
-==adi.adrv9002:[225:236]
+==adi.adrv9009:[167:178]
     @property
     def gain_control_mode_chan1(self):
         &#34;&#34;&#34;gain_control_mode_chan1: Mode of receive path AGC. Options are:
-        manual_spi, manual_pin, automatic&#34;&#34;&#34;
+        slow_attack, fast_attack, manual&#34;&#34;&#34;
         return self._get_iio_attr_str(&#34;voltage1&#34;, &#34;gain_control_mode&#34;, False)
 
     @gain_control_mode_chan1.setter
@@ -2450,11 +2418,11 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td></td>
                 <td><pre>Similar lines in 2 files
 ==adi.ad936x:[79:90]
-==adi.adrv9002:[215:226]
+==adi.adrv9009:[157:168]
     @property
     def gain_control_mode_chan0(self):
         &#34;&#34;&#34;gain_control_mode_chan0: Mode of receive path AGC. Options are:
-        manual_spi, manual_pin, automatic&#34;&#34;&#34;
+        slow_attack, fast_attack, manual&#34;&#34;&#34;
         return self._get_iio_attr_str(&#34;voltage0&#34;, &#34;gain_control_mode&#34;, False)
 
     @gain_control_mode_chan0.setter
@@ -2462,28 +2430,6 @@ def _sortconv(chans_names, noq=False, dds=False):
         self._set_iio_attr(&#34;voltage0&#34;, &#34;gain_control_mode&#34;, False, value)
 
     @property</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad7746:[102:112]
-==adi.adpd188:[97:107]
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            &#34;&#34;&#34;ADPD188 channel raw value.&#34;&#34;&#34;
-            return self._get_iio_attr(self.name, &#34;raw&#34;, False)
-
-        @property</pre></td>
             </tr>
             
             <tr>
@@ -2517,16 +2463,17 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad936x:[202:210]
-==adi.fmcomms5:[273:280]
-        fir_config_string = &#34;&#34;
-        fir_config_string += &#34;RX 3 GAIN -6 DEC &#34; + str(dec) + &#34;\n&#34;
-        fir_config_string += &#34;TX 3 GAIN 0 INT &#34; + str(dec) + &#34;\n&#34;
-        for i in range(taps):
-            fir_config_string += str(fir[i]) + &#34;,&#34; + str(fir[i]) + &#34;\n&#34;
-        fir_config_string += &#34;\n&#34;
-        self._set_iio_dev_attr_str(&#34;filter_fir_config&#34;, fir_config_string)
-</pre></td>
+==adi.adrv9002:[265:274]
+==adi.adrv9009:[314:323]
+            self._set_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, True, value)
+
+    @property
+    def tx_hardwaregain_chan1(self):
+        &#34;&#34;&#34;tx_hardwaregain: Attenuation applied to TX path channel 1&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage1&#34;, &#34;hardwaregain&#34;, True)
+
+    @tx_hardwaregain_chan1.setter
+    def tx_hardwaregain_chan1(self, value):</pre></td>
             </tr>
             
             <tr>
@@ -2537,81 +2484,18 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad936x:[258:267]
-==adi.adrv9009:[226:235]
+==adi.adrv9002:[244:254]
+==adi.adrv9009:[224:234]
+            self._set_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, False, value)
+
     @property
     def rx_hardwaregain_chan1(self):
-        &#34;&#34;&#34;rx_hardwaregain_chan1: Gain applied to RX path. Only applicable when
+        &#34;&#34;&#34;rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
         gain_control_mode is set to &#39;manual&#39;&#34;&#34;&#34;
         return self._get_iio_attr(&#34;voltage1&#34;, &#34;hardwaregain&#34;, False)
 
     @rx_hardwaregain_chan1.setter
-    def rx_hardwaregain_chan1(self, value):
-        if self.gain_control_mode_chan1 == &#34;manual&#34;:</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad936x:[89:98]
-==adi.adrv9009:[215:224]
-    @property
-    def rx_hardwaregain_chan0(self):
-        &#34;&#34;&#34;rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
-        gain_control_mode is set to &#39;manual&#39;&#34;&#34;&#34;
-        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, False)
-
-    @rx_hardwaregain_chan0.setter
-    def rx_hardwaregain_chan0(self, value):
-        if self.gain_control_mode_chan0 == &#34;manual&#34;:</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad7606:[45:54]
-==adi.ad7689:[45:54]
-    _complex_data = False
-    channel = []  # type: ignore
-    _device_name = &#34;&#34;
-
-    def __init__(self, uri=&#34;&#34;, device_name=&#34;&#34;):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = [</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.adxl345:[75:85]
-==adi.adxrs290:[98:108]
-        )
-
-    class _channel(attribute):
-        &#34;&#34;&#34;ADXRS290 channel&#34;&#34;&#34;
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property</pre></td>
+    def rx_hardwaregain_chan1(self, value):</pre></td>
             </tr>
             
             <tr>
@@ -2659,39 +2543,18 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad5686:[100:110]
-==adi.adpd188:[93:104]
-    class _channel(attribute):
-
-        &#34;&#34;&#34;ADPD188 channel.&#34;&#34;&#34;
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            &#34;&#34;&#34;ADPD188 channel raw value.&#34;&#34;&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.adis16460:[71:79]
+==adi.adis16495:[85:95]
 ==adi.adis16507:[87:95]
     @property
     def current_timestamp_clock(self):
-        &#34;&#34;&#34;current_timestamp_clock: Source clock for timestamps&#34;&#34;&#34;
+        &#34;&#34;&#34;Current_timestamp_clock: Source clock for timestamps.&#34;&#34;&#34;
         return self._get_iio_dev_attr(&#34;current_timestamp_clock&#34;)
 
     @current_timestamp_clock.setter
     def current_timestamp_clock(self, value):
-        self._set_iio_dev_attr_str(&#34;current_timestamp_clock&#34;, value)</pre></td>
+        self._set_iio_dev_attr_str(&#34;current_timestamp_clock&#34;, value)
+
+    # channel attributes</pre></td>
             </tr>
             
             <tr>
@@ -2702,31 +2565,8 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad9371:[165:174]
-==adi.adrv9002:[265:274]
-            self._set_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, True, value)
-
-    @property
-    def tx_hardwaregain_chan1(self):
-        &#34;&#34;&#34;tx_hardwaregain: Attenuation applied to TX path channel 1&#34;&#34;&#34;
-        return self._get_iio_attr(&#34;voltage1&#34;, &#34;hardwaregain&#34;, True)
-
-    @tx_hardwaregain_chan1.setter
-    def tx_hardwaregain_chan1(self, value):</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad9371:[109:119]
-==adi.adrv9002:[244:254]
-            self._set_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, False, value)
-
+==adi.ad936x:[258:267]
+==adi.adrv9009:[226:235]
     @property
     def rx_hardwaregain_chan1(self):
         &#34;&#34;&#34;rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
@@ -2734,7 +2574,29 @@ def _sortconv(chans_names, noq=False, dds=False):
         return self._get_iio_attr(&#34;voltage1&#34;, &#34;hardwaregain&#34;, False)
 
     @rx_hardwaregain_chan1.setter
-    def rx_hardwaregain_chan1(self, value):</pre></td>
+    def rx_hardwaregain_chan1(self, value):
+        if self.gain_control_mode_chan1 == &#34;manual&#34;:</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad936x:[89:98]
+==adi.adrv9009:[215:224]
+    @property
+    def rx_hardwaregain_chan0(self):
+        &#34;&#34;&#34;rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
+        gain_control_mode is set to &#39;manual&#39;&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, False)
+
+    @rx_hardwaregain_chan0.setter
+    def rx_hardwaregain_chan0(self, value):
+        if self.gain_control_mode_chan0 == &#34;manual&#34;:</pre></td>
             </tr>
             
             <tr>
@@ -2757,6 +2619,114 @@ def _sortconv(chans_names, noq=False, dds=False):
         &#34;voltage5&#34;,
         &#34;voltage6&#34;,
         &#34;voltage7&#34;,</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad7606:[45:54]
+==adi.ad7689:[45:54]
+    _complex_data = False
+    channel = []  # type: ignore
+    _device_name = &#34;&#34;
+
+    def __init__(self, uri=&#34;&#34;, device_name=&#34;&#34;):
+
+        context_manager.__init__(self, uri, self._device_name)
+
+        compatible_parts = [</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.adpd410x:[94:104]
+==adi.adxrs290:[100:110]
+    class _channel(attribute):
+        &#34;&#34;&#34;adpd410x channel&#34;&#34;&#34;
+
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property
+        def raw(self):
+            &#34;&#34;&#34; adpd410x channel raw value&#34;&#34;&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.adxl345:[75:85]
+==adi.adxrs290:[98:108]
+        )
+
+    class _channel(attribute):
+        &#34;&#34;&#34;ADXRS290 channel&#34;&#34;&#34;
+
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad7124:[132:141]
+==adi.adpd188:[106:115]
+        @property
+        def offset(self):
+            &#34;&#34;&#34;AD7124 channel offset&#34;&#34;&#34;
+            return self._get_iio_attr(self.name, &#34;offset&#34;, False)
+
+        @offset.setter
+        def offset(self, value):
+            self._get_iio_attr(self.name, &#34;offset&#34;, False, value)
+</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad5686:[99:109]
+==adi.ad7124:[111:121]
+    class _channel(attribute):
+        &#34;&#34;&#34;AD7124 channel&#34;&#34;&#34;
+
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property
+        def raw(self):
+            &#34;&#34;&#34;AD7124 channel raw value&#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2808,17 +2778,15 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad7124:[132:141]
-==adi.adpd188:[106:115]
-        @property
-        def offset(self):
-            &#34;&#34;&#34;AD7124 channel offset&#34;&#34;&#34;
-            return self._get_iio_attr(self.name, &#34;offset&#34;, False)
+==adi.ad9371:[158:165]
+==adi.adrv9002:[257:264]
+    @property
+    def tx_hardwaregain_chan0(self):
+        &#34;&#34;&#34;tx_hardwaregain: Attenuation applied to TX path channel 0&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, True)
 
-        @offset.setter
-        def offset(self, value):
-            self._get_iio_attr(self.name, &#34;offset&#34;, False, value)
-</pre></td>
+    @tx_hardwaregain_chan0.setter
+    def tx_hardwaregain_chan0(self, value):</pre></td>
             </tr>
             
             <tr>
@@ -2829,37 +2797,15 @@ def _sortconv(chans_names, noq=False, dds=False):
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad7124:[111:121]
-==adi.adpd410x:[94:104]
-    class _channel(attribute):
-        &#34;&#34;&#34;adpd410x channel&#34;&#34;&#34;
-
+==adi.ad5686:[102:109]
+==adi.ad7746:[102:109]
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
 
         @property
         def raw(self):
-            &#34;&#34;&#34; adpd410x channel raw value&#34;&#34;&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad936x:[100:107]
-==adi.adrv9009:[307:314]
-    @property
-    def tx_hardwaregain_chan0(self):
-        &#34;&#34;&#34;tx_hardwaregain_chan0: Attenuation applied to TX path&#34;&#34;&#34;
-        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, True)
-
-    @tx_hardwaregain_chan0.setter
-    def tx_hardwaregain_chan0(self, value):</pre></td>
+            &#34;&#34;&#34;AD7746 channel raw value.&#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2879,6 +2825,45 @@ def _sortconv(chans_names, noq=False, dds=False):
 
         @calibbias.setter
         def calibbias(self, value):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad5627:[40:46]
+==adi.ad9152:[40:48]
+    _complex_data = False
+    _tx_channel_names = [&#34;voltage0&#34;, &#34;voltage1&#34;]
+    _device_name = &#34;&#34;
+
+    def __init__(self, uri=&#34;&#34;):
+
+        context_manager.__init__(self, uri, self._device_name)
+</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad7606:[77:84]
+==adi.adpd188:[68:73]
+        for ch in self._ctrl._channels:
+            name = ch._id
+            self._rx_channel_names.append(name)
+            self.channel.append(self._channel(self._ctrl, name))
+
+        rx.__init__(self)
+</pre></td>
             </tr>
             
             <tr>
@@ -2909,18 +2894,54 @@ from adi.rx_tx import rx
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.adf5610:[47:57]
-==adi.adl5960:[47:57]
-    def __init__(self, uri=&#34;&#34;, device_name=&#34;&#34;):
+==adi.ad9371:[289:297]
+==adi.adrv9009:[279:287]
+    @property
+    def obs_hardwaregain(self):
+        &#34;&#34;&#34;obs_hardwaregain: Gain applied to Obs/Sniffer receive path chan0. Only applicable when
+        obs_gain_control_mode is set to &#39;manual&#39;&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage2&#34;, &#34;hardwaregain&#34;, False)
 
-        context_manager.__init__(self, uri, self._device_name)
+    @obs_hardwaregain.setter
+    def obs_hardwaregain(self, value):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad9371:[100:108]
+==adi.adrv9009:[215:223]
+    @property
+    def rx_hardwaregain_chan0(self):
+        &#34;&#34;&#34;rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
+        gain_control_mode is set to &#39;manual&#39;&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, False)
 
-        self._device_name = device_name
-        # Find the device
-        self._ctrl = self._ctx.find_device(self._device_name)
-
-        # Raise an exception if the device isn&#39;t found
-        if not self._ctrl:</pre></td>
+    @rx_hardwaregain_chan0.setter
+    def rx_hardwaregain_chan0(self, value):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad9371:[42:48]
+==adi.adrv9009:[59:65]
+    _complex_data = True
+    _rx_channel_names = [&#34;voltage0_i&#34;, &#34;voltage0_q&#34;, &#34;voltage1_i&#34;, &#34;voltage1_q&#34;]
+    _tx_channel_names = [&#34;voltage0&#34;, &#34;voltage1&#34;, &#34;voltage2&#34;, &#34;voltage3&#34;]
+    _obs_channel_names = [&#34;voltage0_i&#34;, &#34;voltage0_q&#34;]
+    _device_name = &#34;&#34;
+</pre></td>
             </tr>
             
             <tr>
@@ -2976,36 +2997,18 @@ from adi.rx_tx import rx
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.adf5610:[69:77]
-==adi.admv8818:[142:150]
-    def reg_read(self, reg):
-        &#34;&#34;&#34;Direct Register Access via debugfs&#34;&#34;&#34;
-        self._set_iio_debug_attr_str(&#34;direct_reg_access&#34;, reg, self._ctrl)
-        return self._get_iio_debug_attr_str(&#34;direct_reg_access&#34;, self._ctrl)
-
-    def reg_write(self, reg, value):
-        &#34;&#34;&#34;Direct Register Access via debugfs&#34;&#34;&#34;
-        self._set_iio_debug_attr_str(&#34;direct_reg_access&#34;, f&#34;{reg} {value}&#34;, self._ctrl)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad5627:[40:46]
-==adi.ad9152:[40:48]
-    _complex_data = False
-    _tx_channel_names = [&#34;voltage0&#34;, &#34;voltage1&#34;]
-    _device_name = &#34;&#34;
-
-    def __init__(self, uri=&#34;&#34;):
+==adi.adf5610:[47:57]
+==adi.admv8818:[47:57]
+    def __init__(self, uri=&#34;&#34;, device_name=&#34;&#34;):
 
         context_manager.__init__(self, uri, self._device_name)
-</pre></td>
+
+        self._device_name = device_name
+        # Find the device
+        self._ctrl = self._ctx.find_device(self._device_name)
+
+        # Raise an exception if the device isn&#39;t found
+        if not self._ctrl:</pre></td>
             </tr>
             
             <tr>
@@ -3036,7 +3039,122 @@ from adi.rx_tx import rx
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.admv8818:[47:57]
+==adi.ad936x:[212:217]
+==adi.fmcomms5:[284:289]
+            dacrate = int(readbuf.split(&#34; &#34;)[1].split(&#34;:&#34;)[1])
+            txrate = int(readbuf.split(&#34; &#34;)[5].split(&#34;:&#34;)[1])
+            max_rate = (dacrate // txrate) * 16
+            if max_rate &lt; taps:
+                self._set_iio_attr(&#34;voltage0&#34;, &#34;sampling_frequency&#34;, False, 3000000)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad936x:[258:266]
+==adi.adrv9002:[246:254]
+    @property
+    def rx_hardwaregain_chan1(self):
+        &#34;&#34;&#34;rx_hardwaregain_chan1: Gain applied to RX path. Only applicable when
+        gain_control_mode is set to &#39;manual&#39;&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage1&#34;, &#34;hardwaregain&#34;, False)
+
+    @rx_hardwaregain_chan1.setter
+    def rx_hardwaregain_chan1(self, value):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad936x:[89:97]
+==adi.adrv9002:[235:243]
+    @property
+    def rx_hardwaregain_chan0(self):
+        &#34;&#34;&#34;rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
+        gain_control_mode is set to &#39;spi&#39;&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, False)
+
+    @rx_hardwaregain_chan0.setter
+    def rx_hardwaregain_chan0(self, value):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad936x:[269:276]
+==adi.adrv9009:[316:323]
+    @property
+    def tx_hardwaregain_chan1(self):
+        &#34;&#34;&#34;tx_hardwaregain: Attenuation applied to TX path channel 1&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage1&#34;, &#34;hardwaregain&#34;, True)
+
+    @tx_hardwaregain_chan1.setter
+    def tx_hardwaregain_chan1(self, value):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.ad936x:[100:107]
+==adi.adrv9009:[307:314]
+    @property
+    def tx_hardwaregain_chan0(self):
+        &#34;&#34;&#34;tx_hardwaregain_chan0: Attenuation applied to TX path&#34;&#34;&#34;
+        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, True)
+
+    @tx_hardwaregain_chan0.setter
+    def tx_hardwaregain_chan0(self, value):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.adl5960:[177:185]
+==adi.admv8818:[142:150]
+    def reg_read(self, reg):
+        &#34;&#34;&#34;Direct Register Access via debugfs&#34;&#34;&#34;
+        self._set_iio_debug_attr_str(&#34;direct_reg_access&#34;, reg, self._ctrl)
+        return self._get_iio_debug_attr_str(&#34;direct_reg_access&#34;, self._ctrl)
+
+    def reg_write(self, reg, value):
+        &#34;&#34;&#34;Direct Register Access via debugfs&#34;&#34;&#34;
+        self._set_iio_debug_attr_str(&#34;direct_reg_access&#34;, f&#34;{reg} {value}&#34;, self._ctrl)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==adi.adl5960:[47:57]
 ==adi.gen_mux:[48:58]
     def __init__(self, uri=&#34;&#34;, device_name=&#34;&#34;):
 
@@ -3058,145 +3176,10 @@ from adi.rx_tx import rx
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad936x:[269:276]
-==adi.ad9371:[167:174]
-    @property
-    def tx_hardwaregain_chan1(self):
-        &#34;&#34;&#34;tx_hardwaregain_chan1: Attenuation applied to TX path&#34;&#34;&#34;
-        return self._get_iio_attr(&#34;voltage1&#34;, &#34;hardwaregain&#34;, True)
-
-    @tx_hardwaregain_chan1.setter
-    def tx_hardwaregain_chan1(self, value):</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad936x:[258:266]
-==adi.ad9371:[111:119]
-    @property
-    def rx_hardwaregain_chan1(self):
-        &#34;&#34;&#34;rx_hardwaregain_chan1: Gain applied to RX path. Only applicable when
-        gain_control_mode is set to &#39;manual&#39;&#34;&#34;&#34;
-        return self._get_iio_attr(&#34;voltage1&#34;, &#34;hardwaregain&#34;, False)
-
-    @rx_hardwaregain_chan1.setter
-    def rx_hardwaregain_chan1(self, value):</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad9371:[289:297]
-==adi.adrv9009:[279:287]
-    @property
-    def obs_hardwaregain(self):
-        &#34;&#34;&#34;obs_hardwaregain: Gain applied to Obs/Sniffer receive path ORX1.&#34;&#34;&#34;
-        return self._get_iio_attr(&#34;voltage2&#34;, &#34;hardwaregain&#34;, False)
-
-    @obs_hardwaregain.setter
-    def obs_hardwaregain(self, value):
-        # if self.obs_gain_control_mode == &#34;manual&#34;:</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad9371:[42:48]
-==adi.adrv9009:[59:65]
-    _complex_data = True
-    _rx_channel_names = [&#34;voltage0_i&#34;, &#34;voltage0_q&#34;, &#34;voltage1_i&#34;, &#34;voltage1_q&#34;]
-    _tx_channel_names = [&#34;voltage0&#34;, &#34;voltage1&#34;, &#34;voltage2&#34;, &#34;voltage3&#34;]
-    _obs_channel_names = [&#34;voltage0_i&#34;, &#34;voltage0_q&#34;]
-    _device_name = &#34;&#34;
-</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad9371:[158:165]
-==adi.adrv9002:[257:264]
-    @property
-    def tx_hardwaregain_chan0(self):
-        &#34;&#34;&#34;tx_hardwaregain: Attenuation applied to TX path channel 0&#34;&#34;&#34;
-        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, True)
-
-    @tx_hardwaregain_chan0.setter
-    def tx_hardwaregain_chan0(self, value):</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad9371:[100:108]
-==adi.adrv9002:[235:243]
-    @property
-    def rx_hardwaregain_chan0(self):
-        &#34;&#34;&#34;rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
-        gain_control_mode is set to &#39;manual&#39;&#34;&#34;&#34;
-        return self._get_iio_attr(&#34;voltage0&#34;, &#34;hardwaregain&#34;, False)
-
-    @rx_hardwaregain_chan0.setter
-    def rx_hardwaregain_chan0(self, value):</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad7746:[102:109]
-==adi.adpd410x:[97:104]
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            &#34;&#34;&#34;AD7746 channel raw value.&#34;&#34;&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
 ==adi.ad7799:[65:73]
-==adi.adpd410x:[94:102]
+==adi.adxrs290:[100:108]
     class _channel(attribute):
-        &#34;&#34;&#34;adpd410x channel&#34;&#34;&#34;
+        &#34;&#34;&#34;ADXRS290 channel&#34;&#34;&#34;
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
@@ -3213,13 +3196,15 @@ from adi.rx_tx import rx
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad936x:[212:217]
-==adi.fmcomms5:[284:289]
-            dacrate = int(readbuf.split(&#34; &#34;)[1].split(&#34;:&#34;)[1])
-            txrate = int(readbuf.split(&#34; &#34;)[5].split(&#34;:&#34;)[1])
-            max_rate = (dacrate // txrate) * 16
-            if max_rate &lt; taps:
-                self._set_iio_attr(&#34;voltage0&#34;, &#34;sampling_frequency&#34;, False, 3000000)</pre></td>
+==adi.ad7124:[96:103]
+==adi.adpd188:[84:91]
+    @property
+    def sample_rate(self):
+        &#34;&#34;&#34;Sets sampling frequency of the AD7124&#34;&#34;&#34;
+        return self._get_iio_attr(self.channel[0].name, &#34;sampling_frequency&#34;, False)
+
+    @sample_rate.setter
+    def sample_rate(self, value):</pre></td>
             </tr>
             
             <tr>
@@ -3270,15 +3255,13 @@ from adi.rx_tx import rx
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad7124:[33:41]
-==adi.ad7689:[34:42]
-from decimal import Decimal
-
-import numpy as np
-from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
-
+==adi.ad7124:[73:79]
+==adi.ad7689:[75:82]
+        for ch in self._ctrl._channels:
+            name = ch._id
+            self._rx_channel_names.append(name)
+            self.channel.append(self._channel(self._ctrl, name))
+        rx.__init__(self)
 </pre></td>
             </tr>
             
@@ -3290,32 +3273,15 @@ from adi.rx_tx import rx
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==adi.ad7124:[96:103]
-==adi.adpd188:[84:91]
-    @property
-    def sample_rate(self):
-        &#34;&#34;&#34;Sets sampling frequency of the ADPD188.&#34;&#34;&#34;
-        return self._get_iio_attr(self.channel[0].name, &#34;sampling_frequency&#34;, False)
+==adi.ad7124:[33:41]
+==adi.ad7689:[34:42]
+from decimal import Decimal
 
-    @sample_rate.setter
-    def sample_rate(self, value):</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==adi.ad7124:[73:79]
-==adi.adpd188:[68:73]
-        for ch in self._ctrl._channels:
-            name = ch._id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-        rx.__init__(self)
+import numpy as np
+from adi.attribute import attribute
+from adi.context_manager import context_manager
+from adi.rx_tx import rx
+
 </pre></td>
             </tr>
             
@@ -4447,16 +4413,6 @@ from adi.rx_tx import rx
                 <td><pre>__init__ method from base class &#39;rx&#39; is not called</pre></td>
             </tr>
             
-            <tr>
-                <td>95</td>
-                <td>4</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>adpd410x._channel</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
-            </tr>
-            
         </table>
         
         <h3>Module <code>adi.adrv9002</code> (<code>adi/adrv9002.py</code>)</h3>
@@ -5526,16 +5482,6 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>47</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>attribute</td>
-                <td><pre>Too few public methods (0/2)</pre></td>
-            </tr>
-            
-            <tr>
                 <td>62</td>
                 <td>4</td>
                 <td>refactor</td>
@@ -5701,16 +5647,6 @@ from adi.rx_tx import rx
                 <td>R0205</td>
                 <td>context_manager</td>
                 <td><pre>Class &#39;context_manager&#39; inherits from object, can be safely removed from bases in python3</pre></td>
-            </tr>
-            
-            <tr>
-                <td>37</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>context_manager</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
             </tr>
             
             <tr>
@@ -6448,16 +6384,6 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>58</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>one_bit_adc_dac</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
-            </tr>
-            
-            <tr>
                 <td>79</td>
                 <td>12</td>
                 <td>warning</td>
@@ -6499,16 +6425,6 @@ from adi.rx_tx import rx
                 <td>C0115</td>
                 <td>phy</td>
                 <td><pre>Missing class docstring</pre></td>
-            </tr>
-            
-            <tr>
-                <td>43</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>phy</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
             </tr>
             
             <tr>
@@ -6680,17 +6596,17 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>convention</td>
-                <td>89</td>
+                <td>88</td>
             </tr>
             
             <tr>
                 <td>refactor</td>
-                <td>161</td>
+                <td>154</td>
             </tr>
             
             <tr>
                 <td>error</td>
-                <td>52</td>
+                <td>51</td>
             </tr>
             
             <tr>
@@ -6725,17 +6641,12 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>no-member</td>
-                <td>49</td>
+                <td>48</td>
             </tr>
             
             <tr>
                 <td>no-else-return</td>
                 <td>12</td>
-            </tr>
-            
-            <tr>
-                <td>too-few-public-methods</td>
-                <td>8</td>
             </tr>
             
             <tr>
@@ -6810,7 +6721,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>line-too-long</td>
-                <td>38</td>
+                <td>37</td>
             </tr>
             
             <tr>
@@ -6855,7 +6766,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>no-else-break</td>
-                <td>4</td>
+                <td>3</td>
             </tr>
             
             <tr>
@@ -6909,16 +6820,6 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>import-outside-toplevel</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
-                <td>consider-iterating-dictionary</td>
-                <td>3</td>
-            </tr>
-            
-            <tr>
                 <td>use-implicit-booleaness-not-comparison</td>
                 <td>1</td>
             </tr>
@@ -6926,6 +6827,16 @@ from adi.rx_tx import rx
             <tr>
                 <td>too-many-statements</td>
                 <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>import-outside-toplevel</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>consider-iterating-dictionary</td>
+                <td>3</td>
             </tr>
             
             <tr>
@@ -6950,7 +6861,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>duplicate-code</td>
-                <td>82</td>
+                <td>84</td>
             </tr>
             
         </table>
@@ -6965,7 +6876,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi.attribute</td>
-                <td>14</td>
+                <td>13</td>
             </tr>
             
             <tr>
@@ -6985,7 +6896,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi.context_manager</td>
-                <td>5</td>
+                <td>4</td>
             </tr>
             
             <tr>
@@ -6995,7 +6906,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi.rx_tx</td>
-                <td>15</td>
+                <td>14</td>
             </tr>
             
             <tr>
@@ -7005,7 +6916,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi.ad7799</td>
-                <td>2</td>
+                <td>1</td>
             </tr>
             
             <tr>
@@ -7014,18 +6925,13 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
+                <td>adi.ad7746</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
                 <td>adi.adpd188</td>
                 <td>2</td>
-            </tr>
-            
-            <tr>
-                <td>adi.ad7746</td>
-                <td>2</td>
-            </tr>
-            
-            <tr>
-                <td>adi.fmclidar1</td>
-                <td>3</td>
             </tr>
             
             <tr>
@@ -7034,13 +6940,13 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>adi.sshfs</td>
-                <td>1</td>
+                <td>adi.fmclidar1</td>
+                <td>3</td>
             </tr>
             
             <tr>
-                <td>adi.ad9081</td>
-                <td>7</td>
+                <td>adi.sshfs</td>
+                <td>1</td>
             </tr>
             
             <tr>
@@ -7049,13 +6955,18 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>adi.fmc_vna</td>
-                <td>8</td>
+                <td>adi.ad9081</td>
+                <td>7</td>
             </tr>
             
             <tr>
                 <td>adi.QuadMxFE_multi</td>
                 <td>41</td>
+            </tr>
+            
+            <tr>
+                <td>adi.fmc_vna</td>
+                <td>8</td>
             </tr>
             
             <tr>
@@ -7070,22 +6981,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi.one_bit_adc_dac</td>
-                <td>3</td>
-            </tr>
-            
-            <tr>
-                <td>adi.adrv9009</td>
-                <td>6</td>
-            </tr>
-            
-            <tr>
-                <td>adi.dds</td>
-                <td>33</td>
-            </tr>
-            
-            <tr>
-                <td>adi.ad5686</td>
-                <td>4</td>
+                <td>2</td>
             </tr>
             
             <tr>
@@ -7094,8 +6990,13 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>adi.ad7606</td>
-                <td>3</td>
+                <td>adi.dds</td>
+                <td>33</td>
+            </tr>
+            
+            <tr>
+                <td>adi.adrv9009</td>
+                <td>6</td>
             </tr>
             
             <tr>
@@ -7114,8 +7015,8 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>adi.adpd410x</td>
-                <td>2</td>
+                <td>adi.adrv9002</td>
+                <td>10</td>
             </tr>
             
             <tr>
@@ -7124,18 +7025,23 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
+                <td>adi.adpd410x</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>adi.ad7606</td>
+                <td>3</td>
+            </tr>
+            
+            <tr>
                 <td>adi.ad936x</td>
                 <td>9</td>
             </tr>
             
             <tr>
-                <td>adi.adrv9002</td>
-                <td>10</td>
-            </tr>
-            
-            <tr>
                 <td>adi.ad9371</td>
-                <td>86</td>
+                <td>88</td>
             </tr>
             
         </table>
@@ -7150,7 +7056,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi/attribute.py</td>
-                <td>14</td>
+                <td>13</td>
             </tr>
             
             <tr>
@@ -7170,7 +7076,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi/context_manager.py</td>
-                <td>5</td>
+                <td>4</td>
             </tr>
             
             <tr>
@@ -7180,7 +7086,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi/rx_tx.py</td>
-                <td>15</td>
+                <td>14</td>
             </tr>
             
             <tr>
@@ -7190,7 +7096,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi/ad7799.py</td>
-                <td>2</td>
+                <td>1</td>
             </tr>
             
             <tr>
@@ -7199,18 +7105,13 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
+                <td>adi/ad7746.py</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
                 <td>adi/adpd188.py</td>
                 <td>2</td>
-            </tr>
-            
-            <tr>
-                <td>adi/ad7746.py</td>
-                <td>2</td>
-            </tr>
-            
-            <tr>
-                <td>adi/fmclidar1.py</td>
-                <td>3</td>
             </tr>
             
             <tr>
@@ -7219,13 +7120,13 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>adi/sshfs.py</td>
-                <td>1</td>
+                <td>adi/fmclidar1.py</td>
+                <td>3</td>
             </tr>
             
             <tr>
-                <td>adi/ad9081.py</td>
-                <td>7</td>
+                <td>adi/sshfs.py</td>
+                <td>1</td>
             </tr>
             
             <tr>
@@ -7234,13 +7135,18 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>adi/fmc_vna.py</td>
-                <td>8</td>
+                <td>adi/ad9081.py</td>
+                <td>7</td>
             </tr>
             
             <tr>
                 <td>adi/QuadMxFE_multi.py</td>
                 <td>41</td>
+            </tr>
+            
+            <tr>
+                <td>adi/fmc_vna.py</td>
+                <td>8</td>
             </tr>
             
             <tr>
@@ -7255,22 +7161,7 @@ from adi.rx_tx import rx
             
             <tr>
                 <td>adi/one_bit_adc_dac.py</td>
-                <td>3</td>
-            </tr>
-            
-            <tr>
-                <td>adi/adrv9009.py</td>
-                <td>6</td>
-            </tr>
-            
-            <tr>
-                <td>adi/dds.py</td>
-                <td>33</td>
-            </tr>
-            
-            <tr>
-                <td>adi/ad5686.py</td>
-                <td>4</td>
+                <td>2</td>
             </tr>
             
             <tr>
@@ -7279,8 +7170,13 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>adi/ad7606.py</td>
-                <td>3</td>
+                <td>adi/dds.py</td>
+                <td>33</td>
+            </tr>
+            
+            <tr>
+                <td>adi/adrv9009.py</td>
+                <td>6</td>
             </tr>
             
             <tr>
@@ -7299,8 +7195,8 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
-                <td>adi/adpd410x.py</td>
-                <td>2</td>
+                <td>adi/adrv9002.py</td>
+                <td>10</td>
             </tr>
             
             <tr>
@@ -7309,18 +7205,23 @@ from adi.rx_tx import rx
             </tr>
             
             <tr>
+                <td>adi/adpd410x.py</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>adi/ad7606.py</td>
+                <td>3</td>
+            </tr>
+            
+            <tr>
                 <td>adi/ad936x.py</td>
                 <td>9</td>
             </tr>
             
             <tr>
-                <td>adi/adrv9002.py</td>
-                <td>10</td>
-            </tr>
-            
-            <tr>
                 <td>adi/ad9371.py</td>
-                <td>86</td>
+                <td>88</td>
             </tr>
             
         </table>
