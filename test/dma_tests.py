@@ -950,7 +950,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     print("Harmonics:")
     print(hm)
     print("Locs: ")
-    print(indxs)
+    print(ffreqs[indxs[0 : len(hm)]])
     assert low[0] <= ffampl[ml] <= high[0]
     for i in range(1, min(len(low), len(hm))):
         assert low[i] <= hm[i] <= high[i]
