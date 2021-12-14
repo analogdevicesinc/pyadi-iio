@@ -47,7 +47,7 @@ jobs:
 
       - name: Test
         run: |
-                pytest -vs --cov=adi --scan-verbose --adi-hw-map --emu --junitxml="results.xml"
+                pytest -vs --cov=adi --scan-verbose --adi-hw-map --emu --junitxml="results.xml" -k 'not prod'
 
       - name: Report coverage
         if: (github.event_name != 'pull_request') && (matrix.python-version == 3.6)
