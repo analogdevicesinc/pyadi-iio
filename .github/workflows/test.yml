@@ -50,7 +50,7 @@ jobs:
                 pytest -vs --cov=adi --scan-verbose --adi-hw-map --emu --junitxml="results.xml"
 
       - name: Report coverage
-        if: matrix.python-version == 3.6
+        if: (github.event_name != 'pull_request') && (matrix.python-version == 3.6)
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: coveralls
