@@ -23,10 +23,16 @@ Supported Devices
    adi.ad9136
    adi.ad9144
    adi.ad9152
+   adi.ad9250
+   adi.ad9265
    adi.ad936x
    adi.ad9371
+   adi.ad9434
+   adi.ad9467
+   adi.ad9625
    adi.ad9680
    adi.ad9739a
+   adi.ada4961
    adi.adar1000
    adi.adf4159
    adi.adf4371
@@ -52,6 +58,8 @@ Supported Devices
    adi.daq2
    adi.daq3
    adi.fmc_vna
+   adi.fmcadc3
+   adi.fmcjesdadc1
    adi.fmclidar1
    adi.fmcomms5
    adi.gen_mux
