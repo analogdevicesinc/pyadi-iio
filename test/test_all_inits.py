@@ -1,5 +1,5 @@
-import pytest
 import adi
+import pytest
 
 
 @pytest.mark.iio_hardware("daq2")
@@ -67,7 +67,7 @@ def test_adrv9009(iio_uri):
 
 @pytest.mark.iio_hardware("adrv9371")
 def test_ad9371(iio_uri):
-    dev = adi.ad9371(iio_uri)
+    dev = adi.ad9371(iio_uri, disable_jesd_control=True)
     assert dev
     del dev
 
