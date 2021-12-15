@@ -24,6 +24,28 @@ jobs:
       - name: Test
         run: pytest -v --cov=adi
 
+  Test-Install:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_iioemu.sh
+          pip install tox
+
+      - name: Test
+        run: tox -e emu
+
   Test-Emulated-HW:
     runs-on: ubuntu-latest
     strategy:
