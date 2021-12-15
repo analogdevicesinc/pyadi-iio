@@ -34,7 +34,7 @@ def test_fmcomms5_loopback_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, [0, 1]])
 def test_fmcomms5_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -50,7 +50,7 @@ def test_fmcomms5_tx_data(test_dma_tx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 def test_fmcomms5_loopback(test_dma_loopback, iio_uri, classname, channel):
@@ -58,7 +58,7 @@ def test_fmcomms5_loopback(test_dma_loopback, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
@@ -93,7 +93,7 @@ def test_fmcomms5_dds_loopback(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
@@ -116,7 +116,7 @@ def test_fmcomms5_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_m
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -175,7 +175,7 @@ def test_fmcomms5_chip_b_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr, tol", [("loopback_chip_b", 0)])
 @pytest.mark.parametrize("val", [0, 1, 2])
@@ -186,7 +186,7 @@ def test_fmcomms5_chip_b_loopback_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3, [2, 3]])
 def test_fmcomms5_chip_b_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -194,7 +194,7 @@ def test_fmcomms5_chip_b_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3, [2, 3]])
 def test_fmcomms5_chip_b_tx_data(test_dma_tx, iio_uri, classname, channel):
@@ -202,7 +202,7 @@ def test_fmcomms5_chip_b_tx_data(test_dma_tx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3])
 def test_fmcomms5_chip_b_loopback(test_dma_loopback, iio_uri, classname, channel):
@@ -210,7 +210,7 @@ def test_fmcomms5_chip_b_loopback(test_dma_loopback, iio_uri, classname, channel
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3])
 @pytest.mark.parametrize("frequency, scale", [(1000000, 1)])
@@ -245,7 +245,7 @@ def test_fmcomms5_dds_chip_b_loopback(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2])
 @pytest.mark.parametrize(
@@ -270,7 +270,7 @@ def test_fmcomms5_chip_b_sfdr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3])
 @pytest.mark.parametrize(

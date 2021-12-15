@@ -5,7 +5,7 @@ classname = "adi.DAQ2"
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, [0, 1]])
 def test_daq2_tx_data(test_dma_tx, iio_uri, classname, channel):
@@ -13,7 +13,7 @@ def test_daq2_tx_data(test_dma_tx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, [0, 1]])
 def test_daq2_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -21,7 +21,7 @@ def test_daq2_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize("param_set", [dict()])
