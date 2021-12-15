@@ -46,15 +46,25 @@ class ad9371(rx_tx, context_manager):
     _obs_channel_names = ["voltage0_i", "voltage0_q"]
     _device_name = ""
 
-    def __init__(self, uri="", username="root", password="analog"):
-
+    def __init__(
+        self, uri="", username="root", password="analog", disable_jesd_control=False
+    ):
+        """Initialize AD9371 interface class.
+        Args:
+            uri (str): URI of target platform with AD9371
+            username (str): SSH username for target board. Required for JESD monitoring
+            password (str): SSH password for target board. Required for JESD monitoring
+            disable_jesd_control (bool): Disable JESD status monitoring over SSH
+        """
         context_manager.__init__(self, uri, self._device_name)
 
         self._ctrl = self._ctx.find_device("ad9371-phy")
         self._rxadc = self._ctx.find_device("axi-ad9371-rx-hpc")
         self._rxobs = self._ctx.find_device("axi-ad9371-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-ad9371-tx-hpc")
-        self._jesd = jesd(uri, username=username, password=password)
+
+        if not disable_jesd_control:
+            self._jesd = jesd(uri, username=username, password=password)
 
         rx_tx.__init__(self)
 
