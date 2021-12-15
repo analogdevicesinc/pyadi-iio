@@ -1,0 +1,35 @@
+[project]
+name = "pyadi-iio"
+version = "0.0.12"
+description = "Interfaces to stream data from ADI hardware."
+authors = [
+    "Travis F. Collins <travis.collins@analog.com>"
+]
+license = "ADI BSD"
+readme = "README.md"
+python = "^3.6"
+homepage = "https://analogdevicesinc.github.io/pyadi-iio"
+repository = "https://github.com/analogdevicesinc/pyadi-iio"
+documentation = "https://analogdevicesinc.github.io/pyadi-iio/master/"
+
+keywords = ["adi","libiio","iio","hardware"]
+
+classifiers = [
+    "Topic :: Software Development"
+]
+
+# Requirements
+[dependencies]
+pylibiio = "0.23.1"
+paramkio = "2.^7.2"
+
+[dev-dependencies]
+black = { version = "19.10b0", python = "3" }
+
+
+[build-system]
+requires = [
+    "setuptools >= 42.5.0",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
