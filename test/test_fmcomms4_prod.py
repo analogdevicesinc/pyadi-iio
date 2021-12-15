@@ -330,7 +330,7 @@ def test_dcxo(test_dcxo_calibration, classname, iio_uri):
 )
 @pytest.mark.parametrize(
     "low, high",
-    [([-20.0, -100.0, -120.0, -120.0, -120.0], [-10.0, -60.0, -75.0, -75.0, -80.0])],
+    [([-25.0, -120.0, -120.0, -120.0], [-10.0, -75.0, -75.0, -80.0])],
 )
 def test_harmonic_values(
     test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=True

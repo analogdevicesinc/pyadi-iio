@@ -1,6 +1,6 @@
 import heapq
 import test.rf.spec as spec
-import genalyzer
+#import genalyzer
 import time
 
 import adi
@@ -911,17 +911,32 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     L = len(data)
 
-    ampl = 1 / L * np.absolute(fft(data))
-    ampl = 20 * np.log10(ampl / ref + 10 ** -20)
+    # ampl = 1 / L * np.absolute(fft(data))
+    # ampl = 20 * np.log10(ampl / ref + 10 ** -20)
 
-    freqs = fftfreq(L, 1 / RXFS)
+    # freqs = fftfreq(L, 1 / RXFS)
 
-    _, ml, hm, indxs = spec.find_harmonics_reduced(
-        fftshift(ampl), fftshift(freqs), num_harmonics=15, tolerance=0.2
-    )
-    ffreqs = fftshift(freqs)
-    ffampl = fftshift(ampl)
+    #ffampl, ffreqs = spec.spec_est(data, fs=RXFS, ref=2**12, num_ffts=8)
 
+    # _, ml, hm, indxs = spec.find_harmonics_reduced(
+    #     ffampl, ffreqs, num_harmonics=50, tolerance=0.01
+    # )
+
+    # _, ml, hm, indxs = spec.find_harmonics(
+    #     ffampl, ffreqs, num_harmonics=7, tolerance=0.01
+    # )
+
+    # _, ml, hm, indxs = spec.find_harmonics_from_main(
+    #     ffampl, ffreqs, RXFS, num_harmonics=4, tolerance=0.01
+    # )
+    
+    sfdr, amp, freq, peaks, indxs = spec.sfdr(data, fs=RXFS, ref=2 ** 12, plot=False)
+    amp = fftshift(amp)
+    print("sfdr: ", sfdr)
+    # print("Amps: ",amp)
+    # print("Freqs: ", freq)
+    print("Plotted vals: ", peaks[0:3])
+    print("Locs of plotted: ", indxs[0:3])
     if plot:
         import matplotlib.pyplot as plt
 
@@ -932,28 +947,24 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.xlabel("Time [s]")
 
         plt.subplot(2, 1, 2)
-        plt.plot(fftshift(freqs), fftshift(ampl))
-        plt.plot(ffreqs[ml], ffampl[ml], "y.")
-        plt.plot(ffreqs[indxs[0 : len(hm)]], ffampl[indxs[0 : len(hm)]], "y.")
+        plt.plot(amp)
+        #plt.plot(ffreqs[ml], ffampl[ml], "y.")
+        plt.plot(indxs[0:3], amp[indxs[0:3]], "y.")
 
         plt.margins(0.1, 0.1)
-        plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
+        plt.annotate("Fundamental", (freq[indxs[0]], peaks[0]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        if channel == 1 or param_set["tx_rf_port_select"] == 'B':
+        if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
             k=1
         else:
             k=0
         plt.savefig("./results_log/graph" + str(k) + ".png")
         plt.close()
 
-    print("Harmonics:")
-    print(hm)
-    print("Locs: ")
-    print(ffreqs[indxs[0 : len(hm)]])
-    assert low[0] <= ffampl[ml] <= high[0]
-    for i in range(1, min(len(low), len(hm))):
-        assert low[i] <= hm[i] <= high[i]
+    for i in range(3):
+        assert low[i] <= peaks[i] <= high[i]
+        
 
 
 def cyclic_buffer(uri, classname, channel, param_set):
