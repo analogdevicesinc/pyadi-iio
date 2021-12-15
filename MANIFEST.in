@@ -1,0 +1,22 @@
+include LICENSE
+include README.md
+
+graft adi
+
+prune test
+prune doc
+prune examples
+prune images
+
+exclude requirements*
+exclude .github
+exclude tasks.py
+exclude .codacy.yml
+exclude .codespell-whitelist
+exclude .gitignore
+exclude .isort.cfg
+exclude .pre-commit-config.yaml
+
+recursive-exclude * test*
+recursive-exclude * __pycache__
+recursive-exclude * *.py[cod]
