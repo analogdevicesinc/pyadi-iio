@@ -1,6 +1,7 @@
 from __future__ import division
 
 import numpy as np
+import adi
 from numpy import (
     absolute,
     argmax,
@@ -229,6 +230,7 @@ def find_harmonics_reduced(x, freqs, num_harmonics=6, tolerance=0.01):
             print("DC ignored", freqs[indxs[indx]])
             continue
         dif = absolute(freqs[indxs[indx]]) % main
+        #dif = int((2*main_loc + lx/2)%lx)
         if dif < main * tolerance:
             harmonics_locs.append(indxs[indx])
             harmonics_vals.append(vals[indx])
@@ -237,7 +239,7 @@ def find_harmonics_reduced(x, freqs, num_harmonics=6, tolerance=0.01):
 
 
 def sfdr(x, fs=1, ref=2 ** 15, plot=False):
-    amp, freqs = spec_est(x, fs=fs, ref=ref, plot=plot)
+    amp, freqs = spec_est(x, fs=fs, ref=ref, plot=False)
     amp_org = amp
     amp = fftshift(amp)
     peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.1))
@@ -269,54 +271,57 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
         plt.tight_layout()
         plt.show()
 
-    return sfdr, amp_org, freqs
+    return sfdr, amp_org, freqs, peak_vals, peak_indxs
 
 
 def main():
 
     # import adi
 
-    # sdr = adi.Pluto("ip:192.168.2.1")
-    # sdr.rx_buffer_size = 2 ** 18
-    # sdr.sample_rate = 10000000
-    # sdr.dds_single_tone(1000000, 0.1)
-    # sdr.tx_lo = 1000000000
-    # sdr.rx_lo = 1000000000
-    # sdr.gain_control = 'slow_attack'
-    # sdr.tx_hardwaregain = -10
-    # fs = sdr.sample_rate
-    # for k in range(10):
-    #     a = sdr.rx()
+    sdr = adi.ad9361("ip:10.42.0.162")
+    sdr.rx_buffer_size = 2 ** 18
+    sdr.sample_rate = 10000000
+    sdr.dds_single_tone(1000000, 0.1)
+    sdr.tx_lo = 1000000000
+    sdr.rx_lo = 1000000000
+    sdr.gain_control = 'slow_attack'
+    sdr.tx_hardwaregain = -10
+    sdr.rx_enabled_channels = [0]
+    fs = sdr.sample_rate
+    for k in range(10):
+        a = sdr.rx()
 
     # Time is from 0 to 1 seconds, but leave off the endpoint, so
     # that 1.0 seconds is the first sample of the *next* chunk
-    fs = 64
-    length = 600  # seconds
-    N = fs * length
-    t = linspace(0, length, num=N, endpoint=False)
+    # fs = 64
+    # length = 600  # seconds
+    # N = fs * length
+    # t = linspace(0, length, num=N, endpoint=False)
 
     # Generate a sinusoid at frequency f
     f = 10  # Hz
     # a = cos(2 * pi * f * t) * 2 ** 15
-    a = exp(1j * 2 * pi * f * t) * 2 ** 15
+    # a = exp(1j * 2 * pi * f * t) * 2 ** 15
     print(f"Input shape {a.shape}")
 
     # fs = sdr.sample_rate
 
-    amp, freqs = spec_est(a, fs, ref=2 ** 15, plot=True)
+    #amp, freqs = spec_est(a, fs, ref=2 ** 15, plot=True)
     # freqs = np.flip(freqs)
-    _, ml, vals, locs = find_harmonics_from_main(
-        fftshift(amp), fftshift(freqs), fs, plot=True
-    )
-    freqs_s = fftshift(freqs)
-    amp_s = fftshift(amp)
+    sfdr(a, fs=fs, ref=2 ** 15, plot=True)
+    # _, ml, vals, locs = find_harmonics_from_main(
+    #     fftshift(amp), fftshift(freqs), fs, plot=True
+    # )
+
+    # freqs_s = fftshift(freqs)
+    # amp_s = fftshift(amp)
 
     tol = 40
-    m = amp_s[ml]
-    print("Main", m, freqs_s[ml])
-    for p in range(len(locs)):
-        if absolute(m - vals[p]) < tol:
-            print("Harmonic", p + 1, "too large", vals[p], freqs_s[locs[p]])
+    # m = amp_s[ml]
+    # print("Main", m, freqs_s[ml])
+    # for p in range(len(locs)):
+    #     if absolute(m - vals[p]) < tol:
+    #         print("Harmonic", p + 1, "too large", vals[p], freqs_s[locs[p]])
 
 
 if __name__ == "__main__":
