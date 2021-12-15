@@ -53,7 +53,7 @@ def test_daq2_dds_loopback(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(

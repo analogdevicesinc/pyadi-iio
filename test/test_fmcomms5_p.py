@@ -23,7 +23,7 @@ def test_fmcomms5_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr, tol", [("loopback", 0)])
 @pytest.mark.parametrize("val", [0, 1, 2])
@@ -42,7 +42,7 @@ def test_fmcomms5_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, [0, 1]])
 def test_fmcomms5_tx_data(test_dma_tx, iio_uri, classname, channel):
