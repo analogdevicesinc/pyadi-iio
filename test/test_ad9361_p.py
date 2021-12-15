@@ -262,7 +262,7 @@ def test_ad9361_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
