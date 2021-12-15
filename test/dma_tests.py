@@ -916,7 +916,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     # freqs = fftfreq(L, 1 / RXFS)
 
-    #ffampl, ffreqs = spec.spec_est(data, fs=RXFS, ref=2**12, num_ffts=8)
+    ffampl, ffreqs = spec.spec_est(data, fs=RXFS, ref=2**12, num_ffts=2)
 
     # _, ml, hm, indxs = spec.find_harmonics_reduced(
     #     ffampl, ffreqs, num_harmonics=50, tolerance=0.01
@@ -926,13 +926,13 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     #     ffampl, ffreqs, num_harmonics=7, tolerance=0.01
     # )
 
-    # _, ml, hm, indxs = spec.find_harmonics_from_main(
-    #     ffampl, ffreqs, RXFS, num_harmonics=4, tolerance=0.01
-    # )
+    _, ml, peaks, indxs = spec.find_harmonics_from_main(
+        ffampl, ffreqs, RXFS, num_harmonics=4, tolerance=0.01
+    )
     
-    sfdr, amp, freq, peaks, indxs = spec.sfdr(data, fs=RXFS, ref=2 ** 12, plot=False)
-    amp = fftshift(amp)
-    print("sfdr: ", sfdr)
+    # sfdr, amp, freq, peaks, indxs = spec.sfdr(data, fs=RXFS, ref=2 ** 12, plot=False)
+    # amp = fftshift(amp)
+    # print("sfdr: ", sfdr)
     # print("Amps: ",amp)
     # print("Freqs: ", freq)
     print("Plotted vals: ", peaks[0:3])
@@ -947,12 +947,12 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.xlabel("Time [s]")
 
         plt.subplot(2, 1, 2)
-        plt.plot(amp)
-        #plt.plot(ffreqs[ml], ffampl[ml], "y.")
-        plt.plot(indxs[0:3], amp[indxs[0:3]], "y.")
+        plt.plot(ffreqs, ffampl)
+        plt.plot(ffreqs[ml], ffampl[ml], "y.")
+        plt.plot(ffreqs[indxs[0:3]], ffampl[indxs[0:3]], "y.")
 
         plt.margins(0.1, 0.1)
-        plt.annotate("Fundamental", (freq[indxs[0]], peaks[0]))
+        plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
         if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
@@ -961,8 +961,8 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
             k=0
         plt.savefig("./results_log/graph" + str(k) + ".png")
         plt.close()
-
-    for i in range(3):
+    assert low[0] <= ffampl[ml] <= high[0]
+    for i in range(1, 4):
         assert low[i] <= peaks[i] <= high[i]
         
 
