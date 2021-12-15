@@ -30,13 +30,10 @@ def test_iio_attr(
 # fmt: on
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
-def test_attribute_changes(context_desc):
+@pytest.mark.iio_hardware(hardware, True)
+def test_attribute_changes(iio_uri):
 
-    ctx = None
-    for ctx_desc in context_desc:
-        if ctx_desc["hw"] in hardware:
-            ctx = iio.Context(ctx_desc["uri"])
+    ctx = iio.Context(iio_uri)
     if not ctx:
         pytest.skip("No valid hardware found")
 
@@ -91,8 +88,6 @@ def test_attribute_changes(context_desc):
 
 
 @pytest.mark.parametrize("percent_fail", [(0.1)])
-@pytest.mark.iio_hardware(hardware)
-def test_iio_buffer_check(single_ctx_desc, percent_fail):
-    iio_buffer_check(
-        "ad9361-phy", "cf-ad9361-lpc", single_ctx_desc["uri"], percent_fail
-    )
+@pytest.mark.iio_hardware(hardware, True)
+def test_iio_buffer_check(iio_uri, percent_fail):
+    iio_buffer_check("ad9361-phy", "cf-ad9361-lpc", iio_uri, percent_fail)
