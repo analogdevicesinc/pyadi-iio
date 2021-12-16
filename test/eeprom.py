@@ -136,9 +136,13 @@ def popup_txt():
     sn = tVar.get()
     match = re.search('^S[0-9][0-9]', sn)
     match1 = re.search('(SN:)', sn)
-    sn.replace(" ", "")
-    print("Seriual number: ", sn)
-    
+    sn.replace("-", "")
+    serials = sn.split(" ", 2)
+    nr = serials[1]
+    nr  = nr[5:8]
+    sn = serials[0] + nr
+    print("Serial number: ", sn)
+
     if match and match1:
         return sn
     else:

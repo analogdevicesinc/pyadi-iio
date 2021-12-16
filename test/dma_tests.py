@@ -935,8 +935,6 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     # print("sfdr: ", sfdr)
     # print("Amps: ",amp)
     # print("Freqs: ", freq)
-    print("Plotted vals: ", peaks[0:3])
-    print("Locs of plotted: ", indxs[0:3])
     if plot:
         import matplotlib.pyplot as plt
 
@@ -962,7 +960,9 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.savefig("./results_log/graph" + str(k) + ".png")
         plt.close()
     assert low[0] <= ffampl[ml] <= high[0]
-    for i in range(1, 4):
+    for i in range(3):
+        print("Harmonic should be between ", low[i], high[i])
+        print("Harmonic is ", peaks[i])
         assert low[i] <= peaks[i] <= high[i]
         
 
