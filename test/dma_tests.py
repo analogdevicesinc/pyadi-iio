@@ -961,7 +961,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.close()
     assert low[0] <= ffampl[ml] <= high[0]
     for i in range(3):
-        print("Harmonic should be between ", low[i], high[i])
+        print("Harmonic should be between ", low[i+1], high[i+1])
         print("Harmonic is ", peaks[i])
         assert low[i+1] <= peaks[i] <= high[i+1]
         
