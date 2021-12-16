@@ -2,7 +2,7 @@ import tkinter as tk
 from datetime import date, datetime
 from tkinter import Button, Entry, Label
 from tkinter.constants import FALSE
-
+import re
 import paramiko
 import pytest
 
@@ -134,7 +134,12 @@ def popup_txt():
     btn.pack()
     popup.mainloop()
     sn = tVar.get()
-    if sn.isalnum():
+    match = re.search('^S[0-9][0-9]', sn)
+    match1 = re.search('(SN:)', sn)
+    sn.replace(" ", "")
+    print("Seriual number: ", sn)
+    
+    if match and match1:
         return sn
     else:
         pytest.skip("Invalid Serial Number")
