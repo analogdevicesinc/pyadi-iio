@@ -103,6 +103,10 @@ def test_sfdr(request):
 
 
 @pytest.fixture()
+def test_sfdrl(request):
+    yield sfdr_low
+
+@pytest.fixture()
 def test_dds_loopback(request):
     yield dds_loopback
 

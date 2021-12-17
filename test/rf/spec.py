@@ -242,7 +242,7 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
     amp, freqs = spec_est(x, fs=fs, ref=ref, plot=False)
     amp_org = amp
     amp = fftshift(amp)
-    peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.1))
+    peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.05))
 
     # Sort peaks
     indxs = argsort(amp[peak_indxs])

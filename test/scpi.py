@@ -107,7 +107,6 @@ def dcxo_calibrate(classname, iio_uri):
     coarse = 0  # table default for desired frequency is 8
     fine = 4000
     direction = 0  # coarse 0 -> higher value
-    save_to_eeprom("ip:127.0.0.1",9,4100,26)
 
     instr = find_instrument()
     if instr is None:
