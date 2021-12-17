@@ -336,3 +336,35 @@ def test_harmonic_values(
     test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=True
 ):
     test_harmonics(classname, iio_uri, channel, param_set, low, high, plot)
+
+
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        dict(
+            rx_rf_port_select="A_BALANCED",
+            tx_rf_port_select="A",
+            rx_lo=3000000000,
+            tx_lo=3000000000,
+            tx_hardwaregain_chan0=-10,
+            sample_rate=30720000,
+        ),
+        dict(
+            rx_rf_port_select="B_BALANCED",
+            tx_rf_port_select="B",
+            rx_lo=3000000000,
+            tx_lo=3000000000,
+            tx_hardwaregain_chan0=-10,
+            sample_rate=30720000,
+        ),
+    ],
+)
+@pytest.mark.parametrize(
+    "low, high",
+    [([-25.0, -120.0, -120.0, -125.0], [-10.0, -75.0, -75.0, -80.0])],
+)
+def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, plot=True):
+    test_sfdrl(classname, iio_uri, channel, param_set, low, high, plot=True)

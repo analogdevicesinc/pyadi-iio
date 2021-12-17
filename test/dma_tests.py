@@ -636,6 +636,103 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
+def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
+    """t_sfdr: Test SFDR loopback of tone with connected loopback cables.
+    This test requires a devices with TX and RX onboard where the transmit
+    signal can be recovered. Sinuoidal data is passed to DMAs which is then
+    estimated on the RX side. The peak and second peak are determined in
+    the received signal to determine the sfdr.
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+
+    time.sleep(3)
+
+    N = 2 ** 15
+    sdr.tx_cyclic_buffer = True
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+
+    ref = 2 ** 12
+
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    else:
+        RXFS = int(sdr.rx_sample_rate)
+
+    fc = RXFS * 0.1
+    fc = int(fc / (RXFS / N)) * (RXFS / N)
+
+    full_scale = 0.9
+    ts = 1 / float(RXFS)
+    t = np.arange(0, N * ts, ts)
+    i = np.cos(2 * np.pi * t * fc) * ref * full_scale
+    q = np.sin(2 * np.pi * t * fc) * ref * full_scale
+    iq = i + 1j * q
+
+    try:
+        sdr.tx(iq)
+        time.sleep(5)
+        for _ in range(30):
+            data = sdr.rx()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    time.sleep(3)
+
+    L = len(data)
+
+    sfdr, amp, freq, peaks, indxs = spec.sfdr(data, fs=RXFS, ref=2 ** 12, plot=False)
+    amp = fftshift(amp)
+    freq = fftshift(freq)
+    ml = indxs[0]
+    if plot:
+        import matplotlib.pyplot as plt
+
+        plt.subplot(2, 1, 1)
+        plt.plot(data, ".-")
+        plt.plot(1, 1, "r.")
+        plt.margins(0.1, 0.1)
+        plt.xlabel("Time [s]")
+
+        plt.subplot(2, 1, 2)
+        plt.plot(freq, amp)
+        plt.plot(freq[ml], amp[ml], "y.")
+        plt.plot(freq[indxs[0:3]], amp[indxs[0:3]], "y.")
+
+        plt.margins(0.1, 0.1)
+        #plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
+        plt.xlabel("Frequency [Hz]")
+        plt.tight_layout()
+        if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
+            k=1
+        else:
+            k=0
+        plt.savefig("./results_log/graphp" + str(k) + ".png")
+        plt.close()
+
+    for i in range(3):
+        print("Peak should be between ", low[i], high[i])
+        print("Peak is ", peaks[i])
+        assert low[i] <= peaks[i] <= high[i]
+
 def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9):
     """t_sfdr: Test SFDR loopback of tone with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
