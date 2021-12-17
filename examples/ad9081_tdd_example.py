@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2021 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,104 +31,85 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import ad9361, ad9363, ad9364, Pluto
+import sys
 
-from adi.fmcomms5 import FMComms5
+import adi
+import matplotlib.pyplot as plt
+import numpy as np
 
-from adi.ad9371 import ad9371
+url = "ip:analog-2.local" if len(sys.argv) == 1 else sys.argv[1]
 
-from adi.adrv9002 import adrv9002
+trx = adi.ad9081(url)
+tdd = adi.tdd(url)
 
-from adi.adrv9009 import adrv9009
+trx.rx_channel_nco_frequencies = [0] * 4
+trx.tx_channel_nco_frequencies = [0] * 4
 
-from adi.adrv9009_zu11eg import adrv9009_zu11eg
+trx.rx_main_nco_frequencies = [2450000000] * 4
+trx.tx_main_nco_frequencies = [2450000000] * 4
 
-from adi.adrv9009_zu11eg_multi import adrv9009_zu11eg_multi
+trx.rx_enabled_channels = [0]
+trx.tx_enabled_channels = [0]
 
-from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
+trx.rx_nyquist_zone = ["odd"] * 4
 
-from adi.ad9081 import ad9081
+N_rx = 2 ** 15
+trx.rx_buffer_size = N_rx
+trx.tx_cyclic_buffer = True
 
-from adi.ad9081_mc import ad9081_mc, QuadMxFE
+# Automatically enabled by TDD device tree
+# trx.tx_ddr_offload = 1
 
-from adi.ad9083 import ad9083
+# Generate TX signal
 
-from adi.ad9094 import ad9094
+fs = int(trx.tx_sample_rate)
 
-from adi.ad9680 import ad9680
+A = 0.5 * 2 ** 14  # -6 dBFS
 
-from adi.ad9136 import ad9136
+B = fs / 2.5  # 100 MHz wide pulse @ 250 MS/s; 200 MHz @ 500 MS/s
+N = 2 ** 14
+T = N / fs
 
-from adi.ad9144 import ad9144
+t = np.linspace(-T / 2, T / 2, N, endpoint=False)
+tx_sig = A * np.sinc(B * t)
+tx_sig_2 = A * np.exp(2j * np.pi * B * t)
 
-from adi.ad9152 import ad9152
+tdd.en = False
 
-from adi.cn0532 import cn0532
+# Setup TDD
+tdd.frame_length_ms = 40.0
+tdd.burst_count = 0
+tdd.dma_gateing_mode = "rx_tx"
+tdd.en_mode = "rx_tx"
+tdd.secondary = False
 
-from adi.daq2 import DAQ2
+tdd.en = True
 
-from adi.daq3 import DAQ3
+# We only need to "trigger" the buffer, it doesn't need to stay high in this use case.
+# The secondary values are disabled and unused
+#
+#                 Primary     Secondary
+#                 on    off   on off
+tdd.tx_dma_raw = [1010, 1020, 0, 0]
+tdd.rx_dma_raw = [10, 20, 0, 0]
 
-from adi.adis16460 import adis16460
+# Send off TX data
+trx.tx(tx_sig)
 
-from adi.adis16495 import adis16495
+rx_t = np.linspace(0, N_rx / fs, N_rx, endpoint=False)
+for r in range(40):
+    rx_sig = trx.rx()
 
-from adi.adis16507 import adis16507
+    if r == 20:
+        trx.tx_destroy_buffer()
+        trx.tx(tx_sig_2)
 
-from adi.ad7124 import ad7124
+    plt.clf()
+    plt.plot(1000000 * rx_t, np.abs(rx_sig))
+    plt.legend(["RX Signal", "TX Signal"])
+    plt.xlabel("t / µs")
+    plt.ylabel("Amplitude")
+    plt.draw()
+    plt.pause(0.10)
 
-from adi.adxl345 import adxl345
-
-from adi.adxrs290 import adxrs290
-
-from adi.fmclidar1 import fmclidar1
-
-from adi.ad5686 import ad5686
-
-from adi.adar1000 import adar1000, adar1000_array
-
-from adi.ltc2983 import ltc2983
-
-from adi.one_bit_adc_dac import one_bit_adc_dac
-
-from adi.ltc2314_14 import ltc2314_14
-
-from adi.ad7606 import ad7606
-
-from adi.ad7799 import ad7799
-
-from adi.ad7746 import ad7746
-
-from adi.adpd410x import adpd410x
-
-from adi.ad7689 import ad7689
-
-from adi.adf4371 import adf4371
-
-from adi.adpd188 import adpd188
-
-from adi.QuadMxFE_multi import QuadMxFE_multi
-
-from adi.adrf5720 import adrf5720
-
-from adi.admv8818 import admv8818
-
-from adi.adf5610 import adf5610
-
-from adi.adl5960 import adl5960
-
-from adi.gen_mux import genmux
-
-from adi.fmc_vna import fmcvna
-
-from adi.adf4159 import adf4159
-
-from adi.tdd import tdd
-
-try:
-    from adi.jesd import jesd
-except ImportError:
-    pass
-
-__version__ = "0.0.12"
-name = "Analog Devices Hardware Interfaces"
+plt.show()
