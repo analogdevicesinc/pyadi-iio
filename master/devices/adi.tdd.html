@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad9136" href="adi.ad9136.html" /><link rel="prev" title="ad9083" href="adi.ad9083.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Buffers" href="../buffers/index.html" /><link rel="prev" title="one_bit_adc_dac" href="adi.one_bit_adc_dac.html" />
 
     <meta name="generator" content="sphinx-4.3.1, furo 2021.11.23"/>
-        <title>ad9094 - Analog Devices Hardware Python Interfaces 0.0.12</title>
+        <title>ad9081 - Analog Devices Hardware Python Interfaces 0.0.12</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=7f0192ddeb2adecfbaa87ffbcf67d16358b30bc1" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=0af69da206d614734f649b27d4cdc2dd6c31f41d" />
@@ -172,7 +172,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
@@ -210,7 +210,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">ad9081</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad9081</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -249,13 +249,127 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ad9094">
-<span id="ad9094"></span><h1>ad9094<a class="headerlink" href="#module-adi.ad9094" title="Permalink to this headline"></a></h1>
+          <section id="module-adi.tdd">
+<span id="ad9081"></span><h1>ad9081<a class="headerlink" href="#module-adi.tdd" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad9094.ad9094">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9094.</span></span><span class="sig-name descname"><span class="pre">ad9094</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9094.ad9094" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
-<p>AD9094 Quad ADC</p>
+<dt class="sig sig-object py" id="adi.tdd.tdd">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.tdd.</span></span><span class="sig-name descname"><span class="pre">tdd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.tdd.tdd" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code></p>
+<p>TDD Controller</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.burst_count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">burst_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#adi.tdd.tdd.burst_count" title="Permalink to this definition"></a></dt>
+<dd><p>burst_count: Amount of frames to produce.
+Should be 0 &lt;= burst_count &lt;= 255, where 0 means don’t stop</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.counter_int">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">counter_int</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#adi.tdd.tdd.counter_int" title="Permalink to this definition"></a></dt>
+<dd><p>counter_init: Internal counter start value</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.dma_gateing_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dma_gateing_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.tdd.tdd.dma_gateing_mode" title="Permalink to this definition"></a></dt>
+<dd><p>dma_gateing_mode: Which of the two DMA (dp) ports should be gated</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">en</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.tdd.tdd.en" title="Permalink to this definition"></a></dt>
+<dd><p>en: Enable or disable the TDD engine</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.en_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">en_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.tdd.tdd.en_mode" title="Permalink to this definition"></a></dt>
+<dd><p>en_mode: In which mode the TDD engine should run</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.frame_length_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frame_length_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#adi.tdd.tdd.frame_length_ms" title="Permalink to this definition"></a></dt>
+<dd><p>frame_length_ms: TDD frame length in ms</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.frame_length_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frame_length_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#adi.tdd.tdd.frame_length_raw" title="Permalink to this definition"></a></dt>
+<dd><p>frame_length_raw: TDD frame length in cycles of the input clock</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.rx_dma_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dma_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.rx_dma_ms" title="Permalink to this definition"></a></dt>
+<dd><p>rx_dma_ms: RX DMA port timing parameters in ms.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.rx_dma_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dma_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.rx_dma_raw" title="Permalink to this definition"></a></dt>
+<dd><p>rx_dma_raw: RX DMA port timing parameters in clock cycles.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.rx_rf_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_rf_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.rx_rf_ms" title="Permalink to this definition"></a></dt>
+<dd><p>rx_rf_ms: RX RF port timing parameters in ms.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.rx_rf_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_rf_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.rx_rf_raw" title="Permalink to this definition"></a></dt>
+<dd><p>rx_rf_raw: RX RF port timing parameters in clock cycles.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.rx_vco_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_vco_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.rx_vco_ms" title="Permalink to this definition"></a></dt>
+<dd><p>rx_vco_ms: RX VCO port timing parameters in ms.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.rx_vco_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_vco_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.rx_vco_raw" title="Permalink to this definition"></a></dt>
+<dd><p>rx_vco_raw: RX VCO port timing parameters in clock cycles.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.secondary">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">secondary</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.tdd.tdd.secondary" title="Permalink to this definition"></a></dt>
+<dd><p>secondary: Enable secondary times. This allows one signal to go high
+twice at two times within a single frame</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.tx_dma_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dma_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.tx_dma_ms" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dma_ms: TX DMA port timing parameters in ms.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.tx_dma_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dma_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.tx_dma_raw" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dma_raw: TX DMA port timing parameters in clock cycles.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.tx_rf_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_rf_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.tx_rf_ms" title="Permalink to this definition"></a></dt>
+<dd><p>tx_rf_ms: TX RF port timing parameters in ms.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.tx_rf_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_rf_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.tx_rf_raw" title="Permalink to this definition"></a></dt>
+<dd><p>tx_rf_raw: TX RF port timing parameters in clock cycles.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.tx_vco_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vco_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.tx_vco_ms" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vco_ms: TX VCO port timing parameters in ms.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tdd.tdd.tx_vco_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vco_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.tdd.tdd.tx_vco_raw" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vco_raw: TX VCO port timing parameters in clock cycles.
+List of four values: [primary_on, primary_off, secondary_on, secondary_off]</p>
+</dd></dl>
 </dd></dl>
 </section>
 
@@ -264,23 +378,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.ad9136.html">
+          <a class="next-page" href="../buffers/index.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ad9136</div>
+                <div class="title">Buffers</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ad9083.html">
+          <a class="prev-page" href="adi.one_bit_adc_dac.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">ad9083</div>
+                <div class="title">one_bit_adc_dac</div>
                 
               </div>
             </a>
@@ -290,7 +404,7 @@
               Copyright &#169; 2019-2021, Analog Devices, Inc |
           Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
           <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            | <a class="muted-link" href="../_sources/devices/adi.ad9094.rst.txt"
+            | <a class="muted-link" href="../_sources/devices/adi.tdd.rst.txt"
                rel="nofollow">
               Show Source
             </a>
