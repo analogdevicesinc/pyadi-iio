@@ -31,12 +31,14 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from abc import ABCMeta, abstractmethod
 from typing import List
 
 import iio
 
 import numpy as np
 from adi.attribute import attribute
+from adi.context_manager import context_manager
 from adi.dds import dds
 
 
@@ -448,3 +450,68 @@ class rx_tx(rx, tx, phy):
         rx.__del__(self)
         tx.__del__(self)
         phy.__del__(self)
+
+
+class rx_def(rx, context_manager, metaclass=ABCMeta):
+    @property
+    @abstractmethod
+    def _complex_data(self) -> None:
+        raise NotImplementedError  # pragma: no cover
+
+    @property
+    @abstractmethod
+    def _control_device_name(self) -> None:
+        raise NotImplementedError  # pragma: no cover
+
+    # @property
+    # @abstractmethod
+    # def _rx_channel_names(self) -> None:
+    #     """Try to use CPLL for clocking.
+    #     This method is only used in brute-force classes
+    #     Raises:
+    #         NotImplementedError: Method not implemented
+    #     """
+    #     raise NotImplementedError  # pragma: no cover
+    _rx_channel_names = None
+
+    @property
+    @abstractmethod
+    def _rx_data_device_name(self) -> None:
+        raise NotImplementedError  # pragma: no cover
+
+    def __init__(self, uri_ctx=None):
+
+        if isinstance(uri_ctx, iio.Context):
+            self._ctx
+            self.uri = ""
+        else:
+            self.uri = uri_ctx
+            context_manager.__init__(self, uri_ctx, self._device_name)
+        # NEED TO HAVE A SCAN OPTION
+
+        if self._control_device_name:
+            self._ctrl = self._ctx.find_device(self._control_device_name)
+            if not self._ctrl:
+                raise Exception(
+                    f"No device found with name {self._control_device_name}"
+                )
+        if self._rx_data_device_name:
+            self._rxadc = self._ctx.find_device(self._rx_data_device_name)
+            if not self._rxadc:
+                raise Exception(
+                    f"No device found with name {self._rx_data_device_name}"
+                )
+
+        if self._rxadc:
+            if self._rx_channel_names == None:
+                self._rx_channel_names = []
+                for chan in self._rxadc.channels:
+                    if chan.scan_element:
+                        self._rx_channel_names.append(chan.name)
+
+        rx.__init__(self)
+
+        self.post_init()
+
+    def post_init(self):
+        pass
