@@ -1047,7 +1047,6 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     # freqs = fftfreq(L, 1 / RXFS)
     
-    del sdr
     # ffampl = fftshift(ffampl)
     # ffreqs = fftshift(ffreqs)
     # _, ml, hm, indxs = spec.find_harmonics_reduced(
@@ -1059,9 +1058,10 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     # )
 
     _, ml, peaks, indxs = spec.find_harmonics_from_main(
-        ffampl, ffreqs, RXFS, num_harmonics=4, tolerance=0.01
+        ffampl, ffreqs, sdr.sample_rate, num_harmonics=4, tolerance=0.01
     )
     
+    del sdr
     # sfdr, amp, freq, peaks, indxs = spec.sfdr(data, fs=RXFS, ref=2 ** 12, plot=False)
     # amp = fftshift(amp)
     # print("sfdr: ", sfdr)
@@ -1090,7 +1090,6 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         else:
             k=0
         plt.savefig("./results_log/graph" + str(k) + ".png")
-        plt.show()
         #plt.close()
     print("Main should be between ", low[0], high[0])
     print("Main is at ", ffampl[ml], ffreqs[ml])
