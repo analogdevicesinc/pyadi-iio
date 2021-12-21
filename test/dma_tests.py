@@ -1090,7 +1090,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         else:
             k=0
         plt.savefig("./results_log/graph" + str(k) + ".png")
-        #plt.close()
+        plt.close()
     print("Main should be between ", low[0], high[0])
     print("Main is at ", ffampl[ml], ffreqs[ml])
     assert low[0] <= ffampl[ml] <= high[0]
