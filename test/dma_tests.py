@@ -22,7 +22,6 @@ def dma_rx(
 ):
     """dma_rx: Construct RX buffers and verify data is non-zero when pulled.
     Collected buffer is of size 2**15 and 10 buffers are checked
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -75,7 +74,6 @@ def dma_rx(
 def dma_tx(uri, classname, channel, use_tx2=False):
     """dma_tx: Construct TX buffers and verify no errors occur when pushed.
     Buffer is of size 2**15 and 10 buffers are pushed
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -123,7 +121,6 @@ def dma_dac_zeros(uri, classname, channel):
     This test requires a AD936x or similar device with internal loopback
     modes. The TX cores are put into zero source mode in cases when no
     output is desired
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -167,7 +164,6 @@ def dma_loopback(uri, classname, channel):
     modes. A triangle wave is generated on I and Q or real1 and real2
     and multiple periods are compared for missing samples within a buffer
     and delay between buffers.
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -250,7 +246,6 @@ def dds_loopback(
     signal can be recovered. TX FPGA DDSs are used to generate a sinusoid
     which is then estimated on the RX side. The receive tone must be within
     1% of its expected frequency with a specified peak
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -268,7 +263,6 @@ def dds_loopback(
             Scale of DDS tone. Range [0,1]
         peak_min: type=float
             Minimum acceptable value of maximum peak in dBFS of received tone
-
     """
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -347,7 +341,6 @@ def dds_two_tone(
     signal can be recovered. TX FPGA DDSs are used to generate two sinusoids
     which are then estimated on the RX side. The receive tones must be within
     1% of its respective expected frequency with a specified peak.
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -373,7 +366,6 @@ def dds_two_tone(
         peak_min2: type=float
             Minimum acceptable value of maximum peak in dBFS of the received
             second tone
-
     """
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -449,7 +441,6 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     signal can be recovered. TX/DAC internal NCOs are used to generate a sinusoid
     which is then estimated on the RX side. The receive tone must be within
     1% of its expected frequency with a specified peak
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -465,7 +456,6 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
             Frequency in Hz of transmitted tone
         peak_min: type=float
             Minimum acceptable value of maximum peak in dBFS of received tone
-
     """
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -514,14 +504,12 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
 
-
 def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False):
     """cw_loopback: Test CW loopback with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
     signal can be recovered. Sinuoidal data is passed to DMAs which is then
     estimated on the RX side. The receive tone must be within
     1% of its expected frequency at the max peak found
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -642,7 +630,6 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
     signal can be recovered. Sinuoidal data is passed to DMAs which is then
     estimated on the RX side. The peak and second peak are determined in
     the received signal to determine the sfdr.
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -654,7 +641,6 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         param_set: type=dict
             Dictionary of attribute and values to be set before tone is
             generated and received
-
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     for p in param_set.keys():
@@ -747,7 +733,6 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     signal can be recovered. Sinuoidal data is passed to DMAs which is then
     estimated on the RX side. The peak and second peak are determined in
     the received signal to determine the sfdr.
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -761,7 +746,6 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
             generated and received
         sfdr_min: type=float
             Minimum acceptable value of SFDR in dB
-
     """
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -845,7 +829,6 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     transmit signal can be recovered. TX FPGA DDSs are used to generate a
     sinusoid which is then received on the RX side. RSSI is captured during
     this reception. The generated tone is at 10% RX sample rate.
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -863,7 +846,6 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
             Minimum acceptable value of RSSI attribute
         max_rssi: type=float
             Maximum acceptable value of RSSI attribute
-
     """
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
@@ -1032,7 +1014,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         ffreqs = 0
         for i in range(8):
             data = sdr.rx()
-            amp, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**12, num_ffts=1, plot=False)
+            amp, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
             ffampl += amp
             ffreqs += freq
         ffampl/= 8
@@ -1105,7 +1087,6 @@ def cyclic_buffer(uri, classname, channel, param_set):
     """cyclic_buffer: Construct Cyclic TX buffers and verify
     no errors occur when pushed. This is performed twice
     without closing the context
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -1163,7 +1144,6 @@ def cyclic_buffer_exception(uri, classname, channel, param_set):
     errors occur when pushed. This is performed twice
     without closing the context and with resetting the TX buffers
     which should cause an exception
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -1221,10 +1201,8 @@ def cyclic_buffer_exception(uri, classname, channel, param_set):
 
 #########################################
 
-
 def stress_context_creation(uri, classname, channel, repeats):
     """stress_context_creation: Repeatedly create and destroy a context
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -1260,7 +1238,6 @@ def stress_context_creation(uri, classname, channel, repeats):
 
 def stress_rx_buffer_length(uri, classname, channel, buffer_sizes):
     """stress_rx_buffer_length: Repeatedly create and destroy buffers across different buffer sizes
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -1295,7 +1272,6 @@ def stress_rx_buffer_length(uri, classname, channel, buffer_sizes):
 
 def stress_rx_buffer_creation(uri, classname, channel, repeats):
     """stress_rx_buffer_creation: Repeatedly create and destroy buffers
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -1329,7 +1305,6 @@ def stress_rx_buffer_creation(uri, classname, channel, repeats):
 
 def stress_tx_buffer_creation(uri, classname, channel, repeats):
     """stress_tx_buffer_creation: Repeatedly create and destroy TX buffers
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -1369,7 +1344,6 @@ def stress_tx_buffer_creation(uri, classname, channel, repeats):
 
 def verify_underflow(uri, classname, channel, buffer_size, sample_rate):
     """verify_overflow: Verify overflow flags occur as expected
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
@@ -1434,7 +1408,6 @@ def verify_underflow(uri, classname, channel, buffer_size, sample_rate):
 
 def verify_overflow(uri, classname, channel, buffer_size, sample_rate):
     """verify_overflow: Verify overflow flags occur as expected
-
     parameters:
         uri: type=string
             URI of IIO context of target board/system
