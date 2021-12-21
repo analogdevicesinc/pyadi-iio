@@ -250,15 +250,15 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
     peak_indxs = peak_indxs[indxs]
     peak_vals = amp[peak_indxs]
 
-    k=0
+    k=1
     main = peak_vals[0]
-    for indx in peak_indxs:
-        if absolute(indx - dc_loc) < (0.07 * lx):
-            #do nothing
-            k = k+1
-            print("DC ignored")
-        else:
-            next = peak_vals[k]
+    # for indx in peak_indxs:
+    #     if absolute(indx - dc_loc) < (0.07 * lx):
+    #         #do nothing
+    #         k = k+1
+    #         print("DC ignored")
+    #     else:
+    #         next = peak_vals[k]
     next = peak_vals[1]
     
     sfdr = absolute(main - next)
