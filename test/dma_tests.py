@@ -709,7 +709,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         plt.subplot(2, 1, 2)
         plt.plot(freq, amp)
         plt.plot(freq[ml], amp[ml], "y.")
-        plt.plot(freq[indxs[pk:pk+2]], amp[indxs[pk:pk+2]], "y.")
+        plt.plot(freq[indxs[1:3]], amp[indxs[1:3]], "y.")
 
         plt.margins(0.1, 0.1)
         plt.annotate("Fundamental", (freq[ml], amp[ml]))
