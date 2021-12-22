@@ -321,8 +321,8 @@ def test_dcxo(test_dcxo_calibration, classname, iio_uri):
         dict(
             rx_rf_port_select="B_BALANCED",
             tx_rf_port_select="B",
-            rx_lo=3000000000,
-            tx_lo=3000000000,
+            rx_lo=2600000000,
+            tx_lo=2600000000,
             tx_hardwaregain_chan0=-10,
             sample_rate=30720000,
         ),
@@ -355,8 +355,8 @@ def test_harmonic_values(
         dict(
             rx_rf_port_select="B_BALANCED",
             tx_rf_port_select="B",
-            rx_lo=3000000000,
-            tx_lo=3000000000,
+            rx_lo=2600000000,
+            tx_lo=2600000000,
             tx_hardwaregain_chan0=-10,
             sample_rate=30720000,
         ),
