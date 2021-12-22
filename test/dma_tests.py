@@ -646,7 +646,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
 
-    sdr.dds_single_tone(999859, 0.0625, channel)
+    sdr.dds_single_tone(2999577, 0.0625, channel)
     time.sleep(4)
 
     N = 2 ** 14
@@ -725,7 +725,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
     print("sfdr is ", sfdr)
     for i in range(3):
         print("Peak should be between ", low[i], high[i])
-        print("Peak is ", peaks[i])
+        print("Peak is ", peaks[i], freq[indxs[i]])
         assert low[i] <= peaks[i] <= high[i]
 
 def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9):
@@ -977,7 +977,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
 
-    sdr.dds_single_tone(999859, 0.0625, channel)
+    sdr.dds_single_tone(2999577, 0.0625, channel)
     time.sleep(3)
 
     N = 2 ** 14
@@ -1077,7 +1077,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     assert low[0] <= ffampl[ml] <= high[0]
     for i in range(3):
         print("Harmonic should be between ", low[i+1], high[i+1])
-        print("Harmonic is ", peaks[i])
+        print("Harmonic is ", peaks[i], ffreqs[indxs[i]])
         assert low[i+1] <= peaks[i] <= high[i+1]
         
 
