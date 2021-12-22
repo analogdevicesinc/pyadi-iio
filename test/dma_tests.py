@@ -707,7 +707,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         plt.xlabel("Time [s]")
 
         plt.subplot(2, 1, 2)
-        plt.plot(freq, amp)
+        plt.plot(fftshift(freq), fftshift(amp))
         plt.plot(freq[ml], amp[ml], "y.")
         plt.plot(freq[indxs[1:3]], amp[indxs[1:3]], "y.")
 
@@ -1058,7 +1058,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.xlabel("Time [s]")
 
         plt.subplot(2, 1, 2)
-        plt.plot(ffreqs, ffampl)
+        plt.plot(fftshift(ffreqs), fftshift(ffampl))
         plt.plot(ffreqs[ml], ffampl[ml], "y.")
         plt.plot(ffreqs[indxs[0:3]], ffampl[indxs[0:3]], "y.")
 
