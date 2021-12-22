@@ -251,14 +251,14 @@ def sfdr_signal(x, amp, freqs, plot=False):
 
     k=1
     main = peak_vals[0]
-    for indx in peak_indxs:
-        if absolute(indx - dc_loc) < (0.07 * lx):
-            #do nothing
-            k = k+1
-            print("DC ignored")
-        else:
-            next = peak_vals[k]
-    #next = peak_vals[1]
+    # for indx in peak_indxs:
+    #     if absolute(indx - dc_loc) < (0.07 * lx):
+    #         #do nothing
+    #         k = k+1
+    #         print("DC ignored")
+    #     else:
+    #         next = peak_vals[k]
+    next = peak_vals[1]
     
     sfdr = absolute(main - next)
 
