@@ -238,8 +238,51 @@ def find_harmonics_reduced(x, freqs, num_harmonics=6, tolerance=0.01):
     return main, main_loc, harmonics_vals, harmonics_locs
 
 
-def sfdr(x, fs=1, ref=2 ** 15, plot=False):
-    amp, freqs = spec_est(x, fs=fs, ref=ref, num_ffts=1, plot=False)
+def sfdr_signal(x, amp, freqs, plot=False):
+    amp_org = amp
+    # amp = fftshift(amp)
+    peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.07))
+    lx = len(x)
+    dc_loc = floor(lx/2)
+    indxs = argsort(amp[peak_indxs])
+    indxs = indxs[::-1]
+    peak_indxs = peak_indxs[indxs]
+    peak_vals = amp[peak_indxs]
+
+    k=1
+    main = peak_vals[0]
+    for indx in peak_indxs:
+        if absolute(indx - dc_loc) < (0.07 * lx):
+            #do nothing
+            k = k+1
+            print("DC ignored")
+        else:
+            next = peak_vals[k]
+    #next = peak_vals[1]
+    
+    sfdr = absolute(main - next)
+
+    if plot:
+        import matplotlib.pyplot as plt
+
+        plt.subplot(2, 1, 1)
+        plt.plot(x, ".-")
+        plt.plot(1, 1, "r.")  # first sample of next chunk
+        plt.margins(0.1, 0.1)
+        plt.xlabel("Time [s]")
+        # Plot shifted data on a shifted axis
+        plt.subplot(2, 1, 2)
+        plt.plot(amp)
+        plt.plot(peak_indxs[0:3], amp[peak_indxs[0:3]], "x")
+        plt.margins(0.1, 0.1)
+        plt.xlabel("Frequency [Hz]")
+        plt.tight_layout()
+        plt.show()
+
+    return sfdr, peak_vals, peak_indxs, k
+
+def sfdr(x, fs=1, ref=2 ** 15, num_ffts=2, enable_windowing=False, plot=False):
+    amp, freqs = spec_est(x, fs=fs, ref=ref, num_ffts=num_ffts, enable_windowing=enable_windowing, plot=False)
     amp_org = amp
     amp = fftshift(amp)
     peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.05))

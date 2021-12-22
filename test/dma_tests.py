@@ -656,7 +656,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
     sdr.rx_enabled_channels = [channel]
     sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
 
-    ref = 2 ** 12
+    ref = 2 ** 11
 
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
@@ -678,12 +678,13 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         time.sleep(5)
         for _ in range(30):
             data = sdr.rx()
-        data_avg = 0
+        amp = 0
+        freq = 0
         for i in range(8):
-            sdr.rx()
-            data_avg += data
-        data_avg /= 8
-        data = data_avg
+            data = sdr.rx()
+            amps, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
+            amp += amps
+        amp /= 8
     except Exception as e:
         del sdr
         raise Exception(e)
@@ -691,10 +692,10 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
     time.sleep(3)
 
     L = len(data)
-
-    sfdr, amp, freq, peaks, indxs, k = spec.sfdr(data, fs=RXFS, ref=2 ** 12, plot=False)
-    amp = fftshift(amp)
-    freq = fftshift(freq)
+    # amp = fftshift(amp)
+    # freq = fftshift(freq)
+    sfdr, peaks, indxs, pk = spec.sfdr_signal(data, amp, freq, plot=False)
+    
     ml = indxs[0]
     if plot:
         import matplotlib.pyplot as plt
@@ -708,10 +709,10 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         plt.subplot(2, 1, 2)
         plt.plot(freq, amp)
         plt.plot(freq[ml], amp[ml], "y.")
-        plt.plot(freq[indxs[k:k+2]], amp[indxs[k:k+2]], "y.")
+        plt.plot(freq[indxs[pk:pk+2]], amp[indxs[pk:pk+2]], "y.")
 
         plt.margins(0.1, 0.1)
-        #plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
+        plt.annotate("Fundamental", (freq[ml], amp[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
         if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
@@ -1014,11 +1015,9 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         ffreqs = 0
         for i in range(8):
             data = sdr.rx()
-            amp, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
+            amp, ffreqs = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
             ffampl += amp
-            ffreqs += freq
         ffampl/= 8
-        ffreqs /= 8
     except Exception as e:
         del sdr
         raise Exception(e)
