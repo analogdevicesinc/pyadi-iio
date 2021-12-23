@@ -6,14 +6,14 @@ import pytest
 hardware = "adrv9002"
 classname = "adi.adrv9002"
 profile_path = dirname(realpath(__file__)) + "/adrv9002_profiles/"
-nco_test_profile = profile_path + "lte_10_lvds_nco_api_48_26_4.json"
-nco_test_stream = profile_path + "lte_10_lvds_nco_api_48_26_4.stream"
-lte_20_lvds_profile = profile_path + "lte_20_lvds_api_48_26_4.json"
-lte_20_lvds_stream = profile_path + "lte_20_lvds_api_48_26_4.stream"
-lte_40_lvds_profile = profile_path + "lte_40_lvds_api_48_26_4.json"
-lte_40_lvds_stream = profile_path + "lte_40_lvds_api_48_26_4.stream"
-lte_5_cmos_profile = profile_path + "lte_5_cmos_api_48_26_4.json"
-lte_5_cmos_stream = profile_path + "lte_5_cmos_api_48_26_4.stream"
+nco_test_profile = profile_path + "lte_10_lvds_nco_api_48_42_0.json"
+nco_test_stream = profile_path + "lte_10_lvds_nco_api_48_42_0.stream"
+lte_20_lvds_profile = profile_path + "lte_20_lvds_api_48_42_0.json"
+lte_20_lvds_stream = profile_path + "lte_20_lvds_api_48_42_0.stream"
+lte_40_lvds_profile = profile_path + "lte_40_lvds_api_48_42_0.json"
+lte_40_lvds_stream = profile_path + "lte_40_lvds_api_48_42_0.stream"
+lte_5_cmos_profile = profile_path + "lte_5_cmos_api_48_42_0.json"
+lte_5_cmos_stream = profile_path + "lte_5_cmos_api_48_42_0.stream"
 
 
 #########################################
