@@ -32,7 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from abc import ABCMeta, abstractmethod
-from typing import List
+from typing import List, Union
 
 import iio
 
@@ -453,42 +453,66 @@ class rx_tx(rx, tx, phy):
 
 
 class rx_def(rx, context_manager, metaclass=ABCMeta):
+    """Template metaclass for rx only device specific interfaces."""
+
     @property
     @abstractmethod
     def _complex_data(self) -> None:
+        """Data to/from device is quadrature (Complex).
+        When True ADC channel pairs are used together and the
+        rx method will generate complex data types.
+        Raises:
+            NotImplementedError: Method not implemented
+        """
         raise NotImplementedError  # pragma: no cover
 
     @property
     @abstractmethod
     def _control_device_name(self) -> None:
+        """Name of driver used for primary attribute control.
+        This is the default IIO device used to address properties
+        """
         raise NotImplementedError  # pragma: no cover
 
-    # @property
-    # @abstractmethod
-    # def _rx_channel_names(self) -> None:
-    #     """Try to use CPLL for clocking.
-    #     This method is only used in brute-force classes
-    #     Raises:
-    #         NotImplementedError: Method not implemented
-    #     """
-    #     raise NotImplementedError  # pragma: no cover
+    """Names of data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
     _rx_channel_names = None
 
     @property
     @abstractmethod
     def _rx_data_device_name(self) -> None:
+        """Name of driver used for receiving data.
+        This is the IIO device used collect data from.
+        """
         raise NotImplementedError  # pragma: no cover
 
-    def __init__(self, uri_ctx=None):
+    def __init__(self, uri_ctx: Union[str, iio.Context] = None) -> None:
 
+        # Handle context
         if isinstance(uri_ctx, iio.Context):
-            self._ctx
+            self._ctx = uri_ctx
             self.uri = ""
-        else:
+        elif uri_ctx:
             self.uri = uri_ctx
             context_manager.__init__(self, uri_ctx, self._device_name)
-        # NEED TO HAVE A SCAN OPTION
+        else:
+            required_devices = [self._rx_data_device_name, self._control_device_name]
+            contexts = iio.scan_contexts()
+            self._ctx = None
+            for c in contexts:
+                ctx = iio.Context(c)
+                devs = [dev.name for dev in ctx.devices]
+                print(devs)
+                if all(dev in devs for dev in required_devices):
+                    self._ctx = iio.Context(c)
+                    break
+            if not self._ctx:
+                raise Exception("No context could be found for class")
 
+        # Set up devices
         if self._control_device_name:
             self._ctrl = self._ctx.find_device(self._control_device_name)
             if not self._ctrl:
@@ -502,12 +526,17 @@ class rx_def(rx, context_manager, metaclass=ABCMeta):
                     f"No device found with name {self._rx_data_device_name}"
                 )
 
+        # Set up channels
         if self._rxadc:
-            if self._rx_channel_names == None:
+            if self._rx_channel_names is None:
                 self._rx_channel_names = []
                 for chan in self._rxadc.channels:
                     if chan.scan_element:
                         self._rx_channel_names.append(chan.name)
+                if not self._rx_channel_names:
+                    raise Exception(
+                        f"No scan elements found for device {self._rxadc.name}"
+                    )
 
         rx.__init__(self)
 
