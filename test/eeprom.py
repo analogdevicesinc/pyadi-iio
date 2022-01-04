@@ -121,19 +121,20 @@ def save_to_eeprom_rate(iio_uri, clk_rate):
 
 
 def popup_txt():
-    popup = tk.Tk()
-    popup.wm_title("Serial Number")
-    label = Label(
-        popup, text="Please write the serial number below:", font=("Verdana", 10)
-    )
-    tVar = tk.StringVar()
-    label.pack(side="top", fill="x", pady=10)
-    tb = Entry(popup, textvariable=tVar)
-    tb.pack()
-    btn = Button(popup, text="OK", command=popup.destroy)
-    btn.pack()
-    popup.mainloop()
-    sn = tVar.get()
+    # popup = tk.Tk()
+    # popup.wm_title("Serial Number")
+    # label = Label(
+    #     popup, text="Please write the serial number below:", font=("Verdana", 10)
+    # )
+    # tVar = tk.StringVar()
+    # label.pack(side="top", fill="x", pady=10)
+    # tb = Entry(popup, textvariable=tVar)
+    # tb.pack()
+    # btn = Button(popup, text="OK", command=popup.destroy)
+    # btn.pack()
+    # popup.mainloop()
+    # sn = tVar.get()
+    sn = input("Please scan the serial number: ")
     match = re.search('^S[0-9][0-9]', sn)
     match1 = re.search('(SN:)', sn)
     sn = sn.replace("-", "")
