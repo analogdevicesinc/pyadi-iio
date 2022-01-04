@@ -361,4 +361,4 @@ def test_harmonic_values(
     [([-20.0, -120.0, -120.0, -125.0], [-10.0, -75.0, -75.0, -80.0])],
 )
 def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, plot=False):
-    test_sfdrl(classname, iio_uri, channel, param_set, low, high, plot=True)
+    test_sfdrl(classname, iio_uri, channel, param_set, low, high, plot=False)
