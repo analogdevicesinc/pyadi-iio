@@ -199,7 +199,7 @@ def test_rssi(
             ),
         ),
         (
-            0.1,
+            0.4,
             999859,
             0.0,
             25,
@@ -216,7 +216,7 @@ def test_rssi(
             ),
         ),
         (
-            0.1,
+            0.4,
             999859,
             0.0,
             28,
@@ -296,12 +296,6 @@ def test_ad9364_loopback(test_dma_loopback, iio_uri, classname, channel):
 )
 def test_ad9364_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param_set):
     test_iq_loopback(iio_uri, classname, channel, param_set)
-
-
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-def test_dcxo(test_dcxo_calibration, classname, iio_uri):
-    test_dcxo_calibration(classname, iio_uri)
 
 
 @pytest.mark.iio_hardware(hardware)
