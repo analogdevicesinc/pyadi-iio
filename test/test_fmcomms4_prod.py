@@ -327,7 +327,7 @@ def test_ad9364_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
     [([-20.0, -120.0, -120.0, -125.0], [-10.0, -75.0, -75.0, -80.0])],
 )
 def test_harmonic_values(
-    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=True
+    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=False
 ):
     test_harmonics(classname, iio_uri, channel, param_set, low, high, plot)
 
@@ -360,5 +360,5 @@ def test_harmonic_values(
     "low, high",
     [([-20.0, -120.0, -120.0, -125.0], [-10.0, -75.0, -75.0, -80.0])],
 )
-def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, plot=True):
+def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, plot=False):
     test_sfdrl(classname, iio_uri, channel, param_set, low, high, plot=True)
