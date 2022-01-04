@@ -57,7 +57,6 @@ def select_channel(instr):
 
 
 def get_freq(instr):
-    # set gate time to 600 for better precision
     xmt = select_channel(instr)
     frq_str = xmt.split(" ", 2)
     scale = 1
