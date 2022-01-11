@@ -4,6 +4,8 @@ flake8
 pre-commit
 isort
 pytest>=4.6
+pandas
+plotly
 scapy
 scipy
 pytest-cov
@@ -13,4 +15,3 @@ bump2version
 pytest-html
 plotly-express
 pyvisa
-tkinter
