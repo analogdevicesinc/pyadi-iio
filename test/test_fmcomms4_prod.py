@@ -358,7 +358,7 @@ def test_harmonic_values(
 )
 @pytest.mark.parametrize(
     "low, high",
-    [([-20.0, -120.0, -120.0, -125.0], [-10.0, -75.0, -75.0, -80.0])],
+    [([-20.0, -120.0, -120.0, -125.0], [-10.0, -70.0, -70.0, -75.0])],
 )
 def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, plot=False):
     test_sfdrl(classname, iio_uri, channel, param_set, low, high, plot=False)
