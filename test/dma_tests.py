@@ -715,12 +715,13 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         plt.annotate("Fundamental", (freq[ml], amp[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
-            k=1
-        else:
-            k=0
-        plt.savefig("./results_log/graphp" + str(k) + ".png")
-        plt.close()
+        # if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
+        #     k=1
+        # else:
+        #     k=0
+        # plt.savefig("./results_log/graphp" + str(k) + ".png")
+        # plt.close()
+        plt.show()
 
     print("sfdr is ", sfdr)
     for i in range(3):
@@ -1066,12 +1067,13 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
-            k=1
-        else:
-            k=0
-        plt.savefig("./results_log/graph" + str(k) + ".png")
-        plt.close()
+        # if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
+        #     k=1
+        # else:
+        #     k=0
+        # plt.savefig("./results_log/graph" + str(k) + ".png")
+        plt.show()
+        #plt.close()
     print("Main should be between ", low[0], high[0])
     print("Main is at ", ffampl[ml], ffreqs[ml])
     assert low[0] <= ffampl[ml] <= high[0]
