@@ -1,4 +1,4 @@
-ad9081
+tdd
 =================
 
 .. automodule:: adi.tdd
