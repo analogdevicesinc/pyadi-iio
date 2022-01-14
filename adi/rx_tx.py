@@ -31,7 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from typing import List
+from typing import List, Union
 
 import iio
 
@@ -82,6 +82,11 @@ class rx(rx_tx_common):
         self.rx_buffer_size = rx_buffer_size
 
     @property
+    def rx_channel_names(self) -> List[str]:
+        """rx_channel_names: List of RX channel names"""
+        return self._rx_channel_names
+
+    @property
     def rx_annotated(self) -> bool:
         """rx_annotated: Set output data from rx() to be annotated"""
         return self._rx_annotated
@@ -113,20 +118,52 @@ class rx(rx_tx_common):
         self.__rx_buffer_size = value
 
     @property
-    def rx_enabled_channels(self):
-        """rx_enabled_channels: List of enabled channels (channel 1 is 0)"""
+    def rx_enabled_channels(self) -> List[int]:
+        """rx_enabled_channels: List of enabled channels (channel 1 is 0)
+
+        Either a list of channel numbers or channel names can be used to set
+        rx_enabled_channels. When channel names are used, they will be
+        translated to channel numbers.
+        """
         return self.__rx_enabled_channels
 
     @rx_enabled_channels.setter
-    def rx_enabled_channels(self, value):
+    def rx_enabled_channels(self, value: Union[List[int], List[str]]):
+        """rx_enabled_channels: List of enabled channels (channel 1 is 0)
+
+        Either a list of channel numbers or channel names can be used to set
+        rx_enabled_channels. When channel names are used, they will be
+        translated to channel numbers.
+        """
         if not value:
             raise Exception("rx_enabled_channels cannot be empty")
-        if self._complex_data:
-            if max(value) > ((self._num_rx_channels) / 2 - 1):
-                raise Exception("RX mapping exceeds available channels")
+        if not isinstance(value, list):
+            raise Exception("rx_enabled_channels must be a list")
+        if not all(isinstance(x, int) for x in value) and not all(
+            isinstance(x, str) for x in value
+        ):
+            raise Exception(
+                "rx_enabled_channels must be a list of integers or "
+                + "list of channel names",
+            )
+
+        if isinstance(value[0], str):
+            indxs = []
+            for cname in value:
+                if cname not in self._rx_channel_names:
+                    raise Exception(
+                        f"Invalid channel name: {cname}. Must be one of {self._rx_channel_names}"
+                    )
+                indxs.append(self._rx_channel_names.index(cname))
+
+            value = sorted(list(set(indxs)))
         else:
-            if max(value) > ((self._num_rx_channels) - 1):
-                raise Exception("RX mapping exceeds available channels")
+            if self._complex_data:
+                if max(value) > ((self._num_rx_channels) / 2 - 1):
+                    raise Exception("RX mapping exceeds available channels")
+            else:
+                if max(value) > ((self._num_rx_channels) - 1):
+                    raise Exception("RX mapping exceeds available channels")
         self.__rx_enabled_channels = value
 
     @property

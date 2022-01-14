@@ -5,7 +5,7 @@ Using buffers or transmitting and receiving data is done through interacting wit
 
 For receivers this is the **rx** method. How data is captured and therefore produced by this method is dependent on two main properties:
 
-* **rx_enabled_channels**: This is an array of integers and the number of elements in the array will determine the number of list items returned by **rx**. For devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.
+* **rx_enabled_channels**: This is an array of integers (or channel names) and the number of elements in the array will determine the number of list items returned by **rx**. For devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.
 * **rx_buffer_size**: This is the number of samples returned in each column. If the device produces complex data, like a transceiver, it will return complex data. This is defined by the author of each device specific class.
 
 For transmitters this is the **tx** method. How data is sent and therefore must be passed by this method is dependent on one main property:
