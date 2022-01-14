@@ -5,7 +5,7 @@ Using buffers or transmitting and receiving data is done through interacting wit
 
 For receivers this is the **rx** method. How data is captured and therefore produced by this method is dependent on two main properties:
 
-* **rx_enabled_channels**: This is an array of integers and the number of elements in the array will determine the number of list items returned by **rx**. For devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.
+* **rx_enabled_channels**: This is an array of integers (or channel names) and the number of elements in the array will determine the number of list items returned by **rx**. For devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.
 * **rx_buffer_size**: This is the number of samples returned in each column. If the device produces complex data, like a transceiver, it will return complex data. This is defined by the author of each device specific class.
 
 For transmitters this is the **tx** method. How data is sent and therefore must be passed by this method is dependent on one main property:
@@ -37,6 +37,72 @@ In many cases, it can be useful to continuously transmit a signal over and over,
  sdr.tx(iq)
 
 At this point, the transmitter will keep transmitting the create sinusoid indefinitely until the buffer is destroyed or the *sdr* object destructor is called. Once data is pushed to hardware with a cyclic buffer the buffer must be manually destroyed or an error will occur if more data push. To update the buffer use the **tx_destroy_buffer** method before passing a new vector to the **tx** method.
+
+Annotated Buffers
+------------------
+
+By default buffers appear as an array or a list of arrays. This can be confusing if all your channels do not produce similar data. For example, for IMUs like ADI16495 certain channels are for acceleration data and others are for angular velocity. To label this data the *rx_annotated* property can be used. When setting it to True the output of the **rx** method will be a dictionary with keys as channel names. Here an example:
+
+.. code-block:: python
+
+ import adi
+
+ dev = adi.adis16495()
+ dev.rx_enabled_channels = [0, 3]
+ print(dev.rx())
+ dev.rx_annotated = True
+ print(dev.rx())
+
+With output
+
+.. code-block:: bash
+
+   [array([    35681,     84055,   -175914,   -203645,    698249,    -51670,
+         -1770250,   1529968,   2586191,  -5353355,   -827741,  11736339,
+         -9847894, -17242014,  97421833, 277496774], dtype=int32),
+   array([     49151,     753663,    3571711,    9928703,   18956287,
+            25165823,   18612223,  -10125313,  -60850176, -114491392,
+         -131350528,  -61521920,  135069695,  466845695,  899235839,
+         1362378751], dtype=int32)]
+   {'accel_x': array([1775091711, 2072264703, 2147483647, 2147483647, 2147483647,
+         2147483647, 2143404031, 2125430783, 2123120639, 2130821119,
+         2139488255, 2144911359, 2147041279, 2147467263, 2147483647,
+         2147483647], dtype=int32),
+   'anglvel_x': array([357750219, 335109279, 323033231, 337667193, 337100396, 330408402,
+         333459194, 335322576, 333247166, 333223475, 333996322, 333805525,
+         333659152, 333664680, 333718473, 333895650], dtype=int32)}
+
+
+Buffer Units
+---------------
+
+For certain devices it is possible to convert types to scientific units, such as volts, degrees, or meters per second among others. This is controlled by setting the property **rx_output_type** to either *raw* or *SI*. If set to *SI*, returned data from the **rx** method will be in scientific units (assuming its supported by the driver). Below is an example using an IMU:
+
+.. code-block:: python
+
+ import adi
+
+ dev = adi.adis16495()
+ dev.rx_annotated = True  # Make channel names appear in data
+ dev.rx_enabled_channels = [3]  # channel 0 is angular velocity in the x direction
+ print(dev.rx())
+ dev.rx_output_type = "SI"
+ print(dev.rx())
+
+With output
+
+.. code-block:: bash
+
+ {'anglvel_x': array([    35644,     84039,   -175647,   -203867,    697612,    -50201,
+        -1770177,   1526291,   2589741,  -5349126,   -839188,  11738313,
+        -9824911, -17267701,  97333042, 277410285], dtype=int32)}
+ {'anglvel_x': array([9.29996712, 9.71257202, 9.40097973, 9.78345151, 9.77009362,
+       9.59662456, 9.67300333, 9.71593538, 9.65847317, 9.6580597 ,
+       9.68022501, 9.67715545, 9.67511814, 9.67609361, 9.67323293,
+       9.67104074])}
+
+
+To understand the exact scaling the driver documentation should be reviewed.
 
 Members
 --------------
