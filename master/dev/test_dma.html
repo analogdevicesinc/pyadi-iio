@@ -436,7 +436,7 @@ enable through tx_enabled_channels</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.dma_rx">
-<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_rx" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32768</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_rx" title="Permalink to this definition"></a></dt>
 <dd><p>dma_rx: Construct RX buffers and verify data is non-zero when pulled.
 Collected buffer is of size 2**15 and 10 buffers are checked</p>
 <dl class="simple">
@@ -447,6 +447,12 @@ Collected buffer is of size 2**15 and 10 buffers are checked</p>
 </dd>
 <dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
 enable through rx_enabled_channels</p>
+</dd>
+<dt>use_rx2: type=bool</dt><dd><p>If True, use rx2() instead of rx()</p>
+</dd>
+<dt>buffer_size: type=int</dt><dd><p>Size of RX buffer in samples. Defaults to 2**15</p>
+</dd>
+<dt>annotated: type=bool</dt><dd><p>If True, annotated output is provided (dict)</p>
 </dd>
 </dl>
 </dd>
