@@ -31,7 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from typing import List
+from typing import List, Union
 
 import iio
 
@@ -47,7 +47,14 @@ class phy(attribute):
         self._ctrl = []
 
 
-class rx(attribute):
+class rx_tx_common(attribute):
+    """Common functions for RX and TX"""
+
+    def _annotate(self, data, cnames: List[str], echans: List[int]):
+        return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
+
+
+class rx(rx_tx_common):
     """Buffer handling for receive devices"""
 
     _rxadc: iio.Device = []
@@ -59,9 +66,10 @@ class rx(attribute):
     _rx_shift = 0
     __rx_buffer_size = 1024
     __rx_enabled_channels = [0]
-    rx_output_type = "raw"
+    _rx_output_type = "raw"
     __rxbuf = None
     _rx_unbuffered_data = False
+    _rx_annotated = False
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -74,6 +82,33 @@ class rx(attribute):
         self.rx_buffer_size = rx_buffer_size
 
     @property
+    def rx_channel_names(self) -> List[str]:
+        """rx_channel_names: List of RX channel names"""
+        return self._rx_channel_names
+
+    @property
+    def rx_annotated(self) -> bool:
+        """rx_annotated: Set output data from rx() to be annotated"""
+        return self._rx_annotated
+
+    @rx_annotated.setter
+    def rx_annotated(self, value: bool):
+        """rx_annotated: Set output data from rx() to be annotated"""
+        self._rx_annotated = bool(value)
+
+    @property
+    def rx_output_type(self) -> str:
+        """rx_output_type: Set output data type from rx()"""
+        return self._rx_output_type
+
+    @rx_output_type.setter
+    def rx_output_type(self, value: str):
+        """rx_output_type: Set output data type from rx()"""
+        if value not in ["raw", "SI"]:
+            raise ValueError(f"Invalid rx_output_type: {value}. Must be raw or SI")
+        self._rx_output_type = value
+
+    @property
     def rx_buffer_size(self):
         """rx_buffer_size: Size of receive buffer in samples"""
         return self.__rx_buffer_size
@@ -83,20 +118,52 @@ class rx(attribute):
         self.__rx_buffer_size = value
 
     @property
-    def rx_enabled_channels(self):
-        """rx_enabled_channels: List of enabled channels (channel 1 is 0)"""
+    def rx_enabled_channels(self) -> List[int]:
+        """rx_enabled_channels: List of enabled channels (channel 1 is 0)
+
+        Either a list of channel numbers or channel names can be used to set
+        rx_enabled_channels. When channel names are used, they will be
+        translated to channel numbers.
+        """
         return self.__rx_enabled_channels
 
     @rx_enabled_channels.setter
-    def rx_enabled_channels(self, value):
+    def rx_enabled_channels(self, value: Union[List[int], List[str]]):
+        """rx_enabled_channels: List of enabled channels (channel 1 is 0)
+
+        Either a list of channel numbers or channel names can be used to set
+        rx_enabled_channels. When channel names are used, they will be
+        translated to channel numbers.
+        """
         if not value:
             raise Exception("rx_enabled_channels cannot be empty")
-        if self._complex_data:
-            if max(value) > ((self._num_rx_channels) / 2 - 1):
-                raise Exception("RX mapping exceeds available channels")
+        if not isinstance(value, list):
+            raise Exception("rx_enabled_channels must be a list")
+        if not all(isinstance(x, int) for x in value) and not all(
+            isinstance(x, str) for x in value
+        ):
+            raise Exception(
+                "rx_enabled_channels must be a list of integers or "
+                + "list of channel names",
+            )
+
+        if isinstance(value[0], str):
+            indxs = []
+            for cname in value:
+                if cname not in self._rx_channel_names:
+                    raise Exception(
+                        f"Invalid channel name: {cname}. Must be one of {self._rx_channel_names}"
+                    )
+                indxs.append(self._rx_channel_names.index(cname))
+
+            value = sorted(list(set(indxs)))
         else:
-            if max(value) > ((self._num_rx_channels) - 1):
-                raise Exception("RX mapping exceeds available channels")
+            if self._complex_data:
+                if max(value) > ((self._num_rx_channels) / 2 - 1):
+                    raise Exception("RX mapping exceeds available channels")
+            else:
+                if max(value) > ((self._num_rx_channels) - 1):
+                    raise Exception("RX mapping exceeds available channels")
         self.__rx_enabled_channels = value
 
     @property
@@ -134,12 +201,16 @@ class rx(attribute):
 
     def __rx_unbuffered_data(self):
         x = []
-        t = self._rx_data_si_type if self.rx_output_type == "SI" else self._rx_data_type
+        t = (
+            self._rx_data_si_type
+            if self._rx_output_type == "SI"
+            else self._rx_data_type
+        )
         for _ in range(len(self.rx_enabled_channels)):
             x.append(np.zeros(self.rx_buffer_size, dtype=t))
 
         # Get scalers first
-        if self.rx_output_type == "SI":
+        if self._rx_output_type == "SI":
             rx_scale = []
             rx_offset = []
             for i in self.rx_enabled_channels:
@@ -165,7 +236,7 @@ class rx(attribute):
                 s = self._get_iio_attr(
                     self._rx_channel_names[m], "raw", False, self._rxadc
                 )
-                if self.rx_output_type == "SI":
+                if self._rx_output_type == "SI":
                     x[i][samp] = rx_scale[i] * s + rx_offset[i]
                 else:
                     x[i][samp] = s
@@ -229,10 +300,10 @@ class rx(attribute):
         sig = []
         stride = len(self.rx_enabled_channels)
 
-        if self.rx_output_type == "raw":
+        if self._rx_output_type == "raw":
             for c in range(stride):
                 sig.append(x[c::stride])
-        elif self.rx_output_type == "SI":
+        elif self._rx_output_type == "SI":
             rx_scale = []
             rx_offset = []
             for i in self.rx_enabled_channels:
@@ -257,7 +328,7 @@ class rx(attribute):
                 raw = x[c::stride]
                 sig.append(raw * rx_scale[c] + rx_offset[c])
         else:
-            raise Exception("rx_output_type undefined")
+            raise Exception("_rx_output_type undefined")
 
         # Don't return list if a single channel
         if len(self.rx_enabled_channels) == 1:
@@ -274,15 +345,20 @@ class rx(attribute):
             Data will be complex when using a complex data device.
         """
         if self._rx_unbuffered_data:
-            return self.__rx_unbuffered_data()
+            data = self.__rx_unbuffered_data()
         else:
             if self._complex_data:
-                return self.__rx_complex()
+                data = self.__rx_complex()
             else:
-                return self.__rx_non_complex()
+                data = self.__rx_non_complex()
+        if self._rx_annotated:
+            return self._annotate(
+                data, self._rx_channel_names, self.rx_enabled_channels
+            )
+        return data
 
 
-class tx(dds, attribute):
+class tx(dds, rx_tx_common):
     """Buffer handling for transmit devices"""
 
     _tx_buffer_size = 1024
@@ -329,21 +405,58 @@ class tx(dds, attribute):
         return len(self.tx_enabled_channels)
 
     @property
+    def tx_channel_names(self):
+        """tx_channel_names: Names of the transmit channels"""
+        return self._tx_channel_names
+
+    @property
     def tx_enabled_channels(self):
-        """tx_enabled_channels: List of enabled channels (channel 1 is 0)"""
+        """tx_enabled_channels: List of enabled channels (channel 1 is 0)
+
+        Either a list of channel numbers or channel names can be used to set
+        tx_enabled_channels. When channel names are used, they will be
+        translated to channel numbers.
+        """
         return self.__tx_enabled_channels
 
     @tx_enabled_channels.setter
     def tx_enabled_channels(self, value):
+        """tx_enabled_channels: List of enabled channels (channel 1 is 0)
+
+        Either a list of channel numbers or channel names can be used to set
+        tx_enabled_channels. When channel names are used, they will be
+        translated to channel numbers.
+        """
         if not value:
             self.__tx_enabled_channels = value
             return
-        if self._complex_data:
-            if max(value) > ((self._num_tx_channels) / 2 - 1):
-                raise Exception("TX mapping exceeds available channels")
+        if not isinstance(value, list):
+            raise Exception("tx_enabled_channels must be a list")
+        if not all(isinstance(x, int) for x in value) and not all(
+            isinstance(x, str) for x in value
+        ):
+            raise Exception(
+                "tx_enabled_channels must be a list of integers or "
+                + "list of channel names",
+            )
+
+        if isinstance(value[0], str):
+            indxs = []
+            for cname in value:
+                if cname not in self._tx_channel_names:
+                    raise Exception(
+                        f"Invalid channel name: {cname}. Must be one of {self._tx_channel_names}"
+                    )
+                indxs.append(self._tx_channel_names.index(cname))
+
+            value = sorted(list(set(indxs)))
         else:
-            if max(value) > ((self._num_tx_channels) - 1):
-                raise Exception("TX mapping exceeds available channels")
+            if self._complex_data:
+                if max(value) > ((self._num_tx_channels) / 2 - 1):
+                    raise Exception("TX mapping exceeds available channels")
+            else:
+                if max(value) > ((self._num_tx_channels) - 1):
+                    raise Exception("TX mapping exceeds available channels")
         self.__tx_enabled_channels = value
 
     def tx_destroy_buffer(self):
