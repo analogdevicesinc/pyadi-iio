@@ -48,6 +48,8 @@ class phy(attribute):
 
 
 class rx_tx_common(attribute):
+    """Common functions for RX and TX"""
+
     def _annotate(self, data, cnames: List[str], echans: List[int]):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
