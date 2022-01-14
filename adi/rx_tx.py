@@ -405,21 +405,58 @@ class tx(dds, rx_tx_common):
         return len(self.tx_enabled_channels)
 
     @property
+    def tx_channel_names(self):
+        """tx_channel_names: Names of the transmit channels"""
+        return self._tx_channel_names
+
+    @property
     def tx_enabled_channels(self):
-        """tx_enabled_channels: List of enabled channels (channel 1 is 0)"""
+        """tx_enabled_channels: List of enabled channels (channel 1 is 0)
+
+        Either a list of channel numbers or channel names can be used to set
+        tx_enabled_channels. When channel names are used, they will be
+        translated to channel numbers.
+        """
         return self.__tx_enabled_channels
 
     @tx_enabled_channels.setter
     def tx_enabled_channels(self, value):
+        """tx_enabled_channels: List of enabled channels (channel 1 is 0)
+
+        Either a list of channel numbers or channel names can be used to set
+        tx_enabled_channels. When channel names are used, they will be
+        translated to channel numbers.
+        """
         if not value:
             self.__tx_enabled_channels = value
             return
-        if self._complex_data:
-            if max(value) > ((self._num_tx_channels) / 2 - 1):
-                raise Exception("TX mapping exceeds available channels")
+        if not isinstance(value, list):
+            raise Exception("tx_enabled_channels must be a list")
+        if not all(isinstance(x, int) for x in value) and not all(
+            isinstance(x, str) for x in value
+        ):
+            raise Exception(
+                "tx_enabled_channels must be a list of integers or "
+                + "list of channel names",
+            )
+
+        if isinstance(value[0], str):
+            indxs = []
+            for cname in value:
+                if cname not in self._tx_channel_names:
+                    raise Exception(
+                        f"Invalid channel name: {cname}. Must be one of {self._tx_channel_names}"
+                    )
+                indxs.append(self._tx_channel_names.index(cname))
+
+            value = sorted(list(set(indxs)))
         else:
-            if max(value) > ((self._num_tx_channels) - 1):
-                raise Exception("TX mapping exceeds available channels")
+            if self._complex_data:
+                if max(value) > ((self._num_tx_channels) / 2 - 1):
+                    raise Exception("TX mapping exceeds available channels")
+            else:
+                if max(value) > ((self._num_tx_channels) - 1):
+                    raise Exception("TX mapping exceeds available channels")
         self.__tx_enabled_channels = value
 
     def tx_destroy_buffer(self):
