@@ -57,6 +57,12 @@ sdr.gain_control_mode_chan0 = "slow_attack"
 print("RX LO %s" % (sdr.rx_lo))
 
 
+pll = adi.adf4159("ip:192.168.95.1")
+
+pll.ramp_mode = "single_sawtooth_burst"
+pll.frequency = 5990000000
+pll.freq_dev_range = 10000000
+
 tdd = adi.tdd("ip:192.168.95.1")
 tdd.frame_length_ms = 3
 tdd.burst_count = 20
