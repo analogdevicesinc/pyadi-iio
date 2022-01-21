@@ -21,10 +21,9 @@ jobs:
           pip install -r requirements_doc.txt
           pip install setuptools wheel twine build
 
-      - name: Build doc and release
+      - name: Update to dev version and build release
         run: |
-          cd doc && make html
-          cd ..
+          invoke bumpversion-test
           python -m build
 
       - uses: pypa/gh-action-pypi-publish@v1.0.0a0
