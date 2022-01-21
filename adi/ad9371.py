@@ -63,7 +63,7 @@ class ad9371(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-ad9371-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-ad9371-tx-hpc")
 
-        if not disable_jesd_control:
+        if not disable_jesd_control and jesd:
             self._jesd = jesd(uri, username=username, password=password)
 
         rx_tx.__init__(self)

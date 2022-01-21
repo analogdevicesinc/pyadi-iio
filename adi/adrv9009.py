@@ -32,20 +32,13 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
+from adi.jesd import jesd as jesdadi
 from adi.obs import obs
 from adi.rx_tx import rx_tx
 
 
-def _import_jesd(uri):
-    try:
-        from adi.jesd import jesd as jesdadi
-    except ImportError:
-        raise Exception("JESD interfaces require fs package")
-    return jesdadi(uri)
-
-
 class adrv9009(rx_tx, context_manager):
-    """ ADRV9009 Transceiver
+    """ADRV9009 Transceiver
 
     parameters:
         uri: type=string
@@ -72,7 +65,8 @@ class adrv9009(rx_tx, context_manager):
         self._rxobs = self._ctx.find_device("axi-adrv9009-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
-        self._jesd = jesd or _import_jesd(uri) if jesd_monitor else None
+        if jesdadi and jesd_monitor:
+            self._jesd = jesd if jesd else jesdadi(uri=uri)
         rx_tx.__init__(self)
         self.obs = obs(self._ctx, self._rxobs, self._obs_channel_names)
 
@@ -341,7 +335,7 @@ class adrv9009(rx_tx, context_manager):
     @property
     def orx_sample_rate(self):
         """orx_sample_rate: Sample rate ORX path in samples per second
-            This value will reflect the correct value when 8x decimator is enabled
+        This value will reflect the correct value when 8x decimator is enabled
         """
         return self._get_iio_attr("voltage2", "sampling_frequency", False)
 
