@@ -212,3 +212,27 @@ def changelog(c, since=None):
     print(f"Changes since {since}:")
     for change in changes:
         print(f"- {change}")
+
+
+@task
+def bumpversion_test(c):
+    """Bump version to {current-version}.dev.{date}
+    Used for marking development releases for test-pypi
+    """
+    import fileinput
+    import time
+
+    for line in fileinput.input("adi/__init__.py", inplace=True):
+        if line.find("__version__") > -1:
+            l = line[len("__version__ = ") + 1 :].strip()[:-1].split(".")
+            major = int(l[0])
+            minor = int(l[1])
+            rev = int(l[2])
+            seconds = int(time.time())
+            line = '__version__ = "{}.{}.{}.dev.{}"\n'.format(
+                major, minor, rev, seconds
+            )
+            ver_string = "v{}.{}.{}.dev.{}".format(major, minor, rev, seconds)
+        print(line, end="")
+
+    print(f"Version bumped to {ver_string}")
