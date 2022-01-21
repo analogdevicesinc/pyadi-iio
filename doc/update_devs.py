@@ -36,7 +36,15 @@ def update_devs():
             f.write(txt)
 
     # Remove classes we shouldn't document
-    to_skip = ["obs", "attribute", "context_manager", "dds", "rx_tx", "sshfs"]
+    to_skip = [
+        "obs",
+        "attribute",
+        "context_manager",
+        "dds",
+        "rx_tx",
+        "sshfs",
+        "jesd_internal",
+    ]
     adi_rst_path = os.path.join(root, "source", "devices", "adi.rst")
     with open(adi_rst_path, "r") as f:
         lines = f.readlines()
