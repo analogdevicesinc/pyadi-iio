@@ -1,0 +1,9 @@
+include LICENSE
+include README.md
+include adi/*
+
+exclude setup.cfg
+
+recursive-exclude test *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
