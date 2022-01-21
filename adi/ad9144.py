@@ -39,7 +39,7 @@ class ad9144(tx, context_manager):
     """ AD9144 High-Speed DAC """
 
     _complex_data = False
-    _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
+    _tx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
 
     def __init__(self, uri=""):
