@@ -1,0 +1,34 @@
+name: TestPyPI
+on:
+  push:
+    branches:
+      - master
+jobs:
+  DeployTestPyPI:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Install dependencies
+        run: |
+          bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_pydeps.sh
+          pip install -r requirements_doc.txt
+          pip install setuptools wheel twine build
+
+      - name: Build doc and release
+        run: |
+          cd doc && make html
+          cd ..
+          python -m build
+
+      - uses: pypa/gh-action-pypi-publish@v1.0.0a0
+        with:
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
