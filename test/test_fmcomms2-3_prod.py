@@ -4,6 +4,8 @@ import adi
 import numpy as np
 import pytest
 
+from .conftest import disable_prod_tests
+
 hardware = ["packrf", "adrv9361", "fmcomms3", "ad9361"]
 classname = "adi.ad9361"
 
@@ -187,10 +189,12 @@ def test_ad9361_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
     test_iq_loopback(iio_uri, classname, channel, param_set)
 
 
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-def test_dcxo(test_dcxo_calibration, classname, iio_uri):
-    test_dcxo_calibration(classname, iio_uri)
+if not disable_prod_tests:
+
+    @pytest.mark.iio_hardware(hardware)
+    @pytest.mark.parametrize("classname", [(classname)])
+    def test_dcxo(test_dcxo_calibration, classname, iio_uri):
+        test_dcxo_calibration(classname, iio_uri)
 
 
 @pytest.mark.iio_hardware(hardware)

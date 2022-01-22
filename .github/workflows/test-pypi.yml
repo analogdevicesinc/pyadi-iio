@@ -23,6 +23,7 @@ jobs:
 
       - name: Update to dev version and build release
         run: |
+          pip install invoke
           invoke bumpversion-test
           python -m build
 
