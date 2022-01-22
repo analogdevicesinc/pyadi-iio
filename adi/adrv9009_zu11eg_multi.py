@@ -37,10 +37,11 @@ from typing import List
 
 from adi.adrv9009_zu11eg import adrv9009_zu11eg
 from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
+from adi.jesd import jesd as jesd_api
 
 
 class adrv9009_zu11eg_multi(object):
-    """ ADRV9009-ZU11EG Multi-SOM Manager
+    """ADRV9009-ZU11EG Multi-SOM Manager
 
     parameters:
         primary_uri: type=string
@@ -67,6 +68,13 @@ class adrv9009_zu11eg_multi(object):
         secondary_jesds=[None],
         fmcomms8=False,
     ):
+
+        if not jesd_api:
+            raise Exception(
+                "JESD optional dependencies are required.\n"
+                + "Please install them using pip install pyadi-iio[jesd] "
+                + "or pip install paramiko"
+            )
 
         if not isinstance(secondary_uris, list):
             Exception("secondary_uris must be a list")
@@ -108,7 +116,7 @@ class adrv9009_zu11eg_multi(object):
             dev._rxadc.set_kernel_buffers_count(1)
 
     def reinitialize(self):
-        """ reinitialize: reinitialize all transceivers """
+        """reinitialize: reinitialize all transceivers"""
         for dev in self.secondaries + [self.primary]:
             property_names = [p for p in dir(dev) if "reinitialize" in p]
             for p in property_names:
@@ -270,12 +278,12 @@ class adrv9009_zu11eg_multi(object):
         return vals
 
     def hmc7044_set_cap_sel(self, vals):
-        """ hmc7044_set_cap_sel:
+        """hmc7044_set_cap_sel:
 
-            parameters:
-                vals: type=list
-                    Forces certain Capacitor bank seletions.
-                    Typically the list returned form hmc7044_cap_sel
+        parameters:
+            vals: type=list
+                Forces certain Capacitor bank seletions.
+                Typically the list returned form hmc7044_cap_sel
         """
         for dev in [self.primary] + self.secondaries:
             dev._clock_chip.reg_write(0xB2, vals.pop(0) << 2 | 1)
@@ -286,15 +294,15 @@ class adrv9009_zu11eg_multi(object):
         self.primary._clock_chip_ext.reg_write(0xB2, vals.pop(0) << 2 | 1)
 
     def hmc7044_ext_output_delay(self, chan, digital, analog_ps):
-        """ hmc7044_ext_output_delay:
+        """hmc7044_ext_output_delay:
 
-            parameters:
-                digital: type=int
-                    Digital delay. Adjusts the phase of the divider signal
-                    by up to 17 half cycles of the VCO.
-                analog_ps: type=int
-                    Analog delay. Adjusts the delay of the divider signal in
-                    increments of ~25 ps. Range is from 100ps to 700ps.
+        parameters:
+            digital: type=int
+                Digital delay. Adjusts the phase of the divider signal
+                by up to 17 half cycles of the VCO.
+            analog_ps: type=int
+                Analog delay. Adjusts the delay of the divider signal in
+                increments of ~25 ps. Range is from 100ps to 700ps.
         """
         assert 0 <= chan <= 13
         if analog_ps - 100 >= 0:
@@ -310,15 +318,15 @@ class adrv9009_zu11eg_multi(object):
         self.primary._clock_chip_ext.reg_write(0xCC + offs, int(digital) & 0x1F)
 
     def hmc7044_car_output_delay(self, chan, digital, analog_ps):
-        """ hmc7044_car_output_delay:
+        """hmc7044_car_output_delay:
 
-            parameters:
-                digital: type=int
-                    Digital delay. Adjusts the phase of the divider signal
-                    by up to 17 half cycles of the VCO.
-                analog_ps: type=int
-                    Analog delay. Adjusts the delay of the divider signal in
-                    increments of ~25 ps. Range is from 100ps to 700ps.
+        parameters:
+            digital: type=int
+                Digital delay. Adjusts the phase of the divider signal
+                by up to 17 half cycles of the VCO.
+            analog_ps: type=int
+                Analog delay. Adjusts the delay of the divider signal in
+                increments of ~25 ps. Range is from 100ps to 700ps.
         """
         assert 0 <= chan <= 13
         if analog_ps - 100 >= 0:
@@ -355,18 +363,18 @@ class adrv9009_zu11eg_multi(object):
             chan.attrs["raw"].value = str(enable)
 
     def sysref_request(self):
-        """ sysref_request: Sysref request for parent HMC7044 """
+        """sysref_request: Sysref request for parent HMC7044"""
         if self._request_sysref_carrier:
             self.primary._clock_chip_carrier.attrs["sysref_request"].value = "1"
         else:
             self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
 
     def set_trx_lo_frequency(self, freq):
-        """ set_trx_lo_frequency:
+        """set_trx_lo_frequency:
 
-            parameters:
-                freq: type=int
-                    Frequency in hertz to be applied to all LOs
+        parameters:
+            freq: type=int
+                Frequency in hertz to be applied to all LOs
         """
         for dev in self.secondaries + [self.primary]:
             dev._set_iio_debug_attr_str("adi,trx-pll-lo-frequency_hz", freq, dev._ctrl)
@@ -421,13 +429,13 @@ class adrv9009_zu11eg_multi(object):
         raise Exception("Unable to initialize (Board reboot required)")
 
     def rx(self):
-        """ Receive data from multiple hardware buffers for each channel index in
-            rx_enabled_channels of each child object (primary,secondaries[indx]).
+        """Receive data from multiple hardware buffers for each channel index in
+        rx_enabled_channels of each child object (primary,secondaries[indx]).
 
-            returns: type=numpy.array or list of numpy.array
-                An array or list of arrays when more than one receive channel
-                is enabled containing samples from a channel or set of channels.
-                Data will be complex when using a complex data device.
+        returns: type=numpy.array or list of numpy.array
+            An array or list of arrays when more than one receive channel
+            is enabled containing samples from a channel or set of channels.
+            Data will be complex when using a complex data device.
         """
         if not self._rx_initialized:
             self._pre_rx_setup()

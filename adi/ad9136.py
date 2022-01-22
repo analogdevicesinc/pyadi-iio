@@ -48,7 +48,8 @@ class ad9136(tx, context_manager):
         context_manager.__init__(self, uri, self._device_name)
 
         self._txdac = self._ctx.find_device("axi-ad9136-tx-hpc")
-        self._jesd = jesd(uri, username="root", password=None)
+        if jesd:
+            self._jesd = jesd(uri, username="root", password=password)
 
         tx.__init__(self)
 
