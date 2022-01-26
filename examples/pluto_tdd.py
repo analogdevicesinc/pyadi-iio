@@ -49,21 +49,26 @@ sdr = adi.Pluto()
 sdr.rx_rf_bandwidth = 30000000
 sdr.rx_lo = 6000000000
 sdr.tx_lo = 6000000000
-sdr.tx_cyclic_buffer = False
+sdr.tx_cyclic_buffer = True
 sdr.tx_hardwaregain_chan0 = -30
 sdr.gain_control_mode_chan0 = "slow_attack"
 
 # Read properties
 print("RX LO %s" % (sdr.rx_lo))
 
+# Enable phaser logic in pluto
+gpio = adi.one_bit_adc_dac("ip:pluto.local")
+gpio.gpio_phaser_enable = True
 
-pll = adi.adf4159("ip:192.168.95.1")
+# Configure PLL
+pll = adi.adf4159("ip:pluto.local")
 
 pll.ramp_mode = "single_sawtooth_burst"
 pll.frequency = 5990000000
 pll.freq_dev_range = 10000000
 
-tdd = adi.tdd("ip:192.168.95.1")
+# Configure TDD controller
+tdd = adi.tdd("ip:pluto.local")
 tdd.frame_length_ms = 3
 tdd.burst_count = 20
 tdd.rx_rf_ms = [1, 1.01, 0, 0]
@@ -74,7 +79,7 @@ tdd.en = True
 buffer_size = int(2 * 1024*1024)
 print("buffer_size:", buffer_size)
 
-# Create a sinewave waveform
+# Create a frequency ramp waveform
 fs = int(sdr.sample_rate)
 print("sample_rate:", fs)
 N = buffer_size
@@ -83,16 +88,18 @@ ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)
 i = np.cos(2 * np.pi * t * fc) * 2 ** 14
 q = np.sin(2 * np.pi * t * fc) * 2 ** 14
-iq = 0.01 * (i + 1j * q)
+iq = i + 1j * q
+# iq[N//2:] = 0
 # Send data
 
 sdr.rx_buffer_size = buffer_size
 
 sdr._ctx.set_timeout(30000)
 
+sdr.tx(iq)
+
 # Collect data
 for r in range(20):
-    sdr.tx(iq)
     x = sdr.rx()
     plt.clf()
     plt.specgram(x)
