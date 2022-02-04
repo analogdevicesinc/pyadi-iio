@@ -347,11 +347,7 @@ class adrv9009_zu11eg_multi(object):
         for dev in self.secondaries + [self.primary]:
             if self._dma_show_arming:
                 print("--DMA ARMING--", dev.uri)
-            dev._rxadc.reg_write(0x80000044, 0x8)
-            while dev._rxadc.reg_read(0x80000068) == 0:
-                dev._rxadc.reg_write(0x80000044, 0x8)
-                if self._dma_show_arming:
-                    print(".", end="")
+            dev.rx_sync_start = "arm"
             if self._dma_show_arming:
                 print("\n--DMA ARMED--", dev.uri)
 
@@ -359,8 +355,7 @@ class adrv9009_zu11eg_multi(object):
         for dev in self.secondaries + [self.primary]:
             if self._dma_show_arming:
                 print("--DAC SYNC ARMING--", dev.uri)
-            chan = dev._txdac.find_channel("altvoltage0", True)
-            chan.attrs["raw"].value = str(enable)
+            dev.tx_sync_start = "arm"
 
     def sysref_request(self):
         """sysref_request: Sysref request for parent HMC7044"""
