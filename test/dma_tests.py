@@ -1062,9 +1062,9 @@ def stress_context_creation(uri, classname, channel, repeats):
                 data = sdr.rx()
                 if isinstance(data, list):
                     for chan in data:
-                        assert np.sum(np.abs(chan)) > 0
+                        assert np.max(np.abs(chan)) > 0
                 else:
-                    assert np.sum(np.abs(data)) > 0
+                    assert np.max(np.abs(data)) > 0
                 sdr.rx_destroy_buffer()
         except Exception as e:
             del sdr
@@ -1096,10 +1096,10 @@ def stress_rx_buffer_length(uri, classname, channel, buffer_sizes):
             if isinstance(data, list):
                 for chan in data:
                     assert len(chan) == size
-                    assert np.sum(np.abs(chan)) > 0
+                    assert np.max(np.abs(chan)) > 0
             else:
                 assert len(data) == size
-                assert np.sum(np.abs(data)) > 0
+                assert np.max(np.abs(data)) > 0
             sdr.rx_destroy_buffer()
     except Exception as e:
         del sdr
@@ -1131,9 +1131,9 @@ def stress_rx_buffer_creation(uri, classname, channel, repeats):
             data = sdr.rx()
             if isinstance(data, list):
                 for chan in data:
-                    assert np.sum(np.abs(chan)) > 0
+                    assert np.max(np.abs(chan)) > 0
             else:
-                assert np.sum(np.abs(data)) > 0
+                assert np.max(np.abs(data)) > 0
             sdr.rx_destroy_buffer()
     except Exception as e:
         del sdr
