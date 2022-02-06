@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2021 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,108 +31,37 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad936x import ad9361, ad9363, ad9364, Pluto
+import sys
 
-from adi.fmcomms5 import FMComms5
+import adi
 
-from adi.ad9371 import ad9371
+# Optionally passs URI as command line argument,
+# else use default context manager search
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
+print("uri: " + str(my_uri))
 
-from adi.adrv9002 import adrv9002
+# Set up LM75
+my_temp_sensr = adi.lm75(uri=my_uri)
 
-from adi.adrv9009 import adrv9009
+print("\nChecking temperature channel...")
+print("Temperature raw: " + str(my_temp_sensr.input))
+print(
+    "Temperature in deg. Celsius: " + str(my_temp_sensr.to_degrees(my_temp_sensr.input))
+)
 
-from adi.adrv9009_zu11eg import adrv9009_zu11eg
+print("\nUpdate interval: " + str(my_temp_sensr.update_interval))
 
-from adi.adrv9009_zu11eg_multi import adrv9009_zu11eg_multi
 
-from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
+print("\nMax threshold: " + str(my_temp_sensr.to_degrees(my_temp_sensr.max)))
+print("Max hysteresis: " + str(my_temp_sensr.to_degrees(my_temp_sensr.max_hyst)))
 
-from adi.ad9081 import ad9081
+print("\nSetting max threshold, hyst. to 30C, 25C...\n")
 
-from adi.ad9081_mc import ad9081_mc, QuadMxFE
+my_temp_sensr.max = my_temp_sensr.to_millidegrees(30.0)
+my_temp_sensr.max_hyst = my_temp_sensr.to_millidegrees(25.0)
 
-from adi.ad9083 import ad9083
+print("New thresholds:")
+print("Max: " + str(my_temp_sensr.to_degrees(my_temp_sensr.max)))
+print("Max hysteresis: " + str(my_temp_sensr.to_degrees(my_temp_sensr.max_hyst)))
 
-from adi.ad9094 import ad9094
-
-from adi.ad9680 import ad9680
-
-from adi.ad9136 import ad9136
-
-from adi.ad9144 import ad9144
-
-from adi.ad9152 import ad9152
-
-from adi.cn0532 import cn0532
-
-from adi.daq2 import DAQ2
-
-from adi.daq3 import DAQ3
-
-from adi.adis16460 import adis16460
-
-from adi.adis16495 import adis16495
-
-from adi.adis16507 import adis16507
-
-from adi.ad7124 import ad7124
-
-from adi.adxl345 import adxl345
-
-from adi.adxl355 import adxl355
-
-from adi.adxrs290 import adxrs290
-
-from adi.fmclidar1 import fmclidar1
-
-from adi.ad5686 import ad5686
-
-from adi.adar1000 import adar1000, adar1000_array
-
-from adi.ltc2983 import ltc2983
-
-from adi.one_bit_adc_dac import one_bit_adc_dac
-
-from adi.ltc2314_14 import ltc2314_14
-
-from adi.ad7606 import ad7606
-
-from adi.ad7799 import ad7799
-
-from adi.ad7746 import ad7746
-
-from adi.adpd410x import adpd410x
-
-from adi.ad7689 import ad7689
-
-from adi.adf4371 import adf4371
-
-from adi.adpd188 import adpd188
-
-from adi.QuadMxFE_multi import QuadMxFE_multi
-
-from adi.adrf5720 import adrf5720
-
-from adi.admv8818 import admv8818
-
-from adi.adf5610 import adf5610
-
-from adi.adl5960 import adl5960
-
-from adi.gen_mux import genmux
-
-from adi.fmc_vna import fmcvna
-
-from adi.adf4159 import adf4159
-
-from adi.tdd import tdd
-
-from adi.lm75 import lm75
-
-try:
-    from adi.jesd import jesd
-except ImportError:
-    pass
-
-__version__ = "0.0.12"
-name = "Analog Devices Hardware Interfaces"
+del my_temp_sensr
