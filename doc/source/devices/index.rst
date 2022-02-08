@@ -54,6 +54,7 @@ Supported Devices
    adi.fmcomms5
    adi.gen_mux
    adi.jesd
+   adi.lm75
    adi.ltc2314_14
    adi.ltc2983
    adi.one_bit_adc_dac
