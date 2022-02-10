@@ -34,6 +34,8 @@
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
+import re
+
 
 class override:
     def _get_iio_dev_attr_single(self, attr):
@@ -59,6 +61,18 @@ class adar3002(override, attribute, context_manager):
 
     _device_name = ""
 
+    def _get_labeled_channels(self, regx, sort_by_label=True):
+        ids = []
+        labels = []
+        for chan in self._ctrl.channels:
+            if "label" in chan.attrs and re.match(regx, str(chan.attrs["label"].value)):
+                ids.append(chan.id)
+                labels.append(chan.attrs["label"].value)
+
+        if sort_by_label:
+            return [x for _, x in sorted(zip(labels, ids))]
+        return ids
+
     def __init__(self, uri="", driver_name="adar3002", ctx=None):
 
         self._ctx = ctx
@@ -70,6 +84,16 @@ class adar3002(override, attribute, context_manager):
 
         for i in range(4):
             setattr(self, f"beam{i}", self._beam(self._ctrl, f"beam{i}"))
+
+        # Collect channels of interest
+        self._vphase_channel_names = self._get_labeled_channels("BEAM\d_V_EL\d_DELAY")
+        self._hphase_channel_names = self._get_labeled_channels("BEAM\d_H_EL\d_DELAY")
+        self._vpower_channel_names = self._get_labeled_channels(
+            "BEAM\d_V_EL\d_ATTENUATION"
+        )
+        self._hpower_channel_names = self._get_labeled_channels(
+            "BEAM\d_H_EL\d_ATTENUATION"
+        )
 
     def _check(self, input, attr, lenl):
         if not isinstance(input, list):
@@ -92,6 +116,41 @@ class adar3002(override, attribute, context_manager):
         return str
 
     #########################################
+    @property
+    def phases_V(self):
+        """phases_V: Select Test Mode."""
+        return self._get_iio_attr_vec(self._vphase_channel_names, "raw", True)
+
+    @phases_V.setter
+    def phases_V(self, value):
+        self._set_iio_attr_int_vec(self._vphase_channel_names, "raw", True, value)
+
+    @property
+    def phases_H(self):
+        """phases_H: Select Test Mode."""
+        return self._get_iio_attr_vec(self._hphase_channel_names, "raw", True)
+
+    @phases_H.setter
+    def phases_H(self, value):
+        self._set_iio_attr_int_vec(self._hphase_channel_names, "raw", True, value)
+
+    @property
+    def powers_V(self):
+        """powers_V: Select Test Mode."""
+        return self._get_iio_attr_vec(self._vpower_channel_names, "raw", True)
+
+    @powers_V.setter
+    def powers_V(self, value):
+        self._set_iio_attr_int_vec(self._vpower_channel_names, "raw", True, value)
+
+    @property
+    def powers_H(self):
+        """powers_H: Select Test Mode."""
+        return self._get_iio_attr_vec(self._hpower_channel_names, "raw", True)
+
+    @powers_H.setter
+    def powers_H(self, value):
+        self._set_iio_attr_int_vec(self._hpower_channel_names, "raw", True, value)
 
     #########################################
 

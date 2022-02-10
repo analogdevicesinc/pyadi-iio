@@ -9,4 +9,4 @@ bfa = adi.adar3002_array("ip:10.72.162.61")
 # bf.amp_en_mute_ELV = a
 
 # bf.annotated_properties = True
-print(bf.__repr__())
+# print(bf.__repr__())
