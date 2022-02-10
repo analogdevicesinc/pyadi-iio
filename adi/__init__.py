@@ -69,6 +69,8 @@ from adi.daq2 import DAQ2
 
 from adi.daq3 import DAQ3
 
+from adi.adar300x import adar3002, adar3002_array
+
 from adi.adis16460 import adis16460
 
 from adi.adis16495 import adis16495
