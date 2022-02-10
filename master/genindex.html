@@ -161,6 +161,7 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad6676.html">adi.ad6676 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7124.html">ad7124</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7689.html">ad7689</a></li>
@@ -176,6 +177,7 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad936x.html">ad936x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9371.html">ad9371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9739a.html">adi.ad9739a module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adar1000.html">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4371.html">adf4371</a></li>
@@ -285,6 +287,8 @@
 </li>
         <li><a href="devices/adi.ad5686.html#adi.ad5686.ad5686">ad5686 (class in adi.ad5686)</a>
 </li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676">ad6676 (class in adi.ad6676)</a>
+</li>
         <li><a href="devices/adi.ad7124.html#adi.ad7124.ad7124">ad7124 (class in adi.ad7124)</a>
 </li>
         <li><a href="devices/adi.ad7606.html#adi.ad7606.ad7606">ad7606 (class in adi.ad7606)</a>
@@ -319,6 +323,8 @@
 </li>
         <li><a href="devices/adi.ad9680.html#adi.ad9680.ad9680">ad9680 (class in adi.ad9680)</a>
 </li>
+        <li><a href="devices/adi.ad9739a.html#adi.ad9739a.ad9739a">ad9739a (class in adi.ad9739a)</a>
+</li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000">adar1000 (class in adi.adar1000)</a>
 </li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.adar1000_channel">adar1000.adar1000_channel (class in adi.adar1000)</a>
@@ -330,6 +336,10 @@
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.adar1000_channel.adar1000_parent">adar1000_parent (adi.adar1000.adar1000.adar1000_channel property)</a>
 </li>
         <li><a href="devices/adi.ad9081.html#adi.ad9081.ad9081.adc_frequency">adc_frequency (adi.ad9081.ad9081 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.adc_frequency_chan0">adc_frequency_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.adc_frequency_chan1">adc_frequency_chan1 (adi.ad6676.ad6676 property)</a>
 </li>
         <li><a href="devices/adi.adf4159.html#adi.adf4159.adf4159">adf4159 (class in adi.adf4159)</a>
 </li>
@@ -356,6 +366,13 @@
 
         <ul>
           <li><a href="devices/adi.ad5686.html#module-adi.ad5686">module</a>
+</li>
+        </ul></li>
+        <li>
+    adi.ad6676
+
+        <ul>
+          <li><a href="devices/adi.ad6676.html#module-adi.ad6676">module</a>
 </li>
         </ul></li>
         <li>
@@ -464,6 +481,13 @@
 </li>
         </ul></li>
         <li>
+    adi.ad9739a
+
+        <ul>
+          <li><a href="devices/adi.ad9739a.html#module-adi.ad9739a">module</a>
+</li>
+        </ul></li>
+        <li>
     adi.adar1000
 
         <ul>
@@ -533,6 +557,8 @@
           <li><a href="devices/adi.adpd188.html#module-adi.adpd188">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     adi.adpd410x
 
@@ -547,8 +573,6 @@
           <li><a href="devices/adi.adrf5720.html#module-adi.adrf5720">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     adi.adrv9002
 
@@ -836,21 +860,37 @@
 </li>
         <li><a href="devices/adi.admv8818.html#adi.admv8818.admv8818.band_pass_center_frequency">band_pass_center_frequency (adi.admv8818.admv8818 property)</a>
 </li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.bandwidth_chan0">bandwidth_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.bandwidth_chan1">bandwidth_chan1 (adi.ad6676.ad6676 property)</a>
+</li>
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan0">bbdc_rejection_tracking_en_chan0 (adi.adrv9002.adrv9002 property)</a>
 </li>
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.bbdc_rejection_tracking_en_chan1">bbdc_rejection_tracking_en_chan1 (adi.adrv9002.adrv9002 property)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.beam_mem_enable">beam_mem_enable (adi.adar1000.adar1000 property)</a>
 </li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.bias_dac_enable">bias_dac_enable (adi.adar1000.adar1000 property)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.bias_dac_mode">bias_dac_mode (adi.adar1000.adar1000 property)</a>
 </li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.bias_mem_enable">bias_mem_enable (adi.adar1000.adar1000 property)</a>
 </li>
         <li><a href="devices/adi.tdd.html#adi.tdd.tdd.burst_count">burst_count (adi.tdd.tdd property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.bw_margin_high_chan0">bw_margin_high_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.bw_margin_high_chan1">bw_margin_high_chan1 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.bw_margin_if_chan0">bw_margin_if_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.bw_margin_if_chan1">bw_margin_if_chan1 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.bw_margin_low_chan0">bw_margin_low_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.bw_margin_low_chan1">bw_margin_low_chan1 (adi.ad6676.ad6676 property)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1202,6 +1242,10 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="dev/test_dma.html#test.dma_tests.hardwaregain">hardwaregain() (in module test.dma_tests)</a>
 </li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.hardwaregain_chan0">hardwaregain_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.hardwaregain_chan1">hardwaregain_chan1 (adi.ad6676.ad6676 property)</a>
+</li>
         <li><a href="dev/test_dma.html#test.dma_tests.harmonic_vals">harmonic_vals() (in module test.dma_tests)</a>
 </li>
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.hd_tracking_en_chan0">hd_tracking_en_chan0 (adi.adrv9002.adrv9002 property)</a>
@@ -1258,10 +1302,10 @@
 </li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.initialize">initialize() (adi.adar1000.adar1000 method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000_array.initialize_devices">initialize_devices() (adi.adar1000.adar1000_array method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.lm75.html#adi.lm75.lm75.input">input (adi.lm75.lm75 property)</a>
 </li>
         <li><a href="devices/adi.cn0540.html#adi.cn0540.cn0540.input_voltage">input_voltage (adi.cn0540.cn0540 property)</a>
@@ -1269,6 +1313,10 @@
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.interface_gain_chan0">interface_gain_chan0 (adi.adrv9002.adrv9002 property)</a>
 </li>
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.interface_gain_chan1">interface_gain_chan1 (adi.adrv9002.adrv9002 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.intermediate_frequency_chan0">intermediate_frequency_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.intermediate_frequency_chan1">intermediate_frequency_chan1 (adi.ad6676.ad6676 property)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1426,6 +1474,8 @@
 </li>
           <li><a href="devices/adi.ad5686.html#module-adi.ad5686">adi.ad5686</a>
 </li>
+          <li><a href="devices/adi.ad6676.html#module-adi.ad6676">adi.ad6676</a>
+</li>
           <li><a href="devices/adi.ad7124.html#module-adi.ad7124">adi.ad7124</a>
 </li>
           <li><a href="devices/adi.ad7606.html#module-adi.ad7606">adi.ad7606</a>
@@ -1455,6 +1505,8 @@
           <li><a href="devices/adi.ad9371.html#module-adi.ad9371">adi.ad9371</a>
 </li>
           <li><a href="devices/adi.ad9680.html#module-adi.ad9680">adi.ad9680</a>
+</li>
+          <li><a href="devices/adi.ad9739a.html#module-adi.ad9739a">adi.ad9739a</a>
 </li>
           <li><a href="devices/adi.adar1000.html#module-adi.adar1000">adi.adar1000</a>
 </li>
@@ -2006,6 +2058,8 @@
 </li>
           <li><a href="devices/adi.ad936x.html#adi.ad936x.ad9364.sample_rate">(adi.ad936x.ad9364 property)</a>
 </li>
+          <li><a href="devices/adi.ad9739a.html#adi.ad9739a.ad9739a.sample_rate">(adi.ad9739a.ad9739a property)</a>
+</li>
           <li><a href="devices/adi.adis16460.html#adi.adis16460.adis16460.sample_rate">(adi.adis16460.adis16460 property)</a>
 </li>
           <li><a href="devices/adi.adis16495.html#adi.adis16495.adis16495.sample_rate">(adi.adis16495.adis16495 property)</a>
@@ -2026,6 +2080,10 @@
 </li>
         </ul></li>
         <li><a href="devices/adi.adxl345.html#adi.adxl345.adxl345.sampling_frequency_available">sampling_frequency_available (adi.adxl345.adxl345 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.sampling_frequency_chan0">sampling_frequency_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.sampling_frequency_chan1">sampling_frequency_chan1 (adi.ad6676.ad6676 property)</a>
 </li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.adar1000_channel.save_rx_beam">save_rx_beam() (adi.adar1000.adar1000.adar1000_channel method)</a>
 </li>
@@ -2068,6 +2126,14 @@
         <li><a href="devices/adi.ad9081.html#adi.ad9081.ad9081.set_tx_dac_full_scale_current">set_tx_dac_full_scale_current() (adi.ad9081.ad9081 method)</a>
 </li>
         <li><a href="devices/adi.cn0540.html#adi.cn0540.cn0540.shift_voltage">shift_voltage (adi.cn0540.cn0540 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.shuffler_control_chan0">shuffler_control_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.shuffler_control_chan1">shuffler_control_chan1 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.shuffler_thresh_chan0">shuffler_thresh_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.shuffler_thresh_chan1">shuffler_thresh_chan1 (adi.ad6676.ad6676 property)</a>
 </li>
         <li><a href="devices/adi.ad9371.html#adi.ad9371.ad9371.sn_lo">sn_lo (adi.ad9371.ad9371 property)</a>
 </li>
@@ -2141,6 +2207,10 @@
 </li>
         </ul></li>
         <li><a href="devices/adi.ad9680.html#adi.ad9680.ad9680.test_mode">test_mode (adi.ad9680.ad9680 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.test_mode_chan0">test_mode_chan0 (adi.ad6676.ad6676 property)</a>
+</li>
+        <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.test_mode_chan1">test_mode_chan1 (adi.ad6676.ad6676 property)</a>
 </li>
         <li><a href="devices/adi.ad5627.html#adi.ad5627.ad5627.tiltvoltage">tiltvoltage (adi.ad5627.ad5627 property)</a>
 </li>
@@ -2244,10 +2314,10 @@
 </li>
         <li><a href="devices/adi.tdd.html#adi.tdd.tdd.tx_dma_raw">tx_dma_raw (adi.tdd.tdd property)</a>
 </li>
-        <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000_array.tx_elevation">tx_elevation (adi.adar1000.adar1000_array property)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000_array.tx_elevation">tx_elevation (adi.adar1000.adar1000_array property)</a>
+</li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000_array.tx_elevation_phi">tx_elevation_phi (adi.adar1000.adar1000_array property)</a>
 </li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.adar1000_channel.tx_enable">tx_enable (adi.adar1000.adar1000.adar1000_channel property)</a>
