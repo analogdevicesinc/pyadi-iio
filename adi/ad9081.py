@@ -490,6 +490,23 @@ class ad9081(rx_tx, context_manager):
     tx_dac_full_scale_current = property(None, set_tx_dac_full_scale_current)
 
     @property
+    def powerdown(self):
+        """powerdown: Powerdown and reset the chip
+
+        Support for dynamic powerdown. Writing device attribute
+        powerdown with 'Yy1Nn0', or [oO][NnFf] for "on" and "off", will either
+        stop the jesd204 fsm, reset the device and power down an optional
+        regulator (vdd), or do the opposite in reverse order.
+        """
+        return self._get_iio_dev_attr_single("powerdown")
+
+    @powerdown.setter
+    def powerdown(self, value):
+        self._set_iio_dev_attr_single(
+            "powerdown", value,
+        )
+
+    @property
     def loopback_mode(self):
         """loopback_mode: Enable loopback mode RX->TX
 
@@ -500,7 +517,7 @@ class ad9081(rx_tx, context_manager):
         between RX and TX must be identical and only use a single
         link.
         """
-        return self._get_iio_dev_attr_single("loopback_mode")
+        return self._get_iio_dev_attr_single("powerdown")
 
     @loopback_mode.setter
     def loopback_mode(self, value):
@@ -575,3 +592,42 @@ class ad9081(rx_tx, context_manager):
     def jesd204_fsm_error(self):
         """jesd204_fsm_error: jesd204-fsm error"""
         return self._get_iio_dev_attr("jesd204_fsm_error", self._rxadc)
+
+    @property
+    def jesd204_device_status(self):
+        """jesd204_device_status: Device jesd204 link status information"""
+        return self._get_iio_debug_attr_str("status", self._rxadc)
+
+    @property
+    def jesd204_device_status_check(self):
+        """jesd204_device_status_check: Device jesd204 link status check
+
+        Returns 'True' in case error conditions are detected, 'False' otherwise
+        """
+        stat = self._get_iio_debug_attr_str("status", self._rxadc)
+
+        for s in stat.splitlines(0):
+            if "JRX" in s:
+                if "204C" in s:
+                    if "Link is good" not in s:
+                        return True
+                elif "204B" in s:
+                    if "0x0 lanes in DATA" in s:
+                        return True
+            elif "JTX" in s:
+                if any(
+                    substr in s
+                    for substr in [" asserted", "unlocked", "lost", "invalid"]
+                ):
+                    return True
+        return False
+
+    @property
+    def chip_version(self):
+        """chip_version: Chip version information"""
+        return self._get_iio_debug_attr_str("chip_version", self._rxadc)
+
+    @property
+    def api_version(self):
+        """api_version: API version"""
+        return self._get_iio_debug_attr_str("api_version", self._rxadc)
