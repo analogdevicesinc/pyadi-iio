@@ -89,7 +89,7 @@ pyadi-iio has a large set of parameterizable fixtures for testing different devi
 Set Up Isolated Environment
 ---------------------------
 
-This section will discussion a method to do isolated development with the correct package versions. The main purpose here is to eliminate any discrepancies that can arise (especially with the linting tools) when running precommit and other checks. This is also useful to not pollute your local global packages. The approach here relies upon leveraging **pyenv** and **pipenv** together.
+This section will discuss a method to do isolated development with the correct package versions. The main purpose here is to eliminate any discrepancies that can arise (especially with the linting tools) when running precommit and other checks. This is also useful to not pollute your local global packages. The approach here relies upon leveraging **pyenv** and **pipenv** together.
 
 
 Install pyenv
@@ -142,3 +142,24 @@ Now at this point we have all the necessary development packages to start workin
   cd <project folder>
   pyenv local 3.6.9
   pipenv shell
+
+Emulation
+---------------------------
+
+By leveraging `iio-emu <https://github.com/analogdevicesinc/iio-emu>`_, hardware or contexts can be emulated for testing without physical devices. However, currently this emulation does not validate attribute rates, states of drivers, or equivalent data sources. This feature should be used to test a library itself rather than hardware drivers.
+
+**pyadi-iio** uses *iio-emu* through *pytest-libiio*, which handles loading the correct context files based on the fixtures used for each test. Essentially, when *pytest* is run, based on the fixture below, *pytest-libiio* will spawn the correct context with *iio-emu* and pass the URI of that context to the test.
+
+
+.. code-block:: python
+
+ import pytest
+ import iio
+
+
+ @pytest.mark.iio_hardware("pluto", False)  # Set True disables test during emulation
+ def test_libiio_device(iio_uri):
+     ctx = iio.Context(iio_uri)
+     ...
+
+To create and add more context files for testing with **pyadi-iio** follow `this page <https://pytest-libiio.readthedocs.io/en/latest/emulation/>`_.
