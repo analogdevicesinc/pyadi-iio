@@ -615,7 +615,10 @@ class ad9081(rx_tx, context_manager):
                     if "0x0 lanes in DATA" in s:
                         return True
             elif "JTX" in s:
-                if any(substr in s for substr in [' asserted', 'unlocked', 'lost', 'invalid']):
+                if any(
+                    substr in s
+                    for substr in [" asserted", "unlocked", "lost", "invalid"]
+                ):
                     return True
         return False
 
