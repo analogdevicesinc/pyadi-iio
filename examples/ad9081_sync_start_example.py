@@ -32,13 +32,15 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import time
+
 import adi
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy import signal
 import pandas as pd
+from scipy import signal
 
 dev = adi.ad9081("ip:analog.local")
+
 
 def measure_phase_and_delay(chan0, chan1, window=None):
     assert len(chan0) == len(chan1)
@@ -76,6 +78,7 @@ def gen_tone(fc, fs, NN):
     # Xn = np.pad(Xn, int(NN - N))
     Xn = np.pad(Xn, (0, int(NN - N)), "constant")
     return Xn
+
 
 # Configure properties
 print("--Setting up chip")
@@ -142,7 +145,7 @@ print("API  Version:", dev.api_version)
 print("TX SYNC START AVAILABLE:", dev.tx_sync_start_available)
 print("RX SYNC START AVAILABLE:", dev.rx_sync_start_available)
 
-#dev._rxadc.reg_write(0x4a3, 25)
+# dev._rxadc.reg_write(0x4a3, 25)
 
 so = []
 po = []
@@ -163,7 +166,12 @@ for r in range(RUNS):
     dev.tx_sync_start = "arm"
 
     if not ("arm" == dev.tx_sync_start == dev.rx_sync_start):
-         raise Exception("Unexpeted SYNC status: TX " + dev.tx_sync_start + " RX: " + dev.rx_sync_start)
+        raise Exception(
+            "Unexpected SYNC status: TX "
+            + dev.tx_sync_start
+            + " RX: "
+            + dev.rx_sync_start
+        )
 
     dev.tx_destroy_buffer()
     dev.rx_destroy_buffer()
@@ -175,7 +183,12 @@ for r in range(RUNS):
     dev.tx_sync_start = "trigger_manual"
 
     if not ("disarm" == dev.tx_sync_start == dev.rx_sync_start):
-         raise Exception("Unexpeted SYNC status: TX " + dev.tx_sync_start + " RX: " + dev.rx_sync_start)
+        raise Exception(
+            "Unexpected SYNC status: TX "
+            + dev.tx_sync_start
+            + " RX: "
+            + dev.rx_sync_start
+        )
 
     try:
         x = dev.rx()
@@ -185,7 +198,7 @@ for r in range(RUNS):
 
     if tx_use_dma:
         (p, s) = measure_phase_and_delay(iq1, x)
-        print("Run#", r, "Sample Delay", int(s), "Phase", f'{p:.2f}')
+        print("Run#", r, "Sample Delay", int(s), "Phase", f"{p:.2f}")
         so.append(s)
         po.append(p)
 
