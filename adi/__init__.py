@@ -63,11 +63,27 @@ from adi.ad9144 import ad9144
 
 from adi.ad9152 import ad9152
 
+from adi.ad9250 import ad9250
+
+from adi.ad9265 import ad9265
+
+from adi.ad9434 import ad9434
+
+from adi.ad9467 import ad9467
+
+from adi.ad9625 import ad9625
+
+from adi.ada4961 import ada4961
+
 from adi.cn0532 import cn0532
 
 from adi.daq2 import DAQ2
 
 from adi.daq3 import DAQ3
+
+from adi.fmcadc3 import fmcadc3
+
+from adi.fmcjesdadc1 import fmcjesdadc1
 
 from adi.adis16460 import adis16460
 
