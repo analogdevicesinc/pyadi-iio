@@ -3,3 +3,4 @@ sphinx-rtd-theme
 myst-parser
 furo
 sphinx-favicon
+sphinxcontrib-mermaid
