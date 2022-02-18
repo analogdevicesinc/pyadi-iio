@@ -44,6 +44,7 @@ def update_devs():
         "rx_tx",
         "sshfs",
         "jesd_internal",
+        "sync_start",
     ]
     adi_rst_path = os.path.join(root, "source", "devices", "adi.rst")
     with open(adi_rst_path, "r") as f:
