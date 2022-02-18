@@ -517,7 +517,7 @@ class ad9081(rx_tx, context_manager):
         between RX and TX must be identical and only use a single
         link.
         """
-        return self._get_iio_dev_attr_single("powerdown")
+        return self._get_iio_dev_attr_single("loopback_mode")
 
     @loopback_mode.setter
     def loopback_mode(self, value):
