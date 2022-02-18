@@ -38,6 +38,7 @@ from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.rx_tx import rx_tx
+from adi.sync_start import sync_start
 
 
 def _map_to_dict(paths, ch, dev_name):
@@ -189,6 +190,7 @@ class ad9081_mc(ad9081):
 
         # Bring up DMA and DDS interfaces
         rx_tx.__init__(self)
+        sync_start.__init__(self)
         self.rx_buffer_size = 2 ** 16
 
     def _map_unique(self, paths):

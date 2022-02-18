@@ -35,6 +35,7 @@ from typing import Dict, List
 
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
+from adi.sync_start import sync_start
 
 
 def _map_to_dict(paths, ch):
@@ -78,7 +79,7 @@ def _sortconv(chans_names, noq=False, dds=False):
     return chans_names_out
 
 
-class ad9081(rx_tx, context_manager):
+class ad9081(rx_tx, context_manager, sync_start):
     """AD9081 Mixed-Signal Front End (MxFE)"""
 
     _complex_data = True
@@ -148,6 +149,7 @@ class ad9081(rx_tx, context_manager):
                     self._tx_fine_duc_channel_names += channels
 
         rx_tx.__init__(self)
+        sync_start.__init__(self)
         self.rx_buffer_size = 2 ** 16
 
     def _get_iio_attr_str_single(self, channel_name, attr, output):
