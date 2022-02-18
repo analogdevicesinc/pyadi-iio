@@ -36,7 +36,25 @@ To configure DDSs individually a list of scales can be passed to the properties 
  sdr.dds_frequencies = [dds_freq_hz] * n
  sdr.dds_scales = [0.9] * n
 
-Methods
+DDS Methods
 ---------------------------
 .. automodule:: adi.dds
+   :members:
+
+
+DMA Synchronization
+---------------------------
+
+In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general tests.
+
+This works by leveraging special control signals inside the HDL design to trigger receive captures from transmitted buffers. These are controlled through the **sync_start** class, which provide explicit control over when data is transmitted or released from the DMA in the FPGA fabric. This transmit or trigger will in turn allow data into the receive DMA at this moment in time. The exact methods and their sequence are described in the flowchart below.
+
+.. mermaid:: dma_sync.mmd
+
+
+A full example that leverages this control is `ad9081_sync_start_example.py <https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/ad9081_sync_start_example.py>`_.
+
+Sync_Start Methods
+---------------------------
+.. automodule:: adi.sync_start
    :members:
