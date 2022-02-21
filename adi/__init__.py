@@ -145,6 +145,8 @@ from adi.tdd import tdd
 
 from adi.lm75 import lm75
 
+from adi.ad4630 import ad4630
+
 try:
     from adi.jesd import jesd
 except ImportError:

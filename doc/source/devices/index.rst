@@ -8,6 +8,7 @@ Supported Devices
    :maxdepth: 4
 
    adi.QuadMxFE_multi
+   adi.ad4630
    adi.ad5627
    adi.ad5686
    adi.ad6676
