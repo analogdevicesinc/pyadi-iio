@@ -54,6 +54,8 @@ class dds(attribute):
                 split_cores_indx = split_cores_indx + 1
             if not chan:
                 return
+            if indx >= len(value):
+                return
             if attr == "raw":
                 chan.attrs[attr].value = str(int(value[indx]))
             else:
