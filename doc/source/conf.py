@@ -46,6 +46,7 @@ extensions = [
     "sphinx_rtd_theme",
     "myst_parser",
     "sphinx-favicon",
+    "sphinxcontrib.mermaid",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

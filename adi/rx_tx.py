@@ -38,7 +38,6 @@ import iio
 import numpy as np
 from adi.attribute import attribute
 from adi.dds import dds
-from adi.sync_start import sync_start
 
 
 class phy(attribute):
@@ -55,7 +54,7 @@ class rx_tx_common(attribute):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
 
-class rx(rx_tx_common, sync_start):
+class rx(rx_tx_common):
     """Buffer handling for receive devices"""
 
     _rxadc: iio.Device = []
@@ -81,7 +80,6 @@ class rx(rx_tx_common, sync_start):
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
-        sync_start.__init__(self)
 
     @property
     def rx_channel_names(self) -> List[str]:
@@ -360,7 +358,7 @@ class rx(rx_tx_common, sync_start):
         return data
 
 
-class tx(dds, rx_tx_common, sync_start):
+class tx(dds, rx_tx_common):
     """Buffer handling for transmit devices"""
 
     _tx_buffer_size = 1024
@@ -379,7 +377,6 @@ class tx(dds, rx_tx_common, sync_start):
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
-        sync_start.__init__(self)
 
     def __del__(self):
         self.__txbuf = []
