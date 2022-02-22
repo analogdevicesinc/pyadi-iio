@@ -36,24 +36,27 @@ from adi.attribute import attribute
 
 
 class sync_start(attribute):
+    """ Synchronization Control: This class allows for synchronous transfers
+        between transmit and receive data movement or captures.
+    """
+
     @property
     def tx_sync_start(self):
         """ tx_sync_start: Issue a synchronisation request
+
         Possible values are:
-        - arm: Writing this key will arm the trigger mechanism sensitive to an
-            external sync signal. Once the external sync signal goes high
-            it synchronizes channels within a DAC, and across multiple
-            instances. This bit has an effect only the EXT_SYNC
-            synthesis parameter is set.
-
-        - disarm: Writing this key will disarm the trigger mechanism
-            sensitive to an external sync signal. This bit has an
-            effect only the EXT_SYNC synthesis parameter is set.
-
-        - trigger_manual: Writing this key will issue an external sync event
-            if it is hooked up inside the fabric. This key has an effect
-            only the EXT_SYNC synthesis parameter is set.
-            This key self clears.
+            - **arm**: Writing this key will arm the trigger mechanism sensitive to an
+              external sync signal. Once the external sync signal goes high
+              it synchronizes channels within a DAC, and across multiple
+              instances. This bit has an effect only the EXT_SYNC
+              synthesis parameter is set.
+            - **disarm**: Writing this key will disarm the trigger mechanism
+              sensitive to an external sync signal. This bit has an
+              effect only the EXT_SYNC synthesis parameter is set.
+            - **trigger_manual**: Writing this key will issue an external sync event
+              if it is hooked up inside the fabric. This key has an effect
+              only the EXT_SYNC synthesis parameter is set.
+              This key self clears.
         """
         try:
             return self._get_iio_dev_attr_str("sync_start_enable", _ctrl=self._txdac)
@@ -84,21 +87,20 @@ class sync_start(attribute):
     @property
     def rx_sync_start(self):
         """ rx_sync_start: Issue a synchronisation request
+
         Possible values are:
-        - arm: Writing this key will arm the trigger mechanism sensitive to an
-            external sync signal. Once the external sync signal goes high
-            it synchronizes channels within a ADC, and across multiple
-            instances. This bit has an effect only the EXT_SYNC
-            synthesis parameter is set.
-
-        - disarm: Writing this key will disarm the trigger mechanism
-            sensitive to an external sync signal. This bit has an
-            effect only the EXT_SYNC synthesis parameter is set.
-
-        - trigger_manual: Writing this key will issue an external sync event
-            if it is hooked up inside the fabric. This key has an effect
-            only the EXT_SYNC synthesis parameter is set.
-            This key self clears.
+            - **arm**: Writing this key will arm the trigger mechanism sensitive to an
+              external sync signal. Once the external sync signal goes high
+              it synchronizes channels within a ADC, and across multiple
+              instances. This bit has an effect only the EXT_SYNC
+              synthesis parameter is set.
+            - **disarm**: Writing this key will disarm the trigger mechanism
+              sensitive to an external sync signal. This bit has an
+              effect only the EXT_SYNC synthesis parameter is set.
+            - **trigger_manual**: Writing this key will issue an external sync event
+              if it is hooked up inside the fabric. This key has an effect
+              only the EXT_SYNC synthesis parameter is set.
+              This key self clears.
         """
         try:
             return self._get_iio_dev_attr_str("sync_start_enable", _ctrl=self._rxadc)

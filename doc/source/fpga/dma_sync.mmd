@@ -1,0 +1,7 @@
+flowchart LR
+    A[ARM DMA\n-set rx_sync_start to arm\n-set tx_sync_start to arm] --> B[Reset Buffers\n-tx_destroy_buffer\n-rx_destroy_buffer]
+    B --> C[Initialize RX buffer\n-_rx_init_channel]
+    C --> D[Fill TX DMA\n-Call tx method]
+    D --> E[Trigger TX DMA\n-set tx_sync_start to trigger_manual]
+    E --> F[Collect RX Buffer\n-Call rx method]
+    F --> A
