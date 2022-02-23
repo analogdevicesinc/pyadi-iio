@@ -102,7 +102,7 @@ def attribute_single_value_pow2(uri, classname, attr, max_pow, tol, repeats=1):
         assert dev_interface(uri, classname, val, attr, tol) <= tol
 
 
-def attribute_multipe_values(uri, classname, attr, values, tol, repeats=1):
+def attribute_multipe_values(uri, classname, attr, values, tol, repeats=1, sleep=0):
     """attribute_multipe_values: Write and read back multiple class properties
     in a loop where all values are pre-defined. This is performed a defined
     number of times.
@@ -124,9 +124,9 @@ def attribute_multipe_values(uri, classname, attr, values, tol, repeats=1):
     for _ in range(repeats):
         for val in values:
             if isinstance(val, str):
-                assert dev_interface(uri, classname, val, attr, 0)
+                assert dev_interface(uri, classname, val, attr, 0, sleep=sleep)
             else:
-                assert dev_interface(uri, classname, val, attr, tol) <= tol
+                assert dev_interface(uri, classname, val, attr, tol, sleep=sleep) <= tol
 
 
 def attribute_multipe_values_with_depends(

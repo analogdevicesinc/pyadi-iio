@@ -1,3 +1,4 @@
+import time
 from os import listdir
 from os.path import dirname, join, realpath
 
@@ -105,7 +106,8 @@ def test_adrv9002_boolean_attr(
 def test_adrv9002_str_attr(
     test_attribute_multipe_values, iio_uri, classname, attr, val
 ):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+    sleep = 3 if "ensm_mode" in attr else 0
+    test_attribute_multipe_values(iio_uri, classname, attr, val, 0, sleep=sleep)
 
 
 #########################################
@@ -288,7 +290,8 @@ def test_adrv9002_rx_data(test_dma_rx, iio_uri, classname, channel, use_rx2):
         pytest.skip("Combined DMA mode does not have RX2 ADC")
     elif sdr._rx_dma_mode == "split" and channel > 0:
         pytest.skip("Split DMA mode does not have more than one channel per ADC")
-
+    sdr.digital_gain_control_mode_chan0 = "automatic"
+    sdr.digital_gain_control_mode_chan1 = "automatic"
     test_dma_rx(iio_uri, classname, channel, use_rx2)
 
 
@@ -306,6 +309,10 @@ def test_adrv9002_rx_data(test_dma_rx, iio_uri, classname, channel, use_rx2):
             rx1_lo=1000000000,
             rx_ensm_mode_chan0="rf_enabled",
             rx_ensm_mode_chan1="rf_enabled",
+            digital_gain_control_mode_chan0="automatic",
+            digital_gain_control_mode_chan1="automatic",
+            gain_control_mode_chan0="automatic",
+            gain_control_mode_chan1="automatic",
             tx_hardwaregain_chan0=-20,
             tx_hardwaregain_chan1=-20,
             tx_ensm_mode_chan0="rf_enabled",
