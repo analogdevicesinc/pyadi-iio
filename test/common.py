@@ -1,4 +1,5 @@
 import sys
+import time
 from test.globals import *
 
 import iio
@@ -96,7 +97,7 @@ def pytest_generate_tests(metafunc):
 
 
 #################################################
-def dev_interface(uri, classname, val, attr, tol, sub_channel=None):
+def dev_interface(uri, classname, val, attr, tol, sub_channel=None, sleep=0):
     sdr = eval(classname + "(uri='" + uri + "')")
     # Check hardware
     if not hasattr(sdr, attr):
@@ -109,6 +110,8 @@ def dev_interface(uri, classname, val, attr, tol, sub_channel=None):
         val = [val] * l
 
     setattr(sdr, attr, val)
+    if sleep > 0:
+        time.sleep(sleep)
     rval = getattr(sdr, attr)
 
     del sdr
@@ -127,6 +130,10 @@ def dev_interface(uri, classname, val, attr, tol, sub_channel=None):
             print("Got: " + str(rval))
         return abs_val
     else:
+        if val != str(rval):
+            print(f"Failed to set: {attr}")
+            print(f"Set: {val}")
+            print(f"Got: {rval}")
         return val == str(rval)
 
 
