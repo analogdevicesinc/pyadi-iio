@@ -71,7 +71,7 @@ class ad4630(rx, context_manager, attribute):
         if device_name not in compatible_parts:
             raise Exception(
                 "Not a compatible device: "
-                + device_name
+                + str(device_name)
                 + ". Please select from "
                 + str(compatible_parts)
             )
@@ -90,7 +90,6 @@ class ad4630(rx, context_manager, attribute):
                     self.chan0 = self._diff_channel(self._ctrl, ch.name)
                 if "1" in ch.name:
                     self.chan1 = self._diff_channel(self._ctrl, ch.name)
-                continue
 
         rx.__init__(self)
 
