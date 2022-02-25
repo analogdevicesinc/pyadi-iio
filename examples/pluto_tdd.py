@@ -52,6 +52,7 @@ sdr.tx_lo = 6000000000
 sdr.tx_cyclic_buffer = True
 sdr.tx_hardwaregain_chan0 = -30
 sdr.gain_control_mode_chan0 = "slow_attack"
+sdr.sample_rate = 5000000
 
 # Read properties
 print("RX LO %s" % (sdr.rx_lo))
@@ -59,6 +60,12 @@ print("RX LO %s" % (sdr.rx_lo))
 # Enable phaser logic in pluto
 gpio = adi.one_bit_adc_dac("ip:pluto.local")
 gpio.gpio_phaser_enable = True
+
+# If set to True, this enables external capture
+# triggering using the L24N GPIO on the Pluto.
+# When set to false, an internal trigger pulse
+# will be generated every second.
+gpio.gpio_tdd_ext_sync = False
 
 # Configure PLL
 pll = adi.adf4159("ip:pluto.local")
@@ -83,7 +90,7 @@ print("buffer_size:", buffer_size)
 fs = int(sdr.sample_rate)
 print("sample_rate:", fs)
 N = buffer_size
-fc = int(3000000 / (fs / N)) * (fs / N)
+fc = int(300000 / (fs / N)) * (fs / N)
 ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)
 i = np.cos(2 * np.pi * t * fc) * 2 ** 14
@@ -103,6 +110,7 @@ for r in range(20):
     x = sdr.rx()
     plt.clf()
     plt.specgram(x)
+    plt.title(f"Iteration: {r}")
     plt.draw()
     plt.pause(0.05)
 
