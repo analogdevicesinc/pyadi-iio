@@ -79,26 +79,6 @@ class cn0540(rx, context_manager):
 
         rx.__init__(self)
 
-    @reset_buffer
-    def calibrate(self):
-        """Tune LTC2606 to make AD7768-1 ADC codes zero mean"""
-        adc_chan = self._rxadc
-        dac_chan = self._ltc2606
-        adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
-        dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
-
-        for _ in range(20):
-            raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
-            adc_voltage = raw * adc_scale
-
-            raw = self._get_iio_attr("voltage0", "raw", True, dac_chan)
-            dac_voltage = (raw * dac_scale - adc_voltage) / dac_scale
-
-            self._set_iio_attr_float(
-                "voltage0", "raw", True, int(dac_voltage), dac_chan
-            )
-            time.sleep(0.01)
-
     @property
     def sample_rate(self):
         """sample_rate: Sample rate in samples per second.
