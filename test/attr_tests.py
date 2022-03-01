@@ -70,7 +70,7 @@ def attribute_single_value_str(uri, classname, attr, val, tol):
             Allowable error of written value compared to read back value
     """
     # Check hardware
-    assert dev_interface(uri, classname, str(val), attr, tol) <= tol
+    assert dev_interface(uri, classname, str(val), attr, tol)
 
 
 def attribute_single_value_pow2(uri, classname, attr, max_pow, tol, repeats=1):
