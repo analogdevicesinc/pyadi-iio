@@ -14,6 +14,9 @@ classname = "adi.Pluto"
         ("rx_lo", 325000000, 3800000000, 1, 8, 100),
         ("tx_lo", 325000000, 3800000000, 1, 8, 100),
         ("sample_rate", 2084000, 61440000, 1, 4, 100),
+        ("loopback", 0, 0, 1, 0, 0),
+        ("loopback", 1, 1, 1, 0, 0),
+        ("loopback", 2, 2, 1, 0, 0),
     ],
 )
 def test_pluto_attr(
@@ -30,17 +33,6 @@ def test_pluto_attr(
     test_attribute_single_value(
         iio_uri, classname, attr, start, stop, step, tol, repeats
     )
-
-
-#########################################
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr, tol", [("loopback", 0)])
-@pytest.mark.parametrize("val", [0, 1, 2])
-def test_pluto_loopback_attr(
-    test_attribute_single_value_str, iio_uri, classname, attr, val, tol
-):
-    test_attribute_single_value_str(iio_uri, classname, attr, val, tol)
 
 
 #########################################
