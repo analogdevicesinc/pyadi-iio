@@ -31,33 +31,43 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from typing import List
+
+from adi.ad9081 import _sortconv
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.rx_tx import tx
 
 
-class ad9265(rx, context_manager):
+class ad9172(tx, context_manager):
+    """AD9172 High-Speed DAC"""
 
-    """AD9265 High-Speed ADC"""
-
-    _complex_data = False
-    _rx_channel_names = ["voltage0"]
+    _complex_data = True
+    _tx_channel_names: List[str] = []
     _device_name = ""
 
     def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        self._rxadc = self._ctx.find_device("axi-ad9265-core-lpc")
+        self._txdac = self._ctx.find_device("axi-ad9172-hpc")
+        if not self._txdac:
+            raise RuntimeError("Could not find axi-ad9172-hpc")
 
-        rx.__init__(self)
+        for chan in self._txdac.channels:
+            if (
+                hasattr(chan, "scan_element")
+                and chan.scan_element
+                and chan.id not in self._tx_channel_names
+            ):
+                self._tx_channel_names.append(chan.id)
+
+        self._tx_channel_names = _sortconv(self._tx_channel_names)
+
+        tx.__init__(self)
 
     @property
-    def test_mode(self):
-        """test_mode: Select Test Mode. Options are:
-        off midscale_short pos_fullscale neg_fullscale checkerboard
-        pn_long pn_short one_zero_toggle user ramp"""
-        return self._get_iio_attr_str("voltage0", "test_mode", False, self._rxadc)
-
-    @test_mode.setter
-    def test_mode(self, value):
-        self._set_iio_attr("voltage0", "test_mode", False, value, self._rxadc)
+    def sample_rate(self):
+        """sample_rate: Sample rate TX path in samples per second"""
+        return self._get_iio_attr(
+            self._tx_channel_names[0], "sampling_frequency", True, self._txdac
+        )
