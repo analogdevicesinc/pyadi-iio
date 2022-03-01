@@ -37,7 +37,7 @@ from adi.rx_tx import rx
 
 class ad9265(rx, context_manager):
 
-    """ AD9265 High-Speed ADC """
+    """AD9265 High-Speed ADC"""
 
     _complex_data = False
     _rx_channel_names = ["voltage0"]
@@ -54,8 +54,9 @@ class ad9265(rx, context_manager):
     @property
     def test_mode(self):
         """test_mode: Select Test Mode. Options are:
-        off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp"""
-        return self._get_iio_attr("voltage0", "test_mode", False)
+        off midscale_short pos_fullscale neg_fullscale checkerboard
+        pn_long pn_short one_zero_toggle user ramp"""
+        return self._get_iio_attr_str("voltage0", "test_mode", False, self._rxadc)
 
     @test_mode.setter
     def test_mode(self, value):
