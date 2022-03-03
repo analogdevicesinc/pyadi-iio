@@ -1,15 +1,45 @@
-#ADPD410X code to plot multiple channels at a time
+# Copyright (C) 2020 Analog Devices, Inc.
+#
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#     - Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     - Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in
+#       the documentation and/or other materials provided with the
+#       distribution.
+#     - Neither the name of Analog Devices, Inc. nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#     - The use of this software may or may not infringe the patent rights
+#       of one or more patent holders.  This license does not release you
+#       from the requirement that you obtain separate licenses from these
+#       patent holders to use this software.
+#     - Use of the software either in source or binary form, must be run
+#       on or directly connected to an Analog Devices Inc. component.
+#
+# THIS SOFTWARE IS PROVIDED BY ANALOG DEVICES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+# INCLUDING, BUT NOT LIMITED TO, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A
+# PARTICULAR PURPOSE ARE DISCLAIMED.
+#
+# IN NO EVENT SHALL ANALOG DEVICES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, INTELLECTUAL PROPERTY
+# RIGHTS, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+# THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import sys
 import time
-import matplotlib.animation as animation
-import matplotlib.pyplot as plt
+from typing import List
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import adi
 
-from typing import List
-
-#ensure connection to the board
+# Connect to user-provided serial port
 while True:
     port = input('Input Serial line (e.g. if ADICUP3029 is connected to COM7, input \'COM7\' )\nSerial line:')
 
@@ -21,11 +51,9 @@ while True:
     except:
         print("Port not found\n")
 
-#get number of channels to plot
-global raw
+# Get number of channels to plot
+global raw, channelnum, channelcount
 raw= []
-
-global channelnum, channelcount
 while True:
     channelcount = input('\nHow many channels to read? (1-8): ')
     try:
@@ -38,8 +66,8 @@ while True:
     else:
         break
 
-channelindex: List[int] = [] #will handle channel indexes to be plotted
-
+# Set which channels to plot
+channelindex: List[int] = [] # List of channel indexes to plot
 while True:
     channelnum = input('\nChoose channel number to read? (1-8): ')
     try:
@@ -51,7 +79,8 @@ while True:
     if channelnum < 1 or channelnum > 8:
         print('Please input an integer within the specified range')
     else:
-        if len(channelindex) > 0:  #to check for repeated entries of channel number
+        # Check if duplicate channel was entered
+        if len(channelindex) > 0:
             skip=0
             if channelnum in channelindex:
                 skip=1
@@ -71,40 +100,40 @@ while True:
 enable_plot = True
 
 if enable_plot:
-
     # Create figure for plotting
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
-    xs: List[float] = [] #channel1
-    ys: List[float] = [] #channel2
-    zs: List[float] = [] #channel3
-    bs: List[float] = [] #channel4
-    cs: List[float] = [] #channel5
-    ds: List[float] = [] #channel6
-    es: List[float] = [] #channel7
-    fs: List[float] = [] #channel8
+    
+    # Data for each channel
+    xs: List[float] = [] # Channel1
+    ys: List[float] = [] # Channel2
+    zs: List[float] = [] # Channel3
+    bs: List[float] = [] # Channel4
+    cs: List[float] = [] # Channel5
+    ds: List[float] = [] # Channel6
+    es: List[float] = [] # Channel7
+    fs: List[float] = [] # Channel8
 
-
+    # Real-time plotting
     def animate(i, xs, ys, zs, bs, cs, ds, es, fs):
-        """Function called to animate in real time using SI"""
         global channelindex
 
         # Continuously adding data from ADPD410X to lists
-        xs.append(adpd410x.channel[0].raw) #channel1
+        xs.append(adpd410x.channel[0].raw) # Channel1
         print(xs[-1])
-        ys.append(adpd410x.channel[1].raw) #channel2
+        ys.append(adpd410x.channel[1].raw) # Channel2
         print(ys[-1])
-        zs.append(adpd410x.channel[2].raw) #channel3
+        zs.append(adpd410x.channel[2].raw) # Channel3
         print(zs[-1])
-        bs.append(adpd410x.channel[3].raw) #channel4
+        bs.append(adpd410x.channel[3].raw) # Channel4
         print(bs[-1])
-        cs.append(adpd410x.channel[4].raw) #channel5
+        cs.append(adpd410x.channel[4].raw) # Channel5
         print(cs[-1])
-        ds.append(adpd410x.channel[5].raw) #channel6
+        ds.append(adpd410x.channel[5].raw) # Channel6
         print(ds[-1])
-        es.append(adpd410x.channel[6].raw) #channel7
+        es.append(adpd410x.channel[6].raw) # Channel7
         print(es[-1])
-        fs.append(adpd410x.channel[7].raw) #channel8
+        fs.append(adpd410x.channel[7].raw) # Channel8
         print(fs[-1])
 
         # Limit channel lists to 200 items
@@ -119,7 +148,8 @@ if enable_plot:
 
         ax.clear()
         limits = []
-        #Plotting desired channels
+        
+        # Plotting desired channels
         for count in channelindex:
             if count==1:
                 ax.plot(xs, label="ADPD410X Channel 1", linewidth=2.0)
