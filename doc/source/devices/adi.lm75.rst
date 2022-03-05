@@ -1,4 +1,4 @@
-adxl355
+lm75
 ==================
 
 .. automodule:: adi.lm75
