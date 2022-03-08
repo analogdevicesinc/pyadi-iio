@@ -66,10 +66,7 @@ class rx(attribute):
     _rx_unbuffered_data = False
 
     def __init__(self, rx_buffer_size=1024):
-        if self._complex_data:
-            N = 2
-        else:
-            N = 1
+        N = 2 if self._complex_data else 1
         rx_enabled_channels = list(range(len(self._rx_channel_names) // N))
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
@@ -96,9 +93,8 @@ class rx(attribute):
         if self._complex_data:
             if max(value) > ((self._num_rx_channels) / 2 - 1):
                 raise Exception("RX mapping exceeds available channels")
-        else:
-            if max(value) > ((self._num_rx_channels) - 1):
-                raise Exception("RX mapping exceeds available channels")
+        elif max(value) > ((self._num_rx_channels) - 1):
+            raise Exception("RX mapping exceeds available channels")
         self.__rx_enabled_channels = value
 
     @property
@@ -135,10 +131,11 @@ class rx(attribute):
         self.__rxbuf = iio.Buffer(self._rxadc, self.__rx_buffer_size, False)
 
     def __rx_unbuffered_data(self):
-        x = []
         t = self._rx_data_si_type if self.rx_output_type == "SI" else self._rx_data_type
-        for _ in range(len(self.rx_enabled_channels)):
-            x.append(np.zeros(self.rx_buffer_size, dtype=t))
+        x = [
+            np.zeros(self.rx_buffer_size, dtype=t)
+            for _ in range(len(self.rx_enabled_channels))
+        ]
 
         # Get scalers first
         if self.rx_output_type == "SI":
@@ -185,7 +182,7 @@ class rx(attribute):
         stride = len(self.rx_enabled_channels) * 2
         for _ in range(stride // 2):
             sig.append(x[indx::stride] + 1j * x[indx + 1 :: stride])
-            indx = indx + 2
+            indx += 2
         # Don't return list if a single channel
         if indx == 2:
             return sig[0]
@@ -232,8 +229,7 @@ class rx(attribute):
         stride = len(self.rx_enabled_channels)
 
         if self.rx_output_type == "raw":
-            for c in range(stride):
-                sig.append(x[c::stride])
+            sig.extend(x[c::stride] for c in range(stride))
         elif self.rx_output_type == "SI":
             rx_scale = []
             rx_offset = []
@@ -255,9 +251,7 @@ class rx(attribute):
                 rx_scale.append(scale)
                 rx_offset.append(offset)
 
-            for c in range(stride):
-                raw = x[c::stride]
-                sig.append(raw * rx_scale[c] + rx_offset[c])
+            sig.extend(x[c::stride] * rx_scale[c] + rx_offset[c] for c in range(stride))
         else:
             raise Exception("rx_output_type undefined")
 
@@ -278,10 +272,9 @@ class rx(attribute):
         if self._rx_unbuffered_data:
             return self.__rx_unbuffered_data()
         else:
-            if self._complex_data:
-                return self.__rx_complex()
-            else:
-                return self.__rx_non_complex()
+            return (
+                self.__rx_complex() if self._complex_data else self.__rx_non_complex()
+            )
 
 
 class tx(dds, attribute):
@@ -294,10 +287,7 @@ class tx(dds, attribute):
     __txbuf = None
 
     def __init__(self, tx_cyclic_buffer=False):
-        if self._complex_data:
-            N = 2
-        else:
-            N = 1
+        N = 2 if self._complex_data else 1
         tx_enabled_channels = list(range(len(self._tx_channel_names) // N))
         self._num_tx_channels = len(self._tx_channel_names)
         self.tx_enabled_channels = tx_enabled_channels
@@ -343,9 +333,8 @@ class tx(dds, attribute):
         if self._complex_data:
             if max(value) > ((self._num_tx_channels) / 2 - 1):
                 raise Exception("TX mapping exceeds available channels")
-        else:
-            if max(value) > ((self._num_tx_channels) - 1):
-                raise Exception("TX mapping exceeds available channels")
+        elif max(value) > ((self._num_tx_channels) - 1):
+            raise Exception("TX mapping exceeds available channels")
         self.__tx_enabled_channels = value
 
     def tx_destroy_buffer(self):
@@ -353,16 +342,14 @@ class tx(dds, attribute):
         self.__txbuf = None
 
     def _tx_init_channels(self):
-        if self._complex_data:
-            for m in self.tx_enabled_channels:
+        for m in self.tx_enabled_channels:
+            if self._complex_data:
                 v = self._txdac.find_channel(self._tx_channel_names[m * 2], True)
                 v.enabled = True
                 v = self._txdac.find_channel(self._tx_channel_names[m * 2 + 1], True)
-                v.enabled = True
-        else:
-            for m in self.tx_enabled_channels:
+            else:
                 v = self._txdac.find_channel(self._tx_channel_names[m], True)
-                v.enabled = True
+            v.enabled = True
         self.__txbuf = iio.Buffer(
             self._txdac, self._tx_buffer_size, self.__tx_cyclic_buffer
         )
@@ -395,14 +382,14 @@ class tx(dds, attribute):
                 "To push more data the tx buffer must be destroyed first."
             )
 
+        indx = 0
+        if self._num_tx_channels_enabled == 1:
+            data_np = [data_np]
+
+        if len(data_np) != self._num_tx_channels_enabled:
+            raise Exception("Not enough data provided for channel mapping")
+
         if self._complex_data:
-            if self._num_tx_channels_enabled == 1:
-                data_np = [data_np]
-
-            if len(data_np) != self._num_tx_channels_enabled:
-                raise Exception("Not enough data provided for channel mapping")
-
-            indx = 0
             stride = self._num_tx_channels_enabled * 2
             data = np.empty(stride * len(data_np[0]), dtype=np.int16)
             for chan in data_np:
@@ -410,20 +397,13 @@ class tx(dds, attribute):
                 q = np.imag(chan)
                 data[indx::stride] = i.astype(int)
                 data[indx + 1 :: stride] = q.astype(int)
-                indx = indx + 2
+                indx += 2
         else:
-            if self._num_tx_channels_enabled == 1:
-                data_np = [data_np]
-
-            if len(data_np) != self._num_tx_channels_enabled:
-                raise Exception("Not enough data provided for channel mapping")
-
-            indx = 0
             stride = self._num_tx_channels_enabled
             data = np.empty(stride * len(data_np[0]), dtype=np.int16)
             for chan in data_np:
                 data[indx::stride] = chan.astype(int)
-                indx = indx + 1
+                indx += 1
 
         if not self.__txbuf:
             self.disable_dds()
@@ -527,16 +507,13 @@ class rx_def(rx, context_manager, metaclass=ABCMeta):
                 )
 
         # Set up channels
-        if self._rxadc:
-            if self._rx_channel_names is None:
-                self._rx_channel_names = []
-                for chan in self._rxadc.channels:
-                    if chan.scan_element:
-                        self._rx_channel_names.append(chan.name)
-                if not self._rx_channel_names:
-                    raise Exception(
-                        f"No scan elements found for device {self._rxadc.name}"
-                    )
+        if self._rxadc and self._rx_channel_names is None:
+            self._rx_channel_names = [
+                chan.name for chan in self._rxadc.channels if chan.scan_element
+            ]
+
+            if not self._rx_channel_names:
+                raise Exception(f"No scan elements found for device {self._rxadc.name}")
 
         rx.__init__(self)
 
