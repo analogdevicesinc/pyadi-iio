@@ -64,6 +64,7 @@ class rx(attribute):
     rx_output_type = "raw"
     __rxbuf = None
     _rx_unbuffered_data = False
+    _device_name = ""
 
     def __init__(self, rx_buffer_size=1024):
         N = 2 if self._complex_data else 1
@@ -285,6 +286,7 @@ class tx(dds, attribute):
     _tx_channel_names: List[str] = []
     _complex_data = False
     __txbuf = None
+    _device_name = ""
 
     def __init__(self, tx_cyclic_buffer=False):
         N = 2 if self._complex_data else 1
@@ -432,8 +434,8 @@ class rx_tx(rx, tx, phy):
         phy.__del__(self)
 
 
-class rx_def(rx, context_manager, metaclass=ABCMeta):
-    """Template metaclass for rx only device specific interfaces."""
+class shared_def(rx, context_manager, metaclass=ABCMeta):
+    """Shared components for rx and tx metaclasses."""
 
     @property
     @abstractmethod
@@ -451,21 +453,6 @@ class rx_def(rx, context_manager, metaclass=ABCMeta):
     def _control_device_name(self) -> None:
         """Name of driver used for primary attribute control.
         This is the default IIO device used to address properties
-        """
-        raise NotImplementedError  # pragma: no cover
-
-    """Names of data channels.
-    List of strings with names of channels.
-    If not defined all channels with scan elements will
-    be populated as available channels.
-    """
-    _rx_channel_names = None
-
-    @property
-    @abstractmethod
-    def _rx_data_device_name(self) -> None:
-        """Name of driver used for receiving data.
-        This is the IIO device used collect data from.
         """
         raise NotImplementedError  # pragma: no cover
 
@@ -499,6 +486,35 @@ class rx_def(rx, context_manager, metaclass=ABCMeta):
                 raise Exception(
                     f"No device found with name {self._control_device_name}"
                 )
+
+    def __post_init__(self):
+        pass
+
+
+class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
+    """Template metaclass for rx only device specific interfaces."""
+
+    """Names of rx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _rx_channel_names = None
+
+    @property
+    @abstractmethod
+    def _rx_data_device_name(self) -> None:
+        """Name of driver used for receiving data.
+        This is the IIO device used collect data from.
+        """
+        raise NotImplementedError  # pragma: no cover
+
+    __run_rx_post_init__ = True
+
+    def __init__(self, uri_ctx: Union[str, iio.Context] = None) -> None:
+
+        shared_def.__init__(self, uri_ctx)
+
         if self._rx_data_device_name:
             self._rxadc = self._ctx.find_device(self._rx_data_device_name)
             if not self._rxadc:
@@ -509,7 +525,7 @@ class rx_def(rx, context_manager, metaclass=ABCMeta):
         # Set up channels
         if self._rxadc and self._rx_channel_names is None:
             self._rx_channel_names = [
-                chan.name for chan in self._rxadc.channels if chan.scan_element
+                chan.id for chan in self._rxadc.channels if chan.scan_element
             ]
 
             if not self._rx_channel_names:
@@ -517,7 +533,65 @@ class rx_def(rx, context_manager, metaclass=ABCMeta):
 
         rx.__init__(self)
 
-        self.post_init()
+        if self.__run_rx_post_init__:
+            self.__post_init__()
 
-    def post_init(self):
-        pass
+
+class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
+    """Template metaclass for rx only device specific interfaces."""
+
+    """Names of tx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _tx_channel_names = None
+
+    @property
+    @abstractmethod
+    def _tx_data_device_name(self) -> None:
+        """Name of driver used for transmitting data.
+        This is the IIO device used collect data from.
+        """
+        raise NotImplementedError  # pragma: no cover
+
+    __run_tx_post_init__ = True
+
+    def __init__(self, uri_ctx: Union[str, iio.Context] = None) -> None:
+
+        shared_def.__init__(self, uri_ctx)
+
+        if self._tx_data_device_name:
+            self._txdac = self._ctx.find_device(self._tx_data_device_name)
+            if not self._txdac:
+                raise Exception(
+                    f"No device found with name {self._tx_data_device_name}"
+                )
+
+        # Set up channels
+        if self._txdac and self._tx_channel_names is None:
+            self._tx_channel_names = [
+                chan.id for chan in self._rxadc.channels if chan.scan_element
+            ]
+
+            if not self._tx_channel_names:
+                raise Exception(f"No scan elements found for device {self._rxadc.name}")
+
+        tx.__init__(self)
+
+        if self.__run_tx_post_init__:
+            self.__post_init__()
+
+
+class rx_tx_def(tx_def, rx_def):
+    """Template metaclass for rx and tx device specific interfaces."""
+
+    __run_rx_post_init__ = False
+    __run_tx_post_init__ = False
+
+    def __init__(self, uri_ctx: Union[str, iio.Context] = None) -> None:
+
+        rx_def.__init__(self, uri_ctx)
+        tx_def.__init__(self, uri_ctx)
+
+        self.__post_init__()
