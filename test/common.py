@@ -97,7 +97,7 @@ def pytest_generate_tests(metafunc):
 
 #################################################
 def dev_interface(uri, classname, val, attr, tol):
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Check hardware
     if not hasattr(sdr, attr):
         raise AttributeError(attr + " not defined in " + classname)

@@ -29,7 +29,7 @@ def dma_rx(uri, classname, channel, use_rx2=False):
             List of integers or list of list of integers of channels to
             enable through rx_enabled_channels
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     N = 2 ** 15
 
     if use_rx2:
@@ -67,7 +67,7 @@ def dma_tx(uri, classname, channel, use_tx2=False):
             List of integers or list of list of integers of channels to
             enable through tx_enabled_channels
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     TXFS = 1000
     N = 2 ** 15
     ts = 1 / float(TXFS)
@@ -115,7 +115,7 @@ def dma_dac_zeros(uri, classname, channel):
             List of integers or list of list of integers of channels to
             enable through tx_enabled_channels
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
         sdr.loopback_chip_b = 1
     else:
@@ -159,7 +159,7 @@ def dma_loopback(uri, classname, channel):
             List of integers or list of list of integers of channels to
             enable through tx_enabled_channels
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
         sdr.loopback_chip_b = 1
     else:
@@ -253,7 +253,7 @@ def dds_loopback(
 
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -358,7 +358,7 @@ def dds_two_tone(
 
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -450,7 +450,7 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
 
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -521,7 +521,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
             Boolean if set will use rx2() as rx method
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -638,7 +638,7 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
 
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -723,7 +723,7 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
 
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -786,7 +786,7 @@ def hardwaregain(
                 Maximum acceptable value of hardwaregain attribute
 
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     sdr.dds_single_tone(frequency, dds_scale, channel)
     time.sleep(3)
 
@@ -820,7 +820,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
             plot: type=boolean
                 Boolean, if set the values are also plotted
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
 
@@ -917,7 +917,7 @@ def cyclic_buffer(uri, classname, channel, param_set):
             generated
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -975,7 +975,7 @@ def cyclic_buffer_exception(uri, classname, channel, param_set):
             generated
     """
     # See if we can tone using DMAs
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
@@ -1036,7 +1036,7 @@ def stress_context_creation(uri, classname, channel, repeats):
     """
     for _ in range(repeats):
         # bi = BoardInterface(classname, devicename)
-        sdr = eval(classname + "(uri='" + uri + "')")
+        sdr = eval(classname + "('" + uri + "')")
         N = 2 ** 15
         sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
         sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
@@ -1070,7 +1070,7 @@ def stress_rx_buffer_length(uri, classname, channel, buffer_sizes):
         buffer_sizes: type=list
             List of buffer size to create and collect
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
     try:
         for size in buffer_sizes:
@@ -1105,7 +1105,7 @@ def stress_rx_buffer_creation(uri, classname, channel, repeats):
         repeats: type=integer
             Number of times to re-create contexts
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     N = 2 ** 15
     sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
     sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
@@ -1139,7 +1139,7 @@ def stress_tx_buffer_creation(uri, classname, channel, repeats):
         repeats: type=integer
             Number of times to re-create buffers
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     TXFS = 1000
     N = 2 ** 15
     ts = 1 / float(TXFS)
@@ -1181,7 +1181,7 @@ def verify_underflow(uri, classname, channel, buffer_size, sample_rate):
         sample_rate=int
             Value to set sample rate of device in samples per second
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     TXFS = 1000
     N = buffer_size
     ts = 1 / float(TXFS)
@@ -1246,7 +1246,7 @@ def verify_overflow(uri, classname, channel, buffer_size, sample_rate):
         sample_rate=int
             Value to set sample rate of device in samples per second
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
     sdr.rx_buffer_size = 2 ** 20
 

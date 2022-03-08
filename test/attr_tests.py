@@ -165,7 +165,7 @@ def attribute_write_only_str(uri, classname, attr, value):
             value: type=string
                 Value to write into attr property
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     try:
         setattr(sdr, attr, value)
         del sdr
@@ -191,7 +191,7 @@ def attribute_write_only_str_with_depends(uri, classname, attr, value, depends):
                 Dictionary of properties to write before value is written. Keys
                 are properties and values are values to be written
     """
-    sdr = eval(classname + "(uri='" + uri + "')")
+    sdr = eval(classname + "('" + uri + "')")
     for p in depends:
         setattr(sdr, p, depends[p])
     try:

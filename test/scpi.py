@@ -71,7 +71,7 @@ def get_freq(instr):
 
 
 def get_clk_rate(classname, iio_uri):
-    sdr = eval(classname + "(uri='" + iio_uri + "')")
+    sdr = eval(classname + "('" + iio_uri + "')")
     sdr._ctrl.debug_attrs["adi,clk-output-mode-select"].value = "1"
     sdr._ctrl.debug_attrs["initialize"].value = "1"
 
@@ -112,7 +112,7 @@ def dcxo_calibrate(classname, iio_uri):
         pytest.skip("No supported instrument found")
         return
     target_frq = get_clk_rate(classname, iio_uri)
-    sdr = eval(classname + "(uri='" + iio_uri + "')")
+    sdr = eval(classname + "('" + iio_uri + "')")
 
     sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
     sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
