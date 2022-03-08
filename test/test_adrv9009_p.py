@@ -419,22 +419,23 @@ def test_adrv9009_dds_loopback(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
-    "param_set, frequency, scale, peak_min",
+    "param_set, frequency, scale",
     [
-        (params["one_cw_tone_manual"], 2000000, 0.5, -53),
-        (params["one_cw_tone_manual"], 2000000, 0.12, -66),
-        (params["one_cw_tone_manual"], 2000000, 0.25, -60),
-        (params["one_cw_tone_slow_attack"], 1000000, 0.12, -55.5),
-        (params["one_cw_tone_slow_attack"], 2000000, 0.12, -55.5),
-        (params["one_cw_tone_slow_attack"], 500000, 0.12, -56),
-        (params["change_attenuation_5dB_manual"], 2000000, 0.25, -65),
-        (params["change_attenuation_10dB_manual"], 2000000, 0.25, -69),
-        (params["change_attenuation_0dB_slow_attack"], 1000000, 0.12, -46),
-        (params["change_attenuation_20dB_slow_attack"], 1000000, 0.12, -65),
-        (params["change_rf_gain_0dB_manual"], 2000000, 0.25, -70),
-        (params["change_rf_gain_20dB_manual"], 2000000, 0.25, -50),
+        (params["one_cw_tone_manual"], 2000000, 0.5),
+        (params["one_cw_tone_manual"], 2000000, 0.12),
+        (params["one_cw_tone_manual"], 2000000, 0.25),
+        (params["one_cw_tone_slow_attack"], 1000000, 0.12),
+        (params["one_cw_tone_slow_attack"], 2000000, 0.12),
+        (params["one_cw_tone_slow_attack"], 500000, 0.12),
+        (params["change_attenuation_5dB_manual"], 2000000, 0.25),
+        (params["change_attenuation_10dB_manual"], 2000000, 0.25),
+        (params["change_attenuation_0dB_slow_attack"], 1000000, 0.12),
+        (params["change_attenuation_20dB_slow_attack"], 1000000, 0.12),
+        (params["change_rf_gain_0dB_manual"], 2000000, 0.25),
+        (params["change_rf_gain_20dB_manual"], 2000000, 0.25),
     ],
 )
+@pytest.mark.parametrize("peak_min", [-50])
 def test_adrv9009_dds_loopback_with_10dB_splitter(
     test_dds_loopback,
     iio_uri,
@@ -577,7 +578,7 @@ def test_adrv9009_two_tone_loopback_with_10dB_splitter(
         params["change_trx_lo_5GHz_slow_attack"],
     ],
 )
-@pytest.mark.parametrize("sfdr_min", [45])
+@pytest.mark.parametrize("sfdr_min", [30])
 def test_adrv9009_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
@@ -675,19 +676,20 @@ def test_adrv9009_dds_gain_check_agc(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
-    "param_set, dds_scale, min_rssi, max_rssi",
+    "param_set, dds_scale, min_rssi",
     [
-        (params["one_cw_tone_slow_attack"], 0.12, 40, 45),
-        (params["change_attenuation_0dB_slow_attack"], 0.12, 30, 42),
-        (params["change_attenuation_20dB_slow_attack"], 0.12, 43.5, 45),
-        (params["change_trx_lo_1GHz_slow_attack"], 0, 43.5, 45.25),
-        (params["change_trx_lo_1GHz_slow_attack"], 0.9, 30, 40),
-        (params["change_trx_lo_3GHz_slow_attack"], 0, 43.75, 45),
-        (params["change_trx_lo_3GHz_slow_attack"], 0.9, 23, 33),
-        (params["change_trx_lo_5GHz_slow_attack"], 0, 43.75, 45),
-        (params["change_trx_lo_5GHz_slow_attack"], 0.9, 25, 33),
+        (params["one_cw_tone_slow_attack"], 0.12, 40),
+        (params["change_attenuation_0dB_slow_attack"], 0.12, 30),
+        (params["change_attenuation_20dB_slow_attack"], 0.12, 43.5),
+        (params["change_trx_lo_1GHz_slow_attack"], 0, 43.5),
+        (params["change_trx_lo_1GHz_slow_attack"], 0.9, 30),
+        (params["change_trx_lo_3GHz_slow_attack"], 0, 43.75),
+        (params["change_trx_lo_3GHz_slow_attack"], 0.9, 23),
+        (params["change_trx_lo_5GHz_slow_attack"], 0, 43.75),
+        (params["change_trx_lo_5GHz_slow_attack"], 0.9, 25),
     ],
 )
+@pytest.mark.parametrize("max_rssi", [50])
 def test_adrv9009_dds_gain_check_agc_with_10db_splitter(
     test_gain_check,
     iio_uri,
