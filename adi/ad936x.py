@@ -32,26 +32,19 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.context_manager import context_manager
-from adi.rx_tx import rx_tx
+from adi.rx_tx import rx_tx_def
 
 
-class ad9364(rx_tx, context_manager):
-    """ AD9364 Transceiver """
+class ad9364(rx_tx_def, context_manager):
+    """AD9364 Transceiver"""
 
     _complex_data = True
     _rx_channel_names = ["voltage0", "voltage1"]
     _tx_channel_names = ["voltage0", "voltage1"]
+    _control_device_name = "ad9361-phy"
+    _rx_data_device_name = "cf-ad9361-lpc"
+    _tx_data_device_name = "cf-ad9361-dds-core-lpc"
     _device_name = ""
-
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._ctrl = self._ctx.find_device("ad9361-phy")
-        self._rxadc = self._ctx.find_device("cf-ad9361-lpc")
-        self._txdac = self._ctx.find_device("cf-ad9361-dds-core-lpc")
-
-        rx_tx.__init__(self)
 
     @property
     def filter(self):
@@ -241,7 +234,7 @@ class ad9364(rx_tx, context_manager):
 
 
 class ad9361(ad9364):
-    """ AD9361 Transceiver """
+    """AD9361 Transceiver"""
 
     _rx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
     _tx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3"]
@@ -278,13 +271,13 @@ class ad9361(ad9364):
 
 
 class ad9363(ad9361):
-    """ AD9363 Transceiver """
+    """AD9363 Transceiver"""
 
     pass
 
 
 class Pluto(ad9364):
-    """ PlutoSDR Evaluation Platform """
+    """PlutoSDR Evaluation Platform"""
 
     _device_name = "PlutoSDR"
     _uri_auto = "ip:pluto.local"

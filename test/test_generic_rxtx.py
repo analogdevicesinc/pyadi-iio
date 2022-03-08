@@ -1,6 +1,6 @@
-import adi
 import iio
 
+import adi
 import pytest
 
 hardware = ["pluto", "adrv9361", "fmcomms2"]
