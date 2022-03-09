@@ -710,22 +710,23 @@ def test_ad9371_dds_gain_check_vary_power(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
-    "param_set, dds_scale, min_rssi, max_rssi",
+    "param_set, dds_scale",
     [
-        (params["one_cw_tone_manual"], 0.5, 30, 31),
-        (params["one_cw_tone_manual"], 0.12, 42.5, 43.5),
-        (params["one_cw_tone_manual"], 0.25, 35.5, 36.5),
-        (params["one_cw_tone_auto"], 0.12, 32.5, 33.5),
-        (params["change_attenuation_5dB_manual"], 0.25, 41, 42),
-        (params["change_attenuation_10dB_manual"], 0.25, 44, 45),
-        (params["change_attenuation_0dB_auto"], 0.12, 22.75, 23.75),
-        (params["change_attenuation_20dB_auto"], 0.12, 42, 43),
-        (params["change_rf_gain_0dB_manual"], 0.25, 45.5, 46.5),
-        (params["change_rf_gain_20dB_manual"], 0.25, 26, 27),
-        (params["change_temp_gain_up"], 0.25, 35.75, 36.75),
-        (params["change_temp_gain_down"], 0.25, 35.75, 36.75),
+        (params["one_cw_tone_manual"], 0.5),
+        (params["one_cw_tone_manual"], 0.12),
+        (params["one_cw_tone_manual"], 0.25),
+        (params["one_cw_tone_auto"], 0.12),
+        (params["change_attenuation_5dB_manual"], 0.25),
+        (params["change_attenuation_10dB_manual"], 0.25),
+        (params["change_attenuation_0dB_auto"], 0.12),
+        (params["change_attenuation_20dB_auto"], 0.12),
+        (params["change_rf_gain_0dB_manual"], 0.25),
+        (params["change_rf_gain_20dB_manual"], 0.25),
+        (params["change_temp_gain_up"], 0.25),
+        (params["change_temp_gain_down"], 0.25),
     ],
 )
+@pytest.mark.parametrize("min_rssi, max_rssi", [(10, 50)])
 def test_ad9371_dds_gain_check_vary_power_with_10dB_splitter(
     test_gain_check,
     iio_uri,
