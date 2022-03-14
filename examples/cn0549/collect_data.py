@@ -9,7 +9,7 @@ fan_mode = 1
 
 xl = adi.cn0532(uri)
 xl.rx_buffer_size = samples_per_capture
-xl.calibrate()  # Calibrating is not necessary everytime
+xl.calibrate()  # Calibrating is not necessary every time
 
 for i in range(captures):
     data = xl.rx()
