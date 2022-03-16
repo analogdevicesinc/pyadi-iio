@@ -79,6 +79,8 @@ from adi.ada4961 import ada4961
 
 from adi.cn0532 import cn0532
 
+from adi.cn0566 import CN0566
+
 from adi.daq2 import DAQ2
 
 from adi.daq3 import DAQ3
@@ -147,7 +149,7 @@ from adi.tdd import tdd
 
 from adi.lm75 import lm75
 
-from adi.ad4630 import ad4630
+from adi.ad7291 import ad7291
 
 try:
     from adi.jesd import jesd
