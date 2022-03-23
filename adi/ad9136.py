@@ -34,9 +34,10 @@
 from adi.context_manager import context_manager
 from adi.jesd import jesd
 from adi.rx_tx import tx
+from adi.sync_start import sync_start
 
 
-class ad9136(tx, context_manager):
+class ad9136(tx, context_manager, sync_start):
     """ AD9136 High-Speed DAC """
 
     _complex_data = False
