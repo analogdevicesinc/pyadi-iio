@@ -31,32 +31,31 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
 
 
-class ada4961(rx, context_manager):
+class ada4961(context_manager, attribute):
 
     """ Low Distortion, 3.2 GHz, RF DGA """
 
-    _complex_data = False
-    _rx_channel_names = ["voltage0"]
     _device_name = ""
 
     def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        self._rxadc = self._ctx.find_device("ada4961")
+        self._ctrl = self._ctx.find_device("ada4961")
 
-        rx.__init__(self)
+        if not self._ctrl:
+            raise Exception("ADF4159 device not found")
 
     @property
     def hardwaregain(self):
         """hardwaregain: Set hardware gain. Options are:
         up to 15 dB"""
-        return self._get_iio_attr("voltage0", "hardwaregain", False)
+        return self._get_iio_attr("voltage0", "hardwaregain", False, self._ctrl)
 
     @hardwaregain.setter
     def hardwaregain(self, value):
-        self._set_iio_attr("voltage0", "hardwaregain", False, value, self._rxadc)
+        self._set_iio_attr("voltage0", "hardwaregain", False, value, self._ctrl)
