@@ -35,9 +35,10 @@ from adi.context_manager import context_manager
 from adi.jesd import jesd
 from adi.obs import obs
 from adi.rx_tx import rx_tx
+from adi.sync_start import sync_start
 
 
-class ad9371(rx_tx, context_manager):
+class ad9371(rx_tx, context_manager, sync_start):
     """ AD9371 Transceiver """
 
     _complex_data = True
