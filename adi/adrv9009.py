@@ -35,9 +35,10 @@ from adi.context_manager import context_manager
 from adi.jesd import jesd as jesdadi
 from adi.obs import obs
 from adi.rx_tx import rx_tx
+from adi.sync_start import sync_start
 
 
-class adrv9009(rx_tx, context_manager):
+class adrv9009(rx_tx, context_manager, sync_start):
     """ADRV9009 Transceiver
 
     parameters:
