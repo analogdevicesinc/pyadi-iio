@@ -33,9 +33,10 @@
 
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
+from adi.sync_start import sync_start
 
 
-class ad9680(rx, context_manager):
+class ad9680(rx, context_manager, sync_start):
     """ AD9680 High-Speed ADC """
 
     _complex_data = False

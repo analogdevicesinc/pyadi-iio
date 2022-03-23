@@ -36,9 +36,10 @@ from typing import List
 from adi.ad9081 import _sortconv
 from adi.context_manager import context_manager
 from adi.rx_tx import tx
+from adi.sync_start import sync_start
 
 
-class ad9172(tx, context_manager):
+class ad9172(tx, context_manager, sync_start):
     """AD9172 High-Speed DAC"""
 
     _complex_data = True

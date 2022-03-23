@@ -34,9 +34,10 @@
 import numpy as np
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
+from adi.sync_start import sync_start
 
 
-class ad9094(rx, context_manager):
+class ad9094(sync_start, rx, context_manager):
     """ AD9094 Quad ADC """
 
     _rx_data_type = np.int8
