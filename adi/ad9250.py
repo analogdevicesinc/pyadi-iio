@@ -34,9 +34,10 @@
 from adi.context_manager import context_manager
 from adi.jesd import jesd
 from adi.rx_tx import rx
+from adi.sync_start import sync_start
 
 
-class ad9250(rx, context_manager):
+class ad9250(rx, context_manager, sync_start):
 
     """ AD9250 High-Speed ADC """
 

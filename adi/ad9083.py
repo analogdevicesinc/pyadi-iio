@@ -35,9 +35,10 @@ from typing import Dict, List
 
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
+from adi.sync_start import sync_start
 
 
-class ad9083(rx, context_manager):
+class ad9083(sync_start, rx, context_manager):
     """AD9083 High-Speed Multi-channel ADC"""
 
     _complex_data = False
