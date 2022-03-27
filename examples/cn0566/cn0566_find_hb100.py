@@ -34,45 +34,20 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-# Basic utility script for working with the CN0566 "Phaser" board. Accepts the following
-# command line arguments:
+# Utility script to find the frequency of an HB100 microwave source.
+# Also serves as basic example for setting / stepping the frequency of
+# the phaser's PLL, capturing data, calculating FFTs, and stitching together
+# FFTs that span several bands.
 
-# plot - plot beam pattern, rectangular element weighting. If cal files are present,
-#        they will be loaded.
-
-# cal - perform both gain and phase calibration, save to files.
 
 import os
 import sys
 import time
+from test.rf.spec import measure_peaks, spec_est
 
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
-
-colors = ["black", "gray", "red", "orange", "yellow", "green", "blue", "purple"]
-
-
-def do_cal_gain():
-    my_cn0566.set_beam_phase_diff(0.0)
-    plot_data = my_cn0566.gain_calibration(verbose=True)  # Start Gain Calibration
-    plt.figure(4)
-    plt.title("Gain calibration FFTs")
-    for i in range(0, 8):
-        plt.plot(plot_data[i], color=colors[i])
-    plt.show()
-
-
-def do_cal_phase():
-    PhaseValues, plot_data = my_cn0566.phase_calibration(
-        verbose=True
-    )  # Start Phase Calibration
-    plt.figure(5)
-    plt.title("Phase sweeps")
-    for i in range(0, 7):
-        plt.plot(PhaseValues, plot_data[i], color=colors[i])
-    plt.show()
-
 
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
@@ -121,15 +96,8 @@ my_sdr._ctrl.debug_attrs[
 ].value = "0"  # Disable pin control so spi can move the states
 my_sdr._ctrl.debug_attrs["initialize"].value = "1"
 
-
 my_sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
-my_sdr.gain_control_mode_chan1 = (
-    "manual"  # We must be in manual gain control mode (otherwise we won't see
-)
-my_sdr.rx_hardwaregain_chan1 = 20
-my_sdr._rxadc.set_kernel_buffers_count(
-    1
-)  # Super important - don't want to have to flush stale buffers
+my_sdr._rxadc.set_kernel_buffers_count(1)  # No stale buffers to flush
 rx = my_sdr._ctrl.find_channel("voltage0")
 rx.attrs[
     "quadrature_tracking_en"
@@ -138,13 +106,12 @@ my_sdr.sample_rate = int(30000000)  # Sampling rate
 my_sdr.rx_buffer_size = int(4 * 256)
 my_sdr.rx_rf_bandwidth = int(10e6)
 # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
-my_sdr.gain_control_mode_chan0 = "manual"
+my_sdr.gain_control_mode_chan0 = "manual"  # DISable AGC
 my_sdr.gain_control_mode_chan1 = "manual"
 my_sdr.rx_hardwaregain_chan0 = 20
 my_sdr.rx_hardwaregain_chan1 = 20
 
-my_sdr.rx_lo = int(2.2e9)  # 4495000000  # Recieve Freq
-my_sdr.tx_lo = int(2.2e9)
+my_sdr.rx_lo = int(2.0e9)  # Downconvert by 2GHz  # Recieve Freq
 
 my_sdr.filter = "LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
 rx_buffer_size = int(4 * 256)
@@ -153,18 +120,9 @@ my_sdr.rx_buffer_size = rx_buffer_size
 my_sdr.tx_cyclic_buffer = True
 my_sdr.tx_buffer_size = int(2 ** 16)
 
-use_tx = False
-
-if use_tx is True:
-    tx_level = -6
-else:
-    tx_level = -88
-
-my_sdr.tx_hardwaregain_chan0 = int(
-    tx_level
-)  # this is a negative number between 0 and -88
+my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
 my_sdr.tx_hardwaregain_chan1 = int(
-    tx_level
+    -88
 )  # Make sure the Tx channels are attenuated (or off) and their freq is far away from Rx
 
 # my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
@@ -186,8 +144,7 @@ my_cn0566.configure(
 # HB100 measured frequency - 10492000000
 
 # my_cn0566.SignalFreq = 10600000000 # Make this automatic in the future.
-my_cn0566.SignalFreq = 10.492e9
-my_cn0566.SignalFreq = 10.496e9
+my_cn0566.SignalFreq = 10.497e9
 
 # my_cn0566.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
 
@@ -201,127 +158,52 @@ my_cn0566.freq_dev_time = 0
 my_cn0566.powerdown = 0
 my_cn0566.ramp_mode = "disabled"
 
-#  If you want to use previously calibrated values load_gain and load_phase values by passing path of previously
-#     stored values. If this is not done system will be working as uncalibrated system.
-#     These will fail gracefully and default to no calibration if files not present.
-
-my_cn0566.load_gain_cal("gain_cal_val.pkl")
-my_cn0566.load_phase_cal("phase_cal_val.pkl")
-
-# This can be useful in Array size vs beam width experiment or beamtappering experiment.
-#     Set the gain of outer channels to 0 and beam width will increase and so on.
-
-# my_beamformer.set_chan_gain(3, 120)  # set gain of Individual channel
-# my_beamformer.set_all_gain(120)  # Set all gain to mentioned value, if not, set to 127 i.e. max gain
-
-# To set gain of all channels with different values.
-#     Here's where you would apply a window / taper function,
-#     but we're starting with rectangular / SINC1.
+# Set all elements to maximum gain
 
 gain_list = [127, 127, 127, 127, 127, 127, 127, 127]
 for i in range(0, len(gain_list)):
-    my_cn0566.set_chan_gain(i, gain_list[i], apply_cal=True)
+    my_cn0566.set_chan_gain(i, gain_list[i], apply_cal=False)
 
 # Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
 my_cn0566.Averages = 8
 
-# This instantiate calibration routine and perform gain and phase calibration. Note gain calibration should be always
-#    done 1st as phase calibration depends on gain cal values if not it throws error"""
 
-# print("Calibrating Gain...")
-# my_cn0566.gain_calibration()   # Start Gain Calibration
-# print("Calibrating Phase...")
-# my_cn0566.phase_calibration()  # Start Phase Calibration
-# print("Done calibration")
+full_ampl = np.empty(0)
+full_freqs = np.empty(0)
 
-# This can be used to change the angle of center lobe i.e if we want to concentrate main lobe/beam at 45 degress"""
-# my_beamformer.set_beam_angle(45)
+# Set up range of frequencies to sweep. Sample rate is set to 30Msps,
+# for a total of 30MHz of bandwidth (quadrature sampling)
+# Filter is 20MHz LTE, so you get a bit less than 20MHz of usable
+# bandwidth. Set step size to something less than 20MHz to ensure
+# complete coverage.
+f_start = 10.4e9
+f_stop = 10.6e9
+f_step = 10e6
 
+for freq in range(int(f_start), int(f_stop), int(f_step)):
+    print("frequency: ", freq)
+    my_cn0566.SignalFreq = freq
+    my_cn0566.frequency = (
+        int(my_cn0566.SignalFreq) + my_sdr.rx_lo
+    ) // 4  # PLL feedback via /4 VCO output
 
-# Really basic options - "plot" to plot continuously, "cal" to calibrate both gain and phase.
-func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
+    data = my_sdr.rx()
+    data_sum = data[0] + data[1]
+    ampl, freqs = spec_est(data_sum, 30000000, ref=2 ^ 12, plot=False)
+    ampl = np.fft.fftshift(ampl)
+    ampl = np.flip(ampl)  # Just an experiment...
+    freqs = np.fft.fftshift(freqs)
+    freqs += freq
+    full_freqs = np.concatenate((full_freqs, freqs))
+    full_ampl = np.concatenate((full_ampl, ampl))
+    # break
+full_freqs /= 1e9
 
-# func = None
-if func == "cal":
-    input(
-        "Calibrating gain and phase - place antenna at mechanical boresight in front\
-          of the aryay, then press enter..."
-    )
-    print("Calibrating Gain, verbosely, then saving cal file...")
-    my_cn0566.gain_calibration(verbose=True)  # Start Gain Calibration
-    my_cn0566.save_gain_cal()  # Default filename
-    print("Calibrating Phase, verbosely, then saving cal file...")
-    my_cn0566.phase_calibration(verbose=True)  # Start Phase Calibration
-    my_cn0566.save_phase_cal()  # Default filename
-    print("Done calibration")
+peak_index = np.argmax(full_ampl)
+print("Peak frequency found at ", full_freqs[peak_index], " GHz.")
 
-if func == "plot":
-    do_plot = True
-else:
-    do_plot = False
-
-while do_plot == True:
-    try:
-        start = time.time()
-        my_cn0566.set_beam_phase_diff(0.0)
-        time.sleep(0.25)
-        data = my_sdr.rx()
-        data = my_sdr.rx()
-        ch0 = data[0]
-        ch1 = data[1]
-        f, Pxx_den0 = signal.periodogram(
-            ch0[1:-1], 30000000, "blackman", scaling="spectrum"
-        )
-        f, Pxx_den1 = signal.periodogram(
-            ch1[1:-1], 30000000, "blackman", scaling="spectrum"
-        )
-
-        plt.figure(1)
-        plt.clf()
-        plt.plot(np.real(ch0), color="red")
-        plt.plot(np.imag(ch0), color="blue")
-        plt.plot(np.real(ch1), color="green")
-        plt.plot(np.imag(ch1), color="black")
-        np.real
-        plt.xlabel("data point")
-        plt.ylabel("output code")
-        plt.draw()
-
-        plt.figure(2)
-        plt.clf()
-        plt.semilogy(f, Pxx_den0)
-        plt.semilogy(f, Pxx_den1)
-        plt.ylim([1e-5, 1e6])
-        plt.xlabel("frequency [Hz]")
-        plt.ylabel("PSD [V**2/Hz]")
-        plt.draw()
-
-        # Plot the output based on experiment that you are performing
-        print("Plotting...")
-
-        plt.figure(3)
-        plt.ion()
-        #    plt.show()
-        (
-            gain,
-            angle,
-            delta,
-            diff_error,
-            beam_phase,
-            xf,
-            max_gain,
-            PhaseValues,
-        ) = my_cn0566.calculate_plot()
-        print("Sweeping took this many seconds: " + str(time.time() - start))
-        #    gain,  = my_cn0566.plot(plot_type="monopulse")
-        plt.clf()
-        plt.scatter(angle, gain, s=10)
-        plt.scatter(angle, delta, s=10)
-        plt.show()
-
-        plt.pause(0.05)
-        time.sleep(0.05)
-        print("Total took this many seconds: " + str(time.time() - start))
-    except KeyboardInterrupt:
-        do_plot = False
-        print("Exiting Loop")
+plt.figure(2)
+plt.title("Full Spectrum, peak at " + str(full_freqs[peak_index]) + " GHz.")
+plt.plot(full_freqs, full_ampl, linestyle="", marker="o", ms=2)
+plt.xlabel("Frequency [GHz]")
+plt.ylabel("Amplitude (dBfs)")

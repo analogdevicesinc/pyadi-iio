@@ -55,15 +55,17 @@ from scipy import signal
 from SDR_functions import *  # import the SDR functions (These all start with SDR_xxxx)
 
 try:
-    import config as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
+    import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
 
+    print("Found custom config file")
     # MWT: Cleaned up a bit,
-
 except:
-    print(
-        "Make sure that the file config.py is in the same directory as this python file."
-    )
-    sys.exit(0)
+    print("Didn't find custom config, looking for default.")
+    try:
+        import config as config
+    except:
+        print("Make sure config.py is in this directory")
+        sys.exit(0)
 
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi

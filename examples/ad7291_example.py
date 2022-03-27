@@ -32,6 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import sys
+
 import adi
 
 # Optionally passs URI as command line argument,
@@ -44,9 +45,13 @@ print("uri: " + str(my_uri))
 # Set up AD7291
 my_monitor = adi.ad7291(uri=my_uri)
 
-for i in range (0, len(my_monitor.channel)):
-    print("Channel : ", my_monitor.channel[i].name, ": ",
-          my_monitor.channel[i].raw * my_monitor.channel[i].scale / 1000.0,
-          ("Deg. C" if my_monitor.channel[i].name == "temp0" else "Volts"))
-    
+for i in range(0, len(my_monitor.channel)):
+    print(
+        "Channel : ",
+        my_monitor.channel[i].name,
+        ": ",
+        my_monitor.channel[i].raw * my_monitor.channel[i].scale / 1000.0,
+        ("Deg. C" if my_monitor.channel[i].name == "temp0" else "Volts"),
+    )
+
 del my_monitor

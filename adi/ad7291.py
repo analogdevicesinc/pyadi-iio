@@ -37,13 +37,13 @@ import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
+
 class ad7291(context_manager):
     """ AD7291 ADC """
 
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
-
 
     def __init__(self, uri="", device_index=0):
 
