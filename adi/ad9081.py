@@ -309,6 +309,61 @@ class ad9081(rx_tx, context_manager, sync_start):
         )
 
     @property
+    def rx_main_nco_ffh_index(self):
+        """rx_main_nco_ffh_index: Receive path coarse DDC NCO index in range [0,15]"""
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_nco_ffh_index", False
+        )
+
+    @rx_main_nco_ffh_index.setter
+    def rx_main_nco_ffh_index(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_coarse_ddc_channel_names, "main_nco_ffh_index", False, value,
+        )
+
+    @property
+    def rx_main_nco_ffh_select(self):
+        """rx_main_nco_ffh_select: Receive path coarse DDC NCO select in range [0,15]"""
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_nco_ffh_select", False
+        )
+
+    @rx_main_nco_ffh_select.setter
+    def rx_main_nco_ffh_select(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_coarse_ddc_channel_names, "main_nco_ffh_select", False, value,
+        )
+
+    @property
+    def rx_main_ffh_mode(self):
+        """rx_main_ffh_mode: ADC FFH mode. Options are:
+        instantaneous_update, synchronous_update_by_transfer_bit,
+        synchronous_update_by_gpio
+        """
+        return self._get_iio_attr_str_vec(
+            self._rx_coarse_ddc_channel_names, "main_ffh_mode", False
+        )
+
+    @rx_main_ffh_mode.setter
+    def rx_main_ffh_mode(self, value):
+        self._set_iio_attr_str_vec(
+            self._rx_coarse_ddc_channel_names, "main_ffh_mode", False, value,
+        )
+
+    @property
+    def rx_main_ffh_trig_hop_en(self):
+        """rx_main_ffh_trig_hop_en: Enable triggered hopping for CDDC NCO"""
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_ffh_trig_hop_en", False
+        )
+
+    @rx_main_ffh_trig_hop_en.setter
+    def rx_main_ffh_trig_hop_en(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_coarse_ddc_channel_names, "main_ffh_trig_hop_en", False, value,
+        )
+
+    @property
     def tx_channel_nco_frequencies(self):
         """tx_channel_nco_frequencies: Transmit path fine DUC NCO frequencies"""
         return self._get_iio_attr_vec(
@@ -433,27 +488,40 @@ class ad9081(rx_tx, context_manager, sync_start):
         """tx_main_ffh_frequency: Transmitter fast frequency hop frequency. This will set
         The NCO frequency of the NCO selected from the bank defined by tx_main_ffh_index
         """
-        return self._get_iio_attr_single("voltage0_i", "main_ffh_frequency", True)
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_ffh_frequency", True
+        )
 
     @tx_main_ffh_frequency.setter
     def tx_main_ffh_frequency(self, value):
-        if self.tx_main_ffh_index == 0:
-            raise Exception(
-                "To set a FFH NCO bank frequency, tx_main_ffh_index must > 0"
-            )
-        self._set_iio_attr_single(
-            "voltage0_i", "main_ffh_frequency", True, value,
+        self._set_iio_attr_int_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_ffh_frequency", True, value,
         )
 
     @property
     def tx_main_ffh_index(self):
-        """tx_main_ffh_index: Transmitter fast frequency hop NCO bank index"""
-        return self._get_iio_attr_single("voltage0_i", "main_ffh_index", True)
+        """tx_main_ffh_index: Transmitter fast frequency hop NCO bank index  in range [0,30]"""
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_ffh_index", True
+        )
 
     @tx_main_ffh_index.setter
     def tx_main_ffh_index(self, value):
-        self._set_iio_attr_single(
-            "voltage0_i", "main_ffh_index", True, value,
+        self._set_iio_attr_int_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_ffh_index", True, value,
+        )
+
+    @property
+    def tx_main_nco_ffh_select(self):
+        """tx_main_nco_ffh_select: Transmit path coarse DDC NCO select in range [0,30]"""
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_ffh_select", True
+        )
+
+    @tx_main_nco_ffh_select.setter
+    def tx_main_nco_ffh_select(self, value):
+        self._set_iio_attr_int_vec(
+            self._tx_coarse_duc_channel_names, "main_nco_ffh_select", True, value,
         )
 
     @property
@@ -461,12 +529,25 @@ class ad9081(rx_tx, context_manager, sync_start):
         """tx_main_ffh_mode: Set hop transition mode of NCOs Options are:
         phase_continuous, phase_incontinuous, and phase_coherent
         """
-        return self._get_iio_attr_str_single("voltage0_i", "main_ffh_mode", True)
+        return self._get_iio_attr_vec(
+            self._tx_coarse_duc_channel_names, "main_ffh_mode", True
+        )
 
     @tx_main_ffh_mode.setter
     def tx_main_ffh_mode(self, value):
+        self._set_iio_attr_str_vec(
+            self._tx_coarse_duc_channel_names, "main_ffh_mode", True, value,
+        )
+
+    @property
+    def tx_main_ffh_gpio_mode_enable(self):
+        """tx_main_ffh_gpio_mode_enable: Enablles GPIO controlled frequency hopping"""
+        return self._get_iio_attr_single("voltage0_i", "main_ffh_gpio_mode_en", True)
+
+    @tx_main_ffh_gpio_mode_enable.setter
+    def tx_main_ffh_gpio_mode_enable(self, value):
         self._set_iio_attr_single(
-            "voltage0_i", "main_ffh_mode", True, value,
+            "voltage0_i", "main_ffh_gpio_mode_en", True, value,
         )
 
     @property
