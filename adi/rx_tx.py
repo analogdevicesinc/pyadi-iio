@@ -366,6 +366,8 @@ class tx(dds, rx_tx_common):
     _tx_channel_names: List[str] = []
     _complex_data = False
     __txbuf = None
+    _output_byte_filename = "out.bin"
+    _push_to_file = False
 
     def __init__(self, tx_cyclic_buffer=False):
         if self._complex_data:
@@ -548,8 +550,13 @@ class tx(dds, rx_tx_common):
             )
 
         # Send data to buffer
-        self.__txbuf.write(bytearray(data))
-        self.__txbuf.push()
+        if self._push_to_file:
+            f = open(self._output_byte_filename, "ab")
+            f.write(bytearray(data))
+            f.close()
+        else:
+            self.__txbuf.write(bytearray(data))
+            self.__txbuf.push()
 
 
 class rx_tx(rx, tx, phy):
