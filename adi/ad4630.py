@@ -51,7 +51,6 @@ def _bitmask(nbits):
 
 
 class ad4630(rx, context_manager, attribute):
-
     """ AD4630 is low power 24-bit precision SAR ADC """
 
     _complex_data = False
@@ -66,12 +65,12 @@ class ad4630(rx, context_manager, attribute):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad4630-24", "ad4030-24", "ad4630-16"]
+        compatible_parts = ["ad4630-16", "ad4630-24", "ad4030-24"]
 
         if device_name not in compatible_parts:
             raise Exception(
                 "Not a compatible device: "
-                + str(device_name)
+                + device_name
                 + ". Please select from "
                 + str(compatible_parts)
             )
@@ -80,16 +79,26 @@ class ad4630(rx, context_manager, attribute):
             self._rxadc = self._ctx.find_device(device_name)
 
         _channels = []
-        self.output_bits = []
+        self.output_bits = [ch.data_format.bits for ch in self._ctrl.channels]
+        self._has_common = False
+        self._is_dual = None
         for ch in self._ctrl.channels:
-            self.output_bits.append(ch.data_format.bits)
             self._rx_channel_names.append(ch.id)
+            if "common" in ch.name:
+                self._has_common = True
             if "differential" in ch.name:
                 _channels.append((ch.id, self._diff_channel(self._ctrl, ch.id)))
                 if "0" in ch.name:
                     self.chan0 = self._diff_channel(self._ctrl, ch.name)
                 if "1" in ch.name:
                     self.chan1 = self._diff_channel(self._ctrl, ch.name)
+
+        if (len(self._ctrl.channels) == 4) or (
+            len(self._ctrl.channels) == 2 and not self._has_common
+        ):
+            self._is_dual = True
+        else:
+            self._is_dual = False
 
         rx.__init__(self)
 
@@ -99,10 +108,10 @@ class ad4630(rx, context_manager, attribute):
             self._rx_init_channels()
         self._rx__rxbuf.refill()
         buff = np.frombuffer(self._rx__rxbuf.read(), dtype=np.uint32)
-
         data = [buff[0::2], buff[1::2]]
         temp = []
-        if self._num_rx_channels != 2:
+
+        if self._has_common:
             for ch in range(0, self._num_rx_channels):
                 nbits = self._ctrl.channels[ch].data_format.bits
                 shift = self._ctrl.channels[ch].data_format.shift
@@ -114,27 +123,38 @@ class ad4630(rx, context_manager, attribute):
                 temp.append(np.vectorize(_sign_extend)(ch_data, nbits))
             data = temp
         else:
+            if not self._is_dual:
+                data = [data[0]]
             for idx, ch_data in enumerate(data):
                 nbits = self._ctrl.channels[idx].data_format.bits
-                temp.append(np.vectorize(_sign_extend)(ch_data, nbits))
-            data = np.vectorize(_sign_extend)(data, nbits)
+                shift = self._ctrl.channels[idx].data_format.shift
+                if nbits == 32:
+                    nbits += 1
+                data[idx] = [((x >> shift) & _bitmask(nbits)) for x in data[idx]]
+                temp.append(np.vectorize(_sign_extend)(data[idx], nbits))
+            data = temp
 
         return data
 
+    @property
     def output_data_mode(self):
         """Determine the output data mode in which device is configured."""
         if self.output_bits[0] == 30:
             return "30bit_avg"
         if self.output_bits[0] == 32:
             return "32bit_test_pattern"
-        if self.output_bits[0] == 16:
-            return "16bit_diff_8bit_cm"
-        if len(self.output_bits) == 1 and self.output_bits[0] == 24:
-            return "24bit_diff"
-        if len(self.output_bits) == 2 and self.output_bits[0] == self.output_bits[1]:
-            return "24bit_diff"
-        else:
-            return "24bit_diff_8bit_cm"
+
+        if self._has_common:
+            if self.output_bits[0] == 16:
+                return "16bit_diff_8bit_cm"
+            if self.output_bits[0] == 24:
+                return "24bit_diff_8bit_cm"
+
+        if not self._has_common:
+            if self.output_bits[0] == 16:
+                return "16bit_dif"
+            if self.output_bits[0] == 24:
+                return "24bit_diff"
 
     @property
     def sample_rate(self):
@@ -144,18 +164,7 @@ class ad4630(rx, context_manager, attribute):
     @sample_rate.setter
     def sample_rate(self, rate):
         """Get/Set the sampling frequency."""
-        if str(rate) in str(self.sample_rate_avail):
-            self._set_iio_dev_attr("sampling_frequency", str(rate))
-        else:
-            raise ValueError(
-                "Error: Sample rate not supported \nUse one of: "
-                + str(self.sample_rate_avail)
-            )
-
-    @property
-    def sample_rate_avail(self):
-        """Get list of all the sampling frequency available."""
-        return self._get_iio_dev_attr("sampling_frequency_available")
+        self._set_iio_dev_attr("sampling_frequency", str(rate))
 
     @property
     def operating_mode_avail(self):
@@ -203,7 +212,7 @@ class ad4630(rx, context_manager, attribute):
             raise Exception("Sample Averaging only available in 30bit averaged mode.")
 
     class _diff_channel(attribute):
-        """AD4x30 differential channel."""
+        """AD463x differential channel."""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
