@@ -93,10 +93,7 @@ class ad4630(rx, context_manager, attribute):
                 if "1" in ch.name:
                     self.chan1 = self._diff_channel(self._ctrl, ch.name)
 
-        if (len(self._ctrl.channels) == 4) or (len(self._ctrl.channels) == 2 and not self._has_common):
-            self._is_dual = True
-        else:
-            self._is_dual = False
+        self._is_dual = (len(self._ctrl.channels) == 4) or (len(self._ctrl.channels) == 2 and not self._has_common)
 
         rx.__init__(self)
 
