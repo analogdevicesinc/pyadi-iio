@@ -2,13 +2,6 @@
 # This is for use with Pluto (and either 1 or 2 ADAR1000 boards)
 
 
-class config_variables:
-    def __init__(self):
-        x = 0
-
-
-config = config_variables()
-
 sdr_address = "ip:192.168.2.1"  # This is the default Pluto address (You can check/change this in the config.txt file on the Pluto "usb drive")
 SignalFreq = 10.134e9
 Rx_freq = int(2.2e9)
@@ -52,3 +45,5 @@ refresh_time = 100  # refresh time in ms.  Auto beam sweep will update at this r
 num_ADARs = 2  # Number of ADAR1000's connected -- this can be either 1 or 2. no other values are allowed
 num_Rx = 2  # Number of Rx channels (i.e. Pluto this must be 1, but AD9361 SOM this could be 1 or 2)
 d = 0.015  # element to element spacing of the antenna
+
+use_tx = True  # Enable TX path if True (if false, HB100 source)

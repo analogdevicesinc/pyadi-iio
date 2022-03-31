@@ -67,6 +67,13 @@ except:
         print("Make sure config.py is in this directory")
         sys.exit(0)
 
+try:
+    config.SignalFreq = load_hb100_cal()
+    print("Found signal freq file, ", config.SignalFreq)
+except:
+    print("No signal freq found, keeping at ", config.SignalFreq)
+
+
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
     #     rpi_ip = "ip:169.254.225.48" # Hard code an IP here for debug

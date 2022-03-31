@@ -41,13 +41,14 @@
 
 
 import os
+import pickle
 import sys
 import time
-from test.rf.spec import measure_peaks, spec_est
 
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+from SDR_functions import *
 
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
@@ -176,8 +177,8 @@ full_freqs = np.empty(0)
 # Filter is 20MHz LTE, so you get a bit less than 20MHz of usable
 # bandwidth. Set step size to something less than 20MHz to ensure
 # complete coverage.
-f_start = 10.4e9
-f_stop = 10.6e9
+f_start = 10.3e9
+f_stop = 10.7e9
 f_step = 10e6
 
 for freq in range(int(f_start), int(f_stop), int(f_step)):
@@ -200,6 +201,7 @@ for freq in range(int(f_start), int(f_stop), int(f_step)):
 full_freqs /= 1e9
 
 peak_index = np.argmax(full_ampl)
+peak_freq = full_freqs[peak_index]
 print("Peak frequency found at ", full_freqs[peak_index], " GHz.")
 
 plt.figure(2)
@@ -207,3 +209,12 @@ plt.title("Full Spectrum, peak at " + str(full_freqs[peak_index]) + " GHz.")
 plt.plot(full_freqs, full_ampl, linestyle="", marker="o", ms=2)
 plt.xlabel("Frequency [GHz]")
 plt.ylabel("Amplitude (dBfs)")
+plt.show()
+print("You may need to close plot to continue...")
+
+prompt = input("Save cal file? (y or n)")
+if prompt.upper() == "Y":
+    save_hb100_cal(peak_freq * 1e9)
+
+del my_sdr
+del my_cn0566

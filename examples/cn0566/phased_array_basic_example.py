@@ -49,6 +49,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+from SDR_functions import *
 
 colors = ["black", "gray", "red", "orange", "yellow", "green", "blue", "purple"]
 
@@ -72,6 +73,19 @@ def do_cal_phase():
     for i in range(0, 7):
         plt.plot(PhaseValues, plot_data[i], color=colors[i])
     plt.show()
+
+
+try:
+    import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
+
+    print("Found custom config file")
+except:
+    print("Didn't find custom config, looking for default.")
+    try:
+        import config as config
+    except:
+        print("Make sure config.py is in this directory")
+        sys.exit(0)
 
 
 if os.name == "nt":  # Assume running on Windows
@@ -106,6 +120,17 @@ except NameError:
 
     my_cn0566 = CN0566(uri=rpi_ip, rx_dev=my_sdr)
 
+# Set up receive frequency. When using HB100, you need to know its frequency
+# fairly accurately. Use the cn0566_find_hb100.py script to measure its frequency
+# and write out to the cal file. IF using the onboard TX generator, delete
+# the cal file and set frequency via config.py or config_custom.py.
+
+try:
+    my_cn0566.SignalFreq = load_hb100_cal()
+    print("Found signal freq file, ", my_cn0566.SignalFreq)
+except:
+    my_cn0566.SignalFreq = config.SignalFreq
+    print("No signal freq found, keeping at ", my_cn0566.SignalFreq)
 
 #  Configure SDR parameters.
 #     Current freq plan is Sig Freq = 10.492 GHz, antenna element spacing = 0.015m, Freq of pll is 12/2 GHz
@@ -153,9 +178,8 @@ my_sdr.rx_buffer_size = rx_buffer_size
 my_sdr.tx_cyclic_buffer = True
 my_sdr.tx_buffer_size = int(2 ** 16)
 
-use_tx = False
 
-if use_tx is True:
+if config.use_tx is True:
     tx_level = -6
 else:
     tx_level = -88
@@ -183,11 +207,6 @@ my_cn0566.configure(
     device_mode="rx"
 )  # Configure adar in mentioned mode and also sets gain of all channel to 127
 
-# HB100 measured frequency - 10492000000
-
-# my_cn0566.SignalFreq = 10600000000 # Make this automatic in the future.
-my_cn0566.SignalFreq = 10.492e9
-my_cn0566.SignalFreq = 10.496e9
 
 # my_cn0566.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
 
