@@ -54,6 +54,12 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+from cn0566_functions import (
+    calculate_plot,
+    gain_calibration,
+    load_hb100_cal,
+    phase_calibration,
+)
 from scipy import signal
 
 failures = []
@@ -217,10 +223,10 @@ input(
       of the array, then press enter..."
 )
 print("Calibrating Gain, verbosely, then saving cal file...")
-my_cn0566.gain_calibration(verbose=True)  # Start Gain Calibration
+gain_calibration(my_cn0566, verbose=True)  # Start Gain Calibration
 my_cn0566.save_gain_cal()  # Default filename
 print("Calibrating Phase, verbosely, then saving cal file...")
-my_cn0566.phase_calibration(verbose=True)  # Start Phase Calibration
+phase_calibration(my_cn0566, verbose=True)  # Start Phase Calibration
 my_cn0566.save_phase_cal()  # Default filename
 print("Done calibration")
 
@@ -300,7 +306,7 @@ while do_plot == True:
         xf,
         max_gain,
         PhaseValues,
-    ) = my_cn0566.calculate_plot()
+    ) = calculate_plot(my_cn0566)
     print("Sweeping took this many seconds: " + str(time.time() - start))
     #    gain,  = my_cn0566.plot(plot_type="monopulse")
     plt.clf()

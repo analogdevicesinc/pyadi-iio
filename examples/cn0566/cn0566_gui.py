@@ -82,7 +82,7 @@ if os.name == "nt":  # Assume running on Windows
 elif os.name == "posix":
     rpi_ip = "ip:localhost"  # Assume running locally on Raspberry Pi
     sdr_ip = "ip:192.168.2.1"  # Historical - assume default Pluto IP
-    print("Running on Windows, connecting to ", rpi_ip, " and ", sdr_ip)
+    print("Running on Linux, connecting to ", rpi_ip, " and ", sdr_ip)
 else:
     print("Can't detect OS")
 

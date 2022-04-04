@@ -48,6 +48,12 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+from cn0566_functions import (
+    calculate_plot,
+    gain_calibration,
+    load_hb100_cal,
+    phase_calibration,
+)
 from scipy import signal
 from SDR_functions import *
 
@@ -56,7 +62,8 @@ colors = ["black", "gray", "red", "orange", "yellow", "green", "blue", "purple"]
 
 def do_cal_gain():
     my_cn0566.set_beam_phase_diff(0.0)
-    plot_data = my_cn0566.gain_calibration(verbose=True)  # Start Gain Calibration
+    #    plot_data = my_cn0566.gain_calibration(verbose=True)  # Start Gain Calibration
+    plot_data = gain_calibration(my_cn0566, verbose=True)  # Start Gain Calibration
     plt.figure(4)
     plt.title("Gain calibration FFTs")
     for i in range(0, 8):
@@ -65,8 +72,11 @@ def do_cal_gain():
 
 
 def do_cal_phase():
-    PhaseValues, plot_data = my_cn0566.phase_calibration(
-        verbose=True
+    # PhaseValues, plot_data = my_cn0566.phase_calibration(
+    #     verbose=True
+    # )  # Start Phase Calibration
+    PhaseValues, plot_data = phase_calibration(
+        my_cn0566, verbose=True
     )  # Start Phase Calibration
     plt.figure(5)
     plt.title("Phase sweeps")
@@ -138,27 +148,19 @@ except:
 #     This frequency plan can be updated any time in example code
 #     e.g:- my_cn0566.frequency = 9000000000 etc
 
-# configure sdr/pluto according to above-mentioned freq plan
-
 my_sdr._ctrl.debug_attrs["adi,frequency-division-duplex-mode-enable"].value = "1"
 my_sdr._ctrl.debug_attrs[
     "adi,ensm-enable-txnrx-control-enable"
 ].value = "0"  # Disable pin control so spi can move the states
 my_sdr._ctrl.debug_attrs["initialize"].value = "1"
-
-
 my_sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
-my_sdr.gain_control_mode_chan1 = (
-    "manual"  # We must be in manual gain control mode (otherwise we won't see
-)
-my_sdr.rx_hardwaregain_chan1 = 20
-my_sdr._rxadc.set_kernel_buffers_count(
-    1
-)  # Super important - don't want to have to flush stale buffers
+
+my_sdr._rxadc.set_kernel_buffers_count(1)  # So we don't have to flush
 rx = my_sdr._ctrl.find_channel("voltage0")
 rx.attrs[
     "quadrature_tracking_en"
 ].value = "1"  # set to '1' to enable quadrature tracking
+rx_buffer_size = int(4 * 256)
 my_sdr.sample_rate = int(30000000)  # Sampling rate
 my_sdr.rx_buffer_size = int(4 * 256)
 my_sdr.rx_rf_bandwidth = int(10e6)
@@ -168,15 +170,13 @@ my_sdr.gain_control_mode_chan1 = "manual"
 my_sdr.rx_hardwaregain_chan0 = 20
 my_sdr.rx_hardwaregain_chan1 = 20
 
-my_sdr.rx_lo = int(2.2e9)  # 4495000000  # Recieve Freq
-my_sdr.tx_lo = int(2.2e9)
+my_sdr.rx_lo = int(config.Rx_freq)  # 4495000000  # Recieve Freq
+my_sdr.tx_lo = int(config.Tx_freq)
 
 my_sdr.filter = "LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
-rx_buffer_size = int(4 * 256)
-my_sdr.rx_buffer_size = rx_buffer_size
 
-my_sdr.tx_cyclic_buffer = True
-my_sdr.tx_buffer_size = int(2 ** 16)
+# my_sdr.tx_cyclic_buffer = True
+# my_sdr.tx_buffer_size = int(2 ** 16)
 
 
 if config.use_tx is True:
@@ -191,9 +191,7 @@ my_sdr.tx_hardwaregain_chan1 = int(
     tx_level
 )  # Make sure the Tx channels are attenuated (or off) and their freq is far away from Rx
 
-# my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
-# my_sdr.dds_frequencies = [0.1e6, 0.1e6, 0.1e6, 0.1e6] #Frequencies of DDSs in Hz
-# my_sdr.dds_scales = [1, 1, 0, 0] #Scale of DDS signal generators Ranges [0,1]
+
 my_sdr.dds_single_tone(
     int(2e6), 0.9, 1
 )  # sdr.dds_single_tone(tone_freq_hz, tone_scale_0to1, tx_channel)
@@ -212,7 +210,7 @@ my_cn0566.configure(
 
 # Onboard source w/ external Vivaldi
 my_cn0566.frequency = (
-    int(my_cn0566.SignalFreq) + my_sdr.rx_lo
+    int(my_cn0566.SignalFreq) + config.Rx_freq
 ) // 4  # PLL feedback via /4 VCO output
 my_cn0566.freq_dev_step = 5690
 my_cn0566.freq_dev_range = 0
@@ -330,7 +328,7 @@ while do_plot == True:
             xf,
             max_gain,
             PhaseValues,
-        ) = my_cn0566.calculate_plot()
+        ) = calculate_plot(my_cn0566)
         print("Sweeping took this many seconds: " + str(time.time() - start))
         #    gain,  = my_cn0566.plot(plot_type="monopulse")
         plt.clf()

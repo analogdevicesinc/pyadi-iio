@@ -47,8 +47,8 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+from cn0566_functions import save_hb100_cal, spec_est
 from scipy import signal
-from SDR_functions import *
 
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
@@ -118,20 +118,6 @@ my_sdr.filter = "LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary
 rx_buffer_size = int(4 * 256)
 my_sdr.rx_buffer_size = rx_buffer_size
 
-my_sdr.tx_cyclic_buffer = True
-my_sdr.tx_buffer_size = int(2 ** 16)
-
-my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
-my_sdr.tx_hardwaregain_chan1 = int(
-    -88
-)  # Make sure the Tx channels are attenuated (or off) and their freq is far away from Rx
-
-# my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
-# my_sdr.dds_frequencies = [0.1e6, 0.1e6, 0.1e6, 0.1e6] #Frequencies of DDSs in Hz
-# my_sdr.dds_scales = [1, 1, 0, 0] #Scale of DDS signal generators Ranges [0,1]
-my_sdr.dds_single_tone(
-    int(2e6), 0.9, 1
-)  # sdr.dds_single_tone(tone_freq_hz, tone_scale_0to1, tx_channel)
 
 # Configure CN0566 parameters.
 #     ADF4159 and ADAR1000 array attributes are exposed directly, although normally
@@ -182,7 +168,7 @@ f_stop = 10.7e9
 f_step = 10e6
 
 for freq in range(int(f_start), int(f_stop), int(f_step)):
-    print("frequency: ", freq)
+    #    print("frequency: ", freq)
     my_cn0566.SignalFreq = freq
     my_cn0566.frequency = (
         int(my_cn0566.SignalFreq) + my_sdr.rx_lo

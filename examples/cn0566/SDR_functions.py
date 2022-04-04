@@ -1,26 +1,11 @@
 # SDR_functions.py
 # These are Pluto control functions
 
-import pickle
 import sys
 import time
 
 import adi
 import numpy as np
-from numpy import (
-    absolute,
-    argmax,
-    argsort,
-    cos,
-    exp,
-    floor,
-    linspace,
-    log10,
-    multiply,
-    pi,
-)
-from numpy.fft import fft, fftfreq, fftshift
-from scipy import signal
 
 
 # MWT looks like these are not necessary...
@@ -174,64 +159,3 @@ def SDR_getData(sdr):
 def SDR_TxBuffer_Destroy(sdr):
     if sdr.tx_cyclic_buffer == True:
         sdr.tx_destroy_buffer()
-
-
-def save_hb100_cal(freq, filename="hb100_freq_val.pkl"):
-    """ Saves measured frequency calibration file."""
-    with open(filename, "wb") as file1:
-        pickle.dump(freq, file1)  # save calibrated gain value to a file
-        file1.close()
-
-
-def load_hb100_cal(filename="hb100_freq_val.pkl"):
-    """ Load frequency measurement value, set to 10.5GHz if no
-        parameters:
-            filename: type=string
-                      Provide path of gain calibration file
-    """
-    try:
-        with open(filename, "rb") as file1:
-            freq = pickle.load(file1)  # Load gain cal values
-    except Exception:
-        print("file not found, loading default 10.5GHz")
-    return freq
-
-
-def spec_est(x, fs, ref=2 ** 15, plot=False):
-
-    N = len(x)
-
-    # Apply window
-    window = signal.kaiser(N, beta=38)
-    # x = multiply(x, window)
-
-    # Use FFT to get the amplitude of the spectrum
-    ampl = 1 / N * absolute(fft(x))
-    ampl = 20 * log10(ampl / ref + 10 ** -20)
-
-    # FFT frequency bins
-    freqs = fftfreq(N, 1 / fs)
-
-    # ampl and freqs for real data
-    if not np.iscomplexobj(x):
-        ampl = ampl[0 : len(ampl) // 2]
-        freqs = freqs[0 : len(freqs) // 2]
-
-    if plot:
-        # Plot signal, showing how endpoints wrap from one chunk to the next
-        import matplotlib.pyplot as plt
-
-        plt.subplot(2, 1, 1)
-        plt.plot(x, ".-")
-        plt.plot(1, 1, "r.")  # first sample of next chunk
-        plt.margins(0.1, 0.1)
-        plt.xlabel("Time [s]")
-        # Plot shifted data on a shifted axis
-        plt.subplot(2, 1, 2)
-        plt.plot(fftshift(freqs), fftshift(ampl))
-        plt.margins(0.1, 0.1)
-        plt.xlabel("Frequency [Hz]")
-        plt.tight_layout()
-        plt.show()
-
-    return ampl, freqs
