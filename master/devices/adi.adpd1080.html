@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="tdd" href="adi.tdd.html" /><link rel="prev" title="ltc2983" href="adi.ltc2983.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adpd410x" href="adi.adpd410x.html" /><link rel="prev" title="adpd188" href="adi.adpd188.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.03.04"/>
-        <title>one_bit_adc_dac - Analog Devices Hardware Python Interfaces 0.0.13</title>
+        <title>adpd1080 - Analog Devices Hardware Python Interfaces 0.0.13</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
@@ -197,7 +197,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd188.html">adpd188</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adpd1080</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd410x.html">adpd410x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrf5720.html">adrf5720</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9002.html">adrv9002</a></li>
@@ -222,7 +222,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
@@ -268,26 +268,34 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.one_bit_adc_dac">
-<span id="one-bit-adc-dac"></span><h1>one_bit_adc_dac<a class="headerlink" href="#module-adi.one_bit_adc_dac" title="Permalink to this headline"></a></h1>
+          <section id="module-adi.adpd1080">
+<span id="adpd1080"></span><h1>adpd1080<a class="headerlink" href="#module-adi.adpd1080" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.one_bit_adc_dac.one_bit_adc_dac">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.one_bit_adc_dac.</span></span><span class="sig-name descname"><span class="pre">one_bit_adc_dac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'one-bit-adc-dac'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.one_bit_adc_dac.one_bit_adc_dac" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<dt class="sig sig-object py" id="adi.adpd1080.adpd1080">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adpd1080.</span></span><span class="sig-name descname"><span class="pre">adpd1080</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adpd1080.adpd1080" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>ADPD1080 photo-electronic device.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.adpd1080.adpd1080.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.adpd1080.adpd1080.channel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adpd1080.adpd1080.rx">
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adpd1080.adpd1080.rx" title="Permalink to this definition"></a></dt>
+<dd><p>Receive data from hardware buffers for each channel index in
+rx_enabled_channels.</p>
 <dl class="simple">
-<dt>One bit ADC/DAC (GPIO). This driver will create a handle for the</dt><dd><p>GPIO device as well as properties for each GPIO pin it accesses.
-Each GPIO pin name will be lowercase and of the format:
-“gpio_{pin name}”</p>
-</dd>
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>uri: type=string</dt><dd><p>URI of IIO context with GPIO pins</p>
-</dd>
-<dt>name: type=string</dt><dd><p>String identifying the device by name from the device tree.
-Dynamic class properties will be created for each channel.</p>
+<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
+is enabled containing samples from a channel or set of channels.
+Data will be complex when using a complex data device.</p>
 </dd>
 </dl>
-</dd>
-</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adpd1080.adpd1080.sample_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.adpd1080.adpd1080.sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p>Sets sampling frequency of the ADPD1080.</p>
+</dd></dl>
 </dd></dl>
 </section>
 
@@ -296,23 +304,23 @@ Dynamic class properties will be created for each channel.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.tdd.html">
+          <a class="next-page" href="adi.adpd410x.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">tdd</div>
+                <div class="title">adpd410x</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ltc2983.html">
+          <a class="prev-page" href="adi.adpd188.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">ltc2983</div>
+                <div class="title">adpd188</div>
                 
               </div>
             </a>
