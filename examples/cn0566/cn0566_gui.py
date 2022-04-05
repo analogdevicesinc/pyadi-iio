@@ -47,6 +47,7 @@ import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from ADAR_pyadi_functions import *  # import the ADAR1000 functions (These all start with ADAR_xxxx)
+from cn0566_functions import load_hb100_cal
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.widgets import Cursor
 
