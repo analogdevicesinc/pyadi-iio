@@ -113,6 +113,8 @@ from adi.one_bit_adc_dac import one_bit_adc_dac
 
 from adi.ltc2314_14 import ltc2314_14
 
+from adi.ad5592r import ad5592r
+
 from adi.ad7606 import ad7606
 
 from adi.ad7799 import ad7799
