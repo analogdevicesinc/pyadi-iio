@@ -50,7 +50,7 @@ class adis16507(rx, context_manager):
     ]
     _device_name = ""
     _rx_data_type = ">i4"
-    _rx_data_si_type = np.float
+    _rx_data_si_type = float
 
     def __init__(
         self, uri="", imu_dev_name="adis16507-3", trigger_name="adis16507-3-dev0"
