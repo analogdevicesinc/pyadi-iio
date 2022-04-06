@@ -50,7 +50,7 @@ class adis16495(rx, context_manager):
     ]
     _device_name = ""
     _rx_data_type = ">i4"
-    _rx_data_si_type = np.float
+    _rx_data_si_type = float
 
     def __init__(self, uri="", name="adis16495-3"):
         """Initialize an adis16495 object.
