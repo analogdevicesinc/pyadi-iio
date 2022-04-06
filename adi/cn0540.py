@@ -55,7 +55,7 @@ class cn0540(rx, context_manager):
     """CN0540 CBM DAQ Board"""
 
     _rx_data_type = np.int32
-    _rx_data_si_type = np.float
+    _rx_data_si_type = float
     _complex_data = False
     _rx_channel_names = ["voltage0"]
     _device_name = ""
