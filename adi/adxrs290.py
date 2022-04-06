@@ -43,7 +43,7 @@ class adxrs290(rx, context_manager, attribute):
     _device_name = "ADXRS290"
     _rx_data_type = np.int16
     _rx_unbuffered_data = True
-    _rx_data_si_type = np.float
+    _rx_data_si_type = float
 
     def __init__(self, uri=""):
 
