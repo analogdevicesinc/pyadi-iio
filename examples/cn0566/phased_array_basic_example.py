@@ -240,7 +240,7 @@ for i in range(0, len(gain_list)):
     my_cn0566.set_chan_gain(i, gain_list[i], apply_cal=True)
 
 # Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
-my_cn0566.Averages = 8
+my_cn0566.Averages = 4
 
 # This instantiate calibration routine and perform gain and phase calibration. Note gain calibration should be always
 #    done 1st as phase calibration depends on gain cal values if not it throws error"""
@@ -261,14 +261,13 @@ func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
 # func = None
 if func == "cal":
     input(
-        "Calibrating gain and phase - place antenna at mechanical boresight in front\
-          of the aryay, then press enter..."
+        "Calibrating gain and phase - place antenna at mechanical boresight in front of the array, then press enter..."
     )
     print("Calibrating Gain, verbosely, then saving cal file...")
-    my_cn0566.gain_calibration(verbose=True)  # Start Gain Calibration
+    do_cal_gain()  # Start Gain Calibration
     my_cn0566.save_gain_cal()  # Default filename
     print("Calibrating Phase, verbosely, then saving cal file...")
-    my_cn0566.phase_calibration(verbose=True)  # Start Phase Calibration
+    do_cal_phase()  # Start Phase Calibration
     my_cn0566.save_phase_cal()  # Default filename
     print("Done calibration")
 

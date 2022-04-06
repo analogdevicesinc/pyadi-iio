@@ -357,16 +357,7 @@ class CN0566(adf4159, adar1000_array):
                 self.pcal = pickle.load(file)  # Load gain cal values
         except Exception:
             print("file not found, loading default (no phase shift)")
-            self.pcal = [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-            ]
+            self.pcal = [0.0] * 8
 
     def set_all_gain(self, value=127, apply_cal=True):
         """ This will try to set gain of all the channels
@@ -380,6 +371,7 @@ class CN0566(adf4159, adar1000_array):
                 self.elements.get(i + 1).rx_gain = int(value * self.gcal[i])
             else:  # Don't apply gain calibration
                 self.elements.get(i + 1).rx_gain = value
+            # Important if you're relying on elements being truly zero'd out
             self.elements.get(i + 1).rx_attenuator = not bool(value)
         self.latch_tx_settings()  # writes 0x01 to reg 0x28
 
@@ -393,16 +385,17 @@ class CN0566(adf4159, adar1000_array):
         """
 
         if apply_cal is True:
+            cval = int(gain_val * self.gcal[chan_no])
             print(
                 "Cal = true, setting channel x to gain y, gcal value: ",
                 chan_no,
                 ", ",
-                int(gain_val * self.gcal[chan_no]),
+                cval,
                 ", ",
                 self.gcal[chan_no],
             )
-            #                list(self.devices.values())[chan_no // 4].channels[(chan_no - (4 * (chan_no // 4)))].rx_gain = int(gain_val * self.gcal[chan_no])
-            self.elements.get(chan_no + 1).rx_gain = int(gain_val * self.gcal[chan_no])
+            self.elements.get(chan_no + 1).rx_gain = cval
+            print("reading back: ", self.elements.get(chan_no + 1).rx_gain)
         else:  # Don't apply gain calibration
             print(
                 "Cal = false, setting channel x to gain y: ",
@@ -410,9 +403,9 @@ class CN0566(adf4159, adar1000_array):
                 ", ",
                 int(gain_val),
             )
-            #                list(self.devices.values())[chan_no // 4].channels[(chan_no - (4 * (chan_no // 4)))].rx_gain = int(gain_val)
             self.elements.get(chan_no + 1).rx_gain = int(gain_val)
-        #            list(self.devices.values())[chan_no // 4].latch_rx_settings()
+        # Important if you're relying on elements being truly zero'd out
+        self.elements.get(chan_no + 1).rx_attenuator = not bool(gain_val)
         self.latch_rx_settings()
 
     def set_chan_phase(self, chan_no: int, phase_val, apply_cal=True):
@@ -434,9 +427,9 @@ class CN0566(adf4159, adar1000_array):
         if apply_cal is True:
             self.elements.get(chan_no + 1).rx_phase = (
                 phase_val + self.pcal[chan_no]
-            ) % 360
+            ) % 360.0
         else:  # Don't apply gain calibration
-            self.elements.get(chan_no + 1).rx_phase = (phase_val) % 360
+            self.elements.get(chan_no + 1).rx_phase = (phase_val) % 360.0
 
         self.latch_rx_settings()
 
@@ -478,6 +471,6 @@ class CN0566(adf4159, adar1000_array):
             self.elements.get(ch + 1).rx_phase = (
                 ((np.rint(Ph_Diff * ch / self.phase_step_size)) * self.phase_step_size)
                 + self.pcal[ch]
-            ) % 360
+            ) % 360.0
 
         self.latch_rx_settings()

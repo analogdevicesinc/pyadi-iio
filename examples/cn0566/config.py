@@ -46,4 +46,4 @@ num_ADARs = 2  # Number of ADAR1000's connected -- this can be either 1 or 2. no
 num_Rx = 2  # Number of Rx channels (i.e. Pluto this must be 1, but AD9361 SOM this could be 1 or 2)
 d = 0.015  # element to element spacing of the antenna
 
-use_tx = True  # Enable TX path if True (if false, HB100 source)
+use_tx = False  # Enable TX path if True (if false, HB100 source)
