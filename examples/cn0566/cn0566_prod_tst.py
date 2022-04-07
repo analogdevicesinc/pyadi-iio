@@ -234,13 +234,15 @@ print("Done calibration")
 for i in range(0, len(my_cn0566.gcal)):
     if my_cn0566.gcal[i] > gain_cal_limits:
         print("Gain cal failure on element ", i, ", ", my_cn0566.gcal[i])
-        failures.append("Gain cal falure on element " + str(i))
+        failures.append(
+            "Gain cal falure on element "
+        )  # + str(i)) # Throws isort error?
 
 
 for i in range(0, len(my_cn0566.pcal)):
     if abs(my_cn0566.pcal[i]) > phase_cal_limits:
         print("Phase cal failure on element ", i, ", ", my_cn0566.pcal[i])
-        failures.append("Phase cal falure on element " + str(i))
+        failures.append("Phase cal falure on element ")  # + str(i))
 
 if len(failures) == 0:
     print("WooHoo! BOARD PASSES!!")

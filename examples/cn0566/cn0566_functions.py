@@ -74,15 +74,18 @@ def find_peak_bin(cn0566, verbose=False):
 
 
 def calculate_plot(cn0566, gcal_element=0, cal_element=0):
-    """ Calculate all the values required to do different plots. It method calls set_beam_phase_diff and
-        sets the Phases of all channel. All the math is done here.
+    """ Calculate all the values required to do different antenna pattern plots.
         parameters:
-            gcal_element: type=int
-                        If gain calibration is taking place, it indicates element number whose gain calibration is
-                        is currently taking place
-            cal_element: type=int
-                        If Phase calibration is taking place, it indicates element number whose phase calibration is
-                        is currently taking place
+            cn0566: Handle to CN0566 instance
+        returns:
+            gain: Antenna gain data
+            angle: Antenna angles (calcuated from phases sent to array)
+            delta: Delta between sub-arrays (for monopulse tracking)
+            diff_error:
+            beam_phase:
+            xf:
+            max_gain:
+            PhaseValues: Actual phase values sent to array
     """
 
     sweep_angle = 180  # This swweps from -70 deg to +70
@@ -193,8 +196,8 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
             PeakValue_sum > max_signal
         ):  # take the largest value, so that we know where to point the compass
             max_signal = PeakValue_sum
-            max_angle = PeakValue_angle
-            max_PhDelta = PhDelta
+            #            max_angle = PeakValue_angle
+            #            max_PhDelta = PhDelta
             data_fft = data[0] + data[1]
         gain.append(PeakValue_sum)
         delta.append(PeakValue_delta)
@@ -217,12 +220,7 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
     xf = np.fft.fftshift(xf)  # this is the x axis (freq in Hz) for our fft plot
     # Return values/ parameter based on Calibration Flag status
 
-    if cn0566.gain_cal:
-        return np.average(gain)
-    # if cn0566.phase_cal:
-    #     return PhaseValues[gain.index(min(gain))]
-    else:  # if not cn0566.gain_cal and not cn0566.phase_cal:
-        return gain, angle, delta, diff_error, beam_phase, xf, max_gain, PhaseValues
+    return gain, angle, delta, diff_error, beam_phase, xf, max_gain, PhaseValues
 
 
 def gain_calibration(cn0566, verbose=False):
@@ -246,9 +244,8 @@ def gain_calibration(cn0566, verbose=False):
         gcal_val, spectrum = measure_element_gain(
             cn0566, gcal_element, peak_bin, verbose=True
         )
-        print("Measured element gain: ", gcal_val)
         if verbose is True:
-            print("Element gain: " + str(gcal_val))
+            print("Measured signal level (ADC counts): " + str(gcal_val))
         gcalibrated_values.append(gcal_val)  # make a list of intermediate cal values
         plot_data.append(spectrum)
 
@@ -278,15 +275,19 @@ def measure_element_gain(
             cal_element: type=int
                         If Phase calibration is taking place, it indicates element number whose phase calibration is
                         is currently taking place
+            peak_bin: type=int
+                        Peak bin to examine around for amplitude
     """
-    width = 4  # Bins around fundamental to sum
+    width = 10  # Bins around fundamental to sum
     cn0566.set_all_gain(0, apply_cal=False)  # Start with all gains set to zero
     cn0566.set_chan_gain(cal, 127, apply_cal=False)  # Set element to max
     sleep(1.0)  # todo - remove when driver fixed to compensate for ADAR1000 quirk
     if verbose:
         print("measuring element: ", cal)
     total_sum = 0
-    win = np.blackman(cn0566.rx_dev.rx_buffer_size)
+    # win = np.blackman(cn0566.rx_dev.rx_buffer_size)
+    win = signal.windows.flattop(cn0566.rx_dev.rx_buffer_size)
+    win /= np.average(np.abs(win))  # Normalize to unity gain
     spectrum = np.zeros(cn0566.rx_dev.rx_buffer_size)
 
     for count in range(0, cn0566.Averages):  # repeatsnip loop and average the results
@@ -297,29 +298,19 @@ def measure_element_gain(
         s_sum = np.fft.fftshift(np.absolute(np.fft.fft(y_sum)))
         spectrum += s_sum
 
-        #        s_mag_sum = np.maximum(
-        #            np.abs(s_sum[np.argmax(s_sum)]) * 2 / np.sum(win), 10 ** (-15)
-        #        )  # Prevent taking log of zero
-
-        s_mag_sum = np.sqrt(
-            np.sum(np.square(s_sum[peak_bin - width : peak_bin + width]))
-        )
-
-        # total_sum = total_sum + (
-        #     20 * np.log10(s_mag_sum / (2 ** 12))
-        # )  # sum up all the loops, then we'll avg
-
+        # Look for peak value within window around fundamental (reject interferers)
+        s_mag_sum = np.max(s_sum[peak_bin - width : peak_bin + width])
         total_sum += s_mag_sum
 
-    spectrum /= cn0566.Averages
-    PeakValue_sum = total_sum / cn0566.Averages
+    spectrum /= cn0566.Averages * cn0566.rx_dev.rx_buffer_size
+    PeakValue_sum = total_sum / (cn0566.Averages * cn0566.rx_dev.rx_buffer_size)
 
     return PeakValue_sum, spectrum
 
 
 def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
-    """ Calculate all the values required to do different plots. It method calls set_beam_phase_diff and
-        sets the Phases of all channel. All the math is done here.
+    """ Calculate all the values required to do different plots. It method
+        calls set_beam_phase_diff and sets the Phases of all channel.
         parameters:
             gcal_element: type=int
                         If gain calibration is taking place, it indicates element number whose gain calibration is
@@ -328,7 +319,8 @@ def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
                         If Phase calibration is taking place, it indicates element number whose phase calibration is
                         is currently taking place
             peak_bin: type=int
-                        Which bin the fundamental is in. This prevents detecting other spurs when deep in a null.
+                        Which bin the fundamental is in.
+                        This prevents detecting other spurs when deep in a null.
     """
 
     cn0566.set_all_gain(0)  # Reset all elements to zero
@@ -337,8 +329,10 @@ def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
     sleep(1.0)
 
     cn0566.set_chan_phase(ref, 0.0, apply_cal=False)  # Reference element
-    win = np.blackman(cn0566.rx_dev.rx_buffer_size)
-    width = 4  # Bins around fundamental to sum
+    # win = np.blackman(cn0566.rx_dev.rx_buffer_size)
+    win = signal.windows.flattop(cn0566.rx_dev.rx_buffer_size)  # Super important!
+    win /= np.average(np.abs(win))  # Normalize to unity gain
+    width = 10  # Bins around fundamental to sum
     sweep_angle = 180
     # These are all the phase deltas (i.e. phase difference between Rx1 and Rx2, then Rx2 and Rx3, etc.) we'll sweep
     PhaseValues = np.arange(-(sweep_angle), (sweep_angle), cn0566.phase_step_size)
@@ -356,15 +350,18 @@ def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
 
             # Pick (uncomment) one:
             # 1) RSS sum a few bins around max
-            s_mag_sum = np.sqrt(
-                np.sum(np.square(s_sum[peak_bin - width : peak_bin + width]))
-            )
+            # s_mag_sum = np.sqrt(
+            #     np.sum(np.square(s_sum[peak_bin - width : peak_bin + width]))
+            # )
+
             # 2) Take maximum value
             # s_mag_sum = np.maximum(s_mag_sum, 10 ** (-15))
 
+            # 3) Apparently the correct way, use flat-top window, look for peak
+            s_mag_sum = np.max(s_sum[peak_bin - width : peak_bin + width])
             s_mag_sum = np.max(s_sum)
             total_sum += s_mag_sum
-        PeakValue_sum = total_sum / cn0566.Averages
+        PeakValue_sum = total_sum / (cn0566.Averages * cn0566.rx_dev.rx_buffer_size)
         gain.append(PeakValue_sum)
 
     return (

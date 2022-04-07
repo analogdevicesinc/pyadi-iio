@@ -66,6 +66,8 @@ def do_cal_gain():
     plot_data = gain_calibration(my_cn0566, verbose=True)  # Start Gain Calibration
     plt.figure(4)
     plt.title("Gain calibration FFTs")
+    plt.xlabel("FFT Bin number")
+    plt.ylabel("Amplitude (ADC counts)")
     for i in range(0, 8):
         plt.plot(plot_data[i], color=colors[i])
     plt.show()
@@ -79,7 +81,9 @@ def do_cal_phase():
         my_cn0566, verbose=True
     )  # Start Phase Calibration
     plt.figure(5)
-    plt.title("Phase sweeps")
+    plt.title("Phase sweeps of adjacent elements")
+    plt.xlabel("Phase difference (degrees)")
+    plt.ylabel("Amplitude (ADC counts)")
     for i in range(0, 7):
         plt.plot(PhaseValues, plot_data[i], color=colors[i])
     plt.show()
@@ -167,8 +171,8 @@ my_sdr.rx_rf_bandwidth = int(10e6)
 # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
 my_sdr.gain_control_mode_chan0 = "manual"
 my_sdr.gain_control_mode_chan1 = "manual"
-my_sdr.rx_hardwaregain_chan0 = 20
-my_sdr.rx_hardwaregain_chan1 = 20
+my_sdr.rx_hardwaregain_chan0 = 6
+my_sdr.rx_hardwaregain_chan1 = 6
 
 my_sdr.rx_lo = int(config.Rx_freq)  # 4495000000  # Recieve Freq
 my_sdr.tx_lo = int(config.Tx_freq)
