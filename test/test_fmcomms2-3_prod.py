@@ -32,6 +32,8 @@ classname = "adi.ad9361"
 def test_ad7291(context_desc, voltage_raw, low, high):
     ctx = None
     for ctx_desc in context_desc:
+        if ctx_desc["hw"] == "adrv9361":
+            pytest.skip("ad7291 not tested for SOM")
         if ctx_desc["hw"] in hardware:
             ctx = iio.Context(ctx_desc["uri"])
     if not ctx:
@@ -250,6 +252,29 @@ if not disable_prod_tests:
     [([-20.0, -100.0, -120.0, -120.0, -120.0], [-10.0, -60.0, -75.0, -75.0, -80.0])],
 )
 def test_harmonic_values(
-    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=True
+    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=False
 ):
     test_harmonics(classname, iio_uri, channel, param_set, low, high, plot)
+
+
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        dict(
+            tx_lo=2400000000,
+            rx_lo=2400000000,
+            tx_hardwaregain_chan0=-10,
+            tx_hardwaregain_chan1=-10,
+            sample_rate=30720000,
+        )
+    ],
+)
+@pytest.mark.parametrize(
+    "low, high",
+    [([-20.0, -120.0, -120.0, -125.0], [-10.0, -75.0, -75.0, -80.0])],
+)
+def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, plot=False):
+    test_sfdrl(classname, iio_uri, channel, param_set, low, high, plot=False)

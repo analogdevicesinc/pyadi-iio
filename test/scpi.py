@@ -88,7 +88,11 @@ def get_clk_rate(classname, iio_uri):
     )
 
     if ssh_stderr.channel.recv_exit_status() != 0:
-        raise paramiko.SSHException("Command did not execute properly")
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
+        "cat /sys/kernel/debug/clk/ad9361-refclk-gpio-gate/clk_rate"
+        )
+        if ssh_stderr.channel.recv_exit_status() != 0:
+            raise paramiko.SSHException("Command did not execute properly")
 
     clk_rate = ssh_stdout.readline()
     ssh_client.close()
@@ -118,8 +122,19 @@ def dcxo_calibrate(classname, iio_uri):
 
     sdr = eval(classname + "(uri='" + iio_uri + "')")
 
-    sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
-    sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+    try:
+        sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
+        sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
+    except:
+        frq_c0 = get_freq(instr)
+        if abs(target_frq - frq_c0) > 5000:
+            del sdr
+            pytest.fail("Frequency is not in the appropriate range!")
+            return
+        else:
+            del sdr
+            return
+
 
     frq_c0 = get_freq(instr)
     coarse = 15
