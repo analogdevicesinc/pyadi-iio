@@ -243,7 +243,7 @@ def test_ad9361_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
     [([-20.0, -100.0, -120.0, -120.0, -120.0], [-10.0, -60.0, -75.0, -75.0, -80.0])],
 )
 def test_harmonic_values(
-    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=True
+    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=False
 ):
     test_harmonics(classname, iio_uri, channel, param_set, low, high, plot)
 
