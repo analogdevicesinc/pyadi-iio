@@ -147,23 +147,16 @@ except:
     print("No signal freq found, keeping at ", my_cn0566.SignalFreq)
 
 #  Configure SDR parameters.
-#     Current freq plan is Sig Freq = 10.492 GHz, antenna element spacing = 0.015m, Freq of pll is 12/2 GHz
-#     this is mixed down using mixer to get 10.492 - 6 = 4.492GHz which is freq of sdr.
-#     This frequency plan can be updated any time in example code
-#     e.g:- my_cn0566.frequency = 9000000000 etc
 
 my_sdr._ctrl.debug_attrs["adi,frequency-division-duplex-mode-enable"].value = "1"
-my_sdr._ctrl.debug_attrs[
-    "adi,ensm-enable-txnrx-control-enable"
-].value = "0"  # Disable pin control so spi can move the states
+# Disable pin control (use SPI)
+my_sdr._ctrl.debug_attrs["adi,ensm-enable-txnrx-control-enable"].value = "0"
 my_sdr._ctrl.debug_attrs["initialize"].value = "1"
 my_sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
 
 my_sdr._rxadc.set_kernel_buffers_count(1)  # So we don't have to flush
 rx = my_sdr._ctrl.find_channel("voltage0")
-rx.attrs[
-    "quadrature_tracking_en"
-].value = "1"  # set to '1' to enable quadrature tracking
+rx.attrs["quadrature_tracking_en"].value = "1"  # enable quadrature tracking
 rx_buffer_size = int(4 * 256)
 my_sdr.sample_rate = int(30000000)  # Sampling rate
 my_sdr.rx_buffer_size = int(4 * 256)
@@ -205,10 +198,7 @@ my_sdr.dds_single_tone(
 #     accessed through other methods.
 
 # By default device_mode is "rx"
-my_cn0566.configure(
-    device_mode="rx"
-)  # Configure adar in mentioned mode and also sets gain of all channel to 127
-
+my_cn0566.configure(device_mode="rx")
 
 # my_cn0566.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
 
@@ -246,18 +236,8 @@ for i in range(0, len(gain_list)):
 # Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
 my_cn0566.Averages = 4
 
-# This instantiate calibration routine and perform gain and phase calibration. Note gain calibration should be always
-#    done 1st as phase calibration depends on gain cal values if not it throws error"""
-
-# print("Calibrating Gain...")
-# my_cn0566.gain_calibration()   # Start Gain Calibration
-# print("Calibrating Phase...")
-# my_cn0566.phase_calibration()  # Start Phase Calibration
-# print("Done calibration")
-
-# This can be used to change the angle of center lobe i.e if we want to concentrate main lobe/beam at 45 degress"""
-# my_beamformer.set_beam_angle(45)
-
+# Aim the beam at boresight by default
+my_cn0566.set_beam_phase_diff(0.0)
 
 # Really basic options - "plot" to plot continuously, "cal" to calibrate both gain and phase.
 func = sys.argv[1] if len(sys.argv) >= 2 else "plot"

@@ -8,13 +8,6 @@ import adi
 import numpy as np
 
 
-# MWT looks like these are not necessary...
-# from ADAR_pyadi_functions import *   #import the ADAR1000 write functions (like ADAR_init and writeBeam functions)
-# try:
-#     from pluto_config import *    # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
-# except:
-#     print("Make sure that the file pluto_config_xxxx.py is in the same directory as this python file.")
-#     sys.exit(0)
 # MWT: Add uri argument...
 def SDR_LO_init(
     uri, LO_freq
@@ -44,27 +37,19 @@ def SDR_LO_init(
     pll.enable = 0  # 0 = PLL enable.  Write this last to update all the registers
 
 
-def SDR_init(
-    sdr_address, NumRx, SampleRate, TX_freq, RX_freq, Rx_gain, Tx_gain, buffer_size
-):
+def SDR_init(sdr_address, SampleRate, TX_freq, RX_freq, Rx_gain, Tx_gain, buffer_size):
     """Setup contexts"""
-    if NumRx == 1:  # 1 Rx, so this is Pluto
-        # sdr=adi.Pluto()     #This finds pluto over usb.  But communicating with its ip address gives us more flexibility
-        sdr = adi.Pluto(uri=sdr_address)  # This finds the device at that ip address
-    if (
-        NumRx == 2
-    ):  # 2 Rx, so this is the ADRV9361-SOM or Pluto Rev C (with 2 Rx and 2 Tx enabled)
-        sdr = adi.ad9361(uri=sdr_address)
-        sdr._ctrl.debug_attrs[
-            "adi,frequency-division-duplex-mode-enable"
-        ].value = "1"  # move to fdd mode.  see https://github.com/analogdevicesinc/pyadi-iio/blob/ensm-example/examples/ad9361_advanced_ensm.py
-        sdr._ctrl.debug_attrs[
-            "adi,ensm-enable-txnrx-control-enable"
-        ].value = "0"  # Disable pin control so spi can move the states
-        sdr._ctrl.debug_attrs["initialize"].value = "1"
-        sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
-        sdr.gain_control_mode_chan0 = "manual"  # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
-        sdr.gain_control_mode_chan1 = "manual"  # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
+    sdr = adi.ad9361(uri=sdr_address)
+    sdr._ctrl.debug_attrs[
+        "adi,frequency-division-duplex-mode-enable"
+    ].value = "1"  # set to fdd mode
+    sdr._ctrl.debug_attrs[
+        "adi,ensm-enable-txnrx-control-enable"
+    ].value = "0"  # Disable pin control so spi can move the states
+    sdr._ctrl.debug_attrs["initialize"].value = "1"
+    sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
+    sdr.gain_control_mode_chan0 = "manual"  # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
+    sdr.gain_control_mode_chan1 = "manual"  # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
     sdr._rxadc.set_kernel_buffers_count(
         1
     )  # Default is 4 Rx buffers are stored, but we want to change and immediately measure the result, so buffers=1
@@ -79,19 +64,10 @@ def SDR_init(
     )  # small buffers make the scan faster -- and we're primarily just looking at peak power
     sdr.tx_lo = int(TX_freq)
     sdr.tx_cyclic_buffer = True
-    if NumRx == 1:
-        sdr.tx_hardwaregain_chan0 = int(
-            Tx_gain
-        )  # this is a negative number between 0 and -88
-        sdr.gain_control_mode_chan0 = "manual"  # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
-        sdr.rx_hardwaregain_chan0 = int(Rx_gain)
-    if NumRx == 2:
-        sdr.tx_hardwaregain_chan0 = int(
-            -80
-        )  # We don't use Tx1, so just make it off or attenuated
-        sdr.tx_hardwaregain_chan1 = int(Tx_gain)
-        sdr.rx_hardwaregain_chan0 = int(Rx_gain)
-        sdr.rx_hardwaregain_chan1 = int(Rx_gain)
+    sdr.tx_hardwaregain_chan0 = int(-80)  # turn off Tx1
+    sdr.tx_hardwaregain_chan1 = int(Tx_gain)
+    sdr.rx_hardwaregain_chan0 = int(Rx_gain)
+    sdr.rx_hardwaregain_chan1 = int(Rx_gain)
     # sdr.filter = "/usr/local/lib/osc/filters/LTE5_MHz.ftr"
     # sdr.rx_rf_bandwidth = int(SampleRate*2)
     # sdr.tx_rf_bandwidth = int(SampleRate*2)
@@ -133,22 +109,14 @@ def SDR_init(
     return sdr
 
 
-def SDR_setRx(sdr, NumRx, Rx1_gain, Rx2_gain):
-    if NumRx == 1:
-        sdr.rx_hardwaregain_chan0 = int(Rx1_gain)
-    if NumRx == 2:
-        sdr.rx_hardwaregain_chan0 = int(Rx1_gain)
-        sdr.rx_hardwaregain_chan1 = int(Rx2_gain)
+def SDR_setRx(sdr, Rx1_gain, Rx2_gain):
+    sdr.rx_hardwaregain_chan0 = int(Rx1_gain)
+    sdr.rx_hardwaregain_chan1 = int(Rx2_gain)
 
 
-def SDR_setTx(sdr, NumRx, Tx_gain):
-    if NumRx == 1:
-        sdr.tx_hardwaregain_chan0 = int(Tx_gain)
-    if NumRx == 2:
-        sdr.tx_hardwaregain_chan0 = int(
-            -80
-        )  # We don't use Tx1, so just make it is off or attenuated
-        sdr.tx_hardwaregain_chan1 = int(Tx_gain)
+def SDR_setTx(sdr, Tx_gain):
+    sdr.tx_hardwaregain_chan0 = int(-80)  # turn off Tx1
+    sdr.tx_hardwaregain_chan1 = int(Tx_gain)
 
 
 def SDR_getData(sdr):

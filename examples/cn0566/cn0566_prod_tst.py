@@ -78,15 +78,14 @@ monitor_ch_names = [
 ]
 
 gain_cal_limits = (
-    0.8  # Fail if any channel is less than 80% of the highest gain channel
+    0.60  # Fail if any channel is less than 60% of the highest gain channel
 )
 phase_cal_limits = (
-    20.0  # Fail if delta between any two channels is more than 20 degress.
+    50.0  # Fail if delta between any two channels is more than 50 degress.
 )
 
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
-    #     rpi_ip = "ip:169.254.225.48" # Hard code an IP here for debug
     sdr_ip = "ip:pluto.local"  # Pluto IP, with modified IP address or not
     print("Running on Windows, connecting to ", rpi_ip, " and ", sdr_ip)
 elif os.name == "posix":
@@ -116,12 +115,7 @@ except NameError:
 
     my_cn0566 = CN0566(uri=rpi_ip, rx_dev=my_sdr)
 
-
 # Configure SDR parameters.
-#     Current freq plan is Sig Freq = 10.492 GHz, antenna element spacing = 0.015m, Freq of pll is 12/2 GHz
-#     this is mixed down using mixer to get 10.492 - 6 = 4.492GHz which is freq of sdr.
-#     This frequency plan can be updated any time in example code
-#     e.g:- my_cn0566.frequency = 9000000000 etc
 
 # configure sdr/pluto according to above-mentioned freq plan
 # my_sdr._ctrl.debug_attrs["adi,frequency-division-duplex-mode-enable"].value = "1"
@@ -145,8 +139,8 @@ my_sdr.rx_rf_bandwidth = int(10e6)
 # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
 my_sdr.gain_control_mode_chan0 = "manual"
 my_sdr.gain_control_mode_chan1 = "manual"
-my_sdr.rx_hardwaregain_chan0 = 20
-my_sdr.rx_hardwaregain_chan1 = 20
+my_sdr.rx_hardwaregain_chan0 = 6
+my_sdr.rx_hardwaregain_chan1 = 6
 
 my_sdr.rx_lo = int(2.2e9)  # 4495000000  # Recieve Freq
 my_sdr.tx_lo = int(2.2e9)
@@ -179,12 +173,8 @@ my_cn0566.configure(
     device_mode="rx"
 )  # Configure adar in mentioned mode and also sets gain of all channel to 127
 
-# HB100 measured frequency - 10492000000
-
-# my_cn0566.SignalFreq = 10600000000 # Make this automatic in the future.
-my_cn0566.SignalFreq = 10.497e9
-
-# my_cn0566.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
+# my_cn0566.SignalFreq = 10.525 - nominal HB100 frequency
+my_cn0566.SignalFreq = 10.525e9
 
 # Onboard source w/ external Vivaldi
 my_cn0566.frequency = (

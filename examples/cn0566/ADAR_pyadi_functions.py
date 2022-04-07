@@ -36,14 +36,6 @@ def ADAR_init(beam):
     beam.rx_vga_vm_bias_current = 22  # Sets the VGA and vector modulator bias.
 
 
-# Tx is not an option for Phaser ADAR1000, so we can comment this out
-#     beam.tx_vga_enable = True           #Enables Tx VGA, reg 0x2F, bit0
-#     beam.tx_vm_enable = True            #Enables Tx Vector Modulator, reg 0x2F, bit1
-#     beam.tx_pa_enable = True            #Enables Tx channel drivers, reg 0x2F, bit2
-#     beam.tx_pa_bias_current = 6         #Sets Tx driver bias current
-#     beam.tx_vga_vm_bias_current = 22    #Sets Tx VGA and VM bias.
-
-
 def ADAR_update_Rx(beam):
     beam.latch_rx_settings()  # Loads Rx vectors from SPI.  Writes 0x01 to reg 0x28.
 
@@ -69,37 +61,26 @@ def ADAR_set_mode(beam, mode):
         for channel in beam.channels:
             channel.rx_enable = True
 
-    # Configure the device for Tx mode -- which is obviously not used on Phaser
-    else:
-        beam.mode = (
-            "tx"  # Mode of operation, bit 5 of reg 0x31. "rx", "tx", or "disabled"
-        )
-        # Enable the Tx path for each channel and set the external PA bias
-        for channel in beam.channels:
-            channel.tx_enable = True
-            channel.pa_bias_on = -2
-
 
 # MWT: Consider combining Gainx into an array.
 def ADAR_set_Taper(array, Gain1, Gain2, Gain3, Gain4, Gain5, Gain6, Gain7, Gain8):
-    print("element 1 gcal, val: ", gcal[0], ", ", int(Gain1 * gcal[0]))
-    array.elements.get(1).rx_gain = int(Gain1 * gcal[0])
-    array.elements.get(1).rx_attenuator = not bool(
-        Gain1
-    )  # if Gainx=0, then also click in the 20dB attenuator (i.e. set rx_attenuator to True)
-    array.elements.get(2).rx_gain = int(Gain2 * gcal[1])
+    # print("element 1 gcal, val: ", gcal[0], ", ", int(Gain1 * gcal[0]))
+    array.elements.get(1).rx_gain = int(Gain1 * 127 / 100 * gcal[0])
+    # if Gainx=0, then also set the 20dB attenuator (set rx_attenuator to True)
+    array.elements.get(1).rx_attenuator = not bool(Gain1)
+    array.elements.get(2).rx_gain = int(Gain2 * 127 / 100 * gcal[1])
     array.elements.get(2).rx_attenuator = not bool(Gain2)
-    array.elements.get(3).rx_gain = int(Gain3 * gcal[2])
+    array.elements.get(3).rx_gain = int(Gain3 * 127 / 100 * gcal[2])
     array.elements.get(3).rx_attenuator = not bool(Gain3)
-    array.elements.get(4).rx_gain = int(Gain4 * gcal[3])
+    array.elements.get(4).rx_gain = int(Gain4 * 127 / 100 * gcal[3])
     array.elements.get(4).rx_attenuator = not bool(Gain4)
-    array.elements.get(5).rx_gain = int(Gain5 * gcal[4])
+    array.elements.get(5).rx_gain = int(Gain5 * 127 / 100 * gcal[4])
     array.elements.get(5).rx_attenuator = not bool(Gain5)
-    array.elements.get(6).rx_gain = int(Gain6 * gcal[5])
+    array.elements.get(6).rx_gain = int(Gain6 * 127 / 100 * gcal[5])
     array.elements.get(6).rx_attenuator = not bool(Gain6)
-    array.elements.get(7).rx_gain = int(Gain7 * gcal[6])
+    array.elements.get(7).rx_gain = int(Gain7 * 127 / 100 * gcal[6])
     array.elements.get(7).rx_attenuator = not bool(Gain7)
-    array.elements.get(8).rx_gain = int(Gain8 * gcal[7])
+    array.elements.get(8).rx_gain = int(Gain8 * 127 / 100 * gcal[7])
     array.elements.get(8).rx_attenuator = not bool(Gain8)
     array.latch_rx_settings()
 

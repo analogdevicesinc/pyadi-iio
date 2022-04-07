@@ -84,12 +84,6 @@ except NameError:
 
 
 #  Configure SDR parameters.
-#     Current freq plan is Sig Freq = 10.492 GHz, antenna element spacing = 0.015m, Freq of pll is 12/2 GHz
-#     this is mixed down using mixer to get 10.492 - 6 = 4.492GHz which is freq of sdr.
-#     This frequency plan can be updated any time in example code
-#     e.g:- my_cn0566.frequency = 9000000000 etc
-
-# configure sdr/pluto according to above-mentioned freq plan
 
 my_sdr._ctrl.debug_attrs["adi,frequency-division-duplex-mode-enable"].value = "1"
 my_sdr._ctrl.debug_attrs[
@@ -100,9 +94,7 @@ my_sdr._ctrl.debug_attrs["initialize"].value = "1"
 my_sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
 my_sdr._rxadc.set_kernel_buffers_count(1)  # No stale buffers to flush
 rx = my_sdr._ctrl.find_channel("voltage0")
-rx.attrs[
-    "quadrature_tracking_en"
-].value = "1"  # set to '1' to enable quadrature tracking
+rx.attrs["quadrature_tracking_en"].value = "1"  # enable quadrature tracking
 my_sdr.sample_rate = int(30000000)  # Sampling rate
 my_sdr.rx_buffer_size = int(4 * 256)
 my_sdr.rx_rf_bandwidth = int(10e6)
@@ -115,8 +107,6 @@ my_sdr.rx_hardwaregain_chan1 = 20
 my_sdr.rx_lo = int(2.0e9)  # Downconvert by 2GHz  # Recieve Freq
 
 my_sdr.filter = "LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
-rx_buffer_size = int(4 * 256)
-my_sdr.rx_buffer_size = rx_buffer_size
 
 
 # Configure CN0566 parameters.
@@ -124,16 +114,11 @@ my_sdr.rx_buffer_size = rx_buffer_size
 #     accessed through other methods.
 
 # By default device_mode is "rx"
-my_cn0566.configure(
-    device_mode="rx"
-)  # Configure adar in mentioned mode and also sets gain of all channel to 127
+my_cn0566.configure(device_mode="rx")
 
-# HB100 measured frequency - 10492000000
+# Set initial PLL frequency to HB100 nominal
 
-# my_cn0566.SignalFreq = 10600000000 # Make this automatic in the future.
-my_cn0566.SignalFreq = 10.497e9
-
-# my_cn0566.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
+my_cn0566.SignalFreq = 10.525e9
 
 # Onboard source w/ external Vivaldi
 my_cn0566.frequency = (
@@ -154,7 +139,7 @@ for i in range(0, len(gain_list)):
 # Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
 my_cn0566.Averages = 8
 
-
+# Initialize arrays for amplitudes, frequencies
 full_ampl = np.empty(0)
 full_freqs = np.empty(0)
 

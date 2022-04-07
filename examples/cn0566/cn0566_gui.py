@@ -59,7 +59,6 @@ try:
     import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
 
     print("Found custom config file")
-    # MWT: Cleaned up a bit,
 except:
     print("Didn't find custom config, looking for default.")
     try:
@@ -115,16 +114,14 @@ class App:
         self.Rx_gain = config.Rx_gain
         self.Tx_gain = config.Tx_gain
         self.Averages = config.Averages
-        # MWT: Do we need to pull defaults from the config file? These will be overwritten
-        # by sliders, correct?
-        self.RxGain1 = 127  # config.RxGain1
-        self.RxGain2 = 127  # config.RxGain2
-        self.RxGain3 = 127  # config.RxGain3
-        self.RxGain4 = 127  # config.RxGain4
-        self.RxGain5 = 127  # config.RxGain5
-        self.RxGain6 = 127  # config.RxGain6
-        self.RxGain7 = 127  # config.RxGain7
-        self.RxGain8 = 127  # config.RxGain8
+        self.RxGain1 = 100
+        self.RxGain2 = 100
+        self.RxGain3 = 100
+        self.RxGain4 = 100
+        self.RxGain5 = 100
+        self.RxGain6 = 100
+        self.RxGain7 = 100
+        self.RxGain8 = 100
         self.Rx1_cal = config.Rx1_cal
         self.Rx2_cal = config.Rx2_cal
         self.Rx3_cal = config.Rx3_cal
@@ -134,12 +131,6 @@ class App:
         self.Rx7_cal = config.Rx7_cal
         self.Rx8_cal = config.Rx8_cal
         self.refresh_time = config.refresh_time
-        self.num_ADARs = (
-            config.num_ADARs
-        )  # Number of ADAR1000's connected -- this can be either 1 or 2. no other values are allowed
-        self.num_Rx = (
-            config.num_ADARs
-        )  # Number of Rx channels (i.e. Pluto this must be 1, but AD9361 SOM this could be 1 or 2)
         self.c = 299792458  # speed of light in m/s
         self.d = config.d
         self.saved_gain = []
@@ -158,7 +149,6 @@ class App:
         """Intialize Pluto"""
         self.sdr = SDR_init(
             self.sdr_address,
-            self.num_Rx,
             self.SampleRate,
             self.Tx_freq,
             self.Rx_freq,
@@ -207,23 +197,6 @@ class App:
         self.master = master
 
         """BUILD THE GUI: Master Frame"""
-        b1 = Button(self.master, text="Aquire Data", command=self.updater)
-        b1.grid(row=14, column=2, columnspan=2, sticky=E + W)
-        button_exit = Button(
-            self.master,
-            text="Close Program",
-            command=self.closeProgram,
-            bd=4,
-            bg="LightYellow3",
-            relief=RAISED,
-        )
-        button_exit.grid(row=14, column=6, columnspan=2, padx=50, pady=10, sticky=E + W)
-        button_save = Button(
-            self.master, text="Copy Plot to Memory", command=self.savePlot
-        )
-        button_save.grid(row=14, column=4, columnspan=1, sticky=E + W)
-        button_clear = Button(self.master, text="Clear Memory", command=self.clearPlot)
-        button_clear.grid(row=14, column=5, columnspan=1, sticky=E + W)
         self.refresh = tk.IntVar()
         check_refresh = tk.Checkbutton(
             self.master,
@@ -238,10 +211,28 @@ class App:
         )
         check_refresh.grid(row=14, column=0, columnspan=2, sticky=E + W)
         self.refresh.set(0)
-        cntrl_tabs = ttk.Notebook(self.master, height=500, width=400)
+        b1 = Button(self.master, text="Aquire Data", command=self.updater)
+        b1.grid(row=14, column=2, columnspan=2, sticky=E + W)
+        button_exit = Button(
+            self.master,
+            text="Close Program",
+            command=self.closeProgram,
+            bd=4,
+            bg="LightYellow3",
+            relief=RAISED,
+        )
+        button_save = Button(
+            self.master, text="Copy Plot to Memory", command=self.savePlot
+        )
+        button_save.grid(row=14, column=5, columnspan=1, sticky=E + W)
+        button_clear = Button(self.master, text="Clear Memory", command=self.clearPlot)
+        button_clear.grid(row=14, column=6, columnspan=1, sticky=E + W)
+        button_exit.grid(row=14, column=7, columnspan=2, padx=50, pady=10, sticky=E + W)
+
+        cntrl_width = 450
+        cntrl_height = 600
+        cntrl_tabs = ttk.Notebook(self.master, height=cntrl_height, width=cntrl_width)
         cntrl_tabs.grid(padx=10, pady=10, row=0, column=0, columnspan=4, sticky=N)
-        cntrl_width = 400
-        cntrl_height = 500
         frame1 = Frame(cntrl_tabs, width=cntrl_width, height=cntrl_height)
         frame2 = Frame(cntrl_tabs, width=cntrl_width, height=cntrl_height)
         frame3 = Frame(cntrl_tabs, width=cntrl_width, height=cntrl_height)
@@ -249,7 +240,7 @@ class App:
         frame5 = Frame(cntrl_tabs, width=cntrl_width, height=cntrl_height)
         frame6 = Frame(cntrl_tabs, width=cntrl_width, height=cntrl_height)
         frame7 = Frame(cntrl_tabs, width=cntrl_width, height=cntrl_height)
-        frame1.grid(row=0, column=1)
+        frame1.grid(row=0, column=0)
         frame2.grid(row=0, column=1)
         frame3.grid(row=0, column=1)
         frame4.grid(row=0, column=1)
@@ -281,7 +272,7 @@ class App:
                 slide_TxGain.config(state=ACTIVE, troughcolor="LightYellow3")
                 slide_TxGain.set(config.Tx_gain)
             else:
-                gpios.gpio_vctrl_2 = 0  # 1=Send LO to transmit circuitry  (0=disable Tx path, and send LO to LO_OUT)
+                gpios.gpio_vctrl_2 = 1  # 1=Send LO to transmit circuitry  (0=disable Tx path, and send LO to LO_OUT)
                 slide_TxGain.set(-80)
                 slide_TxGain.config(state=DISABLED, troughcolor="light gray")
 
@@ -393,11 +384,15 @@ class App:
         slide_RxPhaseDelta.grid(row=23, column=0, padx=10, pady=10, rowspan=3)
         slide_RxPhaseDelta.set(0)
 
+        self.PhaseLabel_text = tk.StringVar()
         self.PhaseVal_text = tk.StringVar()
+        self.label_phase = tk.Label(
+            frame1, textvariable=self.PhaseLabel_text, anchor=W
+        ).grid(row=26, column=0, columnspan=3, pady=10, padx=2, sticky=E + W)
         self.PhaseVal_label = tk.Label(
             frame1, textvariable=self.PhaseVal_text, anchor=W
-        ).grid(row=26, column=0, columnspan=3, pady=10, padx=5, sticky=E + W)
-        self.PhaseVal_text.set("El 1-8 Phase Values: ")
+        ).grid(row=27, column=0, columnspan=3, pady=2, padx=2, sticky=E + W)
+        self.PhaseLabel_text.set("")
 
         def zero_PhaseDelta():
             slide_RxPhaseDelta.set(0)
@@ -417,10 +412,12 @@ class App:
             if value == "Static Phase":
                 slide_RxPhaseDelta.grid()
                 static_phase_label.grid()
+                self.PhaseLabel_text.set("Element 1-8 Phase Values: ")
                 self.PhaseVal_text.set("El 1-8 Phase Values: ")
             else:
                 slide_RxPhaseDelta.grid_remove()
                 static_phase_label.grid_remove()
+                self.PhaseLabel_text.set("")
                 self.PhaseVal_text.set("")
             if value == "Tracking":
                 self.plot_tabs.select(3)
@@ -458,33 +455,25 @@ class App:
         self.Sym_set = 0
 
         def sym_Rx1(val):
-            if self.Sym_set.get() == 1 and self.num_ADARs == 1:
-                slide_Rx4Gain.configure(state="normal")
-                slide_Rx4Gain.set(val)
-                slide_Rx4Gain.configure(state="disabled")
-            if self.Sym_set.get() == 1 and self.num_ADARs == 2:
+            if self.Sym_set.get() == 1:
                 slide_Rx8Gain.configure(state="normal")
                 slide_Rx8Gain.set(val)
                 slide_Rx8Gain.configure(state="disabled")
 
         def sym_Rx2(val):
-            if self.Sym_set.get() == 1 and self.num_ADARs == 1:
-                slide_Rx3Gain.configure(state="normal")
-                slide_Rx3Gain.set(val)
-                slide_Rx3Gain.configure(state="disabled")
-            if self.Sym_set.get() == 1 and self.num_ADARs == 2:
+            if self.Sym_set.get() == 1:
                 slide_Rx7Gain.configure(state="normal")
                 slide_Rx7Gain.set(val)
                 slide_Rx7Gain.configure(state="disabled")
 
         def sym_Rx3(val):
-            if self.Sym_set.get() == 1 and self.num_ADARs == 2:
+            if self.Sym_set.get() == 1:
                 slide_Rx6Gain.configure(state="normal")
                 slide_Rx6Gain.set(val)
                 slide_Rx6Gain.configure(state="disabled")
 
         def sym_Rx4(val):
-            if self.Sym_set.get() == 1 and self.num_ADARs == 2:
+            if self.Sym_set.get() == 1:
                 slide_Rx5Gain.configure(state="normal")
                 slide_Rx5Gain.set(val)
                 slide_Rx5Gain.configure(state="disabled")
@@ -492,7 +481,7 @@ class App:
         slide_Rx1Gain = Scale(
             frame2,
             from_=0,
-            to=127,
+            to=100,
             resolution=1,
             variable=self.Rx1Gain_set,
             command=sym_Rx1,
@@ -505,7 +494,7 @@ class App:
         slide_Rx2Gain = Scale(
             frame2,
             from_=0,
-            to=127,
+            to=100,
             resolution=1,
             variable=self.Rx2Gain_set,
             command=sym_Rx2,
@@ -518,7 +507,7 @@ class App:
         slide_Rx3Gain = Scale(
             frame2,
             from_=0,
-            to=127,
+            to=100,
             resolution=1,
             variable=self.Rx3Gain_set,
             command=sym_Rx3,
@@ -531,7 +520,7 @@ class App:
         slide_Rx4Gain = Scale(
             frame2,
             from_=0,
-            to=127,
+            to=100,
             resolution=1,
             variable=self.Rx4Gain_set,
             command=sym_Rx4,
@@ -541,66 +530,123 @@ class App:
             relief=SUNKEN,
             length=200,
         )
+        slide_Rx5Gain = Scale(
+            frame2,
+            from_=0,
+            to=100,
+            resolution=1,
+            variable=self.Rx5Gain_set,
+            troughcolor="LightYellow3",
+            bd=2,
+            orient=HORIZONTAL,
+            relief=SUNKEN,
+            length=200,
+        )
+        slide_Rx6Gain = Scale(
+            frame2,
+            from_=0,
+            to=100,
+            resolution=1,
+            variable=self.Rx6Gain_set,
+            troughcolor="LightYellow3",
+            bd=2,
+            orient=HORIZONTAL,
+            relief=SUNKEN,
+            length=200,
+        )
+        slide_Rx7Gain = Scale(
+            frame2,
+            from_=0,
+            to=100,
+            resolution=1,
+            variable=self.Rx7Gain_set,
+            troughcolor="LightYellow3",
+            bd=2,
+            orient=HORIZONTAL,
+            relief=SUNKEN,
+            length=200,
+        )
+        slide_Rx8Gain = Scale(
+            frame2,
+            from_=0,
+            to=100,
+            resolution=1,
+            variable=self.Rx8Gain_set,
+            troughcolor="LightYellow3",
+            bd=2,
+            orient=HORIZONTAL,
+            relief=SUNKEN,
+            length=200,
+        )
+
         slide_Rx1Gain.grid(row=0, column=0, padx=2, pady=2, rowspan=3, columnspan=3)
         slide_Rx2Gain.grid(row=3, column=0, padx=2, pady=2, rowspan=3, columnspan=3)
         slide_Rx3Gain.grid(row=6, column=0, padx=2, pady=2, rowspan=3, columnspan=3)
         slide_Rx4Gain.grid(row=9, column=0, padx=2, pady=2, rowspan=3, columnspan=3)
-        slide_Rx1Gain.set(127)
-        slide_Rx2Gain.set(127)
-        slide_Rx3Gain.set(127)
-        slide_Rx4Gain.set(127)
+        slide_Rx5Gain.grid(row=12, column=0, padx=2, pady=2, rowspan=3, columnspan=3)
+        slide_Rx6Gain.grid(row=15, column=0, padx=2, pady=2, rowspan=3, columnspan=3)
+        slide_Rx7Gain.grid(row=18, column=0, padx=2, pady=2, rowspan=3, columnspan=3)
+        slide_Rx8Gain.grid(row=21, column=0, padx=2, pady=2, rowspan=3, columnspan=3)
+        slide_Rx1Gain.set(100)
+        slide_Rx2Gain.set(100)
+        slide_Rx3Gain.set(100)
+        slide_Rx4Gain.set(100)
+        slide_Rx5Gain.set(100)
+        slide_Rx6Gain.set(100)
+        slide_Rx7Gain.set(100)
+        slide_Rx8Gain.set(100)
 
         def Rx1_toggle():
             if slide_Rx1Gain.get() == 0:
-                slide_Rx1Gain.set(127)
+                slide_Rx1Gain.set(100)
             else:
                 slide_Rx1Gain.set(0)
 
         def Rx2_toggle():
             if slide_Rx2Gain.get() == 0:
-                slide_Rx2Gain.set(127)
+                slide_Rx2Gain.set(100)
             else:
                 slide_Rx2Gain.set(0)
 
         def Rx3_toggle():
             if slide_Rx3Gain.get() == 0:
-                slide_Rx3Gain.set(127)
+                slide_Rx3Gain.set(100)
             else:
                 slide_Rx3Gain.set(0)
 
         def Rx4_toggle():
             if slide_Rx4Gain.get() == 0:
-                slide_Rx4Gain.set(127)
+                slide_Rx4Gain.set(100)
             else:
                 slide_Rx4Gain.set(0)
 
         def Rx5_toggle():
             if slide_Rx5Gain.get() == 0:
-                slide_Rx5Gain.set(127)
+                slide_Rx5Gain.set(100)
             else:
                 slide_Rx5Gain.set(0)
 
         def Rx6_toggle():
             if slide_Rx6Gain.get() == 0:
-                slide_Rx6Gain.set(127)
+                slide_Rx6Gain.set(100)
             else:
                 slide_Rx6Gain.set(0)
 
         def Rx7_toggle():
             if slide_Rx7Gain.get() == 0:
-                slide_Rx7Gain.set(127)
+                slide_Rx7Gain.set(100)
             else:
                 slide_Rx7Gain.set(0)
 
         def Rx8_toggle():
             if slide_Rx8Gain.get() == 0:
-                slide_Rx8Gain.set(127)
+                slide_Rx8Gain.set(100)
             else:
                 slide_Rx8Gain.set(0)
 
         tk.Button(
             frame2,
-            text="Rx1 Gain",
+            text="Rx1 Gain (%)",
             relief=RAISED,
             anchor=W,
             command=Rx1_toggle,
@@ -608,7 +654,7 @@ class App:
         ).grid(row=1, column=3, sticky=E + W)
         tk.Button(
             frame2,
-            text="Rx2 Gain",
+            text="Rx2 Gain (%)",
             relief=RAISED,
             anchor=W,
             command=Rx2_toggle,
@@ -616,7 +662,7 @@ class App:
         ).grid(row=4, column=3, sticky=E + W)
         tk.Button(
             frame2,
-            text="Rx3 Gain",
+            text="Rx3 Gain (%)",
             relief=RAISED,
             anchor=W,
             command=Rx3_toggle,
@@ -624,40 +670,64 @@ class App:
         ).grid(row=7, column=3, sticky=E + W)
         tk.Button(
             frame2,
-            text="Rx4 Gain",
+            text="Rx4 Gain (%)",
             relief=RAISED,
             anchor=W,
             command=Rx4_toggle,
             highlightthickness=0,
         ).grid(row=10, column=3, sticky=E + W)
+        tk.Button(
+            frame2,
+            text="Rx5 Gain (%)",
+            relief=RAISED,
+            anchor=W,
+            command=Rx5_toggle,
+            highlightthickness=0,
+        ).grid(row=13, column=3, sticky=E + W)
+        tk.Button(
+            frame2,
+            text="Rx6 Gain (%)",
+            relief=RAISED,
+            anchor=W,
+            command=Rx6_toggle,
+            highlightthickness=0,
+        ).grid(row=16, column=3, sticky=E + W)
+        tk.Button(
+            frame2,
+            text="Rx7 Gain (%)",
+            relief=RAISED,
+            anchor=W,
+            command=Rx7_toggle,
+            highlightthickness=0,
+        ).grid(row=19, column=3, sticky=E + W)
+        tk.Button(
+            frame2,
+            text="Rx8 Gain (%)",
+            relief=RAISED,
+            anchor=W,
+            command=Rx8_toggle,
+            highlightthickness=0,
+        ).grid(row=22, column=3, sticky=E + W)
 
         def sym_sel():
-            if self.num_ADARs == 1:
-                if self.Sym_set.get() == 1:
-                    slide_Rx4Gain.configure(state="normal")  # 'normal'
-                    slide_Rx4Gain.set(self.Rx1Gain_set.get())
-                    slide_Rx4Gain.configure(state="disabled")  # 'normal'
-                if self.Sym_set.get() == 0:
-                    slide_Rx4Gain.configure(state="normal")  # 'disabled'
-            if self.num_ADARs == 2:
-                if self.Sym_set.get() == 1:
-                    slide_Rx5Gain.configure(state="normal")  # 'normal'
-                    slide_Rx6Gain.configure(state="normal")  # 'normal'
-                    slide_Rx7Gain.configure(state="normal")  # 'normal'
-                    slide_Rx8Gain.configure(state="normal")  # 'normal'
-                    slide_Rx5Gain.set(self.Rx4Gain_set.get())
-                    slide_Rx6Gain.set(self.Rx3Gain_set.get())
-                    slide_Rx7Gain.set(self.Rx2Gain_set.get())
-                    slide_Rx8Gain.set(self.Rx1Gain_set.get())
-                    slide_Rx5Gain.configure(state="disabled")  # 'normal'
-                    slide_Rx6Gain.configure(state="disabled")  # 'normal'
-                    slide_Rx7Gain.configure(state="disabled")  # 'normal'
-                    slide_Rx8Gain.configure(state="disabled")  # 'normal'
-                if self.Sym_set.get() == 0:
-                    slide_Rx5Gain.configure(state="normal")  # 'disabled'
-                    slide_Rx6Gain.configure(state="normal")  # 'disabled'
-                    slide_Rx7Gain.configure(state="normal")  # 'disabled'
-                    slide_Rx8Gain.configure(state="normal")  # 'disabled'
+            if self.Sym_set.get() == 1:
+                slide_Rx5Gain.configure(state="normal")  # 'normal'
+                slide_Rx6Gain.configure(state="normal")  # 'normal'
+                slide_Rx7Gain.configure(state="normal")  # 'normal'
+                slide_Rx8Gain.configure(state="normal")  # 'normal'
+                slide_Rx5Gain.set(self.Rx4Gain_set.get())
+                slide_Rx6Gain.set(self.Rx3Gain_set.get())
+                slide_Rx7Gain.set(self.Rx2Gain_set.get())
+                slide_Rx8Gain.set(self.Rx1Gain_set.get())
+                slide_Rx5Gain.configure(state="disabled")  # 'normal'
+                slide_Rx6Gain.configure(state="disabled")  # 'normal'
+                slide_Rx7Gain.configure(state="disabled")  # 'normal'
+                slide_Rx8Gain.configure(state="disabled")  # 'normal'
+            if self.Sym_set.get() == 0:
+                slide_Rx5Gain.configure(state="normal")  # 'disabled'
+                slide_Rx6Gain.configure(state="normal")  # 'disabled'
+                slide_Rx7Gain.configure(state="normal")  # 'disabled'
+                slide_Rx8Gain.configure(state="normal")  # 'disabled'
 
         self.Sym_set = tk.IntVar()
         check_Sym = tk.Checkbutton(
@@ -674,165 +744,48 @@ class App:
         check_Sym.grid(row=24, column=0, columnspan=2, padx=5, pady=5, sticky=E + W)
 
         def taper_profile(taper_var):
-            if self.num_ADARs == 1:
-                if taper_var == 1:  # Rect Window
-                    gain1 = 127
-                elif taper_var == 2:  # Chebyshev
-                    gain1 = 64
-                elif taper_var == 3:  # Hamming
-                    gain1 = 55
-                elif taper_var == 4:  # Hann
-                    gain1 = 48
-                elif taper_var == 5:  # Blackman
-                    gain1 = 30
-                slide_Rx1Gain.configure(state="normal")  # 'disabled'
-                slide_Rx2Gain.configure(state="normal")  # 'disabled'
-                slide_Rx3Gain.configure(state="normal")  # 'disabled'
-                slide_Rx4Gain.configure(state="normal")  # 'disabled'
-                slide_Rx1Gain.set(gain1)
-                slide_Rx2Gain.set(127)
-                slide_Rx3Gain.set(127)
-                slide_Rx4Gain.set(gain1)
-            if self.num_ADARs == 2:
-                if taper_var == 1:  # Rect Window
-                    gain1 = 127
-                    gain2 = 127
-                    gain3 = 127
-                    gain4 = 127
-                elif taper_var == 2:  # Chebyshev
-                    gain1 = 5
-                    gain2 = 29
-                    gain3 = 79
-                    gain4 = 127
-                elif taper_var == 3:  # Hamming
-                    gain1 = 11
-                    gain2 = 34
-                    gain3 = 85
-                    gain4 = 127
-                elif taper_var == 4:  # Hann
-                    gain1 = 15
-                    gain2 = 54
-                    gain3 = 98
-                    gain4 = 127
-                elif taper_var == 5:  # Blackman
-                    gain1 = 7
-                    gain2 = 34
-                    gain3 = 84
-                    gain4 = 127
-                slide_Rx1Gain.configure(state="normal")  # 'disabled'
-                slide_Rx2Gain.configure(state="normal")  # 'disabled'
-                slide_Rx3Gain.configure(state="normal")  # 'disabled'
-                slide_Rx4Gain.configure(state="normal")  # 'disabled'
-                slide_Rx5Gain.configure(state="normal")  # 'disabled'
-                slide_Rx6Gain.configure(state="normal")  # 'disabled'
-                slide_Rx7Gain.configure(state="normal")  # 'disabled'
-                slide_Rx8Gain.configure(state="normal")  # 'disabled'
-                slide_Rx1Gain.set(gain1)
-                slide_Rx2Gain.set(gain2)
-                slide_Rx3Gain.set(gain3)
-                slide_Rx4Gain.set(gain4)
-                slide_Rx5Gain.set(gain4)
-                slide_Rx6Gain.set(gain3)
-                slide_Rx7Gain.set(gain2)
-                slide_Rx8Gain.set(gain1)
+            if taper_var == 1:  # Rect Window
+                gain1 = 100
+                gain2 = 100
+                gain3 = 100
+                gain4 = 100
+            elif taper_var == 2:  # Chebyshev
+                gain1 = 4
+                gain2 = 23
+                gain3 = 62
+                gain4 = 100
+            elif taper_var == 3:  # Hamming
+                gain1 = 9
+                gain2 = 27
+                gain3 = 67
+                gain4 = 100
+            elif taper_var == 4:  # Hann
+                gain1 = 12
+                gain2 = 43
+                gain3 = 77
+                gain4 = 100
+            elif taper_var == 5:  # Blackman
+                gain1 = 6
+                gain2 = 27
+                gain3 = 66
+                gain4 = 100
+            slide_Rx1Gain.configure(state="normal")  # 'disabled'
+            slide_Rx2Gain.configure(state="normal")  # 'disabled'
+            slide_Rx3Gain.configure(state="normal")  # 'disabled'
+            slide_Rx4Gain.configure(state="normal")  # 'disabled'
+            slide_Rx5Gain.configure(state="normal")  # 'disabled'
+            slide_Rx6Gain.configure(state="normal")  # 'disabled'
+            slide_Rx7Gain.configure(state="normal")  # 'disabled'
+            slide_Rx8Gain.configure(state="normal")  # 'disabled'
+            slide_Rx1Gain.set(gain1)
+            slide_Rx2Gain.set(gain2)
+            slide_Rx3Gain.set(gain3)
+            slide_Rx4Gain.set(gain4)
+            slide_Rx5Gain.set(gain4)
+            slide_Rx6Gain.set(gain3)
+            slide_Rx7Gain.set(gain2)
+            slide_Rx8Gain.set(gain1)
 
-        if self.num_ADARs == 2:
-            slide_Rx5Gain = Scale(
-                frame2,
-                from_=0,
-                to=127,
-                resolution=1,
-                variable=self.Rx5Gain_set,
-                troughcolor="LightYellow3",
-                bd=2,
-                orient=HORIZONTAL,
-                relief=SUNKEN,
-                length=200,
-            )
-            slide_Rx6Gain = Scale(
-                frame2,
-                from_=0,
-                to=127,
-                resolution=1,
-                variable=self.Rx6Gain_set,
-                troughcolor="LightYellow3",
-                bd=2,
-                orient=HORIZONTAL,
-                relief=SUNKEN,
-                length=200,
-            )
-            slide_Rx7Gain = Scale(
-                frame2,
-                from_=0,
-                to=127,
-                resolution=1,
-                variable=self.Rx7Gain_set,
-                troughcolor="LightYellow3",
-                bd=2,
-                orient=HORIZONTAL,
-                relief=SUNKEN,
-                length=200,
-            )
-            slide_Rx8Gain = Scale(
-                frame2,
-                from_=0,
-                to=127,
-                resolution=1,
-                variable=self.Rx8Gain_set,
-                troughcolor="LightYellow3",
-                bd=2,
-                orient=HORIZONTAL,
-                relief=SUNKEN,
-                length=200,
-            )
-            slide_Rx5Gain.grid(
-                row=12, column=0, padx=2, pady=2, rowspan=3, columnspan=3
-            )
-            slide_Rx6Gain.grid(
-                row=15, column=0, padx=2, pady=2, rowspan=3, columnspan=3
-            )
-            slide_Rx7Gain.grid(
-                row=18, column=0, padx=2, pady=2, rowspan=3, columnspan=3
-            )
-            slide_Rx8Gain.grid(
-                row=21, column=0, padx=2, pady=2, rowspan=3, columnspan=3
-            )
-            slide_Rx5Gain.set(127)
-            slide_Rx6Gain.set(127)
-            slide_Rx7Gain.set(127)
-            slide_Rx8Gain.set(127)
-            tk.Button(
-                frame2,
-                text="Rx5 Gain",
-                relief=RAISED,
-                anchor=W,
-                command=Rx5_toggle,
-                highlightthickness=0,
-            ).grid(row=13, column=3, sticky=E + W)
-            tk.Button(
-                frame2,
-                text="Rx6 Gain",
-                relief=RAISED,
-                anchor=W,
-                command=Rx6_toggle,
-                highlightthickness=0,
-            ).grid(row=16, column=3, sticky=E + W)
-            tk.Button(
-                frame2,
-                text="Rx7 Gain",
-                relief=RAISED,
-                anchor=W,
-                command=Rx7_toggle,
-                highlightthickness=0,
-            ).grid(row=19, column=3, sticky=E + W)
-            tk.Button(
-                frame2,
-                text="Rx8 Gain",
-                relief=RAISED,
-                anchor=W,
-                command=Rx8_toggle,
-                highlightthickness=0,
-            ).grid(row=22, column=3, sticky=E + W)
         button_rect = Button(
             frame2, text="Rect Window", command=lambda: taper_profile(1)
         )
@@ -987,45 +940,43 @@ class App:
                 phase2 = slide_Rx2Phase.get()
                 phase3 = slide_Rx3Phase.get()
                 phase4 = slide_Rx4Phase.get()
+                phase5 = slide_Rx5Phase.get()
+                phase6 = slide_Rx6Phase.get()
+                phase7 = slide_Rx7Phase.get()
+                phase8 = slide_Rx8Phase.get()
                 slide_Rx1Phase.set(0)
                 slide_Rx2Phase.set(0)
                 slide_Rx3Phase.set(0)
                 slide_Rx4Phase.set(0)
+                slide_Rx5Phase.set(0)
+                slide_Rx6Phase.set(0)
+                slide_Rx7Phase.set(0)
+                slide_Rx8Phase.set(0)
                 slide_Rx1Phase.configure(state="disabled")  # 'normal'
                 slide_Rx2Phase.configure(state="disabled")  # 'normal'
                 slide_Rx3Phase.configure(state="disabled")  # 'normal'
                 slide_Rx4Phase.configure(state="disabled")  # 'normal'
-                if self.num_ADARs == 2:
-                    phase5 = slide_Rx5Phase.get()
-                    phase6 = slide_Rx6Phase.get()
-                    phase7 = slide_Rx7Phase.get()
-                    phase8 = slide_Rx8Phase.get()
-                    slide_Rx5Phase.set(0)
-                    slide_Rx6Phase.set(0)
-                    slide_Rx7Phase.set(0)
-                    slide_Rx8Phase.set(0)
-                    slide_Rx5Phase.configure(state="disabled")  # 'normal'
-                    slide_Rx6Phase.configure(state="disabled")  # 'normal'
-                    slide_Rx7Phase.configure(state="disabled")  # 'normal'
-                    slide_Rx8Phase.configure(state="disabled")  # 'normal'
+                slide_Rx5Phase.configure(state="disabled")  # 'normal'
+                slide_Rx6Phase.configure(state="disabled")  # 'normal'
+                slide_Rx7Phase.configure(state="disabled")  # 'normal'
+                slide_Rx8Phase.configure(state="disabled")  # 'normal'
             else:
                 slide_Rx1Phase.configure(state="normal")  # 'disabled'
                 slide_Rx2Phase.configure(state="normal")  # 'disabled'
                 slide_Rx3Phase.configure(state="normal")  # 'disabled'
                 slide_Rx4Phase.configure(state="normal")  # 'disabled'
+                slide_Rx5Phase.configure(state="normal")  # 'disabled'
+                slide_Rx6Phase.configure(state="normal")  # 'disabled'
+                slide_Rx7Phase.configure(state="normal")  # 'disabled'
+                slide_Rx8Phase.configure(state="normal")  # 'disabled'
                 slide_Rx1Phase.set(phase1)
                 slide_Rx2Phase.set(phase2)
                 slide_Rx3Phase.set(phase3)
                 slide_Rx4Phase.set(phase4)
-                if self.num_ADARs == 2:
-                    slide_Rx5Phase.configure(state="normal")  # 'disabled'
-                    slide_Rx6Phase.configure(state="normal")  # 'disabled'
-                    slide_Rx7Phase.configure(state="normal")  # 'disabled'
-                    slide_Rx8Phase.configure(state="normal")  # 'disabled'
-                    slide_Rx5Phase.set(phase5)
-                    slide_Rx6Phase.set(phase6)
-                    slide_Rx7Phase.set(phase7)
-                    slide_Rx8Phase.set(phase8)
+                slide_Rx5Phase.set(phase5)
+                slide_Rx6Phase.set(phase6)
+                slide_Rx7Phase.set(phase7)
+                slide_Rx8Phase.set(phase8)
 
         check_Phase = tk.Checkbutton(
             frame3,
@@ -1039,107 +990,106 @@ class App:
             relief=SUNKEN,
         )
         check_Phase.grid(row=24, column=0, padx=10, pady=10, sticky=E + W)
-        if self.num_ADARs == 2:
-            slide_Rx5Phase = Scale(
-                frame3,
-                from_=-180,
-                to=180,
-                resolution=2.8125,
-                digits=7,
-                variable=self.Rx5Phase_set,
-                troughcolor="LightYellow3",
-                bd=2,
-                orient=HORIZONTAL,
-                relief=SUNKEN,
-                length=200,
-            )
-            slide_Rx6Phase = Scale(
-                frame3,
-                from_=-180,
-                to=180,
-                resolution=2.8125,
-                digits=7,
-                variable=self.Rx6Phase_set,
-                troughcolor="LightYellow3",
-                bd=2,
-                orient=HORIZONTAL,
-                relief=SUNKEN,
-                length=200,
-            )
-            slide_Rx7Phase = Scale(
-                frame3,
-                from_=-180,
-                to=180,
-                resolution=2.8125,
-                digits=7,
-                variable=self.Rx7Phase_set,
-                troughcolor="LightYellow3",
-                bd=2,
-                orient=HORIZONTAL,
-                relief=SUNKEN,
-                length=200,
-            )
-            slide_Rx8Phase = Scale(
-                frame3,
-                from_=-180,
-                to=180,
-                resolution=2.8125,
-                digits=7,
-                variable=self.Rx8Phase_set,
-                troughcolor="LightYellow3",
-                bd=2,
-                orient=HORIZONTAL,
-                relief=SUNKEN,
-                length=200,
-            )
-            slide_Rx5Phase.grid(
-                row=12, column=0, padx=2, pady=2, columnspan=3, rowspan=3, sticky=E + W
-            )
-            slide_Rx6Phase.grid(
-                row=15, column=0, padx=2, pady=2, columnspan=3, rowspan=3, sticky=E + W
-            )
-            slide_Rx7Phase.grid(
-                row=18, column=0, padx=2, pady=2, columnspan=3, rowspan=3, sticky=E + W
-            )
-            slide_Rx8Phase.grid(
-                row=21, column=0, padx=2, pady=2, columnspan=3, rowspan=3, sticky=E + W
-            )
-            slide_Rx5Phase.set(0)
-            slide_Rx6Phase.set(0)
-            slide_Rx7Phase.set(0)
-            slide_Rx8Phase.set(0)
-            tk.Button(
-                frame3,
-                text="Rx5 Phase",
-                relief=RAISED,
-                anchor=W,
-                command=zero_Rx5,
-                highlightthickness=0,
-            ).grid(row=13, column=3, padx=1, sticky=E + W)
-            tk.Button(
-                frame3,
-                text="Rx6 Phase",
-                relief=RAISED,
-                anchor=W,
-                command=zero_Rx6,
-                highlightthickness=0,
-            ).grid(row=16, column=3, padx=1, sticky=E + W)
-            tk.Button(
-                frame3,
-                text="Rx7 Phase",
-                relief=RAISED,
-                anchor=W,
-                command=zero_Rx7,
-                highlightthickness=0,
-            ).grid(row=19, column=3, padx=1, sticky=E + W)
-            tk.Button(
-                frame3,
-                text="Rx8 Phase",
-                relief=RAISED,
-                anchor=W,
-                command=zero_Rx8,
-                highlightthickness=0,
-            ).grid(row=22, column=3, padx=1, sticky=E + W)
+        slide_Rx5Phase = Scale(
+            frame3,
+            from_=-180,
+            to=180,
+            resolution=2.8125,
+            digits=7,
+            variable=self.Rx5Phase_set,
+            troughcolor="LightYellow3",
+            bd=2,
+            orient=HORIZONTAL,
+            relief=SUNKEN,
+            length=200,
+        )
+        slide_Rx6Phase = Scale(
+            frame3,
+            from_=-180,
+            to=180,
+            resolution=2.8125,
+            digits=7,
+            variable=self.Rx6Phase_set,
+            troughcolor="LightYellow3",
+            bd=2,
+            orient=HORIZONTAL,
+            relief=SUNKEN,
+            length=200,
+        )
+        slide_Rx7Phase = Scale(
+            frame3,
+            from_=-180,
+            to=180,
+            resolution=2.8125,
+            digits=7,
+            variable=self.Rx7Phase_set,
+            troughcolor="LightYellow3",
+            bd=2,
+            orient=HORIZONTAL,
+            relief=SUNKEN,
+            length=200,
+        )
+        slide_Rx8Phase = Scale(
+            frame3,
+            from_=-180,
+            to=180,
+            resolution=2.8125,
+            digits=7,
+            variable=self.Rx8Phase_set,
+            troughcolor="LightYellow3",
+            bd=2,
+            orient=HORIZONTAL,
+            relief=SUNKEN,
+            length=200,
+        )
+        slide_Rx5Phase.grid(
+            row=12, column=0, padx=2, pady=2, columnspan=3, rowspan=3, sticky=E + W
+        )
+        slide_Rx6Phase.grid(
+            row=15, column=0, padx=2, pady=2, columnspan=3, rowspan=3, sticky=E + W
+        )
+        slide_Rx7Phase.grid(
+            row=18, column=0, padx=2, pady=2, columnspan=3, rowspan=3, sticky=E + W
+        )
+        slide_Rx8Phase.grid(
+            row=21, column=0, padx=2, pady=2, columnspan=3, rowspan=3, sticky=E + W
+        )
+        slide_Rx5Phase.set(0)
+        slide_Rx6Phase.set(0)
+        slide_Rx7Phase.set(0)
+        slide_Rx8Phase.set(0)
+        tk.Button(
+            frame3,
+            text="Rx5 Phase",
+            relief=RAISED,
+            anchor=W,
+            command=zero_Rx5,
+            highlightthickness=0,
+        ).grid(row=13, column=3, padx=1, sticky=E + W)
+        tk.Button(
+            frame3,
+            text="Rx6 Phase",
+            relief=RAISED,
+            anchor=W,
+            command=zero_Rx6,
+            highlightthickness=0,
+        ).grid(row=16, column=3, padx=1, sticky=E + W)
+        tk.Button(
+            frame3,
+            text="Rx7 Phase",
+            relief=RAISED,
+            anchor=W,
+            command=zero_Rx7,
+            highlightthickness=0,
+        ).grid(row=19, column=3, padx=1, sticky=E + W)
+        tk.Button(
+            frame3,
+            text="Rx8 Phase",
+            relief=RAISED,
+            anchor=W,
+            command=zero_Rx8,
+            highlightthickness=0,
+        ).grid(row=22, column=3, padx=1, sticky=E + W)
         """Frame4:  BW"""
         self.BW = tk.DoubleVar()
         slide_SignalBW = Scale(
@@ -1567,8 +1517,163 @@ class App:
         self.plot_tabs.bind("<<NotebookTabChanged>>", on_tab_change)
 
         root.bind("<Configure>", conf)
-
         self.generate_Figures()
+
+        """ Add Lab Selection box """
+
+        def Lab_mode_select(value):
+            """ Reset all GUI values to default """
+            print("Resetting all GUI values...")
+            cntrl_tabs.select(frame1)  # Config tab
+            self.plot_tabs.select(self.frame11)  # select rectangular plot
+            cntrl_tabs.add(frame2)  # Gain tab
+            cntrl_tabs.add(frame3)  # Phase tab
+            cntrl_tabs.add(frame4)  # BW tab
+            cntrl_tabs.add(frame5)  # Bits tab
+            cntrl_tabs.add(frame6)  # Digital tab
+            self.plot_tabs.add(self.frame14)  # Signal Tracking Plot
+            mode_Menu.configure(state="normal")
+            self.update_time.set(config.refresh_time)
+            self.refresh.set(0)
+            self.Tx_select.set("Transmit Disabled")
+            Tx_mode_select("Transmit Disabled")
+            slide_SignalFreq.set(config.SignalFreq / 1e9)
+            slide_RxGain.set(int(config.Rx_gain))
+            slide_RxPhaseDelta.set(0)
+            self.mode_var.set("Beam Sweep")
+            mode_select("Beam Sweep")
+            self.Sym_set.set(0)
+            taper_profile(1)  # set all gains to max (100)
+            slide_Rx1Phase.set(0)
+            slide_Rx2Phase.set(0)
+            slide_Rx3Phase.set(0)
+            slide_Rx4Phase.set(0)
+            slide_Rx5Phase.set(0)
+            slide_Rx6Phase.set(0)
+            slide_Rx7Phase.set(0)
+            slide_Rx8Phase.set(0)
+            slide_SignalBW.set(self.SignalFreq / 1e9)
+            slide_res.set(2.8125)
+            slide_bits.set(7)
+            self.res_bits.set(1)
+            slide_B0_Phase.set(0)
+            slide_B1_Phase.set(0)
+            slide_B0_Gain.set(1)
+            slide_B1_Gain.set(1)
+            self.show_delta.set(0)
+            self.show_error.set(0)
+            self.PlotMax_set.set(0)
+            self.AngleMax_set.set(0)
+            if value == "Lab 1: Steering Angle":
+                print(value)
+                self.plot_tabs.select(self.frame13)  # select FFT plot
+                cntrl_tabs.hide(frame2)  # Gain tab
+                cntrl_tabs.hide(frame3)  # Phase tab
+                cntrl_tabs.hide(frame4)  # BW tab
+                cntrl_tabs.hide(frame5)  # Bits tab
+                cntrl_tabs.hide(frame6)  # Digital tab
+                self.plot_tabs.hide(self.frame14)  # Signal Tracking Plot
+                self.mode_var.set("Static Phase")
+                mode_select("Static Phase")
+                mode_Menu.configure(state="disabled")
+                self.PlotMax_set.set(1)
+                self.AngleMax_set.set(1)
+                self.refresh.set(1)
+                self.updater()
+            elif value == "Lab 2: Array Factor":
+                print(value)
+                self.plot_tabs.select(self.frame11)  # select rect plot
+                cntrl_tabs.hide(frame2)  # Gain tab
+                cntrl_tabs.hide(frame3)  # Phase tab
+                cntrl_tabs.hide(frame4)  # BW tab
+                cntrl_tabs.hide(frame5)  # Bits tab
+                cntrl_tabs.hide(frame6)  # Digital tab
+                self.plot_tabs.hide(self.frame14)  # Signal Tracking Plot
+                self.mode_var.set("Beam Sweep")
+                mode_select("Beam Sweep")
+                mode_Menu.configure(state="normal")
+                self.refresh.set(1)
+                self.updater()
+            elif value == "Lab 3: Tapering" or value == "Lab 4: Grating Lobes":
+                print(value)
+                self.plot_tabs.select(self.frame11)  # select rect plot
+                cntrl_tabs.select(frame2)  # select gain tab
+                cntrl_tabs.hide(frame3)  # Phase tab
+                cntrl_tabs.hide(frame4)  # BW tab
+                cntrl_tabs.hide(frame5)  # Bits tab
+                cntrl_tabs.hide(frame6)  # Digital tab
+                self.plot_tabs.hide(self.frame14)  # Signal Tracking Plot
+                self.mode_var.set("Beam Sweep")
+                mode_select("Beam Sweep")
+                mode_Menu.configure(state="normal")
+                self.refresh.set(1)
+                self.updater()
+            elif value == "Lab 5: Beam Squint":
+                print(value)
+                self.plot_tabs.select(self.frame11)  # select rect plot
+                cntrl_tabs.select(frame4)  # select BW tab
+                cntrl_tabs.hide(frame3)  # Phase tab
+                cntrl_tabs.hide(frame5)  # Bits tab
+                cntrl_tabs.hide(frame6)  # Digital tab
+                self.plot_tabs.hide(self.frame14)  # Signal Tracking Plot
+                self.mode_var.set("Beam Sweep")
+                mode_select("Beam Sweep")
+                mode_Menu.configure(state="normal")
+                self.refresh.set(1)
+                self.updater()
+            elif value == "Lab 6: Quantization":
+                print(value)
+                self.plot_tabs.select(self.frame11)  # select rect plot
+                cntrl_tabs.select(frame5)  # select Bits tab
+                cntrl_tabs.hide(frame3)  # Phase tab
+                cntrl_tabs.hide(frame6)  # Digital tab
+                self.plot_tabs.hide(self.frame14)  # Signal Tracking Plot
+                self.mode_var.set("Beam Sweep")
+                mode_select("Beam Sweep")
+                mode_Menu.configure(state="normal")
+                self.refresh.set(1)
+                self.updater()
+            elif value == "Lab 7: Hybrid Control":
+                print(value)
+                self.plot_tabs.select(self.frame11)  # select rect plot
+                cntrl_tabs.select(frame6)  # select digital tab
+                self.plot_tabs.hide(self.frame14)  # Signal Tracking Plot
+                self.mode_var.set("Beam Sweep")
+                mode_select("Beam Sweep")
+                mode_Menu.configure(state="normal")
+                self.refresh.set(1)
+                self.updater()
+            elif value == "Lab 8: Monopulse Tracking":
+                print(value)
+                self.plot_tabs.select(self.frame11)  # select rect plot
+                self.mode_var.set("Beam Sweep")
+                mode_select("Beam Sweep")
+                mode_Menu.configure(state="normal")
+                self.refresh.set(1)
+                self.updater()
+            else:
+                print("Enable All GUI Controls")
+
+        self.Lab_select = StringVar()
+        Lab_sel_menu = OptionMenu(
+            self.master,
+            self.Lab_select,
+            "Lab 1: Steering Angle",
+            "Lab 2: Array Factor",
+            "Lab 3: Tapering",
+            "Lab 4: Grating Lobes",
+            "Lab 5: Beam Squint",
+            "Lab 6: Quantization",
+            "Lab 7: Hybrid Control",
+            "Lab 8: Monopulse Tracking",
+            "Enable All",
+            command=Lab_mode_select,
+        )
+        Lab_sel_menu.grid(
+            row=13, column=4, padx=20, pady=2, rowspan=13, columnspan=1, sticky=E + W
+        )
+        self.Lab_select.set(config.start_lab)
+        Lab_mode_select(config.start_lab)
 
         """START THE UPDATER"""
         self.updater()
@@ -1718,10 +1823,10 @@ class App:
             SDR_LO_init(rpi_ip, self.LO_freq)
         if self.Rx_gain != int(self.RxGain.get()):
             self.Rx_gain = int(self.RxGain.get())
-            SDR_setRx(self.sdr, self.num_Rx, self.Rx_gain, self.Rx_gain)
+            SDR_setRx(self.sdr, self.Rx_gain, self.Rx_gain)
         if self.Tx_gain != int(self.TxGain.get()):
             self.Tx_gain = int(self.TxGain.get())
-            SDR_setTx(self.sdr, self.num_Rx, self.Tx_gain)
+            SDR_setTx(self.sdr, self.Tx_gain)
 
     def ConvertPhaseToSteerAngle(self, PhDelta):
         # steering angle theta = arcsin(c*deltaphase/(2*pi*f*d)
@@ -1822,10 +1927,7 @@ class App:
     def programBeam(self):
         self.programLO()
         self.programTaper()
-        # MWT - I found that averages would start at zero, and throw a div/zero error. Same with steer_res.
-        # MWT - looks like average slider was disabled in latest rev...
-        #        self.Averages = max(int(self.Avg.get()), 1)
-        steer_res = max(self.res.get(), 1.0)
+        steer_res = max(self.res.get(), 0.1)
         phase_step_size = 360 / (2 ** self.bits.get())
         self.bandwidth = self.BW.get()
         self.RxSignal_text.set(
@@ -1884,7 +1986,7 @@ class App:
             e7 = ((np.rint(PhaseValues[0] * 6 / step_size) * step_size)) % 360
             e8 = ((np.rint(PhaseValues[0] * 7 / step_size) * step_size)) % 360
             self.PhaseVal_text.set(
-                "El 1-8 Phases: 0, "
+                "0, "
                 + str(int(e2))
                 + ", "
                 + str(int(e3))
@@ -1907,15 +2009,14 @@ class App:
         self.max_gain = []
         max_signal = -100000
         max_angle = -90
-        # MWT: Originally phase cal values were added here. Now part of ADAR_set_Phase function.
-        self.RxPhase1 = self.Rx1Phase_set.get()  # +self.Rx1_cal
-        self.RxPhase2 = self.Rx2Phase_set.get()  # +self.Rx2_cal
-        self.RxPhase3 = self.Rx3Phase_set.get()  # +self.Rx3_cal
-        self.RxPhase4 = self.Rx4Phase_set.get()  # +self.Rx4_cal
-        self.RxPhase5 = self.Rx5Phase_set.get()  # +self.Rx5_cal
-        self.RxPhase6 = self.Rx6Phase_set.get()  # +self.Rx6_cal
-        self.RxPhase7 = self.Rx7Phase_set.get()  # +self.Rx7_cal
-        self.RxPhase8 = self.Rx8Phase_set.get()  # +self.Rx8_cal
+        self.RxPhase1 = self.Rx1Phase_set.get()
+        self.RxPhase2 = self.Rx2Phase_set.get()
+        self.RxPhase3 = self.Rx3Phase_set.get()
+        self.RxPhase4 = self.Rx4Phase_set.get()
+        self.RxPhase5 = self.Rx5Phase_set.get()
+        self.RxPhase6 = self.Rx6Phase_set.get()
+        self.RxPhase7 = self.Rx7Phase_set.get()
+        self.RxPhase8 = self.Rx8Phase_set.get()
         for PhDelta in PhaseValues:
             # if self.refresh.get()==1:
             # time.sleep((self.update_time.get()/1000)/100)
