@@ -45,6 +45,7 @@
 import os
 import sys
 import time
+from time import sleep
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -325,3 +326,22 @@ while do_plot == True:
     except KeyboardInterrupt:
         do_plot = False
         print("Exiting Loop")
+
+if func == "div_test":
+    while True:
+        my_cn0566.set_tx_sw_div(0)
+        sleep(1.0)
+        my_cn0566.set_tx_sw_div(2)
+        sleep(1.0)
+        my_cn0566.set_tx_sw_div(4)
+        sleep(1.0)
+        my_cn0566.set_tx_sw_div(8)
+        sleep(1.0)
+        my_cn0566.set_tx_sw_div(16)
+        sleep(1.0)
+        my_cn0566.set_tx_sw_div(32)
+        sleep(1.0)
+        my_cn0566.set_tx_sw_div(64)
+        sleep(1.0)
+        my_cn0566.set_tx_sw_div(128)
+        sleep(1.0)

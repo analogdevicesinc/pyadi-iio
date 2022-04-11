@@ -44,6 +44,7 @@ import os
 import pickle
 import sys
 import time
+from time import sleep
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -101,12 +102,17 @@ my_sdr.rx_rf_bandwidth = int(10e6)
 # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
 my_sdr.gain_control_mode_chan0 = "manual"  # DISable AGC
 my_sdr.gain_control_mode_chan1 = "manual"
-my_sdr.rx_hardwaregain_chan0 = 20
-my_sdr.rx_hardwaregain_chan1 = 20
+my_sdr.rx_hardwaregain_chan0 = 0  # dB
+my_sdr.rx_hardwaregain_chan1 = 0  # dB
 
 my_sdr.rx_lo = int(2.0e9)  # Downconvert by 2GHz  # Recieve Freq
 
-my_sdr.filter = "LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
+my_sdr.filter = "LTE20_MHz.ftr"  # Handy filter for fairly widdeband measurements
+
+# Make sure the Tx channels are attenuated (or off) and their freq is far away from Rx
+# this is a negative number between 0 and -88
+my_sdr.tx_hardwaregain_chan0 = int(-80)
+my_sdr.tx_hardwaregain_chan1 = int(-80)
 
 
 # Configure CN0566 parameters.
@@ -130,11 +136,15 @@ my_cn0566.freq_dev_time = 0
 my_cn0566.powerdown = 0
 my_cn0566.ramp_mode = "disabled"
 
-# Set all elements to maximum gain
+# Set all elements to half scale - a typical HB100 will have plenty
+# of signal power.
 
-gain_list = [127, 127, 127, 127, 127, 127, 127, 127]
+gain_list = [64] * 8
 for i in range(0, len(gain_list)):
     my_cn0566.set_chan_gain(i, gain_list[i], apply_cal=False)
+
+# Aim the beam at boresight (zero degrees). Place HB100 right in front of array.
+my_cn0566.set_beam_phase_diff(0.0)
 
 # Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
 my_cn0566.Averages = 8
@@ -148,7 +158,7 @@ full_freqs = np.empty(0)
 # Filter is 20MHz LTE, so you get a bit less than 20MHz of usable
 # bandwidth. Set step size to something less than 20MHz to ensure
 # complete coverage.
-f_start = 10.3e9
+f_start = 10.0e9
 f_stop = 10.7e9
 f_step = 10e6
 
@@ -161,6 +171,9 @@ for freq in range(int(f_start), int(f_stop), int(f_step)):
 
     data = my_sdr.rx()
     data_sum = data[0] + data[1]
+    #    max0 = np.max(abs(data[0]))
+    #    max1 = np.max(abs(data[1]))
+    #    print("max signals: ", max0, max1)
     ampl, freqs = spec_est(data_sum, 30000000, ref=2 ^ 12, plot=False)
     ampl = np.fft.fftshift(ampl)
     ampl = np.flip(ampl)  # Just an experiment...
@@ -168,8 +181,8 @@ for freq in range(int(f_start), int(f_stop), int(f_step)):
     freqs += freq
     full_freqs = np.concatenate((full_freqs, freqs))
     full_ampl = np.concatenate((full_ampl, ampl))
-    # break
-full_freqs /= 1e9
+    sleep(0.1)
+full_freqs /= 1e9  # Hz -> GHz
 
 peak_index = np.argmax(full_ampl)
 peak_freq = full_freqs[peak_index]
@@ -179,7 +192,7 @@ plt.figure(2)
 plt.title("Full Spectrum, peak at " + str(full_freqs[peak_index]) + " GHz.")
 plt.plot(full_freqs, full_ampl, linestyle="", marker="o", ms=2)
 plt.xlabel("Frequency [GHz]")
-plt.ylabel("Amplitude (dBfs)")
+plt.ylabel("Signal Strength")
 plt.show()
 print("You may need to close plot to continue...")
 

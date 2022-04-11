@@ -142,7 +142,7 @@ class CN0566(adf4159, adar1000_array):
         state_map = {0: 0, 2: 1, 4: 2, 8: 3, 16: 4, 32: 5, 64: 6, 128: 7}
         self.gpios.gpio_div_s0 = 0b001 & state_map[div_ratio]
         self.gpios.gpio_div_s1 = (0b010 & state_map[div_ratio]) >> 1
-        self.gpios.gpio_div_s0 = (0b100 & state_map[div_ratio]) >> 2
+        self.gpios.gpio_div_s2 = (0b100 & state_map[div_ratio]) >> 2
 
     def read_monitor(self, verbose=False):
         """ Read all voltage / temperature monitor channels.

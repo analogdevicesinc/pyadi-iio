@@ -109,7 +109,7 @@ class App:
         self.SignalFreq = config.SignalFreq
         self.Tx_freq = config.Tx_freq  # Pluto's Tx LO freq.
         self.Rx_freq = config.Rx_freq  # Pluto's Rx LO freq
-        self.LO_freq = config.LO_freq  # freq of the LO going to the LTC5549 mixers
+        self.LO_freq = self.SignalFreq + self.Rx_freq  # freq of the LTC5548 mixer LO
         self.SampleRate = config.SampleRate
         self.Rx_gain = config.Rx_gain
         self.Tx_gain = config.Tx_gain
@@ -2009,14 +2009,14 @@ class App:
         self.max_gain = []
         max_signal = -100000
         max_angle = -90
-        self.RxPhase1 = self.Rx1Phase_set.get()
-        self.RxPhase2 = self.Rx2Phase_set.get()
-        self.RxPhase3 = self.Rx3Phase_set.get()
-        self.RxPhase4 = self.Rx4Phase_set.get()
-        self.RxPhase5 = self.Rx5Phase_set.get()
-        self.RxPhase6 = self.Rx6Phase_set.get()
-        self.RxPhase7 = self.Rx7Phase_set.get()
-        self.RxPhase8 = self.Rx8Phase_set.get()
+        self.RxPhase1 = self.Rx1Phase_set.get() + self.Rx1_cal
+        self.RxPhase2 = self.Rx2Phase_set.get() + self.Rx2_cal
+        self.RxPhase3 = self.Rx3Phase_set.get() + self.Rx3_cal
+        self.RxPhase4 = self.Rx4Phase_set.get() + self.Rx4_cal
+        self.RxPhase5 = self.Rx5Phase_set.get() + self.Rx5_cal
+        self.RxPhase6 = self.Rx6Phase_set.get() + self.Rx6_cal
+        self.RxPhase7 = self.Rx7Phase_set.get() + self.Rx7_cal
+        self.RxPhase8 = self.Rx8Phase_set.get() + self.Rx8_cal
         for PhDelta in PhaseValues:
             # if self.refresh.get()==1:
             # time.sleep((self.update_time.get()/1000)/100)
@@ -2104,7 +2104,6 @@ class App:
         y_axis_max = self.y_max.get()
         self.ax1.set_xlim([x_axis_min, x_axis_max])
         self.ax1.set_ylim([y_axis_min, y_axis_max])
-        self.ax1.legend(["Sum", "Delta"])
         self.sum_line = self.ax1.plot(
             self.ArrayAngle,
             self.ArrayGain,
@@ -2113,15 +2112,6 @@ class App:
             alpha=0.7,
             mfc="blue",
             color="blue",
-        )
-        self.saved_line = self.ax1.plot(
-            self.saved_angle,
-            self.saved_gain,
-            "-o",
-            ms=1,
-            alpha=0.5,
-            mfc="green",
-            color="green",
         )
         self.delta_line = self.ax1.plot(
             self.ArrayAngle,
@@ -2132,6 +2122,16 @@ class App:
             mfc="red",
             color="red",
         )
+        self.saved_line = self.ax1.plot(
+            self.saved_angle,
+            self.saved_gain,
+            "-o",
+            ms=1,
+            alpha=0.5,
+            mfc="green",
+            color="green",
+        )
+        self.ax1.legend(["Sum", "Delta"], loc="lower right")
         self.max_gain_line = self.ax1.plot(
             self.ArrayAngle,
             np.full(len(self.ArrayAngle), 0),
@@ -2149,7 +2149,6 @@ class App:
 
         self.ax1.grid(True)
 
-        self.ax2.legend(["Phase Delta", "Error Function"])
         self.phase_line = self.ax2.plot(
             self.ArrayAngle,
             np.sign(self.ArrayBeamPhase),
@@ -2168,6 +2167,7 @@ class App:
             mfc="red",
             color="red",
         )
+        self.ax2.legend(["Phase Delta", "Error Function"], loc="upper right")
         self.ax2.set_xlabel("Steering Angle (deg)")
         self.ax2.set_ylabel("Error Function")
         self.ax2.set_xlim([x_axis_min, x_axis_max])
@@ -2224,6 +2224,13 @@ class App:
     def savePlot(self):
         self.saved_gain = self.ArrayGain
         self.saved_angle = self.ArrayAngle
+        np.savetxt(
+            "saved_plot",
+            (self.saved_angle, self.saved_gain),
+            delimiter=",",
+            header="steering angle array (first), then FFT gain array",
+        )
+        print("data saved to saved_plot.txt")
 
     def clearPlot(self):
         self.saved_gain = []
