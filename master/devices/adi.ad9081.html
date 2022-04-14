@@ -199,6 +199,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd1080.html">adpd1080</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd410x.html">adpd410x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrf5720.html">adrf5720</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9002.html">adrv9002</a></li>
@@ -383,33 +384,6 @@ regulator (vdd), or do the opposite in reverse order.</p>
 <dd><p>rx_main_6dB_digital_gains: Enable 6dB of gain per CDDC</p>
 </dd></dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_main_ffh_gpio_mode_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_ffh_gpio_mode_enable</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_main_ffh_gpio_mode_enable" title="Permalink to this definition"></a></dt>
-<dd><p>rx_main_ffh_gpio_mode_enable: Enablles GPIO controlled frequency hopping</p>
-</dd></dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_main_ffh_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_ffh_mode</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_main_ffh_mode" title="Permalink to this definition"></a></dt>
-<dd><p>rx_main_ffh_mode: ADC FFH mode. Options are:
-instantaneous_update, synchronous_update_by_transfer_bit,
-synchronous_update_by_gpio</p>
-</dd></dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_main_ffh_trig_hop_en">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_ffh_trig_hop_en</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_main_ffh_trig_hop_en" title="Permalink to this definition"></a></dt>
-<dd><p>rx_main_ffh_trig_hop_en: Enable triggered hopping for CDDC NCO</p>
-</dd></dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_main_nco_ffh_index">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_nco_ffh_index</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_main_nco_ffh_index" title="Permalink to this definition"></a></dt>
-<dd><p>rx_main_nco_ffh_index: Receive path coarse DDC NCO index in range [0,15]</p>
-</dd></dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_main_nco_ffh_select">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_nco_ffh_select</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_main_nco_ffh_select" title="Permalink to this definition"></a></dt>
-<dd><p>rx_main_nco_ffh_select: Receive path coarse DDC NCO select in range [0,15]</p>
-</dd></dl>
-<dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9081.ad9081.rx_main_nco_frequencies">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9081.ad9081.rx_main_nco_frequencies" title="Permalink to this definition"></a></dt>
 <dd><p>rx_main_nco_frequencies: Receive path coarse DDC NCO frequencies</p>
@@ -490,25 +464,15 @@ underflow due to memory bottlenecks.</p>
 The NCO frequency of the NCO selected from the bank defined by tx_main_ffh_index</p>
 </dd></dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_main_ffh_gpio_mode_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_ffh_gpio_mode_enable</span></span><a class="headerlink" href="#adi.ad9081.ad9081.tx_main_ffh_gpio_mode_enable" title="Permalink to this definition"></a></dt>
-<dd><p>tx_main_ffh_gpio_mode_enable: Enablles GPIO controlled frequency hopping</p>
-</dd></dl>
-<dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_main_ffh_index">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_ffh_index</span></span><a class="headerlink" href="#adi.ad9081.ad9081.tx_main_ffh_index" title="Permalink to this definition"></a></dt>
-<dd><p>tx_main_ffh_index: Transmitter fast frequency hop NCO bank index  in range [0,30]</p>
+<dd><p>tx_main_ffh_index: Transmitter fast frequency hop NCO bank index</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_main_ffh_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_ffh_mode</span></span><a class="headerlink" href="#adi.ad9081.ad9081.tx_main_ffh_mode" title="Permalink to this definition"></a></dt>
 <dd><p>tx_main_ffh_mode: Set hop transition mode of NCOs Options are:
 phase_continuous, phase_incontinuous, and phase_coherent</p>
-</dd></dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_main_nco_ffh_select">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_ffh_select</span></span><a class="headerlink" href="#adi.ad9081.ad9081.tx_main_nco_ffh_select" title="Permalink to this definition"></a></dt>
-<dd><p>tx_main_nco_ffh_select: Transmit path coarse DDC NCO select in range [0,30]</p>
 </dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9081.ad9081.tx_main_nco_frequencies">
