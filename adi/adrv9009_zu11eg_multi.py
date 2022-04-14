@@ -384,6 +384,20 @@ class adrv9009_zu11eg_multi(object):
                     "adi,trx-pll-lo-frequency_hz", freq, dev._ctrl_d
                 )
 
+    def set_trx_framer_a_loopback(self, enable):
+        """set_trx_framer_a_loopback: Set bist_framer_a_loopback
+        """
+        for dev in self.secondaries + [self.primary]:
+            dev._set_iio_debug_attr_str("bist_framer_a_loopback", enable, dev._ctrl)
+            dev._set_iio_debug_attr_str("bist_framer_a_loopback", enable, dev._ctrl_b)
+            if self.fmcomms8:
+                dev._set_iio_debug_attr_str(
+                    "bist_framer_a_loopback", enable, dev._ctrl_c
+                )
+                dev._set_iio_debug_attr_str(
+                    "bist_framer_a_loopback", enable, dev._ctrl_d
+                )
+
     def __refill_samples(self, dev, is_primary):
         if is_primary:
             self.samples_primary = dev.rx()
