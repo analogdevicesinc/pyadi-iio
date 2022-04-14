@@ -542,7 +542,7 @@ class ad9081(rx_tx, context_manager, sync_start):
         """tx_main_ffh_mode: Set hop transition mode of NCOs Options are:
         phase_continuous, phase_incontinuous, and phase_coherent
         """
-        return self._get_iio_attr_vec(
+        return self._get_iio_attr_str_vec(
             self._tx_coarse_duc_channel_names, "main_ffh_mode", True
         )
 
