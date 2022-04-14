@@ -364,6 +364,19 @@ class ad9081(rx_tx, context_manager, sync_start):
         )
 
     @property
+    def rx_main_ffh_gpio_mode_enable(self):
+        """rx_main_ffh_gpio_mode_enable: Enablles GPIO controlled frequency hopping"""
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_ffh_gpio_mode_en", False
+        )
+
+    @rx_main_ffh_gpio_mode_enable.setter
+    def rx_main_ffh_gpio_mode_enable(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_coarse_ddc_channel_names, "main_ffh_gpio_mode_en", False, value,
+        )
+
+    @property
     def tx_channel_nco_frequencies(self):
         """tx_channel_nco_frequencies: Transmit path fine DUC NCO frequencies"""
         return self._get_iio_attr_vec(
