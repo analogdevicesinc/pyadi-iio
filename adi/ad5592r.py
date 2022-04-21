@@ -31,24 +31,26 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from calendar import c
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx, tx
 
+from calendar import c
 from decimal import Decimal
 
 class ad5592r(context_manager, rx, tx):
 
     channel = []  # type: ignore
+    _device_name= ""
 
     def __init__(self,uri="",device_index=0):
         context_manager.__init__(self,uri)
-        compatible_parts=["ad5592r"]
+        compatible_parts=["ad5592r", "ad5593r"]
         self.ctrl=None
         index=0
 
-         # Selecting the device_index-th device from the 5592 family as working device.
+         # Selecting the device_index-th device from the 559XR family as working device.
         for device in self._ctx.devices:
             if device.name in compatible_parts:
                 if index == device_index:
@@ -59,8 +61,7 @@ class ad5592r(context_manager, rx, tx):
                 else:
                     index += 1
 
-        # Dynamically get channels and sorting them after the index of the first voltage channel
-        #self._ctrl.channels.sort()
+        # Dynamically get channels after the index
         for ch in self._ctrl.channels:
             name = ch._id
             output = ch._output
@@ -85,15 +86,15 @@ class ad5592r(context_manager, rx, tx):
             """AD5592r channel raw value"""
             return self._get_iio_attr(self.name, "raw", self._output)
 
+        @property
+        def scale(self):
+            """AD5592r channel scale(gain)"""
+            return float(self._get_iio_attr_str(self.name, "scale", self._output))
+
         @raw.setter
         def raw(self, value):
             if self._output == True:
                 self._set_iio_attr(self.name, "raw", self._output, value)
-
-        @property
-        def scale(self):
-            """AD7124 channel scale(gain)"""
-            return float(self._get_iio_attr_str(self.name, "scale", self._output))
 
         @scale.setter
         def scale(self, value):
