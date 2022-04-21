@@ -42,12 +42,12 @@ from decimal import Decimal
 class ad5592r(context_manager, rx, tx):
 
     channel = []  # type: ignore
-    _device_name= ""
+    _device_name = ""
 
-    def __init__(self,uri="",device_index=0):
+    def __init__(self, uri = "", device_index=0):
         context_manager.__init__(self,uri)
-        compatible_parts=["ad5592r", "ad5593r"]
-        self.ctrl=None
+        compatible_parts = ["ad5592r", "ad5593r"]
+        self.ctrl = None
         index=0
 
          # Selecting the device_index-th device from the 559XR family as working device.
