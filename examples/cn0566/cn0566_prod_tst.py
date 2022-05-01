@@ -78,10 +78,10 @@ monitor_ch_names = [
 ]
 
 gain_cal_limits = (
-    0.60  # Fail if any channel is less than 60% of the highest gain channel
+    0.70  # Fail if any channel is less than 60% of the highest gain channel
 )
 phase_cal_limits = (
-    50.0  # Fail if delta between any two channels is more than 50 degress.
+    80.0  # Fail if delta between any two channels is more than 50 degress.
 )
 
 if os.name == "nt":  # Assume running on Windows
@@ -94,6 +94,7 @@ elif os.name == "posix":
     print("Running on Linux, connecting to ", rpi_ip, " and ", sdr_ip)
 else:
     print("Can't detect OS")
+
 
 try:
     x = my_sdr.uri
@@ -115,6 +116,19 @@ except NameError:
 
     my_cn0566 = CN0566(uri=rpi_ip, rx_dev=my_sdr)
 
+
+# Set up receive frequency. When using HB100, you need to know its frequency
+# fairly accurately. Use the cn0566_find_hb100.py script to measure its frequency
+# and write out to the cal file. IF using the onboard TX generator, delete
+# the cal file and set frequency via config.py or config_custom.py.
+
+try:
+    my_cn0566.SignalFreq = load_hb100_cal()
+    print("Found signal freq file, ", my_cn0566.SignalFreq)
+except:
+    my_cn0566.SignalFreq = 10.525e9
+    print("No signal freq found, keeping at ", my_cn0566.SignalFreq)
+
 # Configure SDR parameters.
 
 # configure sdr/pluto according to above-mentioned freq plan
@@ -122,10 +136,6 @@ except NameError:
 # my_sdr._ctrl.debug_attrs["adi,ensm-enable-txnrx-control-enable"].value = "0"  # Disable pin control so spi can move the states
 # my_sdr._ctrl.debug_attrs["initialize"].value = "1"
 my_sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
-my_sdr.gain_control_mode_chan1 = (
-    "manual"  # We must be in manual gain control mode (otherwise we won't see
-)
-my_sdr.rx_hardwaregain_chan1 = 20
 my_sdr._rxadc.set_kernel_buffers_count(
     1
 )  # Super important - don't want to have to flush stale buffers
@@ -139,8 +149,8 @@ my_sdr.rx_rf_bandwidth = int(10e6)
 # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
 my_sdr.gain_control_mode_chan0 = "manual"
 my_sdr.gain_control_mode_chan1 = "manual"
-my_sdr.rx_hardwaregain_chan0 = 6
-my_sdr.rx_hardwaregain_chan1 = 6
+my_sdr.rx_hardwaregain_chan0 = 12
+my_sdr.rx_hardwaregain_chan1 = 12
 
 my_sdr.rx_lo = int(2.2e9)  # 4495000000  # Recieve Freq
 my_sdr.tx_lo = int(2.2e9)
@@ -152,7 +162,7 @@ my_sdr.rx_buffer_size = rx_buffer_size
 my_sdr.tx_cyclic_buffer = True
 my_sdr.tx_buffer_size = int(2 ** 16)
 
-my_sdr.tx_hardwaregain_chan0 = int(-6)  # this is a negative number between 0 and -88
+my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
 my_sdr.tx_hardwaregain_chan1 = int(
     -6
 )  # Make sure the Tx channels are attenuated (or off) and their freq is far away from Rx
@@ -173,8 +183,6 @@ my_cn0566.configure(
     device_mode="rx"
 )  # Configure adar in mentioned mode and also sets gain of all channel to 127
 
-# my_cn0566.SignalFreq = 10.525 - nominal HB100 frequency
-my_cn0566.SignalFreq = 10.525e9
 
 # Onboard source w/ external Vivaldi
 my_cn0566.frequency = (
@@ -208,21 +216,24 @@ for i in range(0, len(monitor_vals)):
 print("ToDo: Compare monitor readings with allowable (TBD) minimums and maximums.")
 
 
-input(
+print(
     "Calibrating gain and phase - place antenna at mechanical boresight in front\
       of the array, then press enter..."
 )
 print("Calibrating Gain, verbosely, then saving cal file...")
 gain_calibration(my_cn0566, verbose=True)  # Start Gain Calibration
-my_cn0566.save_gain_cal()  # Default filename
+
 print("Calibrating Phase, verbosely, then saving cal file...")
 phase_calibration(my_cn0566, verbose=True)  # Start Phase Calibration
-my_cn0566.save_phase_cal()  # Default filename
+
 print("Done calibration")
 
 
+# my_cn0566.save_gain_cal()  # Default filename
+# my_cn0566.save_phase_cal()  # Default filename
+
 for i in range(0, len(my_cn0566.gcal)):
-    if my_cn0566.gcal[i] > gain_cal_limits:
+    if my_cn0566.gcal[i] < gain_cal_limits:
         print("Gain cal failure on element ", i, ", ", my_cn0566.gcal[i])
         failures.append(
             "Gain cal falure on element "

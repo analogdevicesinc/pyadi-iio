@@ -56,7 +56,19 @@ from cn0566_functions import (
     phase_calibration,
 )
 from scipy import signal
-from SDR_functions import *
+from SDR_functions import SDR_init
+
+try:
+    import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
+
+    print("Found custom config file")
+except:
+    print("Didn't find custom config, looking for default.")
+    try:
+        import config as config
+    except:
+        print("Make sure config.py is in this directory")
+        sys.exit(0)
 
 colors = ["black", "gray", "red", "orange", "yellow", "green", "blue", "purple"]
 
@@ -90,19 +102,6 @@ def do_cal_phase():
     plt.show()
 
 
-try:
-    import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
-
-    print("Found custom config file")
-except:
-    print("Didn't find custom config, looking for default.")
-    try:
-        import config as config
-    except:
-        print("Make sure config.py is in this directory")
-        sys.exit(0)
-
-
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
     #     rpi_ip = "ip:169.254.225.48" # Hard code an IP here for debug
@@ -115,14 +114,16 @@ elif os.name == "posix":
 else:
     print("Can't detect OS")
 
+
 try:
     x = my_sdr.uri
     print("Pluto already connected")
 except NameError:
     print("Pluto not connected, connecting...")
-    from adi import ad9361
+    # from adi import ad9361
 
-    my_sdr = ad9361(uri=sdr_ip)
+    #    my_sdr = ad9361(uri=sdr_ip)
+    my_sdr = SDR_init(sdr_ip, 30000000, config.Tx_freq, config.Rx_freq, 6, -6, 1024)
 
 time.sleep(0.5)
 
@@ -149,33 +150,7 @@ except:
 
 #  Configure SDR parameters.
 
-my_sdr._ctrl.debug_attrs["adi,frequency-division-duplex-mode-enable"].value = "1"
-# Disable pin control (use SPI)
-my_sdr._ctrl.debug_attrs["adi,ensm-enable-txnrx-control-enable"].value = "0"
-my_sdr._ctrl.debug_attrs["initialize"].value = "1"
-my_sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
-
-my_sdr._rxadc.set_kernel_buffers_count(1)  # So we don't have to flush
-rx = my_sdr._ctrl.find_channel("voltage0")
-rx.attrs["quadrature_tracking_en"].value = "1"  # enable quadrature tracking
-rx_buffer_size = int(4 * 256)
-my_sdr.sample_rate = int(30000000)  # Sampling rate
-my_sdr.rx_buffer_size = int(4 * 256)
-my_sdr.rx_rf_bandwidth = int(10e6)
-# We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
-my_sdr.gain_control_mode_chan0 = "manual"
-my_sdr.gain_control_mode_chan1 = "manual"
-my_sdr.rx_hardwaregain_chan0 = 6
-my_sdr.rx_hardwaregain_chan1 = 6
-
-my_sdr.rx_lo = int(config.Rx_freq)  # 4495000000  # Recieve Freq
-my_sdr.tx_lo = int(config.Tx_freq)
-
-my_sdr.filter = "LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
-
-# my_sdr.tx_cyclic_buffer = True
-# my_sdr.tx_buffer_size = int(2 ** 16)
-
+my_sdr.filter = "LTE20_MHz.ftr"  # Load LTE 20 MHz filter
 
 if config.use_tx is True:
     tx_level = -6
@@ -214,17 +189,14 @@ my_cn0566.powerdown = 0
 my_cn0566.ramp_mode = "disabled"
 
 #  If you want to use previously calibrated values load_gain and load_phase values by passing path of previously
-#     stored values. If this is not done system will be working as uncalibrated system.
-#     These will fail gracefully and default to no calibration if files not present.
+#  stored values. If this is not done system will be working as uncalibrated system.
+#  These will fail gracefully and default to no calibration if files not present.
 
 my_cn0566.load_gain_cal("gain_cal_val.pkl")
 my_cn0566.load_phase_cal("phase_cal_val.pkl")
 
 # This can be useful in Array size vs beam width experiment or beamtappering experiment.
 #     Set the gain of outer channels to 0 and beam width will increase and so on.
-
-# my_beamformer.set_chan_gain(3, 120)  # set gain of Individual channel
-# my_beamformer.set_all_gain(120)  # Set all gain to mentioned value, if not, set to 127 i.e. max gain
 
 # To set gain of all channels with different values.
 #     Here's where you would apply a window / taper function,
@@ -243,7 +215,7 @@ my_cn0566.set_beam_phase_diff(0.0)
 # Really basic options - "plot" to plot continuously, "cal" to calibrate both gain and phase.
 func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
 
-# func = None
+
 if func == "cal":
     input(
         "Calibrating gain and phase - place antenna at mechanical boresight in front of the array, then press enter..."

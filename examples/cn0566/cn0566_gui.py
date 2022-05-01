@@ -135,11 +135,14 @@ class App:
         self.d = config.d
         self.saved_gain = []
         self.saved_angle = []
+        self.saved_gainB = []
+        self.saved_angleB = []
         self.ArrayGain = []
         self.ArrayAngle = []
         self.ArrayError = []
         self.ArrayBeamPhase = []
         self.TrackArray = []
+        self.Gain_time = [-100] * 100
         self.win_width = 0
         self.win_height = 0
         for i in range(0, 1000):
@@ -222,12 +225,16 @@ class App:
             relief=RAISED,
         )
         button_save = Button(
-            self.master, text="Copy Plot to Memory", command=self.savePlot
+            self.master, text="Copy Plot A", fg="green", command=self.savePlot
         )
         button_save.grid(row=14, column=5, columnspan=1, sticky=E + W)
+        button_save2 = Button(
+            self.master, text="Copy Plot B", fg="purple", command=self.savePlotB
+        )
+        button_save2.grid(row=14, column=6, columnspan=1, sticky=E + W)
         button_clear = Button(self.master, text="Clear Memory", command=self.clearPlot)
-        button_clear.grid(row=14, column=6, columnspan=1, sticky=E + W)
-        button_exit.grid(row=14, column=7, columnspan=2, padx=50, pady=10, sticky=E + W)
+        button_clear.grid(row=14, column=7, columnspan=1, sticky=E + W)
+        button_exit.grid(row=14, column=8, columnspan=1, padx=50, pady=10, sticky=E + W)
 
         cntrl_width = 450
         cntrl_height = 600
@@ -409,7 +416,9 @@ class App:
         self.PhaseVal_text.set("")
 
         def mode_select(value):
-            if value == "Static Phase":
+            if value == "Gain vs Time":
+                print("Plotting Gain vs Time -- ignore the x axis!")
+            if value == "Static Phase" or value == "Gain vs Time":
                 slide_RxPhaseDelta.grid()
                 static_phase_label.grid()
                 self.PhaseLabel_text.set("Element 1-8 Phase Values: ")
@@ -434,6 +443,7 @@ class App:
             self.mode_var,
             "Beam Sweep",
             "Static Phase",
+            "Gain vs Time",
             "Tracking",
             command=mode_select,
         )
@@ -1472,7 +1482,7 @@ class App:
 
         """CONFIGURE THE TABS FOR PLOTTING"""
         self.plot_tabs = ttk.Notebook(self.master)
-        self.plot_tabs.grid(padx=10, pady=10, row=0, column=4, columnspan=4)
+        self.plot_tabs.grid(padx=10, pady=10, row=0, column=4, columnspan=5)
         self.plot_tabs.columnconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
         self.plot_tabs.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
         self.frame11 = Frame(self.plot_tabs, width=700, height=500)
@@ -1583,7 +1593,7 @@ class App:
             elif value == "Lab 2: Array Factor":
                 print(value)
                 self.plot_tabs.select(self.frame11)  # select rect plot
-                cntrl_tabs.hide(frame2)  # Gain tab
+                # cntrl_tabs.hide(frame2)  # Gain tab
                 cntrl_tabs.hide(frame3)  # Phase tab
                 cntrl_tabs.hide(frame4)  # BW tab
                 cntrl_tabs.hide(frame5)  # Bits tab
@@ -1623,13 +1633,17 @@ class App:
                 self.updater()
             elif value == "Lab 6: Quantization":
                 print(value)
+                slide_res.set(1)
+                slide_bits.set(7)
+                self.res_bits.set(0)
+                taper_profile(5)  # set blackman taper on the elements
                 self.plot_tabs.select(self.frame11)  # select rect plot
-                cntrl_tabs.select(frame5)  # select Bits tab
+                cntrl_tabs.select(frame1)  # select Config tab
                 cntrl_tabs.hide(frame3)  # Phase tab
                 cntrl_tabs.hide(frame6)  # Digital tab
                 self.plot_tabs.hide(self.frame14)  # Signal Tracking Plot
-                self.mode_var.set("Beam Sweep")
-                mode_select("Beam Sweep")
+                self.mode_var.set("Gain vs Time")
+                mode_select("Gain vs Time")
                 mode_Menu.configure(state="normal")
                 self.refresh.set(1)
                 self.updater()
@@ -1645,6 +1659,7 @@ class App:
                 self.updater()
             elif value == "Lab 8: Monopulse Tracking":
                 print(value)
+                taper_profile(5)  # set blackman taper on the elements
                 self.plot_tabs.select(self.frame11)  # select rect plot
                 self.mode_var.set("Beam Sweep")
                 mode_select("Beam Sweep")
@@ -1966,8 +1981,10 @@ class App:
         if self.res_bits.get() == 1:
             phase_limit = int(225 / phase_step_size) * phase_step_size + phase_step_size
             PhaseValues = np.arange(-phase_limit, phase_limit, phase_step_size)
-        if self.mode_var.get() == "Static Phase":
-            # PhaseValues = [self.RxPhaseDelta.get()]
+        if (
+            self.mode_var.get() == "Static Phase"
+            or self.mode_var.get() == "Gain vs Time"
+        ):
             PhaseValues = np.degrees(
                 2
                 * 3.14159
@@ -2001,6 +2018,11 @@ class App:
                 + ", "
                 + str(int(e8))
             )
+        """if self.mode_var.get() == "Gain vs Time":
+            PhaseValues = np.degrees(
+                2 * 3.14159 * self.d
+                * np.sin(np.radians([self.RxPhaseDelta.get()]))
+                * self.SignalFreq / self.c )"""
         gain = []
         delta = []
         beam_phase = []
@@ -2052,11 +2074,17 @@ class App:
                 max_angle = PeakValue_beam_phase
                 self.max_PhDelta = PhDelta
                 data_fft = sum_chan
-            gain.append(PeakValue_sum)
-            delta.append(PeakValue_delta)
-            beam_phase.append(PeakValue_beam_phase)
-            angle.append(SteerAngle)
-            diff_error.append(target_error)
+            if self.mode_var.get() != "Gain vs Time":
+                gain.append(PeakValue_sum)
+                delta.append(PeakValue_delta)
+                beam_phase.append(PeakValue_beam_phase)
+                angle.append(SteerAngle)
+                diff_error.append(target_error)
+
+            if self.mode_var.get() == "Gain vs Time":
+                time.sleep(0.1)
+                self.Gain_time.append(PeakValue_sum)
+                self.Gain_time = self.Gain_time[-100:]
 
         # take the FFT of the raw data ("data_fft") which corresponded to the peak gain
         NumSamples = len(data_fft)  # number of samples
@@ -2077,15 +2105,16 @@ class App:
             self.xf
         )  # this is the x axis (freq in Hz) for our fft plot
 
-        self.ArrayGain = gain
-        self.ArrayDelta = delta
-        self.ArrayBeamPhase = beam_phase
-        self.ArrayAngle = angle
-        self.ArrayError = diff_error
-        self.peak_gain = max(self.ArrayGain)
-        index_peak_gain = np.where(self.ArrayGain == self.peak_gain)
-        index_peak_gain = index_peak_gain[0]
-        self.max_angle = self.ArrayAngle[int(index_peak_gain[0])]
+        if self.mode_var.get() != "Gain vs Time":
+            self.ArrayGain = gain
+            self.ArrayDelta = delta
+            self.ArrayBeamPhase = beam_phase
+            self.ArrayAngle = angle
+            self.ArrayError = diff_error
+            self.peak_gain = max(self.ArrayGain)
+            index_peak_gain = np.where(self.ArrayGain == self.peak_gain)
+            index_peak_gain = index_peak_gain[0]
+            self.max_angle = self.ArrayAngle[int(index_peak_gain[0])]
 
     def generate_Figures(self):
         plt.clf()
@@ -2131,6 +2160,15 @@ class App:
             mfc="green",
             color="green",
         )
+        self.saved_lineB = self.ax1.plot(
+            self.saved_angleB,
+            self.saved_gainB,
+            "-o",
+            ms=1,
+            alpha=0.5,
+            mfc="purple",
+            color="purple",
+        )
         self.ax1.legend(["Sum", "Delta"], loc="lower right")
         self.max_gain_line = self.ax1.plot(
             self.ArrayAngle,
@@ -2167,7 +2205,7 @@ class App:
             mfc="red",
             color="red",
         )
-        self.ax2.legend(["Phase Delta", "Error Function"], loc="upper right")
+        self.ax2.legend(["Phase Difference", "Error Function"], loc="upper right")
         self.ax2.set_xlabel("Steering Angle (deg)")
         self.ax2.set_ylabel("Error Function")
         self.ax2.set_xlim([x_axis_min, x_axis_max])
@@ -2184,6 +2222,7 @@ class App:
 
         self.ax1.add_line(self.sum_line[0])
         self.ax1.add_line(self.saved_line[0])
+        self.ax1.add_line(self.saved_lineB[0])
         self.ax1.add_line(self.delta_line[0])
         self.ax1.add_line(self.max_gain_line[0])
         self.ax1.add_line(self.max_angle_line[0])
@@ -2225,16 +2264,29 @@ class App:
         self.saved_gain = self.ArrayGain
         self.saved_angle = self.ArrayAngle
         np.savetxt(
-            "saved_plot",
+            "saved_plot_A.txt",
             (self.saved_angle, self.saved_gain),
             delimiter=",",
             header="steering angle array (first), then FFT gain array",
         )
-        print("data saved to saved_plot.txt")
+        print("data saved to saved_plot_A.txt")
+
+    def savePlotB(self):
+        self.saved_gainB = self.ArrayGain
+        self.saved_angleB = self.ArrayAngle
+        np.savetxt(
+            "saved_plot_B.txt",
+            (self.saved_angleB, self.saved_gainB),
+            delimiter=",",
+            header="steering angle array (first), then FFT gain array",
+        )
+        print("data saved to saved_plot_B.txt")
 
     def clearPlot(self):
         self.saved_gain = []
         self.saved_angle = []
+        self.saved_gainB = []
+        self.saved_angleB = []
 
     def plotData(self, plot_gain, plot_fft, plot_tracking):
         # plot sum of both channels and subtraction of both channels
@@ -2245,39 +2297,52 @@ class App:
         self.ax1.set_xlim([x_axis_min, x_axis_max])
         self.ax1.set_ylim([y_axis_min, y_axis_max])
 
+        if self.mode_var.get() == "Gain vs Time":
+            # time.sleep(0.1)
+            self.ArrayGain = self.Gain_time
+            self.ArrayAngle = []
+            num_gains = len(self.ArrayGain)
+            for i in range(num_gains):
+                self.ArrayAngle.append(180 / num_gains * i - 90)
+        else:
+            self.saved_line[0].set_data(self.saved_angle, self.saved_gain)
+            self.saved_lineB[0].set_data(self.saved_angleB, self.saved_gainB)
+            if self.show_delta.get() == 1:
+                self.delta_line[0].set_data(self.ArrayAngle, self.ArrayDelta)
+            if self.PlotMax_set.get() == 1:
+                self.max_gain_line[0].set_data(
+                    [x_axis_min, x_axis_max], [self.peak_gain, self.peak_gain]
+                )
+            if self.AngleMax_set.get() == 1:
+                self.max_angle_line[0].set_data(
+                    [self.max_angle, self.max_angle], [y_axis_min, y_axis_max]
+                )
+
         self.sum_line[0].set_data(self.ArrayAngle, self.ArrayGain)
-        self.saved_line[0].set_data(self.saved_angle, self.saved_gain)
-        if self.show_delta.get() == 1:
-            self.delta_line[0].set_data(self.ArrayAngle, self.ArrayDelta)
-        if self.PlotMax_set.get() == 1:
-            self.max_gain_line[0].set_data(
-                [x_axis_min, x_axis_max], [self.peak_gain, self.peak_gain]
-            )
-        if self.AngleMax_set.get() == 1:
-            self.max_angle_line[0].set_data(
-                [self.max_angle, self.max_angle], [y_axis_min, y_axis_max]
-            )
 
         self.graph1.restore_region(self.background1)
         self.graph1.restore_region(self.background2)
 
         self.ax1.draw_artist(self.sum_line[0])
-        self.ax1.draw_artist(self.saved_line[0])
-        if self.show_delta.get() == 1:
-            self.ax1.draw_artist(self.delta_line[0])
-        if self.PlotMax_set.get() == 1:
-            self.ax1.draw_artist(self.max_gain_line[0])
-        if self.AngleMax_set.get() == 1:
-            self.ax1.draw_artist(self.max_angle_line[0])
-
-        if self.show_error.get() == 1:
-            self.ax2.set_xlim([x_axis_min, x_axis_max])
-            self.ax2.set_ylim([-1.5, 1.5])
-            self.phase_line[0].set_data(self.ArrayAngle, np.sign(self.ArrayBeamPhase))
-            self.error_line[0].set_data(self.ArrayAngle, self.ArrayError)
-            # self.graph1.restore_region(self.background2)
-            self.ax2.draw_artist(self.phase_line[0])
-            self.ax2.draw_artist(self.error_line[0])
+        if self.mode_var.get() != "Gain vs Time":
+            self.ax1.draw_artist(self.saved_line[0])
+            self.ax1.draw_artist(self.saved_lineB[0])
+            if self.show_delta.get() == 1:
+                self.ax1.draw_artist(self.delta_line[0])
+            if self.PlotMax_set.get() == 1:
+                self.ax1.draw_artist(self.max_gain_line[0])
+            if self.AngleMax_set.get() == 1:
+                self.ax1.draw_artist(self.max_angle_line[0])
+            if self.show_error.get() == 1:
+                self.ax2.set_xlim([x_axis_min, x_axis_max])
+                self.ax2.set_ylim([-1.5, 1.5])
+                self.phase_line[0].set_data(
+                    self.ArrayAngle, np.sign(self.ArrayBeamPhase)
+                )
+                self.error_line[0].set_data(self.ArrayAngle, self.ArrayError)
+                # self.graph1.restore_region(self.background2)
+                self.ax2.draw_artist(self.phase_line[0])
+                self.ax2.draw_artist(self.error_line[0])
 
         self.graph1.blit(self.ax1.bbox)
         self.graph1.blit(self.ax2.bbox)
@@ -2297,15 +2362,25 @@ class App:
                 mfc="blue",
                 color="blue",
             )
-            self.pol_ax1.plot(
-                np.radians(self.saved_angle),
-                self.saved_gain,
-                "-o",
-                ms=1,
-                alpha=0.5,
-                mfc="green",
-                color="green",
-            )
+            if self.mode_var.get() != "Gain vs Time":
+                self.pol_ax1.plot(
+                    np.radians(self.saved_angle),
+                    self.saved_gain,
+                    "-o",
+                    ms=1,
+                    alpha=0.5,
+                    mfc="green",
+                    color="green",
+                )
+                self.pol_ax1.plot(
+                    np.radians(self.saved_angleB),
+                    self.saved_gainB,
+                    "-o",
+                    ms=1,
+                    alpha=0.5,
+                    mfc="purple",
+                    color="purple",
+                )
             self.pol_ax1.set_theta_offset(
                 np.pi / 2
             )  # rotate polar axis so that 0 deg is on top
