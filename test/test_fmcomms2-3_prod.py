@@ -224,12 +224,10 @@ def test_ad9361_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
     test_iq_loopback(iio_uri, classname, channel, param_set)
 
 
-if not disable_prod_tests:
-
-    @pytest.mark.iio_hardware(hardware)
-    @pytest.mark.parametrize("classname", [(classname)])
-    def test_dcxo(test_dcxo_calibration, classname, iio_uri):
-        test_dcxo_calibration(classname, iio_uri)
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+def test_dcxo(test_dcxo_calibration, context_desc, classname, iio_uri):
+    test_dcxo_calibration(context_desc, classname, iio_uri)
 
 
 @pytest.mark.iio_hardware(hardware)

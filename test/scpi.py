@@ -99,7 +99,7 @@ def get_clk_rate(classname, iio_uri):
     return float(clk_rate)
 
 
-def dcxo_calibrate(classname, iio_uri):
+def dcxo_calibrate(context_desc, classname, iio_uri):
     prev_diff = 0
     diff = 0
     finetune = False
@@ -122,17 +122,17 @@ def dcxo_calibrate(classname, iio_uri):
 
     sdr = eval(classname + "(uri='" + iio_uri + "')")
 
-    try:
-        sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
-        sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
-    except:
-        frq_c0 = get_freq(instr)
-        if abs(target_frq - frq_c0) > 5000:
-            del sdr
-            pytest.fail("Frequency is not in the appropriate range!")
-            return
+    for ctx_desc in context_desc:
+        if ctx_desc["hw"] != "adrv9361":
+            sdr._set_iio_dev_attr("dcxo_tune_coarse", coarse, sdr._ctrl)
+            sdr._set_iio_dev_attr("dcxo_tune_fine", fine, sdr._ctrl)
         else:
-            del sdr
+            frq_c0 = get_freq(instr)
+            if abs(target_frq - frq_c0) > 5000:
+                del sdr
+                pytest.fail("Frequency is not in the appropriate range!")
+            else:
+                del sdr
             return
 
 
