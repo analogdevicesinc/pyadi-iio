@@ -8,5 +8,5 @@ classname = "adi.ad9361"
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-def test_dcxo(test_dcxo_calibration, classname, iio_uri):
-    test_dcxo_calibration(classname, iio_uri)
+def test_dcxo(test_dcxo_calibration, context_desc, classname, iio_uri):
+    test_dcxo_calibration(context_desc, classname, iio_uri)
