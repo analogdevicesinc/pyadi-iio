@@ -50,7 +50,7 @@ class ad5592r(context_manager, rx, tx):
         self.ctrl = None
         index=0
 
-         # Selecting the device_index-th device from the 559XR family as working device.
+         # Selecting the device_index-th device from the AD559XR family as working device.
         for device in self._ctx.devices:
             if device.name in compatible_parts:
                 if index == device_index:
@@ -74,21 +74,20 @@ class ad5592r(context_manager, rx, tx):
         tx.__init__(self)
 
     class _channel(attribute):
-        """AD5592r voltage channel"""
-
+        # AD559XR voltage channel
         def __init__(self, ctrl, channel_name, output):
             self.name = channel_name
             self._ctrl = ctrl
             self._output = output
 
         @property
+        # AD559XR channel raw value
         def raw(self):
-            """AD5592r channel raw value"""
             return self._get_iio_attr(self.name, "raw", self._output)
 
         @property
+        # AD559XR channel scale (gain)
         def scale(self):
-            """AD5592r channel scale(gain)"""
             return float(self._get_iio_attr_str(self.name, "scale", self._output))
 
         @raw.setter
@@ -104,12 +103,11 @@ class ad5592r(context_manager, rx, tx):
                     self._set_iio_attr(self.name, "scale", self._output, str(Decimal(value).real))
 
     class _channeltemp(_channel):
-        """AD5592r temp channel"""
-        
+        # AD559XR temp channel        
         def __init__(self, ctrl, channel_name, output):
             super().__init__(ctrl,channel_name,output)
 
         @property
+        # AD559XR channel temp offset value
         def offset(self):
-            """AD5592r channel temp offset value"""
             return self._get_iio_attr(self.name, "offset", self._output)
