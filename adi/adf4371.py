@@ -130,6 +130,18 @@ class adf4371(attribute, context_manager):
         self._set_iio_attr("altvoltage1", "frequency", True, value, self._ctrl)
 
     @property
+    def rfaux8_vco_output_enable(self):
+        """Get/Set the fundamental VCO output on the Auxiliary 8GHz RF output"""
+        return bool(
+            1 - int(self._get_iio_attr("altvoltage1", "vco_output_enable", True, self._ctrl))
+        )
+
+    @rfaux8_enable.setter
+    def rfaux8_vco_output_enable(self, value):
+        """Get/Set the fundamental VCO output on the Auxiliary 8GHz RF output"""
+        self._set_iio_attr("altvoltage1", "vco_output_enable", True, 1 - int(value), self._ctrl)
+
+    @property
     def rf16_enable(self):
         """Get/Set the enable status of the 16GHz RF output"""
         return bool(
