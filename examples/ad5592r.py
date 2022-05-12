@@ -9,5 +9,5 @@ for ch in myad5592r.channel:
     print("Channel Name: ", ch.name)
     print("is Output? ", ch._output)
     print("Channel Raw Value: ", ch.raw)
-#    print("Channel Scale: ", ch.scale)
-#    print("Channel Offset: ", ch.offset)
+"""    print("Channel Scale: ", ch.scale)
+    print("Channel Offset: ", ch.offset)"""
