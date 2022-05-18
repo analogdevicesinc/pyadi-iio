@@ -185,6 +185,8 @@ class rx(rx_tx_common):
     def _rx_init_channels(self):
         for m in self._rx_channel_names:
             v = self._rxadc.find_channel(m)
+            if not v:
+                raise Exception(f"Channel {m} not found")
             v.enabled = False
 
         if self._complex_data:

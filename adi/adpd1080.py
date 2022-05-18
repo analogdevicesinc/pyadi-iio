@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2021 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,72 +31,78 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from decimal import Decimal
-
-import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
 
-class adxl345(rx, context_manager, attribute):
-    """ ADXL345 3-axis accelerometer """
+class adpd1080(rx, context_manager):
+    """ADPD1080 photo-electronic device."""
 
-    _device_name = "adxl345"
-    _rx_data_type = np.int32
-    _rx_unbuffered_data = True
-    _rx_data_si_type = float
+    channel = []  # type: ignore
+    _device_name = ""
+    _rx_data_type = ["<u4", "<u4", "<u4", "<u4", "<u4", "<u4", "<u4", "<u4"]
 
-    def __init__(self, uri=""):
-
+    def __init__(self, uri="", device_index=0):
+        """ADPD1080 class constructor."""
         context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("adxl345")
-        self.accel_x = self._channel(self._ctrl, "accel_x")
-        self.accel_y = self._channel(self._ctrl, "accel_y")
-        self.accel_z = self._channel(self._ctrl, "accel_z")
-        self._rxadc = self._ctx.find_device("adxl345")
-        self._rx_channel_names = ["accel_x", "accel_y", "accel_z"]
+
+        compatible_parts = ["adpd1080"]
+
+        self._ctrl = None
+        index = 0
+
+        # Selecting the device_index-th device from the adpd188 family as working device.
+        for device in self._ctx.devices:
+            if device.name in compatible_parts:
+                if index == device_index:
+                    self._ctrl = device
+                    self._rxadc = device
+                    break
+                else:
+                    index += 1
+
+        # dynamically get channels and sorting them after the color
+        # self._ctrl.channels.sort(key=lambda x: str(x.id[14:]))
+
+        for ch in self._ctrl._channels:
+            name = ch._id
+            self._rx_channel_names.append(name)
+            self.channel.append(self._channel(self._ctrl, name))
         rx.__init__(self)
+        self.rx_buffer_size = 16
+
+    def rx(self):
+        buff = super().rx()
+        del self._rx__rxbuf
+        return buff
 
     @property
-    def sampling_frequency_available(self):
-        """Provides all available sampling frequency settings for the ADXL345 channels"""
-        return self._get_iio_dev_attr("sampling_frequency_available")
+    def sample_rate(self):
+        """Sets sampling frequency of the ADPD1080."""
+        return self._get_iio_dev_attr_str("sampling_frequency", self._rxadc)
 
-    @property
-    def sampling_frequency(self):
-        """ADXL345 sampling frequency"""
-        # Only need to consider one channel, all others follow
-        return float(self._get_iio_attr_str("accel_x", "sampling_frequency", False))
-
-    @sampling_frequency.setter
-    def sampling_frequency(self, value):
-        self._set_iio_attr(
-            "accel_x", "sampling_frequency", False, str(Decimal(value).real)
-        )
+    @sample_rate.setter
+    def sample_rate(self, value):
+        self._set_iio_dev_attr_str("sampling_frequency", value, self._rxadc)
 
     class _channel(attribute):
-        """ADXL345 channel"""
+        """ADPD1080 channel."""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
 
         @property
-        def calibbias(self):
-            """ADXL345 channel offset"""
-            return self._get_iio_attr(self.name, "calibbias", False)
-
-        @calibbias.setter
-        def calibbias(self, value):
-            self._set_iio_attr(self.name, "calibbias", False, value)
-
-        @property
         def raw(self):
-            """ADXL345 channel raw value"""
+            """ADPD1080 channel raw value."""
             return self._get_iio_attr(self.name, "raw", False)
 
         @property
-        def scale(self):
-            """ADXL345 channel scale(gain)"""
-            return float(self._get_iio_attr_str(self.name, "scale", False))
+        def offset(self):
+            """ADPD1080 channel offset."""
+            return self._get_iio_attr(self.name, "offset", False)
+
+        @offset.setter
+        def offset(self, value):
+            self._set_iio_attr(self.name, "offset", False, value)

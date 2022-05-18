@@ -284,6 +284,18 @@ class ad9081_mc(ad9081):
                 self._ctx.find_device(dev),
             )
 
+    def _set_iio_attr_str_vec(self, channel_names_dict, attr, output, values):
+        values = self._map_inputs_to_dict(channel_names_dict, attr, output, values)
+        for dev in channel_names_dict:
+            ad9081._set_iio_attr_str_vec(
+                self,
+                channel_names_dict[dev],
+                attr,
+                output,
+                values[dev],
+                self._ctx.find_device(dev),
+            )
+
     # Singleton function intercepts
     def _get_iio_attr_str_single(self, channel_name, attr, output):
         channel_names_dict = self._rx_coarse_ddc_channel_names

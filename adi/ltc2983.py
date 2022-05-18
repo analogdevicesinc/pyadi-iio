@@ -15,7 +15,7 @@ class ltc2983(rx, context_manager):
     _device_name = "ltc2983"
     _rx_unbuffered_data = True
     _rx_data_type = np.int32
-    _rx_data_si_type = np.float
+    _rx_data_si_type = float
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, self._device_name)
@@ -46,7 +46,7 @@ class ltc2983(rx, context_manager):
         @property
         def scale(self):
             """Channel scale factor"""
-            return np.float(self._get_iio_attr_str(self.name, "scale", False))
+            return float(self._get_iio_attr_str(self.name, "scale", False))
 
         @property
         def value(self):
