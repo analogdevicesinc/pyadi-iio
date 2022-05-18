@@ -39,25 +39,16 @@ from adi.rx_tx import rx
 
 
 def _sign_extend(value, nbits):
-    sign_bit = 1 << (nbits - 1)
-    return (value & (sign_bit - 1)) - (value & sign_bit)
-
-
-def _bitmask(nbits):
-    mask = 0
-    for i in range(0, nbits):
-        mask = (mask << 1) | 1
-    return mask
+    return (value & ((1 << (nbits - 1)) - 1)) - (value & (1 << (nbits - 1)))
 
 
 class ad4630(rx, context_manager, attribute):
-    """ AD4630 is low power 24-bit precision SAR ADC """
+    """AD4630 is low power 24-bit precision SAR ADC"""
 
     _complex_data = False
     _data_type = "voltage"
     _device_name = ""
     _rx_channel_names = []
-    _rx_data_type = np.uint32
 
     """ Default part to initialize is ad4630-24. If you don't hardware test fails"""
 
@@ -80,8 +71,11 @@ class ad4630(rx, context_manager, attribute):
 
         _channels = []
         self.output_bits = [ch.data_format.bits for ch in self._ctrl.channels]
+        self.nbits = self.output_bits
+        self.shift = [ch.data_format.shift for ch in self._ctrl.channels]
         self._has_common = False
-        self._is_dual = None
+        self.continuous_sampling_flag = False
+
         for ch in self._ctrl.channels:
             self._rx_channel_names.append(ch.id)
             if "common" in ch.name:
@@ -93,8 +87,6 @@ class ad4630(rx, context_manager, attribute):
                 if "1" in ch.name:
                     self.chan1 = self._diff_channel(self._ctrl, ch.name)
 
-        self._is_dual = (len(self._ctrl.channels) == 4) or (len(self._ctrl.channels) == 2 and not self._has_common)
-
         rx.__init__(self)
 
     def rx(self):
@@ -102,34 +94,23 @@ class ad4630(rx, context_manager, attribute):
         if not self._rx__rxbuf:
             self._rx_init_channels()
         self._rx__rxbuf.refill()
-        buff = np.frombuffer(self._rx__rxbuf.read(), dtype=np.uint32)
-        data = [buff[0::2], buff[1::2]]
-        temp = []
+        data = np.frombuffer(self._rx__rxbuf.read(), dtype=np.uint32)
 
-        if self._has_common:
-            for ch in range(0, self._num_rx_channels):
-                nbits = self._ctrl.channels[ch].data_format.bits
-                shift = self._ctrl.channels[ch].data_format.shift
-                ch_data = np.zeros(data[int(ch / 2)].shape, dtype=np.uint32)
-                for index in range(0, len(data[int(ch / 2)])):
-                    ch_data[index] = (data[int(ch / 2)][index] >> shift) & _bitmask(
-                        nbits
-                    )
-                temp.append(np.vectorize(_sign_extend)(ch_data, nbits))
+        if not self.continuous_sampling_flag:
+            temp = []
+            data = [data[0::2], data[1::2]]
+            for ch in self.rx_enabled_channels:
+                if self.nbits[ch] == 32:
+                    self.nbits[ch] += 1
+                ch_data = np.right_shift(
+                    data[int(2 * ch / self._num_rx_channels)], self.shift[ch]
+                )
+                temp.append(np.vectorize(_sign_extend)(ch_data, self.nbits[ch]))
             data = temp
+            return data
+
         else:
-            if not self._is_dual:
-                data = [data[0]]
-            for idx, ch_data in enumerate(data):
-                nbits = self._ctrl.channels[idx].data_format.bits
-                shift = self._ctrl.channels[idx].data_format.shift
-                if nbits == 32:
-                    nbits += 1
-                data[idx] = [((x >> shift) & _bitmask(nbits)) for x in data[idx]]
-                temp.append(np.vectorize(_sign_extend)(data[idx], nbits))
-            data = temp
-
-        return data
+            return data
 
     @property
     def output_data_mode(self):
@@ -145,11 +126,12 @@ class ad4630(rx, context_manager, attribute):
             if self.output_bits[0] == 24:
                 return "24bit_diff_8bit_cm"
 
-        if not self._has_common:
+        else:
             if self.output_bits[0] == 16:
                 return "16bit_dif"
             if self.output_bits[0] == 24:
                 return "24bit_diff"
+            return "Undefined Output Mode"
 
     @property
     def sample_rate(self):
@@ -221,7 +203,7 @@ class ad4630(rx, context_manager, attribute):
         @hw_gain.setter
         def hw_gain(self, gain):
             """Get/Set the hardwaregain of differential channel."""
-            self._set_iio_attr(self.name, "hardwaregain", False, int(gain))
+            self._set_iio_attr(self.name, "hardwaregain", False, float(gain))
 
         @property
         def offset(self):
@@ -231,4 +213,4 @@ class ad4630(rx, context_manager, attribute):
         @offset.setter
         def offset(self, offset):
             """Get/Set the offset of differential channel."""
-            self._set_iio_attr(self.name, "offset", False, int(offset), self._ctrl)
+            self._set_iio_attr(self.name, "offset", False, offset, self._ctrl)
