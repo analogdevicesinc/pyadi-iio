@@ -70,6 +70,7 @@ class rx(rx_tx_common):
     __rxbuf = None
     _rx_unbuffered_data = False
     _rx_annotated = False
+    _rx_iio_type_convert: bool = False
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -245,11 +246,20 @@ class rx(rx_tx_common):
 
         return x
 
+    def __iio_type_convert(self, data):
+        """Use libiio to handle type conversion"""
+        chan = self._rxadc.find_channel(
+            self._rx_channel_names[self.rx_enabled_channels[0]]
+        )
+        return chan.convert(data, self.__rxbuf)
+
     def __rx_complex(self):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
         data = self.__rxbuf.read()
+        if self._rx_iio_type_convert:
+            data = self.__iio_type_convert(data)
         x = np.frombuffer(data, dtype=self._rx_data_type)
         indx = 0
         sig = []
@@ -264,6 +274,8 @@ class rx(rx_tx_common):
 
     def __multi_type_rx(self, data):
         """Process buffers with multiple data types"""
+        if self._rx_iio_type_convert:
+            raise Exception("iio_type_convert not supported for multi-type buffers")
         # Process each channel at a time
         channel_bytes = []
         curated_rx_type = []
@@ -290,6 +302,8 @@ class rx(rx_tx_common):
 
         if isinstance(self._rx_data_type, list):
             return self.__multi_type_rx(data)
+        elif self._rx_iio_type_convert:
+            data = self.__iio_type_convert(data)
 
         x = np.frombuffer(data, dtype=self._rx_data_type)
         if self._rx_mask != 0:
