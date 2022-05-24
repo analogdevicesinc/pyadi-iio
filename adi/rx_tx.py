@@ -31,12 +31,14 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from abc import ABCMeta, abstractmethod
 from typing import List, Union
 
 import iio
 
 import numpy as np
 from adi.attribute import attribute
+from adi.context_manager import context_manager
 from adi.dds import dds
 
 
@@ -570,3 +572,213 @@ class rx_tx(rx, tx, phy):
         rx.__del__(self)
         tx.__del__(self)
         phy.__del__(self)
+
+
+class shared_def(context_manager, metaclass=ABCMeta):
+    """Shared components for rx and tx metaclasses."""
+
+    _device_name = ""  # String available in context name
+
+    @property
+    @abstractmethod
+    def _complex_data(self) -> None:
+        """Data to/from device is quadrature (Complex).
+        When True ADC channel pairs are used together and the
+        rx method will generate complex data types.
+        Raises:
+            NotImplementedError: Method not implemented
+        """
+        raise NotImplementedError  # pragma: no cover
+
+    @property
+    @abstractmethod
+    def _control_device_name(self) -> None:
+        """Name of driver used for primary attribute control.
+        This is the default IIO device used to address properties
+        """
+        raise NotImplementedError  # pragma: no cover
+
+    def __handle_init_args(self, args, kwargs):
+        # Handle Older API and Newer API
+        if len(args) > 0 and len(kwargs) > 0:
+            raise Exception("Cannot use both positional and keyword arguments")
+        if len(args) > 1 or len(kwargs) > 1:
+            raise Exception("Too many arguments")
+
+        if len(args) == 1:
+            if isinstance(args[0], (iio.Context, str)):
+                return args[0]
+            else:
+                raise Exception("Invalid argument. Input must be a string or a context")
+
+        if len(kwargs) == 1:
+            kws = ["uri", "uri_ctx"]
+            for key in kwargs:
+                if key not in kws:
+                    raise Exception(f"Invalid keyword argument. Valid are: {kws}")
+                if not isinstance(kwargs[key], iio.Context) and not isinstance(
+                    kwargs[key], str
+                ):
+                    if key == "uri":
+                        raise Exception(
+                            "Invalid argument. Input must be a string for uri"
+                        )
+                    else:
+                        raise Exception(
+                            "Invalid argument. Input must be a string or a context for uri_ctx"
+                        )
+                return kwargs[key]
+
+        return None  # Auto detect
+
+    # def __init__(self, uri_ctx: Union[str, iio.Context] = None) -> None:
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+
+        # Handle Older API and Newer APIs
+        uri_ctx = self.__handle_init_args(args, kwargs)
+
+        # Handle context
+        if isinstance(uri_ctx, iio.Context):
+            self._ctx = uri_ctx
+            self.uri = ""
+        elif uri_ctx:
+            self.uri = uri_ctx
+            context_manager.__init__(self, uri_ctx, self._device_name)
+        else:
+            required_devices = [self._rx_data_device_name, self._control_device_name]
+            contexts = iio.scan_contexts()
+            self._ctx = None
+            for c in contexts:
+                ctx = iio.Context(c)
+                devs = [dev.name for dev in ctx.devices]
+                print(devs)
+                if all(dev in devs for dev in required_devices):
+                    self._ctx = iio.Context(c)
+                    break
+            if not self._ctx:
+                raise Exception("No context could be found for class")
+
+        # Set up devices
+        if self._control_device_name:
+            self._ctrl = self._ctx.find_device(self._control_device_name)
+            if not self._ctrl:
+                raise Exception(
+                    f"No device found with name {self._control_device_name}"
+                )
+
+    def __post_init__(self):
+        pass
+
+
+class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
+    """Template metaclass for rx only device specific interfaces."""
+
+    """Names of rx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _rx_channel_names = None
+
+    @property
+    @abstractmethod
+    def _rx_data_device_name(self) -> None:
+        """Name of driver used for receiving data.
+        This is the IIO device used collect data from.
+        """
+        raise NotImplementedError  # pragma: no cover
+
+    __run_rx_post_init__ = True
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+
+        shared_def.__init__(self, *args, **kwargs)
+
+        if self._rx_data_device_name:
+            self._rxadc = self._ctx.find_device(self._rx_data_device_name)
+            if not self._rxadc:
+                raise Exception(
+                    f"No device found with name {self._rx_data_device_name}"
+                )
+
+        # Set up channels
+        if self._rxadc and self._rx_channel_names is None:
+            self._rx_channel_names = [
+                chan.id for chan in self._rxadc.channels if chan.scan_element
+            ]
+
+            if not self._rx_channel_names:
+                raise Exception(f"No scan elements found for device {self._rxadc.name}")
+
+        rx.__init__(self)
+
+        if self.__run_rx_post_init__:
+            self.__post_init__()
+
+
+class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
+    """Template metaclass for rx only device specific interfaces."""
+
+    """Names of tx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _tx_channel_names = None
+
+    @property
+    @abstractmethod
+    def _tx_data_device_name(self) -> None:
+        """Name of driver used for transmitting data.
+        This is the IIO device used collect data from.
+        """
+        raise NotImplementedError  # pragma: no cover
+
+    __run_tx_post_init__ = True
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+
+        shared_def.__init__(self, *args, **kwargs)
+
+        if self._tx_data_device_name:
+            self._txdac = self._ctx.find_device(self._tx_data_device_name)
+            if not self._txdac:
+                raise Exception(
+                    f"No device found with name {self._tx_data_device_name}"
+                )
+
+        # Set up channels
+        if self._txdac and self._tx_channel_names is None:
+            self._tx_channel_names = [
+                chan.id for chan in self._rxadc.channels if chan.scan_element
+            ]
+
+            if not self._tx_channel_names:
+                raise Exception(f"No scan elements found for device {self._rxadc.name}")
+
+        tx.__init__(self)
+
+        if self.__run_tx_post_init__:
+            self.__post_init__()
+
+
+class rx_tx_def(tx_def, rx_def):
+    """Template metaclass for rx and tx device specific interfaces."""
+
+    __run_rx_post_init__ = False
+    __run_tx_post_init__ = False
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+
+        rx_def.__init__(self, *args, **kwargs)
+        tx_def.__init__(self, *args, **kwargs)
+
+        self.__post_init__()
