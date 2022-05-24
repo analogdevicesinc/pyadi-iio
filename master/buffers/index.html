@@ -413,6 +413,11 @@ translated to channel numbers.</p>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
+<dt class="sig sig-object py" id="adi.rx_tx.rx_def">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_def" title="Permalink to this definition"></a></dt>
+<dd><p>Template metaclass for rx only device specific interfaces.</p>
+</dd></dl>
+<dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.rx_tx">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_tx</span></span><a class="headerlink" href="#adi.rx_tx.rx_tx" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -420,6 +425,16 @@ translated to channel numbers.</p>
 <dt class="sig sig-object py" id="adi.rx_tx.rx_tx_common">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_tx_common</span></span><a class="headerlink" href="#adi.rx_tx.rx_tx_common" title="Permalink to this definition"></a></dt>
 <dd><p>Common functions for RX and TX</p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.rx_tx.rx_tx_def">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_tx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_tx_def" title="Permalink to this definition"></a></dt>
+<dd><p>Template metaclass for rx and tx device specific interfaces.</p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.rx_tx.shared_def">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">shared_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.shared_def" title="Permalink to this definition"></a></dt>
+<dd><p>Shared components for rx and tx metaclasses.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.tx">
@@ -460,6 +475,11 @@ Data must be complex when using a complex data device.</p>
 tx_enabled_channels. When channel names are used, they will be
 translated to channel numbers.</p>
 </dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.rx_tx.tx_def">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">tx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx_def" title="Permalink to this definition"></a></dt>
+<dd><p>Template metaclass for rx only device specific interfaces.</p>
 </dd></dl>
 </section>
 <section id="buffer-examples">
