@@ -37,6 +37,7 @@ from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
 from adi.ad4630 import ad4630
 from adi.ad5686 import ad5686
+from adi.ad5940 import ad5940
 from adi.ad7124 import ad7124
 from adi.ad7606 import ad7606
 from adi.ad7689 import ad7689
