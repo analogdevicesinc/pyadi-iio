@@ -95,6 +95,8 @@ from adi.adis16507 import adis16507
 
 from adi.ad7124 import ad7124
 
+from adi.adxl313 import adxl313
+
 from adi.adxl345 import adxl345
 
 from adi.adxl355 import adxl355
