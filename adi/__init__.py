@@ -157,6 +157,8 @@ from adi.adpd1080 import adpd1080
 
 from adi.ad717x import ad717x
 
+from adi.max31855 import max31855
+
 try:
     from adi.jesd import jesd
 except ImportError:
