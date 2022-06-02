@@ -274,7 +274,7 @@
 <h1>FPGA Features<a class="headerlink" href="#fpga-features" title="Permalink to this headline"></a></h1>
 <section id="direct-digital-synthesizers">
 <h2>Direct Digital Synthesizers<a class="headerlink" href="#direct-digital-synthesizers" title="Permalink to this headline"></a></h2>
-<p>For FPGA based systems ADI reference designs include direct digital synthesizer (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.</p>
+<p>For FPGA based systems ADI reference designs include direct digital synthesizers (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.</p>
 <p>For the most basic or easiest configuration options use the methods <strong>dds_single_tone</strong> and <strong>dds_dual_tone</strong> which generate a one tone or two tones respectively on a specific channel.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
@@ -393,7 +393,7 @@ the index of the individual converters.</p>
 </section>
 <section id="dma-synchronization">
 <h2>DMA Synchronization<a class="headerlink" href="#dma-synchronization" title="Permalink to this headline"></a></h2>
-<p>In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general tests.</p>
+<p>In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general testing.</p>
 <p>This works by leveraging special control signals inside the HDL design to trigger receive captures from transmitted buffers. These are controlled through the <strong>sync_start</strong> class, which provide explicit control over when data is transmitted or released from the DMA in the FPGA fabric. This transmit or trigger will in turn allow data into the receive DMA at this moment in time. The exact methods and their sequence are described in the flowchart below.</p>
 <div class="mermaid">
             flowchart LR

@@ -4,7 +4,7 @@ FPGA Features
 Direct Digital Synthesizers
 ---------------------------
 
-For FPGA based systems ADI reference designs include direct digital synthesizer (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.
+For FPGA based systems ADI reference designs include direct digital synthesizers (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.
 
 For the most basic or easiest configuration options use the methods **dds_single_tone** and **dds_dual_tone** which generate a one tone or two tones respectively on a specific channel.
 
@@ -45,7 +45,7 @@ DDS Methods
 DMA Synchronization
 ---------------------------
 
-In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general tests.
+In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general testing.
 
 This works by leveraging special control signals inside the HDL design to trigger receive captures from transmitted buffers. These are controlled through the **sync_start** class, which provide explicit control over when data is transmitted or released from the DMA in the FPGA fabric. This transmit or trigger will in turn allow data into the receive DMA at this moment in time. The exact methods and their sequence are described in the flowchart below.
 
