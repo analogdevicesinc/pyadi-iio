@@ -5,7 +5,7 @@ Before installing pyadi-iio make sure you have `libiio <https://github.com/analo
 
 .. note::
 
-  libiio does not currently have a pip installer, but releases are available on `GitHub <https://github.com/analogdevicesinc/libiio/releases>`_ along with the `source <https://github.com/analogdevicesinc/libiio>`_.
+  libiio (the C library) does not currently have a pip installer, but releases are available on `GitHub <https://github.com/analogdevicesinc/libiio/releases>`_ along with the `source <https://github.com/analogdevicesinc/libiio>`_.
   For releases v0.19+ of libiio, when building from source the -DPYTHON_BINDINGS=ON flag is required
 
 pyadi-iio can by installed from pip
@@ -14,7 +14,7 @@ pyadi-iio can by installed from pip
 
   (sudo) pip install pyadi-iio
 
-or by grabbing the source directly
+or by grabbing the source directly for a more up to date version
 
 .. code-block:: bash
 
@@ -32,7 +32,7 @@ Note that this is only needed for the ADRV9009-ZU11EG multi-SOM configuration.
 
 .. note::
 
-  On Linux the libiio python bindings are sometimes installed in locations not on path. On Ubuntu this is a common fix
+  On Linux the libiio python bindings are sometimes installed in locations not on path when building from source. On Ubuntu this is a common fix
 
   .. code-block:: bash
 
