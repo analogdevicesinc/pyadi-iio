@@ -5,18 +5,18 @@ Using buffers or transmitting and receiving data is done through interacting wit
 
 For receivers this is the **rx** method. How data is captured and therefore produced by this method is dependent on two main properties:
 
-* **rx_enabled_channels**: This is an array of integers (or channel names) and the number of elements in the array will determine the number of list items returned by **rx**. For devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.
-* **rx_buffer_size**: This is the number of samples returned in each column. If the device produces complex data, like a transceiver, it will return complex data. This is defined by the author of each device specific class.
+* **rx_enabled_channels**: This is an array of integers (or channel names) and the number of elements in the array will determine the number of list items returned by **rx**. For devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels. When len(**rx_enabled_channels**) == 1, **rx** will return just a single array and not a single array within a list.
+* **rx_buffer_size**: This is the number of samples returned in each array within the list. If the device produces complex data, like a transceiver, it will return complex data. This is defined by the author of each device specific class.
 
 For transmitters this is the **tx** method. How data is sent and therefore must be passed by this method is dependent on one main property:
 
-* **tx_enabled_channels**: This is an array of integers and the number of elements in the array will determine the number of items in list to be submitted to **tx**. Like for **rx_enabled_channels**, devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels.
+* **tx_enabled_channels**: This is an array of integers and the number of elements in the array will determine the number of items in the list to be submitted to **tx**. Like for **rx_enabled_channels**, devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels. When only a single channel is enabled the data can be passed to **tx** as just an array and not an array within a list.
 
 **rx_enabled_channels** must have a length greater than zero but **tx_enabled_channels** can be set to None or an empty list. In this case when **tx** is called it must be called without inputs. This is a special case and will connect a zero source into the TX input stream within the FPGA for FPGA based devices. For background on how this internally works with FPGA based devices reference the generic `DAC driver <https://wiki.analog.com/resources/tools-software/linux-drivers/iio-dds/axi-dac-dds-hdl>`_.
 
 Cyclic Mode
 --------------
-In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to. To complement these use cases it is possible to create transmit buffer which repeats, which we call **cylic buffers**. Cyclic buffers are identical or normal or non-cylic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:
+In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to in real-time. To complement these use cases it is possible to create transmit buffer which repeats, which we call **cyclic buffers**. Cyclic buffers are identical or normal or non-cyclic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:
 
 .. code-block:: python
 
