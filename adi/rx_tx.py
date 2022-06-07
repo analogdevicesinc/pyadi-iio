@@ -251,7 +251,11 @@ class rx(rx_tx_common):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        data = self.__rxbuf.read()
+        chan = self._rxadc.find_channel(
+            self._rx_channel_names[self.rx_enabled_channels[0]]
+        )
+        data = chan.read(self.__rxbuf)
+
         x = np.frombuffer(data, dtype=self._rx_data_type)
         indx = 0
         sig = []
@@ -288,7 +292,10 @@ class rx(rx_tx_common):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        data = self.__rxbuf.read()
+        chan = self._rxadc.find_channel(
+            self._rx_channel_names[self.rx_enabled_channels[0]]
+        )
+        data = chan.read(self.__rxbuf)
 
         if isinstance(self._rx_data_type, list):
             return self.__multi_type_rx(data)
@@ -653,7 +660,6 @@ class shared_def(context_manager, metaclass=ABCMeta):
             for c in contexts:
                 ctx = iio.Context(c)
                 devs = [dev.name for dev in ctx.devices]
-                print(devs)
                 if all(dev in devs for dev in required_devices):
                     self._ctx = iio.Context(c)
                     break
