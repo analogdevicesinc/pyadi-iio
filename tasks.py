@@ -168,6 +168,7 @@ def checkparts(c):
         "adrv9009_zu11eg_fmcomms8",
         "adar1000_array",
         "ad9081_mc",
+        "ad717x",
     ]
     for c in dir(mod):
         if (
