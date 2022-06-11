@@ -84,20 +84,20 @@ time.sleep(0.5)
 
 # Connect to phaser's Raspberry Pi
 try:
-    x = my_cn0566.uri
+    x = my_phaser.uri
     print("cn0566 already connected")
 except NameError:
     print("cn0566 not connected, connecting...")
     from adi.cn0566 import CN0566
 
-    my_cn0566 = CN0566(uri=rpi_ip, rx_dev=my_sdr)
+    my_phaser = CN0566(uri=rpi_ip, rx_dev=my_sdr)
 
 #
 try:
-    my_cn0566.SignalFreq = load_hb100_cal()
-    print("Found signal freq file, ", my_cn0566.SignalFreq)
+    my_phaser.SignalFreq = load_hb100_cal()
+    print("Found signal freq file, ", my_phaser.SignalFreq)
 except:
-    my_cn0566.SignalFreq = 10.525e9
+    my_phaser.SignalFreq = 10.525e9
     print("No signal freq file found, setting to 10.525 GHz")
 
 
@@ -106,23 +106,23 @@ except:
 #     accessed through other methods.
 
 # By default device_mode is "rx"
-my_cn0566.configure(device_mode="rx")
+my_phaser.configure(device_mode="rx")
 # Set up PLL, everything other than the actual output frequency for now
-my_cn0566.freq_dev_step = 5690
-my_cn0566.freq_dev_range = 0
-my_cn0566.freq_dev_time = 0
-my_cn0566.powerdown = 0
-my_cn0566.ramp_mode = "disabled"
+my_phaser.freq_dev_step = 5690
+my_phaser.freq_dev_range = 0
+my_phaser.freq_dev_time = 0
+my_phaser.powerdown = 0
+my_phaser.ramp_mode = "disabled"
 
 # Set all antenna elements to half scale - a typical HB100 will have plenty
 # of signal power.
 
 gain_list = [64] * 8  # (64 is about half scale)
 for i in range(0, len(gain_list)):
-    my_cn0566.set_chan_gain(i, gain_list[i], apply_cal=False)
+    my_phaser.set_chan_gain(i, gain_list[i], apply_cal=False)
 
 # Aim the beam at boresight (zero degrees). Place HB100 right in front of array.
-my_cn0566.set_beam_phase_diff(0.0)
+my_phaser.set_beam_phase_diff(0.0)
 
 
 #  Configure SDR parameters. Start with the more involved settings, don't
@@ -165,21 +165,22 @@ my_sdr.gain_control_mode_chan1 = "manual"
 my_sdr.rx_hardwaregain_chan0 = 0  # dB
 my_sdr.rx_hardwaregain_chan1 = 0  # dB
 
-my_sdr.rx_lo = int(2.0e9)  # Downconvert by 2GHz  # Recieve Freq
+my_sdr.rx_lo = int(2.2e9)  # Downconvert by 2GHz  # Recieve Freq
 my_sdr.filter = "LTE20_MHz.ftr"  # Handy filter for fairly widdeband measurements
 
 # Now set the phaser's PLL. This is the ADF4159, and we'll set it to the HB100 frequency
 # plus the desired 2GHz IF, minus a small offset so we don't land at exactly DC.
-# If the HB100 is at exactly 10.525 GHz, setting the PLL to 12.524 GHz will result
-# in an IF at 2.001 GHz.
+# If the HB100 is at exactly 10.525 GHz, setting the PLL to 12.724 GHz will result
+# in an IF at 2.201 GHz.
 
-my_cn0566.frequency = (
-    int(my_cn0566.SignalFreq) + my_sdr.rx_lo - int(1e6)  # add a small offset
-) // 4  # PLL feedback via /4 VCO output
+offset = 1000000 # add a small offset
+my_phaser.frequency = (
+    int(my_phaser.SignalFreq + my_sdr.rx_lo - offset)  
+) // 4  # PLL feedback is from the VCO's /4 output
 
 # Capture data!
 data = my_sdr.rx()
-# Add I and Q for calculating spectrum
+# Add both channels for calculating spectrum
 data_sum = data[0] + data[1]
 
 # spec_est is a simple estimation function that applies a window, takes the FFT,
@@ -213,4 +214,4 @@ plt.show()
 
 # Clean up / close connections
 del my_sdr
-del my_cn0566
+del my_phaser

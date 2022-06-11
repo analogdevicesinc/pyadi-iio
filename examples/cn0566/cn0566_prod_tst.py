@@ -62,8 +62,11 @@ from cn0566_functions import (
 )
 from scipy import signal
 
+start = time.time()
+
 failures = []
-monitor_hi_limits = [60.0, 1.9, 3.015, 3.45, 4.75, 16.0, 5.50, 99.0, 16.0]
+# monitor_hi_limits = [60.0, 1.9, 3.015, 3.45, 4.75, 16.0, 5.50, 99.0, 16.0]
+monitor_hi_limits = [60.0, 1.9, 3.015, 3.45, 4.75, 16.0, 99.0, 99.0, 16.0]
 monitor_lo_limts = [20.0, 1.8, 2.850, 3.15, 0.00, 00.0, 0.00, 0.0, 0.0]
 monitor_ch_names = [
     "Board temperature: ",
@@ -78,7 +81,7 @@ monitor_ch_names = [
 ]
 
 gain_cal_limits = (
-    0.70  # Fail if any channel is less than 60% of the highest gain channel
+    0.65  # Fail if any channel is less than 60% of the highest gain channel
 )
 phase_cal_limits = (
     80.0  # Fail if delta between any two channels is more than 50 degress.
@@ -108,13 +111,13 @@ except NameError:
 time.sleep(0.5)
 
 try:
-    x = my_cn0566.uri
+    x = my_phaser.uri
     print("cn0566 already connected")
 except NameError:
     print("cn0566 not connected, connecting...")
     from adi.cn0566 import CN0566
 
-    my_cn0566 = CN0566(uri=rpi_ip, rx_dev=my_sdr)
+    my_phaser = CN0566(uri=rpi_ip, rx_dev=my_sdr)
 
 
 # Set up receive frequency. When using HB100, you need to know its frequency
@@ -123,11 +126,13 @@ except NameError:
 # the cal file and set frequency via config.py or config_custom.py.
 
 try:
-    my_cn0566.SignalFreq = load_hb100_cal()
-    print("Found signal freq file, ", my_cn0566.SignalFreq)
+    my_phaser.SignalFreq = load_hb100_cal()
+    print("Found signal freq file, ", my_phaser.SignalFreq)
+    use_tx = False
 except:
-    my_cn0566.SignalFreq = 10.525e9
-    print("No signal freq found, keeping at ", my_cn0566.SignalFreq)
+    my_phaser.SignalFreq = 10.525e9
+    print("No signal freq found, keeping at ", my_phaser.SignalFreq)
+    use_tx = True
 
 # Configure SDR parameters.
 
@@ -153,7 +158,6 @@ my_sdr.rx_hardwaregain_chan0 = 12
 my_sdr.rx_hardwaregain_chan1 = 12
 
 my_sdr.rx_lo = int(2.2e9)  # 4495000000  # Recieve Freq
-my_sdr.tx_lo = int(2.2e9)
 
 my_sdr.filter = "LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
 rx_buffer_size = int(4 * 256)
@@ -162,10 +166,16 @@ my_sdr.rx_buffer_size = rx_buffer_size
 my_sdr.tx_cyclic_buffer = True
 my_sdr.tx_buffer_size = int(2 ** 16)
 
-my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
-my_sdr.tx_hardwaregain_chan1 = int(
-    -6
-)  # Make sure the Tx channels are attenuated (or off) and their freq is far away from Rx
+if use_tx is True:
+    # To disable rx, set attenuation to a high value and set frequency far from rx.
+    my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
+    my_sdr.tx_hardwaregain_chan1 = int(-3) 
+    my_sdr.tx_lo = int(2.2e9) 
+else:
+    # To disable rx, set attenuation to a high value and set frequency far from rx.
+    my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
+    my_sdr.tx_hardwaregain_chan1 = int(-88) 
+    my_sdr.tx_lo = int(1.0e9) 
 
 # my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
 # my_sdr.dds_frequencies = [0.1e6, 0.1e6, 0.1e6, 0.1e6] #Frequencies of DDSs in Hz
@@ -179,32 +189,32 @@ my_sdr.dds_single_tone(
 #     accessed through other methods.
 
 # By default device_mode is "rx"
-my_cn0566.configure(
+my_phaser.configure(
     device_mode="rx"
 )  # Configure adar in mentioned mode and also sets gain of all channel to 127
 
 
 # Onboard source w/ external Vivaldi
-my_cn0566.frequency = (
-    int(my_cn0566.SignalFreq) + my_sdr.rx_lo
+my_phaser.frequency = (
+    int(my_phaser.SignalFreq) + my_sdr.rx_lo
 ) // 4  # PLL feedback via /4 VCO output
-my_cn0566.freq_dev_step = 5690
-my_cn0566.freq_dev_range = 0
-my_cn0566.freq_dev_time = 0
-my_cn0566.powerdown = 0
-my_cn0566.ramp_mode = "disabled"
+my_phaser.freq_dev_step = 5690
+my_phaser.freq_dev_range = 0
+my_phaser.freq_dev_time = 0
+my_phaser.powerdown = 0
+my_phaser.ramp_mode = "disabled"
 
 
 # MWT: Do NOT need to load in cal values during production test.
-# my_cn0566.load_gain_cal('gain_cal_val.pkl')
-# my_cn0566.load_phase_cal('phase_cal_val.pkl')
+# my_phaser.load_gain_cal('gain_cal_val.pkl')
+# my_phaser.load_phase_cal('phase_cal_val.pkl')
 
 # Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
-my_cn0566.Averages = 8
+my_phaser.Averages = 8
 
 
 print("Reading voltage monitor...")
-monitor_vals = my_cn0566.read_monitor()
+monitor_vals = my_phaser.read_monitor()
 
 for i in range(0, len(monitor_vals)):
     if not (monitor_lo_limts[i] <= monitor_vals[i] <= monitor_hi_limits[i]):
@@ -221,47 +231,50 @@ print(
       of the array, then press enter..."
 )
 print("Calibrating Gain, verbosely, then saving cal file...")
-gain_calibration(my_cn0566, verbose=True)  # Start Gain Calibration
+gain_calibration(my_phaser, verbose=True)  # Start Gain Calibration
 
 print("Calibrating Phase, verbosely, then saving cal file...")
-phase_calibration(my_cn0566, verbose=True)  # Start Phase Calibration
+phase_calibration(my_phaser, verbose=True)  # Start Phase Calibration
 
 print("Done calibration")
 
 
-# my_cn0566.save_gain_cal()  # Default filename
-# my_cn0566.save_phase_cal()  # Default filename
+# my_phaser.save_gain_cal()  # Default filename
+# my_phaser.save_phase_cal()  # Default filename
 
-for i in range(0, len(my_cn0566.gcal)):
-    if my_cn0566.gcal[i] < gain_cal_limits:
-        print("Gain cal failure on element ", i, ", ", my_cn0566.gcal[i])
+for i in range(0, len(my_phaser.gcal)):
+    if my_phaser.gcal[i] < gain_cal_limits:
+        print("Gain cal failure on element ", i, ", ", my_phaser.gcal[i])
         failures.append(
             "Gain cal falure on element "
-        )  # + str(i)) # Throws isort error?
+        , str(i)) # Throws isort error?
 
 
-for i in range(0, len(my_cn0566.pcal)):
-    if abs(my_cn0566.pcal[i]) > phase_cal_limits:
-        print("Phase cal failure on element ", i, ", ", my_cn0566.pcal[i])
-        failures.append("Phase cal falure on element ")  # + str(i))
+for i in range(0, len(my_phaser.pcal)):
+    if abs(my_phaser.pcal[i]) > phase_cal_limits:
+        print("Phase cal failure on element ", i, ", ", my_phaser.pcal[i])
+        failures.append("Phase cal falure on element ", str(i))
+
+print("Test took "  + str(time.time() - start) + " seconds.")
 
 if len(failures) == 0:
-    print("WooHoo! BOARD PASSES!!")
+    print("\nWooHoo! BOARD PASSES!!\n")
 else:
-    print("D'oh! BOARD FAILS!")
+    print("\nD'oh! BOARD FAILS!\n")
     for failure in failures:
         print(failure)
     print("\n\n")
 
 
+
 do_plot = (
-    True  # Do a plot just for debug purposes. Suppress for actual production test.
+    False  # Do a plot just for debug purposes. Suppress for actual production test.
 )
 
 while do_plot == True:
 
     start = time.time()
-    my_cn0566.set_beam_phase_diff(0.0)
+    my_phaser.set_beam_phase_diff(0.0)
     time.sleep(0.25)
     data = my_sdr.rx()
     data = my_sdr.rx()
@@ -309,9 +322,9 @@ while do_plot == True:
         xf,
         max_gain,
         PhaseValues,
-    ) = calculate_plot(my_cn0566)
+    ) = calculate_plot(my_phaser)
     print("Sweeping took this many seconds: " + str(time.time() - start))
-    #    gain,  = my_cn0566.plot(plot_type="monopulse")
+    #    gain,  = my_phaser.plot(plot_type="monopulse")
     plt.clf()
     plt.scatter(angle, gain, s=10)
     plt.scatter(angle, delta, s=10)

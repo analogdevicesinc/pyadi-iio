@@ -75,13 +75,13 @@ except NameError:
 time.sleep(0.5)
 
 try:
-    x = my_cn0566.uri
+    x = my_phaser.uri
     print("cn0566 already connected")
 except NameError:
     print("cn0566 not connected, connecting...")
     from adi.cn0566 import CN0566
 
-    my_cn0566 = CN0566(uri=rpi_ip, rx_dev=my_sdr)
+    my_phaser = CN0566(uri=rpi_ip, rx_dev=my_sdr)
 
 
 #  Configure SDR parameters.
@@ -120,34 +120,34 @@ my_sdr.tx_hardwaregain_chan1 = int(-80)
 #     accessed through other methods.
 
 # By default device_mode is "rx"
-my_cn0566.configure(device_mode="rx")
+my_phaser.configure(device_mode="rx")
 
 # Set initial PLL frequency to HB100 nominal
 
-my_cn0566.SignalFreq = 10.525e9
+my_phaser.SignalFreq = 10.525e9
 
 # Onboard source w/ external Vivaldi
-my_cn0566.frequency = (
-    int(my_cn0566.SignalFreq) + my_sdr.rx_lo
+my_phaser.frequency = (
+    int(my_phaser.SignalFreq) + my_sdr.rx_lo
 ) // 4  # PLL feedback via /4 VCO output
-my_cn0566.freq_dev_step = 5690
-my_cn0566.freq_dev_range = 0
-my_cn0566.freq_dev_time = 0
-my_cn0566.powerdown = 0
-my_cn0566.ramp_mode = "disabled"
+my_phaser.freq_dev_step = 5690
+my_phaser.freq_dev_range = 0
+my_phaser.freq_dev_time = 0
+my_phaser.powerdown = 0
+my_phaser.ramp_mode = "disabled"
 
 # Set all elements to half scale - a typical HB100 will have plenty
 # of signal power.
 
 gain_list = [64] * 8
 for i in range(0, len(gain_list)):
-    my_cn0566.set_chan_gain(i, gain_list[i], apply_cal=False)
+    my_phaser.set_chan_gain(i, gain_list[i], apply_cal=False)
 
 # Aim the beam at boresight (zero degrees). Place HB100 right in front of array.
-my_cn0566.set_beam_phase_diff(0.0)
+my_phaser.set_beam_phase_diff(0.0)
 
 # Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
-my_cn0566.Averages = 8
+my_phaser.Averages = 8
 
 # Initialize arrays for amplitudes, frequencies
 full_ampl = np.empty(0)
@@ -164,9 +164,9 @@ f_step = 10e6
 
 for freq in range(int(f_start), int(f_stop), int(f_step)):
     #    print("frequency: ", freq)
-    my_cn0566.SignalFreq = freq
-    my_cn0566.frequency = (
-        int(my_cn0566.SignalFreq) + my_sdr.rx_lo
+    my_phaser.SignalFreq = freq
+    my_phaser.frequency = (
+        int(my_phaser.SignalFreq) + my_sdr.rx_lo
     ) // 4  # PLL feedback via /4 VCO output
 
     data = my_sdr.rx()
@@ -201,4 +201,4 @@ if prompt.upper() == "Y":
     save_hb100_cal(peak_freq * 1e9)
 
 del my_sdr
-del my_cn0566
+del my_phaser

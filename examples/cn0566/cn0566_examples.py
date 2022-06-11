@@ -74,9 +74,9 @@ colors = ["black", "gray", "red", "orange", "yellow", "green", "blue", "purple"]
 
 
 def do_cal_gain():
-    my_cn0566.set_beam_phase_diff(0.0)
-    #    plot_data = my_cn0566.gain_calibration(verbose=True)  # Start Gain Calibration
-    plot_data = gain_calibration(my_cn0566, verbose=True)  # Start Gain Calibration
+    my_phaser.set_beam_phase_diff(0.0)
+    #    plot_data = my_phaser.gain_calibration(verbose=True)  # Start Gain Calibration
+    plot_data = gain_calibration(my_phaser, verbose=True)  # Start Gain Calibration
     plt.figure(4)
     plt.title("Gain calibration FFTs")
     plt.xlabel("FFT Bin number")
@@ -87,11 +87,11 @@ def do_cal_gain():
 
 
 def do_cal_phase():
-    # PhaseValues, plot_data = my_cn0566.phase_calibration(
+    # PhaseValues, plot_data = my_phaser.phase_calibration(
     #     verbose=True
     # )  # Start Phase Calibration
     PhaseValues, plot_data = phase_calibration(
-        my_cn0566, verbose=True
+        my_phaser, verbose=True
     )  # Start Phase Calibration
     plt.figure(5)
     plt.title("Phase sweeps of adjacent elements")
@@ -128,13 +128,13 @@ except NameError:
 time.sleep(0.5)
 
 try:
-    x = my_cn0566.uri
+    x = my_phaser.uri
     print("cn0566 already connected")
 except NameError:
     print("cn0566 not connected, connecting...")
     from adi.cn0566 import CN0566
 
-    my_cn0566 = CN0566(uri=rpi_ip, rx_dev=my_sdr)
+    my_phaser = CN0566(uri=rpi_ip, rx_dev=my_sdr)
 
 # Set up receive frequency. When using HB100, you need to know its frequency
 # fairly accurately. Use the cn0566_find_hb100.py script to measure its frequency
@@ -142,27 +142,28 @@ except NameError:
 # the cal file and set frequency via config.py or config_custom.py.
 
 try:
-    my_cn0566.SignalFreq = load_hb100_cal()
-    print("Found signal freq file, ", my_cn0566.SignalFreq)
+    my_phaser.SignalFreq = load_hb100_cal()
+    print("Found signal freq file, ", my_phaser.SignalFreq)
 except:
-    my_cn0566.SignalFreq = config.SignalFreq
-    print("No signal freq found, keeping at ", my_cn0566.SignalFreq)
+    my_phaser.SignalFreq = config.SignalFreq
+    print("No signal freq found, keeping at ", my_phaser.SignalFreq)
+    print("And using TX path. Make sure antenna is connected.")
+    config.use_tx = True # Assume no HB100, use TX path.
 
 #  Configure SDR parameters.
 
 my_sdr.filter = "LTE20_MHz.ftr"  # Load LTE 20 MHz filter
 
-if config.use_tx is True:
-    tx_level = -6
-else:
-    tx_level = -88
 
-my_sdr.tx_hardwaregain_chan0 = int(
-    tx_level
-)  # this is a negative number between 0 and -88
-my_sdr.tx_hardwaregain_chan1 = int(
-    tx_level
-)  # Make sure the Tx channels are attenuated (or off) and their freq is far away from Rx
+
+if config.use_tx is True:
+    my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
+    my_sdr.tx_hardwaregain_chan1 = int(-6) 
+else:
+    # To disable rx, set attenuation to a high value and set frequency far from rx.
+    my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
+    my_sdr.tx_hardwaregain_chan1 = int(-88) 
+    my_sdr.tx_lo = int(1.0e9) 
 
 
 my_sdr.dds_single_tone(
@@ -174,26 +175,26 @@ my_sdr.dds_single_tone(
 #     accessed through other methods.
 
 # By default device_mode is "rx"
-my_cn0566.configure(device_mode="rx")
+my_phaser.configure(device_mode="rx")
 
-# my_cn0566.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
+# my_phaser.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
 
 # Onboard source w/ external Vivaldi
-my_cn0566.frequency = (
-    int(my_cn0566.SignalFreq) + config.Rx_freq
+my_phaser.frequency = (
+    int(my_phaser.SignalFreq) + config.Rx_freq
 ) // 4  # PLL feedback via /4 VCO output
-my_cn0566.freq_dev_step = 5690
-my_cn0566.freq_dev_range = 0
-my_cn0566.freq_dev_time = 0
-my_cn0566.powerdown = 0
-my_cn0566.ramp_mode = "disabled"
+my_phaser.freq_dev_step = 5690
+my_phaser.freq_dev_range = 0
+my_phaser.freq_dev_time = 0
+my_phaser.powerdown = 0
+my_phaser.ramp_mode = "disabled"
 
 #  If you want to use previously calibrated values load_gain and load_phase values by passing path of previously
 #  stored values. If this is not done system will be working as uncalibrated system.
 #  These will fail gracefully and default to no calibration if files not present.
 
-my_cn0566.load_gain_cal("gain_cal_val.pkl")
-my_cn0566.load_phase_cal("phase_cal_val.pkl")
+my_phaser.load_gain_cal("gain_cal_val.pkl")
+my_phaser.load_phase_cal("phase_cal_val.pkl")
 
 # This can be useful in Array size vs beam width experiment or beamtappering experiment.
 #     Set the gain of outer channels to 0 and beam width will increase and so on.
@@ -204,13 +205,13 @@ my_cn0566.load_phase_cal("phase_cal_val.pkl")
 
 gain_list = [127, 127, 127, 127, 127, 127, 127, 127]
 for i in range(0, len(gain_list)):
-    my_cn0566.set_chan_gain(i, gain_list[i], apply_cal=True)
+    my_phaser.set_chan_gain(i, gain_list[i], apply_cal=True)
 
 # Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
-my_cn0566.Averages = 4
+my_phaser.Averages = 4
 
 # Aim the beam at boresight by default
-my_cn0566.set_beam_phase_diff(0.0)
+my_phaser.set_beam_phase_diff(0.0)
 
 # Really basic options - "plot" to plot continuously, "cal" to calibrate both gain and phase.
 func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
@@ -222,10 +223,10 @@ if func == "cal":
     )
     print("Calibrating Gain, verbosely, then saving cal file...")
     do_cal_gain()  # Start Gain Calibration
-    my_cn0566.save_gain_cal()  # Default filename
+    my_phaser.save_gain_cal()  # Default filename
     print("Calibrating Phase, verbosely, then saving cal file...")
     do_cal_phase()  # Start Phase Calibration
-    my_cn0566.save_phase_cal()  # Default filename
+    my_phaser.save_phase_cal()  # Default filename
     print("Done calibration")
 
 if func == "plot":
@@ -236,7 +237,7 @@ else:
 while do_plot == True:
     try:
         start = time.time()
-        my_cn0566.set_beam_phase_diff(0.0)
+        my_phaser.set_beam_phase_diff(0.0)
         time.sleep(0.25)
         data = my_sdr.rx()
         data = my_sdr.rx()
@@ -284,9 +285,9 @@ while do_plot == True:
             xf,
             max_gain,
             PhaseValues,
-        ) = calculate_plot(my_cn0566)
+        ) = calculate_plot(my_phaser)
         print("Sweeping took this many seconds: " + str(time.time() - start))
-        #    gain,  = my_cn0566.plot(plot_type="monopulse")
+        #    gain,  = my_phaser.plot(plot_type="monopulse")
         plt.clf()
         plt.scatter(angle, gain, s=10)
         plt.scatter(angle, delta, s=10)
@@ -301,19 +302,19 @@ while do_plot == True:
 
 if func == "div_test":
     while True:
-        my_cn0566.set_tx_sw_div(0)
+        my_phaser.set_tx_sw_div(0)
         sleep(1.0)
-        my_cn0566.set_tx_sw_div(2)
+        my_phaser.set_tx_sw_div(2)
         sleep(1.0)
-        my_cn0566.set_tx_sw_div(4)
+        my_phaser.set_tx_sw_div(4)
         sleep(1.0)
-        my_cn0566.set_tx_sw_div(8)
+        my_phaser.set_tx_sw_div(8)
         sleep(1.0)
-        my_cn0566.set_tx_sw_div(16)
+        my_phaser.set_tx_sw_div(16)
         sleep(1.0)
-        my_cn0566.set_tx_sw_div(32)
+        my_phaser.set_tx_sw_div(32)
         sleep(1.0)
-        my_cn0566.set_tx_sw_div(64)
+        my_phaser.set_tx_sw_div(64)
         sleep(1.0)
-        my_cn0566.set_tx_sw_div(128)
+        my_phaser.set_tx_sw_div(128)
         sleep(1.0)
