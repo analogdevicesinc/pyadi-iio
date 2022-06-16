@@ -142,7 +142,7 @@ class App:
         self.ArrayError = []
         self.ArrayBeamPhase = []
         self.TrackArray = []
-        self.Gain_time = [-100]*100
+        self.Gain_time = [-100] * 100
         self.win_width = 0
         self.win_height = 0
         for i in range(0, 1000):
@@ -420,7 +420,7 @@ class App:
                 print("Plotting Signal vs Time")
                 self.plot_tabs.add(self.frame15)  # Signal Tracking Plot
                 self.plot_tabs.select(4)
-                self.Gain_time = [-100]*100
+                self.Gain_time = [-100] * 100
             if value == "Static Phase" or value == "Signal vs Time":
                 slide_RxPhaseDelta.grid()
                 static_phase_label.grid()
@@ -1603,7 +1603,7 @@ class App:
             elif value == "Lab 2: Array Factor":
                 print(value)
                 self.plot_tabs.select(self.frame11)  # select rect plot
-                #cntrl_tabs.hide(frame2)  # Gain tab
+                # cntrl_tabs.hide(frame2)  # Gain tab
                 cntrl_tabs.hide(frame3)  # Phase tab
                 cntrl_tabs.hide(frame4)  # BW tab
                 cntrl_tabs.hide(frame5)  # Bits tab
@@ -1648,7 +1648,7 @@ class App:
                 self.res_bits.set(0)
                 taper_profile(5)  # set blackman taper on the elements
                 self.plot_tabs.add(self.frame15)  # Signal Tracking Plot
-                self.plot_tabs.select(self.frame15)  
+                self.plot_tabs.select(self.frame15)
                 cntrl_tabs.select(frame1)  # select Config tab
                 cntrl_tabs.hide(frame3)  # Phase tab
                 cntrl_tabs.hide(frame6)  # Digital tab
@@ -1981,20 +1981,31 @@ class App:
         )  # convert degrees to radians
         # Phase delta = 2*Pi*d*sin(theta)/lambda = 2*Pi*d*sin(theta)*f/c
         PhaseValues = np.degrees(
-            2 * 3.14159 * self.d
+            2
+            * 3.14159
+            * self.d
             * np.sin(np.radians(SteerValues))
-            * self.SignalFreq / self.c )
+            * self.SignalFreq
+            / self.c
+        )
         self.res_text.set(str("Phase Shift LSB = " + str(phase_step_size)) + " deg")
         if self.res_bits.get() == 1:
             phase_limit = int(225 / phase_step_size) * phase_step_size + phase_step_size
             PhaseValues = np.arange(-phase_limit, phase_limit, phase_step_size)
-        if self.mode_var.get() == "Static Phase" or self.mode_var.get() == "Signal vs Time":
+        if (
+            self.mode_var.get() == "Static Phase"
+            or self.mode_var.get() == "Signal vs Time"
+        ):
             PhaseValues = np.degrees(
-                2 * 3.14159 * self.d
+                2
+                * 3.14159
+                * self.d
                 * np.sin(np.radians([self.RxPhaseDelta.get()]))
-                * self.SignalFreq / self.c )
+                * self.SignalFreq
+                / self.c
+            )
             step_size = phase_step_size  # 2.8125
-            if int(self.RxPhaseDelta.get())<0:
+            if int(self.RxPhaseDelta.get()) < 0:
                 e1 = 360
             else:
                 e1 = 0
@@ -2006,15 +2017,27 @@ class App:
             e7 = ((np.rint(PhaseValues[0] * 6 / step_size) * step_size)) % 360
             e8 = ((np.rint(PhaseValues[0] * 7 / step_size) * step_size)) % 360
             self.PhaseVal_text.set(
-                str(int(e1)) + ", " + str(int(e2)) + ", " + str(int(e3)) 
-                + ", " + str(int(e4))+ ", " + str(int(e5)) + ", " + str(int(e6))
-                + ", " + str(int(e7))+ ", " + str(int(e8))
+                str(int(e1))
+                + ", "
+                + str(int(e2))
+                + ", "
+                + str(int(e3))
+                + ", "
+                + str(int(e4))
+                + ", "
+                + str(int(e5))
+                + ", "
+                + str(int(e6))
+                + ", "
+                + str(int(e7))
+                + ", "
+                + str(int(e8))
             )
-        '''if self.mode_var.get() == "Signal vs Time":
+        """if self.mode_var.get() == "Signal vs Time":
             PhaseValues = np.degrees(
                 2 * 3.14159 * self.d
                 * np.sin(np.radians([self.RxPhaseDelta.get()]))
-                * self.SignalFreq / self.c )'''
+                * self.SignalFreq / self.c )"""
         gain = []
         delta = []
         beam_phase = []
@@ -2072,7 +2095,7 @@ class App:
                 beam_phase.append(PeakValue_beam_phase)
                 angle.append(SteerAngle)
                 diff_error.append(target_error)
-        
+
             if self.mode_var.get() == "Signal vs Time":
                 time.sleep(0.1)
                 self.Gain_time.append(PeakValue_sum)
@@ -2097,7 +2120,6 @@ class App:
             self.xf
         )  # this is the x axis (freq in Hz) for our fft plot
 
-
         if self.mode_var.get() != "Signal vs Time":
             self.ArrayGain = gain
             self.ArrayDelta = delta
@@ -2108,7 +2130,6 @@ class App:
             index_peak_gain = np.where(self.ArrayGain == self.peak_gain)
             index_peak_gain = index_peak_gain[0]
             self.max_angle = self.ArrayAngle[int(index_peak_gain[0])]
-
 
     def generate_Figures(self):
         plt.clf()
@@ -2134,7 +2155,7 @@ class App:
             ms=3,
             alpha=0.7,
             mfc="blue",
-            color="blue"
+            color="blue",
         )
         self.delta_line = self.ax1.plot(
             self.ArrayAngle,
@@ -2163,7 +2184,7 @@ class App:
             mfc="purple",
             color="purple",
         )
-        self.ax1.legend(["Sum", "Delta"], loc='lower right')
+        self.ax1.legend(["Sum", "Delta"], loc="lower right")
         self.max_gain_line = self.ax1.plot(
             self.ArrayAngle,
             np.full(len(self.ArrayAngle), 0),
@@ -2199,7 +2220,7 @@ class App:
             mfc="red",
             color="red",
         )
-        self.ax2.legend(["Phase Difference", "Error Function"], loc='upper right')
+        self.ax2.legend(["Phase Difference", "Error Function"], loc="upper right")
         self.ax2.set_xlabel("Steering Angle (deg)")
         self.ax2.set_ylabel("Error Function")
         self.ax2.set_xlim([x_axis_min, x_axis_max])
@@ -2250,7 +2271,7 @@ class App:
         self.graph4.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
         self.toolbar4 = NavigationToolbar2Tk(self.graph4, self.frame14)
         self.toolbar4.update()
-        
+
         self.figure5 = plt.Figure(figsize=(4, 3), dpi=100)
         self.ax5 = self.figure5.add_subplot(111)
         self.graph5 = FigureCanvasTkAgg(self.figure5, self.frame15)
@@ -2265,13 +2286,23 @@ class App:
     def savePlot(self):
         self.saved_gain = self.ArrayGain
         self.saved_angle = self.ArrayAngle
-        np.savetxt('saved_plot_A.txt', (self.saved_angle, self.saved_gain), delimiter=',', header='steering angle array (first), then FFT amplitude array')
+        np.savetxt(
+            "saved_plot_A.txt",
+            (self.saved_angle, self.saved_gain),
+            delimiter=",",
+            header="steering angle array (first), then FFT amplitude array",
+        )
         print("data saved to saved_plot_A.txt")
-        
+
     def savePlotB(self):
         self.saved_gainB = self.ArrayGain
         self.saved_angleB = self.ArrayAngle
-        np.savetxt('saved_plot_B.txt', (self.saved_angleB, self.saved_gainB), delimiter=',', header='steering angle array (first), then FFT amplitude array')
+        np.savetxt(
+            "saved_plot_B.txt",
+            (self.saved_angleB, self.saved_gainB),
+            delimiter=",",
+            header="steering angle array (first), then FFT amplitude array",
+        )
         print("data saved to saved_plot_B.txt")
 
     def clearPlot(self):
@@ -2279,7 +2310,7 @@ class App:
         self.saved_angle = []
         self.saved_gainB = []
         self.saved_angleB = []
-        
+
     def plotData(self, plot_gain, plot_fft, plot_tracking):
         # plot sum of both channels and subtraction of both channels
         x_axis_min = self.x_min.get()
@@ -2290,12 +2321,12 @@ class App:
         self.ax1.set_ylim([y_axis_min, y_axis_max])
 
         if self.mode_var.get() == "Signal vs Time":
-            #time.sleep(0.1)
+            # time.sleep(0.1)
             self.ArrayGain = self.Gain_time
             self.ArrayAngle = []
             num_gains = len(self.ArrayGain)
             for i in range(num_gains):
-                self.ArrayAngle.append(180/num_gains * i - 90)
+                self.ArrayAngle.append(180 / num_gains * i - 90)
         else:
             self.saved_line[0].set_data(self.saved_angle, self.saved_gain)
             self.saved_lineB[0].set_data(self.saved_angleB, self.saved_gainB)
@@ -2303,10 +2334,12 @@ class App:
                 self.delta_line[0].set_data(self.ArrayAngle, self.ArrayDelta)
             if self.PlotMax_set.get() == 1:
                 self.max_gain_line[0].set_data(
-                    [x_axis_min, x_axis_max], [self.peak_gain, self.peak_gain])
+                    [x_axis_min, x_axis_max], [self.peak_gain, self.peak_gain]
+                )
             if self.AngleMax_set.get() == 1:
                 self.max_angle_line[0].set_data(
-                    [self.max_angle, self.max_angle], [y_axis_min, y_axis_max])
+                    [self.max_angle, self.max_angle], [y_axis_min, y_axis_max]
+                )
 
         self.sum_line[0].set_data(self.ArrayAngle, self.ArrayGain)
 
@@ -2326,7 +2359,9 @@ class App:
             if self.show_error.get() == 1:
                 self.ax2.set_xlim([x_axis_min, x_axis_max])
                 self.ax2.set_ylim([-1.5, 1.5])
-                self.phase_line[0].set_data(self.ArrayAngle, np.sign(self.ArrayBeamPhase))
+                self.phase_line[0].set_data(
+                    self.ArrayAngle, np.sign(self.ArrayBeamPhase)
+                )
                 self.error_line[0].set_data(self.ArrayAngle, self.ArrayError)
                 # self.graph1.restore_region(self.background2)
                 self.ax2.draw_artist(self.phase_line[0])
@@ -2388,8 +2423,8 @@ class App:
             self.ax3.cla()
             self.ax3.plot(-self.xf / 1e6, self.max_gain)
             self.ax3.set_title("FFT at Peak Steering Angle")
-            self.ax3.set_xlabel('Freq (MHz)')
-            #self.ax3.set_xlabel(f"Freq - {int(self.SignalFreq/1e6)} MHz")
+            self.ax3.set_xlabel("Freq (MHz)")
+            # self.ax3.set_xlabel(f"Freq - {int(self.SignalFreq/1e6)} MHz")
             self.ax3.set_ylabel("Amplitude (dBFS)")
             # self.ax3.set_xlim([x_axis_min, x_axis_max])
             self.ax3.set_ylim([-100, y_axis_max])
@@ -2440,12 +2475,13 @@ class App:
         if self.mode_var.get() == "Signal vs Time":
             self.ax5.cla()
             self.ax5.plot(
-                self.ArrayAngle, self.ArrayGain,
+                self.ArrayAngle,
+                self.ArrayGain,
                 "-o",
                 ms=3,
                 alpha=0.7,
                 mfc="blue",
-                color="blue"
+                color="blue",
             )
             self.ax5.set_xlabel("time")
             self.ax5.set_ylabel("Amplitude (dBFS)")
@@ -2454,6 +2490,7 @@ class App:
             self.ax5.set_xticklabels([])  # hide the x axis numbers
             self.ax5.grid()
             self.graph5.draw()
+
 
 # Some notes on TKinter scaling issues:
 # The root.tk.call('tk', 'scaling', 2.0) takes one argument, which is the number of pixels in one "point".

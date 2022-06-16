@@ -168,14 +168,18 @@ my_sdr.tx_buffer_size = int(2 ** 16)
 
 if use_tx is True:
     # To disable rx, set attenuation to a high value and set frequency far from rx.
-    my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
-    my_sdr.tx_hardwaregain_chan1 = int(-3) 
-    my_sdr.tx_lo = int(2.2e9) 
+    my_sdr.tx_hardwaregain_chan0 = int(
+        -88
+    )  # this is a negative number between 0 and -88
+    my_sdr.tx_hardwaregain_chan1 = int(-3)
+    my_sdr.tx_lo = int(2.2e9)
 else:
     # To disable rx, set attenuation to a high value and set frequency far from rx.
-    my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
-    my_sdr.tx_hardwaregain_chan1 = int(-88) 
-    my_sdr.tx_lo = int(1.0e9) 
+    my_sdr.tx_hardwaregain_chan0 = int(
+        -88
+    )  # this is a negative number between 0 and -88
+    my_sdr.tx_hardwaregain_chan1 = int(-88)
+    my_sdr.tx_lo = int(1.0e9)
 
 # my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
 # my_sdr.dds_frequencies = [0.1e6, 0.1e6, 0.1e6, 0.1e6] #Frequencies of DDSs in Hz
@@ -245,9 +249,7 @@ print("Done calibration")
 for i in range(0, len(my_phaser.gcal)):
     if my_phaser.gcal[i] < gain_cal_limits:
         print("Gain cal failure on element ", i, ", ", my_phaser.gcal[i])
-        failures.append(
-            "Gain cal falure on element "
-        , str(i)) # Throws isort error?
+        failures.append("Gain cal falure on element ", str(i))  # Throws isort error?
 
 
 for i in range(0, len(my_phaser.pcal)):
@@ -255,7 +257,7 @@ for i in range(0, len(my_phaser.pcal)):
         print("Phase cal failure on element ", i, ", ", my_phaser.pcal[i])
         failures.append("Phase cal falure on element ", str(i))
 
-print("Test took "  + str(time.time() - start) + " seconds.")
+print("Test took " + str(time.time() - start) + " seconds.")
 
 if len(failures) == 0:
     print("\nWooHoo! BOARD PASSES!!\n")
@@ -264,7 +266,6 @@ else:
     for failure in failures:
         print(failure)
     print("\n\n")
-
 
 
 do_plot = (

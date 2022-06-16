@@ -148,22 +148,25 @@ except:
     my_phaser.SignalFreq = config.SignalFreq
     print("No signal freq found, keeping at ", my_phaser.SignalFreq)
     print("And using TX path. Make sure antenna is connected.")
-    config.use_tx = True # Assume no HB100, use TX path.
+    config.use_tx = True  # Assume no HB100, use TX path.
 
 #  Configure SDR parameters.
 
 my_sdr.filter = "LTE20_MHz.ftr"  # Load LTE 20 MHz filter
 
 
-
 if config.use_tx is True:
-    my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
-    my_sdr.tx_hardwaregain_chan1 = int(-6) 
+    my_sdr.tx_hardwaregain_chan0 = int(
+        -88
+    )  # this is a negative number between 0 and -88
+    my_sdr.tx_hardwaregain_chan1 = int(-6)
 else:
     # To disable rx, set attenuation to a high value and set frequency far from rx.
-    my_sdr.tx_hardwaregain_chan0 = int(-88)  # this is a negative number between 0 and -88
-    my_sdr.tx_hardwaregain_chan1 = int(-88) 
-    my_sdr.tx_lo = int(1.0e9) 
+    my_sdr.tx_hardwaregain_chan0 = int(
+        -88
+    )  # this is a negative number between 0 and -88
+    my_sdr.tx_hardwaregain_chan1 = int(-88)
+    my_sdr.tx_lo = int(1.0e9)
 
 
 my_sdr.dds_single_tone(
