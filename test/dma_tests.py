@@ -589,6 +589,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
             sdr.tx2(cw)
         else:
             sdr.tx(cw)
+        time.sleep(1)
         for _ in range(60):  # Wait to stabilize
             data = sdr.rx2() if use_rx2 else sdr.rx()
     except Exception as e:
@@ -681,6 +682,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, frequency, scale, pl
         freq = 0
         for i in range(8):
             data = sdr.rx()
+            time.sleep(1)
             amps, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
             amp += amps
         amp /= 8
@@ -864,7 +866,7 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     else:
         fs = int(sdr.rx_sample_rate)
     sdr.dds_single_tone(np.floor(fs * 0.1), dds_scale, channel)
-    time.sleep(5)
+    time.sleep(3)
 
     # Check RSSI
     if channel == 0:
@@ -1016,6 +1018,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, frequency, scal
         ffreqs = 0
         for i in range(8):
             data = sdr.rx()
+            #time.sleep(1)
             amp, ffreqs = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
             ffampl += amp
         ffampl/= 8
