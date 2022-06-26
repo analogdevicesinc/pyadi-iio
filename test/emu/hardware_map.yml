@@ -265,3 +265,12 @@ ad6676:
       - filename: ad6676.xml
       - data_devices:
           - iio:device1
+
+ad7768:
+  - ad7768
+  - pyadi_iio_class_support:
+      - ad7768
+  - emulate:
+      - filename: ad7768.xml
+      - data_devices:
+          - iio:device0
