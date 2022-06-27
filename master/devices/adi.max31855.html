@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adxl313" href="adi.adxl313.html" /><link rel="prev" title="adrv9009_zu11eg_fmcomms8" href="adi.adrv9009_zu11eg_fmcomms8.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="one_bit_adc_dac" href="adi.one_bit_adc_dac.html" /><link rel="prev" title="ltc2983" href="adi.ltc2983.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>adrv9009_zu11eg_multi - Analog Devices Hardware Python Interfaces 0.0.13</title>
+        <title>adi.max31855 module - Analog Devices Hardware Python Interfaces 0.0.13</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -208,7 +208,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl313.html">adxl313</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
@@ -227,7 +227,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adi.max31855 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
@@ -274,126 +274,13 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.adrv9009_zu11eg_multi">
-<span id="adrv9009-zu11eg-multi"></span><h1>adrv9009_zu11eg_multi<a class="headerlink" href="#module-adi.adrv9009_zu11eg_multi" title="Permalink to this headline"></a></h1>
+          <section id="module-adi.max31855">
+<span id="adi-max31855-module"></span><h1>adi.max31855 module<a class="headerlink" href="#module-adi.max31855" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adrv9009_zu11eg_multi.</span></span><span class="sig-name descname"><span class="pre">adrv9009_zu11eg_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_uris</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_jesd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_jesds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmcomms8</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>ADRV9009-ZU11EG Multi-SOM Manager</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>primary_uri: type=string</dt><dd><p>URI of primary ADRV9009-ZU11EG. Parent HMC7044 is connected
-to this SOM</p>
-</dd>
-<dt>secondary_uris: type=list[string]</dt><dd><p>URI(s) of secondary ADRV9009-ZU11EG(s).</p>
-</dd>
-<dt>primary_jesd: type=adi.jesd</dt><dd><p>JESD object associated with primary ADRV9009-ZU11EG</p>
-</dd>
-<dt>secondary_jesds: type=list[adi.jesd]</dt><dd><p>JESD object(s) associated with secondary ADRV9009-ZU11EG(s)</p>
-</dd>
-<dt>fmcomms8: type=boolean</dt><dd><p>Boolean flag to idenify is FMComms8(s) are attached to SOMs</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_cap_sel">
-<span class="sig-name descname"><span class="pre">hmc7044_cap_sel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_cap_sel" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_car_output_delay">
-<span class="sig-name descname"><span class="pre">hmc7044_car_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_car_output_delay" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_car_output_delay:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>digital: type=int</dt><dd><p>Digital delay. Adjusts the phase of the divider signal
-by up to 17 half cycles of the VCO.</p>
-</dd>
-<dt>analog_ps: type=int</dt><dd><p>Analog delay. Adjusts the delay of the divider signal in
-increments of ~25 ps. Range is from 100ps to 700ps.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_ext_output_delay">
-<span class="sig-name descname"><span class="pre">hmc7044_ext_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_ext_output_delay" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_ext_output_delay:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>digital: type=int</dt><dd><p>Digital delay. Adjusts the phase of the divider signal
-by up to 17 half cycles of the VCO.</p>
-</dd>
-<dt>analog_ps: type=int</dt><dd><p>Analog delay. Adjusts the delay of the divider signal in
-increments of ~25 ps. Range is from 100ps to 700ps.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_set_cap_sel">
-<span class="sig-name descname"><span class="pre">hmc7044_set_cap_sel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_set_cap_sel" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_set_cap_sel:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>vals: type=list</dt><dd><p>Forces certain Capacitor bank seletions.
-Typically the list returned form hmc7044_cap_sel</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.reinitialize">
-<span class="sig-name descname"><span class="pre">reinitialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.reinitialize" title="Permalink to this definition"></a></dt>
-<dd><p>reinitialize: reinitialize all transceivers</p>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.rx" title="Permalink to this definition"></a></dt>
-<dd><p>Receive data from multiple hardware buffers for each channel index in
-rx_enabled_channels of each child object (primary,secondaries[indx]).</p>
-<dl class="simple">
-<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
-is enabled containing samples from a channel or set of channels.
-Data will be complex when using a complex data device.</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.rx_buffer_size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.rx_buffer_size" title="Permalink to this definition"></a></dt>
-<dd><p>rx_buffer_size: Size of receive buffer in samples for each device</p>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.secondaries">
-<span class="sig-name descname"><span class="pre">secondaries</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="adi.adrv9009_zu11eg.html#adi.adrv9009_zu11eg.adrv9009_zu11eg" title="adi.adrv9009_zu11eg.adrv9009_zu11eg"><span class="pre">adi.adrv9009_zu11eg.adrv9009_zu11eg</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.secondaries" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.set_trx_framer_a_loopback">
-<span class="sig-name descname"><span class="pre">set_trx_framer_a_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.set_trx_framer_a_loopback" title="Permalink to this definition"></a></dt>
-<dd><p>set_trx_framer_a_loopback: Set bist_framer_a_loopback</p>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.set_trx_lo_frequency">
-<span class="sig-name descname"><span class="pre">set_trx_lo_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.set_trx_lo_frequency" title="Permalink to this definition"></a></dt>
-<dd><p>set_trx_lo_frequency:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>freq: type=int</dt><dd><p>Frequency in hertz to be applied to all LOs</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.sysref_request">
-<span class="sig-name descname"><span class="pre">sysref_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.sysref_request" title="Permalink to this definition"></a></dt>
-<dd><p>sysref_request: Sysref request for parent HMC7044</p>
-</dd></dl>
+<dt class="sig sig-object py" id="adi.max31855.max31855">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max31855.</span></span><span class="sig-name descname"><span class="pre">max31855</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max31855.max31855" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code></p>
+<p>MAX31855 thermocouple device</p>
 </dd></dl>
 </section>
 
@@ -402,23 +289,23 @@ Data will be complex when using a complex data device.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.adxl313.html">
+          <a class="next-page" href="adi.one_bit_adc_dac.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">adxl313</div>
+                <div class="title">one_bit_adc_dac</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.adrv9009_zu11eg_fmcomms8.html">
+          <a class="prev-page" href="adi.ltc2983.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">adrv9009_zu11eg_fmcomms8</div>
+                <div class="title">ltc2983</div>
                 
               </div>
             </a>
