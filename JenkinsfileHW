@@ -1,0 +1,65 @@
+// Pipeline
+lock(label: 'adgt_test_harness_boards') {
+    @Library('sdgtt-lib@adgt-test-harness') _
+    def hdlBranch = "NA"
+    def linuxBranch = "NA"
+    def bootPartitionBranch = "master"
+    def jenkins_job_trigger = "ci"
+    def firmwareVersion = 'v0.34'
+    def bootfile_source = 'artifactory' // options: sftp, artifactory, http, local
+    def harness = getGauntlet(hdlBranch, linuxBranch, bootPartitionBranch, firmwareVersion, bootfile_source)
+
+    //Update repos
+    harness.set_env('nebula_repo', 'https://github.com/sdgtt/nebula.git')
+    harness.set_env('nebula_branch','dev')
+    harness.set_env('telemetry_repo', 'https://github.com/sdgtt/telemetry.git')
+    harness.set_env('telemetry_branch', 'master')
+
+    def pyadi_branch = scm.branches.first().getExpandedName(env.getEnvironment())
+    harness.set_env('pyadi_iio_branch', pyadi_branch.toString())
+
+    //Update nebula config from netbox
+    harness.set_update_nebula_config(true)
+    harness.set_env('nebula_config_source','netbox')
+    harness.set_env('netbox_ip','192.168.10.11')
+    harness.set_env('netbox_port','8000')
+    harness.set_env('netbox_base_url','netbox')
+    withCredentials([string(credentialsId: 'netbox_token', variable: 'TOKEN')]) {
+      harness.set_env('netbox_token', TOKEN)
+    }
+    harness.set_env('netbox_devices_tag','active')
+    //update first the agent with the required deps
+    harness.set_required_agent(["sdg-nuc-01","sdg-nuc-02"])
+    harness.update_agents()
+
+    //Set other test parameters
+    harness.set_nebula_debug(true)
+    harness.set_enable_docker(true)
+    harness.set_docker_host_mode(true)
+    harness.set_send_telemetry(true)
+    harness.set_log_artifacts(false)
+    harness.set_log_jira(false)
+    harness.set_enable_resource_queuing(true)
+    harness.set_elastic_server('192.168.10.11')
+    harness.set_required_hardware(["pluto","zynq-adrv9361-z7035-fmc"])
+   //                               "zynq-zed-adv7511-ad9364-fmcomms4",
+   //                               "zynq-zed-adv7511-ad9361-fmcomms2-3",
+   //                               "zynq-zc706-adv7511-ad9361-fmcomms5",
+   //                              "zynq-zc702-adv7511-ad9361-fmcomms2-3",
+   //                               "zynq-adrv9364-z7020-bob-vcmos"])
+    harness.set_docker_args(['Vivado'])
+    harness.set_nebula_local_fs_source_root("artifactory.analog.com")
+
+    // Set stages (Stages are run sequentially on agents.)
+    harness.add_stage(harness.stage_library("UpdateBOOTFiles"), 'stopWhenFail',
+                      harness.stage_library("RecoverBoard"))
+
+    // Test stage
+    harness.add_stage(harness.stage_library("PyADITests"),'continueWhenFail')
+
+    // Send results
+    //harness.add_stage(harness.stage_library('SendResults'),'continueWhenFail')
+
+    // Go go
+    harness.run_stages()
+}
