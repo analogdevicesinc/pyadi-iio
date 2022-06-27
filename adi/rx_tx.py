@@ -58,7 +58,7 @@ class rx_tx_common(attribute):
     def _needs_type_conversion(
         self, rxtx, channel_names: List[str], output: bool
     ) -> None:
-        """Check device to see if they need type conversion to local format"""
+        """Check device to see if they need type conversion to local format."""
         for chan in channel_names:
             df = rxtx.find_channel(chan, output).data_format
             if df.shift != 0 or df.with_scale or df.is_be:
@@ -67,8 +67,7 @@ class rx_tx_common(attribute):
 
     def _check_type_conversion(self):
         """Check channels to see if they need type conversion to local format
-
-        This will set _rx_needs_type_conversion and _tx_needs_type_conversion
+        This will set _rx_needs_type_conversion and _tx_needs_type_conversion.
         """
         if hasattr(self, "_rxadc") and self._rxadc:
             self._rx_needs_type_conversion = self._needs_type_conversion(
