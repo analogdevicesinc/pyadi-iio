@@ -98,6 +98,7 @@ class rx(rx_tx_common):
     __rxbuf = None
     _rx_unbuffered_data = False
     _rx_annotated = False
+    _rx_stack_interleaved = False  # Convert from channel to sample interleaved
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -343,6 +344,15 @@ class rx(rx_tx_common):
 
         sig = []
         stride = len(self.rx_enabled_channels)
+
+        if self._rx_stack_interleaved:
+            # Convert data to sample interleaved from channel interleaved
+            sigi = np.empty((x.size,), dtype=x.dtype)
+            for i, _ in enumerate(self.rx_enabled_channels):
+                sigi[i::stride] = x[
+                    i * self.rx_buffer_size : (i + 1) * self.rx_buffer_size
+                ]
+            x = sigi
 
         if self._rx_output_type == "raw":
             for c in range(stride):
