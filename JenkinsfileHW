@@ -15,6 +15,9 @@ lock(label: 'adgt_test_harness_boards') {
     harness.set_env('libiio_branch', 'v0.23')
     harness.set_env('telemetry_repo', 'https://github.com/sdgtt/telemetry.git')
     harness.set_env('telemetry_branch', 'master')
+
+    def pyadi_branch = scm.branches.first().getExpandedName(env.getEnvironment())
+    harness.set_env('pyadi_iio_branch', pyadi_branch.toString())    
   
     //Update agent with required deps
     harness.set_required_agent(["sdg-nuc-01","sdg-nuc-02"])
