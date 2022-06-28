@@ -1,3 +1,4 @@
+import adi
 import pytest
 
 hardware = "adrv9009-dual"
@@ -313,3 +314,20 @@ def test_adrv9009_zu11eg_iq_loopback(
     test_iq_loopback, iio_uri, classname, channel, param_set
 ):
     test_iq_loopback(iio_uri, classname, channel, param_set)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("rx_buffer_size", [128, 256, 512, 1024])
+@pytest.mark.parametrize("rx_enabled_channels", [[0], [0, 1], [0, 1, 2, 3]])
+def test_adrv9009_zu11eg_buffer_size(iio_uri, rx_buffer_size, rx_enabled_channels):
+    dev = adi.adrv9009_zu11eg(iio_uri)
+    dev.rx_buffer_size = rx_buffer_size
+    dev.rx_enabled_channels = rx_enabled_channels
+
+    data = dev.rx()
+    if len(rx_enabled_channels) == 1:
+        assert len(data) == rx_buffer_size
+    else:
+        for chan in data:
+            assert len(chan) == rx_buffer_size
