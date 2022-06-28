@@ -52,6 +52,32 @@ class phy(attribute):
 class rx_tx_common(attribute):
     """Common functions for RX and TX"""
 
+    _rx_needs_type_conversion = False
+    _tx_needs_type_conversion = False
+
+    def _needs_type_conversion(
+        self, rxtx, channel_names: List[str], output: bool
+    ) -> None:
+        """Check device to see if they need type conversion to local format."""
+        for chan in channel_names:
+            df = rxtx.find_channel(chan, output).data_format
+            if df.shift != 0 or df.with_scale or df.is_be:
+                return True
+        return False
+
+    def _check_type_conversion(self):
+        """Check channels to see if they need type conversion to local format
+        This will set _rx_needs_type_conversion and _tx_needs_type_conversion.
+        """
+        if hasattr(self, "_rxadc") and self._rxadc:
+            self._rx_needs_type_conversion = self._needs_type_conversion(
+                self._rxadc, self._rx_channel_names, False
+            )
+        if hasattr(self, "_txdac") and self._txdac:
+            self._tx_needs_type_conversion = self._needs_type_conversion(
+                self._txdac, self._tx_channel_names, True
+            )
+
     def _annotate(self, data, cnames: List[str], echans: List[int]):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
@@ -72,6 +98,7 @@ class rx(rx_tx_common):
     __rxbuf = None
     _rx_unbuffered_data = False
     _rx_annotated = False
+    _rx_stack_interleaved = False  # Convert from channel to sample interleaved
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -82,6 +109,7 @@ class rx(rx_tx_common):
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
+        self._check_type_conversion()
 
     @property
     def rx_channel_names(self) -> List[str]:
@@ -251,10 +279,16 @@ class rx(rx_tx_common):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        chan = self._rxadc.find_channel(
-            self._rx_channel_names[self.rx_enabled_channels[0]]
-        )
-        data = chan.read(self.__rxbuf)
+        data = bytearray()
+        if self._rx_needs_type_conversion:
+            for ec in self.rx_enabled_channels:
+                ec_i = ec * 2
+                ec_q = ec * 2 + 1
+                for c in [ec_i, ec_q]:
+                    chan = self._rxadc.find_channel(self._rx_channel_names[c])
+                    data.extend(chan.read(self.__rxbuf))
+        else:
+            data = self.__rxbuf.read()
 
         x = np.frombuffer(data, dtype=self._rx_data_type)
         indx = 0
@@ -292,10 +326,10 @@ class rx(rx_tx_common):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        chan = self._rxadc.find_channel(
-            self._rx_channel_names[self.rx_enabled_channels[0]]
-        )
-        data = chan.read(self.__rxbuf)
+        data = bytearray()
+        for ec in self.rx_enabled_channels:
+            chan = self._rxadc.find_channel(self._rx_channel_names[ec])
+            data.extend(chan.read(self.__rxbuf))
 
         if isinstance(self._rx_data_type, list):
             return self.__multi_type_rx(data)
@@ -310,6 +344,15 @@ class rx(rx_tx_common):
 
         sig = []
         stride = len(self.rx_enabled_channels)
+
+        if self._rx_stack_interleaved:
+            # Convert data to sample interleaved from channel interleaved
+            sigi = np.empty((x.size,), dtype=x.dtype)
+            for i, _ in enumerate(self.rx_enabled_channels):
+                sigi[i::stride] = x[
+                    i * self.rx_buffer_size : (i + 1) * self.rx_buffer_size
+                ]
+            x = sigi
 
         if self._rx_output_type == "raw":
             for c in range(stride):
@@ -390,6 +433,7 @@ class tx(dds, rx_tx_common):
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
+        self._check_type_conversion()
 
     def __del__(self):
         self.__txbuf = []
