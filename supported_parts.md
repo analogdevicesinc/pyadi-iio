@@ -120,3 +120,4 @@
 - LM75
 - ADPD1080
 - MAX31855
+- CPU Thermal (Raspberry Pi CPU temperature sensor)

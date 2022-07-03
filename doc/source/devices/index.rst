@@ -61,6 +61,7 @@ Supported Devices
    adi.adxrs290
    adi.cn0532
    adi.cn0540
+   adi.cpu_thermal
    adi.daq2
    adi.daq3
    adi.fmc_vna

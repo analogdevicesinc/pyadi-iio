@@ -151,6 +151,8 @@ from adi.tdd import tdd
 
 from adi.lm75 import lm75
 
+from adi.cpu_thermal import cpu_thermal
+
 from adi.ad4630 import ad4630
 
 from adi.adpd1080 import adpd1080
