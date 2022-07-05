@@ -30,50 +30,45 @@
 # BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 import time
-
+import sys
 import adi
 import numpy as np
 
 # Set up CN0511. Replace URI with the actual uri of your CN0511 for remote access.
-uri = "ip:192.168.254.104"
-# uri = "local:"
-# replace ambient temperature value with actual temperature for temperature
-# calibration.
-ambient_temp = 32.0
+uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:localhost"
 
-rpi_sig_gen = adi.CN0511(uri=uri)
+rpi_sig_gen = adi.cn0511(uri=uri)
 
-# enable temperature measurements
+# Replace ambient temperature value with actual temperature for temperature
+# calibration:
+ambient_temp = 32.0 # set the ambient temperature
+
+# Enable temperature measurements:
 rpi_sig_gen.temperature_enable = True
+print("Temperature read enabled: ", rpi_sig_gen.temperature_enable)
 
-# calibrate temperature
-rpi_sig_gen.temperature_cal = ambient_temp
-
-# Read temperature
-temp = rpi_sig_gen.temperature
-print("Chip Temperature: " + str(temp) + "°C")
-rpi_sig_gen.sample_rate = 5283840000
-# set NCO frequency in Hz
-rpi_sig_gen.nco_enable = True
-rpi_sig_gen.frequency = 100000000
-print("Output Frequency set to: " + str(rpi_sig_gen.frequency) + " Hz")
-
-# set scale of waveform (0-32767)
-rpi_sig_gen.raw = 1000
-print(
-    "Output scale set to: " + str(20 * np.log10(rpi_sig_gen.raw / (2 ** 15))) + " dBFS"
-)
-
-# enable transmit
+# Enable transmit:
 rpi_sig_gen.tx_enable = True
 print("Output enabled: ", rpi_sig_gen.tx_enable)
 
-# enable amplifier
+# Enable amplifier:
 rpi_sig_gen.amp_enable = True
-
 print("Amplifier enabled: ", rpi_sig_gen.amp_enable)
+
+# Calibrate temperature:
+rpi_sig_gen.temperature_cal = ambient_temp
+
+# Read temperature:
+temp = rpi_sig_gen.temperature
+print("Chip Temperature: " + str(temp) + "°C")
+
+# Set calibrated output [output_power_dbm, output_frequency_Hz]:
+rpi_sig_gen.calibrated_output = [-20, 4000000000]
+print(
+    "Output power calibrated set to: " + str(rpi_sig_gen.calibrated_output[0]) + " dBm"
+)
+print("Output Frequency is set to: " + str(rpi_sig_gen.calibrated_output[1]) + " Hz")
 
 print("Sleeping for 15 secs")
 # sleep 15 sec
@@ -82,18 +77,13 @@ for i in range(15):
     time.sleep(1)
 print(".")
 
-# Read temperature
-temp = rpi_sig_gen.temperature
-print("Chip Temperature: " + str(temp) + "°C")
+# Disable reading temperature:
+rpi_sig_gen.temperature_enable = False
+print("Temperature read enabled: ", rpi_sig_gen.temperature_enable)
 
-print("Output Frequency: " + str(rpi_sig_gen.frequency) + " Hz")
-print("Output power: " + str(20 * np.log10(rpi_sig_gen.raw / (2 ** 15))) + " dBFS")
-
+# Turn off amplifier and disable output:
 print("Disabling the amplifier and output...")
-# turn off amplifier and disable output
 rpi_sig_gen.amp_enable = False
 print("Amplifier enabled: ", rpi_sig_gen.amp_enable)
 rpi_sig_gen.tx_enable = False
 print("Output enabled: ", rpi_sig_gen.tx_enable)
-# enable temperature measurements
-print(rpi_sig_gen.temperature_enable)
