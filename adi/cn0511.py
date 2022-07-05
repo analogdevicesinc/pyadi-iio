@@ -30,20 +30,46 @@
 # BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import iio
-
-from adi.ad916x import ad9166
+import numpy as np
+from adi.ad916x import ad9166 as ad9166_adi  # pyadi-iio library
 from adi.context_manager import context_manager
 
+try:
+    import ad9166 as libad9166  # helper library for calibration function
+except ImportError:
+    libad9166 = None
 
-class CN0511(ad9166):
+
+class cn0511(ad9166_adi):
     """ CN0511 Raspberry Pi Hat Signal Generator """
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, self._device_name)
-        ad9166.__init__(self, uri=uri)
+        ad9166_adi.__init__(self, uri=uri)
+        self._trim_dac_ch = "voltage0"
+        self._trim_dac = self._ctx.find_device("ad5693r")
         self._amp = self._ctx.find_device("ad9166-amp")
-        self._synth = self._ctx.find_device("adf4372")
+        self.__calibrated_dev = self._ctx.find_device("ad9166")
+        self.__ch = self.__calibrated_dev.find_channel("altvoltage0", True)
+        if libad9166:
+            self.__calibration_data = libad9166._POINTER(
+                libad9166.CalibrationParameters
+            )()
+            libad9166.find_calibration_data(
+                self._ctx, "cn0511", self.__calibration_data
+            )
+
+        self.FIR85_enable = True
+        self.sample_rate = 6000000000
+
+    @property
+    def trim_frequency_raw(self):
+        """ trim_frequency_raw: modify output frequency of cn0511 in small steps"""
+        return self._get_iio_attr(self._trim_dac_ch, "raw", True, self._trim_dac)
+
+    @trim_frequency_raw.setter
+    def trim_frequency_raw(self, value):
+        self._set_iio_attr(self._trim_dac_ch, "raw", True, value, self._trim_dac)
 
     @property
     def amp_enable(self):
@@ -59,53 +85,40 @@ class CN0511(ad9166):
         self._set_iio_dev_attr_str("en", val, _ctrl=self._amp)
 
     @property
-    def pump_current_code(self):
-        """ pump_current_code: CN0511 ADF4372 pump current code. Values allowed:
-        0-15. Represents the pump current."""
-        return (self._synth.reg_read(0x1E) >> 4) & 0x0F
+    def amplitude_cal(self):
+        """ amplitude_cal: CN0511 amplitude calibration
+            Options:
+                True: If you set this to true, the output is calibrated.
+                False: Nothing happens.
+        """
+        return None
 
-    @pump_current_code.setter
-    def pump_current_code(self, value):
-        if value <= 15 and value >= 0:
-            # Power down first
-            self._synth.reg_write(0x1E, 0x05)
-            # Set new charge pump current (ICP_Iset) value
-            self._synth.reg_write(0x1E, (value & 0x0F) << 4 | 0x08)
-            self._synth.reg_write(0x10, 0x28)
-
-    @property
-    def pump_current_str(self):
-        """ pump_current_str: CN0511 ADF4372 pump current value """
-        return self.pump_current_available[self.pump_current_code]
-
-    @pump_current_str.setter
-    def pump_current_str(self, value):
-        try:
-            code = self.pump_current_available.index(value)
-            self.pump_current_code = code
-        except Exception:
-            pass
+    @amplitude_cal.setter
+    def amplitude_cal(self, value=True):
+        if libad9166:
+            if value:
+                libad9166.device_set_iofs(
+                    self.__calibrated_dev, self.__calibration_data, self.frequency
+                )
+        else:
+            print("Warning: Missing libad9166, calibration failed.")
 
     @property
-    def pump_current_available(self):
-        """ pump_current_available: CN0511 available pump currents. Returns the available
-         current setting for the pump. """
-        available = [
-            "0.35 mA",  # CP_CURRENT = 0000
-            "0.70 mA",  # CP_CURRENT = 0001
-            "1.05 mA",  # CP_CURRENT = 0010
-            "1.40 mA",  # CP_CURRENT = 0011
-            "1.75 mA",  # CP_CURRENT = 0100
-            "2.10 mA",  # CP_CURRENT = 0101
-            "2.35 mA",  # CP_CURRENT = 0110
-            "2.80 mA",  # CP_CURRENT = 0111
-            "3.15 mA",  # CP_CURRENT = 1000
-            "3.50 mA",  # CP_CURRENT = 1001
-            "3.85 mA",  # CP_CURRENT = 1010
-            "4.20 mA",  # CP_CURRENT = 1011
-            "4.55 mA",  # CP_CURRENT = 1100
-            "4.90 mA",  # CP_CURRENT = 1101
-            "5.25 mA",  # CP_CURRENT = 1110
-            "5.60 mA",  # CP_CURRENT = 1111
-        ]
-        return available
+    def calibrated_output(self):
+        """calibrated_output: ["desired_output_amplitude_in_dbm", "desired_output_frequency_in_Hz"]]"""
+        if libad9166:
+            return [int(20 * np.log10(self.raw / (2 ** 15))), self.frequency]
+        else:
+            print("Warning: Missing libad9166, calibration failed.")
+            return [None, None]
+
+    @calibrated_output.setter
+    def calibrated_output(self, value):
+        if libad9166:
+            libad9166.set_amplitude(self.__calibrated_dev, value[0])
+            libad9166.set_frequency(self.__ch, value[1])
+            libad9166.device_set_iofs(
+                self.__calibrated_dev, self.__calibration_data, value[1]
+            )
+        else:
+            print("Warning: Missing libad9166, calibration failed.")
