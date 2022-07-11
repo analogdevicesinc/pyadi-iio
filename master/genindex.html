@@ -193,6 +193,7 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4371.html">adf4371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adg2128.html">adi.adg2128 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16495.html">adis16495</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16507.html">adis16507</a></li>
@@ -275,7 +276,7 @@
           
 <section class="genindex-section">
   <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#J"><strong>J</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#Q"><strong>Q</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#W"><strong>W</strong></a></div>
+  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#J"><strong>J</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#Q"><strong>Q</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#W"><strong>W</strong></a> | <a href="#Y"><strong>Y</strong></a></div>
 </section>
 <section id="A" class="genindex-section">
   <h2>A</h2>
@@ -385,11 +386,15 @@
 </li>
         <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.adc_frequency_chan1">adc_frequency_chan1 (adi.ad6676.ad6676 property)</a>
 </li>
+        <li><a href="devices/adi.adg2128.html#adi.adg2128.adg2128.add">add() (adi.adg2128.adg2128 method)</a>
+</li>
         <li><a href="devices/adi.adf4159.html#adi.adf4159.adf4159">adf4159 (class in adi.adf4159)</a>
 </li>
         <li><a href="devices/adi.adf4371.html#adi.adf4371.adf4371">adf4371 (class in adi.adf4371)</a>
 </li>
         <li><a href="devices/adi.adf5610.html#adi.adf5610.adf5610">adf5610 (class in adi.adf5610)</a>
+</li>
+        <li><a href="devices/adi.adg2128.html#adi.adg2128.adg2128">adg2128 (class in adi.adg2128)</a>
 </li>
         <li>
     adi
@@ -637,12 +642,21 @@
 </li>
         </ul></li>
         <li>
+    adi.adg2128
+
+        <ul>
+          <li><a href="devices/adi.adg2128.html#module-adi.adg2128">module</a>
+</li>
+        </ul></li>
+        <li>
     adi.adis16460
 
         <ul>
           <li><a href="devices/adi.adis16460.html#module-adi.adis16460">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     adi.adis16495
 
@@ -650,8 +664,6 @@
           <li><a href="devices/adi.adis16495.html#module-adi.adis16495">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     adi.adis16507
 
@@ -1481,12 +1493,14 @@
 </li>
         <li><a href="dev/test_generics.html#test.generics.iio_buffer_check">iio_buffer_check() (in module test.generics)</a>
 </li>
-        <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.initialize">initialize() (adi.adar1000.adar1000 method)</a>
+        <li><a href="devices/adi.adg2128.html#adi.adg2128.adg2128.immediate">immediate (adi.adg2128.adg2128 property)</a>
 </li>
-        <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000_array.initialize_devices">initialize_devices() (adi.adar1000.adar1000_array method)</a>
+        <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.initialize">initialize() (adi.adar1000.adar1000 method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000_array.initialize_devices">initialize_devices() (adi.adar1000.adar1000_array method)</a>
+</li>
         <li><a href="devices/adi.lm75.html#adi.lm75.lm75.input">input (adi.lm75.lm75 property)</a>
 </li>
         <li><a href="devices/adi.cn0540.html#adi.cn0540.cn0540.input_voltage">input_voltage (adi.cn0540.cn0540 property)</a>
@@ -1729,6 +1743,8 @@
 </li>
           <li><a href="devices/adi.adf5610.html#module-adi.adf5610">adi.adf5610</a>
 </li>
+          <li><a href="devices/adi.adg2128.html#module-adi.adg2128">adi.adg2128</a>
+</li>
           <li><a href="devices/adi.adis16460.html#module-adi.adis16460">adi.adis16460</a>
 </li>
           <li><a href="devices/adi.adis16495.html#module-adi.adis16495">adi.adis16495</a>
@@ -1872,13 +1888,15 @@
 </li>
         <li><a href="devices/adi.adl5960.html#adi.adl5960.adl5960.offset_frequency">offset_frequency (adi.adl5960.adl5960 property)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.adl5960.html#adi.adl5960.adl5960.offset_mode">offset_mode (adi.adl5960.adl5960 property)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.adl5960.html#adi.adl5960.adl5960.offset_mode_available">offset_mode_available (adi.adl5960.adl5960 property)</a>
 </li>
         <li><a href="devices/adi.one_bit_adc_dac.html#adi.one_bit_adc_dac.one_bit_adc_dac">one_bit_adc_dac (class in adi.one_bit_adc_dac)</a>
+</li>
+        <li><a href="devices/adi.adg2128.html#adi.adg2128.adg2128.open_all">open_all() (adi.adg2128.adg2128 method)</a>
 </li>
         <li><a href="devices/adi.ad4630.html#adi.ad4630.ad4630.operating_mode">operating_mode (adi.ad4630.ad4630 property)</a>
 </li>
@@ -2814,6 +2832,16 @@
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.write_stream">write_stream() (adi.adrv9002.adrv9002 method)</a>
 </li>
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.write_stream_profile">write_stream_profile() (adi.adrv9002.adrv9002 method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="Y" class="genindex-section">
+  <h2>Y</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="devices/adi.adg2128.html#adi.adg2128.yline">yline (class in adi.adg2128)</a>
 </li>
     </ul></td>
   </tr></table>
