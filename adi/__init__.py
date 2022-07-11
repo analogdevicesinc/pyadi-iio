@@ -31,10 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from adi.ad717x import ad717x
 from adi.ad936x import Pluto, ad9361, ad9363, ad9364
-from adi.ad4110 import ad4110
-from adi.ad4130 import ad4130
 from adi.ad4630 import ad4630
 from adi.ad5686 import ad5686
 from adi.ad7124 import ad7124
@@ -59,6 +56,7 @@ from adi.ad9625 import ad9625
 from adi.ad9680 import ad9680
 from adi.ada4961 import ada4961
 from adi.adar1000 import adar1000, adar1000_array
+from adi.adc_shared import ad717x, ad4110, ad4130
 from adi.adf4159 import adf4159
 from adi.adf4371 import adf4371
 from adi.adf5610 import adf5610

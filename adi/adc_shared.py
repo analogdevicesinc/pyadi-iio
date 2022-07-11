@@ -31,7 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
+from abc import abstractmethod
 from decimal import Decimal
 
 import numpy as np
@@ -40,27 +40,24 @@ from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
 
-class ad4110(rx, context_manager):
-
-    """ AD4110 ADC """
+class adc_separate_channels(rx, context_manager):
+    """ADCs with independent channels common core"""
 
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
-    _rx_data_type = np.int32
 
     def __init__(self, uri="", device_name=""):
-        """Constructor for AD4110 class."""
+        """Common constructor for ADCs with separate channel configurations."""
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_part = "ad4110"
         self._ctrl = None
+        self._rxadc = None
 
         if not device_name:
-            device_name = compatible_part
-        else:
-            if device_name != compatible_part:
-                raise Exception(f"Not a compatible device: {device_name}")
+            device_name = self.compatible_parts[0]
+        elif device_name not in self.compatible_parts:
+            raise Exception(f"Not a compatible device: {device_name}")
 
         # Select the device matching device_name as working device
         for device in self._ctx.devices:
@@ -69,22 +66,24 @@ class ad4110(rx, context_manager):
                 self._rxadc = device
                 break
 
-        if not self._ctrl:
-            raise Exception("Error in selecting matching device")
-
-        if not self._rxadc:
-            raise Exception("Error in selecting matching device")
+        if not self._ctrl or not self._rxadc:
+            raise Exception(f"Error in selecting matching device {device_name}")
 
         for ch in self._ctrl.channels:
-            name = ch._id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
+            self._rx_channel_names.append(ch._id)
+            self.channel.append(self._channel(self._ctrl, ch._id))
 
         rx.__init__(self)
 
+    @property
+    @abstractmethod
+    def compatible_parts(self) -> None:
+        """List of compatible driver names."""
+        raise NotImplementedError  # pragma: no cover
+
     class _channel(attribute):
 
-        """ AD4110 channel """
+        """Channel configuration"""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
@@ -92,26 +91,26 @@ class ad4110(rx, context_manager):
 
         @property
         def raw(self):
-            """AD4110 channel raw value."""
+            """Channel raw value."""
             return self._get_iio_attr(self.name, "raw", False)
 
         @property
-        def scale(self):
-            """AD4110 channel scale."""
-            return float(self._get_iio_attr_str(self.name, "scale", False))
-
-        @scale.setter
-        def scale(self, value):
-            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
-
-        @property
         def offset(self):
-            """AD4110 channel offset."""
+            """Channel offset."""
             return float(self._get_iio_attr_str(self.name, "offset", False))
 
         @offset.setter
         def offset(self, value):
             self._set_iio_attr(self.name, "offset", False, str(Decimal(value).real))
+
+        @property
+        def scale(self):
+            """Channel scale."""
+            return float(self._get_iio_attr_str(self.name, "scale", False))
+
+        @scale.setter
+        def scale(self, value):
+            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
 
     def to_volts(self, index, val):
         """Converts raw value to SI."""
@@ -125,7 +124,38 @@ class ad4110(rx, context_manager):
         if isinstance(val, np.ndarray):
             ret = [x * _scale for x in val]
 
-        if ret is None:
-            raise Exception("Error in converting to actual voltage")
-
         return ret
+
+
+class ad4110(adc_separate_channels):
+
+    """AD4110 ADC"""
+
+    _rx_data_type = np.int32
+    compatible_parts = ["ad4110"]
+
+
+class ad4130(adc_separate_channels):
+
+    """AD4130 ADC"""
+
+    compatible_parts = ["ad4130-8"]
+
+
+class ad717x(adc_separate_channels):
+
+    """AD717x ADC"""
+
+    compatible_parts = [
+        "ad4111",
+        "ad4112",
+        "ad4114",
+        "ad4115",
+        "ad7172-2",
+        "ad7172-4",
+        "ad7173-8",
+        "ad7175-2",
+        "ad7175-8",
+        "ad7176-2",
+        "ad7177-2",
+    ]
