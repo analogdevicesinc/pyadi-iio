@@ -16,6 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
@@ -57,6 +58,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
           pip install invoke
