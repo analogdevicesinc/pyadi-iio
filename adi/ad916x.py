@@ -30,6 +30,7 @@
 # BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
@@ -81,8 +82,7 @@ class ad9166(attribute, context_manager):
                     self._get_iio_attr(self._temp_sensor_name, "input", False) / 1000.0
                 )
             return temp
-        else:
-            return None
+        return None
 
     @property
     def temperature_code(self):
@@ -98,10 +98,7 @@ class ad9166(attribute, context_manager):
                 False: Temperature measurement is disabled
         """
         reg = self._ctrl.reg_read(0x135)
-        if (reg and 0x01) == 0x01:
-            return True
-        else:
-            return False
+        return ((reg and 0x01)) == 0x01
 
     @temperature_enable.setter
     def temperature_enable(self, value=True):
@@ -134,11 +131,7 @@ class ad9166(attribute, context_manager):
                 False: NCO Modulation is disabled
         """
         tmp_reg = self._ctrl.reg_read(0x111) & 0x40
-        if tmp_reg == 0:
-            return False
-        else:
-            return True
-        pass
+        return tmp_reg != 0
 
     @nco_enable.setter
     def nco_enable(self, value=True):
@@ -150,7 +143,6 @@ class ad9166(attribute, context_manager):
         else:
             # DATAPATH_CFG (0x111) Bit6=0
             self._ctrl.reg_write(0x111, tmp_reg)
-        pass
 
     @property
     def FIR85_enable(self):
@@ -161,11 +153,7 @@ class ad9166(attribute, context_manager):
                 False: FIR85 Filter is disabled
         """
         tmp_reg = self._ctrl.reg_read(0x111) & 0x01
-        if tmp_reg == 0:
-            return False
-        else:
-            return True
-        pass
+        return tmp_reg != 0
 
     @FIR85_enable.setter
     def FIR85_enable(self, value=True):
@@ -176,7 +164,6 @@ class ad9166(attribute, context_manager):
         else:
             # DATAPATH_CFG (0x111) Bit0=0
             self._ctrl.reg_write(0x111, tmp_reg)
-        pass
 
     @property
     def tx_enable(self):
@@ -187,11 +174,7 @@ class ad9166(attribute, context_manager):
                 False: TX is disabled or  (DAC input is zeroed)
         """
         tmp_reg = self._ctrl.reg_read(0x03F) & 0x80
-        if tmp_reg == 0:
-            return False
-        else:
-            return True
-        pass
+        return tmp_reg != 0
 
     @tx_enable.setter
     def tx_enable(self, value=True):
@@ -205,7 +188,6 @@ class ad9166(attribute, context_manager):
         else:
             # TX_ENABLE (0x3F) Bit7=0
             self._ctrl.reg_write(0x03F, tmp_reg)
-        pass
 
     @property
     def frequency(self):
