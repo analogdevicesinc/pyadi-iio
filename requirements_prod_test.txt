@@ -13,4 +13,4 @@ bump2version
 pytest-html
 plotly-express
 pyvisa
-tkinter
+tk
