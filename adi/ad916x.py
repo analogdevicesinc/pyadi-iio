@@ -35,7 +35,7 @@ from adi.context_manager import context_manager
 
 
 class ad9166(attribute, context_manager):
-    """ AD916x Vector Signal Generator """
+    """ AD9166 Vector Signal Generator """
 
     _complex_data = False
     channel = []  # type: ignore
