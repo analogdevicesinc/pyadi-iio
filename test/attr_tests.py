@@ -54,6 +54,26 @@ def attribute_single_value(
             assert dev_interface(uri, classname, val, attr, tol) <= tol
 
 
+def attribute_single_value_boolean(uri, classname, attr, value):
+    """attribute_single_value_boolean: Write and read back boolean class property
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        val: type=string
+            Value to write and read back from attribute
+    """
+    bi = eval(classname + "(uri='" + uri + "')")
+    setattr(bi, attr, value)
+    rval = getattr(bi, attr)
+    del bi
+    assert rval == value
+
+
 def attribute_single_value_str(uri, classname, attr, val, tol):
     """attribute_single_value_str: Write and read back string class property
 

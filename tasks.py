@@ -169,6 +169,7 @@ def checkparts(c):
         "adar1000_array",
         "ad9081_mc",
         "ad717x",
+        "ad916x",
     ]
     for c in dir(mod):
         if (

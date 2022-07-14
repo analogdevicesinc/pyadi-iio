@@ -32,6 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.ad717x import ad717x
+from adi.ad916x import ad9166
 from adi.ad936x import Pluto, ad9361, ad9363, ad9364
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
@@ -82,6 +83,7 @@ from adi.adxl313 import adxl313
 from adi.adxl345 import adxl345
 from adi.adxl355 import adxl355
 from adi.adxrs290 import adxrs290
+from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.daq2 import DAQ2
 from adi.daq3 import DAQ3
