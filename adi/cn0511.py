@@ -83,10 +83,11 @@ class cn0511(ad9166_adi):
 
     @property
     def amplitude_cal(self):
-        """ amplitude_cal: CN0511 amplitude calibration
-            Options:
-                True: If you set this to true, the output is calibrated.
-                False: Nothing happens.
+        """amplitude_cal: CN0511 amplitude calibration
+
+           Options:
+               True: If you set this to true, the output is calibrated.
+               False: Nothing happens.
         """
         return None
 

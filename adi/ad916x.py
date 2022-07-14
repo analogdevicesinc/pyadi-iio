@@ -92,6 +92,7 @@ class ad9166(attribute, context_manager):
     @property
     def temperature_enable(self):
         """ temperature_enable: AD9166 Chip Temperature Measurement Enable
+
             Options:
                 True: Temperature measurement is enabled
                 False: Temperature measurement is disabled
@@ -111,8 +112,8 @@ class ad9166(attribute, context_manager):
 
     @property
     def temperature_cal(self):
-        """ temperature_cal: AD9166 Chip Temperature single point calibration value. Enter
-         the ambient temperature in degree Celsius.
+        """ temperature_cal: AD9166 Chip Temperature single point calibration value.
+        Enter the ambient temperature in degree Celsius.
         """
         return None
 
@@ -127,6 +128,7 @@ class ad9166(attribute, context_manager):
     @property
     def nco_enable(self):
         """ nco_enable: AD9166 NCO Modulation Enable:
+
             Options:
                 True: NCO Modulation is enabled
                 False: NCO Modulation is disabled
@@ -152,7 +154,8 @@ class ad9166(attribute, context_manager):
 
     @property
     def FIR85_enable(self):
-        """ FIR85_enable: AD9166 FIR85 Filter  Enable:
+        """ FIR85_enable: AD9166 FIR85 Filter Enable:
+
             Options:
                 True: FIR85 Filter is enabled
                 False: FIR85 Filter is disabled
@@ -178,6 +181,7 @@ class ad9166(attribute, context_manager):
     @property
     def tx_enable(self):
         """ tx_enable: AD9166 TX Enable
+
             Options:
                 True: TX is enabled (Datapath is connected to DAC)
                 False: TX is disabled or  (DAC input is zeroed)
