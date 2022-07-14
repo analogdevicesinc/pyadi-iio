@@ -52,11 +52,8 @@ class cn0511(ad9166_adi):
         self.__calibrated_dev = self._ctx.find_device("ad9166")
         self.__ch = self.__calibrated_dev.find_channel("altvoltage0", True)
         if libad9166:
-            self.__calibration_data = libad9166._POINTER(
-                libad9166.CalibrationParameters
-            )()
-            libad9166.find_calibration_data(
-                self._ctx, "cn0511", self.__calibration_data
+            self.__calibration_data = libad9166.find_calibration_data(
+                self._ctx, "cn0511"
             )
 
         self.FIR85_enable = True
