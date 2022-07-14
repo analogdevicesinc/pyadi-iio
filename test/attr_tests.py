@@ -54,14 +54,23 @@ def attribute_single_value(
             assert dev_interface(uri, classname, val, attr, tol) <= tol
 
 
-def attribute_single_value_boolean(classname, devicename, attr, value):
-    bi = BoardInterface(classname, devicename)
-    # Pick random number in operational range
-    hw = eval(bi.classname + "(uri='" + bi.uri + "')")
+def attribute_single_value_boolean(uri, classname, attr, value):
+    """attribute_single_value_boolean: Write and read back boolean class property
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        val: type=string
+            Value to write and read back from attribute
+    """
+    bi = eval(classname + "(uri='" + uri + "')")
+    setattr(bi, attr, value)
     rval = getattr(bi, attr)
-    setattr(hw, attr, value)
-    rval = getattr(hw, attr)
-    del hw
+    del bi
     assert rval == value
 
 

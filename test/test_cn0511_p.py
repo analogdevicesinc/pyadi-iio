@@ -1,11 +1,12 @@
 import pytest
 
 hardware = "cn0511"
-classname = "adi.CN0511"
+classname = "adi.cn0511"
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, param_set",
     [
@@ -16,8 +17,8 @@ classname = "adi.CN0511"
 )
 def test_cn0511_attr(
     test_attribute_single_value,
+    iio_uri,
     classname,
-    hardware,
     attr,
     start,
     stop,
@@ -26,12 +27,13 @@ def test_cn0511_attr(
     param_set,
 ):
     test_attribute_single_value(
-        classname, hardware, attr, start, stop, step, tol, param_set
+        iio_uri, classname, attr, start, stop, step, tol, param_set
     )
 
 
 #########################################
-@pytest.mark.parametrize("classname, hardware", [(classname, hardware)])
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, value",
     [
@@ -44,6 +46,6 @@ def test_cn0511_attr(
     ],
 )
 def test_cn0511_attr_boolean(
-    test_attribute_single_value_boolean, classname, hardware, attr, value
+    test_attribute_single_value_boolean, iio_uri, classname, attr, value
 ):
-    test_attribute_single_value_boolean(classname, hardware, attr, value)
+    test_attribute_single_value_boolean(iio_uri, classname, attr, value)
