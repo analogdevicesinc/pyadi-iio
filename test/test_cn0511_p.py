@@ -5,7 +5,7 @@ classname = "adi.cn0511"
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, param_set",
@@ -32,7 +32,7 @@ def test_cn0511_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, value",
