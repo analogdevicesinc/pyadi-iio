@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adi.ad9265 module" href="adi.ad9265.html" /><link rel="prev" title="adi.ad9172 module" href="adi.ad9172.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adi.ad9172 module" href="adi.ad9172.html" /><link rel="prev" title="ad9152" href="adi.ad9152.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>adi.ad9250 module - Analog Devices Hardware Python Interfaces 0.0.13</title>
+        <title>adi.ad9166 module - Analog Devices Hardware Python Interfaces 0.0.13</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -182,9 +182,9 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad916x.html">adi.ad9166 module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adi.ad9166 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9172.html">adi.ad9172 module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9250.html">adi.ad9250 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9265.html">adi.ad9265 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad936x.html">ad936x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9371.html">ad9371</a></li>
@@ -279,22 +279,91 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ad9250">
-<span id="adi-ad9250-module"></span><h1>adi.ad9250 module<a class="headerlink" href="#module-adi.ad9250" title="Permalink to this headline"></a></h1>
+          <section id="module-adi.ad916x">
+<span id="adi-ad9166-module"></span><h1>adi.ad9166 module<a class="headerlink" href="#module-adi.ad916x" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad9250.ad9250">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9250.</span></span><span class="sig-name descname"><span class="pre">ad9250</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9250.ad9250" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code>, <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start" title="adi.sync_start.sync_start"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.sync_start.sync_start</span></code></a></p>
-<p>AD9250 High-Speed ADC</p>
+<dt class="sig sig-object py" id="adi.ad916x.ad9166">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad916x.</span></span><span class="sig-name descname"><span class="pre">ad9166</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad916x.ad9166" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>AD9166 Vector Signal Generator</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9250.ad9250.jesd204_statuses">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_statuses</span></span><a class="headerlink" href="#adi.ad9250.ad9250.jesd204_statuses" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.FIR85_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FIR85_enable</span></span><a class="headerlink" href="#adi.ad916x.ad9166.FIR85_enable" title="Permalink to this definition"></a></dt>
+<dd><p>FIR85_enable: AD9166 FIR85 Filter Enable:</p>
+<dl class="simple">
+<dt>Options:</dt><dd><p>True: FIR85 Filter is enabled
+False: FIR85 Filter is disabled</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad916x.ad9166.channel" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9250.ad9250.test_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode</span></span><a class="headerlink" href="#adi.ad9250.ad9250.test_mode" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frequency</span></span><a class="headerlink" href="#adi.ad916x.ad9166.frequency" title="Permalink to this definition"></a></dt>
+<dd><p>frequency: AD916x channel nco frequency value in hz.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.nco_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nco_enable</span></span><a class="headerlink" href="#adi.ad916x.ad9166.nco_enable" title="Permalink to this definition"></a></dt>
+<dd><p>nco_enable: AD9166 NCO Modulation Enable:</p>
+<dl class="simple">
+<dt>Options:</dt><dd><p>True: NCO Modulation is enabled
+False: NCO Modulation is disabled</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad916x.ad9166.raw" title="Permalink to this definition"></a></dt>
+<dd><p>raw: AD916x channel raw value. Integer range 0-32767.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.sample_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad916x.ad9166.sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p>sample_rate: Sets sampling frequency of the AD916x</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.sample_rate_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate_available</span></span><a class="headerlink" href="#adi.ad916x.ad9166.sample_rate_available" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.temperature">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature</span></span><a class="headerlink" href="#adi.ad916x.ad9166.temperature" title="Permalink to this definition"></a></dt>
+<dd><p>temperature: Returns the AD916x Chip Temperature in Celsius</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.temperature_cal">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature_cal</span></span><a class="headerlink" href="#adi.ad916x.ad9166.temperature_cal" title="Permalink to this definition"></a></dt>
+<dd><p>temperature_cal: AD9166 Chip Temperature single point calibration value.
+Enter the ambient temperature in degree Celsius.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.temperature_code">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature_code</span></span><a class="headerlink" href="#adi.ad916x.ad9166.temperature_code" title="Permalink to this definition"></a></dt>
+<dd><p>temperature_code: Returns the AD916x Chip Temperature ADC code</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.temperature_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature_enable</span></span><a class="headerlink" href="#adi.ad916x.ad9166.temperature_enable" title="Permalink to this definition"></a></dt>
+<dd><p>temperature_enable: AD9166 Chip Temperature Measurement Enable</p>
+<dl class="simple">
+<dt>Options:</dt><dd><p>True: Temperature measurement is enabled
+False: Temperature measurement is disabled</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad916x.ad9166.tx_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_enable</span></span><a class="headerlink" href="#adi.ad916x.ad9166.tx_enable" title="Permalink to this definition"></a></dt>
+<dd><p>tx_enable: AD9166 TX Enable</p>
+<dl class="simple">
+<dt>Options:</dt><dd><p>True: TX is enabled (Datapath is connected to DAC)
+False: TX is disabled or  (DAC input is zeroed)</p>
+</dd>
+</dl>
 </dd></dl>
 </dd></dl>
 </section>
@@ -304,23 +373,23 @@ off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.ad9265.html">
+          <a class="next-page" href="adi.ad9172.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">adi.ad9265 module</div>
+                <div class="title">adi.ad9172 module</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ad9172.html">
+          <a class="prev-page" href="adi.ad9152.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">adi.ad9172 module</div>
+                <div class="title">ad9152</div>
                 
               </div>
             </a>
