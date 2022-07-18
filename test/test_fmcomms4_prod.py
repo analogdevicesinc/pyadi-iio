@@ -49,12 +49,7 @@ def test_ad7291(context_desc, voltage_raw, low, high):
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats",
     [
-        ("tx_hardwaregain_chan0", -30.0, -7.0, 0.25, 0, 100),
-        ("rx_lo", 2300000000, 2500000000, 1, 8, 100),
-        ("tx_lo", 1300000000, 2500000000, 1, 8, 100),
-        ("sample_rate", 30700000, 30740000, 1, 4, 20),
-        ("rx_rf_bandwidth", 16000000, 19000000, 1, 4, 10),
-        ("tx_rf_bandwidth", 16000000, 19000000, 1, 4, 10),
+        ("tx_hardwaregain_chan0", -30.0, -7.0, 0.25, 0, 10),
     ],
 )
 def test_ad9364_attr(

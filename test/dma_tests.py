@@ -589,6 +589,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
             sdr.tx2(cw)
         else:
             sdr.tx(cw)
+        time.sleep(1)
         for _ in range(60):  # Wait to stabilize
             data = sdr.rx2() if use_rx2 else sdr.rx()
     except Exception as e:
@@ -647,7 +648,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         setattr(sdr, p, param_set[p])
 
     sdr.dds_single_tone(2999577, 0.0625, channel)
-    time.sleep(4)
+    time.sleep(2)
 
     N = 2 ** 14
     sdr.tx_cyclic_buffer = True
@@ -675,13 +676,13 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
 
     try:
         #sdr.tx(iq)
-        time.sleep(5)
-        for _ in range(30):
-            data = sdr.rx()
+        # for _ in range(30):
+        #     data = sdr.rx()
         amp = 0
         freq = 0
         for i in range(8):
             data = sdr.rx()
+            time.sleep(1)
             amps, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
             amp += amps
         amp /= 8
@@ -689,11 +690,8 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         del sdr
         raise Exception(e)
     del sdr
-    time.sleep(3)
 
     L = len(data)
-    # amp = fftshift(amp)
-    # freq = fftshift(freq)
     sfdr, peaks, indxs, pk = spec.sfdr_signal(data, amp, freq, plot=False)
     
     ml = indxs[0]
@@ -860,7 +858,7 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     else:
         fs = int(sdr.rx_sample_rate)
     sdr.dds_single_tone(np.floor(fs * 0.1), dds_scale, channel)
-    time.sleep(5)
+    time.sleep(3)
 
     # Check RSSI
     if channel == 0:
@@ -881,9 +879,9 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
         rssi = sdr._get_iio_attr("voltage1", "rssi", False, sdr._ctrl_d)
 
     print(rssi)
+    del sdr
     assert rssi >= min_rssi
     assert rssi <= max_rssi
-
 
 def hardwaregain(
     uri,
@@ -928,7 +926,7 @@ def hardwaregain(
 
     sdr.dds_single_tone(frequency, dds_scale, channel)
 
-    time.sleep(4)
+    time.sleep(3)
 
     if channel == 0:
         hwgain = sdr._get_iio_attr("voltage0", "hardwaregain", False, sdr._ctrl)
@@ -947,6 +945,7 @@ def hardwaregain(
     if channel == 7:
         hwgain = sdr._get_iio_attr("voltage1", "hardwaregain", False, sdr._ctrl_d)
     print(hwgain)
+    del sdr
     assert hardwaregain_low <= hwgain <= hardwaregain_high
 
 
@@ -1007,48 +1006,23 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     iq = i + 1j * q
 
     try:
-        #sdr.tx(iq)
-        time.sleep(5)
-        for _ in range(30):
-            data = sdr.rx()
-
         ffampl = 0
         ffreqs = 0
         for i in range(8):
             data = sdr.rx()
+            #time.sleep(1)
             amp, ffreqs = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
             ffampl += amp
         ffampl/= 8
     except Exception as e:
         del sdr
         raise Exception(e)
-    time.sleep(3)
-
-    # ampl = 1 / L * np.absolute(fft(data))
-    # ampl = 20 * np.log10(ampl / ref + 10 ** -20)
-
-    # freqs = fftfreq(L, 1 / RXFS)
-    
-    # ffampl = fftshift(ffampl)
-    # ffreqs = fftshift(ffreqs)
-    # _, ml, hm, indxs = spec.find_harmonics_reduced(
-    #     ffampl, ffreqs, num_harmonics=50, tolerance=0.01
-    # )
-
-    # _, ml, hm, indxs = spec.find_harmonics(
-    #     ffampl, ffreqs, num_harmonics=7, tolerance=0.01
-    # )
 
     _, ml, peaks, indxs = spec.find_harmonics_from_main(
         ffampl, ffreqs, sdr.sample_rate, num_harmonics=4, tolerance=0.01
     )
     
     del sdr
-    # sfdr, amp, freq, peaks, indxs = spec.sfdr(data, fs=RXFS, ref=2 ** 12, plot=False)
-    # amp = fftshift(amp)
-    # print("sfdr: ", sfdr)
-    # print("Amps: ",amp)
-    # print("Freqs: ", freq)
     if plot:
         import matplotlib.pyplot as plt
 
