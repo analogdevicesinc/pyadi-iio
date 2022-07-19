@@ -1,7 +1,7 @@
 <!-- PYADI-IIO README -->
 
 <p align="center">
-<img src="https://github.com/analogdevicesinc/pyadi-iio/blob/master/images/PyADI-IIO_Logo_300.png" width="500" alt="PyADI-IIO Logo"> </br>
+<img src="https://raw.githubusercontent.com/analogdevicesinc/pyadi-iio/master/images/PyADI-IIO_Logo_300.png" width="500" alt="PyADI-IIO Logo"> </br>
 </p>
 
 <p align="center">
