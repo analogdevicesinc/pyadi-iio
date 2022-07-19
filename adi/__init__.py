@@ -32,6 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.ad717x import ad717x
+from adi.ad719x import ad719x
 from adi.ad916x import ad9166
 from adi.ad936x import Pluto, ad9361, ad9363, ad9364
 from adi.ad4110 import ad4110
