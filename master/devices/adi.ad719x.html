@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="tdd" href="adi.tdd.html" /><link rel="prev" title="adi.max31855 module" href="adi.max31855.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad7606" href="adi.ad7606.html" /><link rel="prev" title="ad717x" href="adi.ad717x.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>one_bit_adc_dac - Analog Devices Hardware Python Interfaces 0.0.13</title>
+        <title>ad719x - Analog Devices Hardware Python Interfaces 0.0.13</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -171,7 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad6676.html">adi.ad6676 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad717x.html">ad717x</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad719x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7746.html">ad7746</a></li>
@@ -234,7 +234,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
@@ -280,26 +280,22 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.one_bit_adc_dac">
-<span id="one-bit-adc-dac"></span><h1>one_bit_adc_dac<a class="headerlink" href="#module-adi.one_bit_adc_dac" title="Permalink to this headline"></a></h1>
+          <section id="module-adi.ad719x">
+<span id="ad719x"></span><h1>ad719x<a class="headerlink" href="#module-adi.ad719x" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.one_bit_adc_dac.one_bit_adc_dac">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.one_bit_adc_dac.</span></span><span class="sig-name descname"><span class="pre">one_bit_adc_dac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'one-bit-adc-dac'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.one_bit_adc_dac.one_bit_adc_dac" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
-<dl class="simple">
-<dt>One bit ADC/DAC (GPIO). This driver will create a handle for the</dt><dd><p>GPIO device as well as properties for each GPIO pin it accesses.
-Each GPIO pin name will be lowercase and of the format:
-“gpio_{pin name}”</p>
-</dd>
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>uri: type=string</dt><dd><p>URI of IIO context with GPIO pins</p>
-</dd>
-<dt>name: type=string</dt><dd><p>String identifying the device by name from the device tree.
-Dynamic class properties will be created for each channel.</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="adi.ad719x.ad719x">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad719x.</span></span><span class="sig-name descname"><span class="pre">ad719x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad719x.ad719x" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>AD719x ADC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad719x.ad719x.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad719x.ad719x.channel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad719x.ad719x.to_volts">
+<span class="sig-name descname"><span class="pre">to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad719x.ad719x.to_volts" title="Permalink to this definition"></a></dt>
+<dd><p>Converts raw value to SI.</p>
+</dd></dl>
 </dd></dl>
 </section>
 
@@ -308,23 +304,23 @@ Dynamic class properties will be created for each channel.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.tdd.html">
+          <a class="next-page" href="adi.ad7606.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">tdd</div>
+                <div class="title">ad7606</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.max31855.html">
+          <a class="prev-page" href="adi.ad717x.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">adi.max31855 module</div>
+                <div class="title">ad717x</div>
                 
               </div>
             </a>
