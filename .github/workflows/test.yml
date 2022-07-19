@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
 
     steps:
       - uses: actions/checkout@v2
@@ -20,6 +20,7 @@ jobs:
         run: |
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
+          bash ./.github/scripts/install_part_libs.sh
 
       - name: Test
         run: pytest -v --cov=adi
@@ -29,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
 
     steps:
       - uses: actions/checkout@v2
@@ -41,6 +42,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_iioemu.sh
           bash ./.github/scripts/install_pydeps.sh
           sudo apt install -y python3-tk
@@ -69,17 +71,22 @@ jobs:
 
   Lint:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.6
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
 
       - name: Lint
@@ -102,6 +109,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
@@ -125,6 +133,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
@@ -155,6 +164,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
           pip install setuptools wheel twine build

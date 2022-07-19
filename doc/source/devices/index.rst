@@ -8,10 +8,12 @@ Supported Devices
    :maxdepth: 4
 
    adi.QuadMxFE_multi
+   adi.ad4130
    adi.ad4110
    adi.ad4630
    adi.ad5627
    adi.ad5686
+   adi.ad5940
    adi.ad6676
    adi.ad7124
    adi.ad717x
@@ -27,6 +29,7 @@ Supported Devices
    adi.ad9136
    adi.ad9144
    adi.ad9152
+   adi.ad916x
    adi.ad9172
    adi.ad9250
    adi.ad9265
@@ -42,6 +45,7 @@ Supported Devices
    adi.adf4159
    adi.adf4371
    adi.adf5610
+   adi.adg2128
    adi.adis16460
    adi.adis16495
    adi.adis16507
@@ -60,6 +64,7 @@ Supported Devices
    adi.adxl345
    adi.adxl355
    adi.adxrs290
+   adi.cn0511
    adi.cn0532
    adi.cn0540
    adi.daq2

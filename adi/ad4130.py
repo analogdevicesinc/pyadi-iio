@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Analog Devices, Inc.
+# Copyright (C) 2022 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -40,23 +40,19 @@ from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
 
-class ad7689(rx, context_manager):
-    """ AD7689 ADC """
+class ad4130(rx, context_manager):
+
+    """ AD4130 ADC """
 
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
 
     def __init__(self, uri="", device_name=""):
-
+        """Constructor for AD4130 class."""
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = [
-            "ad7689",
-            "ad7682",
-            "ad7949",
-            "ad7699",
-        ]
+        compatible_parts = ["ad4130-8"]
 
         self._ctrl = None
 
@@ -81,7 +77,8 @@ class ad7689(rx, context_manager):
         rx.__init__(self)
 
     class _channel(attribute):
-        """AD7689 channel"""
+
+        """AD4130 channel"""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
@@ -89,12 +86,21 @@ class ad7689(rx, context_manager):
 
         @property
         def raw(self):
-            """AD7689 channel raw value"""
+            """AD4130 channel raw value."""
             return self._get_iio_attr(self.name, "raw", False)
 
         @property
+        def offset(self):
+            """AD4130 channel offset."""
+            return float(self._get_iio_attr_str(self.name, "offset", False))
+
+        @offset.setter
+        def offset(self, value):
+            self._set_iio_attr(self.name, "offset", False, str(Decimal(value).real))
+
+        @property
         def scale(self):
-            """AD7689 channel scale"""
+            """AD4130 channel scale."""
             return float(self._get_iio_attr_str(self.name, "scale", False))
 
         @scale.setter
@@ -102,7 +108,7 @@ class ad7689(rx, context_manager):
             self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
 
     def to_volts(self, index, val):
-        """Converts raw value to SI"""
+        """Converts raw value to SI."""
         _scale = self.channel[index].scale
 
         ret = None
