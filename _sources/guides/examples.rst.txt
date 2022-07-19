@@ -1,7 +1,7 @@
 Examples
 ===================
 
-Here is a collection of small examples which demonstrate interfacings with different devices in different ways.
+Here is a collection of small examples which demonstrate how to interface with different devices in different ways.
 
 Configuring hardware properties and reading back settings
 
