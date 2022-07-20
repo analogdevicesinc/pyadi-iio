@@ -10,7 +10,7 @@ lock(label: 'adgt_test_harness_boards') {
   
     //Udpate repos
     harness.set_env('nebula_repo', 'https://github.com/sdgtt/nebula.git')
-    harness.set_env('nebula_branch','master')
+    harness.set_env('nebula_branch','dev')
     harness.set_env('nebula_config_branch','release')
     harness.set_env('libiio_branch', 'v0.23')
     harness.set_env('telemetry_repo', 'https://github.com/sdgtt/telemetry.git')
@@ -19,7 +19,15 @@ lock(label: 'adgt_test_harness_boards') {
     def pyadi_branch = scm.branches.first().getExpandedName(env.getEnvironment())
     harness.set_env('pyadi_iio_branch', pyadi_branch.toString())    
   
-    //Update agent with required deps
+	//update nebula config from netbox
+    harness.set_update_nebula_config(true)
+    harness.set_env('nebula_config_source','netbox')
+    harness.set_env('netbox_ip','192.168.10.11')
+    harness.set_env('netbox_port','8000')
+    harness.set_env('netbox_base_url','netbox')
+    harness.set_env('netbox_token','0123456789abcdef0123456789abcdef01234567')
+    harness.set_env('netbox_devices_tag','active')
+    //update first the agent with the required deps
     harness.set_required_agent(["sdg-nuc-01","sdg-nuc-02"])
     harness.update_agents()
   
