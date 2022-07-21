@@ -3,7 +3,8 @@ lock(label: 'adgt_test_harness_boards') {
     @Library('sdgtt-lib@adgt-test-harness') _ // Not necessary when we turn on global libraries :)
     def hdlBranch = "NA"
     def linuxBranch = "NA"
-    def bootPartitionBranch = "release"
+    //def bootPartitionBranch = "release"
+    def bootPartitionBranch = "master"
     def firmwareVersion = 'v0.34'
     def bootfile_source = 'artifactory' // options: sftp, artifactory, http, local
     def harness = getGauntlet(hdlBranch, linuxBranch, bootPartitionBranch, firmwareVersion, bootfile_source)
