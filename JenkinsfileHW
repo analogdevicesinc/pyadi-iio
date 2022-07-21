@@ -5,6 +5,7 @@ lock(label: 'adgt_test_harness_boards') {
     def linuxBranch = "NA"
     //def bootPartitionBranch = "release"
     def bootPartitionBranch = "master"
+    def jenkins_job_trigger = "ci"
     def firmwareVersion = 'v0.34'
     def bootfile_source = 'artifactory' // options: sftp, artifactory, http, local
     def harness = getGauntlet(hdlBranch, linuxBranch, bootPartitionBranch, firmwareVersion, bootfile_source)
@@ -12,8 +13,6 @@ lock(label: 'adgt_test_harness_boards') {
     //Udpate repos
     harness.set_env('nebula_repo', 'https://github.com/sdgtt/nebula.git')
     harness.set_env('nebula_branch','dev')
-    harness.set_env('nebula_config_branch','release')
-    harness.set_env('libiio_branch', 'v0.23')
     harness.set_env('telemetry_repo', 'https://github.com/sdgtt/telemetry.git')
     harness.set_env('telemetry_branch', 'master')
 
@@ -35,11 +34,12 @@ lock(label: 'adgt_test_harness_boards') {
     //Set other test parameters
     harness.set_nebula_debug(true)
     harness.set_enable_docker(true)
-    harness.set_docker_host_mode(false)
-    harness.set_send_telemetry(false)
+    harness.set_docker_host_mode(true)
+    harness.set_send_telemetry(true)
+    harness.set_log_artifacts(true)
     harness.set_log_jira(false)
     harness.set_enable_resource_queuing(true)
-    harness.set_elastic_server('192.168.10.1')
+    harness.set_elastic_server('192.168.10.11')
     harness.set_required_hardware(["pluto","zynq-adrv9361-z7035-fmc"])
    //                               "zynq-zed-adv7511-ad9364-fmcomms4",
    //                               "zynq-zed-adv7511-ad9361-fmcomms2-3",
