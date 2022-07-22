@@ -20,7 +20,7 @@ jobs:
         run: |
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
-          bash ./.github/scripts/install_part_libs.sh
+          # bash ./.github/scripts/install_part_libs.sh
 
       - name: Test
         run: pytest -v --cov=adi
@@ -42,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_part_libs.sh
+          # bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_iioemu.sh
           bash ./.github/scripts/install_pydeps.sh
           sudo apt install -y python3-tk
@@ -86,7 +86,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_part_libs.sh
+          # bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
 
       - name: Lint
@@ -109,7 +109,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_part_libs.sh
+          # bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
@@ -133,7 +133,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_part_libs.sh
+          # bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
@@ -164,7 +164,7 @@ jobs:
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_part_libs.sh
+          # bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
           pip install setuptools wheel twine build

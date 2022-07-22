@@ -219,17 +219,24 @@ class rx(rx_tx_common):
                 raise Exception(f"Channel {m} not found")
             v.enabled = False
 
+        mask = iio.ChannelsMask(self._rxadc)
+        channels = []
+
         if self._complex_data:
             for m in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[m * 2])
-                v.enabled = True
+                channels.append(v)
                 v = self._rxadc.find_channel(self._rx_channel_names[m * 2 + 1])
-                v.enabled = True
+                channels.append(v)
         else:
             for m in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[m])
-                v.enabled = True
-        self.__rxbuf = iio.Buffer(self._rxadc, self.__rx_buffer_size, False)
+                channels.append(v)
+
+        mask.channels = channels
+
+        self.__rxbuf = iio.Buffer(self._rxadc, mask)
+        self.__rxstream = iio.Stream(self.__rxbuf, self.rx_buffer_size)
 
     def __rx_unbuffered_data(self):
         x = []
@@ -278,9 +285,11 @@ class rx(rx_tx_common):
     def __rx_complex(self):
         if not self.__rxbuf:
             self._rx_init_channels()
-        self.__rxbuf.refill()
+        # self.__rxbuf.refill()
+        block = next(self.__stream)
         data = bytearray()
         if self._rx_needs_type_conversion:
+            raise Exception("Type conversion not implemented")
             for ec in self.rx_enabled_channels:
                 ec_i = ec * 2
                 ec_q = ec * 2 + 1
@@ -288,7 +297,7 @@ class rx(rx_tx_common):
                     chan = self._rxadc.find_channel(self._rx_channel_names[c])
                     data.extend(chan.read(self.__rxbuf))
         else:
-            data = self.__rxbuf.read()
+            data = block.read()
 
         x = np.frombuffer(data, dtype=self._rx_data_type)
         indx = 0
