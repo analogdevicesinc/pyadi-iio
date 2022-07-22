@@ -25,7 +25,9 @@ lock(label: 'adgt_test_harness_boards') {
     harness.set_env('netbox_ip','192.168.10.11')
     harness.set_env('netbox_port','8000')
     harness.set_env('netbox_base_url','netbox')
-    harness.set_env('netbox_token','0123456789abcdef0123456789abcdef01234567')
+    withCredentials([string(credentialsId: 'netbox_token', variable: 'TOKEN')]) {
+      harness.set_env('netbox_token', $TOKEN)
+    }
     harness.set_env('netbox_devices_tag','active')
     //update first the agent with the required deps
     harness.set_required_agent(["sdg-nuc-01","sdg-nuc-02"])
