@@ -1,0 +1,1135 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <link rel="icon" href="../_static/favicon.png" type="image/png">
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adf4159" href="adi.adf4159.html" /><link rel="prev" title="adi.ada4961 module" href="adi.ada4961.html" />
+
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+        <title>adar1000 - Analog Devices Hardware Python Interfaces 0.0.14</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Analog Devices Hardware Python Interfaces 0.0.14</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">Analog Devices Hardware Python Interfaces 0.0.14</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4130.html">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4630.html">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5940.html">adi.ad5940 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad6676.html">adi.ad6676 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad717x.html">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7746.html">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad916x.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9250.html">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9265.html">adi.ad9265 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9371.html">ad9371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9434.html">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9467.html">adi.ad9467 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9625.html">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9739a.html">adi.ad9739a module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ada4961.html">adi.ada4961 module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd410x.html">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrf5720.html">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl313.html">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="module-adi.adar1000">
+<span id="adar1000"></span><h1>adar1000<a class="headerlink" href="#module-adi.adar1000" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adar1000.</span></span><span class="sig-name descname"><span class="pre">adar1000</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chip_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'csb1_chip1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_element_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_element_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>ADAR1000 Beamformer</p>
+<dl>
+<dt>parameters:</dt><dd><dl>
+<dt>uri: type=string</dt><dd><p>Optional parameter for the URI of IIO context with ADAR1000(s). If
+not given,</p>
+</dd>
+<dt>context: type=iio.Context</dt><dd><p>Optional parameter for IIO Context handle for the device. Don’t use if
+instantiating the adar1000 class directly. The adar1000_array class
+will handle this if creating an array instance.</p>
+</dd>
+<dt>chip_id: type=string</dt><dd><p>Required string identifying the desired chip select and hardware ID
+for the ADAR1000. If creating a single adar1000 instance, you can
+typically leave the default value of “csb1_chip1” as long as the
+device tree label matches. If creating an adar1000_array instance,
+the array class will handle the instantiation of individual adar1000
+handles.</p>
+</dd>
+<dt>device_number: type=int</dt><dd><p>Required integer indicating the device number in the array. If creating
+a single adar1000 instance, this value should be 1. If creating an
+adar1000_array instance, the array class will handle the instantiation
+of individual adar1000 handles.</p>
+</dd>
+<dt>array_element_map: type=list[list[int]]</dt><dd><p>Required list of lists with the map of where the array elements are
+located in the physical array. Each entry in the map represents a
+row of elements referenced by element number. For example, a map:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">[[1, 5, 9, 13],</div>
+<div class="line">[2, 6, 10, 14],</div>
+<div class="line">[3, 7, 11, 15],</div>
+<div class="line">[4, 8, 12, 16]]</div>
+</div>
+</div></blockquote>
+<p>represents an array of 16 elements (4 ADAR1000s) in a 4x4 array.
+If creating a single adar1000 instance, the elements should be 1-4 in
+whatever configuration the physical array is (1x4, 2x2, 4x1, etc.). If
+creating an adar1000_array instance, the array class will handle the
+instantiation of individual adar1000 handles.</p>
+</dd>
+<dt>channel_element_map: type=list[int]</dt><dd><p>Required list of integers relating the array element numbers to the
+channels of the ADAR1000 instance. Each number in the list is the
+element number in the larger array, in order of the ADAR1000’s channels.
+For example, a list [10, 14, 13, 9] indicates that the ADAR1000’s
+channels are the following elements in the full array:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">Channel 1: Element # 10</div>
+<div class="line">Channel 2: Element # 14</div>
+<div class="line">Channel 3: Element # 13</div>
+<div class="line">Channel 4: Element # 9</div>
+</div>
+</div></blockquote>
+<p>If creating a single adar1000 instance, the elements should be 1-4 in
+order of the ADAR1000’s channels related to the array elements. If
+creating an adar1000_array instance, the array class will handle the
+instantiation of individual adar1000 handles.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adar1000_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adar_parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adar_channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for each channel of the ADAR1000. This class is not meant
+to be instantiated directly. adar1000 objects will create their
+own handles of this class, one for each channel</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>adar1000_parent: type=adar1000</dt><dd><p>Parent ADAR1000 instance</p>
+</dd>
+<dt>adar_channel: type=int</dt><dd><p>Channel number of the parent corresponding to this channel</p>
+</dd>
+<dt>array_element: type=int</dt><dd><p>Element number of the array corresponding to this channel</p>
+</dd>
+<dt>row: int</dt><dd><p>Row number in the array</p>
+</dd>
+<dt>column: int</dt><dd><p>Column number in the array</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.adar1000_channel">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adar1000_channel</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.adar1000_channel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.adar1000_parent">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adar1000_parent</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.adar1000_parent" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.array_element_number">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">array_element_number</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.array_element_number" title="Permalink to this definition"></a></dt>
+<dd><p>Element number in the array</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.column">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">column</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.column" title="Permalink to this definition"></a></dt>
+<dd><p>Element column number in the array</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.detector_power">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">detector_power</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.detector_power" title="Permalink to this definition"></a></dt>
+<dd><p>Get the detector power reading for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.pa_bias_off">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pa_bias_off</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.pa_bias_off" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set PA_BIAS_OFF in voltage for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.pa_bias_on">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pa_bias_on</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.pa_bias_on" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set PA_BIAS_ON in voltage for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.row">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">row</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.row" title="Permalink to this definition"></a></dt>
+<dd><p>Element row number in the array</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.rx_attenuator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_attenuator</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.rx_attenuator" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Rx Attenuator state for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.rx_beam_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_beam_state</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.rx_beam_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Channel Rx beam position used by RAM when
+all channels point to individual states. Valid states are 0-120.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.rx_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.rx_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Rx enable state for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.rx_gain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_gain</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.rx_gain" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Rx Gain for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.rx_phase">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_phase</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.rx_phase" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Rx Phase for the associated channel</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.save_rx_beam">
+<span class="sig-name descname"><span class="pre">save_rx_beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attenuator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.save_rx_beam" title="Permalink to this definition"></a></dt>
+<dd><p>Save a beam to an Rx memory position</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>state: int</dt><dd><p>State number to save. Valid options are 0 to 120</p>
+</dd>
+<dt>attenuator: bool</dt><dd><p>Attenuator state for the beam position. True means the attenuator is in place.</p>
+</dd>
+<dt>gain: int</dt><dd><p>Gain value for the beam position. Valid settings are 0 to 127.</p>
+</dd>
+<dt>phase: float</dt><dd><p>Phase value for the beam position.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.save_tx_beam">
+<span class="sig-name descname"><span class="pre">save_tx_beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attenuator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.save_tx_beam" title="Permalink to this definition"></a></dt>
+<dd><p>Save a beam to a Tx memory position</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>state: int</dt><dd><p>State number to save. Valid options are 0 to 120</p>
+</dd>
+<dt>attenuator: bool</dt><dd><p>Attenuator state for the beam position. True means the attenuator is in place.</p>
+</dd>
+<dt>gain: int</dt><dd><p>Gain value for the beam position. Valid settings are 0 to 127.</p>
+</dd>
+<dt>phase: float</dt><dd><p>Phase value for the beam position.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.tx_attenuator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_attenuator</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.tx_attenuator" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Tx Attenuator state for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.tx_beam_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_beam_state</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.tx_beam_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Channel Tx beam position used by RAM when
+all channels point to individual states. Valid states are 0-120.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.tx_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.tx_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Tx enable state for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.tx_gain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_gain</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.tx_gain" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Tx Gain for the associated channel</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.adar1000_channel.tx_phase">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_phase</span></span><a class="headerlink" href="#adi.adar1000.adar1000.adar1000_channel.tx_phase" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Tx Phase for the associated channel</p>
+</dd></dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.array_device_number">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">array_device_number</span></span><a class="headerlink" href="#adi.adar1000.adar1000.array_device_number" title="Permalink to this definition"></a></dt>
+<dd><p>Device number in the array</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.beam_mem_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">beam_mem_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.beam_mem_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set enable bit for RAM control vs. SPI control of the beam state</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.bias_dac_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bias_dac_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.bias_dac_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set enable for bias DACs</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.bias_dac_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bias_dac_mode</span></span><a class="headerlink" href="#adi.adar1000.adar1000.bias_dac_mode" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set BIAS_CTRL bit (Register 0x30[6]) which controls whether the bias DACs stay at “ON” value,
+or toggle with respect to T/R state.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.bias_mem_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bias_mem_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.bias_mem_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set enable bit for RAM control vs. SPI control of the bias state</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.channel1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channel1</span></span><a class="headerlink" href="#adi.adar1000.adar1000.channel1" title="Permalink to this definition"></a></dt>
+<dd><p>Handle for the ADAR1000’s channel 1 object</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.channel2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channel2</span></span><a class="headerlink" href="#adi.adar1000.adar1000.channel2" title="Permalink to this definition"></a></dt>
+<dd><p>Handle for the ADAR1000’s channel 2 object</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.channel3">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channel3</span></span><a class="headerlink" href="#adi.adar1000.adar1000.channel3" title="Permalink to this definition"></a></dt>
+<dd><p>Handle for the ADAR1000’s channel 3 object</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.channel4">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channel4</span></span><a class="headerlink" href="#adi.adar1000.adar1000.channel4" title="Permalink to this definition"></a></dt>
+<dd><p>Handle for the ADAR1000’s channel 4 object</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.channels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channels</span></span><a class="headerlink" href="#adi.adar1000.adar1000.channels" title="Permalink to this definition"></a></dt>
+<dd><p>List of the ADAR1000’s channels, in order from 1 to 4</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.chip_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chip_id</span></span><a class="headerlink" href="#adi.adar1000.adar1000.chip_id" title="Permalink to this definition"></a></dt>
+<dd><p>Chip ID including CSB and hardware address. Of the form “csbX_chipX” where csbX indicates the CSB
+line for the IC and chipX indicating the hardware address of the chip, 1-4.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.common_mem_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">common_mem_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.common_mem_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the CHX_RAM_BYPASS bits to use either a common beam state for all channels set by registers 0x39
+and 0x3A, or individual beam states set by registers 0x3D to 0x44.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.common_rx_beam_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">common_rx_beam_state</span></span><a class="headerlink" href="#adi.adar1000.adar1000.common_rx_beam_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Rx beam position used by RAM when all
+channels point to a common state. Valid states are 0-120.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.common_tx_beam_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">common_tx_beam_state</span></span><a class="headerlink" href="#adi.adar1000.adar1000.common_tx_beam_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Tx beam position used by RAM when all
+channels point to a common state. Valid states are 0-120.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.external_tr_pin">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">external_tr_pin</span></span><a class="headerlink" href="#adi.adar1000.adar1000.external_tr_pin" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set which external T/R switch driver is used (“positive” = TR_SW_POS, “negative” = TR_SW_NEG)</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.external_tr_polarity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">external_tr_polarity</span></span><a class="headerlink" href="#adi.adar1000.adar1000.external_tr_polarity" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set polarity of the T/R switch driver compared to the T/R state of the ADAR1000.
+True outputs 0V in Rx mode, False outputs either 3.3V or -5V, depending on which T/R switch driver is enabled.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.generate_clocks">
+<span class="sig-name descname"><span class="pre">generate_clocks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.generate_clocks" title="Permalink to this definition"></a></dt>
+<dd><p>Generate CLK cycles before pulsing RX_LOAD or TX_LOAD</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lna_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lna_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.initialize" title="Permalink to this definition"></a></dt>
+<dd><p>Suggested initialization routine after powerup</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>pa_off: float</dt><dd><p>Voltage to set the PA_BIAS_OFF values to during initialization</p>
+</dd>
+<dt>pa_on: float</dt><dd><p>Voltage to set the PA_BIAS_ON values to during initialization</p>
+</dd>
+<dt>lna_off: float</dt><dd><p>Voltage to set the LNA_BIAS_OFF values to during initialization</p>
+</dd>
+<dt>lna_on: float</dt><dd><p>Voltage to set the LNA_BIAS_ON values to during initialization</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.latch_rx_settings">
+<span class="sig-name descname"><span class="pre">latch_rx_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.latch_rx_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Latch in new Gain/Phase settings for the Rx</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.latch_tx_settings">
+<span class="sig-name descname"><span class="pre">latch_tx_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.latch_tx_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Latch in new Gain/Phase settings for the Tx</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.lna_bias_off">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lna_bias_off</span></span><a class="headerlink" href="#adi.adar1000.adar1000.lna_bias_off" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set LNA_BIAS_OFF in voltage</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.lna_bias_on">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lna_bias_on</span></span><a class="headerlink" href="#adi.adar1000.adar1000.lna_bias_on" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set LNA_BIAS_ON in voltage</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.lna_bias_out_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lna_bias_out_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.lna_bias_out_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set enable for LNA bias DAC output. Disable to allow for always-on self-biased LNAs</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mode</span></span><a class="headerlink" href="#adi.adar1000.adar1000.mode" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the mode of operation for the device. Valid options are “rx”, “tx”, and “disabled”</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.pol_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pol_state</span></span><a class="headerlink" href="#adi.adar1000.adar1000.pol_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set polarity switch state. True outputs -5V, False outputs 0V</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.pol_switch_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pol_switch_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.pol_switch_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set polarity switch driver enable state</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset ADAR1000 to default settings</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_bias_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_bias_state</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_bias_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Rx bias memory position when loading from RAM. Valid states are 1-7.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_lna_bias_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_lna_bias_current</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_lna_bias_current" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Rx LNA bias current setting</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_lna_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_lna_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_lna_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Rx LNA enable status</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_sequencer_start">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sequencer_start</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_sequencer_start" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Rx Sequencer’s starting position</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_sequencer_stop">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sequencer_stop</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_sequencer_stop" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Rx Sequencer’s ending position</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_to_tx_delay_1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_to_tx_delay_1</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_to_tx_delay_1" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Rx to Tx Delay 1</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_to_tx_delay_2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_to_tx_delay_2</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_to_tx_delay_2" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Rx to Tx Delay 2</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_vga_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_vga_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_vga_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Rx VGA enable status</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_vga_vm_bias_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_vga_vm_bias_current</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_vga_vm_bias_current" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Rx VGA/Vector Modulator bias current setting</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.rx_vm_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_vm_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.rx_vm_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Rx Vector Modulator enable status</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.save_rx_bias">
+<span class="sig-name descname"><span class="pre">save_rx_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lna_bias_off</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lna_bias_on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rx_vga_vm_bias_current</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rx_lna_bias_current</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.save_rx_bias" title="Permalink to this definition"></a></dt>
+<dd><p>Save a bias setting to an Rx memory position</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>state: int</dt><dd><p>State number to save. Valid options are 1 to 7</p>
+</dd>
+<dt>lna_bias_off: float</dt><dd><p>LNA_BIAS_OFF voltage</p>
+</dd>
+<dt>lna_bias_on: float</dt><dd><p>LNA_BIAS_ON voltage</p>
+</dd>
+<dt>rx_vga_vm_bias_current: int</dt><dd><p>Bias current setting for the Rx VGA and Vector Modulator</p>
+</dd>
+<dt>rx_lna_bias_current: int</dt><dd><p>Bias current setting for the Rx LNA</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.save_tx_bias">
+<span class="sig-name descname"><span class="pre">save_tx_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa1_bias_off</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa2_bias_off</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa3_bias_off</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa4_bias_off</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa1_bias_on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa2_bias_on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa3_bias_on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa4_bias_on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_vga_vm_bias_current</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_pa_bias_current</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000.save_tx_bias" title="Permalink to this definition"></a></dt>
+<dd><p>Save a bias setting to a Tx memory position</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>state: int</dt><dd><p>State number to save. Valid options are 1 to 7</p>
+</dd>
+<dt>pa1_bias_off: float</dt><dd><p>PA1_BIAS_OFF voltage</p>
+</dd>
+<dt>pa2_bias_off: float</dt><dd><p>PA2_BIAS_OFF voltage</p>
+</dd>
+<dt>pa3_bias_off: float</dt><dd><p>PA3_BIAS_OFF voltage</p>
+</dd>
+<dt>pa4_bias_off: float</dt><dd><p>PA4_BIAS_OFF voltage</p>
+</dd>
+<dt>pa1_bias_on: float</dt><dd><p>PA1_BIAS_ON voltage</p>
+</dd>
+<dt>pa2_bias_on: float</dt><dd><p>PA2_BIAS_ON voltage</p>
+</dd>
+<dt>pa3_bias_on: float</dt><dd><p>PA3_BIAS_ON voltage</p>
+</dd>
+<dt>pa4_bias_on: float</dt><dd><p>PA4_BIAS_ON voltage</p>
+</dd>
+<dt>tx_vga_vm_bias_current: int</dt><dd><p>Bias current setting for the Tx VGA and Vector Modulator</p>
+</dd>
+<dt>tx_lna_bias_current: int</dt><dd><p>Bias current setting for the Tx PA</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.sequencer_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sequencer_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.sequencer_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set sequencer enable status</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.temperature">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature</span></span><a class="headerlink" href="#adi.adar1000.adar1000.temperature" title="Permalink to this definition"></a></dt>
+<dd><p>Get the temperature reading from the device</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tr_source">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tr_source</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tr_source" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set TR source for the chip. Valid options are “external” or “spi”</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tr_spi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tr_spi</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tr_spi" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set T/R state using the SPI bit. Valid options are “tx” or “rx”</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tr_switch_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tr_switch_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tr_switch_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set T/R switch driver enable state</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_bias_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_bias_state</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_bias_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Tx bias memory position when loading from RAM. Valid states are 1-7.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_pa_bias_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_pa_bias_current</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_pa_bias_current" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Tx PA bias current setting</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_pa_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_pa_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_pa_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Tx PA enable status</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_sequencer_start">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sequencer_start</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_sequencer_start" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Tx Sequencer’s starting position</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_sequencer_stop">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sequencer_stop</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_sequencer_stop" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the Tx Sequencer’s ending position</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_to_rx_delay_1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_to_rx_delay_1</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_to_rx_delay_1" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Tx to Rx Delay 1</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_to_rx_delay_2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_to_rx_delay_2</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_to_rx_delay_2" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Tx to Rx Delay 2</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_vga_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vga_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_vga_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Tx VGA enable status</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_vga_vm_bias_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vga_vm_bias_current</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_vga_vm_bias_current" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Tx VGA/Vector Modulator bias current setting</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000.tx_vm_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vm_enable</span></span><a class="headerlink" href="#adi.adar1000.adar1000.tx_vm_enable" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set Tx Vector Modulator enable status</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adar1000.</span></span><span class="sig-name descname"><span class="pre">adar1000_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chip_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_element_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>ADAR1000 Beamformer Array</p>
+<dl>
+<dt>parameters:</dt><dd><dl>
+<dt>uri: type=string</dt><dd><p>URI of IIO context with ADAR1000 array</p>
+</dd>
+<dt>chip_ids: type=list[string]</dt><dd><p>List of strings identifying desired chip select and hardware ID
+for the ADAR1000. These strings are the labels coinciding with
+each chip select and hardware address and are typically in the
+form csbX_chipX. The csb line can be any number depending on how
+many are used in the system. The chip number will typically be
+1-4 because each CSB line can control up to four ADAR1000s. Note
+that the order of the devices listed will correspond to the
+device numbers in the array map directly.</p>
+</dd>
+<dt>device_map: type=list[list[int]]</dt><dd><p>List with the map of where the ADAR1000s are in the array. Each
+entry in the map represents a row of ADAR1000s referenced by
+device number. For example, a map:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">[[1, 3, 5, 7],</div>
+<div class="line">[2, 4, 6, 8]]</div>
+</div>
+</div></blockquote>
+<p>represents an array of 8 ADAR1000s 4 wide and 2 tall.</p>
+</dd>
+<dt>element_map: type=list[list[int]]</dt><dd><p>List of lists with the map of where the array elements are in the
+physical array. Each entry in the map represents a row of array
+channels referenced by element number. For example, a map:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">[[1, 5, 9, 13],</div>
+<div class="line">[2, 6, 10, 14],</div>
+<div class="line">[3, 7, 11, 15],</div>
+<div class="line">[4, 8, 12, 16]]</div>
+</div>
+</div></blockquote>
+<p>represents an array of 16 elements (4 ADAR1000s) in a square array.</p>
+</dd>
+<dt>device_element_map: type=dict[int, list[int]]</dt><dd><p>Dictionary with the map of ADAR1000 to array element references. Each
+key in the map is a device number. The corresponding list of integers
+represents the array element numbers connected to that ADAR1000, in
+order of the ADAR1000’s channels. For example, an entry of
+{3: [10, 14, 13, 9]} connects ADAR1000 #3 to array elements 10, 14, 13,
+and 9. Element #10 is on the ADAR1000’s channel 1 while element #13 is
+on the ADAR1000’s channel 3.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.all_rx_attenuators">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_rx_attenuators</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.all_rx_attenuators" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set all Rx Attenuator settings in the array.
+The format is a list of lists where each row in the
+array is a list entry in the larger list.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.all_rx_gains">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_rx_gains</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.all_rx_gains" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set all Rx Gain settings in the array.
+The format is a list of lists where each row in the
+array is a list entry in the larger list.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.all_rx_phases">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_rx_phases</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.all_rx_phases" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set all Rx Phase settings in the array.
+The format is a list of lists where each row in the
+array is a list entry in the larger list.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.all_tx_attenuators">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_tx_attenuators</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.all_tx_attenuators" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set all Tx Attenuator settings in the array.
+The format is a list of lists where each row in the
+array is a list entry in the larger list.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.all_tx_gains">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_tx_gains</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.all_tx_gains" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set all Tx Gain settings in the array.
+The format is a list of lists where each row in the
+array is a list entry in the larger list.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.all_tx_phases">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_tx_phases</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.all_tx_phases" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set all Tx Phase settings in the array.
+The format is a list of lists where each row in the
+array is a list entry in the larger list.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.calculate_phi">
+<span class="sig-name descname"><span class="pre">calculate_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elevation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array.calculate_phi" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Calculate the Φ angles to steer the array in a particular direction. This method assumes that the entire</dt><dd><p>array is one analog beam.</p>
+</dd>
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>azimuth: float</dt><dd><p>Desired beam angle in degrees for the horizontal direction.</p>
+</dd>
+<dt>elevation: float</dt><dd><p>Desired beam angle in degrees for the vertical direction.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.device_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device_map</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.device_map" title="Permalink to this definition"></a></dt>
+<dd><p>Get the map of ADAR1000s in the array</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.devices">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">devices</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.devices" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary representing all of the connected ADAR1000s.
+The dictionary key is the chip_id for each device.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.element_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">element_map</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.element_map" title="Permalink to this definition"></a></dt>
+<dd><p>Get the map of elements in the array</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.element_spacing">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">element_spacing</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.element_spacing" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the element spacing for the array in meters</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.elements">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elements</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.elements" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary representing all of the connected ADAR1000 elements sorted by element number.
+The dictionary key is the element number for each device.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frequency</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the board frequency in Hz</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.initialize_devices">
+<span class="sig-name descname"><span class="pre">initialize_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lna_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lna_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array.initialize_devices" title="Permalink to this definition"></a></dt>
+<dd><p>Suggested initialization routine after powerup</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>pa_off: float</dt><dd><p>Voltage to set the PA_BIAS_OFF values to during initialization</p>
+</dd>
+<dt>pa_on: float</dt><dd><p>Voltage to set the PA_BIAS_ON values to during initialization</p>
+</dd>
+<dt>lna_off: float</dt><dd><p>Voltage to set the LNA_BIAS_OFF values to during initialization</p>
+</dd>
+<dt>lna_on: float</dt><dd><p>Voltage to set the LNA_BIAS_ON values to during initialization</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.latch_rx_settings">
+<span class="sig-name descname"><span class="pre">latch_rx_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array.latch_rx_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Latch in new Gain/Phase settings for the Rx</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.latch_tx_settings">
+<span class="sig-name descname"><span class="pre">latch_tx_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array.latch_tx_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Latch in new Gain/Phase settings for the Tx</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.rx_azimuth">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_azimuth</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.rx_azimuth" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Rx azimuth angle for the array in degrees</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.rx_azimuth_phi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_azimuth_phi</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.rx_azimuth_phi" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Rx azimuth phi angle for the array in degrees</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.rx_elevation">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_elevation</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.rx_elevation" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Rx elevation angle for the array in degrees</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.rx_elevation_phi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_elevation_phi</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.rx_elevation_phi" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Rx elevation phi angle for the array in degrees</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.steer_rx">
+<span class="sig-name descname"><span class="pre">steer_rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elevation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array.steer_rx" title="Permalink to this definition"></a></dt>
+<dd><p>Steer the Rx array in a particular direction. This method assumes that the entire array is one analog beam.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>azimuth: float</dt><dd><p>Desired beam angle in degrees for the horizontal direction.</p>
+</dd>
+<dt>elevation: float</dt><dd><p>Desired beam angle in degrees for the vertical direction.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.steer_tx">
+<span class="sig-name descname"><span class="pre">steer_tx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elevation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adar1000.adar1000_array.steer_tx" title="Permalink to this definition"></a></dt>
+<dd><p>Steer the Tx array in a particular direction. This method assumes that the entire array is one analog beam.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>azimuth: float</dt><dd><p>Desired beam angle in degrees for the horizontal direction.</p>
+</dd>
+<dt>elevation: float</dt><dd><p>Desired beam angle in degrees for the vertical direction.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.temperatures">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperatures</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.temperatures" title="Permalink to this definition"></a></dt>
+<dd><p>Get the temperature readings of the ADAR1000s in a dictionary</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.tx_azimuth">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_azimuth</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.tx_azimuth" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Tx azimuth angle for the array in degrees</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.tx_azimuth_phi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_azimuth_phi</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.tx_azimuth_phi" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Tx azimuth phi angle for the array in degrees</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.tx_elevation">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_elevation</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.tx_elevation" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Tx elevation angle for the array in degrees</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adar1000.adar1000_array.tx_elevation_phi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_elevation_phi</span></span><a class="headerlink" href="#adi.adar1000.adar1000_array.tx_elevation_phi" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Tx elevation phi angle for the array in degrees</p>
+</dd></dl>
+</dd></dl>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="adi.adf4159.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">adf4159</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="adi.ada4961.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">adi.ada4961 module</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2019-2021, Analog Devices, Inc
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>

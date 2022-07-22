@@ -1,0 +1,506 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <link rel="icon" href="_static/favicon.png" type="image/png">
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Quick Start" href="guides/quick.html" />
+
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+        <title>Analog Devices Hardware Python Interfaces 0.0.14</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="#"><div class="brand">Analog Devices Hardware Python Interfaces 0.0.14</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+  
+  
+  <span class="sidebar-brand-text">Analog Devices Hardware Python Interfaces 0.0.14</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4130.html">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4110.html">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4630.html">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5940.html">adi.ad5940 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad6676.html">adi.ad6676 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad717x.html">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7689.html">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7746.html">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7799.html">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9083.html">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9136.html">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad916x.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9250.html">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9265.html">adi.ad9265 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9371.html">ad9371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9434.html">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9467.html">adi.ad9467 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9625.html">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9739a.html">adi.ad9739a module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ada4961.html">adi.ada4961 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adl5960.html">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.admv8818.html">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adpd410x.html">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrf5720.html">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl313.html">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.cn0511.html">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmc_vna.html">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmcadc3.html">adi.fmcadc3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.lm75.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.tdd.html">tdd</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="analog-devices-hardware-python-interfaces">
+<h1>Analog Devices Hardware Python Interfaces<a class="headerlink" href="#analog-devices-hardware-python-interfaces" title="Permalink to this headline"></a></h1>
+<p><strong>pyadi-iio</strong> is a python abstraction module for ADI hardware with IIO drivers to make them easier to use. The libIIO interface although extremely flexible can be cumbersome to use due to the amount of boilerplate code required for even simple examples, especially when interfacing with buffers. This module has custom interfaces classes for specific parts and development systems which can generally make them easier to understand and use. To get up and running with a device can be as simple as a few lines of code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="c1"># Create device from specific uri address</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">"ip:192.168.2.1"</span><span class="p">)</span>
+<span class="c1"># Get data from transceiver</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="_images/PyADI-IIO_Logo_72.png" src="_images/PyADI-IIO_Logo_72.png"/>
+</figure>
+<a class="reference external image-reference" href="http://travis-ci.org/analogdevicesinc/pyadi-iio"><img alt="https://secure.travis-ci.org/analogdevicesinc/pyadi-iio.png" src="https://secure.travis-ci.org/analogdevicesinc/pyadi-iio.png"/></a>
+<a class="reference external image-reference" href="https://badge.fury.io/py/pyadi-iio"><img alt="https://badge.fury.io/py/pyadi-iio.svg" src="https://badge.fury.io/py/pyadi-iio.svg"/></a>
+<a class="reference external image-reference" href="https://www.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=github.com&amp;amp;utm_medium=referral&amp;amp;utm_content=analogdevicesinc/pyadi-iio&amp;amp;utm_campaign=Badge_Grade"><img alt="https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077" src="https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077"/></a>
+</section>
+<section id="requirements">
+<h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p><a class="reference external" href="http://github.com/analogdevicesinc/libiio/">libiio</a></p></li>
+<li><p><a class="reference external" href="http://github.com/analogdevicesinc/libad9361/">(Optional) libad9361 for AD9361 specific devices</a></p></li>
+</ul>
+</section>
+<section id="sections">
+<h1>Sections<a class="headerlink" href="#sections" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/quick.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/quick.html#install-checks">Install Checks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices/index.html">Supported Devices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4130.html">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4110.html">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4630.html">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5940.html">adi.ad5940 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad6676.html">adi.ad6676 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad717x.html">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7689.html">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7746.html">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad7799.html">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9083.html">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9136.html">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad916x.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9250.html">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9265.html">adi.ad9265 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9371.html">ad9371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9434.html">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9467.html">adi.ad9467 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9625.html">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9739a.html">adi.ad9739a module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ada4961.html">adi.ada4961 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adl5960.html">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.admv8818.html">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adpd410x.html">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrf5720.html">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl313.html">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.cn0511.html">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmc_vna.html">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmcadc3.html">adi.fmcadc3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.lm75.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.tdd.html">tdd</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#cyclic-mode">Cyclic Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#annotated-buffers">Annotated Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#buffer-units">Buffer Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#module-adi.rx_tx">Members</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#buffer-examples">Buffer Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#direct-digital-synthesizers">Direct Digital Synthesizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#module-adi.dds">DDS Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#dma-synchronization">DMA Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#module-adi.sync_start">Sync_Start Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#invoke">Invoke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#precommit">Precommit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#set-up-isolated-environment">Set Up Isolated Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#emulation">Emulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="libiio.html">libiio Direct Access</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="libiio.html#libiio-entry-points">libiio Entry Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libiio.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="guides/quick.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Quick Start</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2019-2021, Analog Devices, Inc
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Analog Devices Hardware Python Interfaces</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#sections">Sections</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>
