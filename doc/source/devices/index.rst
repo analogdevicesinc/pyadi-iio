@@ -50,6 +50,7 @@ Supported Devices
    adi.adis16460
    adi.adis16495
    adi.adis16507
+   adi.adl5240
    adi.adl5960
    adi.admv8818
    adi.adpd1080

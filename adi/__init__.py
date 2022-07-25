@@ -70,6 +70,7 @@ from adi.adg2128 import adg2128
 from adi.adis16460 import adis16460
 from adi.adis16495 import adis16495
 from adi.adis16507 import adis16507
+from adi.adl5240 import adl5240
 from adi.adl5960 import adl5960
 from adi.admv8818 import admv8818
 from adi.adpd188 import adpd188
