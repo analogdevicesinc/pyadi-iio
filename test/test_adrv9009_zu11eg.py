@@ -250,7 +250,9 @@ def test_adrv9009_zu11eg_dds_gain_check_vary_power(
     min_rssi,
     max_rssi,
 ):
-    test_gain_check(classname, channel, param_set, dds_scale, min_rssi, max_rssi)
+    test_gain_check(
+        iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
+    )
 
 
 #########################################
