@@ -34,6 +34,8 @@
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx_def
 
+from .dsp import _dec_int_fpga_filter
+
 
 class ad9364(rx_tx_def, context_manager):
     """AD9364 Transceiver"""
@@ -276,7 +278,7 @@ class ad9363(ad9361):
     pass
 
 
-class Pluto(ad9364):
+class Pluto(ad9364, _dec_int_fpga_filter):
     """PlutoSDR Evaluation Platform"""
 
     _device_name = "PlutoSDR"
