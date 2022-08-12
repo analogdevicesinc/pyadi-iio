@@ -11,6 +11,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import shutil
 import sys
 from typing import List
 
@@ -19,12 +20,32 @@ import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath("../.."))
 sys.setrecursionlimit(1500)
 
+# Move logos over to doc directory
+p = os.path.join("_static", "logos")
+if not os.path.exists(p):
+    os.mkdir("_static/logos")
+
+for filename in os.listdir(os.path.join("..", "..", "images")):
+    if filename.endswith(".png"):
+        shutil.copy(
+            os.path.join("..", "..", "images", filename),
+            os.path.join("_static", "logos", filename),
+        )
+        fn = os.path.join("_static", "logos", filename)
+        from PIL import Image
+
+        im = Image.open(fn)
+        # Remove left 30% of image
+        im = im.crop((int(im.size[0] * 0.45), 0, int(im.size[0] * 1), im.size[1]))
+        im.save(fn)
+
+
 import adi  # isort:skip
 
 # -- Project information -----------------------------------------------------
 
 project = "Analog Devices Hardware Python Interfaces"
-copyright = "2019-2021, Analog Devices, Inc"
+copyright = "2019-2022, Analog Devices, Inc"
 author = "Travis Collins"
 
 # The full version, including alpha/beta/rc tags
@@ -76,3 +97,22 @@ favicons = ["favicon.png"]
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+html_css_files = [
+    "css/style.css",
+]
+
+html_theme_options = {
+    "light_logo": os.path.join("logos", "PyADI-IIO_Logo_300.png"),
+    "dark_logo": os.path.join("logos", "PyADI-IIO_Logo_w_300.png"),
+    "dark_css_variables": {
+        "color-sidebar-item-background--current": "white",
+        "color-sidebar-link-text": "white",
+        "color-sidebar-link-text--top-level": "white",
+    },
+    "light_css_variables": {
+        "color-sidebar-item-background--current": "black",
+        "color-sidebar-link-text": "black",
+        "color-sidebar-link-text--top-level": "black",
+    },
+}
