@@ -11,6 +11,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
     
 
@@ -19,18 +20,27 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-sidebar-item-background--current: black;
+  --color-sidebar-link-text: black;
+  --color-sidebar-link-text--top-level: black;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-sidebar-item-background--current: white;
+  --color-sidebar-link-text: white;
+  --color-sidebar-link-text--top-level: white;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-sidebar-item-background--current: white;
+  --color-sidebar-link-text: white;
+  --color-sidebar-link-text--top-level: white;
   
       }
     }
@@ -146,6 +156,10 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/logos/PyADI-IIO_Logo_300.png" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/logos/PyADI-IIO_Logo_w_300.png" alt="Dark Logo"/>
+  </div>
   
   <span class="sidebar-brand-text">Analog Devices Hardware Python Interfaces 0.0.14</span>
   
@@ -375,7 +389,7 @@ be all zeroes and not relevant for the user.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2019-2021, Analog Devices, Inc
+                Copyright &#169; 2019-2022, Analog Devices, Inc
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
