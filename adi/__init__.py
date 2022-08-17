@@ -96,6 +96,7 @@ from adi.fmcomms5 import FMComms5
 from adi.gen_mux import genmux
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
+from adi.ltc2499 import ltc2499
 from adi.ltc2983 import ltc2983
 from adi.max11205 import max11205
 from adi.max31855 import max31855
