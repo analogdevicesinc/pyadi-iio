@@ -611,7 +611,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # print("Peak: @"+str(tone_freq) )
     # assert (fc * 0.01) > diff
 
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=False)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=True)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - fc)
     s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
@@ -659,7 +659,7 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     # Set custom device parameters
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
-    time.sleep(5)  # Wait for QEC to kick in
+    time.sleep(2)  # Wait for QEC to kick in
     # Set common buffer settings
     N = 2 ** 14
     sdr.tx_cyclic_buffer = True
@@ -697,7 +697,7 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
         del sdr
         raise Exception(e)
     del sdr
-    val, amp, freqs = spec.sfdr(data, plot=False)
+    val, amp, freqs = spec.sfdr(data, plot=True)
     if do_html_log:
         pytest.data_log = {
             "html": gen_line_plot_html(
@@ -750,7 +750,7 @@ def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     else:
         fs = int(sdr.rx_sample_rate)
     sdr.dds_single_tone(np.floor(fs * 0.1), dds_scale, channel)
-    time.sleep(3)
+    time.sleep(1)
 
     # Check RSSI
     if channel == 0:
