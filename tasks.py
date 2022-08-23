@@ -174,7 +174,7 @@ def checkparts(c):
     ]
     for c in dir(mod):
         if (
-            any(c.lower().startswith(pre) for pre in ("ad", "hmc", "lt"))
+            any(c.lower().startswith(pre) for pre in ("ad", "hmc", "lt", "cn", "max"))
             and not c in ignored_parts
         ):
             parts.append(c)
