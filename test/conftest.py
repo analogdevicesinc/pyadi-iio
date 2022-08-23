@@ -103,6 +103,11 @@ def test_dma_loopback(request):
 
 
 @pytest.fixture()
+def test_sfdrl(request):
+    yield sfdr_low
+    
+
+@pytest.fixture()
 def test_sfdr(request):
     yield t_sfdr
 

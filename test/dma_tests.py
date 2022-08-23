@@ -611,7 +611,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # print("Peak: @"+str(tone_freq) )
     # assert (fc * 0.01) > diff
 
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=True)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=False)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - fc)
     s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
@@ -630,6 +630,110 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
 
     assert (fc * 0.01) > diff
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
+
+
+def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=False):
+    """t_sfdrl: Test SFDR loopback of tone with connected loopback cables.
+    This test requires a devices with TX and RX onboard where the transmit
+    signal can be recovered. Sinuoidal data is passed to DMAs which is then
+    estimated on the RX side. The peak and second peak are determined in
+    the received signal to determine the sfdr.
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+    time.sleep(1)
+
+    N = 2 ** 14
+    sdr.tx_cyclic_buffer = True
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+    sdr.rx_enabled_channels = [channel]
+    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+
+    sdr.dds_single_tone(2999577, 0.0625, channel)
+    time.sleep(1)
+
+    ref = 2 ** 11
+
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    else:
+        RXFS = int(sdr.rx_sample_rate)
+
+    fc = RXFS * 0.1
+    fc = int(fc / (RXFS / N)) * (RXFS / N)
+
+    full_scale = 0.9
+    ts = 1 / float(RXFS)
+    t = np.arange(0, N * ts, ts)
+    i = np.cos(2 * np.pi * t * fc) * ref * full_scale
+    q = np.sin(2 * np.pi * t * fc) * ref * full_scale
+    iq = i + 1j * q
+
+    try:
+        #sdr.tx(iq)
+        # for _ in range(30):
+        #     data = sdr.rx()
+        amp = 0
+        freq = 0
+        for i in range(8):
+            data = sdr.rx()
+            time.sleep(1)
+            amps, freq = spec.spec_est(data, fs=RXFS, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
+            amp += amps
+        amp /= 8
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+
+    L = len(data)
+    sfdr, peaks, indxs, pk = spec.sfdr_signal(data, amp, freq, plot=False)
+    
+    ml = indxs[0]
+    if plot:
+        import matplotlib.pyplot as plt
+
+        plt.subplot(2, 1, 1)
+        plt.plot(data, ".-")
+        plt.plot(1, 1, "r.")
+        plt.margins(0.1, 0.1)
+        plt.xlabel("Time [s]")
+
+        plt.subplot(2, 1, 2)
+        plt.plot(fftshift(freq), fftshift(amp))
+        plt.plot(freq[ml], amp[ml], "y.")
+        plt.plot(freq[indxs[1:3]], amp[indxs[1:3]], "y.")
+
+        plt.margins(0.1, 0.1)
+        plt.annotate("Fundamental", (freq[ml], amp[ml]))
+        plt.xlabel("Frequency [Hz]")
+        plt.tight_layout()
+        # if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
+        #     k=1
+        # else:
+        #     k=0
+        # plt.savefig("./results_log/graphp" + str(k) + ".png")
+        # plt.close()
+        plt.show()
+
+    print("sfdr is ", sfdr)
+    for i in range(3):
+        print("Peak should be between ", low[i], high[i])
+        print("Peak is ", peaks[i], freq[indxs[i]])
+        assert low[i] <= peaks[i] <= high[i]
 
 
 def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9):
