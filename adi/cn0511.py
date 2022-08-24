@@ -31,7 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import numpy as np
-from adi.ad916x import ad9166 as ad9166_adi  # pyadi-iio library
+from adi.ad9166 import ad9166 as ad9166_adi  # pyadi-iio library
 from adi.context_manager import context_manager
 
 try:
