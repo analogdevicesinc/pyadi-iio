@@ -655,12 +655,12 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         setattr(sdr, p, param_set[p])
     time.sleep(1)
 
-    N = 2 ** 14
+    N = 2 ** 13
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
-    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
     sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
 
     sdr.dds_single_tone(2999577, 0.0625, channel)
     time.sleep(1)
@@ -683,15 +683,12 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
     iq = i + 1j * q
 
     try:
-        #sdr.tx(iq)
-        # for _ in range(30):
-        #     data = sdr.rx()
         amp = 0
         freq = 0
         for i in range(8):
             data = sdr.rx()
             time.sleep(1)
-            amps, freq = spec.spec_est(data, fs=RXFS, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
+            amps, freq = spec.spec_est(data, fs=RXFS, ref=ref, num_ffts=1,  enable_windowing=True, plot=False)
             amp += amps
         amp /= 8
     except Exception as e:
@@ -725,9 +722,9 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         #     k=1
         # else:
         #     k=0
-        # plt.savefig("./results_log/graphp" + str(k) + ".png")
-        # plt.close()
-        plt.show()
+        plt.savefig("./results_log/graph" + str(channel) + ".png")
+        plt.close()
+        #plt.show()
 
     print("sfdr is ", sfdr)
     for i in range(3):

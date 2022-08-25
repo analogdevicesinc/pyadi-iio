@@ -39,7 +39,7 @@ def test_adrv9009_zu11eg_rx_data(test_dma_rx, iio_uri, classname, channel):
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "low, high",
-    [([-50.0, -120.0, -120.0, -120.0, -120.0], [-10.0, -75.0, -75.0, -75.0, -75.0])],
+    [([-50.0, -120.0, -120.0, -120.0, -120.0], [-5.0, -50.0, -60.0, -70.0, -70.0])],
 )
 @pytest.mark.parametrize(
     "param_set",
