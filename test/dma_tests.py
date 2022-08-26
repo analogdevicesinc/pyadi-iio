@@ -655,7 +655,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         setattr(sdr, p, param_set[p])
     time.sleep(1)
 
-    N = 2 ** 13
+    N = 2 ** 12
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
     sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
@@ -722,7 +722,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         #     k=1
         # else:
         #     k=0
-        plt.savefig("./results_log/graph" + str(channel) + ".png")
+        plt.savefig("./results_log/graph_ch" + str(channel) + "_"  + str(param_set["trx_lo"]/1000000000) + "GHz.png")
         plt.close()
         #plt.show()
 
