@@ -29,7 +29,7 @@ Supported Devices
    adi.ad9136
    adi.ad9144
    adi.ad9152
-   adi.ad916x
+   adi.ad9166
    adi.ad9172
    adi.ad9250
    adi.ad9265
