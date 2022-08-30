@@ -97,6 +97,7 @@ from adi.gen_mux import genmux
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2983 import ltc2983
+from adi.max11205 import max11205
 from adi.max31855 import max31855
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
