@@ -139,7 +139,7 @@ class FMComms5(ad9361):
 
     @rx_hardwaregain_chip_b_chan0.setter
     def rx_hardwaregain_chip_b_chan0(self, value):
-        if self.gain_control_mode == "manual":
+        if self.gain_control_mode_chip_b_chan0 == "manual":
             self._set_iio_attr("voltage0", "hardwaregain", False, value, self._ctrl_b)
 
     @property
@@ -150,7 +150,7 @@ class FMComms5(ad9361):
 
     @rx_hardwaregain_chip_b_chan1.setter
     def rx_hardwaregain_chip_b_chan1(self, value):
-        if self.gain_control_mode == "manual":
+        if self.gain_control_mode_chip_b_chan1 == "manual":
             self._set_iio_attr("voltage1", "hardwaregain", False, value, self._ctrl_b)
 
     @property
