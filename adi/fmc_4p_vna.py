@@ -39,8 +39,9 @@ from adi.admv8818 import admv8818
 from adi.adrf5720 import adrf5720
 from adi.gen_mux import genmux
 from adi.one_bit_adc_dac import one_bit_adc_dac
+from adi.ad9173 import ad9173
 
-class fmc_4p_vna(adrf5720, ad9083, admv8818, genmux, adf4371, adl5960):
+class fmc_4p_vna(adrf5720, ad9083, admv8818, genmux, adf4371, adl5960, one_bit_adc_dac):
     """ FMCVNA Scalable 4-port Vector Network Analyzer Board """
 
     frontend = [0] * 8
@@ -49,11 +50,12 @@ class fmc_4p_vna(adrf5720, ad9083, admv8818, genmux, adf4371, adl5960):
         self.lo = adf4371(uri)
         self.rfin_attenuator = adrf5720(uri, device_name="adrf5720-rfin")
         self.lo_attenuator = adrf5720(uri, device_name="adrf5720-lo")
-        self.rfin_bpf = admv8818(uri, device_name="admv8818-rfin")
+        self.bpf = admv8818(uri, device_name="admv8818")
         self.rfin_mux = genmux(uri, device_name="mux-rfin")
         self.lo_mux = genmux(uri, device_name="mux-adf4371")
         self.freq_src_sel_mux = genmux(uri, device_name="mux-freq-src-sel")
         self.rfin_freq_src_sel_mux = genmux(uri, device_name="mux-rfin-freq-src-sel")
+        self.hsdac = ad9173(uri)
 
         for i in range(1, 5):
             self.frontend[i - 1] = adl5960(uri, device_name=f"adl5960-{i}")
