@@ -49,6 +49,28 @@ lock(label: 'adgt_test_harness_boards') {
                       harness.stage_library("RecoverBoard"))
 
     // Test stage
+    def cls = {
+        String board ->
+        stage("Install libad9361"){
+            sh 'git clone https://github.com/analogdevicesinc/libad9361-iio.git'
+            dir('libad9361-iio'){
+                sh 'mkdir build'
+                dir('build'){
+                    sh 'cmake ..'
+                    sh 'make'
+                    sh 'make install'
+                    sh 'ldconfig'
+                }
+                dir('bindings/python'){
+                    sh 'cmake .'
+                    sh 'pip install .'
+                }
+            }
+        }
+    }
+    harness.add_stage(cls)
+
+    // Test stage
     harness.add_stage(harness.stage_library("PyADITests"),'continueWhenFail')
 
     // Send results
