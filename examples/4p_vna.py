@@ -99,7 +99,7 @@ vna = adi.fmc_4p_vna("ip:analog.local")
 print("--Setting up chip")
 
 # Capture all 32 channels
-vna.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+vna.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7]
 vna.rx_buffer_size = 2 ** 12
 fs = int(vna.rx_sample_rate)
 
@@ -112,8 +112,14 @@ vna.rfin_mux.select = "d1"
 vna.lo.frequency = 3e9
 vna.lo.rfaux8_vco_output_enable = False
 
-vna.freq_src_sel_mux = "rf_dac0_direct"
-vna.rfin_freq_src_sel_mux = "main"
+vna.freq_src_sel_mux.select = "rf_dac0_direct"
+vna.rfin_freq_src_sel_mux.select = "main"
+
+vna.hsdac.channel0_nco_frequency = 1
+vna.hsdac.channel1_nco_frequency = 1
+
+vna.hsdac.main0_nco_frequency = 100000000
+vna.hsdac.main1_nco_frequency = 100000000
 
 # push shifted DC the out of spectrum
 if_frequency = fs
@@ -131,7 +137,8 @@ for i in range(0, 4):
     print("ADL5960-", i, "REG 0x25 =", vna.frontend[i].reg_read(0x25))
 
 
-vna.rfin_bpf.band_pass_bandwidth_3db_frequency = 200
+vna.bpf.band_pass_bandwidth_3db_frequency = 200
+vna.bpf.mode = "manual"
 
 vna.gpio_adl5960x_sync = 1
 vna.gpio_adl5960x_sync = 0
@@ -142,36 +149,41 @@ print("ADL5960-1 OFFSET frequency", vna.frontend[0].offset_frequency, "Hz")
 print("ADL5960-1 OFFSET mode", vna.frontend[0].offset_mode)
 
 # Collect data
-for f in range(int(3e9), int(16e9), int(1000e6)):
+for f in range(int(100e6), int(5000e6), int(100e6)):
     # TODO: This should be more efficiently handled in a own method as part of teh fmc_vna class
-    if f <= 8e9:
-        for i in range(0, 8):
-            vna.frontend[i].lo_mode = "x1"
-        vna.lo_mux.select = "rf8"
-        vna.lo.rfaux8_vco_output_enable = False
-        vna.lo.rf8_frequency = f
+    # if f <= 8e9:
+    #     for i in range(0, 4):
+    #         vna.frontend[i].lo_mode = "x1"
+    #     vna.lo_mux.select = "rf8"
+    #     vna.lo.rfaux8_vco_output_enable = False
+    #     vna.lo.rf8_frequency = f
 
-    if f > 8e9 and f <= 16e9:
-        for i in range(0, 8):
-            vna.frontend[i].lo_mode = "x2"
-        vna.lo_mux.select = "rf16"
-        vna.lo.rfaux8_vco_output_enable = True
-        vna.lo.rf16_frequency = f
+    # if f > 8e9 and f <= 16e9:
+    #     for i in range(0, 4):
+    #         vna.frontend[i].lo_mode = "x2"
+    #     vna.lo_mux.select = "rf16"
+    #     vna.lo.rfaux8_vco_output_enable = True
+    #     vna.lo.rf16_frequency = f
+
+
+    vna.bpf.band_pass_center_frequency = int(f / 1e6)
+    vna.hsdac.main0_nco_frequency = int(f)
+    #vna.hsdac.main1_nco_frequency = int(f)
 
     print("ADL5960-", i, "CT2 REG 0x21 =", vna.frontend[0].reg_read(0x21))
     # ADMV8818 should update automatically as long as the LO doubler is not used
     print(
         "RFIN    HPF",
-        vna.rfin_bpf.high_pass_3db_frequency,
+        vna.bpf.high_pass_3db_frequency,
         "MHz, LPF",
-        vna.rfin_bpf.low_pass_3db_frequency,
+        vna.bpf.low_pass_3db_frequency,
         "MHz",
     )
     print(
         "RFIN Center",
-        vna.rfin_bpf.band_pass_center_frequency,
+        vna.bpf.band_pass_center_frequency,
         "MHz,  BW",
-        vna.rfin_bpf.band_pass_bandwidth_3db_frequency,
+        vna.bpf.band_pass_bandwidth_3db_frequency,
         "MHz",
     )
     for r in range(2):
