@@ -79,6 +79,7 @@ Supported Devices
    adi.lm75
    adi.ltc2314_14
    adi.ltc2983
+   adi.max11205
    adi.max31855
    adi.one_bit_adc_dac
    adi.tdd
