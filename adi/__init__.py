@@ -53,6 +53,7 @@ from adi.ad9136 import ad9136
 from adi.ad9144 import ad9144
 from adi.ad9152 import ad9152
 from adi.ad9172 import ad9172
+from adi.ad9173 import ad9173
 from adi.ad9250 import ad9250
 from adi.ad9265 import ad9265
 from adi.ad9371 import ad9371
@@ -102,6 +103,7 @@ from adi.max31855 import max31855
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.tdd import tdd
+
 
 try:
     from adi.jesd import jesd
