@@ -37,7 +37,7 @@ for filename in os.listdir(os.path.join("..", "..", "images")):
         im = Image.open(fn)
         # Remove left 30% of image
         im = im.crop((int(im.size[0] * 0.45), 0, int(im.size[0] * 1), im.size[1]))
-        im.save(fn)
+        im.save(fn.replace(".png", "_cropped.png"))
 
 
 import adi  # isort:skip
@@ -103,8 +103,8 @@ html_css_files = [
 ]
 
 html_theme_options = {
-    "light_logo": os.path.join("logos", "PyADI-IIO_Logo_300.png"),
-    "dark_logo": os.path.join("logos", "PyADI-IIO_Logo_w_300.png"),
+    "light_logo": os.path.join("logos", "PyADI-IIO_Logo_300_cropped.png"),
+    "dark_logo": os.path.join("logos", "PyADI-IIO_Logo_w_300_cropped.png"),
     "dark_css_variables": {
         "color-sidebar-item-background--current": "white",
         "color-sidebar-link-text": "white",

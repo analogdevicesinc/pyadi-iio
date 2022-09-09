@@ -17,14 +17,53 @@ Analog Devices Hardware Python Interfaces
  # Get data from transceiver
  data = sdr.rx()
 
-.. figure:: ../../images/PyADI-IIO_Logo_72.png
+.. raw:: html
 
-.. image:: https://secure.travis-ci.org/analogdevicesinc/pyadi-iio.png
-    :target: http://travis-ci.org/analogdevicesinc/pyadi-iio
-.. image:: https://badge.fury.io/py/pyadi-iio.svg
-    :target: https://badge.fury.io/py/pyadi-iio
-.. image:: https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077
-    :target: https://www.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade
+    <center>
+    <div style="width:70%;">
+    <div id="indexlogo_dark">
+    <img src="_static/logos/PyADI-IIO_Logo_600.png" alt="PyADI-IIO Logo" />
+    </div>
+    <div id="indexlogo_light">
+    <img src="_static/logos/PyADI-IIO_Logo_w_600.png" alt="PyADI-IIO Logo" />
+    </div>
+    </div>
+    </center>
+
+.. raw:: html
+
+    <p align="center">
+    <a href="https://github.com/analogdevicesinc/pyadi-iio/actions">
+    <img src="https://img.shields.io/github/workflow/status/analogdevicesinc/pyadi-iio/CI%20Pushes/master" alt="Build Status">
+    </a>
+
+    <a href="https://badge.fury.io/py/pyadi-iio">
+    <img src="https://badge.fury.io/py/pyadi-iio.svg" alt="PyPI version">
+    </a>
+
+    <a href="https://www.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade">
+    <img src="https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077" alt="Codacy Badge">
+    </a>
+
+    <a href="https://www.python.org/download/releases/3.6.0/">
+    <img src="https://img.shields.io/badge/python-3.6+-blue.svg" alt="Python Version">
+    </a>
+    </p>
+
+    <p align="center">
+    <a href="http://analogdevicesinc.github.io/pyadi-iio/">
+    <img alt="GitHub Pages" src="https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg">
+    </a>
+
+    <a href="https://ez.analog.com/sw-interface-tools/f/q-a">
+    <img alt="EngineerZone" src="https://img.shields.io/badge/Support-on%20EngineerZone-blue.svg">
+    </a>
+
+    <a href="https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio">
+    <img alt="Analog Wiki" src="https://img.shields.io/badge/Wiki-on%20wiki.analog.com-blue.svg">
+    </a>
+    </p>
+
 
 Requirements
 ==================
