@@ -1,11 +1,21 @@
+:root {
+    /* Defaults */
+    --display-dark-stuff: none;
+    --display-light-stuff: block;
+}
+
 [data-theme=light] {
     --sidebar-highligh-color-hover: black;
     --sidebar-highligh-color: white;
+    --display-dark-stuff: none;
+    --display-light-stuff: block;
 }
 
 [data-theme=dark] {
     --sidebar-highligh-color-hover: white;
     --sidebar-highligh-color: black;
+    --display-dark-stuff: block;
+    --display-light-stuff: none;
 }
 
 /* Pad sidebar entries so radius does not touch content or browser*/
@@ -51,4 +61,17 @@ body > div > aside > div > div > div.sidebar-scroll > div > ul {
     padding-bottom: 1px;
     padding-top: 1px;
     margin: 2px;
+}
+
+
+/* Hide/display logo on index page based on theme */
+#indexlogo_light {
+    display: var(--display-dark-stuff);
+}
+#indexlogo_dark {
+    display: var(--display-light-stuff);
+}
+
+element.style {
+    display: none;
 }
