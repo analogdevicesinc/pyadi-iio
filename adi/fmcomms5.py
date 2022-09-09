@@ -96,6 +96,8 @@ class FMComms5(ad9361):
         self._set_iio_dev_attr_str("filter_fir_config", data, self._ctrl_b)
         self._set_iio_attr("out", "voltage_filter_fir_en", False, 1)
         self._set_iio_attr("out", "voltage_filter_fir_en", False, 1, self._ctrl_b)
+        if libad9361:
+            libad9361.fmcomms5_multichip_sync(self._ctx, 3)
 
     @property
     def loopback_chip_b(self):
@@ -303,6 +305,9 @@ class FMComms5(ad9361):
             )
             self._set_iio_attr("out", "voltage_filter_fir_en", False, 1)
             self._set_iio_attr("out", "voltage_filter_fir_en", False, 1, self._ctrl_b)
+
+        if libad9361:
+            libad9361.fmcomms5_multichip_sync(self._ctx, 3)
 
     @property
     def rx_lo_chip_b(self):
