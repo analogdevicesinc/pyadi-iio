@@ -25,12 +25,14 @@ def test_fmcomms5_attr(
 #########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr, tol", [("loopback", 0)])
-@pytest.mark.parametrize("val", [0, 1, 2])
+@pytest.mark.parametrize(
+    "attr, start, stop, step, tol",
+    [("loopback", 2, 2, 1, 0), ("loopback", 1, 1, 1, 0), ("loopback", 0, 0, 1, 0),],
+)
 def test_fmcomms5_loopback_attr(
-    test_attribute_single_value_str, iio_uri, classname, attr, val, tol
+    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
-    test_attribute_single_value_str(iio_uri, classname, attr, val, tol)
+    test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
 #########################################
@@ -177,12 +179,18 @@ def test_fmcomms5_chip_b_attr(
 #########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr, tol", [("loopback_chip_b", 0)])
-@pytest.mark.parametrize("val", [0, 1, 2])
+@pytest.mark.parametrize(
+    "attr, start, stop, step, tol",
+    [
+        ("loopback_chip_b", 2, 2, 1, 0),
+        ("loopback_chip_b", 1, 1, 1, 0),
+        ("loopback_chip_b", 0, 0, 1, 0),
+    ],
+)
 def test_fmcomms5_chip_b_loopback_attr(
-    test_attribute_single_value_str, iio_uri, classname, attr, val, tol
+    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
-    test_attribute_single_value_str(iio_uri, classname, attr, val, tol)
+    test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
 #########################################
