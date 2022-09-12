@@ -11,6 +11,7 @@
 
 ### Currently supported hardware
 - AD2S1210
+- AD3552R
 - AD4020
 - AD4130
 - AD4110
