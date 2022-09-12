@@ -34,6 +34,7 @@
 from adi.ad717x import ad717x
 from adi.ad719x import ad719x
 from adi.ad936x import Pluto, ad9361, ad9363, ad9364
+from adi.ad3552r import ad3552r
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
 from adi.ad4630 import ad4630
