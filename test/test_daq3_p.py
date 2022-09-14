@@ -36,7 +36,7 @@ def test_daq3_rx_data(test_dma_rx, iio_uri, classname, channel):
         (200000000, 0.5),
     ],
 )
-@pytest.mark.parametrize("peak_min", [-45])
+@pytest.mark.parametrize("peak_min", [-50])
 def test_daq3_dds_loopback(
     test_dds_loopback,
     iio_uri,
