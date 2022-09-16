@@ -63,7 +63,6 @@ def get_test_map():
         "zynq-adrv9361-z7035-bob",
         "zynq-adrv9361-z7035-bob-cmos",
     ]
-    #  + test_map["fmcomms5"]
     test_map["ad9364"] = [
         "socfpga_cyclone5_sockit_arradio",
         "zynq-zc702-adv7511-ad9364-fmcomms4",
