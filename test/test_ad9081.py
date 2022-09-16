@@ -3,7 +3,7 @@ from os.path import dirname, join, realpath
 
 import pytest
 
-hardware = "ad9081"
+hardware = "ad9081_tdd"
 classname = "adi.ad9081"
 
 #########################################
