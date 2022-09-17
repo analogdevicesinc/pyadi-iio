@@ -63,7 +63,6 @@ def get_test_map():
         "zynq-adrv9361-z7035-bob",
         "zynq-adrv9361-z7035-bob-cmos",
     ]
-    #  + test_map["fmcomms5"]
     test_map["ad9364"] = [
         "socfpga_cyclone5_sockit_arradio",
         "zynq-zc702-adv7511-ad9364-fmcomms4",
@@ -85,6 +84,17 @@ def get_test_map():
     test_map["ad9172"] = [
         "zynq-zc706-adv7511-ad9172-fmc-ebz",
         "zynqmp-zcu102-rev10-ad9172-fmc-ebz-mode4",
+    ]
+    test_map["ad9081"] = [
+        "socfpga-arria10-socdk-ad9081",
+        "socfpga-arria10-socdk-ad9081-np12",
+        "versal-vck190-reva-ad9081",
+        "zynq-zc706-adv7511-ad9081",
+        "zynqmp-zcu102-rev10-ad9081-204b-txmode9-rxmode4",
+        "zynqmp-zcu102-rev10-ad9081-204c-txmode0-rxmode1",
+        "zynqmp-zcu102-rev10-ad9081-m8-l4",
+        "zynqmp-zcu102-rev10-ad9081-m8-l4-vcxo122p88",
+        "zynqmp-zcu102-rev10-ad9081-m4-l8",
     ]
 
     return test_map
