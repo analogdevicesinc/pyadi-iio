@@ -654,16 +654,21 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
     time.sleep(1)
+    
+    sdr.dds_single_tone(4001311, 0.2, channel)
+    time.sleep(1)
 
     N = 2 ** 12
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
     sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
-    sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
 
-    sdr.dds_single_tone(2999577, 0.0625, channel)
-    time.sleep(1)
+    if use_obs:
+        sdr.obs.rx_enabled_channels = [channel]
+        sdr.obs.rx_buffer_size = N * 2 * len(sdr.obs.rx_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = [channel]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
 
     ref = 2 ** 11
 
@@ -686,9 +691,11 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         amp = 0
         freq = 0
         for i in range(8):
-            data = sdr.rx()
+            data = sdr.obs.rx() if use_obs else sdr.rx()
             time.sleep(1)
-            amps, freq = spec.spec_est(data, fs=RXFS, ref=ref, num_ffts=1,  enable_windowing=True, plot=False)
+            amps, freq = spec.spec_est(
+                data, fs=RXFS, ref=ref, num_ffts=1, enable_windowing=True, plot=False
+            )
             amp += amps
         amp /= 8
     except Exception as e:
@@ -696,10 +703,10 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         raise Exception(e)
     del sdr
 
-    L = len(data)
-    sfdr, peaks, indxs, pk = spec.sfdr_signal(data, amp, freq, plot=False)
-    
+    sfdr, peaks, indxs, _ = spec.sfdr_signal(data, amp, freq, plot=False)
+
     ml = indxs[0]
+    # assert freq[int(np.floor(N/2))]/2 - 750000 < freq[ml] < freq[int(np.floor(N/2))]/2 + 750000
     if plot:
         import matplotlib.pyplot as plt
 
@@ -718,13 +725,9 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         plt.annotate("Fundamental", (freq[ml], amp[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        # if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
-        #     k=1
-        # else:
-        #     k=0
-        plt.savefig("./results_log/graph_ch" + str(channel) + "_"  + str(param_set["trx_lo"]/1000000000) + "GHz.png")
-        plt.close()
-        #plt.show()
+        # plt.savefig("./results_log/graph_ch" + str(channel) + "_"  + str(param_set["trx_lo"]/1000000000) + "GHz.png")
+        # plt.close()
+        plt.show()
 
     print("sfdr is ", sfdr)
     for i in range(3):
@@ -798,7 +801,7 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
         del sdr
         raise Exception(e)
     del sdr
-    val, amp, freqs = spec.sfdr(data, plot=True)
+    val, amp, freqs = spec.sfdr(data, plot=False)
     if do_html_log:
         pytest.data_log = {
             "html": gen_line_plot_html(

@@ -21,7 +21,7 @@ from scipy.signal import find_peaks
 def spec_est(x, fs, ref=2 ** 15, num_ffts=2, enable_windowing=False, plot=False):
 
     N = len(x)
-    fft_len = int(np.floor(N/num_ffts))
+    fft_len = int(np.floor(N / num_ffts))
     possible_ffts = num_ffts
 
     indx = 0
@@ -30,7 +30,7 @@ def spec_est(x, fs, ref=2 ** 15, num_ffts=2, enable_windowing=False, plot=False)
 
     for n_fft in range(num_ffts):
 
-        seg = x[indx:indx+fft_len]
+        seg = x[indx : indx + fft_len]
         indx += fft_len
 
         # Apply window
@@ -187,27 +187,20 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
 
 
 def sfdr_signal(x, amp, freqs, plot=False):
-    amp_org = amp
-    # amp = fftshift(amp)
-    peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.07))
     lx = len(x)
-    dc_loc = floor(lx/2)
+    print("x is the buffer ", x)
+    print("amps are: ", amp)
+    peak_indxs, _ = find_peaks(amp, distance=floor(lx * 0.1))
+    dc_loc = floor(lx / 2)
     indxs = argsort(amp[peak_indxs])
     indxs = indxs[::-1]
     peak_indxs = peak_indxs[indxs]
     peak_vals = amp[peak_indxs]
 
-    k=1
+    k = 1
     main = peak_vals[0]
-    # for indx in peak_indxs:
-    #     if absolute(indx - dc_loc) < (0.07 * lx):
-    #         #do nothing
-    #         k = k+1
-    #         print("DC ignored")
-    #     else:
-    #         next = peak_vals[k]
     next = peak_vals[1]
-    
+
     sfdr = absolute(main - next)
 
     if plot:

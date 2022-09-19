@@ -32,6 +32,7 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from adi.adrv9009 import adrv9009
+from adi.obs import obs
 
 
 class adrv9009_zu11eg(adrv9009):
@@ -67,6 +68,16 @@ class adrv9009_zu11eg(adrv9009):
         "voltage6",
         "voltage7",
     ]
+    _obs_channel_names = [
+        "voltage0_i",
+        "voltage0_q",
+        "voltage1_i",
+        "voltage1_q",
+        "voltage2_i",
+        "voltage2_q",
+        "voltage3_i",
+        "voltage3_q",
+    ]
     _device_name = ""
 
     def __init__(self, uri="", jesd_monitor=False, jesd=None):
@@ -77,6 +88,7 @@ class adrv9009_zu11eg(adrv9009):
         self._clock_chip_carrier = self._ctx.find_device("hmc7044-car")
         # Used for multi-som sync
         self._clock_chip_ext = self._ctx.find_device("hmc7044-ext")
+        self.obs = obs(self._ctx, self._rxobs, self._obs_channel_names)
 
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize both transceivers """
@@ -223,6 +235,56 @@ class adrv9009_zu11eg(adrv9009):
     @tx_hardwaregain_chan1_chip_b.setter
     def tx_hardwaregain_chan1_chip_b(self, value):
         self._set_iio_attr("voltage1", "hardwaregain", True, value, self._ctrl_b)
+
+    @property
+    def obs_hardwaregain_chip_b(self):
+        """obs_hardwaregain_chip_b: Gain applied to Obs/Sniffer receive path ORX1."""
+        return self._get_iio_attr("voltage2", "hardwaregain", False)
+
+    @obs_hardwaregain_chip_b.setter
+    def obs_hardwaregain(self, value):
+        # if self.obs_gain_control_mode == "manual":
+        self._set_iio_attr("voltage2", "hardwaregain", False, value, self._ctrl_b)
+
+    @property
+    def obs_powerdown_en_chip_b(self):
+        """obs_powerdown_en_chip_b: Enables/disables the ORX signal paths
+        while in the ENSM radio_on state"""
+        return self._get_iio_attr("voltage2", "powerdown", False, self._ctrl_b)
+
+    @obs_powerdown_en_chip_b.setter
+    def obs_powerdown_en_chip_b(self, value):
+        self._set_iio_attr_int("voltage2", "powerdown", False, value, self._ctrl_b)
+
+    @property
+    def obs_powerdown_en_chan1_chip_b(self):
+        """obs_powerdown_en_chan1_chip_b: Enables/disables the ORX signal paths
+        while in the ENSM radio_on state"""
+        return self._get_iio_attr("voltage3", "powerdown", False, self._ctrl_b)
+
+    @obs_powerdown_en_chan1_chip_b.setter
+    def obs_powerdown_en_chan1_chip_b(self, value):
+        self._set_iio_attr_int("voltage3", "powerdown", False, value, self._ctrl_b)
+
+    @property
+    def rx_powerdown_en_chan0_chip_b(self):
+        """rx_powerdown_en_chan0_chip_b: Enables/disables the RX1 signal paths
+        while in the ENSM radio_on state"""
+        return self._get_iio_attr("voltage0", "powerdown", False, self._ctrl_b)
+
+    @rx_powerdown_en_chan0_chip_b.setter
+    def rx_powerdown_en_chan0_chip_b(self, value):
+        self._set_iio_attr_int("voltage0", "powerdown", False, value, self._ctrl_b)
+
+    @property
+    def rx_powerdown_en_chan1_chip_b(self):
+        """rx_powerdown_en_chan1_chip_b: Enables/disables the RX2 signal paths
+        while in the ENSM radio_on state for chip b"""
+        return self._get_iio_attr("voltage1", "powerdown", False, self._ctrl_b)
+
+    @rx_powerdown_en_chan1_chip_b.setter
+    def rx_powerdown_en_chan1_chip_b(self, value):
+        self._set_iio_attr_int("voltage1", "powerdown", False, value, self._ctrl_b)
 
     @property
     def rx_rf_bandwidth_chip_b(self):

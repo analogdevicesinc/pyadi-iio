@@ -25,7 +25,7 @@ def test_adrv9009_zu11eg_attr(
     test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
-#########################################
+########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", range(4))
@@ -33,7 +33,7 @@ def test_adrv9009_zu11eg_rx_data(test_dma_rx, iio_uri, classname, channel):
     test_dma_rx(iio_uri, classname, channel)
 
 
-#########################################
+########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
@@ -45,8 +45,17 @@ def test_adrv9009_zu11eg_rx_data(test_dma_rx, iio_uri, classname, channel):
     "param_set",
     [
         dict(
+            ensm_mode="radio_off",
             trx_lo=1000000000,
             trx_lo_chip_b=5000000000,
+            obs_powerdown_en=1,
+            obs_powerdown_en_chan1=1,
+            obs_powerdown_en_chip_b=1,
+            obs_powerdown_en_chan1_chip_b=1,
+            rx_powerdown_en_chan0=0,
+            rx_powerdown_en_chan1=0,
+            rx_powerdown_en_chan0_chip_b=0,
+            rx_powerdown_en_chan1_chip_b=0,
             gain_control_mode_chan0="slow_attack",
             gain_control_mode_chan1="slow_attack",
             gain_control_mode_chan0_chip_b="slow_attack",
@@ -55,12 +64,6 @@ def test_adrv9009_zu11eg_rx_data(test_dma_rx, iio_uri, classname, channel):
             tx_hardwaregain_chan1=-10,
             tx_hardwaregain_chan0_chip_b=-10,
             tx_hardwaregain_chan1_chip_b=-10,
-            calibrate_rx_qec_en=1,
-            calibrate_tx_qec_en=1,
-            calibrate=1,
-            calibrate_rx_qec_en_chip_b=1,
-            calibrate_tx_qec_en_chip_b=1,
-            calibrate_chip_b=1,
         ),
         dict(
             trx_lo=3000000000,
@@ -79,6 +82,47 @@ def test_adrv9009_zu11eg_sfdr(
 
 
 #########################################
+# @pytest.mark.obs_required
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize(
+    "low, high",
+    [([-50.0, -120.0, -120.0, -120.0, -120.0], [5.0, -50.0, -60.0, -70.0, -70.0])],
+)
+@pytest.mark.parametrize(
+    "param_set",
+    [
+        dict(
+            ensm_mode="radio_on",
+            trx_lo=2500000000,
+            trx_lo_chip_b=2500000000,
+            rx_powerdown_en_chan0=1,
+            rx_powerdown_en_chan1=1,
+            rx_powerdown_en_chan0_chip_b=1,
+            rx_powerdown_en_chan1_chip_b=1,
+            obs_powerdown_en=0,
+            obs_powerdown_en_chan1=0,
+            obs_powerdown_en_chip_b=0,
+            obs_powerdown_en_chan1_chip_b=0,
+            tx_hardwaregain_chan0=-10,
+            tx_hardwaregain_chan1=-10,
+            tx_hardwaregain_chan0_chip_b=-10,
+            tx_hardwaregain_chan1_chip_b=-10,
+            aux_obs_lo=2500000000,
+            obs_rf_port_select="OBS_TX_LO",
+        ),
+    ],
+)
+def test_adrv9009_zu11eg_sfdr_for_obs(
+    test_sfdrl, classname, iio_uri, channel, param_set, low, high
+):
+    test_sfdrl(
+        classname, iio_uri, channel, param_set, low, high, plot=True, use_obs=True
+    )
+
+
+########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
@@ -86,8 +130,17 @@ def test_adrv9009_zu11eg_sfdr(
     "param_set",
     [
         dict(
+            ensm_mode="radio_off",
             trx_lo=1000000000,
-            trx_lo_chip_b=1000000000,
+            trx_lo_chip_b=5000000000,
+            obs_powerdown_en=1,
+            obs_powerdown_en_chan1=1,
+            obs_powerdown_en_chip_b=1,
+            obs_powerdown_en_chan1_chip_b=1,
+            rx_powerdown_en_chan0=0,
+            rx_powerdown_en_chan1=0,
+            rx_powerdown_en_chan0_chip_b=0,
+            rx_powerdown_en_chan1_chip_b=0,
             gain_control_mode_chan0="slow_attack",
             gain_control_mode_chan1="slow_attack",
             gain_control_mode_chan0_chip_b="slow_attack",
@@ -96,16 +149,10 @@ def test_adrv9009_zu11eg_sfdr(
             tx_hardwaregain_chan1=-10,
             tx_hardwaregain_chan0_chip_b=-10,
             tx_hardwaregain_chan1_chip_b=-10,
-            calibrate_rx_qec_en=1,
-            calibrate_tx_qec_en=1,
-            calibrate=1,
-            calibrate_rx_qec_en_chip_b=1,
-            calibrate_tx_qec_en_chip_b=1,
-            calibrate_chip_b=1,
         ),
         dict(
             trx_lo=3000000000,
-            trx_lo_chip_b=1000000000,
+            trx_lo_chip_b=4000000000,
         ),
         dict(
             trx_lo=5000000000,
@@ -127,118 +174,6 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
     test_gain_check(
         iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     )
-
-
-#########################################
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
-@pytest.mark.parametrize(
-    "param_set, dds_scale, min_rssi, max_rssi",
-    [
-        (
-            dict(
-                trx_lo=1000000000,
-                trx_lo_chip_b=1000000000,
-                gain_control_mode_chan0="manual",
-                gain_control_mode_chan1="manual",
-                gain_control_mode_chan0_chip_b="manual",
-                gain_control_mode_chan1_chip_b="manual",
-                rx_hardwaregain_chan0=0,
-                rx_hardwaregain_chan1=0,
-                rx_hardwaregain_chan0_chip_b=0,
-                rx_hardwaregain_chan1_chip_b=0,
-                tx_hardwaregain_chan0=-10,
-                tx_hardwaregain_chan1=-10,
-                tx_hardwaregain_chan0_chip_b=-10,
-                tx_hardwaregain_chan1_chip_b=-10,
-                calibrate_tx_qec_en=1,
-                calibrate_tx_qec_en_chip_b=1,
-                calibrate=1,
-                calibrate_chip_b=1,
-            ),
-            0.5,
-            20,
-            60,
-        ),
-        (
-            dict(
-                trx_lo=1000000000,
-                gain_control_mode_chan0="manual",
-                gain_control_mode_chan1="manual",
-                gain_control_mode_chan0_chip_b="manual",
-                gain_control_mode_chan1_chip_b="manual",
-                rx_hardwaregain_chan0=30,
-                rx_hardwaregain_chan1=30,
-                rx_hardwaregain_chan0_chip_b=30,
-                rx_hardwaregain_chan1_chip_b=30,
-                tx_hardwaregain_chan0=-10,
-                tx_hardwaregain_chan1=-10,
-                tx_hardwaregain_chan0_chip_b=-10,
-                tx_hardwaregain_chan1_chip_b=-10,
-                calibrate_tx_qec_en=1,
-                calibrate_tx_qec_en_chip_b=1,
-                calibrate=1,
-                calibrate_chip_b=1,
-            ),
-            0.5,
-            0,
-            15,
-        ),
-    ],
-)
-def test_adrv9009_zu11eg_dds_gain_check_vary_power(
-    test_gain_check,
-    iio_uri,
-    classname,
-    channel,
-    param_set,
-    dds_scale,
-    min_rssi,
-    max_rssi,
-):
-    test_gain_check(
-        iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
-    )
-
-
-#########################################
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
-@pytest.mark.parametrize(
-    "param_set",
-    [
-        dict(
-            trx_lo=1000000000,
-            trx_lo_chip_b=5000000000,
-            gain_control_mode_chan0="slow_attack",
-            gain_control_mode_chan1="slow_attack",
-            gain_control_mode_chan0_chip_b="slow_attack",
-            gain_control_mode_chan1_chip_b="slow_attack",
-            tx_hardwaregain_chan0=-20,
-            tx_hardwaregain_chan1=-20,
-            tx_hardwaregain_chan0_chip_b=-20,
-            tx_hardwaregain_chan1_chip_b=-20,
-            calibrate_tx_qec_en=1,
-            calibrate_tx_qec_en_chip_b=1,
-            calibrate=1,
-            calibrate_chip_b=1,
-        ),
-        dict(
-            trx_lo=3000000000,
-            trx_lo_chip_b=4000000000,
-        ),
-        dict(
-            trx_lo=5000000000,
-            trx_lo_chip_b=1000000000,
-        ),
-    ],
-)
-def test_adrv9009_zu11eg_iq_loopback(
-    test_iq_loopback, iio_uri, classname, channel, param_set
-):
-    test_iq_loopback(iio_uri, classname, channel, param_set)
 
 
 #########################################
