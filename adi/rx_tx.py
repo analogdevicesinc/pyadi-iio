@@ -287,16 +287,26 @@ class rx(rx_tx_common):
                 for c in [ec_i, ec_q]:
                     chan = self._rxadc.find_channel(self._rx_channel_names[c])
                     data.extend(chan.read(self.__rxbuf))
+                # Data at this point is channel interleaved (not sample interleaved)
         else:
             data = self.__rxbuf.read()
 
         x = np.frombuffer(data, dtype=self._rx_data_type)
         indx = 0
         sig = []
-        stride = len(self.rx_enabled_channels) * 2
-        for _ in range(stride // 2):
-            sig.append(x[indx::stride] + 1j * x[indx + 1 :: stride])
-            indx = indx + 2
+        if not self._rx_needs_type_conversion:
+            stride = len(self.rx_enabled_channels) * 2
+            for _ in range(stride // 2):
+                sig.append(x[indx::stride] + 1j * x[indx + 1 :: stride])
+                indx = indx + 2
+        else:
+            for i in range(len(self.rx_enabled_channels) * 2, 2):
+                sig.append(
+                    x[i * self.rx_buffer_size : (i + 1) * self.rx_buffer_size]
+                    + 1j
+                    * x[(i + 1) * self.rx_buffer_size : (i + 2) * self.rx_buffer_size]
+                )
+                indx = indx + 2
         # Don't return list if a single channel
         if indx == 2:
             return sig[0]
@@ -330,8 +340,10 @@ class rx(rx_tx_common):
         for ec in self.rx_enabled_channels:
             chan = self._rxadc.find_channel(self._rx_channel_names[ec])
             data.extend(chan.read(self.__rxbuf))
+        # Data at this point is channel interleaved (not sample interleaved)
 
         if isinstance(self._rx_data_type, list):
+            raise Exception("Not implemented")
             return self.__multi_type_rx(data)
 
         x = np.frombuffer(data, dtype=self._rx_data_type)
@@ -343,24 +355,12 @@ class rx(rx_tx_common):
             x = np.left_shift(x, -(self._rx_shift))
 
         sig = []
-        stride = len(self.rx_enabled_channels)
-
-        if self._rx_stack_interleaved:
-            # Convert data to sample interleaved from channel interleaved
-            sigi = np.empty((x.size,), dtype=x.dtype)
-            for i, _ in enumerate(self.rx_enabled_channels):
-                sigi[i::stride] = x[
-                    i * self.rx_buffer_size : (i + 1) * self.rx_buffer_size
-                ]
-            x = sigi
 
         if self._rx_output_type == "raw":
-            for c in range(stride):
-                sig.append(x[c::stride])
+            for i, _ in enumerate(self.rx_enabled_channels):
+                sig.append(x[i * self.rx_buffer_size : (i + 1) * self.rx_buffer_size])
         elif self._rx_output_type == "SI":
-            rx_scale = []
-            rx_offset = []
-            for i in self.rx_enabled_channels:
+            for c, i in enumerate(self.rx_enabled_channels):
                 v = self._rxadc.find_channel(self._rx_channel_names[i])
                 if "scale" in v.attrs:
                     scale = self._get_iio_attr(
@@ -375,12 +375,9 @@ class rx(rx_tx_common):
                     )
                 else:
                     offset = 0.0
-                rx_scale.append(scale)
-                rx_offset.append(offset)
 
-            for c in range(stride):
-                raw = x[c::stride]
-                sig.append(raw * rx_scale[c] + rx_offset[c])
+                raw = x[c * self.rx_buffer_size : (c + 1) * self.rx_buffer_size]
+                sig.append(raw * scale + offset)
         else:
             raise Exception("_rx_output_type undefined")
 
