@@ -78,6 +78,7 @@ class ad5686(context_manager, attribute):
             "ad5695r",
             "ad5696",
             "ad5696r",
+            "ad5732r",
         ]
 
         self._ctrl = None

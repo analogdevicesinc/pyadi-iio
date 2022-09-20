@@ -1,4 +1,4 @@
-# Copyright (C) 2022 Analog Devices, Inc.
+# Copyright (C) 2019 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,41 +31,33 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from adi.context_manager import context_manager
+from adi.rx_tx import rx
 import numpy as np
-from adi.ad9083 import ad9083
-from adi.adf4371 import adf4371
-from adi.adl5960 import adl5960
-from adi.admv8818 import admv8818
-from adi.adrf5720 import adrf5720
-from adi.gen_mux import genmux
-from adi.one_bit_adc_dac import one_bit_adc_dac
-from adi.ad9173 import ad9173
-from adi.ad5686 import ad5686
-from adi.ad4858 import ad4858
 
-class fmc_4p_vna(adrf5720, ad9083, admv8818, genmux, adf4371, adl5960, one_bit_adc_dac):
-    """ FMCVNA Scalable 4-port Vector Network Analyzer Board """
 
-    frontend = [0] * 8
+class ad4858(rx, context_manager):
 
-    def __init__(self, uri):
-        self.lo = adf4371(uri)
-        self.rfin_attenuator = adrf5720(uri, device_name="adrf5720-rfin")
-        self.lo_attenuator = adrf5720(uri, device_name="adrf5720-lo")
-        self.bpf = admv8818(uri, device_name="admv8818")
-        self.rfin_mux = genmux(uri, device_name="mux-rfin")
-        self.lo_mux = genmux(uri, device_name="mux-adf4371")
-        self.freq_src_sel_mux = genmux(uri, device_name="mux-freq-src-sel")
-        self.rfin_freq_src_sel_mux = genmux(uri, device_name="mux-rfin-freq-src-sel")
-        self.hsdac = ad9173(uri)
-        self.ad4858 = ad4858(uri)
-        self.ad5732 = ad5686(uri)
+    """ AD4858 High-Speed ADC """
 
-        for i in range(1, 5):
-            self.frontend[i - 1] = adl5960(uri, device_name=f"adl5960-{i}")
+    _complex_data = False
+    _device_name = ""
+    _rx_channel_names = []
+    _data_type = "voltage"
+    _rx_data_type = np.int32
+    _rx_data_si_type = np.int32
+    _rx_stack_interleaved = True
 
-        ad9083.__init__(self, uri)
-        one_bit_adc_dac.__init__(self, uri)
+    def __init__(self, uri=""):
 
-        self._rxadc.set_kernel_buffers_count(1)
-        self.ad4858._rxadc.set_kernel_buffers_count(1)
+        context_manager.__init__(self, uri, self._device_name)
+
+        self._rxadc = self._ctx.find_device("ad4858")
+        self._ctrl = self._rxadc
+
+        for ch in self._ctrl.channels:
+            name = ch._id
+            self._rx_channel_names.append(name)
+
+        rx.__init__(self)
+

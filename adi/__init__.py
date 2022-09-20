@@ -103,6 +103,7 @@ from adi.max31855 import max31855
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.tdd import tdd
+from adi.ad4858 import ad4858
 
 
 try:
