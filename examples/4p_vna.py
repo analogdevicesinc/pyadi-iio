@@ -151,6 +151,16 @@ vna.lo.rfaux8_vco_output_enable = False
 vna.freq_src_sel_mux.select = "rf_dac0_direct"
 vna.rfin_freq_src_sel_mux.select = "rf_dac1_direct"
 
+# vna.hsdac.modulation_switch_mode
+#      0 = Mode 0
+#      1 = Mode 1
+#      2 = Mode 2
+#      3 = Mode 3
+#      4 = Mode 3A (complex Mode)
+#      5 = Mode 3B (complex Mode)
+
+vna.hsdac.modulation_switch_mode = 0
+
 vna.hsdac.channel0_nco_frequency = 1
 vna.hsdac.channel1_nco_frequency = 1
 

@@ -141,5 +141,15 @@ class ad9173(attribute, context_manager):
     @main1_nco_frequency.setter
     def main1_nco_frequency(self, value):
         """Get/Set the frequency of the main1 NCO"""
-        self._set_iio_attr("altvoltage1", "main_nco_frequency", True, value, self._ctrl)#
+        self._set_iio_attr("altvoltage1", "main_nco_frequency", True, value, self._ctrl)
+
+    @property
+    def modulation_switch_mode(self):
+        """Get/Set the Modulation switch mode"""
+        return self._get_iio_attr("altvoltage0", "modulation_switch", True, self._ctrl)
+
+    @modulation_switch_mode.setter
+    def modulation_switch_mode(self, value):
+        """Get/Set the Modulation switch mode"""
+        self._set_iio_attr("altvoltage0", "modulation_switch", True, value, self._ctrl)
 
