@@ -57,6 +57,7 @@ class ad717x(rx, context_manager):
             "ad4112",
             "ad4114",
             "ad4115",
+            "ad4116",
             "ad7172-2",
             "ad7172-4",
             "ad7173-8",
