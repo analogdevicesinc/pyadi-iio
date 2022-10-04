@@ -78,6 +78,7 @@ Supported Devices
    adi.jesd
    adi.lm75
    adi.ltc2314_14
+   adi.ltc2499
    adi.ltc2983
    adi.max11205
    adi.max31855
