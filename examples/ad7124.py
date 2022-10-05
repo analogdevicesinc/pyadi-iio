@@ -30,7 +30,7 @@
 # BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+'''
 import adi
 import matplotlib.pyplot as plt
 import numpy as np
@@ -53,3 +53,43 @@ raw = ad7124.channel[0].raw
 data = ad7124.rx()
 
 print(data)
+'''
+import adi
+import matplotlib.pyplot as plt
+import numpy as np
+from struct import unpack
+import sys
+import time
+
+rate = 9600        # readings per second
+samples = 100    # how many ADC readings at a time
+
+hardcoded_ip = "ip:10.48.65.159" # Default to localhost if no argument given
+my_ip = sys.argv[1] if len(sys.argv) >= 2 else hardcoded_ip
+
+my_ad7124 = adi.ad7124(uri=my_ip)
+ad_channel = 0
+
+sc = my_ad7124.scale_available
+my_ad7124.channel[ad_channel].scale = sc[-1]  # get highest range
+scale = my_ad7124.channel[ad_channel].scale
+#my_ad7124.rx_output_type = "SI"
+
+my_ad7124.sample_rate = rate  # sets sample rate for all channels
+my_ad7124.rx_enabled_channels = [ad_channel]
+my_ad7124.rx_buffer_size = samples
+my_ad7124._ctx.set_timeout(100000)
+
+plt.ion()
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+while ( True ):
+    data = my_ad7124.rx()
+
+    plt.cla()     # clear any previous data
+    line1, = ax.plot(data)
+    fig.canvas.draw()
+    fig.canvas.flush_events()
+
+del my_ad7124 # Clean up
