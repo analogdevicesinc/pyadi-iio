@@ -45,9 +45,6 @@ class ad7124(rx, context_manager):
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
-    _rx_data_type = ">u4"
-    _rx_mask = 0xFFFFFF
-    _rx_shift = 0
 
     def __init__(self, uri="", device_index=0):
 
@@ -71,7 +68,7 @@ class ad7124(rx, context_manager):
         # dynamically get channels and sorting them after the index of the first voltage channel
         self._ctrl.channels.sort(key=lambda x: int(x.id[7 : x.id.find("-")]))
 
-        for ch in self._ctrl._channels:
+        for ch in self._ctrl.channels:
             name = ch._id
             self._rx_channel_names.append(name)
             self.channel.append(self._channel(self._ctrl, name))
