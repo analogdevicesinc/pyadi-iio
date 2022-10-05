@@ -326,21 +326,22 @@ class rx(rx_tx_common):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        data = bytearray()
+        data = []
         for ec in self.rx_enabled_channels:
             chan = self._rxadc.find_channel(self._rx_channel_names[ec])
-            data.extend(chan.read(self.__rxbuf))
+            d = chan.read(self.__rxbuf) # chan.read handles endianness and shifting
+
+            df = chan.data_format
+            fmt = "i" if df.is_signed is True else "u"
+            fmt += str(df.length // 8) # create format string -
+
+            data.extend(np.frombuffer(d, dtype=fmt))
+
+        # Data at this point is channel interleaved (not sample interleaved)
+        x = data
 
         if isinstance(self._rx_data_type, list):
             return self.__multi_type_rx(data)
-
-        x = np.frombuffer(data, dtype=self._rx_data_type)
-        if self._rx_mask != 0:
-            x = np.bitwise_and(x, self._rx_mask)
-        if self._rx_shift > 0:
-            x = np.right_shift(x, self._rx_shift)
-        elif self._rx_shift < 0:
-            x = np.left_shift(x, -(self._rx_shift))
 
         sig = []
         stride = len(self.rx_enabled_channels)
