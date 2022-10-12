@@ -29,6 +29,7 @@ Supported Devices
    adi.ad9136
    adi.ad9144
    adi.ad9152
+   adi.ad9162
    adi.ad9166
    adi.ad9172
    adi.ad9250
@@ -43,12 +44,14 @@ Supported Devices
    adi.ada4961
    adi.adar1000
    adi.adf4159
+   adi.adf4355
    adi.adf4371
    adi.adf5610
    adi.adg2128
    adi.adis16460
    adi.adis16495
    adi.adis16507
+   adi.adl5240
    adi.adl5960
    adi.admv8818
    adi.adpd1080
