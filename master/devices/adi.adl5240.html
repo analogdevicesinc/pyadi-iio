@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad9144" href="adi.ad9144.html" /><link rel="prev" title="ad9094" href="adi.ad9094.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adl5960" href="adi.adl5960.html" /><link rel="prev" title="adis16507" href="adi.adis16507.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>ad9136 - Analog Devices Hardware Python Interfaces 0.0.14</title>
+        <title>adi.adl5240 module - Analog Devices Hardware Python Interfaces 0.0.14</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -194,7 +194,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9162.html">adi.ad9162 module</a></li>
@@ -219,7 +219,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16495.html">adis16495</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adl5240.html">adi.adl5240 module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd1080.html">adpd1080</a></li>
@@ -299,22 +299,17 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ad9136">
-<span id="ad9136"></span><h1>ad9136<a class="headerlink" href="#module-adi.ad9136" title="Permalink to this headline"></a></h1>
+          <section id="module-adi.adl5240">
+<span id="adi-adl5240-module"></span><h1>adi.adl5240 module<a class="headerlink" href="#module-adi.adl5240" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad9136.ad9136">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9136.</span></span><span class="sig-name descname"><span class="pre">ad9136</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9136.ad9136" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.rx_tx.tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code>, <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start" title="adi.sync_start.sync_start"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.sync_start.sync_start</span></code></a></p>
-<p>AD9136 High-Speed DAC</p>
+<dt class="sig sig-object py" id="adi.adl5240.adl5240">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adl5240.</span></span><span class="sig-name descname"><span class="pre">adl5240</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adl5240.adl5240" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<p>ADL5240 100 MHz TO 4000 MHz RF/IF Digitally Controlled VGA</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9136.ad9136.jesd204_statuses">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_statuses</span></span><a class="headerlink" href="#adi.ad9136.ad9136.jesd204_statuses" title="Permalink to this definition"></a></dt>
-<dd><p>jesd204_statuses: JESD204 low-level driver data.</p>
-</dd></dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9136.ad9136.sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad9136.ad9136.sample_rate" title="Permalink to this definition"></a></dt>
-<dd><p>sample_rate: Sample rate RX and TX paths in samples per second.</p>
+<dt class="sig sig-object py" id="adi.adl5240.adl5240.hardwaregain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hardwaregain</span></span><a class="headerlink" href="#adi.adl5240.adl5240.hardwaregain" title="Permalink to this definition"></a></dt>
+<dd><p>hardwaregain: Attenuation applied to TX path</p>
 </dd></dl>
 </dd></dl>
 </section>
@@ -324,23 +319,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.ad9144.html">
+          <a class="next-page" href="adi.adl5960.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ad9144</div>
+                <div class="title">adl5960</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ad9094.html">
+          <a class="prev-page" href="adi.adis16507.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">ad9094</div>
+                <div class="title">adis16507</div>
                 
               </div>
             </a>
