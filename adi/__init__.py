@@ -51,6 +51,7 @@ from adi.ad9094 import ad9094
 from adi.ad9136 import ad9136
 from adi.ad9144 import ad9144
 from adi.ad9152 import ad9152
+from adi.ad9162 import ad9162
 from adi.ad9166 import ad9166
 from adi.ad9172 import ad9172
 from adi.ad9250 import ad9250
@@ -63,12 +64,14 @@ from adi.ad9680 import ad9680
 from adi.ada4961 import ada4961
 from adi.adar1000 import adar1000, adar1000_array
 from adi.adf4159 import adf4159
+from adi.adf4355 import adf4355
 from adi.adf4371 import adf4371
 from adi.adf5610 import adf5610
 from adi.adg2128 import adg2128
 from adi.adis16460 import adis16460
 from adi.adis16495 import adis16495
 from adi.adis16507 import adis16507
+from adi.adl5240 import adl5240
 from adi.adl5960 import adl5960
 from adi.admv8818 import admv8818
 from adi.adpd188 import adpd188
