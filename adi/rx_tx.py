@@ -284,86 +284,53 @@ class rx(rx_tx_common):
 
         return x
 
-    def __rx_complex(self):
-        if not self.__rxbuf:
-            self._rx_init_channels()
-        self.__rxbuf.refill()
-        data = bytearray()
-        if self._rx_needs_type_conversion:
-            for ec in self.rx_enabled_channels:
-                ec_i = ec * 2
-                ec_q = ec * 2 + 1
-                for c in [ec_i, ec_q]:
-                    chan = self._rxadc.find_channel(self._rx_channel_names[c])
-                    data.extend(chan.read(self.__rxbuf))
-        else:
-            data = self.__rxbuf.read()
-
-        x = np.frombuffer(data, dtype=self._rx_data_type)
-        indx = 0
-        sig = []
-        stride = len(self.rx_enabled_channels) * 2
-        for _ in range(stride // 2):
-            sig.append(x[indx::stride] + 1j * x[indx + 1 :: stride])
-            indx = indx + 2
-        # Don't return list if a single channel
-        if indx == 2:
-            return sig[0]
-        return sig
-
-    def __multi_type_rx(self, data):
-        """Process buffers with multiple data types"""
-        # Process each channel at a time
-        channel_bytes = []
-        curated_rx_type = []
-        for en_ch in self.rx_enabled_channels:
-            channel_bytes += [np.dtype(self._rx_data_type[en_ch]).itemsize]
-            curated_rx_type += [self._rx_data_type[en_ch]]
-        offset = 0
-        stride = sum(channel_bytes)
-        sig = []
-        for indx, chan_bytes in enumerate(channel_bytes):
-            bar = bytearray()
-            for bytesI in range(offset, len(data), stride):
-                bar.extend(data[bytesI : bytesI + chan_bytes])
-
-            sig.append(np.frombuffer(bar, dtype=curated_rx_type[indx]))
-            offset += chan_bytes
-        return sig
-
-    def __rx_non_complex(self):
+    def __rx_buffered_data(self):
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
         data = []
         for ec in self.rx_enabled_channels:
             chan = self._rxadc.find_channel(self._rx_channel_names[ec])
-            d = chan.read(self.__rxbuf) # chan.read handles endianness and shifting
-
+            d = chan.read(self.__rxbuf)  # chan.read handles endianness and shifting
             df = chan.data_format
             fmt = "i" if df.is_signed is True else "u"
-            fmt += str(df.length // 8) # create format string -
-
+            fmt += str(df.length // 8)  # create format string -
             data.extend(np.frombuffer(d, dtype=fmt))
 
         # Data at this point is channel interleaved (not sample interleaved)
         x = data
 
-        if isinstance(self._rx_data_type, list):
-            return self.__multi_type_rx(data)
-
-        sig = []
         stride = len(self.rx_enabled_channels)
-
         if self._rx_stack_interleaved:
             # Convert data to sample interleaved from channel interleaved
             sigi = np.empty((x.size,), dtype=x.dtype)
             for i, _ in enumerate(self.rx_enabled_channels):
                 sigi[i::stride] = x[
-                    i * self.rx_buffer_size : (i + 1) * self.rx_buffer_size
-                ]
+                                  i * self.rx_buffer_size: (i + 1) * self.rx_buffer_size
+                                  ]
             x = sigi
+        return x
 
+    def __rx_complex(self):
+        x = self.__rx_buffered_data()
+        indx = 0
+        sig = []
+        stride = len(self.rx_enabled_channels) * 2
+        for _ in range(stride // 2):
+            cplx = np.zeros(len(x) // stride, dtype=complex)
+            np.multiply(x[indx + 1::stride], 1j, cplx)
+            np.add(x[indx::stride], cplx, cplx)
+            sig.append(cplx)
+            indx = indx + 2
+        # Don't return list if a single channel
+        if indx == 2:
+            return sig[0]
+        return sig
+
+    def __rx_non_complex(self):
+        x = self.__rx_buffered_data()
+        sig = []
+        stride = len(self.rx_enabled_channels)
         if self._rx_output_type == "raw":
             for c in range(stride):
                 sig.append(x[c::stride])
