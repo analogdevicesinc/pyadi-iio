@@ -54,12 +54,10 @@ def reset_buffer(func):
 class cn0540(rx, context_manager):
     """CN0540 CBM DAQ Board"""
 
-    _rx_data_type = np.int32
     _rx_data_si_type = float
     _complex_data = False
     _rx_channel_names = ["voltage0"]
     _device_name = ""
-    _rx_shift = 8
     _fda_mode_options = ["low-power", "full-power"]
     _dac_buffer_gain = 1.22
     _g = 0.3

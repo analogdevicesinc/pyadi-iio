@@ -49,7 +49,6 @@ class adis16507(rx, context_manager):
         "accel_z",
     ]
     _device_name = ""
-    _rx_data_type = ">i4"
     _rx_data_si_type = float
 
     def __init__(
