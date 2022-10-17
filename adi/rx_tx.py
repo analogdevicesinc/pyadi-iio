@@ -212,6 +212,32 @@ class rx(rx_tx_common):
                 v.enabled = False
         self._rxadc = []
 
+    def __get_rx_channel_scales(self):
+        rx_scale = []
+        for i in self.rx_enabled_channels:
+            v = self._rxadc.find_channel(self._rx_channel_names[i])
+            if "scale" in v.attrs:
+                scale = self._get_iio_attr(
+                    self._rx_channel_names[i], "scale", False
+                )
+            else:
+                scale = 1.0
+            rx_scale.append(scale)
+        return rx_scale
+
+    def __get_rx_channel_offsets(self):
+        rx_offset = []
+        for i in self.rx_enabled_channels:
+            v = self._rxadc.find_channel(self._rx_channel_names[i])
+            if "offset" in v.attrs:
+                offset = self._get_iio_attr(
+                    self._rx_channel_names[i], "offset", False
+                )
+            else:
+                offset = 0.0
+            rx_offset.append(offset)
+        return rx_offset
+
     def _rx_init_channels(self):
         for m in self._rx_channel_names:
             v = self._rxadc.find_channel(m)
@@ -243,25 +269,8 @@ class rx(rx_tx_common):
 
         # Get scalers first
         if self._rx_output_type == "SI":
-            rx_scale = []
-            rx_offset = []
-            for i in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[i])
-                if "scale" in v.attrs:
-                    scale = self._get_iio_attr(
-                        self._rx_channel_names[i], "scale", False
-                    )
-                else:
-                    scale = 1.0
-
-                if "offset" in v.attrs:
-                    offset = self._get_iio_attr(
-                        self._rx_channel_names[i], "offset", False
-                    )
-                else:
-                    offset = 0.0
-                rx_scale.append(scale)
-                rx_offset.append(offset)
+            rx_scale = self.__get_rx_channel_scales()
+            rx_offset = self.__get_rx_channel_offsets()
 
         for samp in range(self.rx_buffer_size):
             for i, m in enumerate(self.rx_enabled_channels):
@@ -359,25 +368,8 @@ class rx(rx_tx_common):
             for c in range(stride):
                 sig.append(x[c::stride])
         elif self._rx_output_type == "SI":
-            rx_scale = []
-            rx_offset = []
-            for i in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[i])
-                if "scale" in v.attrs:
-                    scale = self._get_iio_attr(
-                        self._rx_channel_names[i], "scale", False
-                    )
-                else:
-                    scale = 1.0
-
-                if "offset" in v.attrs:
-                    offset = self._get_iio_attr(
-                        self._rx_channel_names[i], "offset", False
-                    )
-                else:
-                    offset = 0.0
-                rx_scale.append(scale)
-                rx_offset.append(offset)
+            rx_scale = self.__get_rx_channel_scales()
+            rx_offset = self.__get_rx_channel_offsets()
 
             for c in range(stride):
                 raw = x[c::stride]
