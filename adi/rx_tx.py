@@ -63,7 +63,6 @@ class rx(rx_tx_common):
     _complex_data = False
     _rx_data_type = np.int16
     _rx_data_si_type = np.int16
-    _rx_mask = 0x0000
     _rx_shift = 0
     __rx_buffer_size = 1024
     __rx_enabled_channels = [0]

@@ -42,7 +42,6 @@ class ad5686(context_manager, attribute):
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
-    _rx_data_type = np.int32
 
     def __init__(self, uri="", device_index=0):
         context_manager.__init__(self, uri, self._device_name)
