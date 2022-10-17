@@ -51,33 +51,6 @@ class phy(attribute):
 
 class rx_tx_common(attribute):
     """Common functions for RX and TX"""
-
-    _rx_needs_type_conversion = False
-    _tx_needs_type_conversion = False
-
-    def _needs_type_conversion(
-        self, rxtx, channel_names: List[str], output: bool
-    ) -> None:
-        """Check device to see if they need type conversion to local format."""
-        for chan in channel_names:
-            df = rxtx.find_channel(chan, output).data_format
-            if df.shift != 0 or df.with_scale or df.is_be:
-                return True
-        return False
-
-    def _check_type_conversion(self):
-        """Check channels to see if they need type conversion to local format
-        This will set _rx_needs_type_conversion and _tx_needs_type_conversion.
-        """
-        if hasattr(self, "_rxadc") and self._rxadc:
-            self._rx_needs_type_conversion = self._needs_type_conversion(
-                self._rxadc, self._rx_channel_names, False
-            )
-        if hasattr(self, "_txdac") and self._txdac:
-            self._tx_needs_type_conversion = self._needs_type_conversion(
-                self._txdac, self._tx_channel_names, True
-            )
-
     def _annotate(self, data, cnames: List[str], echans: List[int]):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
@@ -109,7 +82,6 @@ class rx(rx_tx_common):
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
-        self._check_type_conversion()
 
     @property
     def rx_channel_names(self) -> List[str]:
@@ -170,7 +142,7 @@ class rx(rx_tx_common):
         if not isinstance(value, list):
             raise Exception("rx_enabled_channels must be a list")
         if not all(isinstance(x, int) for x in value) and not all(
-            isinstance(x, str) for x in value
+                isinstance(x, str) for x in value
         ):
             raise Exception(
                 "rx_enabled_channels must be a list of integers or "
@@ -395,7 +367,6 @@ class tx(dds, rx_tx_common):
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
-        self._check_type_conversion()
 
     def __del__(self):
         self.__txbuf = []
@@ -452,7 +423,7 @@ class tx(dds, rx_tx_common):
         if not isinstance(value, list):
             raise Exception("tx_enabled_channels must be a list")
         if not all(isinstance(x, int) for x in value) and not all(
-            isinstance(x, str) for x in value
+                isinstance(x, str) for x in value
         ):
             raise Exception(
                 "tx_enabled_channels must be a list of integers or "
@@ -539,7 +510,7 @@ class tx(dds, rx_tx_common):
                 i = np.real(chan)
                 q = np.imag(chan)
                 data[indx::stride] = i.astype(int)
-                data[indx + 1 :: stride] = q.astype(int)
+                data[indx + 1:: stride] = q.astype(int)
                 indx = indx + 2
         else:
             if self._num_tx_channels_enabled == 1:
@@ -630,7 +601,7 @@ class shared_def(context_manager, metaclass=ABCMeta):
                 if key not in kws:
                     raise Exception(f"Invalid keyword argument. Valid are: {kws}")
                 if not isinstance(kwargs[key], iio.Context) and not isinstance(
-                    kwargs[key], str
+                        kwargs[key], str
                 ):
                     if key == "uri":
                         raise Exception(
@@ -646,7 +617,7 @@ class shared_def(context_manager, metaclass=ABCMeta):
 
     # def __init__(self, uri_ctx: Union[str, iio.Context] = None) -> None:
     def __init__(
-        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+            self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
 
         # Handle Older API and Newer APIs
@@ -705,7 +676,7 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
     __run_rx_post_init__ = True
 
     def __init__(
-        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+            self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
 
         shared_def.__init__(self, *args, **kwargs)
@@ -753,7 +724,7 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
     __run_tx_post_init__ = True
 
     def __init__(
-        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+            self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
 
         shared_def.__init__(self, *args, **kwargs)
@@ -787,9 +758,8 @@ class rx_tx_def(tx_def, rx_def):
     __run_tx_post_init__ = False
 
     def __init__(
-        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+            self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
-
         rx_def.__init__(self, *args, **kwargs)
         tx_def.__init__(self, *args, **kwargs)
 
