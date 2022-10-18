@@ -260,24 +260,34 @@ class rx(rx_tx_common):
             self._rx_init_channels()
         self.__rxbuf.refill()
         data = []
-        for ec in self.rx_enabled_channels:
-            chan = self._rxadc.find_channel(self._rx_channel_names[ec])
-            d = chan.read(self.__rxbuf)  # chan.read handles endianness and shifting
-            df = chan.data_format
+
+        iio_enabled_channels = []
+        if self._complex_data is True:
+            for m in self.rx_enabled_channels:
+                iio_enabled_channels.append(self._rxadc.find_channel(self._rx_channel_names[m * 2]))
+                iio_enabled_channels.append(self._rxadc.find_channel(self._rx_channel_names[(m * 2) + 1]))
+        else:
+            for m in self.rx_enabled_channels:
+                iio_enabled_channels.append(self._rxadc.find_channel(self._rx_channel_names[m]))
+
+        for ec in iio_enabled_channels:
+            #chan = self._rxadc.find_channel(self._rx_channel_names[ec])
+            d = ec.read(self.__rxbuf)  # chan.read handles endianness and shifting
+            df = ec.data_format
             fmt = "i" if df.is_signed is True else "u"
             fmt += str(df.length // 8)  # create format string -
             data.extend(np.frombuffer(d, dtype=fmt))
 
         # Data at this point is channel interleaved (not sample interleaved)
-        x = data
+        x = np.array(data)
 
-        stride = len(self.rx_enabled_channels)
+        stride = len(iio_enabled_channels)
 
         # only makes sense when multiple channels are enabled
         if self._rx_stack_interleaved and stride > 1:
             # Convert data to sample interleaved from channel interleaved
             sigi = np.empty((x.size,), dtype=x.dtype)
-            for i, _ in enumerate(self.rx_enabled_channels):
+            for i, _ in enumerate(iio_enabled_channels):
                 sigi[i::stride] = x[
                                   i * self.rx_buffer_size: (i + 1) * self.rx_buffer_size
                                   ]
