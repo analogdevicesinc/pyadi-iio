@@ -34,12 +34,13 @@
 import time
 
 import adi
+import cmath
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 
 # Create radio
-sdr = adi.ad9361(uri="ip:analog.local")
+sdr = adi.ad9361(uri="ip:192.168.2.1")
 
 # Configure properties
 sdr.rx_rf_bandwidth = 4000000
@@ -68,17 +69,26 @@ q = np.sin(2 * np.pi * t * fc) * 2 ** 14
 iq = i + 1j * q
 
 # Send data
-sdr.tx(iq)
+# sdr.tx(iq)
 
 # Collect data
-for r in range(20):
+for r in range(1):
     x = sdr.rx()
-    f, Pxx_den = signal.periodogram(x, fs)
-    plt.clf()
-    plt.semilogy(f, Pxx_den)
-    plt.ylim([1e-7, 1e2])
-    plt.xlabel("frequency [Hz]")
-    plt.ylabel("PSD [V**2/Hz]")
+    # f, Pxx_den = signal.periodogram(x, fs)
+    # plt.clf()
+    # plt.semilogy(f, Pxx_den)
+    # plt.ylim([1e-7, 1e2])
+    # plt.xlabel("frequency [Hz]")
+    # plt.ylabel("PSD [V**2/Hz]")
+
+    fig, ax = plt.subplots(2, 1, figsize=(8, 4), sharex=True)
+    ax[0].plot(t, np.real(x), lw=1.5)
+    ax[0].plot(t, np.imag(x), lw=0.5, color='orange')
+    ax[0].set_title('real (cosine)', color='C0')
+
+    ax[1].plot(t, np.imag(x), color='orange', lw=1.5)
+    ax[1].plot(t, np.real(x), lw=0.5, color='C0')
+    ax[1].set_title('imaginary (sine)', color='orange')
     plt.draw()
     plt.pause(0.05)
     time.sleep(0.1)

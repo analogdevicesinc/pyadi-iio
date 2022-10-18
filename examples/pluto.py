@@ -39,7 +39,7 @@ import numpy as np
 from scipy import signal
 
 # Create radio
-sdr = adi.Pluto()
+sdr = adi.Pluto("ip:192.168.2.1")
 
 # Configure properties
 sdr.rx_rf_bandwidth = 4000000
