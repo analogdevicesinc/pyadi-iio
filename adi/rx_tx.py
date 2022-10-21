@@ -270,28 +270,30 @@ class rx(rx_tx_common):
             for m in self.rx_enabled_channels:
                 iio_enabled_channels.append(self._rxadc.find_channel(self._rx_channel_names[m]))
 
-        for ec in iio_enabled_channels:
-            #chan = self._rxadc.find_channel(self._rx_channel_names[ec])
-            d = ec.read(self.__rxbuf)  # chan.read handles endianness and shifting
-            df = ec.data_format
-            fmt = "i" if df.is_signed is True else "u"
-            fmt += str(df.length // 8)  # create format string -
-            data.extend(np.frombuffer(d, dtype=fmt))
+        iio_enabled_channels.sort(key=lambda ch: ch.index) # sort channels by index
 
-        # Data at this point is channel interleaved (not sample interleaved)
-        x = np.array(data)
+        data = self.__rxbuf.read() # read buffer from iio
+        # initialize and build dtype tuple for np.frombuffer
+        npdtype = ()
+        for ec in iio_enabled_channels:
+            df = ec.data_format
+            fmt = ">" if df.is_be is True else "<"
+            fmt += "i" if df.is_signed is True else "u"
+            fmt += str(df.length // 8)  # create format string -
+            npdtype = (*npdtype, fmt)
+        x = np.frombuffer(data, dtype=npdtype)
 
         stride = len(iio_enabled_channels)
+        for idx, ec in enumerate(iio_enabled_channels):
+            df = ec.data_format
+            x[idx::stride] = np.right_shift(x[idx::stride], df.shift)
+            x[idx::stride] = np.bitwise_and(x[idx::stride], (1 << df.length) - 1)
 
-        # only makes sense when multiple channels are enabled
-        if self._rx_stack_interleaved and stride > 1:
-            # Convert data to sample interleaved from channel interleaved
-            sigi = np.empty((x.size,), dtype=x.dtype)
-            for i, _ in enumerate(iio_enabled_channels):
-                sigi[i::stride] = x[
-                                  i * self.rx_buffer_size: (i + 1) * self.rx_buffer_size
-                                  ]
-            x = sigi
+        if not self._rx_stack_interleaved and stride>1:
+            stacked_data = []
+            for idx, ec in enumerate(iio_enabled_channels):
+                stacked_data.extend(x[idx::stride])
+            x = stacked_data
         return x
 
     def __rx_complex(self):
