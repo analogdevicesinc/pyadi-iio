@@ -51,6 +51,7 @@ class phy(attribute):
 
 class rx_tx_common(attribute):
     """Common functions for RX and TX"""
+
     def _annotate(self, data, cnames: List[str], echans: List[int]):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
@@ -141,7 +142,7 @@ class rx(rx_tx_common):
         if not isinstance(value, list):
             raise Exception("rx_enabled_channels must be a list")
         if not all(isinstance(x, int) for x in value) and not all(
-                isinstance(x, str) for x in value
+            isinstance(x, str) for x in value
         ):
             raise Exception(
                 "rx_enabled_channels must be a list of integers or "
@@ -188,9 +189,7 @@ class rx(rx_tx_common):
         for i in self.rx_enabled_channels:
             v = self._rxadc.find_channel(self._rx_channel_names[i])
             if "scale" in v.attrs:
-                scale = self._get_iio_attr(
-                    self._rx_channel_names[i], "scale", False
-                )
+                scale = self._get_iio_attr(self._rx_channel_names[i], "scale", False)
             else:
                 scale = 1.0
             rx_scale.append(scale)
@@ -201,9 +200,7 @@ class rx(rx_tx_common):
         for i in self.rx_enabled_channels:
             v = self._rxadc.find_channel(self._rx_channel_names[i])
             if "offset" in v.attrs:
-                offset = self._get_iio_attr(
-                    self._rx_channel_names[i], "offset", False
-                )
+                offset = self._get_iio_attr(self._rx_channel_names[i], "offset", False)
             else:
                 offset = 0.0
             rx_offset.append(offset)
@@ -255,84 +252,59 @@ class rx(rx_tx_common):
 
         return x
 
-    def __rx_buffered_data(self):
+    def __rx_buffered_data(self) -> Union[List[np.ndarray], np.ndarray]:
+        """__rx_buffered_data: Read data from RX buffer
+
+        Returns:
+            List of numpy arrays containing the data from the RX buffer that are
+            channel interleaved
+        """
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        data = []
 
-        iio_enabled_channels = []
-        if self._complex_data is True:
+        data_channel_interleaved = []
+        ecn = []
+        if self._complex_data:
             for m in self.rx_enabled_channels:
-                iio_enabled_channels.append(self._rxadc.find_channel(self._rx_channel_names[m * 2]))
-                iio_enabled_channels.append(self._rxadc.find_channel(self._rx_channel_names[(m * 2) + 1]))
+                ecn.extend(
+                    (self._rx_channel_names[m * 2], self._rx_channel_names[m * 2 + 1])
+                )
         else:
-            for m in self.rx_enabled_channels:
-                iio_enabled_channels.append(self._rxadc.find_channel(self._rx_channel_names[m]))
+            ecn = [self._rx_channel_names[m] for m in self.rx_enabled_channels]
 
-        iio_enabled_channels.sort(key=lambda ch: ch.index) # sort channels by index
+        for name in ecn:
+            chan = self._rxadc.find_channel(name)
+            ba = chan.read(self.__rxbuf)  # Do local type conversion
+            # create format strings
+            df = chan.data_format
+            fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
+            data_channel_interleaved.append(np.frombuffer(ba, dtype=fmt))
 
-        data = self.__rxbuf.read() # read buffer from iio
-        # initialize and build dtype tuple for np.frombuffer
-        npdtype = ()
-        for ec in iio_enabled_channels:
-            df = ec.data_format
-            fmt = ">" if df.is_be is True else "<"
-            fmt += "i" if df.is_signed is True else "u"
-            fmt += str(df.length // 8)  # create format string -
-            npdtype = (*npdtype, fmt)
-        x = np.frombuffer(data, dtype=npdtype)
-
-        stride = len(iio_enabled_channels)
-        for idx, ec in enumerate(iio_enabled_channels):
-            df = ec.data_format
-            x[idx::stride] = np.right_shift(x[idx::stride], df.shift)
-            x[idx::stride] = np.bitwise_and(x[idx::stride], (1 << df.length) - 1)
-
-        if not self._rx_stack_interleaved and stride>1:
-            stacked_data = []
-            for idx, ec in enumerate(iio_enabled_channels):
-                stacked_data.extend(x[idx::stride])
-            x = stacked_data
-        return x
+        return data_channel_interleaved
 
     def __rx_complex(self):
         x = self.__rx_buffered_data()
-        indx = 0
-        sig = []
-        stride = len(self.rx_enabled_channels) * 2
-        for _ in range(stride // 2):
-            cplx = np.zeros(len(x) // stride, dtype=complex)
-            np.multiply(x[indx + 1::stride], 1j, cplx)
-            np.add(x[indx::stride], cplx, cplx)
-            sig.append(cplx)
-            indx = indx + 2
+        if len(x) % 2 != 0:
+            raise Exception(
+                "Complex data must have an even number of component channels"
+            )
+        out = [x[i] + 1j * x[i + 1] for i in range(0, len(x), 2)]
         # Don't return list if a single channel
-        if indx == 2:
-            return sig[0]
-        return sig
+        return out[0] if len(x) == 2 else out
 
     def __rx_non_complex(self):
         x = self.__rx_buffered_data()
-        sig = []
-        stride = len(self.rx_enabled_channels)
-        if self._rx_output_type == "raw":
-            for c in range(stride):
-                sig.append(x[c::stride])
-        elif self._rx_output_type == "SI":
+        if self._rx_output_type == "SI":
             rx_scale = self.__get_rx_channel_scales()
             rx_offset = self.__get_rx_channel_offsets()
-
-            for c in range(stride):
-                raw = x[c::stride]
-                sig.append(raw * rx_scale[c] + rx_offset[c])
-        else:
+            x = x if isinstance(x, list) else [x]
+            x = [rx_scale[i] * x[i] + rx_offset[i] for i in range(len(x))]
+        elif self._rx_output_type != "raw":
             raise Exception("_rx_output_type undefined")
 
         # Don't return list if a single channel
-        if len(self.rx_enabled_channels) == 1:
-            return sig[0]
-        return sig
+        return x[0] if len(self.rx_enabled_channels) == 1 else x
 
     def rx(self):
         """Receive data from hardware buffers for each channel index in
@@ -434,7 +406,7 @@ class tx(dds, rx_tx_common):
         if not isinstance(value, list):
             raise Exception("tx_enabled_channels must be a list")
         if not all(isinstance(x, int) for x in value) and not all(
-                isinstance(x, str) for x in value
+            isinstance(x, str) for x in value
         ):
             raise Exception(
                 "tx_enabled_channels must be a list of integers or "
@@ -521,7 +493,7 @@ class tx(dds, rx_tx_common):
                 i = np.real(chan)
                 q = np.imag(chan)
                 data[indx::stride] = i.astype(int)
-                data[indx + 1:: stride] = q.astype(int)
+                data[indx + 1 :: stride] = q.astype(int)
                 indx = indx + 2
         else:
             if self._num_tx_channels_enabled == 1:
@@ -612,7 +584,7 @@ class shared_def(context_manager, metaclass=ABCMeta):
                 if key not in kws:
                     raise Exception(f"Invalid keyword argument. Valid are: {kws}")
                 if not isinstance(kwargs[key], iio.Context) and not isinstance(
-                        kwargs[key], str
+                    kwargs[key], str
                 ):
                     if key == "uri":
                         raise Exception(
@@ -628,7 +600,7 @@ class shared_def(context_manager, metaclass=ABCMeta):
 
     # def __init__(self, uri_ctx: Union[str, iio.Context] = None) -> None:
     def __init__(
-            self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
 
         # Handle Older API and Newer APIs
@@ -687,7 +659,7 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
     __run_rx_post_init__ = True
 
     def __init__(
-            self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
 
         shared_def.__init__(self, *args, **kwargs)
@@ -735,7 +707,7 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
     __run_tx_post_init__ = True
 
     def __init__(
-            self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
 
         shared_def.__init__(self, *args, **kwargs)
@@ -769,7 +741,7 @@ class rx_tx_def(tx_def, rx_def):
     __run_tx_post_init__ = False
 
     def __init__(
-            self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
         rx_def.__init__(self, *args, **kwargs)
         tx_def.__init__(self, *args, **kwargs)
