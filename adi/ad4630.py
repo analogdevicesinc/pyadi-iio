@@ -58,7 +58,6 @@ class ad4630(rx, context_manager, attribute):
     _data_type = "voltage"
     _device_name = ""
     _rx_channel_names = []
-    _rx_data_type = np.uint32
 
     """ Default part to initialize is ad4630-24. If you don't hardware test fails"""
 

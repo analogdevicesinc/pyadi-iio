@@ -40,7 +40,6 @@ from adi.sync_start import sync_start
 class ad9094(sync_start, rx, context_manager):
     """ AD9094 Quad ADC """
 
-    _rx_data_type = np.int8
     _complex_data = False
     _rx_channel_names = ["voltage0", "voltage1", "voltage2", "voltage3", "voltage4"]
     _device_name = ""

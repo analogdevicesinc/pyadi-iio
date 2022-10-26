@@ -47,7 +47,6 @@ class ad4110(rx, context_manager):
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
-    _rx_data_type = np.int32
 
     def __init__(self, uri="", device_name=""):
         """Constructor for AD4110 class."""

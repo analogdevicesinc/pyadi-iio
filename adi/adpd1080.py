@@ -41,7 +41,6 @@ class adpd1080(rx, context_manager):
 
     channel = []  # type: ignore
     _device_name = ""
-    _rx_data_type = ["<u4", "<u4", "<u4", "<u4", "<u4", "<u4", "<u4", "<u4"]
 
     def __init__(self, uri="", device_index=0):
         """ADPD1080 class constructor."""
