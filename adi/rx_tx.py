@@ -52,32 +52,6 @@ class phy(attribute):
 class rx_tx_common(attribute):
     """Common functions for RX and TX"""
 
-    _rx_needs_type_conversion = False
-    _tx_needs_type_conversion = False
-
-    def _needs_type_conversion(
-        self, rxtx, channel_names: List[str], output: bool
-    ) -> None:
-        """Check device to see if they need type conversion to local format."""
-        for chan in channel_names:
-            df = rxtx.find_channel(chan, output).data_format
-            if df.shift != 0 or df.with_scale or df.is_be:
-                return True
-        return False
-
-    def _check_type_conversion(self):
-        """Check channels to see if they need type conversion to local format
-        This will set _rx_needs_type_conversion and _tx_needs_type_conversion.
-        """
-        if hasattr(self, "_rxadc") and self._rxadc:
-            self._rx_needs_type_conversion = self._needs_type_conversion(
-                self._rxadc, self._rx_channel_names, False
-            )
-        if hasattr(self, "_txdac") and self._txdac:
-            self._tx_needs_type_conversion = self._needs_type_conversion(
-                self._txdac, self._tx_channel_names, True
-            )
-
     def _annotate(self, data, cnames: List[str], echans: List[int]):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
@@ -90,7 +64,6 @@ class rx(rx_tx_common):
     _complex_data = False
     _rx_data_type = np.int16
     _rx_data_si_type = np.int16
-    _rx_mask = 0x0000
     _rx_shift = 0
     __rx_buffer_size = 1024
     __rx_enabled_channels = [0]
@@ -98,7 +71,7 @@ class rx(rx_tx_common):
     __rxbuf = None
     _rx_unbuffered_data = False
     _rx_annotated = False
-    _rx_stack_interleaved = False  # Convert from channel to sample interleaved
+    _rx_stack_interleaved = True  # Convert from channel to sample interleaved
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -109,7 +82,6 @@ class rx(rx_tx_common):
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
-        self._check_type_conversion()
 
     @property
     def rx_channel_names(self) -> List[str]:
@@ -212,6 +184,28 @@ class rx(rx_tx_common):
                 v.enabled = False
         self._rxadc = []
 
+    def __get_rx_channel_scales(self):
+        rx_scale = []
+        for i in self.rx_enabled_channels:
+            v = self._rxadc.find_channel(self._rx_channel_names[i])
+            if "scale" in v.attrs:
+                scale = self._get_iio_attr(self._rx_channel_names[i], "scale", False)
+            else:
+                scale = 1.0
+            rx_scale.append(scale)
+        return rx_scale
+
+    def __get_rx_channel_offsets(self):
+        rx_offset = []
+        for i in self.rx_enabled_channels:
+            v = self._rxadc.find_channel(self._rx_channel_names[i])
+            if "offset" in v.attrs:
+                offset = self._get_iio_attr(self._rx_channel_names[i], "offset", False)
+            else:
+                offset = 0.0
+            rx_offset.append(offset)
+        return rx_offset
+
     def _rx_init_channels(self):
         for m in self._rx_channel_names:
             v = self._rxadc.find_channel(m)
@@ -243,25 +237,8 @@ class rx(rx_tx_common):
 
         # Get scalers first
         if self._rx_output_type == "SI":
-            rx_scale = []
-            rx_offset = []
-            for i in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[i])
-                if "scale" in v.attrs:
-                    scale = self._get_iio_attr(
-                        self._rx_channel_names[i], "scale", False
-                    )
-                else:
-                    scale = 1.0
-
-                if "offset" in v.attrs:
-                    offset = self._get_iio_attr(
-                        self._rx_channel_names[i], "offset", False
-                    )
-                else:
-                    offset = 0.0
-                rx_scale.append(scale)
-                rx_offset.append(offset)
+            rx_scale = self.__get_rx_channel_scales()
+            rx_offset = self.__get_rx_channel_offsets()
 
         for samp in range(self.rx_buffer_size):
             for i, m in enumerate(self.rx_enabled_channels):
@@ -275,119 +252,59 @@ class rx(rx_tx_common):
 
         return x
 
-    def __rx_complex(self):
+    def __rx_buffered_data(self) -> Union[List[np.ndarray], np.ndarray]:
+        """__rx_buffered_data: Read data from RX buffer
+
+        Returns:
+            List of numpy arrays containing the data from the RX buffer that are
+            channel interleaved
+        """
         if not self.__rxbuf:
             self._rx_init_channels()
         self.__rxbuf.refill()
-        data = bytearray()
-        if self._rx_needs_type_conversion:
-            for ec in self.rx_enabled_channels:
-                ec_i = ec * 2
-                ec_q = ec * 2 + 1
-                for c in [ec_i, ec_q]:
-                    chan = self._rxadc.find_channel(self._rx_channel_names[c])
-                    data.extend(chan.read(self.__rxbuf))
+
+        data_channel_interleaved = []
+        ecn = []
+        if self._complex_data:
+            for m in self.rx_enabled_channels:
+                ecn.extend(
+                    (self._rx_channel_names[m * 2], self._rx_channel_names[m * 2 + 1])
+                )
         else:
-            data = self.__rxbuf.read()
+            ecn = [self._rx_channel_names[m] for m in self.rx_enabled_channels]
 
-        x = np.frombuffer(data, dtype=self._rx_data_type)
-        indx = 0
-        sig = []
-        stride = len(self.rx_enabled_channels) * 2
-        for _ in range(stride // 2):
-            sig.append(x[indx::stride] + 1j * x[indx + 1 :: stride])
-            indx = indx + 2
+        for name in ecn:
+            chan = self._rxadc.find_channel(name)
+            bytearray_data = chan.read(self.__rxbuf)  # Do local type conversion
+            # create format strings
+            df = chan.data_format
+            fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
+            data_channel_interleaved.append(np.frombuffer(bytearray_data, dtype=fmt))
+
+        return data_channel_interleaved
+
+    def __rx_complex(self):
+        x = self.__rx_buffered_data()
+        if len(x) % 2 != 0:
+            raise Exception(
+                "Complex data must have an even number of component channels"
+            )
+        out = [x[i] + 1j * x[i + 1] for i in range(0, len(x), 2)]
         # Don't return list if a single channel
-        if indx == 2:
-            return sig[0]
-        return sig
-
-    def __multi_type_rx(self, data):
-        """Process buffers with multiple data types"""
-        # Process each channel at a time
-        channel_bytes = []
-        curated_rx_type = []
-        for en_ch in self.rx_enabled_channels:
-            channel_bytes += [np.dtype(self._rx_data_type[en_ch]).itemsize]
-            curated_rx_type += [self._rx_data_type[en_ch]]
-        offset = 0
-        stride = sum(channel_bytes)
-        sig = []
-        for indx, chan_bytes in enumerate(channel_bytes):
-            bar = bytearray()
-            for bytesI in range(offset, len(data), stride):
-                bar.extend(data[bytesI : bytesI + chan_bytes])
-
-            sig.append(np.frombuffer(bar, dtype=curated_rx_type[indx]))
-            offset += chan_bytes
-        return sig
+        return out[0] if len(x) == 2 else out
 
     def __rx_non_complex(self):
-        if not self.__rxbuf:
-            self._rx_init_channels()
-        self.__rxbuf.refill()
-        data = bytearray()
-        for ec in self.rx_enabled_channels:
-            chan = self._rxadc.find_channel(self._rx_channel_names[ec])
-            data.extend(chan.read(self.__rxbuf))
-
-        if isinstance(self._rx_data_type, list):
-            return self.__multi_type_rx(data)
-
-        x = np.frombuffer(data, dtype=self._rx_data_type)
-        if self._rx_mask != 0:
-            x = np.bitwise_and(x, self._rx_mask)
-        if self._rx_shift > 0:
-            x = np.right_shift(x, self._rx_shift)
-        elif self._rx_shift < 0:
-            x = np.left_shift(x, -(self._rx_shift))
-
-        sig = []
-        stride = len(self.rx_enabled_channels)
-
-        if self._rx_stack_interleaved:
-            # Convert data to sample interleaved from channel interleaved
-            sigi = np.empty((x.size,), dtype=x.dtype)
-            for i, _ in enumerate(self.rx_enabled_channels):
-                sigi[i::stride] = x[
-                    i * self.rx_buffer_size : (i + 1) * self.rx_buffer_size
-                ]
-            x = sigi
-
-        if self._rx_output_type == "raw":
-            for c in range(stride):
-                sig.append(x[c::stride])
-        elif self._rx_output_type == "SI":
-            rx_scale = []
-            rx_offset = []
-            for i in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[i])
-                if "scale" in v.attrs:
-                    scale = self._get_iio_attr(
-                        self._rx_channel_names[i], "scale", False
-                    )
-                else:
-                    scale = 1.0
-
-                if "offset" in v.attrs:
-                    offset = self._get_iio_attr(
-                        self._rx_channel_names[i], "offset", False
-                    )
-                else:
-                    offset = 0.0
-                rx_scale.append(scale)
-                rx_offset.append(offset)
-
-            for c in range(stride):
-                raw = x[c::stride]
-                sig.append(raw * rx_scale[c] + rx_offset[c])
-        else:
+        x = self.__rx_buffered_data()
+        if self._rx_output_type == "SI":
+            rx_scale = self.__get_rx_channel_scales()
+            rx_offset = self.__get_rx_channel_offsets()
+            x = x if isinstance(x, list) else [x]
+            x = [rx_scale[i] * x[i] + rx_offset[i] for i in range(len(x))]
+        elif self._rx_output_type != "raw":
             raise Exception("_rx_output_type undefined")
 
         # Don't return list if a single channel
-        if len(self.rx_enabled_channels) == 1:
-            return sig[0]
-        return sig
+        return x[0] if len(self.rx_enabled_channels) == 1 else x
 
     def rx(self):
         """Receive data from hardware buffers for each channel index in
@@ -433,7 +350,6 @@ class tx(dds, rx_tx_common):
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
-        self._check_type_conversion()
 
     def __del__(self):
         self.__txbuf = []
@@ -827,7 +743,6 @@ class rx_tx_def(tx_def, rx_def):
     def __init__(
         self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
-
         rx_def.__init__(self, *args, **kwargs)
         tx_def.__init__(self, *args, **kwargs)
 

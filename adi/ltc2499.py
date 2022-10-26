@@ -43,7 +43,6 @@ class ltc2499(rx, context_manager):
     channel: OrderedDict = None
     _device_name = "ltc2499"
     _rx_unbuffered_data = True
-    _rx_data_type = np.int32
     _rx_data_si_type = float
 
     def __init__(self, uri=""):

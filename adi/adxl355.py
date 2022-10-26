@@ -43,7 +43,6 @@ class adxl355(rx, context_manager, attribute):
     """ ADXL355 3-axis accelerometer """
 
     _device_name = "adxl355"
-    _rx_data_type = np.int32
     _rx_unbuffered_data = True
     _rx_data_si_type = float
 

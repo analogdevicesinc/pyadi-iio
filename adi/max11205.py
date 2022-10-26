@@ -45,7 +45,6 @@ class max11205(rx, context_manager):
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
-    _rx_data_type = np.int16
 
     def __init__(self, uri="", device_name=""):
         """Constructor for MAX11205 class."""
