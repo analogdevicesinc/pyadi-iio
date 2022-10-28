@@ -153,3 +153,7 @@ class ad9173(attribute, context_manager):
         """Get/Set the Modulation switch mode"""
         self._set_iio_attr("altvoltage0", "modulation_switch", True, value, self._ctrl)
 
+    def reg_write_multiple(self, reg, len, value):
+        """Direct Register Access via debugfs write multiple"""
+        self._set_iio_debug_attr_str("reg_write_mult", f"{reg} {len} {value}", self._ctrl)
+
