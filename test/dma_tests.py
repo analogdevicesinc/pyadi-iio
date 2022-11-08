@@ -655,7 +655,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         setattr(sdr, p, param_set[p])
     time.sleep(1)
     
-    sdr.dds_single_tone(4001311, 0.2, channel)
+    sdr.dds_single_tone(4001311, 0.064, channel)
     time.sleep(1)
 
     N = 2 ** 12
@@ -690,14 +690,14 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
     try:
         amp = 0
         freq = 0
-        for i in range(8):
+        for i in range(1):
             data = sdr.obs.rx() if use_obs else sdr.rx()
             time.sleep(1)
             amps, freq = spec.spec_est(
                 data, fs=RXFS, ref=ref, num_ffts=1, enable_windowing=True, plot=False
             )
             amp += amps
-        amp /= 8
+        #amp /= 8
     except Exception as e:
         del sdr
         raise Exception(e)
@@ -725,9 +725,9 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False, use_obs=
         plt.annotate("Fundamental", (freq[ml], amp[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        # plt.savefig("./results_log/graph_ch" + str(channel) + "_"  + str(param_set["trx_lo"]/1000000000) + "GHz.png")
-        # plt.close()
-        plt.show()
+        plt.savefig("./results_log/graph_ch" + str(channel) + "_"  + str(param_set["trx_lo"]/1000000000) + "GHz.png")
+        plt.close()
+        # plt.show()
 
     print("sfdr is ", sfdr)
     for i in range(3):
