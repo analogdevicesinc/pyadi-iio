@@ -1,5 +1,5 @@
 import pytest
- 
+
 hardware = ["adt7420"]
 classname = "adi.adt7420"
 
