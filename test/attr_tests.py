@@ -1,4 +1,5 @@
 import random
+from decimal import Decimal
 from test.common import (
     dev_interface,
     dev_interface_sub_channel,
@@ -9,6 +10,19 @@ from test.common import (
 import adi
 import numpy as np
 import pytest
+
+
+def floor_step_size(quantity, step_size):
+    """Quantize to specific stepsize
+
+    parameters:
+        quanity: type=float
+            Value to be quantized
+        step_size: type=str
+            Step size to quantize quanity to
+    """
+    step_size_dec = Decimal(str(step_size))
+    return float(int(Decimal(str(quantity)) / step_size_dec) * step_size_dec)
 
 
 def attribute_single_value(
@@ -44,6 +58,8 @@ def attribute_single_value(
     for _ in range(repeats):
         ind = random.randint(0, numints)
         val = start + step * ind
+        if isinstance(val, float):
+            val = floor_step_size(val, str(step))
         # Check hardware
         if sub_channel:
             assert (
