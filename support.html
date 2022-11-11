@@ -7,10 +7,11 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="libiio Direct Access" href="libiio.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>Support - Analog Devices Hardware Python Interfaces 0.0.13</title>
+        <title>Support - Analog Devices Hardware Python Interfaces 0.0.14</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="_static/css/style.css" />
     
     
 
@@ -19,18 +20,27 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-sidebar-item-background--current: black;
+  --color-sidebar-link-text: black;
+  --color-sidebar-link-text--top-level: black;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-sidebar-item-background--current: white;
+  --color-sidebar-link-text: white;
+  --color-sidebar-link-text--top-level: white;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-sidebar-item-background--current: white;
+  --color-sidebar-link-text: white;
+  --color-sidebar-link-text--top-level: white;
   
       }
     }
@@ -124,7 +134,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">Analog Devices Hardware Python Interfaces 0.0.13</div></a>
+      <a href="index.html"><div class="brand">Analog Devices Hardware Python Interfaces 0.0.14</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,8 +156,12 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="_static/logos/PyADI-IIO_Logo_300_cropped.png" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="_static/logos/PyADI-IIO_Logo_w_300_cropped.png" alt="Dark Logo"/>
+  </div>
   
-  <span class="sidebar-brand-text">Analog Devices Hardware Python Interfaces 0.0.13</span>
+  <span class="sidebar-brand-text">Analog Devices Hardware Python Interfaces 0.0.14</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -183,7 +197,8 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9136.html">ad9136</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9144.html">ad9144</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9152.html">ad9152</a></li>
-<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad916x.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9162.html">adi.ad9162 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9166.html">adi.ad9166 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9172.html">adi.ad9172 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9250.html">adi.ad9250 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9265.html">adi.ad9265 module</a></li>
@@ -197,12 +212,14 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ada4961.html">adi.ada4961 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adar1000.html">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4355.html">adi.adf4355 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4371.html">adf4371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf5610.html">adf5610</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adg2128.html">adi.adg2128 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16460.html">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16495.html">adis16495</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adl5240.html">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.admv8818.html">admv8818</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adpd1080.html">adpd1080</a></li>
@@ -214,6 +231,7 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adt7420.html">adi.adt7420 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl313.html">adxl313</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl355.html">adxl355</a></li>
@@ -232,7 +250,9 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.lm75.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2499.html">adi.ltc2499 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.max11205.html">adi.max11205 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.max31855.html">adi.max31855 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.tdd.html">tdd</a></li>
@@ -306,7 +326,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2019-2021, Analog Devices, Inc
+                Copyright &#169; 2019-2022, Analog Devices, Inc
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
