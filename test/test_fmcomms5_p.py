@@ -4,6 +4,14 @@ hardware = "fmcomms5"
 classname = "adi.FMComms5"
 
 
+def libad9361_check():
+    try:
+        import ad9361
+    except ImportError:
+        pytest.skip("libad9361 not installed")
+    return True
+
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -198,6 +206,7 @@ def test_fmcomms5_chip_b_loopback_attr(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3, [2, 3]])
 def test_fmcomms5_chip_b_rx_data(test_dma_rx, iio_uri, classname, channel):
+    libad9361_check()
     test_dma_rx(iio_uri, classname, channel)
 
 
@@ -206,6 +215,7 @@ def test_fmcomms5_chip_b_rx_data(test_dma_rx, iio_uri, classname, channel):
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3, [2, 3]])
 def test_fmcomms5_chip_b_tx_data(test_dma_tx, iio_uri, classname, channel):
+    libad9361_check()
     test_dma_tx(iio_uri, classname, channel)
 
 
@@ -214,6 +224,7 @@ def test_fmcomms5_chip_b_tx_data(test_dma_tx, iio_uri, classname, channel):
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3])
 def test_fmcomms5_chip_b_loopback(test_dma_loopback, iio_uri, classname, channel):
+    libad9361_check()
     test_dma_loopback(iio_uri, classname, channel)
 
 
@@ -247,6 +258,7 @@ def test_fmcomms5_dds_chip_b_loopback(
     scale,
     peak_min,
 ):
+    libad9361_check()
     test_dds_loopback(
         iio_uri, classname, param_set, channel, frequency, scale, peak_min
     )
@@ -274,6 +286,7 @@ def test_fmcomms5_dds_chip_b_loopback(
 def test_fmcomms5_chip_b_sfdr(
     test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 ):
+    libad9361_check()
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
 
@@ -316,4 +329,5 @@ def test_fmcomms5_chip_b_sfdr(
 def test_fmcomms5_chip_b_iq_loopback(
     test_iq_loopback, iio_uri, classname, channel, param_set
 ):
+    libad9361_check()
     test_iq_loopback(iio_uri, classname, channel, param_set)
