@@ -1,0 +1,77 @@
+:root {
+    /* Defaults */
+    --display-dark-stuff: none;
+    --display-light-stuff: block;
+}
+
+[data-theme=light] {
+    --sidebar-highligh-color-hover: black;
+    --sidebar-highligh-color: white;
+    --display-dark-stuff: none;
+    --display-light-stuff: block;
+}
+
+[data-theme=dark] {
+    --sidebar-highligh-color-hover: white;
+    --sidebar-highligh-color: black;
+    --display-dark-stuff: block;
+    --display-light-stuff: none;
+}
+
+/* Pad sidebar entries so radius does not touch content or browser*/
+body > div > aside > div > div > div.sidebar-scroll > div > ul {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+/* Disable sidebar title */
+.sidebar-brand-text {
+    display: none;
+}
+
+/* Add better highlighting on selected sidebar entry */
+.sidebar-tree .current>.reference {
+    border-radius: 25px;
+    color: var(--sidebar-highligh-color);
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+/* Add better highlighting on selected second level sidebar entry */
+.toctree-l2 .current.reference.internal {
+    border-radius: 25px;
+    color: var(--sidebar-highligh-color);
+    padding-bottom: 1px;
+    padding-top: 1px;
+    margin: 2px;
+}
+
+/* Add better highlighting on selected hovered sidebar entry */
+.sidebar-tree .current>.reference:hover {
+    color: var(--sidebar-highligh-color-hover);
+    border: 1px solid var(--sidebar-highligh-color-hover);
+    padding-bottom: 4px;
+    padding-top: 4px;
+}
+
+/* Add better highlighting on selected second level hovered sidebar entry */
+.toctree-l2 .current.reference.internal:hover {
+    color: var(--sidebar-highligh-color-hover);
+    border: 1px solid var(--sidebar-highligh-color-hover);
+    padding-bottom: 1px;
+    padding-top: 1px;
+    margin: 2px;
+}
+
+
+/* Hide/display logo on index page based on theme */
+#indexlogo_light {
+    display: var(--display-dark-stuff);
+}
+#indexlogo_dark {
+    display: var(--display-light-stuff);
+}
+
+element.style {
+    display: none;
+}
