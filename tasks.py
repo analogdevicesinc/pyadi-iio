@@ -171,6 +171,7 @@ def checkparts(c):
         "ad717x",
         "ad916x",
         "ad719x",
+        "ad469x",
     ]
     for c in dir(mod):
         if (
