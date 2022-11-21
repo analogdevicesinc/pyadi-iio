@@ -40,7 +40,8 @@ from adi.sync_start import sync_start
 class ad9162(tx, context_manager, sync_start):
     """ AD9162 16-Bit, 12 GSPS, RF DAC """
 
-    _complex_data = True
+    _complex_data = False
+    # _complex_data = True
     _tx_channel_names = ["voltage0_i", "voltage0_q"]
     # _tx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
