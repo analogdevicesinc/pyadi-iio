@@ -66,8 +66,8 @@ class ad9162(tx, context_manager, sync_start):
         # self._set_iio_attr("voltage0", "fir85_enable", True, value, self._txdac)
 
     @property
-    def sampling_rate(self):
-        """sampling_rate: Sample frequency rate TX path in samples per second."""
+    def sample_rate(self):
+        """sample_rate: Sample frequency rate TX path in samples per second."""
         return self._get_iio_attr("voltage0_i", "sampling_frequency", True, self._txdac)
         # return self._get_iio_attr("voltage0", "sampling_frequency", True, self._txdac)
 
