@@ -25,61 +25,113 @@ def test_adrv9009_zu11eg_attr(
     test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 
-########################################
+######################## CHIP A ##############################
+##############################################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", range(4))
-def test_adrv9009_zu11eg_rx_data(test_dma_rx, iio_uri, classname, channel):
-    test_dma_rx(iio_uri, classname, channel)
-
-
-########################################
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize("frequency, scale, sfdr1_min, sfdr2_min", [(4001311, 0.1, 30, 60)])
 @pytest.mark.parametrize(
-    "low, high",
-    [([-50.0, -120.0, -120.0, -120.0, -120.0], [-5.0, -50.0, -60.0, -70.0, -70.0])],
-)
-@pytest.mark.parametrize(
-    "param_set",
+    "param_set, low, high",
     [
-        dict(
-            ensm_mode="radio_on",
-            trx_lo=1000000000,
-            trx_lo_chip_b=5000000000,
-            obs_powerdown_en=1,
-            obs_powerdown_en_chan1=1,
-            obs_powerdown_en_chip_b=1,
-            obs_powerdown_en_chan1_chip_b=1,
-            rx_powerdown_en_chan0=0,
-            rx_powerdown_en_chan1=0,
-            rx_powerdown_en_chan0_chip_b=0,
-            rx_powerdown_en_chan1_chip_b=0,
-            gain_control_mode_chan0="slow_attack",
-            gain_control_mode_chan1="slow_attack",
-            gain_control_mode_chan0_chip_b="slow_attack",
-            gain_control_mode_chan1_chip_b="slow_attack",
-            tx_hardwaregain_chan0=-10,
-            tx_hardwaregain_chan1=-10,
-            tx_hardwaregain_chan0_chip_b=-10,
-            tx_hardwaregain_chan1_chip_b=-10,
+        (
+            dict(
+                ensm_mode="radio_on",
+                trx_lo=1000000000,
+                trx_lo_chip_b=5000000000,
+                obs_powerdown_en=1,
+                obs_powerdown_en_chan1=1,
+                obs_powerdown_en_chip_b=1,
+                obs_powerdown_en_chan1_chip_b=1,
+                rx_powerdown_en_chan0=0,
+                rx_powerdown_en_chan1=0,
+                rx_powerdown_en_chan0_chip_b=0,
+                rx_powerdown_en_chan1_chip_b=0,
+                gain_control_mode_chan0="slow_attack",
+                gain_control_mode_chan1="slow_attack",
+                gain_control_mode_chan0_chip_b="slow_attack",
+                gain_control_mode_chan1_chip_b="slow_attack",
+                tx_hardwaregain_chan0=-10,
+                tx_hardwaregain_chan1=-10,
+                tx_hardwaregain_chan0_chip_b=-10,
+                tx_hardwaregain_chan1_chip_b=-10,
+            ),
+            [-22.0, -60.0, -150.0, -150.0, -150.0, -150.0, -150.0, -150.0],
+            [-18.0, -52.0, -61.0, -90.0, -90.0, -90.0, -90.0, -90.0],
         ),
-        dict(
-            trx_lo=3000000000,
-            trx_lo_chip_b=4000000000,
+        (
+            dict(
+                trx_lo=3000000000,
+                trx_lo_chip_b=4000000000,
+            ),
+            [-25.0, -150.0, -150.0, -150.0, -150.0, -150.0, -150.0, -150.0],
+            [-21.0, -56.0, -62.0, -90.0, -90.0, -90.0, -90.0, -90.0],
         ),
-        dict(
-            trx_lo=5000000000,
-            trx_lo_chip_b=1000000000,
+        (
+            dict(
+                trx_lo=5000000000,
+                trx_lo_chip_b=1000000000,
+            ),
+            [-27.0, -80.0, -150.0, -150.0, -150.0, -150.0, -150.0, -150.0],
+            [-24.0, -70.0, -80.0, -90.0, -90.0, -90.0, -90.0, -90.0],
         ),
     ],
 )
 def test_adrv9009_zu11eg_sfdr(
-    test_sfdrl, classname, iio_uri, channel, param_set, low, high
+    test_sfdrl, classname, iio_uri, channel, param_set, low, high, sfdr1_min, sfdr2_min, frequency, scale
 ):
-    test_sfdrl(classname, iio_uri, channel, param_set, low, high, plot=True)
+    print("")
+    print("Configuration channel:", channel)
+    print("LO chip A: ", param_set["trx_lo"], "LO chip B:", param_set["trx_lo_chip_b"])
+    print("Frequency ", frequency, "and scale ", scale)
+    print("")
+    test_sfdrl(classname, iio_uri, channel, param_set, low, high, sfdr1_min, sfdr2_min, frequency, scale, plot=True)
 
+
+######################## CHIP B ##############################
+##############################################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [2, 3])
+@pytest.mark.parametrize("frequency, scale, sfdr1_min, sfdr2_min", [(4001311, 0.1, 30, 60)])
+@pytest.mark.parametrize(
+    "param_set, low, high",
+    [
+        (
+            dict(
+                trx_lo=5000000000,
+                trx_lo_chip_b=1000000000,
+            ),
+            [-22.0, -62.0, -150.0, -150.0, -150.0, -150.0, -150.0, -150.0],
+            [-18.0, -52.0, -61.0, -90.0, -90.0, -90.0, -90.0, -90.0],
+        ),
+        (
+            dict(
+                trx_lo=3000000000,
+                trx_lo_chip_b=4000000000,
+            ),
+            [-25.0, -150.0, -150.0, -150.0, -150.0, -150.0, -150.0, -150.0],
+            [-21.0, -60.0, -75.0, -90.0, -90.0, -90.0, -90.0, -90.0],
+        ),
+        (
+            dict(
+                trx_lo=1000000000,
+                trx_lo_chip_b=5000000000,
+            ),
+            [-27.0, -80.0, -150.0, -150.0, -150.0, -150.0, -150.0, -150.0],
+            [-24.0, -70.0, -80.0, -90.0, -90.0, -90.0, -90.0, -90.0],
+        ),
+    ],
+)
+def test_adrv9009_zu11eg_sfdr_chipb(
+    test_sfdrl, classname, iio_uri, channel, param_set, low, high, sfdr1_min, sfdr2_min, frequency, scale
+):
+    print("")
+    print("Configuration channel:", channel, "(chip b)")
+    print("LO chip A: ", param_set["trx_lo"], "LO chip B:", param_set["trx_lo_chip_b"])
+    print("Frequency ", frequency, "and scale ", scale)
+    print("")
+    test_sfdrl(classname, iio_uri, channel, param_set, low, high, sfdr1_min, sfdr2_min, frequency, scale, plot=True)
 
 ########################################
 @pytest.mark.iio_hardware(hardware)
@@ -134,6 +186,14 @@ def test_adrv9009_zu11eg_dds_gain_check_agc(
         iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     )
 
+
+########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", range(4))
+def test_adrv9009_zu11eg_rx_data(test_dma_rx, iio_uri, classname, channel):
+    test_dma_rx(iio_uri, classname, channel)
+    
 
 #########################################
 @pytest.mark.iio_hardware(hardware)

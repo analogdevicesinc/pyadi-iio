@@ -149,6 +149,49 @@ def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.01):
             # print("Harmonic",freqs[indxs[indx]])
     return main, main_loc, harmonics_vals, harmonics_locs
 
+def find_harmonics_from_main(
+    x, freqs, fs, num_harmonics=6, tolerance=0.01, plot=False
+):
+    """Find harmonic tone magnitudes based on found fundamental"""
+    vals, indxs = measure_peaks(x, num_harmonics)
+    main = freqs[indxs[0]]
+    main_loc = indxs[0]
+    # Calculate other harmonic locations
+    harmonic_freqz = [main * harmonic for harmonic in range(2, num_harmonics + 2)]
+    harmonic_freqz_neg = [main - h for h in harmonic_freqz]
+    # print("Main", main)
+    # print(f"Estimated harmonics {harmonic_freqz}")
+    # print(f"Estimated negative harmonics {harmonic_freqz_neg}")
+    harmonics_locs = []
+    harmonics_vals = []
+    lx = len(x)
+    bin_width = fs / lx
+    for freq in harmonic_freqz + harmonic_freqz_neg:
+        if absolute(freq) < (bin_width / 2):
+            print("DC ignored", freq)
+            continue
+        # Get closest index
+        indx = np.argmin(absolute(freqs - freq))
+        if absolute(freqs[indx] - freq) < (bin_width / 2):
+            # print(f"Harmonic found at {freqs[indx]} with mag {x[indx]}")
+            harmonics_locs.append(indx)
+            harmonics_vals.append(x[indx])
+
+    print("The final number of harmonics is: ", len(harmonics_vals))
+    if plot:
+        import matplotlib.pyplot as plt
+
+        # Plot shifted data on a shifted axis
+        plt.plot(freqs, x)
+        plt.plot(main, x[main_loc], "+")
+        plt.plot(freqs[harmonics_locs], harmonics_vals, "x")
+        plt.margins(0.1, 0.1)
+        plt.xlabel("Frequency [Hz]")
+        plt.tight_layout()
+        plt.show()
+    
+    return main, main_loc, harmonics_vals, harmonics_locs
+
 
 def sfdr(x, fs=1, ref=2 ** 15, plot=False):
     amp, freqs = spec_est(x, fs=fs, ref=ref, plot=plot)
@@ -188,20 +231,19 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
 
 def sfdr_signal(x, amp, freqs, plot=False):
     lx = len(x)
-    print("x is the buffer ", x)
-    print("amps are: ", amp)
-    peak_indxs, _ = find_peaks(amp, distance=floor(lx * 0.1))
+    peak_indxs, _ = find_peaks(amp, distance=floor(lx * 0.01))
     dc_loc = floor(lx / 2)
     indxs = argsort(amp[peak_indxs])
     indxs = indxs[::-1]
     peak_indxs = peak_indxs[indxs]
     peak_vals = amp[peak_indxs]
 
-    k = 1
     main = peak_vals[0]
     next = peak_vals[1]
+    nextlow = peak_vals[4]
 
-    sfdr = absolute(main - next)
+    sfdr1 = absolute(main - next)
+    sfdr2 = absolute(main - nextlow)
 
     if plot:
         import matplotlib.pyplot as plt
@@ -220,7 +262,7 @@ def sfdr_signal(x, amp, freqs, plot=False):
         plt.tight_layout()
         plt.show()
 
-    return sfdr, peak_vals, peak_indxs, k
+    return sfdr1, peak_vals, peak_indxs, sfdr2
 
 
 def main():

@@ -1,4 +1,3 @@
-
 import adi
 import pytest
 
@@ -6,14 +5,15 @@ hardware = "adrv9009-dual"
 classname = "adi.adrv9009_zu11eg"
 
 
-############################################
+#########################################
 # @pytest.mark.obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize("frequency, scale, sfdr1_min, sfdr2_min", [(4001311, 0.1, 30, 60)])
 @pytest.mark.parametrize(
     "low, high",
-    [([-50.0, -120.0, -120.0, -120.0, -120.0], [5.0, -50.0, -60.0, -70.0, -70.0])],
+    [([-24.0, -120.0, -120.0, -120.0, -120.0], [-21.0, -20.0, -30.0, -40.0, -40.0])],
 )
 @pytest.mark.parametrize(
     "param_set",
@@ -40,8 +40,13 @@ classname = "adi.adrv9009_zu11eg"
     ],
 )
 def test_adrv9009_zu11eg_sfdr_for_obs(
-    test_sfdrl, classname, iio_uri, channel, param_set, low, high
+    test_sfdrl, classname, iio_uri, channel, param_set, low, high, sfdr1_min, sfdr2_min, frequency, scale
 ):
+    print("")
+    print("Configuration channel:", channel)
+    print("LO chip A: ", param_set["trx_lo"], "LO chip B:", param_set["trx_lo_chip_b"])
+    print("Frequency ", frequency, "and scale ", scale)
+    print("")
     test_sfdrl(
-        classname, iio_uri, channel, param_set, low, high, plot=False, use_obs=True
+        classname, iio_uri, channel, param_set, low, high, sfdr1_min, sfdr2_min, frequency, scale, plot=True, use_obs=True
     )
