@@ -1,9 +1,54 @@
 import pytest
+import iio
 import adi
 
 hardware = "adrv9009-dual-fmcomms8"
 classname = "adi.adrv9009_zu11eg_fmcomms8"
 
+
+##################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize(
+    "voltage_raw, low, high",
+    [
+        ("in_temp0", 20, 50),
+        ("in_voltage0", 2064, 2179),
+        ("in_voltage1", 2064, 2179),
+        ("in_voltage2", 2867, 3031),
+        ("in_voltage3", 2867, 3031),
+        ("in_voltage4", 2654, 2736),
+        ("in_voltage5", 2654, 2736),
+        ("in_voltage6", 2654, 2736),
+        ("in_voltage7", 2654, 2736),
+    ],
+)
+def test_ad7291(context_desc, voltage_raw, low, high):
+    ctx = None
+    for ctx_desc in context_desc:
+        if ctx_desc["hw"] in hardware:
+            ctx = iio.Context(ctx_desc["uri"])
+    if not ctx:
+        pytest.skip("No valid hardware found")
+
+    ad7291 = ctx.find_device("ad7291")
+
+    for channel in ad7291.channels:
+        c_name = "out" if channel.output else "in"
+        c_name += "_" + str(channel.id)
+        if c_name == voltage_raw:
+            for attr in channel.attrs:
+                if attr == "raw":
+                    if c_name == "in_temp0":
+                        #calculate celsius temp from raw
+                        temp = (2.5 * (int(channel.attrs[attr].value)/10 + 109.3) - 273.15)
+                        print(temp)
+                        assert low <= temp <= high
+                    else:
+                        try:
+                            print(channel.attrs[attr].value)
+                            assert low <= int(channel.attrs[attr].value) <= high
+                        except OSError:
+                            continue
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
@@ -199,5 +244,4 @@ def test_adrv9009_zu11eg_dds_gain_check_vary_power(
     test_gain_check(
         iio_uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi
     )
-
 
