@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adi.fmcadc3 module" href="adi.fmcadc3.html" /><link rel="prev" title="daq3" href="adi.daq3.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>fmc_vna - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -145,7 +145,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -295,24 +297,26 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="module-adi.fmc_vna">
-<span id="fmc-vna"></span><h1>fmc_vna<a class="headerlink" href="#module-adi.fmc_vna" title="Permalink to this headline"></a></h1>
+<span id="fmc-vna"></span><h1>fmc_vna<a class="headerlink" href="#module-adi.fmc_vna" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.fmc_vna.fmcvna">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.fmc_vna.</span></span><span class="sig-name descname"><span class="pre">fmcvna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmc_vna.fmcvna" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.adrf5720.html#adi.adrf5720.adrf5720" title="adi.adrf5720.adrf5720"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.adrf5720.adrf5720</span></code></a>, <a class="reference internal" href="adi.ad9083.html#adi.ad9083.ad9083" title="adi.ad9083.ad9083"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad9083.ad9083</span></code></a>, <a class="reference internal" href="adi.admv8818.html#adi.admv8818.admv8818" title="adi.admv8818.admv8818"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.admv8818.admv8818</span></code></a>, <a class="reference internal" href="adi.gen_mux.html#adi.gen_mux.genmux" title="adi.gen_mux.genmux"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.gen_mux.genmux</span></code></a>, <a class="reference internal" href="adi.adf5610.html#adi.adf5610.adf5610" title="adi.adf5610.adf5610"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.adf5610.adf5610</span></code></a>, <a class="reference internal" href="adi.adl5960.html#adi.adl5960.adl5960" title="adi.adl5960.adl5960"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.adl5960.adl5960</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="adi.adrf5720.html#adi.adrf5720.adrf5720" title="adi.adrf5720.adrf5720"><code class="xref py py-class docutils literal notranslate"><span class="pre">adrf5720</span></code></a>, <a class="reference internal" href="adi.ad9083.html#adi.ad9083.ad9083" title="adi.ad9083.ad9083"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9083</span></code></a>, <a class="reference internal" href="adi.admv8818.html#adi.admv8818.admv8818" title="adi.admv8818.admv8818"><code class="xref py py-class docutils literal notranslate"><span class="pre">admv8818</span></code></a>, <a class="reference internal" href="adi.gen_mux.html#adi.gen_mux.genmux" title="adi.gen_mux.genmux"><code class="xref py py-class docutils literal notranslate"><span class="pre">genmux</span></code></a>, <a class="reference internal" href="adi.adf5610.html#adi.adf5610.adf5610" title="adi.adf5610.adf5610"><code class="xref py py-class docutils literal notranslate"><span class="pre">adf5610</span></code></a>, <a class="reference internal" href="adi.adl5960.html#adi.adl5960.adl5960" title="adi.adl5960.adl5960"><code class="xref py py-class docutils literal notranslate"><span class="pre">adl5960</span></code></a></p>
 <p>FMCVNA Scalable 8-port Vector Network Analyzer Board</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.fmc_vna.fmcvna.frontend">
 <span class="sig-name descname"><span class="pre">frontend</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0]</span></em><a class="headerlink" href="#adi.fmc_vna.fmcvna.frontend" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 </section>
 
         </article>
@@ -327,10 +331,10 @@
                 </div>
                 <div class="title">adi.fmcadc3 module</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="adi.daq3.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -360,8 +364,30 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">fmc_vna</a><ul>
+<li><a class="reference internal" href="#adi.fmc_vna.fmcvna"><code class="docutils literal notranslate"><span class="pre">fmcvna</span></code></a><ul>
+<li><a class="reference internal" href="#adi.fmc_vna.fmcvna.frontend"><code class="docutils literal notranslate"><span class="pre">fmcvna.frontend</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -369,7 +395,9 @@
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

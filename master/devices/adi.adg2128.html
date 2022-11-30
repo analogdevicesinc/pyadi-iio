@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adis16460" href="adi.adis16460.html" /><link rel="prev" title="adf5610" href="adi.adf5610.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>adi.adg2128 module - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -145,7 +145,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -295,18 +297,18 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="module-adi.adg2128">
-<span id="adi-adg2128-module"></span><h1>adi.adg2128 module<a class="headerlink" href="#module-adi.adg2128" title="Permalink to this headline"></a></h1>
+<span id="adi-adg2128-module"></span><h1>adi.adg2128 module<a class="headerlink" href="#module-adi.adg2128" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adg2128.adg2128">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adg2128.</span></span><span class="sig-name descname"><span class="pre">adg2128</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adg2128.adg2128" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.attribute.attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">adi.context_manager.context_manager</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
 <p>ADG2128 cross point switch.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adg2128.adg2128.add">
@@ -320,6 +322,7 @@ connected (common Y configuration).
 <p>Arguments:
 addr - device address on i2c bus</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adg2128.adg2128.immediate">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">immediate</span></span><a class="headerlink" href="#adi.adg2128.adg2128.immediate" title="Permalink to this definition"></a></dt>
@@ -327,6 +330,7 @@ addr - device address on i2c bus</p>
 <p>When it’s not immediate, the new switch configuration is only
 latched into the device (see LDSW in datasheet).</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adg2128.adg2128.open_all">
 <span class="sig-name descname"><span class="pre">open_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adg2128.adg2128.open_all" title="Permalink to this definition"></a></dt>
@@ -334,12 +338,15 @@ latched into the device (see LDSW in datasheet).</p>
 <p>For each device, iterate all x-y combinations and
 open all the switches at once.</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adg2128.yline">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adg2128.</span></span><span class="sig-name descname"><span class="pre">yline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adg2128.yline" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 </dd></dl>
+
 </section>
 
         </article>
@@ -354,10 +361,10 @@ open all the switches at once.</p>
                 </div>
                 <div class="title">adis16460</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="adi.adf5610.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -387,8 +394,33 @@ open all the switches at once.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">adi.adg2128 module</a><ul>
+<li><a class="reference internal" href="#adi.adg2128.adg2128"><code class="docutils literal notranslate"><span class="pre">adg2128</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adg2128.adg2128.add"><code class="docutils literal notranslate"><span class="pre">adg2128.add()</span></code></a></li>
+<li><a class="reference internal" href="#adi.adg2128.adg2128.immediate"><code class="docutils literal notranslate"><span class="pre">adg2128.immediate</span></code></a></li>
+<li><a class="reference internal" href="#adi.adg2128.adg2128.open_all"><code class="docutils literal notranslate"><span class="pre">adg2128.open_all()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.adg2128.yline"><code class="docutils literal notranslate"><span class="pre">yline</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -396,7 +428,9 @@ open all the switches at once.</p>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

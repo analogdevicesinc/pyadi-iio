@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Quick Start" href="guides/quick.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="_static/css/style.css" />
     
@@ -145,7 +145,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -295,19 +297,19 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="analog-devices-hardware-python-interfaces">
-<h1>Analog Devices Hardware Python Interfaces<a class="headerlink" href="#analog-devices-hardware-python-interfaces" title="Permalink to this headline"></a></h1>
+<h1>Analog Devices Hardware Python Interfaces<a class="headerlink" href="#analog-devices-hardware-python-interfaces" title="Permalink to this heading"></a></h1>
 <p><strong>pyadi-iio</strong> is a python abstraction module for ADI hardware with IIO drivers to make them easier to use. The libIIO interface although extremely flexible can be cumbersome to use due to the amount of boilerplate code required for even simple examples, especially when interfacing with buffers. This module has custom interfaces classes for specific parts and development systems which can generally make them easier to understand and use. To get up and running with a device can be as simple as a few lines of code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
 <span class="c1"># Create device from specific uri address</span>
-<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">"ip:192.168.2.1"</span><span class="p">)</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
 <span class="c1"># Get data from transceiver</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
 </pre></div>
@@ -315,46 +317,52 @@
 <center>
 <div style="width:70%;">
 <div id="indexlogo_dark">
-<img alt="PyADI-IIO Logo" src="_static/logos/PyADI-IIO_Logo_600.png"/>
+<img src="_static/logos/PyADI-IIO_Logo_600.png" alt="PyADI-IIO Logo" />
 </div>
 <div id="indexlogo_light">
-<img alt="PyADI-IIO Logo" src="_static/logos/PyADI-IIO_Logo_w_600.png"/>
+<img src="_static/logos/PyADI-IIO_Logo_w_600.png" alt="PyADI-IIO Logo" />
 </div>
 </div>
 </center><p align="center">
 <a href="https://github.com/analogdevicesinc/pyadi-iio/actions">
-<img alt="Build Status" src="https://img.shields.io/github/workflow/status/analogdevicesinc/pyadi-iio/CI%20Pushes/master"/>
+<img src="https://img.shields.io/github/workflow/status/analogdevicesinc/pyadi-iio/CI%20Pushes/master" alt="Build Status">
 </a>
+
 <a href="https://badge.fury.io/py/pyadi-iio">
-<img alt="PyPI version" src="https://badge.fury.io/py/pyadi-iio.svg"/>
+<img src="https://badge.fury.io/py/pyadi-iio.svg" alt="PyPI version">
 </a>
+
 <a href="https://www.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade">
-<img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077"/>
+<img src="https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077" alt="Codacy Badge">
 </a>
+
 <a href="https://www.python.org/download/releases/3.6.0/">
-<img alt="Python Version" src="https://img.shields.io/badge/python-3.6+-blue.svg"/>
+<img src="https://img.shields.io/badge/python-3.6+-blue.svg" alt="Python Version">
 </a>
 </p>
+
 <p align="center">
 <a href="http://analogdevicesinc.github.io/pyadi-iio/">
-<img alt="GitHub Pages" src="https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg"/>
+<img alt="GitHub Pages" src="https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg">
 </a>
+
 <a href="https://ez.analog.com/sw-interface-tools/f/q-a">
-<img alt="EngineerZone" src="https://img.shields.io/badge/Support-on%20EngineerZone-blue.svg"/>
+<img alt="EngineerZone" src="https://img.shields.io/badge/Support-on%20EngineerZone-blue.svg">
 </a>
+
 <a href="https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio">
-<img alt="Analog Wiki" src="https://img.shields.io/badge/Wiki-on%20wiki.analog.com-blue.svg"/>
+<img alt="Analog Wiki" src="https://img.shields.io/badge/Wiki-on%20wiki.analog.com-blue.svg">
 </a>
 </p></section>
 <section id="requirements">
-<h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"></a></h1>
+<h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference external" href="http://github.com/analogdevicesinc/libiio/">libiio</a></p></li>
 <li><p><a class="reference external" href="http://github.com/analogdevicesinc/libad9361/">(Optional) libad9361 for AD9361 specific devices</a></p></li>
 </ul>
 </section>
 <section id="sections">
-<h1>Sections<a class="headerlink" href="#sections" title="Permalink to this headline"></a></h1>
+<h1>Sections<a class="headerlink" href="#sections" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="guides/quick.html">Quick Start</a><ul>
@@ -482,7 +490,7 @@
 </div>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
@@ -502,7 +510,7 @@
                 </div>
                 <div class="title">Quick Start</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           
         </div>
@@ -525,27 +533,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Analog Devices Hardware Python Interfaces</a></li>
-<li><a class="reference internal" href="#requirements">Requirements</a></li>
-<li><a class="reference internal" href="#sections">Sections</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
@@ -553,7 +542,9 @@
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

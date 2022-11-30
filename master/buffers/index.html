@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="FPGA Features" href="../fpga/index.html" /><link rel="prev" title="tdd" href="../devices/adi.tdd.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Buffers - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -302,7 +304,7 @@
         </div>
         <article role="main">
           <section id="buffers">
-<h1>Buffers<a class="headerlink" href="#buffers" title="Permalink to this headline"></a></h1>
+<h1>Buffers<a class="headerlink" href="#buffers" title="Permalink to this heading"></a></h1>
 <p>Using buffers or transmitting and receiving data is done through interacting with two methods.</p>
 <p>For receivers this is the <strong>rx</strong> method. How data is captured and therefore produced by this method is dependent on two main properties:</p>
 <ul class="simple">
@@ -315,7 +317,7 @@
 </ul>
 <p><strong>rx_enabled_channels</strong> must have a length greater than zero but <strong>tx_enabled_channels</strong> can be set to None or an empty list. In this case when <strong>tx</strong> is called it must be called without inputs. This is a special case and will connect a zero source into the TX input stream within the FPGA for FPGA based devices. For background on how this internally works with FPGA based devices reference the generic <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-drivers/iio-dds/axi-dac-dds-hdl">DAC driver</a>.</p>
 <section id="cyclic-mode">
-<h2>Cyclic Mode<a class="headerlink" href="#cyclic-mode" title="Permalink to this headline"></a></h2>
+<h2>Cyclic Mode<a class="headerlink" href="#cyclic-mode" title="Permalink to this heading"></a></h2>
 <p>In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to in real-time. To complement these use cases it is possible to create transmit buffer which repeats, which we call <strong>cyclic buffers</strong>. Cyclic buffers are identical or normal or non-cyclic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
@@ -337,7 +339,7 @@
 <p>At this point, the transmitter will keep transmitting the create sinusoid indefinitely until the buffer is destroyed or the <em>sdr</em> object destructor is called. Once data is pushed to hardware with a cyclic buffer the buffer must be manually destroyed or an error will occur if more data push. To update the buffer use the <strong>tx_destroy_buffer</strong> method before passing a new vector to the <strong>tx</strong> method.</p>
 </section>
 <section id="annotated-buffers">
-<h2>Annotated Buffers<a class="headerlink" href="#annotated-buffers" title="Permalink to this headline"></a></h2>
+<h2>Annotated Buffers<a class="headerlink" href="#annotated-buffers" title="Permalink to this heading"></a></h2>
 <p>By default buffers appear as an array or a list of arrays. This can be confusing if all your channels do not produce similar data. For example, for IMUs like ADI16495 certain channels are for acceleration data and others are for angular velocity. To label this data the <em>rx_annotated</em> property can be used. When setting it to True the output of the <strong>rx</strong> method will be a dictionary with keys as channel names. Here an example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
@@ -356,18 +358,18 @@ array<span class="o">([</span>     <span class="m">49151</span>,     <span class
          <span class="m">25165823</span>,   <span class="m">18612223</span>,  -10125313,  -60850176, -114491392,
       -131350528,  -61521920,  <span class="m">135069695</span>,  <span class="m">466845695</span>,  <span class="m">899235839</span>,
       <span class="m">1362378751</span><span class="o">]</span>, <span class="nv">dtype</span><span class="o">=</span>int32<span class="o">)]</span>
-<span class="o">{</span><span class="s1">'accel_x'</span>: array<span class="o">([</span><span class="m">1775091711</span>, <span class="m">2072264703</span>, <span class="m">2147483647</span>, <span class="m">2147483647</span>, <span class="m">2147483647</span>,
+<span class="o">{</span><span class="s1">&#39;accel_x&#39;</span>: array<span class="o">([</span><span class="m">1775091711</span>, <span class="m">2072264703</span>, <span class="m">2147483647</span>, <span class="m">2147483647</span>, <span class="m">2147483647</span>,
       <span class="m">2147483647</span>, <span class="m">2143404031</span>, <span class="m">2125430783</span>, <span class="m">2123120639</span>, <span class="m">2130821119</span>,
       <span class="m">2139488255</span>, <span class="m">2144911359</span>, <span class="m">2147041279</span>, <span class="m">2147467263</span>, <span class="m">2147483647</span>,
       <span class="m">2147483647</span><span class="o">]</span>, <span class="nv">dtype</span><span class="o">=</span>int32<span class="o">)</span>,
-<span class="s1">'anglvel_x'</span>: array<span class="o">([</span><span class="m">357750219</span>, <span class="m">335109279</span>, <span class="m">323033231</span>, <span class="m">337667193</span>, <span class="m">337100396</span>, <span class="m">330408402</span>,
+<span class="s1">&#39;anglvel_x&#39;</span>: array<span class="o">([</span><span class="m">357750219</span>, <span class="m">335109279</span>, <span class="m">323033231</span>, <span class="m">337667193</span>, <span class="m">337100396</span>, <span class="m">330408402</span>,
       <span class="m">333459194</span>, <span class="m">335322576</span>, <span class="m">333247166</span>, <span class="m">333223475</span>, <span class="m">333996322</span>, <span class="m">333805525</span>,
       <span class="m">333659152</span>, <span class="m">333664680</span>, <span class="m">333718473</span>, <span class="m">333895650</span><span class="o">]</span>, <span class="nv">dtype</span><span class="o">=</span>int32<span class="o">)}</span>
 </pre></div>
 </div>
 </section>
 <section id="buffer-units">
-<h2>Buffer Units<a class="headerlink" href="#buffer-units" title="Permalink to this headline"></a></h2>
+<h2>Buffer Units<a class="headerlink" href="#buffer-units" title="Permalink to this heading"></a></h2>
 <p>For certain devices it is possible to convert types to scientific units, such as volts, degrees, or meters per second among others. This is controlled by setting the property <strong>rx_output_type</strong> to either <em>raw</em> or <em>SI</em>. If set to <em>SI</em>, returned data from the <strong>rx</strong> method will be in scientific units (assuming its supported by the driver). Below is an example using an IMU:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
@@ -375,15 +377,15 @@ array<span class="o">([</span>     <span class="m">49151</span>,     <span class
 <span class="n">dev</span><span class="o">.</span><span class="n">rx_annotated</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Make channel names appear in data</span>
 <span class="n">dev</span><span class="o">.</span><span class="n">rx_enabled_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># channel 0 is angular velocity in the x direction</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">rx</span><span class="p">())</span>
-<span class="n">dev</span><span class="o">.</span><span class="n">rx_output_type</span> <span class="o">=</span> <span class="s2">"SI"</span>
+<span class="n">dev</span><span class="o">.</span><span class="n">rx_output_type</span> <span class="o">=</span> <span class="s2">&quot;SI&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">rx</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>With output</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span><span class="s1">'anglvel_x'</span>: array<span class="o">([</span>    <span class="m">35644</span>,     <span class="m">84039</span>,   -175647,   -203867,    <span class="m">697612</span>,    -50201,
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span><span class="s1">&#39;anglvel_x&#39;</span>: array<span class="o">([</span>    <span class="m">35644</span>,     <span class="m">84039</span>,   -175647,   -203867,    <span class="m">697612</span>,    -50201,
        -1770177,   <span class="m">1526291</span>,   <span class="m">2589741</span>,  -5349126,   -839188,  <span class="m">11738313</span>,
        -9824911, -17267701,  <span class="m">97333042</span>, <span class="m">277410285</span><span class="o">]</span>, <span class="nv">dtype</span><span class="o">=</span>int32<span class="o">)}</span>
-<span class="o">{</span><span class="s1">'anglvel_x'</span>: array<span class="o">([</span><span class="m">9</span>.29996712, <span class="m">9</span>.71257202, <span class="m">9</span>.40097973, <span class="m">9</span>.78345151, <span class="m">9</span>.77009362,
+<span class="o">{</span><span class="s1">&#39;anglvel_x&#39;</span>: array<span class="o">([</span><span class="m">9</span>.29996712, <span class="m">9</span>.71257202, <span class="m">9</span>.40097973, <span class="m">9</span>.78345151, <span class="m">9</span>.77009362,
       <span class="m">9</span>.59662456, <span class="m">9</span>.67300333, <span class="m">9</span>.71593538, <span class="m">9</span>.65847317, <span class="m">9</span>.6580597 ,
       <span class="m">9</span>.68022501, <span class="m">9</span>.67715545, <span class="m">9</span>.67511814, <span class="m">9</span>.67609361, <span class="m">9</span>.67323293,
       <span class="m">9</span>.67104074<span class="o">])}</span>
@@ -392,7 +394,7 @@ array<span class="o">([</span>     <span class="m">49151</span>,     <span class
 <p>To understand the exact scaling the driver documentation should be reviewed.</p>
 </section>
 <section id="module-adi.rx_tx">
-<span id="members"></span><h2>Members<a class="headerlink" href="#module-adi.rx_tx" title="Permalink to this headline"></a></h2>
+<span id="members"></span><h2>Members<a class="headerlink" href="#module-adi.rx_tx" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.rx">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx_buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx" title="Permalink to this definition"></a></dt>
@@ -409,26 +411,31 @@ Data will be complex when using a complex data device.</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.rx_tx.rx.rx_annotated">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_annotated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.rx_tx.rx.rx_annotated" title="Permalink to this definition"></a></dt>
 <dd><p>rx_annotated: Set output data from rx() to be annotated</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.rx_tx.rx.rx_buffer_size">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.rx_tx.rx.rx_buffer_size" title="Permalink to this definition"></a></dt>
 <dd><p>rx_buffer_size: Size of receive buffer in samples</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.rx_tx.rx.rx_channel_names">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.rx_tx.rx.rx_channel_names" title="Permalink to this definition"></a></dt>
 <dd><p>rx_channel_names: List of RX channel names</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.rx_tx.rx.rx_destroy_buffer">
 <span class="sig-name descname"><span class="pre">rx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx.rx_destroy_buffer" title="Permalink to this definition"></a></dt>
 <dd><p>rx_destroy_buffer: Clears RX buffer</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.rx_tx.rx.rx_enabled_channels">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.rx_tx.rx.rx_enabled_channels" title="Permalink to this definition"></a></dt>
@@ -437,36 +444,44 @@ Data will be complex when using a complex data device.</p>
 rx_enabled_channels. When channel names are used, they will be
 translated to channel numbers.</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.rx_tx.rx.rx_output_type">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.rx_tx.rx.rx_output_type" title="Permalink to this definition"></a></dt>
 <dd><p>rx_output_type: Set output data type from rx()</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.rx_def">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_def" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_def" title="Permalink to this definition"></a></dt>
 <dd><p>Template metaclass for rx only device specific interfaces.</p>
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.rx_tx">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_tx</span></span><a class="headerlink" href="#adi.rx_tx.rx_tx" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.rx_tx_common">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_tx_common</span></span><a class="headerlink" href="#adi.rx_tx.rx_tx_common" title="Permalink to this definition"></a></dt>
 <dd><p>Common functions for RX and TX</p>
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.rx_tx_def">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_tx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_tx_def" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_tx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_tx_def" title="Permalink to this definition"></a></dt>
 <dd><p>Template metaclass for rx and tx device specific interfaces.</p>
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.shared_def">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">shared_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.shared_def" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">shared_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.shared_def" title="Permalink to this definition"></a></dt>
 <dd><p>Shared components for rx and tx metaclasses.</p>
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.tx">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">tx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx_cyclic_buffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx" title="Permalink to this definition"></a></dt>
@@ -483,21 +498,25 @@ Data must be complex when using a complex data device.</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.rx_tx.tx.tx_channel_names">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_names</span></span><a class="headerlink" href="#adi.rx_tx.tx.tx_channel_names" title="Permalink to this definition"></a></dt>
 <dd><p>tx_channel_names: Names of the transmit channels</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.rx_tx.tx.tx_cyclic_buffer">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_cyclic_buffer</span></span><a class="headerlink" href="#adi.rx_tx.tx.tx_cyclic_buffer" title="Permalink to this definition"></a></dt>
 <dd><p>tx_cyclic_buffer: Enable cyclic buffer for TX</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.rx_tx.tx.tx_destroy_buffer">
 <span class="sig-name descname"><span class="pre">tx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx_destroy_buffer" title="Permalink to this definition"></a></dt>
 <dd><p>tx_destroy_buffer: Clears TX buffer</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.rx_tx.tx.tx_enabled_channels">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_enabled_channels</span></span><a class="headerlink" href="#adi.rx_tx.tx.tx_enabled_channels" title="Permalink to this definition"></a></dt>
@@ -506,15 +525,18 @@ Data must be complex when using a complex data device.</p>
 tx_enabled_channels. When channel names are used, they will be
 translated to channel numbers.</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.tx_def">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">tx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">iio.Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx_def" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">tx_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Context</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Context</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx_def" title="Permalink to this definition"></a></dt>
 <dd><p>Template metaclass for rx only device specific interfaces.</p>
 </dd></dl>
+
 </section>
 <section id="buffer-examples">
-<h2>Buffer Examples<a class="headerlink" href="#buffer-examples" title="Permalink to this headline"></a></h2>
+<h2>Buffer Examples<a class="headerlink" href="#buffer-examples" title="Permalink to this heading"></a></h2>
 <p>Collect data from one channel</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
@@ -574,10 +596,10 @@ translated to channel numbers.</p>
                 </div>
                 <div class="title">FPGA Features</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="../devices/adi.tdd.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -613,7 +635,7 @@ translated to channel numbers.</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -623,7 +645,33 @@ translated to channel numbers.</p>
 <li><a class="reference internal" href="#cyclic-mode">Cyclic Mode</a></li>
 <li><a class="reference internal" href="#annotated-buffers">Annotated Buffers</a></li>
 <li><a class="reference internal" href="#buffer-units">Buffer Units</a></li>
-<li><a class="reference internal" href="#module-adi.rx_tx">Members</a></li>
+<li><a class="reference internal" href="#module-adi.rx_tx">Members</a><ul>
+<li><a class="reference internal" href="#adi.rx_tx.rx"><code class="docutils literal notranslate"><span class="pre">rx</span></code></a><ul>
+<li><a class="reference internal" href="#adi.rx_tx.rx.rx"><code class="docutils literal notranslate"><span class="pre">rx.rx()</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx.rx_annotated"><code class="docutils literal notranslate"><span class="pre">rx.rx_annotated</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">rx.rx_buffer_size</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx.rx_channel_names"><code class="docutils literal notranslate"><span class="pre">rx.rx_channel_names</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx.rx_destroy_buffer"><code class="docutils literal notranslate"><span class="pre">rx.rx_destroy_buffer()</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx.rx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">rx.rx_enabled_channels</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx.rx_output_type"><code class="docutils literal notranslate"><span class="pre">rx.rx_output_type</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_def"><code class="docutils literal notranslate"><span class="pre">rx_def</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_tx"><code class="docutils literal notranslate"><span class="pre">rx_tx</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_tx_common"><code class="docutils literal notranslate"><span class="pre">rx_tx_common</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_tx_def"><code class="docutils literal notranslate"><span class="pre">rx_tx_def</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.shared_def"><code class="docutils literal notranslate"><span class="pre">shared_def</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx"><code class="docutils literal notranslate"><span class="pre">tx</span></code></a><ul>
+<li><a class="reference internal" href="#adi.rx_tx.tx.tx"><code class="docutils literal notranslate"><span class="pre">tx.tx()</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx.tx_channel_names"><code class="docutils literal notranslate"><span class="pre">tx.tx_channel_names</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx.tx_cyclic_buffer"><code class="docutils literal notranslate"><span class="pre">tx.tx_cyclic_buffer</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx.tx_destroy_buffer"><code class="docutils literal notranslate"><span class="pre">tx.tx_destroy_buffer()</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx.tx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">tx.tx_enabled_channels</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.rx_tx.tx_def"><code class="docutils literal notranslate"><span class="pre">tx_def</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#buffer-examples">Buffer Examples</a></li>
 </ul>
 </li>
@@ -639,7 +687,9 @@ translated to channel numbers.</p>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

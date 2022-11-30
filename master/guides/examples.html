@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Connectivity" href="connectivity.html" /><link rel="prev" title="Attributes" href="../attr/index.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Examples - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -302,7 +304,7 @@
         </div>
         <article role="main">
           <section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h1>
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
 <p>Here is a collection of small examples which demonstrate how to interface with different devices in different ways.</p>
 <p>Configuring hardware properties and reading back settings</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
@@ -316,7 +318,7 @@
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_lo</span> <span class="o">=</span> <span class="mi">2000000000</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode</span> <span class="o">=</span> <span class="s2">"slow_attack"</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode</span> <span class="o">=</span> <span class="s2">&quot;slow_attack&quot;</span>
 <span class="c1"># Read back properties from hardware</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain</span><span class="p">)</span>
 </pre></div>
@@ -348,7 +350,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
 <span class="c1"># Create device from specific uri address</span>
-<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">"ip:192.168.2.1"</span><span class="p">)</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -356,7 +358,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
 <span class="c1"># Create device from specific uri address</span>
-<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">"usb:1.24.5"</span><span class="p">)</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;usb:1.24.5&quot;</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -375,10 +377,10 @@
                 </div>
                 <div class="title">Connectivity</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="../attr/index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -417,7 +419,9 @@
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

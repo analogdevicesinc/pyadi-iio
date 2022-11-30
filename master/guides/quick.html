@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Attributes" href="../attr/index.html" /><link rel="prev" title="Analog Devices Hardware Python Interfaces" href="../index.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Quick Start - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -302,7 +304,7 @@
         </div>
         <article role="main">
           <section id="quick-start">
-<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline"></a></h1>
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h1>
 <p>Before installing pyadi-iio make sure you have <a class="reference external" href="https://github.com/analogdevicesinc/libiio">libiio</a> and <a class="reference external" href="https://github.com/analogdevicesinc/libiio/blob/master/bindings/python/iio.py">its python bindings</a> installed. Since libiio v0.21, the libiio python bindings have been available on pypi and conda. The conda package includes the built library but the pypi install will require that it is installed beforehand. If you install pyadi-iio directly from pypi or conda they will automatically install the python bindings for libiio (pylibiio).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -332,27 +334,27 @@ For releases v0.19+ of libiio, when building from source the -DPYTHON_BINDINGS=O
 </div>
 </div>
 <section id="install-checks">
-<h2>Install Checks<a class="headerlink" href="#install-checks" title="Permalink to this headline"></a></h2>
+<h2>Install Checks<a class="headerlink" href="#install-checks" title="Permalink to this heading"></a></h2>
 <p>For check for libiio with the following from a command prompt or terminal:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dave@hal:~$ python3
 Python <span class="m">3</span>.6.8 <span class="o">(</span>default, Jan <span class="m">14</span> <span class="m">2019</span>, <span class="m">11</span>:02:34<span class="o">)</span>
 <span class="o">[</span>GCC <span class="m">8</span>.0.1 <span class="m">20180414</span> <span class="o">(</span>experimental<span class="o">)</span> <span class="o">[</span>trunk revision <span class="m">259383</span><span class="o">]]</span> on linux
-Type <span class="s2">"help"</span>, <span class="s2">"copyright"</span>, <span class="s2">"credits"</span> or <span class="s2">"license"</span> <span class="k">for</span> more information.
+Type <span class="s2">&quot;help&quot;</span>, <span class="s2">&quot;copyright&quot;</span>, <span class="s2">&quot;credits&quot;</span> or <span class="s2">&quot;license&quot;</span> <span class="k">for</span> more information.
 &gt;&gt;&gt; import iio
 &gt;&gt;&gt; iio.version
-<span class="o">(</span><span class="m">0</span>, <span class="m">18</span>, <span class="s1">'eec5616'</span><span class="o">)</span>
+<span class="o">(</span><span class="m">0</span>, <span class="m">18</span>, <span class="s1">&#39;eec5616&#39;</span><span class="o">)</span>
 </pre></div>
 </div>
 <p>If that worked, try the follow to see if pyadi-iio is there:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dave@hal:~$ python3
 Python <span class="m">3</span>.6.8 <span class="o">(</span>default, Jan <span class="m">14</span> <span class="m">2019</span>, <span class="m">11</span>:02:34<span class="o">)</span>
 <span class="o">[</span>GCC <span class="m">8</span>.0.1 <span class="m">20180414</span> <span class="o">(</span>experimental<span class="o">)</span> <span class="o">[</span>trunk revision <span class="m">259383</span><span class="o">]]</span> on linux
-Type <span class="s2">"help"</span>, <span class="s2">"copyright"</span>, <span class="s2">"credits"</span> or <span class="s2">"license"</span> <span class="k">for</span> more information.
+Type <span class="s2">&quot;help&quot;</span>, <span class="s2">&quot;copyright&quot;</span>, <span class="s2">&quot;credits&quot;</span> or <span class="s2">&quot;license&quot;</span> <span class="k">for</span> more information.
 &gt;&gt;&gt; import adi
 &gt;&gt;&gt; adi.__version__
-<span class="s1">'0.0.5'</span>
+<span class="s1">&#39;0.0.5&#39;</span>
 &gt;&gt;&gt; adi.name
-<span class="s1">'Analog Devices Hardware Interfaces'</span>
+<span class="s1">&#39;Analog Devices Hardware Interfaces&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -370,10 +372,10 @@ Type <span class="s2">"help"</span>, <span class="s2">"copyright"</span>, <span 
                 </div>
                 <div class="title">Attributes</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="../index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -409,7 +411,7 @@ Type <span class="s2">"help"</span>, <span class="s2">"copyright"</span>, <span 
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -431,7 +433,9 @@ Type <span class="s2">"help"</span>, <span class="s2">"copyright"</span>, <span 
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

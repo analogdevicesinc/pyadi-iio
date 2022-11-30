@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="gen_mux" href="adi.gen_mux.html" /><link rel="prev" title="fmclidar1" href="adi.fmclidar1.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>fmcomms5 - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -145,7 +145,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -295,93 +297,107 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="module-adi.fmcomms5">
-<span id="fmcomms5"></span><h1>fmcomms5<a class="headerlink" href="#module-adi.fmcomms5" title="Permalink to this headline"></a></h1>
+<span id="fmcomms5"></span><h1>fmcomms5<a class="headerlink" href="#module-adi.fmcomms5" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.fmcomms5.</span></span><span class="sig-name descname"><span class="pre">FMComms5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmcomms5.FMComms5" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad936x.html#adi.ad936x.ad9361" title="adi.ad936x.ad9361"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad936x.ad9361</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="adi.ad936x.html#adi.ad936x.ad9361" title="adi.ad936x.ad9361"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9361</span></code></a></p>
 <p>FMComms5 Dual Transceiver Evaluation Board</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.filter">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.filter" title="Permalink to this definition"></a></dt>
 <dd><p>Load FIR filter file. Provide path to filter file to attribute</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan0">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_control_mode_chip_b_chan0</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan0" title="Permalink to this definition"></a></dt>
 <dd><p>gain_control_mode_chip_b_chan0: Mode of receive path AGC of second transceiver.
 Options are: slow_attack, fast_attack, manual</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan1">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_control_mode_chip_b_chan1</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan1" title="Permalink to this definition"></a></dt>
 <dd><p>gain_control_mode_chip_b_chan1: Mode of receive path AGC of second transceiver.
 Options are: slow_attack, fast_attack, manual</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.loopback_chip_b">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loopback_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.loopback_chip_b" title="Permalink to this definition"></a></dt>
 <dd><p>loopback_chip_b: Set loopback mode of second transceiver. Options are:
 0 (Disable), 1 (Digital), 2 (RF)</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan0">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chip_b_chan0</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan0" title="Permalink to this definition"></a></dt>
 <dd><p>rx_hardwaregain_chip_b_chan0: Gain applied to RX path of second transceiver.
 Only applicable when gain_control_mode is set to ‘manual’</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan1">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chip_b_chan1</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan1" title="Permalink to this definition"></a></dt>
 <dd><p>rx_hardwaregain_chip_b_chan1: Gain applied to RX path of second transceiver.
 Only applicable when gain_control_mode is set to ‘manual’</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.rx_lo_chip_b">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_lo_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.rx_lo_chip_b" title="Permalink to this definition"></a></dt>
 <dd><p>rx_lo_chip_b: Carrier frequency of RX path of second transceiver</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.rx_rf_bandwidth_chip_b">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_rf_bandwidth_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.rx_rf_bandwidth_chip_b" title="Permalink to this definition"></a></dt>
 <dd><p>rx_rf_bandwidth_chip_b: Bandwidth of front-end analog filter of RX path
 of second transceiver</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.sample_rate">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.sample_rate" title="Permalink to this definition"></a></dt>
 <dd><p>sample_rate: Sample rate RX and TX paths in samples per second of
 second transceiver</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan0">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chip_b_chan0</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan0" title="Permalink to this definition"></a></dt>
 <dd><p>tx_hardwaregain_chip_b_chan0: Attenuation applied to TX path of second transceiver</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan1">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chip_b_chan1</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan1" title="Permalink to this definition"></a></dt>
 <dd><p>tx_hardwaregain_chip_b_chan1: Attenuation applied to TX path of second transceiver</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.tx_lo_chip_b">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_lo_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.tx_lo_chip_b" title="Permalink to this definition"></a></dt>
 <dd><p>tx_lo_chip_b: Carrier frequency of TX path of second transceiver</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.tx_rf_bandwidth_chip_b">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_rf_bandwidth_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.tx_rf_bandwidth_chip_b" title="Permalink to this definition"></a></dt>
 <dd><p>tx_rf_bandwidth_chip_b: Bandwidth of front-end analog filter of TX path
 of second transceiver</p>
 </dd></dl>
+
 </dd></dl>
+
 </section>
 
         </article>
@@ -396,10 +412,10 @@ of second transceiver</p>
                 </div>
                 <div class="title">gen_mux</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="adi.fmclidar1.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -429,8 +445,42 @@ of second transceiver</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">fmcomms5</a><ul>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5"><code class="docutils literal notranslate"><span class="pre">FMComms5</span></code></a><ul>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.filter"><code class="docutils literal notranslate"><span class="pre">FMComms5.filter</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan0"><code class="docutils literal notranslate"><span class="pre">FMComms5.gain_control_mode_chip_b_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan1"><code class="docutils literal notranslate"><span class="pre">FMComms5.gain_control_mode_chip_b_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.loopback_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.loopback_chip_b</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan0"><code class="docutils literal notranslate"><span class="pre">FMComms5.rx_hardwaregain_chip_b_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan1"><code class="docutils literal notranslate"><span class="pre">FMComms5.rx_hardwaregain_chip_b_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.rx_lo_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.rx_lo_chip_b</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.rx_rf_bandwidth_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.rx_rf_bandwidth_chip_b</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.sample_rate"><code class="docutils literal notranslate"><span class="pre">FMComms5.sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan0"><code class="docutils literal notranslate"><span class="pre">FMComms5.tx_hardwaregain_chip_b_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan1"><code class="docutils literal notranslate"><span class="pre">FMComms5.tx_hardwaregain_chip_b_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.tx_lo_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.tx_lo_chip_b</span></code></a></li>
+<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.tx_rf_bandwidth_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.tx_rf_bandwidth_chip_b</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -438,7 +488,9 @@ of second transceiver</p>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

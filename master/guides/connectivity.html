@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Supported Devices" href="../devices/index.html" /><link rel="prev" title="Examples" href="examples.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Connectivity - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -302,13 +304,13 @@
         </div>
         <article role="main">
           <section id="connectivity">
-<h1>Connectivity<a class="headerlink" href="#connectivity" title="Permalink to this headline"></a></h1>
+<h1>Connectivity<a class="headerlink" href="#connectivity" title="Permalink to this heading"></a></h1>
 <p>Since pyadi-iio is built on top of libiio, it can use the different <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio">backends</a> which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it to the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
 <span class="kn">import</span> <span class="nn">adi</span>
 
 <span class="c1"># Create a device interface</span>
-<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">"ip:192.168.2.1"</span><span class="p">)</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
 <span class="c1"># Read back properties from hardware</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain0</span><span class="p">)</span>
 </pre></div>
@@ -328,7 +330,7 @@
 <span class="kn">import</span> <span class="nn">adi</span>
 
 <span class="c1"># Create a device interface</span>
-<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">"usb:1.24.5"</span><span class="p">)</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;usb:1.24.5&quot;</span><span class="p">)</span>
 <span class="c1"># Read back properties from hardware</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span><span class="p">)</span>
 </pre></div>
@@ -348,10 +350,10 @@
                 </div>
                 <div class="title">Supported Devices</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="examples.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -390,7 +392,9 @@
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

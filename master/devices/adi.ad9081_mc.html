@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad9083" href="adi.ad9083.html" /><link rel="prev" title="ad9081" href="adi.ad9081.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>ad9081_mc - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -145,7 +145,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -295,14 +297,14 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="ad9081-mc">
-<h1>ad9081_mc<a class="headerlink" href="#ad9081-mc" title="Permalink to this headline"></a></h1>
+<h1>ad9081_mc<a class="headerlink" href="#ad9081-mc" title="Permalink to this heading"></a></h1>
 <p>The multi-chip python interface for AD9081 is scalable to any number of AD9081s within a single libIIO context. It will automatically determine the correct main driver, manage the CDDC/FDDC/CDUC/FDUC arrangement uniquely for each chip, and DMA/DDS IP. However, the interface a bit unique with <strong>pyadi-iio</strong> since it is almost identical to the single AD9081 class but it exposes properties in a slightly different way.</p>
 <p>When using <strong>adi.ad9081</strong>, properties are generally simple types like strings, ints, floats, or lists of these types. For example, when reading back the <strong>rx_channel_nco_frequencies</strong> you would observe something like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; import adi
@@ -315,10 +317,10 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; import adi
 &gt;&gt;&gt; <span class="nv">dev</span> <span class="o">=</span> adi.ad9081_mc<span class="o">()</span>
 &gt;&gt;&gt; dev.rx_channel_nco_frequencies
-<span class="o">{</span><span class="s1">'axi-ad9081-rx-0'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-1'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-2'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-3'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]}</span>
+<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-1&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-2&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-3&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]}</span>
 </pre></div>
 </div>
 <p>The same dict can be passed back to the property when writing, which will contain all or a subset of the chips to be address if desired. Alternatively, a list can be passed with only the values themselves if a dict does not want to be used. This is useful when performing array based DSP were data is approach in aggregate. However, in this case entries must be provided for all chip, not just a subset. Otherwise an error is returned.</p>
@@ -326,22 +328,22 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; import adi
 &gt;&gt;&gt; <span class="nv">dev</span> <span class="o">=</span> adi.ad9081_mc<span class="o">()</span>
 &gt;&gt;&gt; dev.rx_channel_nco_frequencies
-<span class="o">{</span><span class="s1">'axi-ad9081-rx-0'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-1'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-2'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-3'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]}</span>
+<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-1&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-2&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-3&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]}</span>
 &gt;&gt;&gt; dev.rx_channel_nco_frequencies <span class="o">=</span> <span class="o">[</span><span class="m">0</span>,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15<span class="o">]</span>
 &gt;&gt;&gt; dev.rx_channel_nco_frequencies
-<span class="o">{</span><span class="s1">'axi-ad9081-rx-0'</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-1'</span>: <span class="o">[</span><span class="m">4</span>, <span class="m">5</span>, <span class="m">6</span>, <span class="m">7</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-2'</span>: <span class="o">[</span><span class="m">8</span>, <span class="m">9</span>, <span class="m">10</span>, <span class="m">11</span><span class="o">]</span>,
- <span class="s1">'axi-ad9081-rx-3'</span>: <span class="o">[</span><span class="m">12</span>, <span class="m">13</span>, <span class="m">14</span>, <span class="m">15</span><span class="o">]}</span>
+<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-1&#39;</span>: <span class="o">[</span><span class="m">4</span>, <span class="m">5</span>, <span class="m">6</span>, <span class="m">7</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-2&#39;</span>: <span class="o">[</span><span class="m">8</span>, <span class="m">9</span>, <span class="m">10</span>, <span class="m">11</span><span class="o">]</span>,
+ <span class="s1">&#39;axi-ad9081-rx-3&#39;</span>: <span class="o">[</span><span class="m">12</span>, <span class="m">13</span>, <span class="m">14</span>, <span class="m">15</span><span class="o">]}</span>
 </pre></div>
 </div>
 <span class="target" id="module-adi.ad9081_mc"></span><dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9081_mc.QuadMxFE">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9081_mc.</span></span><span class="sig-name descname"><span class="pre">QuadMxFE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_board_attached</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9081_mc.QuadMxFE" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#adi.ad9081_mc.ad9081_mc" title="adi.ad9081_mc.ad9081_mc"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad9081_mc.ad9081_mc</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad9081_mc.ad9081_mc" title="adi.ad9081_mc.ad9081_mc"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9081_mc</span></code></a></p>
 <p>Quad AD9081 Mixed-Signal Front End (MxFE) Development System</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -355,11 +357,13 @@
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa_gain</span></span><a class="headerlink" href="#adi.ad9081_mc.QuadMxFE.rx_dsa_gain" title="Permalink to this definition"></a></dt>
 <dd><p>rx_dsa_gain: Receiver digital step attenuator gain</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9081_mc.ad9081_mc">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9081_mc.</span></span><span class="sig-name descname"><span class="pre">ad9081_mc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phy_dev_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9081_mc.ad9081_mc" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad9081.html#adi.ad9081.ad9081" title="adi.ad9081.ad9081"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.ad9081.ad9081</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="adi.ad9081.html#adi.ad9081.ad9081" title="adi.ad9081.ad9081"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9081</span></code></a></p>
 <p>AD9081 Mixed-Signal Front End (MxFE) Multi-Chip Interface</p>
 <blockquote>
 <div><p>This class is a generic interface for boards that utilize multiple AD9081
@@ -377,6 +381,7 @@ assumed to be the main PHY driver</p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 
         </article>
@@ -391,10 +396,10 @@ assumed to be the main PHY driver</p>
                 </div>
                 <div class="title">ad9083</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="adi.ad9081.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -424,8 +429,31 @@ assumed to be the main PHY driver</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">ad9081_mc</a><ul>
+<li><a class="reference internal" href="#adi.ad9081_mc.QuadMxFE"><code class="docutils literal notranslate"><span class="pre">QuadMxFE</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad9081_mc.QuadMxFE.rx_dsa_gain"><code class="docutils literal notranslate"><span class="pre">QuadMxFE.rx_dsa_gain</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad9081_mc.ad9081_mc"><code class="docutils literal notranslate"><span class="pre">ad9081_mc</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -433,7 +461,9 @@ assumed to be the main PHY driver</p>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

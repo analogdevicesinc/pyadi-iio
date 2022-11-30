@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Developers" href="../dev/index.html" /><link rel="prev" title="Buffers" href="../buffers/index.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>FPGA Features - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -302,9 +304,9 @@
         </div>
         <article role="main">
           <section id="fpga-features">
-<h1>FPGA Features<a class="headerlink" href="#fpga-features" title="Permalink to this headline"></a></h1>
+<h1>FPGA Features<a class="headerlink" href="#fpga-features" title="Permalink to this heading"></a></h1>
 <section id="direct-digital-synthesizers">
-<h2>Direct Digital Synthesizers<a class="headerlink" href="#direct-digital-synthesizers" title="Permalink to this headline"></a></h2>
+<h2>Direct Digital Synthesizers<a class="headerlink" href="#direct-digital-synthesizers" title="Permalink to this heading"></a></h2>
 <p>For FPGA based systems ADI reference designs include direct digital synthesizers (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.</p>
 <p>For the most basic or easiest configuration options use the methods <strong>dds_single_tone</strong> and <strong>dds_dual_tone</strong> which generate a one tone or two tones respectively on a specific channel.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
@@ -333,7 +335,7 @@
 </div>
 </section>
 <section id="module-adi.dds">
-<span id="dds-methods"></span><h2>DDS Methods<a class="headerlink" href="#module-adi.dds" title="Permalink to this headline"></a></h2>
+<span id="dds-methods"></span><h2>DDS Methods<a class="headerlink" href="#module-adi.dds" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.dds.dds">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.dds.</span></span><span class="sig-name descname"><span class="pre">dds</span></span><a class="headerlink" href="#adi.dds.dds" title="Permalink to this definition"></a></dt>
@@ -369,28 +371,33 @@ the index of the individual converters.</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_enabled</span></span><a class="headerlink" href="#adi.dds.dds.dds_enabled" title="Permalink to this definition"></a></dt>
 <dd><p>DDS generator enable state</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_frequencies">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_frequencies</span></span><a class="headerlink" href="#adi.dds.dds.dds_frequencies" title="Permalink to this definition"></a></dt>
 <dd><p>Frequencies of DDSs in Hz</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_phases">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_phases</span></span><a class="headerlink" href="#adi.dds.dds.dds_phases" title="Permalink to this definition"></a></dt>
 <dd><p>Phases of DDS signal generators.
 Range in millidegrees [0,360000]</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_scales">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_scales</span></span><a class="headerlink" href="#adi.dds.dds.dds_scales" title="Permalink to this definition"></a></dt>
 <dd><p>Scale of DDS signal generators
 Ranges [0,1]</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_single_tone">
 <span class="sig-name descname"><span class="pre">dds_single_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition"></a></dt>
@@ -415,15 +422,18 @@ the index of the individual converters.</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.dds.dds.disable_dds">
 <span class="sig-name descname"><span class="pre">disable_dds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.disable_dds" title="Permalink to this definition"></a></dt>
 <dd><p>Disable all DDS channels and set all output sources to zero.</p>
 </dd></dl>
+
 </dd></dl>
+
 </section>
 <section id="dma-synchronization">
-<h2>DMA Synchronization<a class="headerlink" href="#dma-synchronization" title="Permalink to this headline"></a></h2>
+<h2>DMA Synchronization<a class="headerlink" href="#dma-synchronization" title="Permalink to this heading"></a></h2>
 <p>In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general testing.</p>
 <p>This works by leveraging special control signals inside the HDL design to trigger receive captures from transmitted buffers. These are controlled through the <strong>sync_start</strong> class, which provide explicit control over when data is transmitted or released from the DMA in the FPGA fabric. This transmit or trigger will in turn allow data into the receive DMA at this moment in time. The exact methods and their sequence are described in the flowchart below.</p>
 <div class="mermaid">
@@ -438,7 +448,7 @@ the index of the individual converters.</p>
         </div><p>A full example that leverages this control is <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/ad9081_sync_start_example.py">ad9081_sync_start_example.py</a>.</p>
 </section>
 <section id="module-adi.sync_start">
-<span id="sync-start-methods"></span><h2>Sync_Start Methods<a class="headerlink" href="#module-adi.sync_start" title="Permalink to this headline"></a></h2>
+<span id="sync-start-methods"></span><h2>Sync_Start Methods<a class="headerlink" href="#module-adi.sync_start" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.sync_start.</span></span><span class="sig-name descname"><span class="pre">sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start" title="Permalink to this definition"></a></dt>
@@ -466,11 +476,13 @@ This key self clears.</p></li>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start.rx_sync_start_available">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.rx_sync_start_available" title="Permalink to this definition"></a></dt>
 <dd><p>rx_sync_start_available: Returns a list of possible keys used for rx_sync_start</p>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start.tx_sync_start">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start" title="Permalink to this definition"></a></dt>
@@ -493,12 +505,15 @@ This key self clears.</p></li>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start.tx_sync_start_available">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start_available" title="Permalink to this definition"></a></dt>
 <dd><p>tx_sync_start_available: Returns a list of possible keys used for tx_sync_start</p>
 </dd></dl>
+
 </dd></dl>
+
 </section>
 </section>
 
@@ -514,10 +529,10 @@ This key self clears.</p></li>
                 </div>
                 <div class="title">Developers</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="../buffers/index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -553,7 +568,7 @@ This key self clears.</p></li>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -561,9 +576,30 @@ This key self clears.</p></li>
             <ul>
 <li><a class="reference internal" href="#">FPGA Features</a><ul>
 <li><a class="reference internal" href="#direct-digital-synthesizers">Direct Digital Synthesizers</a></li>
-<li><a class="reference internal" href="#module-adi.dds">DDS Methods</a></li>
+<li><a class="reference internal" href="#module-adi.dds">DDS Methods</a><ul>
+<li><a class="reference internal" href="#adi.dds.dds"><code class="docutils literal notranslate"><span class="pre">dds</span></code></a><ul>
+<li><a class="reference internal" href="#adi.dds.dds.dds_dual_tone"><code class="docutils literal notranslate"><span class="pre">dds.dds_dual_tone()</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_enabled"><code class="docutils literal notranslate"><span class="pre">dds.dds_enabled</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_frequencies"><code class="docutils literal notranslate"><span class="pre">dds.dds_frequencies</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_phases"><code class="docutils literal notranslate"><span class="pre">dds.dds_phases</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_scales"><code class="docutils literal notranslate"><span class="pre">dds.dds_scales</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_single_tone"><code class="docutils literal notranslate"><span class="pre">dds.dds_single_tone()</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.disable_dds"><code class="docutils literal notranslate"><span class="pre">dds.disable_dds()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#dma-synchronization">DMA Synchronization</a></li>
-<li><a class="reference internal" href="#module-adi.sync_start">Sync_Start Methods</a></li>
+<li><a class="reference internal" href="#module-adi.sync_start">Sync_Start Methods</a><ul>
+<li><a class="reference internal" href="#adi.sync_start.sync_start"><code class="docutils literal notranslate"><span class="pre">sync_start</span></code></a><ul>
+<li><a class="reference internal" href="#adi.sync_start.sync_start.rx_sync_start"><code class="docutils literal notranslate"><span class="pre">sync_start.rx_sync_start</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start.rx_sync_start_available"><code class="docutils literal notranslate"><span class="pre">sync_start.rx_sync_start_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start.tx_sync_start"><code class="docutils literal notranslate"><span class="pre">sync_start.tx_sync_start</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start.tx_sync_start_available"><code class="docutils literal notranslate"><span class="pre">sync_start.tx_sync_start_available</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -578,7 +614,9 @@ This key self clears.</p></li>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

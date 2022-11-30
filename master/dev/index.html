@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Attribute Tests" href="test_attr.html" /><link rel="prev" title="FPGA Features" href="../fpga/index.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Developers - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -302,14 +304,14 @@
         </div>
         <article role="main">
           <section id="developers">
-<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this headline"></a></h1>
+<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this heading"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This section is only for developers and advanced users.</p>
 </div>
 <p>When submitting code or running tests, there are a few ways things are done in pyadi-iio.</p>
 <section id="invoke">
-<h2>Invoke<a class="headerlink" href="#invoke" title="Permalink to this headline"></a></h2>
+<h2>Invoke<a class="headerlink" href="#invoke" title="Permalink to this heading"></a></h2>
 <p>To make repetitve tasks easier, pyadi-iio utilizes pyinvoke. To see the available options (once pyinvoke is installed) run:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke --list</span>
 <span class="go">Available tasks:</span>
@@ -327,7 +329,7 @@
 </div>
 </section>
 <section id="precommit">
-<h2>Precommit<a class="headerlink" href="#precommit" title="Permalink to this headline"></a></h2>
+<h2>Precommit<a class="headerlink" href="#precommit" title="Permalink to this heading"></a></h2>
 <p><strong>pre-commit</strong> is heavily relied on for keeping code in order and for eliminating certain bugs. Be sure to run these checks before submitting code. This can be run through pyinvoke or directly from the repo root as:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke precommit</span>
 </pre></div>
@@ -337,7 +339,7 @@
 </div>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline"></a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h2>
 <p>Testing pyadi-iio requires hardware, but fortunately by default it assumes no hardware is connected unless found. It will only load specific tests for hardware it can find and skip all other tests. <strong>pytest</strong>, which is the framework pyadi-iio uses, can be call as following:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke test</span>
 </pre></div>
@@ -346,7 +348,7 @@
 </pre></div>
 </div>
 <section id="test-configuration">
-<h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Permalink to this headline"></a></h3>
+<h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Permalink to this heading"></a></h3>
 <p>There are several advanced features of pytest that are utilized by pyadi-iio. Specifically custom markers and custom plugins.</p>
 <p>Markers are a way of labeling tests, which can be then used to filter specific tests. Markers are provided through the <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/test/test_map.py">test_map.py</a> file in the test directory. These markers are used to map FPGA based boards with daughtercards to specific tests. <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/embedded_arm_images">Reference design folder names</a> from the ADI SD cards are using as the markers, which them can be passed through the <em>-m</em> flag to enabled certain tests. For example, the following would enable all tests related to <em>ADRV9009</em>, assuming the hardware is available:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pytest -m zynqmp-zcu102-rev10-adrv9009</span>
@@ -359,30 +361,67 @@
 <p>If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps">pytest-libiio CLI</a>.</p>
 </section>
 <section id="test-functions-and-fixtures">
-<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this headline"></a></h3>
+<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this heading"></a></h3>
 <p>pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links belows to the different test categories:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_attr.html">Attribute Tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.attribute_multipe_values"><code class="docutils literal notranslate"><span class="pre">attribute_multipe_values()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.attribute_multipe_values_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_multipe_values_with_depends()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.attribute_single_value"><code class="docutils literal notranslate"><span class="pre">attribute_single_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.attribute_single_value_boolean"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_boolean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.attribute_single_value_pow2"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_pow2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.attribute_single_value_str"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_str()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.attribute_write_only_str"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.attribute_write_only_str_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str_with_depends()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html#test.attr_tests.floor_step_size"><code class="docutils literal notranslate"><span class="pre">floor_step_size()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_dma.html">DMA Tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.cw_loopback"><code class="docutils literal notranslate"><span class="pre">cw_loopback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.cyclic_buffer"><code class="docutils literal notranslate"><span class="pre">cyclic_buffer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.cyclic_buffer_exception"><code class="docutils literal notranslate"><span class="pre">cyclic_buffer_exception()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.dds_loopback"><code class="docutils literal notranslate"><span class="pre">dds_loopback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.dds_two_tone"><code class="docutils literal notranslate"><span class="pre">dds_two_tone()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.dma_dac_zeros"><code class="docutils literal notranslate"><span class="pre">dma_dac_zeros()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.dma_loopback"><code class="docutils literal notranslate"><span class="pre">dma_loopback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.dma_rx"><code class="docutils literal notranslate"><span class="pre">dma_rx()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.dma_tx"><code class="docutils literal notranslate"><span class="pre">dma_tx()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.gain_check"><code class="docutils literal notranslate"><span class="pre">gain_check()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.hardwaregain"><code class="docutils literal notranslate"><span class="pre">hardwaregain()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.harmonic_vals"><code class="docutils literal notranslate"><span class="pre">harmonic_vals()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.nco_loopback"><code class="docutils literal notranslate"><span class="pre">nco_loopback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.stress_context_creation"><code class="docutils literal notranslate"><span class="pre">stress_context_creation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.stress_rx_buffer_creation"><code class="docutils literal notranslate"><span class="pre">stress_rx_buffer_creation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.stress_rx_buffer_length"><code class="docutils literal notranslate"><span class="pre">stress_rx_buffer_length()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.stress_tx_buffer_creation"><code class="docutils literal notranslate"><span class="pre">stress_tx_buffer_creation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.t_sfdr"><code class="docutils literal notranslate"><span class="pre">t_sfdr()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.verify_overflow"><code class="docutils literal notranslate"><span class="pre">verify_overflow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html#test.dma_tests.verify_underflow"><code class="docutils literal notranslate"><span class="pre">verify_underflow()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_generics.html">Generic Tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_generics.html#test.generics.iio_attribute_single_value"><code class="docutils literal notranslate"><span class="pre">iio_attribute_single_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_generics.html#test.generics.iio_buffer_check"><code class="docutils literal notranslate"><span class="pre">iio_buffer_check()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
 </section>
 <section id="set-up-isolated-environment">
-<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Permalink to this headline"></a></h2>
+<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Permalink to this heading"></a></h2>
 <p>This section will discuss a method to do isolated development with the correct package versions. The main purpose here is to eliminate any discrepancies that can arise (especially with the linting tools) when running precommit and other checks. This is also useful to not pollute your local global packages. The approach here relies upon leveraging <strong>pyenv</strong> and <strong>pipenv</strong> together.</p>
 <section id="install-pyenv">
-<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this headline"></a></h3>
+<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this heading"></a></h3>
 <p><strong>pyenv</strong> is a handy tool for installing different and isolated versions of python on your system. Since distributions can ship with rather random versions of python, pyenv can help us install exactly the versions we want. The quick way to install pyenv is with their bash script:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl https://pyenv.run <span class="p">|</span> bash
 </pre></div>
 </div>
 <p>Add to your path and shell startup script (.bashrc, .zshrc, …)</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">"/home/&lt;username&gt;/.pyenv/bin:</span><span class="nv">$PATH</span><span class="s2"></span>
-<span class="s2">eval "</span><span class="k">$(</span>pyenv init -<span class="k">)</span><span class="s2">"</span>
-<span class="s2">eval "</span><span class="k">$(</span>pyenv virtualenv-init -<span class="k">)</span><span class="s2">"</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/home/&lt;username&gt;/.pyenv/bin:</span><span class="nv">$PATH</span><span class="s2"></span>
+<span class="s2">eval &quot;</span><span class="k">$(</span>pyenv init -<span class="k">)</span><span class="s2">&quot;</span>
+<span class="s2">eval &quot;</span><span class="k">$(</span>pyenv virtualenv-init -<span class="k">)</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 <p>Install the desired python version</p>
@@ -391,7 +430,7 @@
 </div>
 </section>
 <section id="create-isolated-install-with-pipenv">
-<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this headline"></a></h3>
+<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this heading"></a></h3>
 <p>Get the repo, set python version, and setup env</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install -U pipenv
 pyenv <span class="nb">local</span> <span class="m">3</span>.6.9
@@ -411,14 +450,14 @@ pipenv shell
 </section>
 </section>
 <section id="emulation">
-<h2>Emulation<a class="headerlink" href="#emulation" title="Permalink to this headline"></a></h2>
+<h2>Emulation<a class="headerlink" href="#emulation" title="Permalink to this heading"></a></h2>
 <p>By leveraging <a class="reference external" href="https://github.com/analogdevicesinc/iio-emu">iio-emu</a>, hardware or contexts can be emulated for testing without physical devices. However, currently this emulation does not validate attribute rates, states of drivers, or equivalent data sources. This feature should be used to test a library itself rather than hardware drivers.</p>
 <p><strong>pyadi-iio</strong> uses <em>iio-emu</em> through <em>pytest-libiio</em>, which handles loading the correct context files based on the fixtures used for each test. Essentially, when <em>pytest</em> is run, based on the fixture below, <em>pytest-libiio</em> will spawn the correct context with <em>iio-emu</em> and pass the URI of that context to the test.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">iio</span>
 
 
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">iio_hardware</span><span class="p">(</span><span class="s2">"pluto"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># Set True disables test during emulation</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">iio_hardware</span><span class="p">(</span><span class="s2">&quot;pluto&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># Set True disables test during emulation</span>
 <span class="k">def</span> <span class="nf">test_libiio_device</span><span class="p">(</span><span class="n">iio_uri</span><span class="p">):</span>
     <span class="n">ctx</span> <span class="o">=</span> <span class="n">iio</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">iio_uri</span><span class="p">)</span>
     <span class="o">...</span>
@@ -440,10 +479,10 @@ pipenv shell
                 </div>
                 <div class="title">Attribute Tests</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="../fpga/index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -479,7 +518,7 @@ pipenv shell
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -513,7 +552,9 @@ pipenv shell
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

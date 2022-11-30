@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Generic Tests" href="test_generics.html" /><link rel="prev" title="Attribute Tests" href="test_attr.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>DMA Tests - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -145,7 +145,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -295,14 +297,14 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="dma-tests">
-<h1>DMA Tests<a class="headerlink" href="#dma-tests" title="Permalink to this headline"></a></h1>
+<h1>DMA Tests<a class="headerlink" href="#dma-tests" title="Permalink to this heading"></a></h1>
 <p>Functions used by test fixtures for evaluating receive and transmit DMA/buffers</p>
 <span class="target" id="module-test.dma_tests"></span><dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.cw_loopback">
@@ -332,6 +334,7 @@ generated and received</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.cyclic_buffer">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">cyclic_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer" title="Permalink to this definition"></a></dt>
@@ -354,6 +357,7 @@ generated</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.cyclic_buffer_exception">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">cyclic_buffer_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer_exception" title="Permalink to this definition"></a></dt>
@@ -377,6 +381,7 @@ generated</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.dds_loopback">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dds_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dds_loopback" title="Permalink to this definition"></a></dt>
@@ -407,6 +412,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.dds_two_tone">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dds_two_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dds_two_tone" title="Permalink to this definition"></a></dt>
@@ -445,6 +451,7 @@ second tone</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.dma_dac_zeros">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_dac_zeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_dac_zeros" title="Permalink to this definition"></a></dt>
@@ -465,6 +472,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.dma_loopback">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_loopback" title="Permalink to this definition"></a></dt>
@@ -486,6 +494,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.dma_rx">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32768</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_rx" title="Permalink to this definition"></a></dt>
@@ -510,6 +519,7 @@ enable through rx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.dma_tx">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_tx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_tx" title="Permalink to this definition"></a></dt>
@@ -528,6 +538,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.gain_check">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">gain_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dds_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_rssi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rssi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.gain_check" title="Permalink to this definition"></a></dt>
@@ -559,6 +570,7 @@ generated and received</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.hardwaregain">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">hardwaregain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dds_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardwaregain_low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardwaregain_high</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.hardwaregain" title="Permalink to this definition"></a></dt>
@@ -589,6 +601,7 @@ less than 1/2 the sample rate.</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.harmonic_vals">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">harmonic_vals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.harmonic_vals" title="Permalink to this definition"></a></dt>
@@ -618,6 +631,7 @@ generated and received</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.nco_loopback">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">nco_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.nco_loopback" title="Permalink to this definition"></a></dt>
@@ -646,6 +660,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.stress_context_creation">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_context_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_context_creation" title="Permalink to this definition"></a></dt>
@@ -665,6 +680,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.stress_rx_buffer_creation">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_rx_buffer_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_creation" title="Permalink to this definition"></a></dt>
@@ -684,6 +700,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.stress_rx_buffer_length">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_rx_buffer_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_sizes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_length" title="Permalink to this definition"></a></dt>
@@ -703,6 +720,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.stress_tx_buffer_creation">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_tx_buffer_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_tx_buffer_creation" title="Permalink to this definition"></a></dt>
@@ -722,6 +740,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.t_sfdr">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">t_sfdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sfdr_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.t_sfdr" title="Permalink to this definition"></a></dt>
@@ -748,6 +767,7 @@ generated and received</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.verify_overflow">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">verify_overflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.verify_overflow" title="Permalink to this definition"></a></dt>
@@ -769,6 +789,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.dma_tests.verify_underflow">
 <span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">verify_underflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.verify_underflow" title="Permalink to this definition"></a></dt>
@@ -790,6 +811,7 @@ enable through tx_enabled_channels</p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 
         </article>
@@ -804,10 +826,10 @@ enable through tx_enabled_channels</p>
                 </div>
                 <div class="title">Generic Tests</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="test_attr.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -837,8 +859,46 @@ enable through tx_enabled_channels</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">DMA Tests</a><ul>
+<li><a class="reference internal" href="#test.dma_tests.cw_loopback"><code class="docutils literal notranslate"><span class="pre">cw_loopback()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.cyclic_buffer"><code class="docutils literal notranslate"><span class="pre">cyclic_buffer()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.cyclic_buffer_exception"><code class="docutils literal notranslate"><span class="pre">cyclic_buffer_exception()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dds_loopback"><code class="docutils literal notranslate"><span class="pre">dds_loopback()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dds_two_tone"><code class="docutils literal notranslate"><span class="pre">dds_two_tone()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dma_dac_zeros"><code class="docutils literal notranslate"><span class="pre">dma_dac_zeros()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dma_loopback"><code class="docutils literal notranslate"><span class="pre">dma_loopback()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dma_rx"><code class="docutils literal notranslate"><span class="pre">dma_rx()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dma_tx"><code class="docutils literal notranslate"><span class="pre">dma_tx()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.gain_check"><code class="docutils literal notranslate"><span class="pre">gain_check()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.hardwaregain"><code class="docutils literal notranslate"><span class="pre">hardwaregain()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.harmonic_vals"><code class="docutils literal notranslate"><span class="pre">harmonic_vals()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.nco_loopback"><code class="docutils literal notranslate"><span class="pre">nco_loopback()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.stress_context_creation"><code class="docutils literal notranslate"><span class="pre">stress_context_creation()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.stress_rx_buffer_creation"><code class="docutils literal notranslate"><span class="pre">stress_rx_buffer_creation()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.stress_rx_buffer_length"><code class="docutils literal notranslate"><span class="pre">stress_rx_buffer_length()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.stress_tx_buffer_creation"><code class="docutils literal notranslate"><span class="pre">stress_tx_buffer_creation()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.t_sfdr"><code class="docutils literal notranslate"><span class="pre">t_sfdr()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.verify_overflow"><code class="docutils literal notranslate"><span class="pre">verify_overflow()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.verify_underflow"><code class="docutils literal notranslate"><span class="pre">verify_underflow()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -846,7 +906,9 @@ enable through tx_enabled_channels</p>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>

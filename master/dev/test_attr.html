@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="DMA Tests" href="test_dma.html" /><link rel="prev" title="Developers" href="index.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Attribute Tests - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
     
@@ -145,7 +145,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -287,7 +287,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -295,14 +297,14 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="attribute-tests">
-<h1>Attribute Tests<a class="headerlink" href="#attribute-tests" title="Permalink to this headline"></a></h1>
+<h1>Attribute Tests<a class="headerlink" href="#attribute-tests" title="Permalink to this heading"></a></h1>
 <p>Functions used by test fixtures for evaluating attributes and driver state.</p>
 <span class="target" id="module-test.attr_tests"></span><dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_multipe_values">
@@ -328,6 +330,7 @@ number of times.</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_multipe_values_with_depends">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multipe_values_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multipe_values_with_depends" title="Permalink to this definition"></a></dt>
@@ -355,6 +358,7 @@ number of times.</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value" title="Permalink to this definition"></a></dt>
@@ -386,6 +390,7 @@ is randomly determined based in input parameters</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_boolean">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_boolean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_boolean" title="Permalink to this definition"></a></dt>
@@ -404,6 +409,7 @@ is randomly determined based in input parameters</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_pow2">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_pow2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_pow2" title="Permalink to this definition"></a></dt>
@@ -429,6 +435,7 @@ in input parameters</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_str">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_str" title="Permalink to this definition"></a></dt>
@@ -449,6 +456,7 @@ in input parameters</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_write_only_str">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str" title="Permalink to this definition"></a></dt>
@@ -467,6 +475,7 @@ in input parameters</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_write_only_str_with_depends">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str_with_depends" title="Permalink to this definition"></a></dt>
@@ -489,6 +498,7 @@ are properties and values are values to be written</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.floor_step_size">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">floor_step_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.floor_step_size" title="Permalink to this definition"></a></dt>
@@ -503,6 +513,7 @@ are properties and values are values to be written</p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 
         </article>
@@ -517,10 +528,10 @@ are properties and values are values to be written</p>
                 </div>
                 <div class="title">DMA Tests</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -550,8 +561,35 @@ are properties and values are values to be written</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Attribute Tests</a><ul>
+<li><a class="reference internal" href="#test.attr_tests.attribute_multipe_values"><code class="docutils literal notranslate"><span class="pre">attribute_multipe_values()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_multipe_values_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_multipe_values_with_depends()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_single_value"><code class="docutils literal notranslate"><span class="pre">attribute_single_value()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_single_value_boolean"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_boolean()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_single_value_pow2"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_pow2()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_single_value_str"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_str()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str_with_depends()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.floor_step_size"><code class="docutils literal notranslate"><span class="pre">floor_step_size()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -559,7 +597,9 @@ are properties and values are values to be written</p>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
