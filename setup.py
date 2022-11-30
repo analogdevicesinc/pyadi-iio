@@ -29,7 +29,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/analogdevicesinc/pyadi-iio",
     packages=setuptools.find_packages(exclude=["test*"]),
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=["numpy>=1.20", "pylibiio==0.23.1"],
     extras_require={"jesd": ["paramiko"]},
     classifiers=[
