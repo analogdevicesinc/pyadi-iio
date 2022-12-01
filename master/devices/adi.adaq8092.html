@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adi.max11205 module" href="adi.max11205.html" /><link rel="prev" title="adi.ltc2499 module" href="adi.ltc2499.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adar1000" href="adi.adar1000.html" /><link rel="prev" title="adi.ada4961 module" href="adi.ada4961.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>ltc2983 - Analog Devices Hardware Python Interfaces 0.0.15</title>
+        <title>adaq8092 - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -211,7 +211,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9680.html">ad9680</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9739a.html">adi.ad9739a module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ada4961.html">adi.ada4961 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adaq8092.html">adaq8092</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adaq8092</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4355.html">adi.adf4355 module</a></li>
@@ -254,7 +254,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2499.html">adi.ltc2499 module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max11205.html">adi.max11205 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
@@ -305,22 +305,17 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ltc2983">
-<span id="ltc2983"></span><h1>ltc2983<a class="headerlink" href="#module-adi.ltc2983" title="Permalink to this heading"></a></h1>
+          <section id="module-adi.adaq8092">
+<span id="adaq8092"></span><h1>adaq8092<a class="headerlink" href="#module-adi.adaq8092" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ltc2983.ltc2983">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ltc2983.</span></span><span class="sig-name descname"><span class="pre">ltc2983</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ltc2983.ltc2983" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.adaq8092.adaq8092">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adaq8092.</span></span><span class="sig-name descname"><span class="pre">adaq8092</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adaq8092.adaq8092" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>LTC2983 Multi-Sensor Temperature Measurement System</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ltc2983.ltc2983.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">OrderedDict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#adi.ltc2983.ltc2983.channel" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ltc2983.ltc2983.convert">
-<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ltc2983.ltc2983.convert" title="Permalink to this definition"></a></dt>
-<dd><p>Convert raw value(s) to real units</p>
+<p>ADAQ8092 14-Bit, 105MSPS, Dual-Channel uModule Data Acquisition Solution</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adaq8092.adaq8092.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.adaq8092.adaq8092.sampling_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get Sampling Frequency.</p>
 </dd></dl>
 
 </dd></dl>
@@ -332,23 +327,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.max11205.html">
+          <a class="next-page" href="adi.adar1000.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">adi.max11205 module</div>
+                <div class="title">adar1000</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ltc2499.html">
+          <a class="prev-page" href="adi.ada4961.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">adi.ltc2499 module</div>
+                <div class="title">adi.ada4961 module</div>
                 
               </div>
             </a>
@@ -384,10 +379,9 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">ltc2983</a><ul>
-<li><a class="reference internal" href="#adi.ltc2983.ltc2983"><code class="docutils literal notranslate"><span class="pre">ltc2983</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ltc2983.ltc2983.channel"><code class="docutils literal notranslate"><span class="pre">ltc2983.channel</span></code></a></li>
-<li><a class="reference internal" href="#adi.ltc2983.ltc2983.convert"><code class="docutils literal notranslate"><span class="pre">ltc2983.convert()</span></code></a></li>
+<li><a class="reference internal" href="#">adaq8092</a><ul>
+<li><a class="reference internal" href="#adi.adaq8092.adaq8092"><code class="docutils literal notranslate"><span class="pre">adaq8092</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adaq8092.adaq8092.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">adaq8092.sampling_frequency</span></code></a></li>
 </ul>
 </li>
 </ul>
