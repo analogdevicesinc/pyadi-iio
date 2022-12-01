@@ -36,8 +36,7 @@ from adi.ad9625 import ad9625
 
 
 class FMComms11(
-    ad9162,
-    ad9625,
+    ad9162, ad9625,
 ):
     """ FMCOMMS11 Transceiver """
 
