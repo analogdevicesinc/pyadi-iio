@@ -63,6 +63,7 @@ from adi.ad9467 import ad9467
 from adi.ad9625 import ad9625
 from adi.ad9680 import ad9680
 from adi.ada4961 import ada4961
+from adi.adaq8092 import adaq8092
 from adi.adar1000 import adar1000, adar1000_array
 from adi.adf4159 import adf4159
 from adi.adf4355 import adf4355
