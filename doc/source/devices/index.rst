@@ -79,6 +79,7 @@ Supported Devices
    adi.fmcjesdadc1
    adi.fmclidar1
    adi.fmcomms5
+   adi.fmcomms11
    adi.gen_mux
    adi.jesd
    adi.lm75

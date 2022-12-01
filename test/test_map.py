@@ -96,5 +96,6 @@ def get_test_map():
         "zynqmp-zcu102-rev10-ad9081-m8-l4-vcxo122p88",
         "zynqmp-zcu102-rev10-ad9081-m4-l8",
     ]
+    test_map["fmcomms11"] = ["zynq-zc706-adv7511-fmcomms11"]
 
     return test_map

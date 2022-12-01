@@ -98,6 +98,7 @@ from adi.fmcadc3 import fmcadc3
 from adi.fmcjesdadc1 import fmcjesdadc1
 from adi.fmclidar1 import fmclidar1
 from adi.fmcomms5 import FMComms5
+from adi.fmcomms11 import FMComms11
 from adi.gen_mux import genmux
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
