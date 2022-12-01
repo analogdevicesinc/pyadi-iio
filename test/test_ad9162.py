@@ -1,8 +1,7 @@
 import pytest
 
 # AD9162 isn't in the adi_hardware_map.py in pylibiio
-# This value will be changed to change to FMCOMMS11
-hardware = "ad9162"
+hardware = ["ad9162", "fmcomms11"]
 classname = "adi.ad9162"
 
 
