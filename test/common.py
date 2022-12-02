@@ -25,6 +25,9 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "obs_required: mark tests that require observation data paths"
     )
+    # config.addinivalue_line(
+    #     "markers", "snumber_required: mark tests that require serial number"
+    # )
     config.addinivalue_line("markers", "lvds_test: mark tests for LVDS")
     config.addinivalue_line("markers", "cmos_test: mark tests for CMOS")
 
@@ -63,6 +66,9 @@ def pytest_addoption(parser):
     parser.addoption(
         "--password", default="analog", help="SSH login password",
     )
+    parser.addoption(
+        "--snumber", action="store", help="Serial Number for storing eeprom",
+    )
 
 
 def pytest_runtest_setup(item):
@@ -94,6 +100,8 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("username", [metafunc.config.getoption("username")])
     if "password" in metafunc.fixturenames:
         metafunc.parametrize("password", [metafunc.config.getoption("password")])
+    if "snumber" in metafunc.fixturenames:
+        metafunc.parametrize("snumber", [metafunc.config.getoption("snumber")])
 
 
 #################################################

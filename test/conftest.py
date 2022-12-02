@@ -21,6 +21,7 @@ import pytest
 
 try:
     from test.scpi import dcxo_calibrate
+    from test.eeprom import save_to_eeprom_basic
 
     disable_prod_tests = False
 except ImportError:
@@ -157,6 +158,12 @@ if not disable_prod_tests:
     def test_dcxo_calibration(request):
         yield dcxo_calibrate
 
+
+if not disable_prod_tests:
+
+    @pytest.fixture()
+    def test_save_eeprom(request):
+        yield save_to_eeprom_basic
 
 @pytest.fixture()
 def test_attribute_multipe_values(request):
