@@ -302,7 +302,7 @@ def dds_loopback(
         del sdr
         raise Exception(e)
     del sdr
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15, plot=False)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 13, plot=False)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - frequency)
     s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
@@ -625,7 +625,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
+def sfdr_low(classname, uri, channel, param_set, low, high, frequency, scale, plot=False):
     """t_sfdr: Test SFDR loopback of tone with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
     signal can be recovered. Sinuoidal data is passed to DMAs which is then
@@ -647,15 +647,15 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
 
-    sdr.dds_single_tone(2999577, 0.0625, channel)
-    time.sleep(2)
+    sdr.dds_single_tone(frequency, scale, channel)
+    time.sleep(1)
 
     N = 2 ** 14
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
-    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
     sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
 
     ref = 2 ** 11
 
@@ -683,7 +683,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         for i in range(8):
             data = sdr.rx()
             time.sleep(1)
-            amps, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
+            amps, freq = spec.spec_est(data, fs=RXFS, ref=2**13, num_ffts=1,  enable_windowing=True, plot=False)
             amp += amps
         amp /= 8
     except Exception as e:
@@ -691,10 +691,18 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         raise Exception(e)
     del sdr
 
-    L = len(data)
     sfdr, peaks, indxs, pk = spec.sfdr_signal(data, amp, freq, plot=False)
     
     ml = indxs[0]
+    n = len(low)
+
+    if np.iscomplexobj(data):
+        ffreq_shift = fftshift(freq)
+        ffampl_shift = fftshift(amp)
+    else:
+        ffreq_shift = freq
+        ffampl_shift = amp
+
     if plot:
         import matplotlib.pyplot as plt
 
@@ -705,9 +713,9 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         plt.xlabel("Time [s]")
 
         plt.subplot(2, 1, 2)
-        plt.plot(fftshift(freq), fftshift(amp))
+        plt.plot(ffreq_shift, ffampl_shift)
         plt.plot(freq[ml], amp[ml], "y.")
-        plt.plot(freq[indxs[1:3]], amp[indxs[1:3]], "y.")
+        plt.plot(freq[indxs[1:n]], amp[indxs[1:n]], "y.")
 
         plt.margins(0.1, 0.1)
         plt.annotate("Fundamental", (freq[ml], amp[ml]))
@@ -717,12 +725,12 @@ def sfdr_low(classname, uri, channel, param_set, low, high, plot=False):
         #     k=1
         # else:
         #     k=0
-        # plt.savefig("./results_log/graphp" + str(k) + ".png")
-        # plt.close()
-        plt.show()
+        plt.savefig("./results_log/graphp" + str(channel) + "_freq" + str(frequency) + ".png")
+        plt.close()
+        # plt.show()
 
     print("sfdr is ", sfdr)
-    for i in range(3):
+    for i in range(n-1):
         print("Peak should be between ", low[i], high[i])
         print("Peak is ", peaks[i], freq[indxs[i]])
         assert low[i] <= peaks[i] <= high[i]
@@ -949,7 +957,7 @@ def hardwaregain(
     assert hardwaregain_low <= hwgain <= hardwaregain_high
 
 
-def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
+def harmonic_vals(classname, uri, channel, param_set, low, high, frequency, scale, plot=False):
     """harmonic_vals: Test first five harmonics and check to be within
     certain intervals. This test also requires a devices with TX and RX
     onboard where thetransmit signal can be recovered.Sinuoidal data is
@@ -977,18 +985,18 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
 
-    sdr.dds_single_tone(2999577, 0.0625, channel)
-    time.sleep(3)
+    sdr.dds_single_tone(frequency, scale, channel)
+    time.sleep(1)
 
-    N = 2 ** 14
+    N = 2 ** 12
 
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
-    sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
+    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
     sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
+    sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
 
-    ref = 2 ** 12
+    ref = 2 ** 14
 
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
@@ -1011,7 +1019,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         for i in range(8):
             data = sdr.rx()
             #time.sleep(1)
-            amp, ffreqs = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
+            amp, ffreqs = spec.spec_est(data, fs=RXFS, ref=2**13, enable_windowing=True, num_ffts=1, plot=False)
             ffampl += amp
         ffampl/= 8
     except Exception as e:
@@ -1019,9 +1027,18 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         raise Exception(e)
 
     _, ml, peaks, indxs = spec.find_harmonics_from_main(
-        ffampl, ffreqs, sdr.sample_rate, num_harmonics=4, tolerance=0.01
+        ffampl, ffreqs, sdr.sample_rate, num_harmonics=10, tolerance=0.01
     )
+
+    n = len(peaks)
     
+    if np.iscomplexobj(data):
+        ffreq_shift = fftshift(ffreqs)
+        ffampl_shift = fftshift(ffampl)
+    else:
+        ffreq_shift = ffreqs
+        ffampl_shift = ffampl
+
     del sdr
     if plot:
         import matplotlib.pyplot as plt
@@ -1033,25 +1050,22 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
         plt.xlabel("Time [s]")
 
         plt.subplot(2, 1, 2)
-        plt.plot(fftshift(ffreqs), fftshift(ffampl))
+
+        plt.plot(ffreq_shift, ffampl_shift)
         plt.plot(ffreqs[ml], ffampl[ml], "y.")
-        plt.plot(ffreqs[indxs[0:3]], ffampl[indxs[0:3]], "y.")
+        plt.plot(ffreqs[indxs[0:n]], ffampl[indxs[0:n]], "y.")
 
         plt.margins(0.1, 0.1)
         plt.annotate("Fundamental", (ffreqs[ml], ffampl[ml]))
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        # if channel == 1 or (classname == "adi.ad9364" and param_set["tx_rf_port_select"] == 'B'):
-        #     k=1
-        # else:
-        #     k=0
-        # plt.savefig("./results_log/graph" + str(k) + ".png")
-        plt.show()
-        #plt.close()
+        plt.savefig("./results_log/graph_chan" + str(channel) + "_freq" + str(frequency) + ".png")
+        #plt.show()
+        plt.close()
     print("Main should be between ", low[0], high[0])
     print("Main is at ", ffampl[ml], ffreqs[ml])
     assert low[0] <= ffampl[ml] <= high[0]
-    for i in range(3):
+    for i in range(n):
         print("Harmonic should be between ", low[i+1], high[i+1])
         print("Harmonic is ", peaks[i], ffreqs[indxs[i]])
         assert low[i+1] <= peaks[i] <= high[i+1]
