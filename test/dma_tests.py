@@ -683,7 +683,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, frequency, scale, pl
         for i in range(8):
             data = sdr.rx()
             time.sleep(1)
-            amps, freq = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
+            amps, freq = spec.spec_est(data, fs=RXFS, ref=2**13, num_ffts=1,  enable_windowing=True, plot=False)
             amp += amps
         amp /= 8
     except Exception as e:
@@ -715,7 +715,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, frequency, scale, pl
         plt.subplot(2, 1, 2)
         plt.plot(ffreq_shift, ffampl_shift)
         plt.plot(freq[ml], amp[ml], "y.")
-        plt.plot(freq[indxs[1:3]], amp[indxs[1:3]], "y.")
+        plt.plot(freq[indxs[1:n]], amp[indxs[1:n]], "y.")
 
         plt.margins(0.1, 0.1)
         plt.annotate("Fundamental", (freq[ml], amp[ml]))
@@ -1019,7 +1019,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, frequency, scal
         for i in range(8):
             data = sdr.rx()
             #time.sleep(1)
-            amp, ffreqs = spec.spec_est(data, fs=sdr.sample_rate, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
+            amp, ffreqs = spec.spec_est(data, fs=RXFS, ref=2**13, enable_windowing=True, num_ffts=1, plot=False)
             ffampl += amp
         ffampl/= 8
     except Exception as e:
@@ -1065,7 +1065,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, frequency, scal
     print("Main should be between ", low[0], high[0])
     print("Main is at ", ffampl[ml], ffreqs[ml])
     assert low[0] <= ffampl[ml] <= high[0]
-    for i in range(3):
+    for i in range(n):
         print("Harmonic should be between ", low[i+1], high[i+1])
         print("Harmonic is ", peaks[i], ffreqs[indxs[i]])
         assert low[i+1] <= peaks[i] <= high[i+1]
