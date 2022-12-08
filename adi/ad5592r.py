@@ -34,13 +34,11 @@
 
 from decimal import Decimal
 
-import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx, tx
 
 
-class ad5592r(context_manager, rx):
+class ad5592r(context_manager):
     """AD5592R ADC/DAC"""
 
     _complex_data = False
@@ -68,17 +66,23 @@ class ad5592r(context_manager, rx):
         for device in self._ctx.devices:
             if device.name in device_name:
                 self._ctrl = device
-                self._rxadc = device
-                self._txdac = device
                 break
 
         # Dynamically get channels after the index
         for ch in self._ctrl.channels:
             name = ch._id
             output = ch._output
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name, output))
-        rx.__init__(self)
+            if name == "temp":
+                setattr(self, name, self._channel(self._ctrl, name, output))
+            else:
+                if output is True:
+                    setattr(
+                        self, name + "_dac", self._channel(self._ctrl, name, output)
+                    )
+                else:
+                    setattr(
+                        self, name + "_adc", self._channel(self._ctrl, name, output)
+                    )
 
     class _channel(attribute):
         """AD5592R Input/Output Voltage Channels"""
@@ -117,5 +121,12 @@ class ad5592r(context_manager, rx):
             for scale_available_0 in scale_available:
                 if scale_available_0 == value:
                     self._set_iio_attr(
-                        self.name, "scale", self._output, str(Decimal(value).real)
+                        self.name,
+                        "scale",
+                        self._output,
+                        value,  # str(Decimal(value).real) # Why do some device classes use Decimal??
                     )
+
+        @property
+        def scale_available(self):
+            return self._get_iio_attr(self.name, "scale_available", self._output)
