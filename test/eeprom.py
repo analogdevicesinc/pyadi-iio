@@ -68,7 +68,7 @@ def save_to_eeprom(iio_uri, coarse, fine, temp):
     ssh_client.close()
 
 
-def save_to_eeprom_basic(iio_uri, snumber, masterfile):
+def save_to_eeprom_basic(iio_uri, snumber, masterfile, eeprom_path):
     full_uri = iio_uri.split(":", 2)
     if full_uri[0] != "ip":
         pytest.skip("Tuning currently supported only for ip URIs")
@@ -77,13 +77,6 @@ def save_to_eeprom_basic(iio_uri, snumber, masterfile):
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh_client.connect(ip, username="root", password="analog")
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
-        "find /sys/ -name eeprom"
-    )
-    eeprom_path = ssh_stdout.readlines()
-
-    if ssh_stderr.channel.recv_exit_status() != 0:
-        raise paramiko.SSHException("find_eeprom command did not execute properly")
 
     this_day = date.today()
     if this_day.year < 2022:
@@ -92,27 +85,20 @@ def save_to_eeprom_basic(iio_uri, snumber, masterfile):
         )
 
     err = False
-    for i in range(0, len(eeprom_path)):
-        cmd = (
-            "fru-dump -i "
-            + "/usr/local/src/fru_tools/masterfiles/" 
-            + masterfile
-            + " -o "
-            + eeprom_path[i].rstrip("\n")
-            + " -s "
-            + snumber
-            + " -d "
-            + datetime.now().strftime("%Y-%m-%dT%H:%M:%S-05:00")
-        )
-        sshin, sshout, ssherr = ssh_client.exec_command(cmd)
-        if ssherr.channel.recv_exit_status() != 0:
-            err = True
-        else:
-            err = False
-            break
-
-    if err:
-        raise paramiko.SSHException("fru-dump command did not execute properly")
+    cmd = (
+        "fru-dump -i "
+        + "/usr/local/src/fru_tools/masterfiles/" 
+        + masterfile
+        + " -o "
+        + eeprom_path
+        + " -s "
+        + snumber
+        + " -d "
+        + datetime.now().strftime("%Y-%m-%dT%H:%M:%S-05:00")
+    )
+    sshin, sshout, ssherr = ssh_client.exec_command(cmd)
+    if ssherr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException("fru-dump command did not execute properly")    
     ssh_client.close()
 
 def save_to_eeprom_rate(iio_uri, clk_rate):
