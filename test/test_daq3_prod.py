@@ -134,7 +134,8 @@ def test_peaks(
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("masterfile", [("AD-FMCDAQ3-EBZ.bin")])
+@pytest.mark.parametrize("eeprom_path", [("/sys/devices/soc0/fpga-axi@0/41600000.i2c/i2c-0/i2c-6/6-0050/eeprom")])
 def test_write_eeprom(
-    test_save_eeprom, iio_uri, snumber, masterfile
+    test_save_eeprom, iio_uri, snumber, masterfile, eeprom_path
 ):
-    test_save_eeprom(iio_uri, snumber, masterfile)
+    test_save_eeprom(iio_uri, snumber, masterfile, eeprom_path)
