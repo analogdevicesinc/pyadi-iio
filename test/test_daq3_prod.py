@@ -12,7 +12,7 @@ classname = "adi.DAQ3"
     "voltage_raw, low, high",
     [
         ("in_temp0", 20, 50),
-        ("in_voltage0", 2703, 3195),
+        ("in_voltage0", 3101, 3265),
         ("in_voltage1", 2540, 2867),
         ("in_voltage2", 2540, 2867),
         ("in_voltage3", 1229, 1393),
