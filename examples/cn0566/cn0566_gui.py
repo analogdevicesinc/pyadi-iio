@@ -77,7 +77,8 @@ except:
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
     #     rpi_ip = "ip:169.254.225.48" # Hard code an IP here for debug
-    sdr_ip = "ip:pluto.local"  # Pluto IP, with modified IP address or not
+    # sdr_ip = "ip:pluto.local"  # Pluto IP, with modified IP address or not
+    sdr_ip = "ip:phaser.local:12345"  # Context Forwarding in libiio 0.24!
     print("Running on Windows, connecting to ", rpi_ip, " and ", sdr_ip)
 elif os.name == "posix":
     rpi_ip = "ip:localhost"  # Assume running locally on Raspberry Pi
@@ -99,6 +100,7 @@ gpios.gpio_div_s0 = 0
 gpios.gpio_div_s1 = 0
 gpios.gpio_div_s2 = 0
 gpios.gpio_tx_sw = 0  # gpio_tx_sw is "gpio_w" on schematic.  0=OUT1, 1=OUT2
+time.sleep(0.5)
 
 
 class App:
@@ -162,6 +164,7 @@ class App:
         SDR_LO_init(rpi_ip, self.LO_freq)
 
         """Intialize the ADAR1000"""
+        time.sleep(0.5)
         self.array = adi.adar1000_array(
             uri=rpi_ip,
             chip_ids=[

@@ -65,9 +65,9 @@ from scipy import signal
 start = time.time()
 
 failures = []
-# monitor_hi_limits = [60.0, 1.9, 3.015, 3.45, 4.75, 16.0, 5.50, 99.0, 16.0]
-monitor_hi_limits = [60.0, 1.9, 3.015, 3.45, 4.75, 16.0, 99.0, 99.0, 16.0]
-monitor_lo_limts = [20.0, 1.8, 2.850, 3.15, 0.00, 00.0, 0.00, 0.0, 0.0]
+#                    temp   1.8V 3.0    3.3   4.5   15?   USB   curr. Vtune
+monitor_hi_limits = [60.0, 1.85, 3.015, 3.45, 4.75, 16.0, 5.25, 1.6, 14.0]
+monitor_lo_limts = [20.0, 1.75, 2.850, 3.15, 4.25, 13.0, 4.75, 1.2, 1.0]
 monitor_ch_names = [
     "Board temperature: ",
     "1.8V supply: ",
@@ -89,7 +89,8 @@ phase_cal_limits = (
 
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
-    sdr_ip = "ip:pluto.local"  # Pluto IP, with modified IP address or not
+    # sdr_ip = "ip:pluto.local"  # Pluto IP, with modified IP address or not
+    sdr_ip = "ip:phaser.local:12345"  # Context Forwarding in libiio 0.24!
     print("Running on Windows, connecting to ", rpi_ip, " and ", sdr_ip)
 elif os.name == "posix":
     rpi_ip = "ip:localhost"  # Assume running locally on Raspberry Pi
@@ -125,14 +126,19 @@ except NameError:
 # and write out to the cal file. IF using the onboard TX generator, delete
 # the cal file and set frequency via config.py or config_custom.py.
 
-try:
-    my_phaser.SignalFreq = load_hb100_cal()
-    print("Found signal freq file, ", my_phaser.SignalFreq)
-    use_tx = False
-except:
-    my_phaser.SignalFreq = 10.525e9
-    print("No signal freq found, keeping at ", my_phaser.SignalFreq)
-    use_tx = True
+
+# try:
+#     my_phaser.SignalFreq = load_hb100_cal()
+#     print("Found signal freq file, ", my_phaser.SignalFreq)
+#     use_tx = False
+# except:
+#     my_phaser.SignalFreq = 10.525e9
+#     print("No signal freq found, keeping at ", my_phaser.SignalFreq)
+#     use_tx = True
+
+print("Using TX output closest to tripod mount, 10.525 GHz for production test.")
+my_phaser.SignalFreq = 10.525e9
+use_tx = True
 
 # Configure SDR parameters.
 
@@ -223,7 +229,9 @@ monitor_vals = my_phaser.read_monitor()
 for i in range(0, len(monitor_vals)):
     if not (monitor_lo_limts[i] <= monitor_vals[i] <= monitor_hi_limits[i]):
         print("Fails ", monitor_ch_names[i], ": ", monitor_vals[i])
-        failures.append(monitor_ch_names[i])
+        failures.append(
+            "Monitor fails " + monitor_ch_names[i] + ": " + str(monitor_vals[i])
+        )
     else:
         print("Passes ", monitor_ch_names[i], monitor_vals[i])
 
@@ -249,13 +257,13 @@ print("Done calibration")
 for i in range(0, len(my_phaser.gcal)):
     if my_phaser.gcal[i] < gain_cal_limits:
         print("Gain cal failure on element ", i, ", ", my_phaser.gcal[i])
-        failures.append("Gain cal falure on element ", str(i))  # Throws isort error?
+        failures.append("Gain cal falure on element " + str(i))  # Throws isort error?
 
 
 for i in range(0, len(my_phaser.pcal)):
     if abs(my_phaser.pcal[i]) > phase_cal_limits:
         print("Phase cal failure on element ", i, ", ", my_phaser.pcal[i])
-        failures.append("Phase cal falure on element ", str(i))
+        failures.append("Phase cal falure on element " + str(i))
 
 print("Test took " + str(time.time() - start) + " seconds.")
 

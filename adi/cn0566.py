@@ -101,6 +101,10 @@ class CN0566(adf4159, adar1000_array):
         self.pcal = [
             0.0 for i in range(0, (self.num_elements))
         ]  # default phase cal value i.e 0
+        self.ccal = [
+            0.0,
+            0.0,
+        ]  # Gain compensation for two RX channels - includes all errors, including the SDR's
         self.gcal = [
             1.0 for i in range(0, self.num_elements)
         ]  # default gain cal value i.e 127
@@ -117,7 +121,7 @@ class CN0566(adf4159, adar1000_array):
         self.v3_vdd4v5_scale = 1.0 + (30.1 / 10.0)
         self.v4_vdd_amp_scale = 1.0 + (69.8 / 10.0)
         self.v5_vinput_scale = 1.0 + (30.1 / 10.0)
-        self.v6_imon_scale = 10.0  # double check scaling, this is in mA
+        self.v6_imon_scale = 1.0  # LTC4217 IMON = 50uA/A * 20k = 1 V / A
         self.v7_vtune_scale = 1.0 + (69.8 / 10.0)
 
         # set outputs
@@ -218,6 +222,7 @@ class CN0566(adf4159, adar1000_array):
             v0_vdd1v8,
             v1_vdd3v0,
             v2_vdd3v3,
+            v3_vdd4v5,
             v4_vdd_amp,
             v5_vinput,
             v6_imon,
@@ -321,6 +326,12 @@ class CN0566(adf4159, adar1000_array):
             elif self.device_mode == "tx":
                 device.latch_tx_settings()  # writes 0x02 to reg 0x28.
 
+    def save_channel_cal(self, filename="channel_cal_val.pkl"):
+        """ Saves channel calibration file."""
+        with open(filename, "wb") as file1:
+            pickle.dump(self.ccal, file1)  # save calibrated gain value to a file
+            file1.close()
+
     def save_gain_cal(self, filename="gain_cal_val.pkl"):
         """ Saves gain calibration file."""
         with open(filename, "wb") as file1:
@@ -332,6 +343,19 @@ class CN0566(adf4159, adar1000_array):
         with open(filename, "wb") as file:
             pickle.dump(self.pcal, file)  # save calibrated phase value to a file
             file.close()
+
+    def load_channel_cal(self, filename="channel_cal_val.pkl"):
+        """ Load channel gain compensation values, if not calibrated set all to 0.
+            parameters:
+                filename: type=string
+                          Provide path of phase calibration file
+        """
+        try:
+            with open(filename, "rb") as file:
+                self.ccal = pickle.load(file)  # Load gain cal values
+        except Exception:
+            print("file not found, loading default (no channel gain compensation)")
+            self.ccal = [0.0] * 2
 
     def load_gain_cal(self, filename="gain_cal_val.pkl"):
         """ Load gain calibrated value, if not calibrated set all channel gain to maximum.

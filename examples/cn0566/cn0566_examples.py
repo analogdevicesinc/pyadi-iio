@@ -51,6 +51,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from cn0566_functions import (
     calculate_plot,
+    channel_calibration,
     gain_calibration,
     load_hb100_cal,
     phase_calibration,
@@ -71,6 +72,11 @@ except:
         sys.exit(0)
 
 colors = ["black", "gray", "red", "orange", "yellow", "green", "blue", "purple"]
+
+
+def do_cal_channel():
+    my_phaser.set_beam_phase_diff(0.0)
+    channel_calibration(my_phaser, verbose=True)
 
 
 def do_cal_gain():
@@ -105,7 +111,8 @@ def do_cal_phase():
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
     #     rpi_ip = "ip:169.254.225.48" # Hard code an IP here for debug
-    sdr_ip = "ip:pluto.local"  # Pluto IP, with modified IP address or not
+    # sdr_ip = "ip:pluto.local"  # Pluto IP, with modified IP address or not
+    sdr_ip = "ip:phaser.local:12345"  # Context Forwarding in libiio 0.24!
     print("Running on Windows, connecting to ", rpi_ip, " and ", sdr_ip)
 elif os.name == "posix":
     rpi_ip = "ip:localhost"  # Assume running locally on Raspberry Pi

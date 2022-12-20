@@ -223,6 +223,23 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
     return gain, angle, delta, diff_error, beam_phase, xf, max_gain, PhaseValues
 
 
+def channel_calibration(cn0566, verbose=False):
+    """" Do this BEFORE gain_calibration.
+         Performs calibration between the two ADAR1000 channels. Accounts for all
+         sources of mismatch between the two channels: ADAR1000s, mixers, and
+         the SDR (Pluto) inputs. """
+    peak_bin = find_peak_bin(cn0566)
+    channel_levels, plot_data = measure_channel_gains(cn0566, peak_bin, verbose=False)
+    ch_mismatch = 20.0 * np.log10(channel_levels[0] / channel_levels[1])
+    if verbose is True:
+        print("channel mismatch: ", ch_mismatch, " dB")
+    if ch_mismatch > 0:  # Channel 0 hihger, boost ch1:
+        cn0566.ccal = [0.0, ch_mismatch]
+    else:  # Channel 1 higher, boost ch0:
+        cn0566.ccal = [-ch_mismatch, 0.0]
+    pass
+
+
 def gain_calibration(cn0566, verbose=False):
     """ Perform the Gain Calibration routine."""
 
@@ -261,6 +278,74 @@ def gain_calibration(cn0566, verbose=False):
     )
     return plot_data
     # print(cn0566.gcal)
+
+
+def measure_channel_gains(
+    cn0566, peak_bin, verbose=False
+):  # Default to central element
+    """ Calculate all the values required to do different plots. It method calls set_beam_phase_diff and
+        sets the Phases of all channel. All the math is done here.
+        parameters:
+            gcal_element: type=int
+                        If gain calibration is taking place, it indicates element number whose gain calibration is
+                        is currently taking place
+            cal_element: type=int
+                        If Phase calibration is taking place, it indicates element number whose phase calibration is
+                        is currently taking place
+            peak_bin: type=int
+                        Peak bin to examine around for amplitude
+    """
+    width = 10  # Bins around fundamental to sum
+    win = signal.windows.flattop(cn0566.rx_dev.rx_buffer_size)
+    win /= np.average(np.abs(win))  # Normalize to unity gain
+    plot_data = []
+    channel_level = []
+    for channel in range(0, 2):
+        # Start with sdr CH0 elements
+        cn0566.set_all_gain(0, apply_cal=False)  # Start with all gains set to zero
+        cn0566.set_chan_gain(
+            channel * 4 + 0, 127, apply_cal=False
+        )  # Set element to max
+        cn0566.set_chan_gain(
+            channel * 4 + 1, 127, apply_cal=False
+        )  # Set element to max
+        cn0566.set_chan_gain(
+            channel * 4 + 2, 127, apply_cal=False
+        )  # Set element to max
+        cn0566.set_chan_gain(
+            channel * 4 + 3, 127, apply_cal=False
+        )  # Set element to max
+
+        sleep(1.0)  # todo - remove when driver fixed to compensate for ADAR1000 quirk
+        if verbose:
+            print("measuring channel ", channel)
+        total_sum = 0
+        # win = np.blackman(cn0566.rx_dev.rx_buffer_size)
+
+        spectrum = np.zeros(cn0566.rx_dev.rx_buffer_size)
+
+        for count in range(
+            0, cn0566.Averages
+        ):  # repeatsnip loop and average the results
+            data = (
+                cn0566.rx_dev.rx()
+            )  # todo - remove once confirmed no flushing necessary
+            data = cn0566.rx_dev.rx()  # read a buffer of data
+            y_sum = (data[0] + data[1]) * win
+
+            s_sum = np.fft.fftshift(np.absolute(np.fft.fft(y_sum)))
+            spectrum += s_sum
+
+            # Look for peak value within window around fundamental (reject interferers)
+            s_mag_sum = np.max(s_sum[peak_bin - width : peak_bin + width])
+            total_sum += s_mag_sum
+
+        spectrum /= cn0566.Averages * cn0566.rx_dev.rx_buffer_size
+        PeakValue_sum = total_sum / (cn0566.Averages * cn0566.rx_dev.rx_buffer_size)
+        plot_data.append(spectrum)
+        channel_level.append(PeakValue_sum)
+
+    return channel_level, plot_data
 
 
 def measure_element_gain(
