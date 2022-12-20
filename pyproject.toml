@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=40.6.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "pyadi-iio"
+dynamic = ["version", "readme"]
+description = "Analog Devices python interfaces for hardware with Industrial I/O drivers"
+license = {text = "ADI BSD"}
+classifiers = [
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules"]
+requires-python = ">=3.7"
+authors = [
+    {name = "Travis Collins", email="travis.collins@analog.com"},
+]
+maintainers = [
+    {name = "Travis Collins", email="travis.collins@analog.com"},
+    {name = "Analog Devices, Inc"}
+]
+dependencies = [
+    'numpy >= 1.20',
+    'pylibiio >= 0.23.1',
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "adi.__version__"}
+readme = {file = "README.md"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["adi"]
+exclude = ["test*"]
+namespaces = true
+
+[project.optional-dependencies]
+jesd = [
+    "paramiko"
+]
+
+[project.urls]
+homepage = "https://analogdevicesinc.github.io/pyadi-iio/"
+documentation = "https://analogdevicesinc.github.io/pyadi-iio/"
+repository = "https://github/analogdevicesinc/pyadi-iio"
+
+[tool.isort]
+multi_line_output=3
+include_trailing_comma="True"
+force_grid_wrap=0
+use_parentheses="True"
+line_length=88
+
+[tool.mypy]
+ignore_missing_imports="true"
