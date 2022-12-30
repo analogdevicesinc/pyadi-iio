@@ -63,11 +63,11 @@ def to_sup(angle):
 
 
 def find_peak_bin(cn0566, verbose=False):
-    win = np.blackman(cn0566.rx_dev.rx_buffer_size)
+    win = np.blackman(cn0566.sdr.rx_buffer_size)
     # First, locate fundamental.
     cn0566.set_all_gain(127)
     cn0566.set_beam_phase_diff(0.0)
-    data = cn0566.rx_dev.rx()  # read a buffer of data
+    data = cn0566.sdr.rx()  # read a buffer of data
     y_sum = (data[0] + data[1]) * win
     s_sum = np.fft.fftshift(np.absolute(np.fft.fft(y_sum)))
     return np.argmax(s_sum)
@@ -102,7 +102,7 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
         [],
         [],
     )  # Create empty lists
-    NumSamples = cn0566.rx_dev.rx_buffer_size
+    NumSamples = cn0566.sdr.rx_buffer_size
     win = np.blackman(NumSamples)
     win /= np.average(win)
 
@@ -149,7 +149,7 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
 
         for count in range(0, cn0566.Averages):  # repeat loop and average the results
             data = (
-                cn0566.rx_dev.rx()
+                cn0566.sdr.rx()
             )  # read a buffer of data from Pluto using pyadi-iio library (adi.py)
             y_sum = (data[0] + data[1]) * win
             y_delta = (data[0] - data[1]) * win
@@ -215,7 +215,7 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
     max_gain = 20 * np.log10(
         s_mag / (2 ** 12)
     )  # Pluto is a 12 bit ADC, so use that to convert to dBFS
-    ts = 1 / float(cn0566.rx_dev.sample_rate)
+    ts = 1 / float(cn0566.sdr.sample_rate)
     xf = np.fft.fftfreq(NumSamples, ts)
     xf = np.fft.fftshift(xf)  # this is the x axis (freq in Hz) for our fft plot
     # Return values/ parameter based on Calibration Flag status
@@ -252,7 +252,7 @@ def gain_calibration(cn0566, verbose=False):
     plot_data = []
     peak_bin = find_peak_bin(cn0566)
     if verbose is True:
-        print("Peak bin at ", peak_bin, " out of ", cn0566.rx_dev.rx_buffer_size)
+        print("Peak bin at ", peak_bin, " out of ", cn0566.sdr.rx_buffer_size)
     # gcal_element indicates current element/channel which is being calibrated
     for gcal_element in range(0, (cn0566.num_elements)):
         if verbose is True:
@@ -296,41 +296,42 @@ def measure_channel_gains(
                         Peak bin to examine around for amplitude
     """
     width = 10  # Bins around fundamental to sum
-    win = signal.windows.flattop(cn0566.rx_dev.rx_buffer_size)
+    win = signal.windows.flattop(cn0566.sdr.rx_buffer_size)
     win /= np.average(np.abs(win))  # Normalize to unity gain
     plot_data = []
     channel_level = []
+    cn0566.set_rx_hardwaregain(6, False)
     for channel in range(0, 2):
         # Start with sdr CH0 elements
         cn0566.set_all_gain(0, apply_cal=False)  # Start with all gains set to zero
         cn0566.set_chan_gain(
-            channel * 4 + 0, 127, apply_cal=False
+            (1 - channel) * 4 + 0,
+            127,
+            apply_cal=False,  # 1-channel because wonky channel mapping!!
         )  # Set element to max
         cn0566.set_chan_gain(
-            channel * 4 + 1, 127, apply_cal=False
+            (1 - channel) * 4 + 1, 127, apply_cal=False
         )  # Set element to max
         cn0566.set_chan_gain(
-            channel * 4 + 2, 127, apply_cal=False
+            (1 - channel) * 4 + 2, 127, apply_cal=False
         )  # Set element to max
         cn0566.set_chan_gain(
-            channel * 4 + 3, 127, apply_cal=False
+            (1 - channel) * 4 + 3, 127, apply_cal=False
         )  # Set element to max
 
         sleep(1.0)  # todo - remove when driver fixed to compensate for ADAR1000 quirk
         if verbose:
             print("measuring channel ", channel)
         total_sum = 0
-        # win = np.blackman(cn0566.rx_dev.rx_buffer_size)
+        # win = np.blackman(cn0566.sdr.rx_buffer_size)
 
-        spectrum = np.zeros(cn0566.rx_dev.rx_buffer_size)
+        spectrum = np.zeros(cn0566.sdr.rx_buffer_size)
 
         for count in range(
             0, cn0566.Averages
         ):  # repeatsnip loop and average the results
-            data = (
-                cn0566.rx_dev.rx()
-            )  # todo - remove once confirmed no flushing necessary
-            data = cn0566.rx_dev.rx()  # read a buffer of data
+            data = cn0566.sdr.rx()  # todo - remove once confirmed no flushing necessary
+            data = cn0566.sdr.rx()  # read a buffer of data
             y_sum = (data[0] + data[1]) * win
 
             s_sum = np.fft.fftshift(np.absolute(np.fft.fft(y_sum)))
@@ -340,8 +341,8 @@ def measure_channel_gains(
             s_mag_sum = np.max(s_sum[peak_bin - width : peak_bin + width])
             total_sum += s_mag_sum
 
-        spectrum /= cn0566.Averages * cn0566.rx_dev.rx_buffer_size
-        PeakValue_sum = total_sum / (cn0566.Averages * cn0566.rx_dev.rx_buffer_size)
+        spectrum /= cn0566.Averages * cn0566.sdr.rx_buffer_size
+        PeakValue_sum = total_sum / (cn0566.Averages * cn0566.sdr.rx_buffer_size)
         plot_data.append(spectrum)
         channel_level.append(PeakValue_sum)
 
@@ -364,20 +365,21 @@ def measure_element_gain(
                         Peak bin to examine around for amplitude
     """
     width = 10  # Bins around fundamental to sum
+    cn0566.set_rx_hardwaregain(6)  # Channel calibration defaults to True
     cn0566.set_all_gain(0, apply_cal=False)  # Start with all gains set to zero
     cn0566.set_chan_gain(cal, 127, apply_cal=False)  # Set element to max
     sleep(1.0)  # todo - remove when driver fixed to compensate for ADAR1000 quirk
     if verbose:
         print("measuring element: ", cal)
     total_sum = 0
-    # win = np.blackman(cn0566.rx_dev.rx_buffer_size)
-    win = signal.windows.flattop(cn0566.rx_dev.rx_buffer_size)
+    # win = np.blackman(cn0566.sdr.rx_buffer_size)
+    win = signal.windows.flattop(cn0566.sdr.rx_buffer_size)
     win /= np.average(np.abs(win))  # Normalize to unity gain
-    spectrum = np.zeros(cn0566.rx_dev.rx_buffer_size)
+    spectrum = np.zeros(cn0566.sdr.rx_buffer_size)
 
     for count in range(0, cn0566.Averages):  # repeatsnip loop and average the results
-        data = cn0566.rx_dev.rx()  # todo - remove once confirmed no flushing necessary
-        data = cn0566.rx_dev.rx()  # read a buffer of data
+        data = cn0566.sdr.rx()  # todo - remove once confirmed no flushing necessary
+        data = cn0566.sdr.rx()  # read a buffer of data
         y_sum = (data[0] + data[1]) * win
 
         s_sum = np.fft.fftshift(np.absolute(np.fft.fft(y_sum)))
@@ -387,8 +389,8 @@ def measure_element_gain(
         s_mag_sum = np.max(s_sum[peak_bin - width : peak_bin + width])
         total_sum += s_mag_sum
 
-    spectrum /= cn0566.Averages * cn0566.rx_dev.rx_buffer_size
-    PeakValue_sum = total_sum / (cn0566.Averages * cn0566.rx_dev.rx_buffer_size)
+    spectrum /= cn0566.Averages * cn0566.sdr.rx_buffer_size
+    PeakValue_sum = total_sum / (cn0566.Averages * cn0566.sdr.rx_buffer_size)
 
     return PeakValue_sum, spectrum
 
@@ -414,8 +416,8 @@ def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
     sleep(1.0)
 
     cn0566.set_chan_phase(ref, 0.0, apply_cal=False)  # Reference element
-    # win = np.blackman(cn0566.rx_dev.rx_buffer_size)
-    win = signal.windows.flattop(cn0566.rx_dev.rx_buffer_size)  # Super important!
+    # win = np.blackman(cn0566.sdr.rx_buffer_size)
+    win = signal.windows.flattop(cn0566.sdr.rx_buffer_size)  # Super important!
     win /= np.average(np.abs(win))  # Normalize to unity gain
     width = 10  # Bins around fundamental to sum
     sweep_angle = 180
@@ -428,8 +430,8 @@ def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
         cn0566.set_chan_phase(cal, phase, apply_cal=False)
         total_sum = 0
         for count in range(0, cn0566.Averages):  # repeat loop and average the results
-            data = cn0566.rx_dev.rx()  # read a buffer of data
-            data = cn0566.rx_dev.rx()
+            data = cn0566.sdr.rx()  # read a buffer of data
+            data = cn0566.sdr.rx()
             y_sum = (data[0] + data[1]) * win
             s_sum = np.fft.fftshift(np.absolute(np.fft.fft(y_sum)))
 
@@ -446,7 +448,7 @@ def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
             s_mag_sum = np.max(s_sum[peak_bin - width : peak_bin + width])
             s_mag_sum = np.max(s_sum)
             total_sum += s_mag_sum
-        PeakValue_sum = total_sum / (cn0566.Averages * cn0566.rx_dev.rx_buffer_size)
+        PeakValue_sum = total_sum / (cn0566.Averages * cn0566.sdr.rx_buffer_size)
         gain.append(PeakValue_sum)
 
     return (
@@ -464,7 +466,7 @@ def phase_calibration(cn0566, verbose=False):
         Now set gain values according to above Note."""
     peak_bin = find_peak_bin(cn0566)
     if verbose is True:
-        print("Peak bin at ", peak_bin, " out of ", cn0566.rx_dev.rx_buffer_size)
+        print("Peak bin at ", peak_bin, " out of ", cn0566.sdr.rx_buffer_size)
 
     #        cn0566.phase_cal = True  # Gain Calibration Flag
     #        cn0566.load_gain_cal('gain_cal_val.pkl')  # Load gain cal val as phase cal is dependent on gain cal

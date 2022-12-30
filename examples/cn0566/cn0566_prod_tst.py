@@ -56,6 +56,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from cn0566_functions import (
     calculate_plot,
+    channel_calibration,
     gain_calibration,
     load_hb100_cal,
     phase_calibration,
@@ -80,8 +81,10 @@ monitor_ch_names = [
     "VTune: ",
 ]
 
+
+channel_cal_limits = 13.0  # Fail if channels mismatched by more than 12 dB
 gain_cal_limits = (
-    0.65  # Fail if any channel is less than 60% of the highest gain channel
+    0.50  # Fail if any channel is less than 60% of the highest gain channel
 )
 phase_cal_limits = (
     80.0  # Fail if delta between any two channels is more than 50 degress.
@@ -118,27 +121,13 @@ except NameError:
     print("cn0566 not connected, connecting...")
     from adi.cn0566 import CN0566
 
-    my_phaser = CN0566(uri=rpi_ip, rx_dev=my_sdr)
+    my_phaser = CN0566(uri=rpi_ip, sdr=my_sdr)
 
+# By default device_mode is "rx"
+my_phaser.configure(device_mode="rx")
 
-# Set up receive frequency. When using HB100, you need to know its frequency
-# fairly accurately. Use the cn0566_find_hb100.py script to measure its frequency
-# and write out to the cal file. IF using the onboard TX generator, delete
-# the cal file and set frequency via config.py or config_custom.py.
-
-
-# try:
-#     my_phaser.SignalFreq = load_hb100_cal()
-#     print("Found signal freq file, ", my_phaser.SignalFreq)
-#     use_tx = False
-# except:
-#     my_phaser.SignalFreq = 10.525e9
-#     print("No signal freq found, keeping at ", my_phaser.SignalFreq)
-#     use_tx = True
-
-print("Using TX output closest to tripod mount, 10.525 GHz for production test.")
-my_phaser.SignalFreq = 10.525e9
 use_tx = True
+
 
 # Configure SDR parameters.
 
@@ -187,35 +176,42 @@ else:
     my_sdr.tx_hardwaregain_chan1 = int(-88)
     my_sdr.tx_lo = int(1.0e9)
 
+
+# Set up receive frequency. When using HB100, you need to know its frequency
+# fairly accurately. Use the cn0566_find_hb100.py script to measure its frequency
+# and write out to the cal file. IF using the onboard TX generator, delete
+# the cal file and set frequency via config.py or config_custom.py.
+
+
+# try:
+#     my_phaser.SignalFreq = load_hb100_cal()
+#     print("Found signal freq file, ", my_phaser.SignalFreq)
+#     use_tx = False
+# except:
+#     my_phaser.SignalFreq = 10.525e9
+#     print("No signal freq found, keeping at ", my_phaser.SignalFreq)
+#     use_tx = True
+
+print("Using TX output closest to tripod mount, 10.525 GHz for production test.")
+my_phaser.SignalFreq = 10.525e9
+
+
 # my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
 # my_sdr.dds_frequencies = [0.1e6, 0.1e6, 0.1e6, 0.1e6] #Frequencies of DDSs in Hz
 # my_sdr.dds_scales = [1, 1, 0, 0] #Scale of DDS signal generators Ranges [0,1]
 my_sdr.dds_single_tone(
-    int(2e6), 0.9, 1
+    int(0.5e6), 0.9, 1
 )  # sdr.dds_single_tone(tone_freq_hz, tone_scale_0to1, tx_channel)
 
 #  Configure CN0566 parameters.
 #     ADF4159 and ADAR1000 array attributes are exposed directly, although normally
 #     accessed through other methods.
 
-# By default device_mode is "rx"
-my_phaser.configure(
-    device_mode="rx"
-)  # Configure adar in mentioned mode and also sets gain of all channel to 127
 
+my_phaser.lo = int(my_phaser.SignalFreq) + my_sdr.rx_lo
 
-# Onboard source w/ external Vivaldi
-my_phaser.frequency = (
-    int(my_phaser.SignalFreq) + my_sdr.rx_lo
-) // 4  # PLL feedback via /4 VCO output
-my_phaser.freq_dev_step = 5690
-my_phaser.freq_dev_range = 0
-my_phaser.freq_dev_time = 0
-my_phaser.powerdown = 0
-my_phaser.ramp_mode = "disabled"
-
-
-# MWT: Do NOT need to load in cal values during production test.
+# MWT: Do NOT load in cal values during production test. That's what we're doing, after all :)
+# But running a second time with saved cal values may be useful in development.
 # my_phaser.load_gain_cal('gain_cal_val.pkl')
 # my_phaser.load_phase_cal('phase_cal_val.pkl')
 
@@ -235,17 +231,18 @@ for i in range(0, len(monitor_vals)):
     else:
         print("Passes ", monitor_ch_names[i], monitor_vals[i])
 
-print("ToDo: Compare monitor readings with allowable (TBD) minimums and maximums.")
-
-
 print(
-    "Calibrating gain and phase - place antenna at mechanical boresight in front\
-      of the array, then press enter..."
+    "Calibrating SDR channel mismatch, gain and phase - place antenna at mechanical\
+        boresight in front of the array, then press enter...\n\n"
 )
-print("Calibrating Gain, verbosely, then saving cal file...")
+
+print("\nCalibrating SDR channel mismatch, verbosely...")
+channel_calibration(my_phaser, verbose=True)
+
+print("\nCalibrating Gain, verbosely, then saving cal file...")
 gain_calibration(my_phaser, verbose=True)  # Start Gain Calibration
 
-print("Calibrating Phase, verbosely, then saving cal file...")
+print("\nCalibrating Phase, verbosely, then saving cal file...")
 phase_calibration(my_phaser, verbose=True)  # Start Phase Calibration
 
 print("Done calibration")
@@ -254,10 +251,15 @@ print("Done calibration")
 # my_phaser.save_gain_cal()  # Default filename
 # my_phaser.save_phase_cal()  # Default filename
 
+for i in range(0, len(my_phaser.ccal)):
+    if my_phaser.ccal[i] < channel_cal_limits:
+        print("Channel cal failure on channel ", i, ", ", my_phaser.gcal[i])
+        failures.append("Channel cal falure on channel " + str(i))
+
 for i in range(0, len(my_phaser.gcal)):
     if my_phaser.gcal[i] < gain_cal_limits:
         print("Gain cal failure on element ", i, ", ", my_phaser.gcal[i])
-        failures.append("Gain cal falure on element " + str(i))  # Throws isort error?
+        failures.append("Gain cal falure on element " + str(i))
 
 
 for i in range(0, len(my_phaser.pcal)):
@@ -277,7 +279,7 @@ else:
 
 
 do_plot = (
-    False  # Do a plot just for debug purposes. Suppress for actual production test.
+    True  # Do a plot just for debug purposes. Suppress for actual production test.
 )
 
 while do_plot == True:

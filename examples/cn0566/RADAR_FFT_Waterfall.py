@@ -103,8 +103,8 @@ num_slices = 200
 fft_size = 1024 * 16
 img_array = np.zeros((num_slices, fft_size))
 
-# Create radio
-"""This script is for Pluto Rev C, dual channel setup"""
+# Create radio.
+# This script is for Pluto Rev C, dual channel setup
 my_sdr.sample_rate = int(sample_rate)
 
 # Configure Rx

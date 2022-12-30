@@ -57,7 +57,8 @@ from cn0566_functions import (
     phase_calibration,
 )
 from scipy import signal
-from SDR_functions import SDR_init
+
+# from SDR_functions import SDR_init
 
 try:
     import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
@@ -127,10 +128,10 @@ try:
     print("Pluto already connected")
 except NameError:
     print("Pluto not connected, connecting...")
-    # from adi import ad9361
+    from adi import ad9361
 
-    #    my_sdr = ad9361(uri=sdr_ip)
-    my_sdr = SDR_init(sdr_ip, 30000000, config.Tx_freq, config.Rx_freq, 6, -6, 1024)
+    my_sdr = ad9361(uri=sdr_ip)
+#    my_sdr = SDR_init(sdr_ip, 30000000, config.Tx_freq, config.Rx_freq, 6, -6, 1024)
 
 time.sleep(0.5)
 
@@ -141,7 +142,22 @@ except NameError:
     print("cn0566 not connected, connecting...")
     from adi.cn0566 import CN0566
 
-    my_phaser = CN0566(uri=rpi_ip, rx_dev=my_sdr)
+    my_phaser = CN0566(uri=rpi_ip, sdr=my_sdr)
+
+# By default device_mode is "rx"
+my_phaser.configure(device_mode="rx")
+
+
+my_phaser.SDR_init(30000000, config.Tx_freq, config.Rx_freq, 6, -6, 1024)
+
+my_phaser.load_channel_cal()
+# First crack at compensating for channel gain mismatch
+my_phaser.sdr.rx_hardwaregain_chan0 = (
+    my_phaser.sdr.rx_hardwaregain_chan0 + my_phaser.ccal[0]
+)
+my_phaser.sdr.rx_hardwaregain_chan1 = (
+    my_phaser.sdr.rx_hardwaregain_chan1 + my_phaser.ccal[1]
+)
 
 # Set up receive frequency. When using HB100, you need to know its frequency
 # fairly accurately. Use the cn0566_find_hb100.py script to measure its frequency
@@ -162,11 +178,20 @@ except:
 my_sdr.filter = "LTE20_MHz.ftr"  # Load LTE 20 MHz filter
 
 
-if config.use_tx is True:
+# use_tx = config.use_tx
+use_tx = True
+
+if use_tx is True:
+    # To use tx path, set chan1 gain "high" keep chan0 attenuated.
     my_sdr.tx_hardwaregain_chan0 = int(
         -88
     )  # this is a negative number between 0 and -88
-    my_sdr.tx_hardwaregain_chan1 = int(-6)
+    my_sdr.tx_hardwaregain_chan1 = int(-3)
+    my_sdr.tx_lo = config.Tx_freq  # int(2.2e9)
+
+    my_sdr.dds_single_tone(
+        int(2e6), 0.9, 1
+    )  # sdr.dds_single_tone(tone_freq_hz, tone_scale_0to1, tx_channel)
 else:
     # To disable rx, set attenuation to a high value and set frequency far from rx.
     my_sdr.tx_hardwaregain_chan0 = int(
@@ -176,16 +201,10 @@ else:
     my_sdr.tx_lo = int(1.0e9)
 
 
-my_sdr.dds_single_tone(
-    int(2e6), 0.9, 1
-)  # sdr.dds_single_tone(tone_freq_hz, tone_scale_0to1, tx_channel)
-
 # Configure CN0566 parameters.
 #     ADF4159 and ADAR1000 array attributes are exposed directly, although normally
 #     accessed through other methods.
 
-# By default device_mode is "rx"
-my_phaser.configure(device_mode="rx")
 
 # my_phaser.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
 
@@ -231,6 +250,9 @@ if func == "cal":
     input(
         "Calibrating gain and phase - place antenna at mechanical boresight in front of the array, then press enter..."
     )
+    print("Calibrating gain mismatch between SDR channels, then saving cal file...")
+    do_cal_channel()
+    my_phaser.save_channel_cal()
     print("Calibrating Gain, verbosely, then saving cal file...")
     do_cal_gain()  # Start Gain Calibration
     my_phaser.save_gain_cal()  # Default filename

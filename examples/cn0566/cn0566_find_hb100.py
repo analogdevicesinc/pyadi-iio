@@ -82,8 +82,10 @@ except NameError:
     print("cn0566 not connected, connecting...")
     from adi.cn0566 import CN0566
 
-    my_phaser = CN0566(uri=rpi_ip, rx_dev=my_sdr)
+    my_phaser = CN0566(uri=rpi_ip, sdr=my_sdr)
 
+# By default device_mode is "rx"
+my_phaser.configure(device_mode="rx")
 
 #  Configure SDR parameters.
 
@@ -120,25 +122,12 @@ my_sdr.tx_hardwaregain_chan1 = int(-80)
 #     ADF4159 and ADAR1000 array attributes are exposed directly, although normally
 #     accessed through other methods.
 
-# By default device_mode is "rx"
-my_phaser.configure(device_mode="rx")
 
 # Set initial PLL frequency to HB100 nominal
 
 my_phaser.SignalFreq = 10.525e9
+my_phaser.lo = int(my_phaser.SignalFreq) + my_sdr.rx_lo
 
-# Onboard source w/ external Vivaldi
-my_phaser.frequency = (
-    int(my_phaser.SignalFreq) + my_sdr.rx_lo
-) // 4  # PLL feedback via /4 VCO output
-my_phaser.freq_dev_step = 5690
-my_phaser.freq_dev_range = 0
-my_phaser.freq_dev_time = 0
-my_phaser.powerdown = 0
-my_phaser.ramp_mode = "disabled"
-
-# Set all elements to half scale - a typical HB100 will have plenty
-# of signal power.
 
 gain_list = [64] * 8
 for i in range(0, len(gain_list)):

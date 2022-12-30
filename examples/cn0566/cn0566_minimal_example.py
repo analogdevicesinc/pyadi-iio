@@ -61,7 +61,7 @@ from scipy import signal
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
     #     rpi_ip = "ip:169.254.225.48" # Hard code an IP here for debug
-    sdr_ip = "ip:pluto.local"  # Pluto IP, with modified IP address or not
+    sdr_ip = "ip:phaser.local:12345"  # Pluto IP, with modified IP address or not
     print("Running on Windows, connecting to ", rpi_ip, " and ", sdr_ip)
 elif os.name == "posix":
     rpi_ip = "ip:localhost"  # Assume running locally on Raspberry Pi
@@ -90,7 +90,9 @@ except NameError:
     print("cn0566 not connected, connecting...")
     from adi.cn0566 import CN0566
 
-    my_phaser = CN0566(uri=rpi_ip, rx_dev=my_sdr)
+    my_phaser = CN0566(uri=rpi_ip, sdr=my_sdr)
+# By default device_mode is "rx"
+my_phaser.configure(device_mode="rx")
 
 #
 try:
@@ -105,14 +107,6 @@ except:
 #     ADF4159 and ADAR1000 array attributes are exposed directly, although normally
 #     accessed through other methods.
 
-# By default device_mode is "rx"
-my_phaser.configure(device_mode="rx")
-# Set up PLL, everything other than the actual output frequency for now
-my_phaser.freq_dev_step = 5690
-my_phaser.freq_dev_range = 0
-my_phaser.freq_dev_time = 0
-my_phaser.powerdown = 0
-my_phaser.ramp_mode = "disabled"
 
 # Set all antenna elements to half scale - a typical HB100 will have plenty
 # of signal power.

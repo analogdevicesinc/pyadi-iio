@@ -46,13 +46,16 @@ class CN0566(adf4159, adar1000_array):
         operations for beamforming like default configuration,
         calibration, set_beam_phase_diff, etc.
         gpios (as one-bit-adc-dac) are instantiated internally.
+        ad7291 temperature / voltage monitor instantiated internally.
+        sdr argument is an instance of a Pluto SDR with updated firmware,
+        and updated to 2t2r.
         """
 
     # MWT: Still up for debate - inheret, or nest? Nesting may actually be easier to understand.
     def __init__(
         self,
         uri=None,
-        rx_dev=None,
+        sdr=None,
         chip_ids=["BEAM0", "BEAM1"],
         device_map=[[1], [2]],
         element_map=[[1, 2, 3, 4, 5, 6, 7, 8]],  # [[1, 2, 3, 4], [5, 6, 7, 8]],
@@ -62,12 +65,13 @@ class CN0566(adf4159, adar1000_array):
         },
         verbose=False,
     ):
+        """ Set up devices, properties, helper methods, etc. """
         if verbose is True:
             print("attempting to open ADF4159, uri: ", str(uri))
         adf4159.__init__(self, uri)
-
         if verbose is True:
             print("attempting to open ADAR1000 array, uri: ", str(uri))
+        sleep(0.5)
         adar1000_array.__init__(
             self, uri, chip_ids, device_map, element_map, device_element_map
         )
@@ -104,18 +108,18 @@ class CN0566(adf4159, adar1000_array):
         self.ccal = [
             0.0,
             0.0,
-        ]  # Gain compensation for two RX channels - includes all errors, including the SDR's
+        ]  # Gain compensation for the two RX channels in dB. Includes all errors, including the SDR's
         self.gcal = [
             1.0 for i in range(0, self.num_elements)
-        ]  # default gain cal value i.e 127
+        ]  # Per-element gain compensation, AFTER above channel compensation. Use to scale value sent to ADAR1000.
         self.ph_deltas = [
             0 for i in range(0, (self.num_elements) - 1)
         ]  # Phase delta between elements
-        self.rx_dev = rx_dev  # rx_device/sdr that rx and plots
+        self.sdr = sdr  # rx_device/sdr that rx and plots
         self.gain_cal = False  # gain/phase calibration status flag it goes True when performing calibration
         self.phase_cal = False
-        # Scaling factors for voltage AD7291 monitor, straight from schematic
-        self.v0_vdd1v8_scale = 1.0 + (10.0 / 10.0)
+        # Scaling factors for voltage AD7291 monitor, straight from schematic.
+        self.v0_vdd1v8_scale = 1.0 + (10.0 / 10.0)  # Resistances in k ohms.
         self.v1_vdd3v0_scale = 1.0 + (10.0 / 10.0)
         self.v2_vdd3v3_scale = 1.0 + (10.0 / 10.0)
         self.v3_vdd4v5_scale = 1.0 + (30.1 / 10.0)
@@ -124,7 +128,35 @@ class CN0566(adf4159, adar1000_array):
         self.v6_imon_scale = 1.0  # LTC4217 IMON = 50uA/A * 20k = 1 V / A
         self.v7_vtune_scale = 1.0 + (69.8 / 10.0)
 
-        # set outputs
+        ### Initialize ADF4159 / Local Oscillator ###
+
+        self.lo = 10.5e9
+
+        BW = 500e6 / 4
+        num_steps = 1000
+        self.freq_dev_range = int(
+            BW
+        )  # frequency deviation range in Hz.  This is the total freq deviation of the complete freq ramp
+        self.freq_dev_step = int(
+            BW / num_steps
+        )  # frequency deviation step in Hz.  This is fDEV, in Hz.  Can be positive or negative
+        self.freq_dev_time = int(
+            1e3
+        )  # total time (in us) of the complete frequency ramp
+        self.ramp_mode = "disabled"  # ramp_mode can be:  "disabled", "continuous_sawtooth", "continuous_triangular", "single_sawtooth_burst", "single_ramp_burst"
+        self.delay_word = 4095  # 12 bit delay word.  4095*PFD = 40.95 us.  For sawtooth ramps, this is also the length of the Ramp_complete signal
+        self.delay_clk = "PFD"  # can be 'PFD' or 'PFD*CLK1'
+        self.delay_start_en = 0  # delay start
+        self.ramp_delay_en = 0  # delay between ramps.
+        self.trig_delay_en = 0  # triangle delay
+        self.sing_ful_tri = 0  # full triangle enable/disable -- this is used with the single_ramp_burst mode
+        self.tx_trig_en = 0  # start a ramp with TXdata
+        # pll.clk1_value = 100
+        # pll.phase_value = 3
+        self.powerdown = 0
+        self.enable = 0  # 0 = PLL enable.  Write this last to update all the registers
+
+        ### Initialize GPIOS / set outputs ###
         self.gpios.gpio_vctrl_1 = 1  # Onboard PLL/LO source
         self.gpios.gpio_vctrl_2 = 1  # Send LO to TX circuitry
 
@@ -135,7 +167,7 @@ class CN0566(adf4159, adar1000_array):
         self.gpios.gpio_rx_load = 0  # ADAR1000 RX load (cycle through RAM table)
         self.gpios.gpio_tr = 0  # ADAR1000 transmit / recieve mode. RX = 0 (assuming)
         self.gpios.gpio_tx_sw = (
-            0  # Direct control of TX switch when div=[000]. 0 = J1, 1 = J2
+            0  # Direct control of TX switch when div=[000]. 0 = TX_OUT_2, 1 = TX_OUT_1
         )
         # Read input
         self.muxout = (
@@ -143,6 +175,7 @@ class CN0566(adf4159, adar1000_array):
         )  # PLL MUXOUT, assign to PLL lock in the future
 
     def set_tx_sw_div(self, div_ratio):
+        """ Set TX switch toggle divide ratio. """
         state_map = {0: 0, 2: 1, 4: 2, 8: 3, 16: 4, 32: 5, 64: 6, 128: 7}
         self.gpios.gpio_div_s0 = 0b001 & state_map[div_ratio]
         self.gpios.gpio_div_s1 = (0b010 & state_map[div_ratio]) >> 1
@@ -228,6 +261,16 @@ class CN0566(adf4159, adar1000_array):
             v6_imon,
             v7_vtune,
         ]
+
+    @property
+    def lo(self):
+        """Get the VCO output frequency, accounting for the /4 ahead of the ADF4159 RFIN."""
+        return self.frequency * 4.0
+
+    @lo.setter
+    def lo(self, value):
+        """Set the VCO output frequency, accounting for the /4 ahead of the ADF4159 RFIN."""
+        self.frequency = int(value / 4)
 
     def configure(self, device_mode="rx"):
         """ Configure the device/beamformer properties like RAM bypass, Tr source etc.
@@ -383,6 +426,15 @@ class CN0566(adf4159, adar1000_array):
             print("file not found, loading default (no phase shift)")
             self.pcal = [0.0] * 8
 
+    def set_rx_hardwaregain(self, gain, apply_cal=True):
+        if apply_cal is True:
+            self.sdr.rx_hardwaregain_chan0 = int(gain + self.ccal[0])
+            self.sdr.rx_hardwaregain_chan1 = int(gain + self.ccal[1])
+
+        else:
+            self.sdr.rx_hardwaregain_chan0 = int(gain)
+            self.sdr.rx_hardwaregain_chan1 = int(gain)
+
     def set_all_gain(self, value=127, apply_cal=True):
         """ This will try to set gain of all the channels
             parameters:
@@ -498,3 +550,91 @@ class CN0566(adf4159, adar1000_array):
             ) % 360.0
 
         self.latch_rx_settings()
+
+    def SDR_init(self, SampleRate, TX_freq, RX_freq, Rx_gain, Tx_gain, buffer_size):
+        """Setup contexts"""
+        #        sdr = adi.ad9361(uri=sdr_address)
+        self.sdr._ctrl.debug_attrs[
+            "adi,frequency-division-duplex-mode-enable"
+        ].value = "1"  # set to fdd mode
+        self.sdr._ctrl.debug_attrs[
+            "adi,ensm-enable-txnrx-control-enable"
+        ].value = "0"  # Disable pin control so spi can move the states
+        self.sdr._ctrl.debug_attrs["initialize"].value = "1"
+        self.sdr.rx_enabled_channels = [
+            0,
+            1,
+        ]  # enable Rx1 (voltage0) and Rx2 (voltage1)
+        self.sdr.gain_control_mode_chan0 = "manual"  # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
+        self.sdr.gain_control_mode_chan1 = "manual"  # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
+        self.sdr._rxadc.set_kernel_buffers_count(
+            1
+        )  # Default is 4 Rx buffers are stored, but we want to change and immediately measure the result, so buffers=1
+        rx = self.sdr._ctrl.find_channel("voltage0")
+        rx.attrs[
+            "quadrature_tracking_en"
+        ].value = "1"  # set to '1' to enable quadrature tracking
+        self.sdr.sample_rate = int(SampleRate)
+        self.sdr.rx_lo = int(RX_freq)
+        self.sdr.rx_buffer_size = int(
+            buffer_size
+        )  # small buffers make the scan faster -- and we're primarily just looking at peak power
+        self.sdr.tx_lo = int(TX_freq)
+        self.sdr.tx_cyclic_buffer = True
+        self.sdr.tx_hardwaregain_chan0 = int(-88)  # turn off Tx1
+        self.sdr.tx_hardwaregain_chan1 = int(Tx_gain)
+        self.sdr.rx_hardwaregain_chan0 = int(Rx_gain)
+        self.sdr.rx_hardwaregain_chan1 = int(Rx_gain)
+        self.sdr.filter = (
+            "LTE20_MHz.ftr"  # Handy filter for fairly widdeband measurements
+        )
+        # sdr.filter = "/usr/local/lib/osc/filters/LTE5_MHz.ftr"
+        # sdr.rx_rf_bandwidth = int(SampleRate*2)
+        # sdr.tx_rf_bandwidth = int(SampleRate*2)
+        signal_freq = int(SampleRate / 8)
+        if (
+            True
+        ):  # use either DDS or sdr.tx(iq) to generate the Tx waveform.  But don't do both!
+            self.sdr.dds_enabled = [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+            ]  # DDS generator enable state
+            self.sdr.dds_frequencies = [
+                signal_freq,
+                0,
+                signal_freq,
+                0,
+                signal_freq,
+                0,
+                signal_freq,
+                0,
+            ]  # Frequencies of DDSs in Hz
+            self.sdr.dds_scales = [
+                0.5,
+                0,
+                0.5,
+                0,
+                0.9,
+                0,
+                0.9,
+                0,
+            ]  # Scale of DDS signal generators Ranges [0,1]
+        else:
+            fs = int(SampleRate)
+            N = 1000
+            fc = int(signal_freq / (fs / N)) * (fs / N)
+            ts = 1 / float(fs)
+            t = np.arange(0, N * ts, ts)
+            i = np.cos(2 * np.pi * t * fc) * 2 ** 15
+            q = np.sin(2 * np.pi * t * fc) * 2 ** 15
+            iq = 0.9 * (i + 1j * q)
+            self.sdr.tx([iq, iq])
+
+
+#        return sdr
