@@ -57,6 +57,8 @@ class ad7606(rx, context_manager):
             "ad7606-6",
             "ad7606-8",
             "ad7606b",
+            "ad7606c-16",
+            "ad7606c-18",
             "ad7616",
         ]
 
@@ -75,7 +77,7 @@ class ad7606(rx, context_manager):
                 self._rxadc = device
                 break
 
-        for ch in self._ctrl._channels:
+        for ch in self._ctrl.channels:
             name = ch._id
             self._rx_channel_names.append(name)
             self.channel.append(self._channel(self._ctrl, name))
