@@ -417,36 +417,36 @@
 <section id="install-pyenv">
 <h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this heading"></a></h3>
 <p><strong>pyenv</strong> is a handy tool for installing different and isolated versions of python on your system. Since distributions can ship with rather random versions of python, pyenv can help us install exactly the versions we want. The quick way to install pyenv is with their bash script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl https://pyenv.run <span class="p">|</span> bash
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>https://pyenv.run<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </pre></div>
 </div>
 <p>Add to your path and shell startup script (.bashrc, .zshrc, …)</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/home/&lt;username&gt;/.pyenv/bin:</span><span class="nv">$PATH</span><span class="s2"></span>
-<span class="s2">eval &quot;</span><span class="k">$(</span>pyenv init -<span class="k">)</span><span class="s2">&quot;</span>
-<span class="s2">eval &quot;</span><span class="k">$(</span>pyenv virtualenv-init -<span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/home/&lt;username&gt;/.pyenv/bin:</span><span class="nv">$PATH</span>
+<span class="s2">eval &quot;</span><span class="k">$(</span>pyenv<span class="w"> </span>init<span class="w"> </span>-<span class="k">)</span><span class="s2">&quot;</span>
+<span class="s2">eval &quot;</span><span class="k">$(</span>pyenv<span class="w"> </span>virtualenv-init<span class="w"> </span>-<span class="k">)</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 <p>Install the desired python version</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pyenv install <span class="m">3</span>.6.9
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.6.9
 </pre></div>
 </div>
 </section>
 <section id="create-isolated-install-with-pipenv">
 <h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this heading"></a></h3>
 <p>Get the repo, set python version, and setup env</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install -U pipenv
-pyenv <span class="nb">local</span> <span class="m">3</span>.6.9
-git clone git@github.com:analogdevicesinc/pyadi-iio.git
-pipenv install
-pipenv shell
-pipenv install -r requirements.txt
-pipenv install -r requirements_dev.txt
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pipenv
+pyenv<span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="m">3</span>.6.9
+git<span class="w"> </span>clone<span class="w"> </span>git@github.com:analogdevicesinc/pyadi-iio.git
+pipenv<span class="w"> </span>install
+pipenv<span class="w"> </span>shell
+pipenv<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+pipenv<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements_dev.txt
 </pre></div>
 </div>
 <p>Now at this point we have all the necessary development packages to start working. If you close the current shell you will lose the environment. To return to it, go to the project folder and run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> &lt;project folder&gt;
-pyenv <span class="nb">local</span> <span class="m">3</span>.6.9
-pipenv shell
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;project<span class="w"> </span>folder&gt;
+pyenv<span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="m">3</span>.6.9
+pipenv<span class="w"> </span>shell
 </pre></div>
 </div>
 </section>

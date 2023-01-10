@@ -309,37 +309,37 @@
 <h1>ad9081_mc<a class="headerlink" href="#ad9081-mc" title="Permalink to this heading"></a></h1>
 <p>The multi-chip python interface for AD9081 is scalable to any number of AD9081s within a single libIIO context. It will automatically determine the correct main driver, manage the CDDC/FDDC/CDUC/FDUC arrangement uniquely for each chip, and DMA/DDS IP. However, the interface a bit unique with <strong>pyadi-iio</strong> since it is almost identical to the single AD9081 class but it exposes properties in a slightly different way.</p>
 <p>When using <strong>adi.ad9081</strong>, properties are generally simple types like strings, ints, floats, or lists of these types. For example, when reading back the <strong>rx_channel_nco_frequencies</strong> you would observe something like:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; import adi
-&gt;&gt;&gt; <span class="nv">dev</span> <span class="o">=</span> adi.ad9081<span class="o">()</span>
-&gt;&gt;&gt; dev.rx_channel_nco_frequencies
-<span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>import<span class="w"> </span>adi
+&gt;&gt;&gt;<span class="w"> </span><span class="nv">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.ad9081<span class="o">()</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies
+<span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>
 </pre></div>
 </div>
 <p>For the case of a multi-chip configuration a dict is returned with an entry for each MxFE chip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; import adi
-&gt;&gt;&gt; <span class="nv">dev</span> <span class="o">=</span> adi.ad9081_mc<span class="o">()</span>
-&gt;&gt;&gt; dev.rx_channel_nco_frequencies
-<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-1&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-2&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-3&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]}</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>import<span class="w"> </span>adi
+&gt;&gt;&gt;<span class="w"> </span><span class="nv">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.ad9081_mc<span class="o">()</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies
+<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-1&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-2&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-3&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]}</span>
 </pre></div>
 </div>
 <p>The same dict can be passed back to the property when writing, which will contain all or a subset of the chips to be address if desired. Alternatively, a list can be passed with only the values themselves if a dict does not want to be used. This is useful when performing array based DSP were data is approach in aggregate. However, in this case entries must be provided for all chip, not just a subset. Otherwise an error is returned.</p>
 <p>When passing a list only, the chips are address based on the attribute <strong>_default_ctrl_names</strong>. Below is an example of this API:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; import adi
-&gt;&gt;&gt; <span class="nv">dev</span> <span class="o">=</span> adi.ad9081_mc<span class="o">()</span>
-&gt;&gt;&gt; dev.rx_channel_nco_frequencies
-<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-1&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-2&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-3&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span>, <span class="m">0</span><span class="o">]}</span>
-&gt;&gt;&gt; dev.rx_channel_nco_frequencies <span class="o">=</span> <span class="o">[</span><span class="m">0</span>,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15<span class="o">]</span>
-&gt;&gt;&gt; dev.rx_channel_nco_frequencies
-<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>: <span class="o">[</span><span class="m">0</span>, <span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-1&#39;</span>: <span class="o">[</span><span class="m">4</span>, <span class="m">5</span>, <span class="m">6</span>, <span class="m">7</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-2&#39;</span>: <span class="o">[</span><span class="m">8</span>, <span class="m">9</span>, <span class="m">10</span>, <span class="m">11</span><span class="o">]</span>,
- <span class="s1">&#39;axi-ad9081-rx-3&#39;</span>: <span class="o">[</span><span class="m">12</span>, <span class="m">13</span>, <span class="m">14</span>, <span class="m">15</span><span class="o">]}</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>import<span class="w"> </span>adi
+&gt;&gt;&gt;<span class="w"> </span><span class="nv">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.ad9081_mc<span class="o">()</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies
+<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-1&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-2&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-3&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]}</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="m">0</span>,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15<span class="o">]</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies
+<span class="o">{</span><span class="s1">&#39;axi-ad9081-rx-0&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">1</span>,<span class="w"> </span><span class="m">2</span>,<span class="w"> </span><span class="m">3</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-1&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">4</span>,<span class="w"> </span><span class="m">5</span>,<span class="w"> </span><span class="m">6</span>,<span class="w"> </span><span class="m">7</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-2&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">8</span>,<span class="w"> </span><span class="m">9</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">11</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9081-rx-3&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">12</span>,<span class="w"> </span><span class="m">13</span>,<span class="w"> </span><span class="m">14</span>,<span class="w"> </span><span class="m">15</span><span class="o">]}</span>
 </pre></div>
 </div>
 <span class="target" id="module-adi.ad9081_mc"></span><dl class="py class">
