@@ -60,7 +60,7 @@ data = sdr.rx()
 ```
 tcollins@jeeves:~$ git clone https://github.com/analogdevicesinc/pyadi-iio.git
 tcollins@jeeves:~$ cd pyadi-iio
-tcollins@jeeves:~$ (sudo) python setup.py install
+tcollins@jeeves:~$ (sudo) pip install .
 ```
 ### Installing from pip
 ```
