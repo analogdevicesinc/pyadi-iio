@@ -20,7 +20,7 @@ or by grabbing the source directly for a more up to date version
 
   git clone https://github.com/analogdevicesinc/pyadi-iio.git
   cd pyadi-iio
-  (sudo) python3 setup.py install
+  (sudo) pip install .
 
 To install the optional dependencies for JESD debugging and control
 
