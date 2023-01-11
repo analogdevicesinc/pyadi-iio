@@ -38,6 +38,16 @@ class context_manager(object):
     _uri_auto = "ip:analog"
     _ctx = None
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}(uri='{self.uri}')"
+
+    def __str__(self):
+        return self.__doc__
+
+    def _set_uri(self) -> None:
+        if "uri" in self._ctx.attrs:
+            self.uri = self._ctx.attrs["uri"]
+
     @property
     def ctx(self) -> iio.Context:
         """IIO Context"""
@@ -45,6 +55,8 @@ class context_manager(object):
 
     def __init__(self, uri="", _device_name=""):
         if self._ctx:
+            if not self.uri:
+                self._set_uri()
             return
         self.uri = uri
         try:
@@ -55,10 +67,12 @@ class context_manager(object):
                     for c in contexts:
                         if _device_name in contexts[c]:
                             self._ctx = iio.Context(c)
+                            self._set_uri()
                             break
                 # Try auto discover
                 if not self._ctx and self._uri_auto != "":
                     self._ctx = iio.Context(self._uri_auto)
+                    self._set_uri()
                 if not self._ctx:
                     raise Exception("No device found")
             else:

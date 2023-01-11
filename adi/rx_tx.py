@@ -622,6 +622,7 @@ class shared_def(context_manager, metaclass=ABCMeta):
                 devs = [dev.name for dev in ctx.devices]
                 if all(dev in devs for dev in required_devices):
                     self._ctx = iio.Context(c)
+                    self._set_uri()
                     break
             if not self._ctx:
                 raise Exception("No context could be found for class")
