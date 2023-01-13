@@ -10,6 +10,7 @@
 [[Wiki](https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio)]
 
 ### Currently supported hardware
+- AD4020
 - AD4130
 - AD4110
 - AD4111
@@ -126,6 +127,7 @@
 - FMComms8
 - FMComms11
 - LTC2314-14
+- LTC2387-18
 - LTC2499
 - LTC2983
 - AD7606

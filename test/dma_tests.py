@@ -57,7 +57,7 @@ def dma_rx(
                     sdr._rx_channel_names[ec] for ec in sdr.rx_enabled_channels
                 ]
                 for ci in sdr.rx_enabled_channels:
-                    assert np.sum(np.abs(data[sdr._rx_channel_names[ci]])) > 0
+                    assert np.max(np.abs(data[sdr._rx_channel_names[ci]])) > 0
             else:
                 if isinstance(data, list):
                     for chan in data:
