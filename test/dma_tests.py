@@ -61,9 +61,9 @@ def dma_rx(
             else:
                 if isinstance(data, list):
                     for chan in data:
-                        assert np.sum(np.abs(chan)) > 0, "Buffer all zeros"
+                        assert np.max(np.abs(chan)) > 0, "Buffer all zeros"
                 else:
-                    assert np.sum(np.abs(data)) > 0, "Buffer all zeros"
+                    assert np.max(np.abs(data)) > 0, "Buffer all zeros"
     except Exception as e:
         del sdr
         raise Exception(e) from e
