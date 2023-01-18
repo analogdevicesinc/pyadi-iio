@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adi.fmcadc3 module" href="adi.fmcadc3.html" /><link rel="prev" title="daq3" href="adi.daq3.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad7799" href="adi.ad7799.html" /><link rel="prev" title="ad7746" href="adi.ad7746.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
-        <title>fmc_vna - Analog Devices Hardware Python Interfaces 0.0.15</title>
+        <title>ad777x - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -191,7 +191,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7746.html">ad7746</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad777x.html">ad777x</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad777x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
@@ -245,7 +245,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
@@ -308,17 +308,23 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.fmc_vna">
-<span id="fmc-vna"></span><h1>fmc_vna<a class="headerlink" href="#module-adi.fmc_vna" title="Permalink to this heading"></a></h1>
+          <section id="module-adi.ad777x">
+<span id="ad777x"></span><h1>ad777x<a class="headerlink" href="#module-adi.ad777x" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.fmc_vna.fmcvna">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.fmc_vna.</span></span><span class="sig-name descname"><span class="pre">fmcvna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmc_vna.fmcvna" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.adrf5720.html#adi.adrf5720.adrf5720" title="adi.adrf5720.adrf5720"><code class="xref py py-class docutils literal notranslate"><span class="pre">adrf5720</span></code></a>, <a class="reference internal" href="adi.ad9083.html#adi.ad9083.ad9083" title="adi.ad9083.ad9083"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9083</span></code></a>, <a class="reference internal" href="adi.admv8818.html#adi.admv8818.admv8818" title="adi.admv8818.admv8818"><code class="xref py py-class docutils literal notranslate"><span class="pre">admv8818</span></code></a>, <a class="reference internal" href="adi.gen_mux.html#adi.gen_mux.genmux" title="adi.gen_mux.genmux"><code class="xref py py-class docutils literal notranslate"><span class="pre">genmux</span></code></a>, <a class="reference internal" href="adi.adf5610.html#adi.adf5610.adf5610" title="adi.adf5610.adf5610"><code class="xref py py-class docutils literal notranslate"><span class="pre">adf5610</span></code></a>, <a class="reference internal" href="adi.adl5960.html#adi.adl5960.adl5960" title="adi.adl5960.adl5960"><code class="xref py py-class docutils literal notranslate"><span class="pre">adl5960</span></code></a></p>
-<p>FMCVNA Scalable 8-port Vector Network Analyzer Board</p>
+<dt class="sig sig-object py" id="adi.ad777x.ad777x">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad777x.</span></span><span class="sig-name descname"><span class="pre">ad777x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad777x.ad777x" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD777x ADC</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.fmc_vna.fmcvna.frontend">
-<span class="sig-name descname"><span class="pre">frontend</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0]</span></em><a class="headerlink" href="#adi.fmc_vna.fmcvna.frontend" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad777x.ad777x.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad777x.ad777x.channel" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad777x.ad777x.to_volts">
+<span class="sig-name descname"><span class="pre">to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad777x.ad777x.to_volts" title="Permalink to this definition"></a></dt>
+<dd><p>Converts raw value to SI.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -329,23 +335,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.fmcadc3.html">
+          <a class="next-page" href="adi.ad7799.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">adi.fmcadc3 module</div>
+                <div class="title">ad7799</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.daq3.html">
+          <a class="prev-page" href="adi.ad7746.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">daq3</div>
+                <div class="title">ad7746</div>
                 
               </div>
             </a>
@@ -379,9 +385,10 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">fmc_vna</a><ul>
-<li><a class="reference internal" href="#adi.fmc_vna.fmcvna"><code class="docutils literal notranslate"><span class="pre">fmcvna</span></code></a><ul>
-<li><a class="reference internal" href="#adi.fmc_vna.fmcvna.frontend"><code class="docutils literal notranslate"><span class="pre">fmcvna.frontend</span></code></a></li>
+<li><a class="reference internal" href="#">ad777x</a><ul>
+<li><a class="reference internal" href="#adi.ad777x.ad777x"><code class="docutils literal notranslate"><span class="pre">ad777x</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad777x.ad777x.channel"><code class="docutils literal notranslate"><span class="pre">ad777x.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad777x.ad777x.to_volts"><code class="docutils literal notranslate"><span class="pre">ad777x.to_volts()</span></code></a></li>
 </ul>
 </li>
 </ul>
