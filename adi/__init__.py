@@ -38,6 +38,7 @@ from adi.ad3552r import ad3552r
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
 from adi.ad4630 import ad4630
+from adi.ad7291 import ad7291
 from adi.ad5686 import ad5686
 from adi.ad5940 import ad5940
 from adi.ad7124 import ad7124
@@ -98,6 +99,7 @@ from adi.gen_mux import genmux
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2983 import ltc2983
+from adi.ltc2387 import ltc2387
 from adi.max11205 import max11205
 from adi.max31855 import max31855
 from adi.one_bit_adc_dac import one_bit_adc_dac

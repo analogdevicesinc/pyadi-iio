@@ -1,4 +1,4 @@
-# Copyright (C) 2022 Analog Devices, Inc.
+# Copyright (C) 2019 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -31,58 +31,44 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import numpy as np
+from decimal import Decimal
 
+import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import tx
 
 
-class ad3552r(tx, context_manager, attribute):
-    """AD3552R DAC"""
+class ad7291(context_manager):
+    """ AD7291 ADC """
 
-    _device_name = ""
-    channel = []  # type: ignore
     _complex_data = False
+    channel = []  # type: ignore
+    _device_name = ""
 
-    def __init__(self, uri="", device_name=""):
+    def __init__(self, uri="", device_index=0):
 
         context_manager.__init__(self, uri, self._device_name)
-        compatible_parts = ["axi-ad3552r-0","axi-ad3552r-1"]
+
+        compatible_parts = ["ad7291_1"]
 
         self._ctrl = None
+        index = 0
 
-        if not device_name:
-            device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception("Not a compatible device: " + device_name)
-
-                # Select the device matching device_name as working device
+        # Selecting the device_index-th device from the 7291 family as working device.
         for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._txdac = device
-                break
+            if device.name in compatible_parts:
+                if index == device_index:
+                    self._ctrl = device
+                    break
+                else:
+                    index += 1
 
         for ch in self._ctrl.channels:
-            name = ch.id
-            self._tx_channel_names.append(name)
+            name = ch._id
             self.channel.append(self._channel(self._ctrl, name))
 
-        tx.__init__(self)
-
-    @property
-    def sample_rate(self):
-        """Sample rate of the DAC"""
-        return self._get_iio_dev_attr("sampling_frequency", self._txdac)
-
-    @sample_rate.setter
-    def sample_rate(self, value):
-        self._set_iio_dev_attr("sampling_frequency", value, self._txdac)
-
     class _channel(attribute):
-        """AD3552R channel"""
+        """AD7291 channel"""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
@@ -90,36 +76,10 @@ class ad3552r(tx, context_manager, attribute):
 
         @property
         def raw(self):
-            """AD3552R channel raw value"""
-            return self._get_iio_attr(self.name, "raw", True)
-
-        @raw.setter
-        def raw(self, value):
-            self._set_iio_attr(self.name, "raw", True)
-
-        @property
-        def en(self):
-            """AD3552R channel en value"""
-            return self._get_iio_attr(self.name, "en", True)
-
-        @en.setter
-        def en(self, value):
-            self._set_iio_attr(self.name, "en", True)
+            """AD7291 channel raw value"""
+            return self._get_iio_attr(self.name, "raw", False)
 
         @property
         def scale(self):
-            """AD3552R channel scale value"""
-            return self._get_iio_attr(self.name, "scale", True)
-
-        @scale.setter
-        def scale(self, value):
-            self._set_iio_attr(self.name, "scale", True)
-
-        @property
-        def offset(self):
-            """AD3552R channel offset value"""
-            return self._get_iio_attr(self.name, "offset", True)
-
-        @offset.setter
-        def offset(self, value):
-            self._set_iio_attr(self.name, "offset", True)
+            """AD7291 channel scale(gain)"""
+            return float(self._get_iio_attr_str(self.name, "scale", False))
