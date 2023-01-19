@@ -58,7 +58,111 @@ from cn0566_functions import (
 )
 from scipy import signal
 
+#imports for pluto channel phase calibration
+from adi import ad9361, ad9364
+############################################
+
 # from SDR_functions import SDR_init
+
+#functions for pluto channel phase calibration
+# Function definitions
+def measure_phase(chan0, chan1):
+    assert len(chan0) == len(chan1)
+    errorV = np.angle(chan0 * np.conj(chan1), deg=True) #* 180 / np.pi
+    #print("chan0 * np.conj(chan1)", chan0 * np.conj(chan1))
+    error = np.mean(errorV)
+    #print("errorV: ", errorV)
+    return error
+#######################
+
+def get_ph_shift_ch0(sdr_obj):
+    """This function returns the phase adjustment of channel 0 in degrees"""
+    val = []
+    val.append(sdr_obj.calibscale_voltage0_chan0) # = val[0]
+    val.append(sdr_obj.calibphase_voltage0_chan0) # = val[1]
+    val.append(sdr_obj.calibphase_voltage1_chan0) # = val[2]
+    val.append(sdr_obj.calibscale_voltage1_chan0) # = val[3]
+
+    val[0] = np.arccos(val[0]) * 180 / np.pi
+    val[1] = np.arcsin(-1.0 * val[1]) * 180 / np.pi
+    val[2] = np.arccos(val[2]) * 180 / np.pi
+    val[3] = np.arcsin(val[3]) * 180 / np.pi
+
+    if(val[1] < 0.0):
+        val[0] *= -1.0
+
+    if(val[3] < 0.0):
+        val[2] *= -1.0
+
+    if(val[1] < -90.0):
+        val[0] = (val[0] * -1.0) - 180.0
+
+    if(val[3] < -90.0):
+        val[0] = (val[0] * -1.0) - 180.0
+
+    if(abs(val[0]) > 90.0):
+        if(val[1] < 0.0):
+            val[1] = (val[1] * -1.0) - 180.0
+        else:
+            val[1] = 180 - val[1]
+
+    if(abs(val[2]) > 90.0):
+        if(val[3] < 0.0):
+            val[3] = (val[3] * -1.0) - 180.0
+        else:
+            val[3] = 180 - val[3]
+    return val[0]
+
+def get_ph_shift_ch1(sdr_obj):
+    """This function returns the phase adjustment of channel 1 in degrees"""
+    val = []
+    val.append(sdr_obj.calibscale_voltage2_chan1) # = val[0]
+    val.append(sdr_obj.calibphase_voltage2_chan1) # = val[1]
+    val.append(sdr_obj.calibphase_voltage3_chan1) # = val[2]
+    val.append(sdr_obj.calibscale_voltage3_chan1) # = val[3]
+
+    val[0] = np.arccos(val[0]) * 180 / np.pi
+    val[1] = np.arcsin(-1.0 * val[1]) * 180 / np.pi
+    val[2] = np.arccos(val[2]) * 180 / np.pi
+    val[3] = np.arcsin(val[3]) * 180 / np.pi
+
+    if(val[1] < 0.0):
+        val[0] *= -1.0
+
+    if(val[3] < 0.0):
+        val[2] *= -1.0
+
+    if(val[1] < -90.0):
+        val[0] = (val[0] * -1.0) - 180.0
+
+    if(val[3] < -90.0):
+        val[0] = (val[0] * -1.0) - 180.0
+
+    if(abs(val[0]) > 90.0):
+        if(val[1] < 0.0):
+            val[1] = (val[1] * -1.0) - 180.0
+        else:
+            val[1] = 180 - val[1]
+
+    if(abs(val[2]) > 90.0):
+        if(val[3] < 0.0):
+            val[3] = (val[3] * -1.0) - 180.0
+        else:
+            val[3] = 180 - val[3]
+    return val[0]
+
+def set_ph_shift_ch0(sdr_obj, phase_deg):
+    sdr_obj.calibscale_voltage0_chan0 = "{:.5f}".format(np.cos(phase_deg * np.pi / 180.0))
+    sdr_obj.calibphase_voltage0_chan0 = "{:.5f}".format(-1 * np.sin(phase_deg * np.pi / 180.0))
+    sdr_obj.calibscale_voltage1_chan0 = "{:.5f}".format(np.cos(phase_deg * np.pi / 180.0))
+    sdr_obj.calibphase_voltage1_chan0 = "{:.5f}".format(np.sin(phase_deg * np.pi / 180.0))
+
+def set_ph_shift_ch1(sdr_obj, phase_deg):
+    sdr_obj.calibscale_voltage2_chan1 = "{:.5f}".format(np.cos(phase_deg * np.pi / 180.0))
+    sdr_obj.calibphase_voltage2_chan1 = "{:.5f}".format(-1 * np.sin(phase_deg * np.pi / 180.0))
+    sdr_obj.calibscale_voltage3_chan1 = "{:.5f}".format(np.cos(phase_deg * np.pi / 180.0))
+    sdr_obj.calibphase_voltage3_chan1 = "{:.5f}".format(np.sin(phase_deg * np.pi / 180.0))
+##############################################
 
 try:
     import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
@@ -247,6 +351,14 @@ func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
 
 
 if func == "cal":
+
+    #phase calibration for two pluto channels#################################
+    #Set initial phase shift 0
+    my_phaser.set_beam_phase_diff(0.0)
+    time.sleep(0.25)
+    set_ph_shift_ch0(my_sdr, 0)
+    set_ph_shift_ch1(my_sdr, 0)
+
     input(
         "Calibrating gain and phase - place antenna at mechanical boresight in front of the array, then press enter..."
     )
@@ -256,9 +368,63 @@ if func == "cal":
     print("Calibrating Gain, verbosely, then saving cal file...")
     do_cal_gain()  # Start Gain Calibration
     my_phaser.save_gain_cal()  # Default filename
+
+    my_phaser.set_beam_phase_diff(0.0)
+    time.sleep(0.25)
+    set_ph_shift_ch0(my_sdr, 0)
+    set_ph_shift_ch1(my_sdr, 0)
+
+    # Capture data!
+    data = my_sdr.rx()
+    rx0rx1_ph_diff1 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff2 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff3 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff4 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff5 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff6 = measure_phase(data[0], data[1])
+    rx0rx1_ph_diff = (rx0rx1_ph_diff1 + rx0rx1_ph_diff2 + rx0rx1_ph_diff3 + rx0rx1_ph_diff4 + rx0rx1_ph_diff5 + rx0rx1_ph_diff6)/6
+
+    print("phase shift calculated: ", str(rx0rx1_ph_diff))
+    set_ph_shift_ch1(my_sdr, rx0rx1_ph_diff)
+    print("phase offset set to ch1: ", str(get_ph_shift_ch1(my_sdr)))
+    ############################################################################
+
     print("Calibrating Phase, verbosely, then saving cal file...")
     do_cal_phase()  # Start Phase Calibration
     my_phaser.save_phase_cal()  # Default filename
+
+    my_phaser.set_beam_phase_diff(0.0)
+    time.sleep(0.25)
+    set_ph_shift_ch0(my_sdr, 0)
+    set_ph_shift_ch1(my_sdr, 0)
+
+    # Capture data!
+    data = my_sdr.rx()
+    rx0rx1_ph_diff1 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff2 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff3 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff4 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff5 = measure_phase(data[0], data[1])
+    data = my_sdr.rx()
+    rx0rx1_ph_diff6 = measure_phase(data[0], data[1])
+    rx0rx1_ph_diff = (rx0rx1_ph_diff1 + rx0rx1_ph_diff2 + rx0rx1_ph_diff3 + rx0rx1_ph_diff4 + rx0rx1_ph_diff5 + rx0rx1_ph_diff6)/6
+
+    print("phase shift calculated: ", str(rx0rx1_ph_diff))
+    set_ph_shift_ch1(my_sdr, rx0rx1_ph_diff)
+    print("phase offset set to ch1: ", str(get_ph_shift_ch1(my_sdr)))
+    ############################################################################
+
+    #TODO: - call function for pluto RX1 RX2 phase calibration
+    #      - call function to save this coefficient
     print("Done calibration")
 
 if func == "plot":

@@ -239,6 +239,38 @@ class ad9364(rx_tx, context_manager):
     def tx_lo(self, value):
         self._set_iio_attr_int("altvoltage1", "frequency", True, value)
 
+    @property
+    def calibphase_voltage0_chan0(self):
+        return float(self._rxadc.find_channel("voltage0")._attrs["calibphase"].value)
+
+    @calibphase_voltage0_chan0.setter
+    def calibphase_voltage0_chan0(self, value):
+        self._rxadc.find_channel("voltage0")._attrs["calibphase"].value = str(value)
+
+    @property
+    def calibscale_voltage0_chan0(self):
+        return float(self._rxadc.find_channel("voltage0")._attrs["calibscale"].value)
+
+    @calibscale_voltage0_chan0.setter
+    def calibscale_voltage0_chan0(self, value):
+        self._rxadc.find_channel("voltage0")._attrs["calibscale"].value = str(value)
+
+    @property
+    def calibphase_voltage1_chan0(self):
+        return float(self._rxadc.find_channel("voltage1")._attrs["calibphase"].value)
+
+    @calibphase_voltage1_chan0.setter
+    def calibphase_voltage1_chan0(self, value):
+        self._rxadc.find_channel("voltage1")._attrs["calibphase"].value = str(value)
+
+    @property
+    def calibscale_voltage1_chan0(self):
+        return float(self._rxadc.find_channel("voltage1")._attrs["calibscale"].value)
+
+    @calibscale_voltage1_chan0.setter
+    def calibscale_voltage1_chan0(self, value):
+        self._rxadc.find_channel("voltage1")._attrs["calibscale"].value = str(value)
+
 
 class ad9361(ad9364):
     """ AD9361 Transceiver """
@@ -275,6 +307,38 @@ class ad9361(ad9364):
     @tx_hardwaregain_chan1.setter
     def tx_hardwaregain_chan1(self, value):
         self._set_iio_attr_float("voltage1", "hardwaregain", True, value)
+
+    @property
+    def calibphase_voltage2_chan1(self):
+        return float(self._rxadc.find_channel("voltage2")._attrs["calibphase"].value)
+
+    @calibphase_voltage2_chan1.setter
+    def calibphase_voltage2_chan1(self, value):
+        self._rxadc.find_channel("voltage2")._attrs["calibphase"].value = str(value)
+
+    @property
+    def calibscale_voltage2_chan1(self):
+        return float(self._rxadc.find_channel("voltage2")._attrs["calibscale"].value)
+
+    @calibscale_voltage2_chan1.setter
+    def calibscale_voltage2_chan1(self, value):
+        self._rxadc.find_channel("voltage2")._attrs["calibscale"].value = str(value)
+
+    @property
+    def calibphase_voltage3_chan1(self):
+        return float(self._rxadc.find_channel("voltage3")._attrs["calibphase"].value)
+
+    @calibphase_voltage3_chan1.setter
+    def calibphase_voltage3_chan1(self, value):
+        self._rxadc.find_channel("voltage3")._attrs["calibphase"].value = str(value)
+
+    @property
+    def calibscale_voltage3_chan1(self):
+        return float(self._rxadc.find_channel("voltage3")._attrs["calibscale"].value)
+
+    @calibscale_voltage3_chan1.setter
+    def calibscale_voltage3_chan1(self, value):
+        self._rxadc.find_channel("voltage3")._attrs["calibscale"].value = str(value)
 
 
 class ad9363(ad9361):
