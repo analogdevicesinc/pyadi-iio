@@ -92,6 +92,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False, title=""):
 
     return ampl, freqs
 
+
 def ad4858_plot(x, plot=False, title=""):
 
     if plot:
@@ -108,6 +109,7 @@ def ad4858_plot(x, plot=False, title=""):
         plt.show()
 
     return r_avg
+
 
 def ad4858_capture():
     channels = []
@@ -132,16 +134,12 @@ fs = int(vna.rx_sample_rate)
 # Capture all 8 channels
 vna.ad4858.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7]
 vna.ad4858.rx_buffer_size = 128
-#fs_ad4858 = int(vna.ad4858.rx_sample_rate)
+# fs_ad4858 = int(vna.ad4858.rx_sample_rate)
 
 # ADRF5720
-vna.lo_attenuator.attenuation = 6
+vna.rfin2_attenuator.attenuation = 6
 vna.rfin_attenuator.attenuation = 6
 
-# AD5732R values between -8192...8191
-
-vna.ad5732.channel[0].raw = 0
-vna.ad5732.channel[1].raw = 0
 
 vna.lo_mux.select = "rf8"
 vna.rfin_mux.select = "d1"
@@ -149,7 +147,7 @@ vna.lo.frequency = 3e9
 vna.lo.rfaux8_vco_output_enable = False
 
 vna.freq_src_sel_mux.select = "rf_dac0_direct"
-vna.rfin_freq_src_sel_mux.select = "rf_dac1_direct"
+vna.rfin_low.select = "d1"
 
 # vna.hsdac.modulation_switch_mode
 #      0 = Mode 0
@@ -166,6 +164,7 @@ vna.hsdac.channel1_nco_frequency = 1
 
 vna.hsdac.main0_nco_frequency = 100000000
 vna.hsdac.main1_nco_frequency = 100000000
+
 
 # push shifted DC the out of spectrum
 if_frequency = fs
@@ -211,10 +210,9 @@ for f in range(int(100e6), int(5000e6), int(100e6)):
     #     vna.lo.rfaux8_vco_output_enable = True
     #     vna.lo.rf16_frequency = f
 
-
     vna.bpf.band_pass_center_frequency = int(f / 1e6)
     vna.hsdac.main0_nco_frequency = int(f)
-    #vna.hsdac.main1_nco_frequency = int(f)
+    # vna.hsdac.main1_nco_frequency = int(f)
 
     print("ADL5960-", i, "CT2 REG 0x21 =", vna.frontend[0].reg_read(0x21))
     # ADMV8818 should update automatically as long as the LO doubler is not used
@@ -233,10 +231,11 @@ for f in range(int(100e6), int(5000e6), int(100e6)):
         "MHz",
     )
 
-    print (ad4858_capture())
+    print(ad4858_capture())
 
     for r in range(2):
         i = int(r / 2) + 1
+        vna.gpio_hi_low_sel = 0
         vna.rfin_mux.select = f"d{i}"
         x = vna.rx()
         if r & 1:
@@ -248,11 +247,12 @@ for f in range(int(100e6), int(5000e6), int(100e6)):
 
     for r in range(2):
         i = int(r / 2) + 1
+        vna.gpio_hi_low_sel = 1
         vna.rfin_mux.select = f"d{i}"
         x = vna.ad4858.rx()
         if r & 1:
             dir = "Reflected"
         else:
             dir = "Forward"
-        
+
         ad4858_plot(x[r], plot=True, title=f"AD4858 {dir} Port-{i} f={f} Hz")

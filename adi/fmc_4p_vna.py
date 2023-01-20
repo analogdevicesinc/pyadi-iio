@@ -32,16 +32,17 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
+from adi.ad4858 import ad4858
+from adi.ad5686 import ad5686
 from adi.ad9083 import ad9083
+from adi.ad9173 import ad9173
 from adi.adf4371 import adf4371
 from adi.adl5960 import adl5960
 from adi.admv8818 import admv8818
 from adi.adrf5720 import adrf5720
 from adi.gen_mux import genmux
 from adi.one_bit_adc_dac import one_bit_adc_dac
-from adi.ad9173 import ad9173
-from adi.ad5686 import ad5686
-from adi.ad4858 import ad4858
+
 
 class fmc_4p_vna(adrf5720, ad9083, admv8818, genmux, adf4371, adl5960, one_bit_adc_dac):
     """ FMCVNA Scalable 4-port Vector Network Analyzer Board """
@@ -51,15 +52,15 @@ class fmc_4p_vna(adrf5720, ad9083, admv8818, genmux, adf4371, adl5960, one_bit_a
     def __init__(self, uri):
         self.lo = adf4371(uri)
         self.rfin_attenuator = adrf5720(uri, device_name="adrf5720-rfin")
-        self.lo_attenuator = adrf5720(uri, device_name="adrf5720-lo")
+        self.rfin2_attenuator = adrf5720(uri, device_name="adrf5720-rfin2")
         self.bpf = admv8818(uri, device_name="admv8818")
         self.rfin_mux = genmux(uri, device_name="mux-rfin")
         self.lo_mux = genmux(uri, device_name="mux-adf4371")
         self.freq_src_sel_mux = genmux(uri, device_name="mux-freq-src-sel")
-        self.rfin_freq_src_sel_mux = genmux(uri, device_name="mux-rfin-freq-src-sel")
+        self.rfin_low = genmux(uri, device_name="mux-rfin-low")
         self.hsdac = ad9173(uri)
         self.ad4858 = ad4858(uri)
-        self.ad5732 = ad5686(uri)
+        # self.ad5732 = ad5686(uri)
 
         for i in range(1, 5):
             self.frontend[i - 1] = adl5960(uri, device_name=f"adl5960-{i}")
