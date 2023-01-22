@@ -58,6 +58,7 @@ from cn0566_functions import (
     calculate_plot,
     channel_calibration,
     gain_calibration,
+    get_signal_levels,
     load_hb100_cal,
     phase_calibration,
 )
@@ -82,13 +83,14 @@ monitor_ch_names = [
 ]
 
 
-channel_cal_limits = 13.0  # Fail if channels mismatched by more than 12 dB
+channel_cal_limits = 10.0  # Fail if channels mismatched by more than 10 dB
 gain_cal_limits = (
     0.50  # Fail if any channel is less than 60% of the highest gain channel
 )
-phase_cal_limits = (
-    80.0  # Fail if delta between any two channels is more than 50 degress.
-)
+# Phase delta limits between channels. Extra tolerance between 3rd and 4th element,
+# which split across the two Pluto channels.
+phase_cal_limits = [90.0, 90.0, 90.0, 120.0, 90.0, 90.0, 90.0]
+
 
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
@@ -233,8 +235,15 @@ for i in range(0, len(monitor_vals)):
 
 print(
     "Calibrating SDR channel mismatch, gain and phase - place antenna at mechanical\
-        boresight in front of the array, then press enter...\n\n"
+        boresight in front of the array.\n\n"
 )
+
+print("\n Getting signal levels...")
+sig_levels = get_signal_levels(my_phaser)
+print(sig_levels)
+if min(sig_levels) < 80.0:
+    print("Low signal levels!! Double-check hardware setup, then re-run test.")
+    sys.exit()
 
 print("\nCalibrating SDR channel mismatch, verbosely...")
 channel_calibration(my_phaser, verbose=True)
@@ -252,7 +261,7 @@ print("Done calibration")
 # my_phaser.save_phase_cal()  # Default filename
 
 for i in range(0, len(my_phaser.ccal)):
-    if my_phaser.ccal[i] < channel_cal_limits:
+    if my_phaser.ccal[i] > channel_cal_limits:
         print("Channel cal failure on channel ", i, ", ", my_phaser.gcal[i])
         failures.append("Channel cal falure on channel " + str(i))
 
@@ -262,10 +271,22 @@ for i in range(0, len(my_phaser.gcal)):
         failures.append("Gain cal falure on element " + str(i))
 
 
-for i in range(0, len(my_phaser.pcal)):
-    if abs(my_phaser.pcal[i]) > phase_cal_limits:
-        print("Phase cal failure on element ", i, ", ", my_phaser.pcal[i])
-        failures.append("Phase cal falure on element " + str(i))
+# Important - my_phaser.pcal represents the CUMULATIVE phase shift across the
+# array. Element 0 will always be zero, so we just need to check the delta between
+# 0-1, 1-2, 2-3, etc. This IS sort of un-doing what the pcal routine does, but oh well...
+
+for i in range(0, len(my_phaser.pcal) - 1):
+    delta = my_phaser.pcal[i + 1] - my_phaser.pcal[i]
+    if abs(delta) > phase_cal_limits[i]:
+        print("Phase cal failure on elements ", i - 1, ", ", i, str(delta))
+        failures.append(
+            "Phase cal falure on elements "
+            + str(i - 1)
+            + ", "
+            + str(i)
+            + ", delta: "
+            + str(delta)
+        )
 
 print("Test took " + str(time.time() - start) + " seconds.")
 
@@ -278,8 +299,24 @@ else:
     print("\n\n")
 
 
+ser_no = input("Please enter serial number of board, then press enter.\n")
+filename = str("results/CN0566_" + ser_no + "_" + time.asctime() + ".txt")
+filename = filename.replace(":", "-")
+
+with open(filename, "w") as f:
+    f.write("Phaser Test Results:\n")
+    f.write("Monitor Readings:\n")
+    f.write(str(monitor_vals))
+    f.write("\nChannel Calibration:\n")
+    f.write(str(my_phaser.ccal))
+    f.write("\nGain Calibration:\n")
+    f.write(str(my_phaser.gcal))
+    f.write("\nPhase Calibration:\n")
+    f.write(str(my_phaser.pcal))
+
+
 do_plot = (
-    True  # Do a plot just for debug purposes. Suppress for actual production test.
+    False  # Do a plot just for debug purposes. Suppress for actual production test.
 )
 
 while do_plot == True:

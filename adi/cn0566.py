@@ -462,23 +462,23 @@ class CN0566(adf4159, adar1000_array):
 
         if apply_cal is True:
             cval = int(gain_val * self.gcal[chan_no])
-            print(
-                "Cal = true, setting channel x to gain y, gcal value: ",
-                chan_no,
-                ", ",
-                cval,
-                ", ",
-                self.gcal[chan_no],
-            )
+            # print(
+            #     "Cal = true, setting channel x to gain y, gcal value: ",
+            #     chan_no,
+            #     ", ",
+            #     cval,
+            #     ", ",
+            #     self.gcal[chan_no],
+            # )
             self.elements.get(chan_no + 1).rx_gain = cval
-            print("reading back: ", self.elements.get(chan_no + 1).rx_gain)
+            # print("reading back: ", self.elements.get(chan_no + 1).rx_gain)
         else:  # Don't apply gain calibration
-            print(
-                "Cal = false, setting channel x to gain y: ",
-                chan_no,
-                ", ",
-                int(gain_val),
-            )
+            # print(
+            #     "Cal = false, setting channel x to gain y: ",
+            #     chan_no,
+            #     ", ",
+            #     int(gain_val),
+            # )
             self.elements.get(chan_no + 1).rx_gain = int(gain_val)
         # Important if you're relying on elements being truly zero'd out
         self.elements.get(chan_no + 1).rx_attenuator = not bool(gain_val)

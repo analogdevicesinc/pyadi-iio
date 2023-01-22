@@ -223,6 +223,28 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
     return gain, angle, delta, diff_error, beam_phase, xf, max_gain, PhaseValues
 
 
+def get_signal_levels(cn0566, verbose=False):
+    """" Measure signal levels. Without a decent signal, all bets are off. """
+    peak_bin = find_peak_bin(cn0566)
+    #    channel_levels, plot_data = measure_channel_gains(cn0566, peak_bin, verbose=False)
+    #    return channel_levels
+
+    channel_levels = []
+
+    if verbose is True:
+        print("Peak bin at ", peak_bin, " out of ", cn0566.sdr.rx_buffer_size)
+    # gcal_element indicates current element/channel which is being calibrated
+    for element in range(0, (cn0566.num_elements)):
+        if verbose is True:
+            print("Calibrating Element " + str(element))
+
+        gcal_val, spectrum = measure_element_gain(cn0566, element, peak_bin, verbose)
+        if verbose is True:
+            print("Measured signal level (ADC counts): " + str(gcal_val))
+        channel_levels.append(gcal_val)  # make a list of intermediate cal values
+    return channel_levels
+
+
 def channel_calibration(cn0566, verbose=False):
     """" Do this BEFORE gain_calibration.
          Performs calibration between the two ADAR1000 channels. Accounts for all
