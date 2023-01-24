@@ -313,7 +313,10 @@ with open(filename, "w") as f:
     f.write(str(my_phaser.gcal))
     f.write("\nPhase Calibration:\n")
     f.write(str(my_phaser.pcal))
-
+    if len(failures) == 0:
+        f.write("\nThis is a PASSING board!")
+    else:
+        f.write("\nThis is a FAILING board!")
 
 do_plot = (
     False  # Do a plot just for debug purposes. Suppress for actual production test.
