@@ -156,7 +156,8 @@ my_sdr.rx_hardwaregain_chan1 = 12
 
 my_sdr.rx_lo = int(2.2e9)  # 4495000000  # Recieve Freq
 
-my_sdr.filter = "LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
+print ("Loading filter")
+my_sdr.filter = os.getcwd() + "/LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
 rx_buffer_size = int(4 * 256)
 my_sdr.rx_buffer_size = rx_buffer_size
 
@@ -302,11 +303,14 @@ else:
 ser_no = input("Please enter serial number of board, then press enter.\n")
 filename = str("results/CN0566_" + ser_no + "_" + time.asctime() + ".txt")
 filename = filename.replace(":", "-")
+filename = os.getcwd() + "/" + filename
 
 with open(filename, "w") as f:
     f.write("Phaser Test Results:\n")
-    f.write("Monitor Readings:\n")
+    f.write("\nMonitor Readings:\n")
     f.write(str(monitor_vals))
+    f.write("\nSignal Levels:\n")
+    f.write(str(sig_levels))
     f.write("\nChannel Calibration:\n")
     f.write(str(my_phaser.ccal))
     f.write("\nGain Calibration:\n")
@@ -314,9 +318,9 @@ with open(filename, "w") as f:
     f.write("\nPhase Calibration:\n")
     f.write(str(my_phaser.pcal))
     if len(failures) == 0:
-        f.write("\nThis is a PASSING board!")
+        f.write("\nThis is a PASSING board!\n")
     else:
-        f.write("\nThis is a FAILING board!")
+        f.write("\nThis is a FAILING board!\n")
 
 do_plot = (
     False  # Do a plot just for debug purposes. Suppress for actual production test.
