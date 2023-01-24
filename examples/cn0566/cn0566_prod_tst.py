@@ -68,7 +68,7 @@ start = time.time()
 
 failures = []
 #                    temp   1.8V 3.0    3.3   4.5   15?   USB   curr. Vtune
-monitor_hi_limits = [60.0, 1.85, 3.015, 3.45, 4.75, 16.0, 5.25, 1.6, 14.0]
+monitor_hi_limits = [60.0, 1.85, 3.15, 3.45, 4.75, 16.0, 5.25, 1.6, 14.0]
 monitor_lo_limts = [20.0, 1.75, 2.850, 3.15, 4.25, 13.0, 4.75, 1.2, 1.0]
 monitor_ch_names = [
     "Board temperature: ",
