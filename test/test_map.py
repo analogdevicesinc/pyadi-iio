@@ -8,24 +8,16 @@ def get_test_map():
     # NO TESTS YET
     # zynq-zc702-adv7511
     # zynq-zc706-adv7511-fmcadc4
-    # zynq-zc706-adv7511-fmcomms11
     # zynq-zc706-adv7511-ad9625-fmcadc2
     # vc707_fmcadc2
     #
-    #
-    # zynq-zed-adv7511-ad9467-fmc-250ebz
     # zynq-zc706-adv7511-ad9625-fmcadc3
     #
     # zynq-zed-adv7511-cn0363
     # zynq-zc706-adv7511-ad6676-fmc
     #
-    # zynq-zc706-adv7511-ad9265-fmc-125ebz
-    # zynq-zc706-adv7511-ad9434-fmc-500ebz
     # zynq-zed-adv7511
-    # zynq-zc706-adv7511-ad9739a-fmc
     # zynq-zed-imageon
-    # zynq-zc706-adv7511-fmcdaq3-revC
-    # zynq-zc706-adv7511-fmcjesdadc1
     # zynq-zed-adv7511-fmcmotcon2
     # zynq-zc706-adv7511
     #
