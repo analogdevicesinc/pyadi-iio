@@ -10,6 +10,7 @@ def get_test_map():
     # zynq-zc706-adv7511-fmcadc4
     # zynq-zc706-adv7511-fmcomms11
     # zynq-zc706-adv7511-ad9625-fmcadc2
+    # vc707_fmcadc2
     #
     #
     # zynq-zed-adv7511-ad9467-fmc-250ebz
@@ -27,6 +28,49 @@ def get_test_map():
     # zynq-zc706-adv7511-fmcjesdadc1
     # zynq-zed-adv7511-fmcmotcon2
     # zynq-zc706-adv7511
+    #
+    # socfpga_arria10_socdk_cn0506_mii
+    # zynq-zc706-adv7511-cn0506-mii
+    # zynq-zc706-adv7511-cn0506-rgmii
+    # zynq-zc706-adv7511-cn0506-rmii
+    # zynq-zed-adv7511-cn0506-mii
+    # zynq-zed-adv7511-cn0506-rgmii
+    # zynq-zed-adv7511-cn0506-rmii
+    # zynqmp-zcu102-rev10-cn0506-mii
+    # zynqmp-zcu102-rev10-cn0506-rgmii
+    # zynqmp-zcu102-rev10-cn0506-rmii
+    #
+    # socfpga_cyclone5_de10_nano_cn0540
+    # zynq-coraz7s-cn0540
+    #
+    # socfpga_cyclone5_sockit_arradio
+    #
+    # zynq-coraz7s-cn0501
+    #
+    # zynq-zc706-adv7511-ad6676-fmc
+    # vc707_ad6676evb
+    #
+    # zynq-zed-adv7511-cn0577
+    #
+    # zynqmp-zcu102-rev10-ad9082-m4-l8
+    #
+    # zynqmp-zcu102-rev10-ad9695
+    #
+    # zynqmp-zcu102-rev10-ad9783
+    #
+    # zynqmp-zcu102-rev10-stingray
+    # zynqmp-zcu102-rev10-stingray-direct-clk
+    # zynqmp-zcu102-rev10-stingray-vcxo100
+    # zynqmp-zcu102-rev10-stingray-vcxo100-direct-clk
+    #
+    # zynq-zed-adv7511-ad7768
+    #
+    # zynq-zed-adv7511-ad7768-1-evb
+    #
+    # vcu118_dual_ad9208
+    #
+    # zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-xmicrowave
+    # zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-fmcbridge
 
     test_map = {}
     test_map["daq3"] = ["zynqmp-zcu102-rev10-fmcdaq3"]
