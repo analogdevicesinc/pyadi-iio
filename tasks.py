@@ -1,8 +1,10 @@
 # type:ignore
 # flake8: noqa
 import os
+import pathlib
 import sys
 
+import yaml
 from invoke import task
 
 
@@ -197,6 +199,111 @@ def checkparts(c):
             print("No parts missing from supported_parts.md")
 
     print("------------------------")
+    sys.exit(count)
+
+
+@task
+def checkemulation(c):
+    """Check for missing emulation contexts for devices"""
+    print("Running emulation context check")
+    mod = __import__("adi")
+    parts = []
+    ignored_parts = [
+        "adrv9009_zu11eg",
+        "adrv9009_zu11eg_multi",
+        "adrv9009_zu11eg_fmcomms8",
+        "adar1000_array",
+        "ad9081_mc",
+        "ad717x",
+        "ad916x",
+        "ad719x",
+        "ad469x",
+        "ad777x",
+        "ad4110",
+        "ad4130",
+        "ad4630",
+        "ad5627",
+        "ad5686",
+        "ad5940",
+        "ad7124",
+        "ad7606",
+        "ad7689",
+        "ad7746",
+        "ad7799",
+        "ad9083",
+        "ad9094",
+        "ad9136",
+        "ad9144",
+        "ad9152",
+        "ad9162",
+        "ad9166",
+        "ad9250",
+        "ad936x",
+        "ad9371",
+        "ad9467",
+        "ad9625",
+        "ad9680",
+        "ada4961",
+        "adaq8092",
+        "adar1000",
+        "adf4159",
+        "adf4355",
+        "adf4371",
+        "adf5610",
+        "adg2128",
+        "adis16460",
+        "adis16495",
+        "adis16507",
+        "adl5240",
+        "adl5960",
+        "admv8818",
+        "adpd1080",
+        "adpd188",
+        "adpd410x",
+        "adrf5720",
+        "adt7420",
+        "adxl313",
+        "adxl345",
+        "adxrs290",
+        "cn0532",
+        "ltc2314_14",
+        "ltc2499",
+        "ltc2983",
+        "max11205",
+        "max31855",
+    ]
+    for c in dir(mod):
+        if (
+            any(c.lower().startswith(pre) for pre in ("ad", "hmc", "lt", "cn", "max"))
+            and not c in ignored_parts
+        ):
+            parts.append(c)
+    # read in yaml file
+    path = pathlib.Path(__file__).parent.absolute()
+    filename = os.path.join(path, "test", "emu", "hardware_map.yml")
+    with open(filename, "r") as f:
+        hw_map = yaml.safe_load(f)
+    # Build list of all supported classes
+    classes_wth_emu = []
+    for k in hw_map.keys():
+        for item in hw_map[k]:
+            if isinstance(item, dict) and "pyadi_iio_class_support" in item.keys():
+                classes_wth_emu += item["pyadi_iio_class_support"]
+
+    count = 0
+    for p in parts:
+        if not p in classes_wth_emu:
+            print("Missing", p, "from hardware_map.yml emulation context map")
+            count += 1
+
+    print("------------------------")
+    if count:
+        print("All classes must have an emulation context defined in hardware_map.yml")
+        print(
+            "Please see doc for more information: https://analogdevicesinc.github.io/pyadi-iio/dev/index.html#testing"
+        )
+    else:
+        print("All classes have an emulation context defined in hardware_map.yml")
     sys.exit(count)
 
 
