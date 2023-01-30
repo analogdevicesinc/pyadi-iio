@@ -66,3 +66,7 @@ jobs:
       - name: Check if supported parts missing
         run: |
           invoke checkparts
+
+      - name: Check if emulation support exists
+        run: |
+          invoke checkemulation
