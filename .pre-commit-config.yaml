@@ -1,9 +1,10 @@
+exclude: '^test\/emu'
 repos:
 -   repo: https://github.com/codespell-project/codespell
-    rev: v1.15.0
+    rev: v2.2.2
     hooks:
     -   id: codespell
-        args: [--ignore-words=.codespell-whitelist,--exclude-file=examples/cn0549/ml_fan_example.ipynb]
+        entry: codespell --ignore-words=.codespell-whitelist --exclude-file=examples/cn0549/ml_fan_example.ipynb --skip="*.pyc,*.xml"
 -   repo: https://github.com/pre-commit/mirrors-isort
     rev: v4.3.20
     hooks:
@@ -30,6 +31,7 @@ repos:
     - id: black
       language_version: python3
       additional_dependencies: ['click==8.0.4']
+      args: [--exclude=./test/emu]
 -   repo: https://github.com/asottile/blacken-docs
     rev: v1.12.0
     hooks:
