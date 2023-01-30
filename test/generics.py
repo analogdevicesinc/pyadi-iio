@@ -250,12 +250,12 @@ def iio_buffer_check(phy, rxdev, uri, percent_fail):
     counts = np.zeros((chans, bs), dtype=int)
     tries = 10
     for _ in range(tries):
-        datas = c.rx()
-        for chan, data in enumerate(datas):
+        data_sets = c.rx()
+        for chan, data in enumerate(data_sets):
             for i, sample in enumerate(data):
                 counts[chan, i] += counts[chan, i] + sample == 0.0
 
-    for chan, data in enumerate(datas):
+    for chan, data in enumerate(data_sets):
         for i, sample in enumerate(data):
             counts[chan, i] = counts[chan, i] / tries
             # print(counts[chan,i])

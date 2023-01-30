@@ -42,7 +42,7 @@ from scipy import signal
 device_name = "ltc2387"
 vref = 4.096
 
-# Optionally passs URI as command line argument,
+# Optionally pass URI as command line argument,
 # else use default context manager search
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
