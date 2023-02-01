@@ -37,7 +37,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from adi import adaq8092
 
-# Optionally passs URI as command line argument,
+# Optionally pass URI as command line argument,
 # else use default ip:analog.local
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))

@@ -73,6 +73,16 @@ To help manage libiio contexts, filter tests based on those contexts, and map dr
 If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the `pytest-libiio CLI <https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps>`_.
 
 
+
+New Hardware Requirements
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In order to maintain pyadi-iio, for all new drivers the development team will require emulation contexts to be submitted alongside the new class interfaces. This is to ensure that the new drivers are tested and maintained. Emulation contexts can be created using `xml_gen <https://pytest-libiio.readthedocs.io/en/latest/emulation/#adding-device-support>`_. CI will automatically validate that all hardware interfaces have emulation contexts and prevent merging if they are missing.
+
+.. note::
+        Note that xml_gen is not the same as iio_genxml, as iio_genxml does not capture default values of properties required for emulation.
+
+
 Test Functions and Fixtures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

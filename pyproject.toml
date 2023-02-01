@@ -60,3 +60,10 @@ line_length=88
 
 [tool.mypy]
 ignore_missing_imports="true"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--custom-hw-map=test/emu/hardware_map.yml"
+testpaths = [
+    "test",
+]
