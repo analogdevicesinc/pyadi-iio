@@ -36,7 +36,7 @@ import time
 
 import adi
 
-# Optionally passs URI as command line argument,
+# Optionally pass URI as command line argument,
 # else use default context manager search
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
 print("uri: " + str(my_uri))

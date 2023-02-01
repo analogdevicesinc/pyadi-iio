@@ -42,7 +42,7 @@ from scipy import signal
 device_name = "ad4020"
 vref = 5.0  # Manually entered, consult eval board manual
 
-# Optionally passs URI as command line argument,
+# Optionally pass URI as command line argument,
 # else use default context manager search
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
