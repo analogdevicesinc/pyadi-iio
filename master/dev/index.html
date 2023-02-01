@@ -365,6 +365,14 @@
 </div>
 <p>If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps">pytest-libiio CLI</a>.</p>
 </section>
+<section id="new-hardware-requirements">
+<h3>New Hardware Requirements<a class="headerlink" href="#new-hardware-requirements" title="Permalink to this heading"></a></h3>
+<p>In order to maintain pyadi-iio, for all new drivers the development team will require emulation contexts to be submitted alongside the new class interfaces. This is to ensure that the new drivers are tested and maintained. Emulation contexts can be created using <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/emulation/#adding-device-support">xml_gen</a>. CI will automatically validate that all hardware interfaces have emulation contexts and prevent merging if they are missing.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that xml_gen is not the same as iio_genxml, as iio_genxml does not capture default values of properties required for emulation.</p>
+</div>
+</section>
 <section id="test-functions-and-fixtures">
 <h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this heading"></a></h3>
 <p>pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links belows to the different test categories:</p>
@@ -532,6 +540,7 @@ pipenv<span class="w"> </span>shell
 <li><a class="reference internal" href="#precommit">Precommit</a></li>
 <li><a class="reference internal" href="#testing">Testing</a><ul>
 <li><a class="reference internal" href="#test-configuration">Test Configuration</a></li>
+<li><a class="reference internal" href="#new-hardware-requirements">New Hardware Requirements</a></li>
 <li><a class="reference internal" href="#test-functions-and-fixtures">Test Functions and Fixtures</a></li>
 </ul>
 </li>
