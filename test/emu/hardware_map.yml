@@ -256,3 +256,12 @@ ltc2387:
       - filename: ltc2387.xml
       - data_devices:
           - iio:device0
+
+ad6676:
+  - ad6676
+  - pyadi_iio_class_support:
+      - ad6676
+  - emulate:
+      - filename: ad6676.xml
+      - data_devices:
+          - iio:device1
