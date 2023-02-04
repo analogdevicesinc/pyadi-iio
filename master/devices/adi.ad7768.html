@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
     <link rel="icon" href="../_static/favicon.png" type="image/png">
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad9094" href="adi.ad9094.html" /><link rel="prev" title="ad9081_mc" href="adi.ad9081_mc.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad777x" href="adi.ad777x.html" /><link rel="prev" title="ad7746" href="adi.ad7746.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
-        <title>ad9083 - Analog Devices Hardware Python Interfaces 0.0.15</title>
+        <title>ad7768 - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -191,12 +191,12 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7746.html">ad7746</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad7768.html">ad7768</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad7768</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad777x.html">ad777x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
@@ -309,47 +309,47 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ad9083">
-<span id="ad9083"></span><h1>ad9083<a class="headerlink" href="#module-adi.ad9083" title="Permalink to this heading"></a></h1>
+          <section id="module-adi.ad7768">
+<span id="ad7768"></span><h1>ad7768<a class="headerlink" href="#module-adi.ad7768" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad9083.ad9083">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9083.</span></span><span class="sig-name descname"><span class="pre">ad9083</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9083.ad9083" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start" title="adi.sync_start.sync_start"><code class="xref py py-class docutils literal notranslate"><span class="pre">sync_start</span></code></a>, <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>AD9083 High-Speed Multi-channel ADC</p>
+<dt class="sig sig-object py" id="adi.ad7768.ad7768">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7768.</span></span><span class="sig-name descname"><span class="pre">ad7768</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ip:analog.local'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7768.ad7768" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD7768 8-channel, Simultaneous Sampling Sigma-Delta ADC</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9083.ad9083.nco0_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nco0_frequency</span></span><a class="headerlink" href="#adi.ad9083.ad9083.nco0_frequency" title="Permalink to this definition"></a></dt>
-<dd><p>nco0_frequency: Get/Set NCO0 frequency</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9083.ad9083.nco1_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nco1_frequency</span></span><a class="headerlink" href="#adi.ad9083.ad9083.nco1_frequency" title="Permalink to this definition"></a></dt>
-<dd><p>nco0_frequency: Get/Set NCO1 frequency</p>
+<dt class="sig sig-object py" id="adi.ad7768.ad7768.filter_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type</span></span><a class="headerlink" href="#adi.ad7768.ad7768.filter_type" title="Permalink to this definition"></a></dt>
+<dd><p>Get filter type.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9083.ad9083.nco2_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nco2_frequency</span></span><a class="headerlink" href="#adi.ad9083.ad9083.nco2_frequency" title="Permalink to this definition"></a></dt>
-<dd><p>nco0_frequency: Get/Set NCO2 frequency</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ad9083.ad9083.reg_read">
-<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9083.ad9083.reg_read" title="Permalink to this definition"></a></dt>
-<dd><p>Direct Register Access via debugfs</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ad9083.ad9083.reg_write">
-<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9083.ad9083.reg_write" title="Permalink to this definition"></a></dt>
-<dd><p>Direct Register Access via debugfs</p>
+<dt class="sig sig-object py" id="adi.ad7768.ad7768.filter_type_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type_avail</span></span><a class="headerlink" href="#adi.ad7768.ad7768.filter_type_avail" title="Permalink to this definition"></a></dt>
+<dd><p>Get available filter types.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9083.ad9083.rx_sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sample_rate</span></span><a class="headerlink" href="#adi.ad9083.ad9083.rx_sample_rate" title="Permalink to this definition"></a></dt>
-<dd><p>rx_sampling_frequency: Sample rate after decimation</p>
+<dt class="sig sig-object py" id="adi.ad7768.ad7768.power_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">power_mode</span></span><a class="headerlink" href="#adi.ad7768.ad7768.power_mode" title="Permalink to this definition"></a></dt>
+<dd><p>Get power mode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7768.ad7768.power_mode_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">power_mode_avail</span></span><a class="headerlink" href="#adi.ad7768.ad7768.power_mode_avail" title="Permalink to this definition"></a></dt>
+<dd><p>Get available power modes.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7768.ad7768.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad7768.ad7768.sampling_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get sampling frequency.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7768.ad7768.sampling_frequency_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency_available</span></span><a class="headerlink" href="#adi.ad7768.ad7768.sampling_frequency_available" title="Permalink to this definition"></a></dt>
+<dd><p>Get available sampling frequencies.</p>
 </dd></dl>
 
 </dd></dl>
@@ -361,23 +361,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.ad9094.html">
+          <a class="next-page" href="adi.ad777x.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ad9094</div>
+                <div class="title">ad777x</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ad9081_mc.html">
+          <a class="prev-page" href="adi.ad7746.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">ad9081_mc</div>
+                <div class="title">ad7746</div>
                 
               </div>
             </a>
@@ -411,14 +411,14 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">ad9083</a><ul>
-<li><a class="reference internal" href="#adi.ad9083.ad9083"><code class="docutils literal notranslate"><span class="pre">ad9083</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad9083.ad9083.nco0_frequency"><code class="docutils literal notranslate"><span class="pre">ad9083.nco0_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9083.ad9083.nco1_frequency"><code class="docutils literal notranslate"><span class="pre">ad9083.nco1_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9083.ad9083.nco2_frequency"><code class="docutils literal notranslate"><span class="pre">ad9083.nco2_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9083.ad9083.reg_read"><code class="docutils literal notranslate"><span class="pre">ad9083.reg_read()</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9083.ad9083.reg_write"><code class="docutils literal notranslate"><span class="pre">ad9083.reg_write()</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9083.ad9083.rx_sample_rate"><code class="docutils literal notranslate"><span class="pre">ad9083.rx_sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#">ad7768</a><ul>
+<li><a class="reference internal" href="#adi.ad7768.ad7768"><code class="docutils literal notranslate"><span class="pre">ad7768</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad7768.ad7768.filter_type"><code class="docutils literal notranslate"><span class="pre">ad7768.filter_type</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7768.ad7768.filter_type_avail"><code class="docutils literal notranslate"><span class="pre">ad7768.filter_type_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7768.ad7768.power_mode"><code class="docutils literal notranslate"><span class="pre">ad7768.power_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7768.ad7768.power_mode_avail"><code class="docutils literal notranslate"><span class="pre">ad7768.power_mode_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7768.ad7768.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad7768.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7768.ad7768.sampling_frequency_available"><code class="docutils literal notranslate"><span class="pre">ad7768.sampling_frequency_available</span></code></a></li>
 </ul>
 </li>
 </ul>
