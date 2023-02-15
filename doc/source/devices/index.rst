@@ -9,6 +9,7 @@ Supported Devices
 
    adi.QuadMxFE_multi
    adi.ad4020
+   adi.ad3552r
    adi.ad4130
    adi.ad4110
    adi.ad4630
