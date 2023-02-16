@@ -45,18 +45,8 @@ class adrf5720(attribute, context_manager):
     def __init__(self, uri="", device_name=""):
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = [
-            "adrf5720",
-            "adrf5730",
-            "adrf5731",
-        ]
-
-        self._ctrl = None
-
-        for device in self._ctx.devices:
-            if device.name in [device_name] + compatible_parts:
-                self._ctrl = device
-                break
+        self._device_name = device_name
+        self._ctrl = self._ctx.find_device(self._device_name)
 
         # Raise an exception if the device isn't found
         if not self._ctrl:
