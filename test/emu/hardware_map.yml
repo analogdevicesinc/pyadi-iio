@@ -274,3 +274,12 @@ ad7768:
       - filename: ad7768.xml
       - data_devices:
           - iio:device0
+
+ad5592r:
+  - ad5592r
+  - pyadi_iio_class_support:
+      - ad5592r
+  - emulate:
+      - filename: ad5592r.xml
+      - data_devices:
+          - iio:device0
