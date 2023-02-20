@@ -156,8 +156,10 @@ my_sdr.rx_hardwaregain_chan1 = 12
 
 my_sdr.rx_lo = int(2.2e9)  # 4495000000  # Recieve Freq
 
-print ("Loading filter")
-my_sdr.filter = os.getcwd() + "/LTE20_MHz.ftr"  # MWT: Using this for now, may not be necessary.
+print("Loading filter")
+my_sdr.filter = (
+    os.getcwd() + "/LTE20_MHz.ftr"
+)  # MWT: Using this for now, may not be necessary.
 rx_buffer_size = int(4 * 256)
 my_sdr.rx_buffer_size = rx_buffer_size
 
@@ -196,7 +198,7 @@ else:
 #     use_tx = True
 
 print("Using TX output closest to tripod mount, 10.525 GHz for production test.")
-my_phaser.SignalFreq = 10.525e9
+my_phaser.SignalFreq = 10.0e9
 
 
 # my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
@@ -234,9 +236,12 @@ for i in range(0, len(monitor_vals)):
     else:
         print("Passes ", monitor_ch_names[i], monitor_vals[i])
 
+if (monitor_vals[5] - monitor_vals[8]) < 1:
+    print("Warning: Less than 1V headroom on Vtune")
+
 print(
-    "Calibrating SDR channel mismatch, gain and phase - place antenna at mechanical\
-        boresight in front of the array.\n\n"
+    "Calibrating SDR channel mismatch, gain and phase - place antenna at "
+    "mechanical boresight in front of the array.\n\n"
 )
 
 print("\n Getting signal levels...")
