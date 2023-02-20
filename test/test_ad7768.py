@@ -4,7 +4,7 @@ hardware = ["ad7768"]
 classname = "adi.ad7768"
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7])
 def test_ad7768_rx_data(test_dma_rx, iio_uri, classname, channel):
