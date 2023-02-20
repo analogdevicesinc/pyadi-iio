@@ -63,7 +63,7 @@ ignore_missing_imports="true"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "--custom-hw-map=test/emu/hardware_map.yml"
+addopts = "--custom-hw-map=test/emu/hardware_map.yml --emu-xml-dir=test/emu/devices"
 testpaths = [
     "test",
 ]
