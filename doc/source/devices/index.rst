@@ -71,6 +71,7 @@ Supported Devices
    adi.ltc2983
    adi.one_bit_adc_dac
    adi.tdd
+   adi.tddn
 
 -----
 

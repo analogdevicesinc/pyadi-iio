@@ -146,6 +146,7 @@ from adi.fmc_vna import fmcvna
 from adi.adf4159 import adf4159
 
 from adi.tdd import tdd
+from adi.tddn import tddn
 
 from adi.lm75 import lm75
 
