@@ -236,21 +236,27 @@ def test_ad9361_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
-    "param_set",
+    "param_set,frequency, scale",
     [
-        dict(
+        (
+            dict(
             tx_lo=2400000000,
             rx_lo=2400000000,
             rx_rf_port_select="A_BALANCED",
             tx_rf_port_select="A",
             sample_rate=30720000,
+            ),
+            2999577, 0.0625,
         ),
-        dict(
-            tx_lo=2400000000,
-            rx_lo=2400000000,
-            rx_rf_port_select="B_BALANCED",
-            tx_rf_port_select="B",
-            sample_rate=30720000,
+        (
+            dict(
+                tx_lo=2400000000,
+                rx_lo=2400000000,
+                rx_rf_port_select="B_BALANCED",
+                tx_rf_port_select="B",
+                sample_rate=30720000,
+            ),
+            2999577, 0.0625,
         )
     ],
 )
@@ -259,30 +265,36 @@ def test_ad9361_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
     [([-20.0, -100.0, -120.0, -120.0, -120.0], [-10.0, -60.0, -75.0, -75.0, -80.0])],
 )
 def test_harmonic_values(
-    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=False
+    test_harmonics, classname, iio_uri, channel, param_set, low, high, frequency, scale, plot=False
 ):
-    test_harmonics(classname, iio_uri, channel, param_set, low, high, plot)
+    test_harmonics(classname, iio_uri, channel, param_set, low, high, frequency, scale, plot)
 
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
-    "param_set",
+    "param_set, frequency, scale",
     [
-        dict(
+        (
+            dict(
             tx_lo=2400000000,
             rx_lo=2400000000,
             rx_rf_port_select="A_BALANCED",
             tx_rf_port_select="A",
             sample_rate=30720000,
+            ),
+            2999577, 0.0625,
         ),
-        dict(
-            tx_lo=2400000000,
-            rx_lo=2400000000,
-            rx_rf_port_select="B_BALANCED",
-            tx_rf_port_select="B",
-            sample_rate=30720000,
+        (
+            dict(
+                tx_lo=2400000000,
+                rx_lo=2400000000,
+                rx_rf_port_select="B_BALANCED",
+                tx_rf_port_select="B",
+                sample_rate=30720000,
+            ),
+            2999577, 0.0625,
         )
     ],
 )
@@ -290,5 +302,5 @@ def test_harmonic_values(
     "low, high",
     [([-20.0, -120.0, -120.0, -125.0], [-10.0, -75.0, -75.0, -80.0])],
 )
-def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, plot=False):
-    test_sfdrl(classname, iio_uri, channel, param_set, low, high, plot=False)
+def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, frequency, scale, plot=False):
+    test_sfdrl(classname, iio_uri, channel, param_set, low, high, frequency, scale, plot)
