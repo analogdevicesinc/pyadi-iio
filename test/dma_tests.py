@@ -683,7 +683,7 @@ def sfdr_low(classname, uri, channel, param_set, low, high, frequency, scale, pl
         for i in range(8):
             data = sdr.rx()
             time.sleep(1)
-            amps, freq = spec.spec_est(data, fs=RXFS, ref=2**13, num_ffts=1,  enable_windowing=True, plot=False)
+            amps, freq = spec.spec_est(data, fs=RXFS, ref=2**11, num_ffts=1,  enable_windowing=True, plot=False)
             amp += amps
         amp /= 8
     except Exception as e:
@@ -1019,7 +1019,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, frequency, scal
         for i in range(8):
             data = sdr.rx()
             #time.sleep(1)
-            amp, ffreqs = spec.spec_est(data, fs=RXFS, ref=2**13, enable_windowing=True, num_ffts=1, plot=False)
+            amp, ffreqs = spec.spec_est(data, fs=RXFS, ref=2**11, enable_windowing=True, num_ffts=1, plot=False)
             ffampl += amp
         ffampl/= 8
     except Exception as e:
