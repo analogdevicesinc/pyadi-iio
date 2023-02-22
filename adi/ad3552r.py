@@ -48,7 +48,7 @@ class ad3552r(tx, context_manager, attribute):
     def __init__(self, uri="", device_name=""):
 
         context_manager.__init__(self, uri, self._device_name)
-        compatible_parts = ["axi-ad3552r-0","axi-ad3552r-1"]
+        compatible_parts = ["axi-ad3552r-0","axi-ad3552r-1","axi-ad3552r"]
 
         self._ctrl = None
 
