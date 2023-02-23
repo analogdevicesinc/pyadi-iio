@@ -91,6 +91,12 @@ gain_cal_limits = (
 # which split across the two Pluto channels.
 phase_cal_limits = [90.0, 90.0, 90.0, 120.0, 90.0, 90.0, 90.0]
 
+# Set up RF / IF / LO frequencies
+rx_lo = 2.2e9
+SignalFreq = 10.2e9
+
+use_tx = True  # Use on board TX w/ cabled antenna, NOT external HB100
+
 
 if os.name == "nt":  # Assume running on Windows
     rpi_ip = "ip:phaser.local"  # IP address of the remote Raspberry Pi
@@ -128,65 +134,18 @@ except NameError:
 # By default device_mode is "rx"
 my_phaser.configure(device_mode="rx")
 
-use_tx = True
-
-
-# Configure SDR parameters.
-
-# configure sdr/pluto according to above-mentioned freq plan
-# my_sdr._ctrl.debug_attrs["adi,frequency-division-duplex-mode-enable"].value = "1"
-# my_sdr._ctrl.debug_attrs["adi,ensm-enable-txnrx-control-enable"].value = "0"  # Disable pin control so spi can move the states
-# my_sdr._ctrl.debug_attrs["initialize"].value = "1"
-my_sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
-my_sdr._rxadc.set_kernel_buffers_count(
-    1
-)  # Super important - don't want to have to flush stale buffers
-rx = my_sdr._ctrl.find_channel("voltage0")
-rx.attrs[
-    "quadrature_tracking_en"
-].value = "1"  # set to '1' to enable quadrature tracking
-my_sdr.sample_rate = int(30000000)  # Sampling rate
-my_sdr.rx_buffer_size = int(4 * 256)
-my_sdr.rx_rf_bandwidth = int(10e6)
-# We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
-my_sdr.gain_control_mode_chan0 = "manual"
-my_sdr.gain_control_mode_chan1 = "manual"
-my_sdr.rx_hardwaregain_chan0 = 12
-my_sdr.rx_hardwaregain_chan1 = 12
-
-my_sdr.rx_lo = int(2.2e9)  # 4495000000  # Recieve Freq
-
-print("Loading filter")
-my_sdr.filter = (
-    os.getcwd() + "/LTE20_MHz.ftr"
-)  # MWT: Using this for now, may not be necessary.
-rx_buffer_size = int(4 * 256)
-my_sdr.rx_buffer_size = rx_buffer_size
-
-my_sdr.tx_cyclic_buffer = True
-my_sdr.tx_buffer_size = int(2 ** 16)
-
-if use_tx is True:
-    # To disable rx, set attenuation to a high value and set frequency far from rx.
-    my_sdr.tx_hardwaregain_chan0 = int(
-        -88
-    )  # this is a negative number between 0 and -88
-    my_sdr.tx_hardwaregain_chan1 = int(-3)
-    my_sdr.tx_lo = int(2.2e9)
-else:
-    # To disable rx, set attenuation to a high value and set frequency far from rx.
-    my_sdr.tx_hardwaregain_chan0 = int(
-        -88
-    )  # this is a negative number between 0 and -88
-    my_sdr.tx_hardwaregain_chan1 = int(-88)
-    my_sdr.tx_lo = int(1.0e9)
-
+# Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
+my_phaser.Averages = 8
 
 # Set up receive frequency. When using HB100, you need to know its frequency
 # fairly accurately. Use the cn0566_find_hb100.py script to measure its frequency
 # and write out to the cal file. IF using the onboard TX generator, delete
 # the cal file and set frequency via config.py or config_custom.py.
 
+# Set the PLL once here, so that we can measure VTune below.
+my_phaser.SignalFreq = SignalFreq
+my_phaser.lo = int(SignalFreq) + rx_lo  # This actually sets the ADF4159.
+time.sleep(0.5)  # Give the ADF4159 time to settle
 
 # try:
 #     my_phaser.SignalFreq = load_hb100_cal()
@@ -197,32 +156,18 @@ else:
 #     print("No signal freq found, keeping at ", my_phaser.SignalFreq)
 #     use_tx = True
 
-print("Using TX output closest to tripod mount, 10.525 GHz for production test.")
-my_phaser.SignalFreq = 10.0e9
-
-
-# my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
-# my_sdr.dds_frequencies = [0.1e6, 0.1e6, 0.1e6, 0.1e6] #Frequencies of DDSs in Hz
-# my_sdr.dds_scales = [1, 1, 0, 0] #Scale of DDS signal generators Ranges [0,1]
-my_sdr.dds_single_tone(
-    int(0.5e6), 0.9, 1
-)  # sdr.dds_single_tone(tone_freq_hz, tone_scale_0to1, tx_channel)
-
-#  Configure CN0566 parameters.
-#     ADF4159 and ADAR1000 array attributes are exposed directly, although normally
-#     accessed through other methods.
-
-
-my_phaser.lo = int(my_phaser.SignalFreq) + my_sdr.rx_lo
-
 # MWT: Do NOT load in cal values during production test. That's what we're doing, after all :)
 # But running a second time with saved cal values may be useful in development.
 # my_phaser.load_gain_cal('gain_cal_val.pkl')
 # my_phaser.load_phase_cal('phase_cal_val.pkl')
 
-# Averages decide number of time samples are taken to plot and/or calibrate system. By default it is 1.
-my_phaser.Averages = 8
 
+print("Using TX output closest to tripod mount, 10.525 GHz for production test.")
+
+
+#  Configure CN0566 parameters.
+#     ADF4159 and ADAR1000 array attributes are exposed directly, although normally
+#     accessed through other methods.
 
 print("Reading voltage monitor...")
 monitor_vals = my_phaser.read_monitor()
@@ -236,20 +181,104 @@ for i in range(0, len(monitor_vals)):
     else:
         print("Passes ", monitor_ch_names[i], monitor_vals[i])
 
+if len(failures) > 0:
+    print("Fails one or more supply voltage tests. Please set board aside for debug.")
+    sys.exit()
+else:
+    print("Passes all monitor readings, proceeding...")
+
 if (monitor_vals[5] - monitor_vals[8]) < 1:
     print("Warning: Less than 1V headroom on Vtune")
+
+
+print("\nSetting up Pluto and Getting signal levels...")
+success = False
+attempts = 0
+max_attempts = 5
+
+while attempts < max_attempts and not success:
+    try:
+        my_phaser.lo = int(SignalFreq) + rx_lo  # This actually sets the ADF4159.
+        time.sleep(0.5)  # Give the ADF4159 time to settle
+
+        # Configure SDR parameters.
+
+        # configure sdr/pluto according to above-mentioned freq plan
+        # my_sdr._ctrl.debug_attrs["adi,frequency-division-duplex-mode-enable"].value = "1"
+        # my_sdr._ctrl.debug_attrs["adi,ensm-enable-txnrx-control-enable"].value = "0"  # Disable pin control so spi can move the states
+        # my_sdr._ctrl.debug_attrs["initialize"].value = "1"
+        my_sdr.rx_enabled_channels = [0, 1]  # enable Rx1 (voltage0) and Rx2 (voltage1)
+        my_sdr._rxadc.set_kernel_buffers_count(
+            1
+        )  # Super important - don't want to have to flush stale buffers
+        rx = my_sdr._ctrl.find_channel("voltage0")
+        rx.attrs[
+            "quadrature_tracking_en"
+        ].value = "1"  # set to '1' to enable quadrature tracking
+        my_sdr.sample_rate = int(30000000)  # Sampling rate
+        my_sdr.rx_buffer_size = int(4 * 256)
+        my_sdr.rx_rf_bandwidth = int(10e6)
+        # We must be in manual gain control mode (otherwise we won't see the peaks and nulls!)
+        my_sdr.gain_control_mode_chan0 = "manual"
+        my_sdr.gain_control_mode_chan1 = "manual"
+        my_sdr.rx_hardwaregain_chan0 = 12
+        my_sdr.rx_hardwaregain_chan1 = 12
+
+        my_sdr.rx_lo = int(rx_lo)  # 4495000000  # Recieve Freq
+
+        print("Loading filter")
+        my_sdr.filter = (
+            os.getcwd() + "/LTE20_MHz.ftr"
+        )  # MWT: Using this for now, may not be necessary.
+        rx_buffer_size = int(4 * 256)
+        my_sdr.rx_buffer_size = rx_buffer_size
+
+        my_sdr.tx_cyclic_buffer = True
+        my_sdr.tx_buffer_size = int(2 ** 16)
+
+        if use_tx is True:
+            # To disable rx, set attenuation to a high value and set frequency far from rx.
+            my_sdr.tx_hardwaregain_chan0 = int(
+                -88
+            )  # this is a negative number between 0 and -88
+            my_sdr.tx_hardwaregain_chan1 = int(-3)
+            my_sdr.tx_lo = int(2.2e9)
+        else:
+            # To disable rx, set attenuation to a high value and set frequency far from rx.
+            my_sdr.tx_hardwaregain_chan0 = int(
+                -88
+            )  # this is a negative number between 0 and -88
+            my_sdr.tx_hardwaregain_chan1 = int(-88)
+            my_sdr.tx_lo = int(1.0e9)
+
+        # my_sdr.dds_enabled = [1, 1, 1, 1] #DDS generator enable state
+        # my_sdr.dds_frequencies = [0.1e6, 0.1e6, 0.1e6, 0.1e6] #Frequencies of DDSs in Hz
+        # my_sdr.dds_scales = [1, 1, 0, 0] #Scale of DDS signal generators Ranges [0,1]
+        my_sdr.dds_single_tone(
+            int(0.5e6), 0.9, 1
+        )  # sdr.dds_single_tone(tone_freq_hz, tone_scale_0to1, tx_channel)
+
+        sig_levels = get_signal_levels(my_phaser)
+        print(sig_levels)
+        if min(sig_levels) < 80.0:
+            print("Low signal levels on attempt ", attempts, " of ", max_attempts)
+            attempts += 1
+        else:
+            success = True
+        if attempts == max_attempts:
+            raise Exception("Max attempts reached")
+    except:
+        print(
+            "failed after " + str(max_attempts) + " attempts, please set board aside."
+        )
+        sys.exit()
+
 
 print(
     "Calibrating SDR channel mismatch, gain and phase - place antenna at "
     "mechanical boresight in front of the array.\n\n"
 )
 
-print("\n Getting signal levels...")
-sig_levels = get_signal_levels(my_phaser)
-print(sig_levels)
-if min(sig_levels) < 80.0:
-    print("Low signal levels!! Double-check hardware setup, then re-run test.")
-    sys.exit()
 
 print("\nCalibrating SDR channel mismatch, verbosely...")
 channel_calibration(my_phaser, verbose=True)
