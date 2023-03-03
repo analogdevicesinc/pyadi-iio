@@ -42,8 +42,7 @@ test_raw2 = 8192  # Test raw DAC code
 toggle1 = 41210  # 1st toggle value
 toggle2 = 21410  # 2nd toggle value
 
-dither_raw_test = 4100  # dither raw value
-dither_off_test = 2100  # dither offset
+dither_raw_test = 8192  # dither raw value
 dither_freq_test = 16384  # dither frequency
 dither_phase_test = (
     1.5708  # dither phase. available options: 0, 1.5708, 3.14159, 4.71239
@@ -51,31 +50,38 @@ dither_phase_test = (
 
 # indices of standard channels
 # ch1 expected value = -3.9V
+# ch2 expected value = 0V
 # even number channel = 1.249V
 # odd number channel = 0.624V
 standard_channels = [1, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15]
+toggle_channels = [2, 7]
+dither_channels = [0, 3]
 
 # Device initialization
 try:
-    myDAC = adi.ltc2688(uri="ip:analog.local")
+    myDAC = adi.ltc2688(uri="ip:169.254.8.72")
 
-    for ch in myDAC._ctrl.channels:
-        name = ch.id
-        if "toggle_en" in ch.attrs:
-            ch.raw0 = 0
-            ch.raw1 = 0
-            ch.toggle_en = 0
-            if "symbol" in ch.attrs:
-                print("Channel: " + name + " function: " + "sw toggle")
+    for ch in myDAC.channel_names:
+        ch_object = eval("myDAC." + str(ch))
+        id_num = int(ch[7:])
+        if id_num in toggle_channels:
+            ch_object.raw0 = 0
+            ch_object.raw1 = 0
+            ch_object.toggle_en = 0
+            if id_num == 7:
+                print("Channel: " + str(ch) + " function: " + "sw toggle")
             else:
-                print("Channel: " + name + " function: " + "hw toggle")
-        elif "dither_en" in ch.attrs:
-            ch.dither_en = 0
-            ch.raw = 0
-            print("Channel: " + name + " function: " + "dither")
+                print("Channel: " + str(ch) + " function: " + "hw toggle")
+        elif id_num in dither_channels:
+            ch_object.dither_en = 0
+            if id_num == 3:
+                ch_object.raw = 32768
+            else:
+                ch_object.raw = 0
+            print("Channel: " + str(ch) + " function: " + "dither")
         else:
-            ch.raw = 0
-            print("Channel: " + name + " function: " + "standard")
+            ch_object.raw = 0
+            print("Channel: " + str(ch) + " function: " + "standard")
 
 except Exception as e:
     print(str(e))
@@ -85,29 +91,22 @@ except Exception as e:
 print("")
 print("")
 
+
 # Basic DAC output setting function
 try:
     print("Basic DAC output configuration.")
-    for ch in range(0, 8):
-        if hasattr(myDAC.channel[(ch * 2)], "raw"):
-            if (ch * 2) in standard_channels:
-                myDAC.channel[(ch * 2)].raw = test_raw1
-                print(
-                    "Channel: "
-                    + str(myDAC.channel[(ch * 2)].name)
-                    + " set to: "
-                    + str(myDAC.channel[(ch * 2)].raw)
-                )
 
-        if hasattr(myDAC.channel[(ch * 2 + 1)], "raw"):
-            if (ch * 2 + 1) in standard_channels:
-                myDAC.channel[(ch * 2) + 1].raw = test_raw2
-                print(
-                    "Channel: "
-                    + str(myDAC.channel[(ch * 2) + 1].name)
-                    + " set to: "
-                    + str(myDAC.channel[(ch * 2) + 1].raw)
-                )
+    for ch in myDAC.channel_names:
+        ch_object = eval("myDAC." + str(ch))
+        id_num = int(ch[7:])
+
+        if id_num in standard_channels:
+            if id_num % 2 == 0:
+                ch_object.raw = test_raw1
+            else:
+                ch_object.raw = test_raw2
+
+            print("Channel: " + str(ch) + " set to: " + str(ch_object.raw))
 
         time.sleep(0.05)
 
@@ -121,38 +120,47 @@ except Exception as e:
 print("")
 print("")
 
+
 # Toggling Output for toggle enabled channels
 try:
     print("DAC output toggling feature.")
-    for ch in myDAC.channel:
-        if hasattr(ch, "toggle_en"):
-            ch.raw0 = toggle1
-            ch.raw1 = toggle2
+    for ch in myDAC.channel_names:
+        ch_object = eval("myDAC." + str(ch))
+        id_num = int(ch[7:])
+
+        if id_num in toggle_channels:
+            ch_object.raw0 = toggle1
+            ch_object.raw1 = toggle2
 
             print(
                 "Channel: "
-                + str(ch.name)
+                + str(ch)
                 + " set to: "
-                + str(ch.raw0)
+                + str(ch_object.raw0)
                 + str(" (raw0)  ")
-                + str(ch.raw1)
+                + str(ch_object.raw1)
                 + str(" (raw1)  ")
             )
 
             # Toggles between 1.6V and 3.1V
-            if hasattr(ch, "symbol"):  # software toggle enable
+            if id_num == 7:  # software toggle enable
                 print("Software enabled toggle.")
                 print("")
+                ch_object.toggle_en = 1
                 for j in range(8):
-                    ch.symbol = not (ch.symbol)
+                    ch_object.symbol = not (ch_object.symbol)
+                    print("Toggling...")
                     time.sleep(1)
+                ch_object.toggle_en = 0
 
             else:  # TGPx toggle enable
                 print("Hardware enabled toggle. Supply clock at TGP1 pin.")
                 print("")
-                ch.toggle_en = 1
+                ch_object.toggle_en = 1
                 time.sleep(2)
-                ch.toggle_en = 0
+                ch_object.toggle_en = 0
+
+            print("")
 
     time.sleep(2)
 
@@ -161,36 +169,38 @@ except Exception as e:
     print("Failed to write to LTC2688 DAC")
     sys.exit(0)
 
-print("")
-print("")
 
 # Dither output for enabled channels
 # Monitor outputs at VOUT0 and VOUT3
 try:
     print("Dither output feature.")
-    for ch in myDAC.channel:
-        if hasattr(ch, "dither_en"):
-            print("Dither enabled at channel: " + str(ch.name))
-            ch.dither_raw = dither_raw_test
-            # ch.dither_offset = dither_off_test # cannot write value
-            ch.dither_frequency = dither_freq_test
-            ch.dither_phase = dither_phase_test
+    for ch in myDAC.channel_names:
+        ch_object = eval("myDAC." + str(ch))
+        id_num = int(ch[7:])
+
+        if id_num in dither_channels:
+            print("Dither enabled at channel: " + str(ch))
+            ch_object.dither_raw = dither_raw_test
+            ch_object.dither_frequency = dither_freq_test
+            ch_object.dither_phase = dither_phase_test
 
             print(
                 "Dither Settings of: "
-                + str(ch.dither_raw)
+                + str(ch_object.dither_raw)
                 + str(" (raw),  ")
-                + str(ch.dither_offset)
+                + str(ch_object.dither_offset)
                 + str(" (offset),  ")
-                + str(ch.dither_frequency)
+                + str(ch_object.dither_frequency)
                 + str(" (frequency),  ")
-                + str(ch.dither_phase)
+                + str(ch_object.dither_phase)
                 + str(" (phase).  ")
             )
 
-            ch.dither_en = 1
+            ch_object.dither_en = 1
             time.sleep(5)
-            ch.dither_en = 0
+            ch_object.dither_en = 0
+
+            print("")
 
 except Exception as e:
     print(str(e))

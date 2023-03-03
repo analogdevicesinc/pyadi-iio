@@ -39,9 +39,9 @@ class ltc2688(context_manager, attribute):
     """ LTC2688 DAC """
 
     _complex_data = False
-    channel = []
     _device_name = "LTC2688"
     vref = 4.096
+    channel_names = []
 
     def __init__(self, uri="ip:analog.local", device_index=0):
         context_manager.__init__(self, uri, self._device_name)
@@ -50,22 +50,19 @@ class ltc2688(context_manager, attribute):
 
         for ch in self._ctrl.channels:
             name = ch.id
+            self.channel_names.append(name)
             if "toggle_en" in ch.attrs:
                 if "symbol" in ch.attrs:
-                    self.channel.append(self._channel_sw_toggle(self._ctrl, name))
+                    setattr(self, name, self._channel_sw_toggle(self._ctrl, name))
                 else:
-                    self.channel.append(self._channel_toggle(self._ctrl, name))
+                    setattr(self, name, self._channel_toggle(self._ctrl, name))
             elif "dither_en" in ch.attrs:
-                self.channel.append(self._channel_dither(self._ctrl, name))
+                setattr(self, name, self._channel_dither(self._ctrl, name))
             else:
-                self.channel.append(self._channel_standard(self._ctrl, name))
-
-        self.channel.sort(key=lambda x: int(x.name[7:]))
+                setattr(self, name, self._channel_standard(self._ctrl, name))
 
     class _channel_base(attribute):
         """ LTC2688 base channel class """
-
-        # Default reference voltage
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
