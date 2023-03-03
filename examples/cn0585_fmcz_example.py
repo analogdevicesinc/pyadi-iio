@@ -8,18 +8,18 @@ import time
 # Optionally passs URI as command line argument,
 # else use default ip:analog.local
 
-ltc_vref = 2.048
-ltc_gain = 0.37 / 4.07
+adaq23876_vref = 2.048
+adaq23876_gain = 0.37 / 4.07
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
 
-class ltc2387_x4(adi.ltc2387):
+class adaq23876(adi.ltc2387):
       _rx_channel_names = ["voltage0","voltage1","voltage2","voltage3"]
       _rx_data_type = np.int16
 
 # device connections 
 
-ltc2387_adc = ltc2387_x4(my_uri)
+adaq23876_adc = adaq23876(my_uri)
 ad3552r_0 = adi.ad3552r(uri=my_uri, device_name="axi-ad3552r-0")
 ad3552r_1 = adi.ad3552r(uri=my_uri, device_name="axi-ad3552r-1")
 voltage_monitor = adi.ad7291(uri=my_uri)
@@ -61,8 +61,8 @@ for i in range(0, len(voltage_monitor.channel)):
 
 # device configurations 
 
-ltc2387_adc.rx_buffer_size = 4096
-ltc2387_adc.sampling_frequency = 12000000
+adaq23876_adc.rx_buffer_size = 4096
+adaq23876_adc.sampling_frequency = 15000000
 
 ad3552r_0.tx_enabled_channels = [0, 1]
 ad3552r_1.tx_enabled_channels = [0, 1]
@@ -73,7 +73,7 @@ ad3552r_1.tx_cyclic_buffer = True
 
 fs = int(ad3552r_0.sample_rate)
 # Signal frequency
-fc = 1000
+fc = 5000
 # Number of samples
 N = int(fs / fc)
 # Period
@@ -110,16 +110,16 @@ ad3552r_1.tx([samples, samples])
 
 # rx 
 
-data = ltc2387_adc.rx()
+data = adaq23876_adc.rx()
 
 # plot setup 
 
-x = np.arange(0, ltc2387_adc.rx_buffer_size)
+x = np.arange(0, adaq23876_adc.rx_buffer_size)
 
-voltage_0 = ( data[0]  * -ltc_vref )  / (ltc_gain * 2 ** 16)
-voltage_1 = ( data[1]  * -ltc_vref )  / (ltc_gain * 2 ** 16)
-voltage_2 = ( data[2]  * -ltc_vref )  / (ltc_gain * 2 ** 16)
-voltage_3 = ( data[3]  * -ltc_vref )  / (ltc_gain * 2 ** 16)
+voltage_0 = ( data[0]  * -adaq23876_vref )  / (adaq23876_gain * 2 ** 16)
+voltage_1 = ( data[1]  * -adaq23876_vref )  / (adaq23876_gain * 2 ** 16)
+voltage_2 = ( data[2]  * -adaq23876_vref )  / (adaq23876_gain * 2 ** 16)
+voltage_3 = ( data[3]  * -adaq23876_vref )  / (adaq23876_gain * 2 ** 16)
 fig, (ch1, ch2, ch3, ch4) = plt.subplots(4, 1)
 
 print("Maximum measured voltage 0 :",voltage_0.max())
@@ -132,11 +132,11 @@ print("Minimum measured voltage 1:",voltage_1.min())
 print("Minimum measured voltage 2:",voltage_2.min())
 print("Minimum measured voltage 3:",voltage_3.min())
 
-fig.suptitle('LTC 2387 Channels')
-ch1.plot(x,voltage_0[0:ltc2387_adc.rx_buffer_size])
-ch2.plot(x,voltage_1[0:ltc2387_adc.rx_buffer_size])
-ch3.plot(x,voltage_2[0:ltc2387_adc.rx_buffer_size])
-ch4.plot(x,voltage_3[0:ltc2387_adc.rx_buffer_size])
+fig.suptitle('ADAQ23876 Channels')
+ch1.plot(x,voltage_0[0:adaq23876_adc.rx_buffer_size])
+ch2.plot(x,voltage_1[0:adaq23876_adc.rx_buffer_size])
+ch3.plot(x,voltage_2[0:adaq23876_adc.rx_buffer_size])
+ch4.plot(x,voltage_3[0:adaq23876_adc.rx_buffer_size])
 ch1.set_ylabel('Channel 1 voltage [V]')
 ch2.set_ylabel('Channel 2 voltage [V]')
 ch3.set_ylabel('Channel 3 voltage [V]')
