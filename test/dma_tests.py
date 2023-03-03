@@ -57,13 +57,13 @@ def dma_rx(
                     sdr._rx_channel_names[ec] for ec in sdr.rx_enabled_channels
                 ]
                 for ci in sdr.rx_enabled_channels:
-                    assert np.sum(np.abs(data[sdr._rx_channel_names[ci]])) > 0
+                    assert np.max(np.abs(data[sdr._rx_channel_names[ci]])) > 0
             else:
                 if isinstance(data, list):
                     for chan in data:
-                        assert np.sum(np.abs(chan)) > 0, "Buffer all zeros"
+                        assert np.max(np.abs(chan)) > 0, "Buffer all zeros"
                 else:
-                    assert np.sum(np.abs(data)) > 0, "Buffer all zeros"
+                    assert np.max(np.abs(data)) > 0, "Buffer all zeros"
     except Exception as e:
         del sdr
         raise Exception(e) from e

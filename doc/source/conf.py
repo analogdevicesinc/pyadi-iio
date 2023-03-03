@@ -66,7 +66,7 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx_rtd_theme",
     "myst_parser",
-    "sphinx-favicon",
+    "sphinx_favicon",
     "sphinxcontrib.mermaid",
 ]
 

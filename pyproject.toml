@@ -33,7 +33,7 @@ dependencies = [
 
 [tool.setuptools.dynamic]
 version = {attr = "adi.__version__"}
-readme = {file = "README.md"}
+readme = {file = "README.md", content-type = "text/markdown"}
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -60,3 +60,10 @@ line_length=88
 
 [tool.mypy]
 ignore_missing_imports="true"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--custom-hw-map=test/emu/hardware_map.yml --emu-xml-dir=test/emu/devices"
+testpaths = [
+    "test",
+]

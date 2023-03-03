@@ -6,7 +6,7 @@
 
 <p align="center">
 <a href="https://github.com/analogdevicesinc/pyadi-iio/actions">
-<img src="https://img.shields.io/github/workflow/status/analogdevicesinc/pyadi-iio/CI%20Pushes/master" alt="Build Status">
+<img src="https://github.com/analogdevicesinc/pyadi-iio/actions/workflows/test.yml/badge.svg" alt="Build Status">
 </a>
 
 <a href="https://badge.fury.io/py/pyadi-iio">
@@ -60,7 +60,7 @@ data = sdr.rx()
 ```
 tcollins@jeeves:~$ git clone https://github.com/analogdevicesinc/pyadi-iio.git
 tcollins@jeeves:~$ cd pyadi-iio
-tcollins@jeeves:~$ (sudo) python setup.py install
+tcollins@jeeves:~$ (sudo) pip install .
 ```
 ### Installing from pip
 ```

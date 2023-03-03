@@ -36,7 +36,7 @@ import time
 
 import adi
 
-# Passs URI as command line argument
+# pass URI as command line argument
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
 
 # Set up ADXL31x

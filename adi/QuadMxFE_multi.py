@@ -218,7 +218,7 @@ class QuadMxFE_multi(object):
 
         parameters:
             vals: type=list
-                Forces certain Capacitor bank seletions.
+                Forces certain Capacitor bank selections.
                 Typically the list returned form hmc7044_cap_sel
         """
         for dev in [self.primary] + self.secondaries:

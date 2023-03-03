@@ -34,16 +34,21 @@
 from adi.ad469x import ad469x
 from adi.ad717x import ad717x
 from adi.ad719x import ad719x
+from adi.ad777x import ad777x
 from adi.ad936x import Pluto, ad9361, ad9363, ad9364
+from adi.ad4020 import ad4020
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
 from adi.ad4630 import ad4630
+from adi.ad5592r import ad5592r
 from adi.ad5686 import ad5686
 from adi.ad5940 import ad5940
+from adi.ad6676 import ad6676
 from adi.ad7124 import ad7124
 from adi.ad7606 import ad7606
 from adi.ad7689 import ad7689
 from adi.ad7746 import ad7746
+from adi.ad7768 import ad7768
 from adi.ad7799 import ad7799
 from adi.ad9081 import ad9081
 from adi.ad9081_mc import QuadMxFE, ad9081_mc
@@ -103,6 +108,7 @@ from adi.fmcomms11 import FMComms11
 from adi.gen_mux import genmux
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
+from adi.ltc2387 import ltc2387
 from adi.ltc2499 import ltc2499
 from adi.ltc2983 import ltc2983
 from adi.max11205 import max11205
