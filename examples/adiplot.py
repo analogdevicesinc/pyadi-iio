@@ -6,16 +6,26 @@ from queue import Full, Queue
 
 import adi
 import numpy as np
-import pyqtgraph as pg
-from PyQt5 import QtGui
-from pyqtgraph.Qt import QtCore, QtGui
+# import pyqtgraph as pg
+# from PyQt5 import QtGui
+# from pyqtgraph.Qt import QtCore, QtGui
 from scipy import signal
 from scipy.fftpack import fft
+
+from PyQt5 import QtWidgets, QtCore
+from pyqtgraph import PlotWidget, plot, GraphicsLayoutWidget
+import pyqtgraph as pg
+import sys  # We need sys so that we can pass argv to QApplication
+import os
+from random import randint
+
+pg.setConfigOptions(antialias=True)
 
 REAL_DEV_NAME = "cn05".lower()
 
 
 class ADIPlotter(object):
+
     def __init__(self, classname, uri):
 
         self.classname = classname
@@ -29,10 +39,18 @@ class ADIPlotter(object):
         self.stream.rx_buffer_size = 2 ** 12
         self.stream.rx_enabled_channels = [0]
 
-        pg.setConfigOptions(antialias=True)
+        self.app = QtWidgets.QApplication(sys.argv)
+
+        self.qmw = QtWidgets.QMainWindow()
+        self.qmw.graphWidget = pg.PlotWidget()
+        self.qmw.setCentralWidget(self.qmw.graphWidget)
+        self.qmw.graphWidget.setBackground('w')
+
+        self.win = self.qmw.graphWidget
+
         self.traces = {}
-        self.app = QtGui.QApplication(sys.argv)
-        self.win = pg.GraphicsWindow(title="Spectrum Analyzer")
+
+        self.win = GraphicsLayoutWidget(self.qmw.centralWidget())
         self.win.setWindowTitle("Spectrum Analyzer")
         self.win.setGeometry(5, 115, 1910, 1070)
 
@@ -70,46 +88,50 @@ class ADIPlotter(object):
         self.min = -100
         self.window = signal.kaiser(self.stream.rx_buffer_size, beta=38)
 
+        self.qmw.show()
+
         self.run_source = True
         self.thread = threading.Thread(target=self.source)
         self.thread.start()
 
     def source(self):
         print("Thread running")
+        self.counter = 0
         while self.run_source:
             data = self.stream.rx()
+            # print("counter: ", self.counter)
+            self.counter += 1
             try:
                 self.q.put(data, block=False, timeout=4)
             except Full:
                 continue
 
     def start(self):
-        if (sys.flags.interactive != 1) or not hasattr(QtCore, "PYQT_VERSION"):
-            QtGui.QApplication.instance().exec_()
+        self.app.exec_()
 
     def set_plotdata(self, name, data_x, data_y):
         if name in self.traces:
             self.traces[name].setData(data_x, data_y)
-        else:
-            if name == "spectrum":
-                self.traces[name] = self.spectrum.plot(pen="m", width=3)
-                self.spectrum.setLogMode(x=False, y=False)
-                self.spectrum.setYRange(self.min, 5, padding=0)
-                if REAL_DEV_NAME in self.classname.lower():
-                    start = 0
-                else:
-                    start = -1 * self.stream.sample_rate / 2
-                self.spectrum.setXRange(
-                    start, self.stream.sample_rate / 2, padding=0.005,
-                )
-            elif name == "waveform":
-                self.traces[name] = self.waveform.plot(pen="c", width=3)
-                self.waveform.setYRange(-(2 ** 11) - 200, 2 ** 11 + 200, padding=0)
-                self.waveform.setXRange(
-                    0,
-                    self.stream.rx_buffer_size / self.stream.sample_rate,
-                    padding=0.005,
-                )
+        elif name == "spectrum":
+            self.traces[name] = self.spectrum.plot(pen="m", width=3)
+            self.spectrum.setLogMode(x=False, y=False)
+            self.spectrum.setYRange(self.min, 5, padding=0)
+            start = (
+                0
+                if REAL_DEV_NAME in self.classname.lower()
+                else -1 * self.stream.sample_rate / 2
+            )
+            self.spectrum.setXRange(
+                start, self.stream.sample_rate / 2, padding=0.005,
+            )
+        elif name == "waveform":
+            self.traces[name] = self.waveform.plot(pen="c", width=3)
+            self.waveform.setYRange(-(2 ** 11) - 200, 2 ** 11 + 200, padding=0)
+            self.waveform.setXRange(
+                0,
+                self.stream.rx_buffer_size / self.stream.sample_rate,
+                padding=0.005,
+            )
 
     def update(self):
         while not self.q.empty():
