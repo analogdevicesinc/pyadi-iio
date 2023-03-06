@@ -18,7 +18,6 @@ classname = "adi.ltc2688"
         ("raw", 0, 65000, 1000, 1, 3, "voltage4"),  # Standard Channel
         ("raw", 0, 65000, 1000, 1, 3, "voltage5"),  # Standard Channel
         ("raw", 0, 65000, 1000, 1, 3, "voltage6"),  # Standard Channel
-        ("raw0", 0, 65000, 1000, 1, 3, "voltage7"),  # Toggle Channel
         ("raw1", 0, 65000, 1000, 1, 3, "voltage7"),  # Toggle Channel
         ("raw", 0, 65000, 1000, 1, 3, "voltage8"),  # Standard Channel
         ("raw", 0, 65000, 1000, 1, 3, "voltage9"),  # Standard Channel
