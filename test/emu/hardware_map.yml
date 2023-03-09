@@ -275,6 +275,15 @@ ad7768:
       - data_devices:
           - iio:device0
 
+max31865:
+  - max31865
+  - pyadi_iio_class_support:
+      - max31865
+  - emulate:
+      - filename: max31865.xml
+      - data_devices:
+          - iio:device0
+          
 ad5592r:
   - ad5592r
   - pyadi_iio_class_support:
