@@ -63,5 +63,6 @@ class context_manager(object):
                     raise Exception("No device found")
             else:
                 self._ctx = iio.Context(self.uri)
+                print("returned by iio.Context():", self._ctx)
         except BaseException:
             raise Exception("No device found")
