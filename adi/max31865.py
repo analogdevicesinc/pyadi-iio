@@ -94,3 +94,8 @@ class max31865(rx, context_manager, attribute):
         def notch(self):
             """MAX31865 Notch center frequency"""
             return self._get_iio_attr(self.name, "notch_center_frequency", False)
+
+        @notch.setter
+        def notch(self, value):
+            """MAX31865 Notch center frequency (50 or 60)"""
+            return self._set_iio_attr(self.name, "notch_center_frequency", False, value)

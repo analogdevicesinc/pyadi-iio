@@ -38,7 +38,7 @@ import adi
 
 # Optionally pass URI as command line argument,
 # else use default context manager search
-my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
 
 rtd = adi.max31865(uri=my_uri)
@@ -53,5 +53,6 @@ print("Notch Filter: {} Hz".format(str(rtd.filter.notch)))
 datapoints = 5
 for i in range(datapoints):
 
-    print("RTD temperature: {} deg. C".format(str((rtd.temp.raw * rtd.temp.scale))))
+    print("RTD raw: {} ".format(str((rtd.temp.raw))))
+    print("RTD raw: {} ".format(str((rtd.temp.scale))))
     time.sleep(0.1)
