@@ -36,7 +36,7 @@
 }
 
 /* Pad sidebar entries so radius does not touch content or browser*/
-body > div > aside > div > div > div.sidebar-scroll > div > ul {
+body>div>aside>div>div>div.sidebar-scroll>div>ul {
     padding-right: 10px;
     padding-left: 10px;
 }
@@ -85,6 +85,7 @@ body > div > aside > div > div > div.sidebar-scroll > div > ul {
 #indexlogo_light {
     display: var(--display-dark-stuff);
 }
+
 #indexlogo_dark {
     display: var(--display-light-stuff);
 }
