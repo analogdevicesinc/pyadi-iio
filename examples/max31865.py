@@ -54,5 +54,5 @@ datapoints = 5
 for i in range(datapoints):
 
     print("RTD raw: {} ".format(str((rtd.temp.raw))))
-    print("RTD raw: {} ".format(str((rtd.temp.scale))))
+    print("RTD scale: {} ".format(str((rtd.temp.scale))))
     time.sleep(0.1)
