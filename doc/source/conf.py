@@ -10,6 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import contextlib
 import os
 import shutil
 import sys
@@ -116,3 +117,29 @@ html_theme_options = {
         "color-sidebar-link-text--top-level": "black",
     },
 }
+
+if os.getenv("DEV_BUILD"):
+    branch = os.getenv("GIT_BRANCH")
+    if branch is None:
+        with contextlib.suppress(Exception):
+            # Try to get branch from git
+            import subprocess
+
+            branch = (
+                subprocess.run(
+                    args=["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                    capture_output=True,
+                )
+                .stdout.decode("utf-8")
+                .strip()
+            )
+    if branch is None:
+        branch = "_UNKNOWN_"  # type: ignore
+    html_theme_options["announcement"] = (
+        "<em>WARNING: This is a development \
+        build of branch: <b>"
+        + branch
+        + "</b>. Please use the latest stable release.</em>"
+    )
+    html_theme_options["dark_css_variables"]["color-announcement-text"] = "red"
+    html_theme_options["light_css_variables"]["color-announcement-text"] = "red"

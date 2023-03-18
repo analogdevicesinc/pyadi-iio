@@ -170,6 +170,8 @@ jobs:
 
       - name: Build doc and release
         run: |
+          export GIT_BRANCH=${{ github.head_ref }}
+          export DEV_BUILD=1
           cd doc && make html
           cd ..
 
