@@ -34,7 +34,7 @@ jobs:
       if: steps.folder_check.outputs.check_result == 'true'
       run: |
          echo "Listing files"
-         ls dev/${{ github.head_ref }}
+         ls prs/${{ github.head_ref }}
 
   close_job:
     # this job will only run if the PR has been closed without being merged
@@ -61,4 +61,4 @@ jobs:
       if: steps.folder_check.outputs.check_result == 'true'
       run: |
          echo "Listing files"
-         ls dev/${{ github.head_ref }}
+         ls prs/${{ github.head_ref }}
