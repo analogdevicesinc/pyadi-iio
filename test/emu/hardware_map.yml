@@ -518,6 +518,7 @@ max9611:
       - filename: max9611.xml
       - data_devices:
           - iio:device0
+<<<<<<< HEAD
 
 ad4858:
   - xadc
@@ -567,3 +568,13 @@ lm75:
       - filename: lm75.xml
       - data_devices:
           - hwmon0
+=======
+ad3552r:
+  - ad3552r
+  - pyadi_iio_class_support:
+      - ad3552r
+  - emulate:
+      - filename: ad3552r.xml
+      - data_devices:
+          - iio:device1
+>>>>>>> 5715ef5b (Add support for AD3552R)
