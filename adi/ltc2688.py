@@ -261,11 +261,11 @@ class ltc2688(context_manager, attribute):
             super().__init__(ctrl, channel_name)
 
         @property
-        def symbol(self):
+        def toggle_state(self):
             """ LTC2688 SW toggle enable flag """
             return self._get_iio_attr(self.name, "symbol", True, self._ctrl)
 
-        @symbol.setter
-        def symbol(self, val):
+        @toggle_state.setter
+        def toggle_state(self, val):
             """ LTC2688 SW toggle enable flag setter """
             self._set_iio_attr(self.name, "symbol", True, str(int(val)))
