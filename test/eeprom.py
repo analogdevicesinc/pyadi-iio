@@ -57,6 +57,36 @@ def save_to_eeprom(iio_uri, coarse, fine):
     ssh_client.close()
 
 
+def read_fru_eeprom(iio_uri):
+    full_uri = iio_uri.split(":", 2)
+    if full_uri[0] != "ip":
+        pytest.skip("Tuning currently supported only for ip URIs")
+    ip = full_uri[1]
+
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh_client.connect(ip, username="root", password="analog")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_client.exec_command(
+        "find /sys/ -name eeprom"
+    )
+    eeprom_path = ssh_stdout.readline().rstrip("\n")
+
+    if ssh_stderr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException("find_eeprom command did not execute properly")
+
+    cmdin, cmdout, cmderr = ssh_client.exec_command(
+        "fru-dump -i " + eeprom_path + " -b"
+    )
+    if cmderr.channel.recv_exit_status() != 0:
+        raise paramiko.SSHException(
+            "fru-dump board info command did not execute properly"
+        )
+
+    for i in range(12):
+        field = cmdout.readline().rstrip("\n")
+        print(field)
+
+
 def popup_txt():
     popup = tk.Tk()
     popup.wm_title("Serial Number")
