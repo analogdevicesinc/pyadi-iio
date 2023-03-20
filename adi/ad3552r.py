@@ -90,13 +90,23 @@ class ad3552r(tx, context_manager, attribute):
         self._set_iio_dev_attr_str("input_source", value, self._txdac)
 
     @property
+    def stream_status(self):
+        """Stream status of the DAC"""
+        return self._get_iio_dev_attr_str("stream_status", self._txdac)
+
+    @stream_status.setter
+    def stream_status(self, value):
+        self._set_iio_dev_attr_str("stream_status", value, self._txdac)
+
+    @property
     def output_range(self):
-        """Output range of the DAC"""
+        """Stream status of the DAC"""
         return self._get_iio_dev_attr_str("output_range", self._txdac)
 
     @output_range.setter
     def output_range(self, value):
         self._set_iio_dev_attr_str("output_range", value, self._txdac)
+
 
     class _channel(attribute):
         """AD3552R channel"""
@@ -140,3 +150,13 @@ class ad3552r(tx, context_manager, attribute):
         @offset.setter
         def offset(self, value):
             self._set_iio_attr(self.name, "offset", True)
+        
+        # @property
+        # def output_range(self):
+        #     """Output range of the DAC"""
+        #     return self._get_iio_attr(self.name,"output_range", True)
+    
+        # @output_range.setter
+        # def output_range(self, value):
+        #     self._set_iio_attr(self.name, "output_range", True, value)
+
