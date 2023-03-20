@@ -148,7 +148,7 @@ try:
                 print("")
                 ch_object.toggle_en = 1
                 for j in range(8):
-                    ch_object.symbol = not (ch_object.symbol)
+                    ch_object.toggle_state = not (ch_object.toggle_state)
                     print("Toggling...")
                     time.sleep(1)
                 ch_object.toggle_en = 0
