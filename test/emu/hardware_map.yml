@@ -327,3 +327,11 @@ max9611:
       - filename: max9611.xml
       - data_devices:
           - iio:device0
+ad3552r:
+  - ad3552r
+  - pyadi_iio_class_support:
+      - ad3552r
+  - emulate:
+      - filename: ad3552r.xml
+      - data_devices:
+          - iio:device1
