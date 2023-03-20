@@ -283,3 +283,12 @@ ad5592r:
       - filename: ad5592r.xml
       - data_devices:
           - iio:device0
+
+max9611:
+  - max9611
+  - pyadi_iio_class_support:
+      - max9611
+  - emulate:
+      - filename: max9611.xml
+      - data_devices:
+          - iio:device0
