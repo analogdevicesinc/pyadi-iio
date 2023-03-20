@@ -1,0 +1,64 @@
+
+
+name: Cleanup Development Branch Doc
+
+# only trigger on pull request closed events
+on:
+  pull_request:
+    types: [ closed ]
+
+jobs:
+  merge_job:
+    # this job will only run if the PR has been merged
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'gh-pages'
+    - name: Check For Doc Directory
+      id: folder_check
+      run: |
+        echo PR #${{ github.event.number }} has been merged. Cleaning up doc
+        echo This came from source branch ${{ github.head_ref }}
+        echo This was targeted at branch ${{ github.base_ref }}
+        if [ -d "prs" ]; then
+          echo "Generate doc found under dev"
+          echo "check_result=true" >> $GITHUB_OUTPUT
+        else
+          echo "No generated doc found. No cleanup to happen"
+          echo "check_result=false" >> $GITHUB_OUTPUT
+        fi
+    - name: Run dependent step
+      if: steps.folder_check.outputs.check_result == 'true'
+      run: |
+         echo "Listing files"
+         ls prs/${{ github.head_ref }}
+
+  close_job:
+    # this job will only run if the PR has been closed without being merged
+    if: github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'gh-pages'
+    - name: Check For Doc Directory
+      id: folder_check
+      run: |
+        echo PR #${{ github.event.number }} has not been merged. Cleaning up doc
+        echo This came from source branch ${{ github.head_ref }}
+        echo This was targeted at branch ${{ github.base_ref }}
+        if [ -d "prs" ]; then
+          echo "Generate doc found under dev"
+          echo "check_result=true" >> $GITHUB_OUTPUT
+        else
+          echo "No generated doc found. No cleanup to happen"
+          echo "check_result=false" >> $GITHUB_OUTPUT
+        fi
+    - name: Run dependent step
+      if: steps.folder_check.outputs.check_result == 'true'
+      run: |
+         echo "Listing files"
+         ls prs/${{ github.head_ref }}
