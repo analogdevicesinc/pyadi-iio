@@ -230,6 +230,20 @@ cn0579:
       - data_devices:
           - iio:device1
 
+cn0585:
+  - ltc2387
+  - ad3552r
+  - ad7291
+  - one-bit-adc-dac
+  - pyadi_iio_class_support:
+      - cn0585
+  - emulate:
+      - filename: cn0585.xml
+      - data_devices:
+          - iio:device0
+          - iio:device6
+          - iio:device7
+
 # SOMS
 adrv9361:
   - ad7291
