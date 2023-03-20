@@ -92,8 +92,17 @@ class ad3552r(tx, context_manager, attribute):
         self._set_iio_dev_attr_str("input_source", value, self._txdac)
 
     @property
+    def stream_status(self):
+        """Stream status of the DAC"""
+        return self._get_iio_dev_attr_str("stream_status", self._txdac)
+
+    @stream_status.setter
+    def stream_status(self, value):
+        self._set_iio_dev_attr_str("stream_status", value, self._txdac)
+
+    @property
     def output_range(self):
-        """Output range of the DAC"""
+        """Stream status of the DAC"""
         return self._get_iio_dev_attr_str("output_range", self._txdac)
 
     @output_range.setter
