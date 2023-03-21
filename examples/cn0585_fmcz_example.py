@@ -26,8 +26,7 @@ ad3552r_0 = adi.ad3552r(uri=my_uri, device_name="axi-ad3552r-0")
 ad3552r_1 = adi.ad3552r(uri=my_uri, device_name="axi-ad3552r-1")
 voltage_monitor = adi.ad7291(uri=my_uri)
 gpio_controller = adi.one_bit_adc_dac(uri=my_uri, name="one-bit-adc-dac")
-hdl_dut_write_channel = adi.mwpicore(uri=my_uri, device_name="mwipcore0:mmwr-channel0")
-hdl_dut_read_channel = adi.mwpicore(uri=my_uri, device_name="mwipcore0:mmrd-channel1")
+
 # reading data from eeprom
 
 print("############# EEPROM INFORMATION ############")
@@ -81,7 +80,7 @@ if hdl_dut_write_channel.check_matlab_ip() :
     reg_value1 = hdl_dut_read_channel.axi4_lite_register_read(0x10C)
     print("AXI4-Lite 0x108 register value:", reg_value)
     print("AXI4-Lite 0x10c register value:", reg_value1)
-
+    
 ##############################################################################
 
 adaq23876_adc.rx_buffer_size = 1000

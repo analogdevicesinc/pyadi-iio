@@ -1,7 +1,5 @@
-import tkinter as tk
 from datetime import date, datetime
-from tkinter import Button, Entry, Label
-
+import tk
 import paramiko
 import pytest
 
