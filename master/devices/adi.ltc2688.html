@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad9680" href="adi.ad9680.html" /><link rel="prev" title="adi.ad9467 module" href="adi.ad9467.html" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ltc2983" href="adi.ltc2983.html" /><link rel="prev" title="adi.ltc2499 module" href="adi.ltc2499.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
-        <title>adi.ad9625 module - Analog Devices Hardware Python Interfaces 0.0.15</title>
+        <title>ltc2688 - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -210,7 +210,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9371.html">ad9371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9434.html">adi.ad9434 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9467.html">adi.ad9467 module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9625.html">adi.ad9625 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9680.html">ad9680</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9739a.html">adi.ad9739a module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ada4961.html">adi.ada4961 module</a></li>
@@ -258,7 +258,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2387.html">ltc2387</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2499.html">adi.ltc2499 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ltc2688.html">ltc2688</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ltc2688</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max11205.html">adi.max11205 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
@@ -310,43 +310,22 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ad9625">
-<span id="adi-ad9625-module"></span><h1>adi.ad9625 module<a class="headerlink" href="#module-adi.ad9625" title="Permalink to this heading"></a></h1>
+          <section id="module-adi.ltc2688">
+<span id="ltc2688"></span><h1>ltc2688<a class="headerlink" href="#module-adi.ltc2688" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad9625.ad9625">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9625.</span></span><span class="sig-name descname"><span class="pre">ad9625</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9625.ad9625" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start" title="adi.sync_start.sync_start"><code class="xref py py-class docutils literal notranslate"><span class="pre">sync_start</span></code></a></p>
-<p>AD9625 High-Speed ADC</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9625.ad9625.jesd204_statuses">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_statuses</span></span><a class="headerlink" href="#adi.ad9625.ad9625.jesd204_statuses" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ltc2688.ltc2688">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ltc2688.</span></span><span class="sig-name descname"><span class="pre">ltc2688</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ip:analog.local'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ltc2688.ltc2688" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>LTC2688 DAC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ltc2688.ltc2688.channel_names">
+<span class="sig-name descname"><span class="pre">channel_names</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ltc2688.ltc2688.channel_names" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9625.ad9625.rx_sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sample_rate</span></span><a class="headerlink" href="#adi.ad9625.ad9625.rx_sample_rate" title="Permalink to this definition"></a></dt>
-<dd><p>rx_sample_rate: Sample rate RX path in samples per second</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9625.ad9625.scale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad9625.ad9625.scale" title="Permalink to this definition"></a></dt>
-<dd><p>scale: AD9625 Gain</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9625.ad9625.scale_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale_available</span></span><a class="headerlink" href="#adi.ad9625.ad9625.scale_available" title="Permalink to this definition"></a></dt>
-<dd><p>Provides all available scale settings for the AD9625</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9625.ad9625.test_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode</span></span><a class="headerlink" href="#adi.ad9625.ad9625.test_mode" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode: Select Test Mode. Options are:
-off, midscale_short, pos_fullscale, neg_fullscale, checkerboard,
-pn_long, pn_short, one_zero_toggle, user, ramp</p>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ltc2688.ltc2688.vref">
+<span class="sig-name descname"><span class="pre">vref</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4.096</span></em><a class="headerlink" href="#adi.ltc2688.ltc2688.vref" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -357,23 +336,23 @@ pn_long, pn_short, one_zero_toggle, user, ramp</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.ad9680.html">
+          <a class="next-page" href="adi.ltc2983.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ad9680</div>
+                <div class="title">ltc2983</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ad9467.html">
+          <a class="prev-page" href="adi.ltc2499.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">adi.ad9467 module</div>
+                <div class="title">adi.ltc2499 module</div>
                 
               </div>
             </a>
@@ -407,13 +386,10 @@ pn_long, pn_short, one_zero_toggle, user, ramp</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">adi.ad9625 module</a><ul>
-<li><a class="reference internal" href="#adi.ad9625.ad9625"><code class="docutils literal notranslate"><span class="pre">ad9625</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad9625.ad9625.jesd204_statuses"><code class="docutils literal notranslate"><span class="pre">ad9625.jesd204_statuses</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9625.ad9625.rx_sample_rate"><code class="docutils literal notranslate"><span class="pre">ad9625.rx_sample_rate</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9625.ad9625.scale"><code class="docutils literal notranslate"><span class="pre">ad9625.scale</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9625.ad9625.scale_available"><code class="docutils literal notranslate"><span class="pre">ad9625.scale_available</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad9625.ad9625.test_mode"><code class="docutils literal notranslate"><span class="pre">ad9625.test_mode</span></code></a></li>
+<li><a class="reference internal" href="#">ltc2688</a><ul>
+<li><a class="reference internal" href="#adi.ltc2688.ltc2688"><code class="docutils literal notranslate"><span class="pre">ltc2688</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ltc2688.ltc2688.channel_names"><code class="docutils literal notranslate"><span class="pre">ltc2688.channel_names</span></code></a></li>
+<li><a class="reference internal" href="#adi.ltc2688.ltc2688.vref"><code class="docutils literal notranslate"><span class="pre">ltc2688.vref</span></code></a></li>
 </ul>
 </li>
 </ul>

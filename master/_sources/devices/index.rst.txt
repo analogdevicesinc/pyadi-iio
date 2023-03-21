@@ -91,6 +91,7 @@ Supported Devices
    adi.ltc2314_14
    adi.ltc2387
    adi.ltc2499
+   adi.ltc2688
    adi.ltc2983
    adi.max11205
    adi.max31855

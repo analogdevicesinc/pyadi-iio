@@ -256,6 +256,7 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2387.html">ltc2387</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2499.html">adi.ltc2499 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2688.html">ltc2688</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.max11205.html">adi.max11205 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.max31855.html">adi.max31855 module</a></li>
@@ -759,8 +760,6 @@
           <li><a href="devices/adi.adf4355.html#module-adi.adf4355">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     adi.adf4371
 
@@ -768,6 +767,8 @@
           <li><a href="devices/adi.adf4371.html#module-adi.adf4371">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     adi.adf5610
 
@@ -1046,6 +1047,13 @@
 
         <ul>
           <li><a href="devices/adi.ltc2499.html#module-adi.ltc2499">module</a>
+</li>
+        </ul></li>
+        <li>
+    adi.ltc2688
+
+        <ul>
+          <li><a href="devices/adi.ltc2688.html#module-adi.ltc2688">module</a>
 </li>
         </ul></li>
         <li>
@@ -1355,6 +1363,8 @@
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.channel3">channel3 (adi.adar1000.adar1000 property)</a>
 </li>
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.channel4">channel4 (adi.adar1000.adar1000 property)</a>
+</li>
+        <li><a href="devices/adi.ltc2688.html#adi.ltc2688.ltc2688.channel_names">channel_names (adi.ltc2688.ltc2688 attribute)</a>
 </li>
         <li><a href="devices/adi.fmclidar1.html#adi.fmclidar1.fmclidar1.channel_sequencer_enable_disable">channel_sequencer_enable_disable (adi.fmclidar1.fmclidar1 property)</a>
 </li>
@@ -1842,10 +1852,10 @@
 </li>
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan0">lo_leakage_tracking_en_chan0 (adi.adrv9002.adrv9002 property)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.lo_leakage_tracking_en_chan1">lo_leakage_tracking_en_chan1 (adi.adrv9002.adrv9002 property)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.adl5960.html#adi.adl5960.adl5960.lo_mode">lo_mode (adi.adl5960.adl5960 property)</a>
 </li>
         <li><a href="devices/adi.adl5960.html#adi.adl5960.adl5960.lo_mode_available">lo_mode_available (adi.adl5960.adl5960 property)</a>
@@ -1873,6 +1883,8 @@
         <li><a href="devices/adi.ltc2387.html#adi.ltc2387.ltc2387">ltc2387 (class in adi.ltc2387)</a>
 </li>
         <li><a href="devices/adi.ltc2499.html#adi.ltc2499.ltc2499">ltc2499 (class in adi.ltc2499)</a>
+</li>
+        <li><a href="devices/adi.ltc2688.html#adi.ltc2688.ltc2688">ltc2688 (class in adi.ltc2688)</a>
 </li>
         <li><a href="devices/adi.ltc2983.html#adi.ltc2983.ltc2983">ltc2983 (class in adi.ltc2983)</a>
 </li>
@@ -2083,6 +2095,8 @@
           <li><a href="devices/adi.ltc2387.html#module-adi.ltc2387">adi.ltc2387</a>
 </li>
           <li><a href="devices/adi.ltc2499.html#module-adi.ltc2499">adi.ltc2499</a>
+</li>
+          <li><a href="devices/adi.ltc2688.html#module-adi.ltc2688">adi.ltc2688</a>
 </li>
           <li><a href="devices/adi.ltc2983.html#module-adi.ltc2983">adi.ltc2983</a>
 </li>
@@ -3138,11 +3152,13 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="dev/test_dma.html#test.dma_tests.verify_overflow">verify_overflow() (in module test.dma_tests)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="dev/test_dma.html#test.dma_tests.verify_underflow">verify_underflow() (in module test.dma_tests)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="devices/adi.ltc2314_14.html#adi.ltc2314_14.ltc2314_14.voltage">voltage (adi.ltc2314_14.ltc2314_14 property)</a>
+</li>
+        <li><a href="devices/adi.ltc2688.html#adi.ltc2688.ltc2688.vref">vref (adi.ltc2688.ltc2688 attribute)</a>
 </li>
     </ul></td>
   </tr></table>
