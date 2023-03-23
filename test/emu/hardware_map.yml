@@ -256,7 +256,14 @@ ltc2387:
       - filename: ltc2387.xml
       - data_devices:
           - iio:device0
-
+ltc2688:
+  - ltc2688
+  - pyadi_iio_class_support:
+      - ltc2688
+  - emulate:
+      - filename: ltc2688.xml
+      - data_devices:
+          - iio:device0
 ad6676:
   - ad6676
   - pyadi_iio_class_support:
@@ -274,7 +281,7 @@ ad7768:
       - filename: ad7768.xml
       - data_devices:
           - iio:device0
-
+          
 ad5592r:
   - ad5592r
   - pyadi_iio_class_support:
@@ -290,5 +297,14 @@ max9611:
       - max9611
   - emulate:
       - filename: max9611.xml
+      - data_devices:
+          - iio:device0
+
+max31865:
+  - max31865
+  - pyadi_iio_class_support:
+      - max31865
+  - emulate:
+      - filename: max31865.xml
       - data_devices:
           - iio:device0
