@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad4020" href="adi.ad4020.html" /><link rel="prev" title="Supported Devices" href="index.html" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="one_bit_adc_dac" href="adi.one_bit_adc_dac.html" /><link rel="prev" title="adi.max31865 module" href="adi.max31865.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.23 -->
-        <title>QuadMxFE_multi - Analog Devices Hardware Python Interfaces 0.0.15</title>
+        <title>adi.max9611 module - Analog Devices Hardware Python Interfaces 0.0.15</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -174,7 +174,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4130.html">ad4130</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
@@ -263,7 +263,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.max11205.html">adi.max11205 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31865.html">adi.max31865 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.max9611.html">adi.max9611 module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adi.max9611 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
@@ -312,115 +312,17 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.QuadMxFE_multi">
-<span id="quadmxfe-multi"></span><h1>QuadMxFE_multi<a class="headerlink" href="#module-adi.QuadMxFE_multi" title="Permalink to this heading"></a></h1>
+          <section id="module-adi.max9611">
+<span id="adi-max9611-module"></span><h1>adi.max9611 module<a class="headerlink" href="#module-adi.max9611" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.QuadMxFE_multi.</span></span><span class="sig-name descname"><span class="pre">QuadMxFE_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_uris</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_jesd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_jesds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>ADQUADMXFExEBZ Multi-SOM Manager</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>primary_uri: type=string</dt><dd><p>URI of primary ADQUADMXFExEBZ. Parent HMC7044 is connected
-to this SOM</p>
-</dd>
-<dt>secondary_uris: type=list[string]</dt><dd><p>URI(s) of secondary ADQUADMXFExEBZ(s).</p>
-</dd>
-<dt>primary_jesd: type=adi.jesd</dt><dd><p>JESD object associated with primary ADQUADMXFExEBZ</p>
-</dd>
-<dt>secondary_jesds: type=list[adi.jesd]</dt><dd><p>JESD object(s) associated with secondary ADQUADMXFExEBZ(s)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel">
-<span class="sig-name descname"><span class="pre">hmc7044_cap_sel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay">
-<span class="sig-name descname"><span class="pre">hmc7044_car_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_car_output_delay:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>digital: type=int</dt><dd><p>Digital delay. Adjusts the phase of the divider signal
-by up to 17 half cycles of the VCO.</p>
-</dd>
-<dt>analog_ps: type=int</dt><dd><p>Analog delay. Adjusts the delay of the divider signal in
-increments of ~25 ps. Range is from 100ps to 700ps.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay">
-<span class="sig-name descname"><span class="pre">hmc7044_ext_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_ext_output_delay:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>digital: type=int</dt><dd><p>Digital delay. Adjusts the phase of the divider signal
-by up to 17 half cycles of the VCO.</p>
-</dd>
-<dt>analog_ps: type=int</dt><dd><p>Analog delay. Adjusts the delay of the divider signal in
-increments of ~25 ps. Range is from 100ps to 700ps.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel">
-<span class="sig-name descname"><span class="pre">hmc7044_set_cap_sel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_set_cap_sel:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>vals: type=list</dt><dd><p>Forces certain Capacitor bank selections.
-Typically the list returned form hmc7044_cap_sel</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize">
-<span class="sig-name descname"><span class="pre">reinitialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize" title="Permalink to this definition"></a></dt>
-<dd><p>reinitialize: reinitialize all transceivers</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx" title="Permalink to this definition"></a></dt>
-<dd><p>Receive data from multiple hardware buffers for each channel index in
-rx_enabled_channels of each child object (primary,secondaries[indx]).</p>
-<dl class="simple">
-<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
-is enabled containing samples from a channel or set of channels.
-Data will be complex when using a complex data device.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size" title="Permalink to this definition"></a></dt>
-<dd><p>rx_buffer_size: Size of receive buffer in samples for each device</p>
-</dd></dl>
-
+<dt class="sig sig-object py" id="adi.max9611.max9611">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max9611.</span></span><span class="sig-name descname"><span class="pre">max9611</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max9611.max9611" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD611 Current-sense Amplifier with ADC</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.secondaries">
-<span class="sig-name descname"><span class="pre">secondaries</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="adi.ad9081_mc.html#adi.ad9081_mc.QuadMxFE" title="adi.ad9081_mc.QuadMxFE"><span class="pre">QuadMxFE</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.secondaries" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.max9611.max9611.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.max9611.max9611.channel" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request">
-<span class="sig-name descname"><span class="pre">sysref_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request" title="Permalink to this definition"></a></dt>
-<dd><p>sysref_request: Sysref request for parent HMC7044</p>
-</dd></dl>
 
 </dd></dl>
 
@@ -431,23 +333,23 @@ Data will be complex when using a complex data device.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.ad4020.html">
+          <a class="next-page" href="adi.one_bit_adc_dac.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ad4020</div>
+                <div class="title">one_bit_adc_dac</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="index.html">
+          <a class="prev-page" href="adi.max31865.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Supported Devices</div>
+                <div class="title">adi.max31865 module</div>
                 
               </div>
             </a>
@@ -481,17 +383,9 @@ Data will be complex when using a complex data device.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">QuadMxFE_multi</a><ul>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi</span></code></a><ul>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.hmc7044_cap_sel()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.hmc7044_car_output_delay()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.hmc7044_ext_output_delay()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.hmc7044_set_cap_sel()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.reinitialize()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.rx()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.rx_buffer_size</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.secondaries"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.secondaries</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.sysref_request()</span></code></a></li>
+<li><a class="reference internal" href="#">adi.max9611 module</a><ul>
+<li><a class="reference internal" href="#adi.max9611.max9611"><code class="docutils literal notranslate"><span class="pre">max9611</span></code></a><ul>
+<li><a class="reference internal" href="#adi.max9611.max9611.channel"><code class="docutils literal notranslate"><span class="pre">max9611.channel</span></code></a></li>
 </ul>
 </li>
 </ul>
