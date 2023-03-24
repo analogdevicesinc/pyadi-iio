@@ -112,6 +112,7 @@ from adi.ltc2387 import ltc2387
 from adi.ltc2499 import ltc2499
 from adi.ltc2688 import ltc2688
 from adi.ltc2983 import ltc2983
+from adi.max9611 import max9611
 from adi.max11205 import max11205
 from adi.max31855 import max31855
 from adi.max31865 import max31865
