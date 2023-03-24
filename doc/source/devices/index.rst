@@ -93,10 +93,10 @@ Supported Devices
    adi.ltc2499
    adi.ltc2688
    adi.ltc2983
-   adi.max9611
    adi.max11205
    adi.max31855
    adi.max31865
+   adi.max9611
 
    adi.one_bit_adc_dac
    adi.tdd
