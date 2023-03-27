@@ -50,8 +50,6 @@ from ADAR_pyadi_functions import *  # import the ADAR1000 functions (These all s
 from cn0566_functions import load_hb100_cal
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.widgets import Cursor
-
-# import matplotlib.collections as collections
 from scipy import signal
 from SDR_functions import *  # import the SDR functions (These all start with SDR_xxxx)
 
@@ -151,7 +149,7 @@ class App:
             self.TrackArray.append(0)  # array of zeros
         self.max_hold = -1000
         self.min_hold = 1000
-        """Intialize Pluto"""
+        """Initialize Pluto"""
         self.sdr = SDR_init(
             self.sdr_address,
             self.SampleRate,
@@ -163,7 +161,7 @@ class App:
         )
         SDR_LO_init(rpi_ip, self.LO_freq)
 
-        """Intialize the ADAR1000"""
+        """Initialize the ADAR1000"""
         time.sleep(0.5)
         self.array = adi.adar1000_array(
             uri=rpi_ip,
@@ -217,7 +215,7 @@ class App:
         )
         check_refresh.grid(row=14, column=0, columnspan=2, sticky=E + W)
         self.refresh.set(0)
-        b1 = Button(self.master, text="Aquire Data", command=self.updater)
+        b1 = Button(self.master, text="Acquire Data", command=self.updater)
         b1.grid(row=14, column=2, columnspan=2, sticky=E + W)
         button_exit = Button(
             self.master,
@@ -2116,7 +2114,7 @@ class App:
         s_mag = np.maximum(s_mag, 10 ** (-15))
         self.max_gain = 20 * np.log10(
             s_mag / (2 ** 11)
-        )  # Pluto is a 12 bit ADC, but we're only looking at postive #'s, so use 2**11
+        )  # Pluto is a 12 bit ADC, but we're only looking at positive #'s, so use 2**11
         ts = 1 / float(self.SampleRate)
         self.xf = np.fft.fftfreq(NumSamples, ts)
         self.xf = np.fft.fftshift(

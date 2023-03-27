@@ -159,7 +159,7 @@ my_sdr.gain_control_mode_chan1 = "manual"
 my_sdr.rx_hardwaregain_chan0 = 0  # dB
 my_sdr.rx_hardwaregain_chan1 = 0  # dB
 
-my_sdr.rx_lo = int(2.2e9)  # Downconvert by 2GHz  # Recieve Freq
+my_sdr.rx_lo = int(2.2e9)  # Downconvert by 2GHz  # Receive Freq
 my_sdr.filter = "LTE20_MHz.ftr"  # Handy filter for fairly widdeband measurements
 
 # Now set the phaser's PLL. This is the ADF4159, and we'll set it to the HB100 frequency

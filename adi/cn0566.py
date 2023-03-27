@@ -51,7 +51,7 @@ class CN0566(adf4159, adar1000_array):
         and updated to 2t2r.
         """
 
-    # MWT: Still up for debate - inheret, or nest? Nesting may actually be easier to understand.
+    # MWT: Still up for debate - inherit, or nest? Nesting may actually be easier to understand.
     def __init__(
         self,
         uri=None,
@@ -165,7 +165,7 @@ class CN0566(adf4159, adar1000_array):
         self.gpios.gpio_div_s1 = 0  # TX toggle divider 2s
         self.gpios.gpio_div_s2 = 0  # TX toggle divider 4s
         self.gpios.gpio_rx_load = 0  # ADAR1000 RX load (cycle through RAM table)
-        self.gpios.gpio_tr = 0  # ADAR1000 transmit / recieve mode. RX = 0 (assuming)
+        self.gpios.gpio_tr = 0  # ADAR1000 transmit / receive mode. RX = 0 (assuming)
         self.gpios.gpio_tx_sw = (
             0  # Direct control of TX switch when div=[000]. 0 = TX_OUT_2, 1 = TX_OUT_1
         )
@@ -282,7 +282,7 @@ class CN0566(adf4159, adar1000_array):
         self.device_mode = device_mode
         for device in self.devices.values():  # For device in Dict of device array
             # Configure ADAR1000
-            # adar.initialize_devices()  # Always Intialize the device 1st as reset is performed at Initialization
+            # adar.initialize_devices()  # Always Initialize the device 1st as reset is performed at Initialization
             # If ADAR1000 array is used initialization work otherwise reset each adar individually
             device.reset()  # Performs a soft reset of the device (writes 0x81 to reg 0x00)
             device._ctrl.reg_write(

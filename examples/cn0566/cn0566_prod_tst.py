@@ -224,7 +224,7 @@ while attempts < max_attempts and not success:
         my_sdr.rx_hardwaregain_chan0 = 12
         my_sdr.rx_hardwaregain_chan1 = 12
 
-        my_sdr.rx_lo = int(rx_lo)  # 4495000000  # Recieve Freq
+        my_sdr.rx_lo = int(rx_lo)  # 4495000000  # Receive Freq
 
         print("Loading filter")
         my_sdr.filter = (
@@ -298,12 +298,12 @@ print("Done calibration")
 for i in range(0, len(my_phaser.ccal)):
     if my_phaser.ccal[i] > channel_cal_limits:
         print("Channel cal failure on channel ", i, ", ", my_phaser.gcal[i])
-        failures.append("Channel cal falure on channel " + str(i))
+        failures.append("Channel cal failure on channel " + str(i))
 
 for i in range(0, len(my_phaser.gcal)):
     if my_phaser.gcal[i] < gain_cal_limits:
         print("Gain cal failure on element ", i, ", ", my_phaser.gcal[i])
-        failures.append("Gain cal falure on element " + str(i))
+        failures.append("Gain cal failure on element " + str(i))
 
 
 # Important - my_phaser.pcal represents the CUMULATIVE phase shift across the
@@ -315,7 +315,7 @@ for i in range(0, len(my_phaser.pcal) - 1):
     if abs(delta) > phase_cal_limits[i]:
         print("Phase cal failure on elements ", i - 1, ", ", i, str(delta))
         failures.append(
-            "Phase cal falure on elements "
+            "Phase cal failure on elements "
             + str(i - 1)
             + ", "
             + str(i)

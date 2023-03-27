@@ -191,7 +191,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel0_on_ms(self) -> float:
-        """out_channel0_on_ms: The offset from the beggining of a new frame when CH0 is set (ms)"""
+        """out_channel0_on_ms: The offset from the beginning of a new frame when CH0 is set (ms)"""
         return self._get_iio_attr("channel0", "on_ms", True)
 
     @out_channel0_on_ms.setter
@@ -200,7 +200,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel0_on_raw(self) -> float:
-        """out_channel0_on_raw: The offset from the beggining of a new frame when CH0 is set (clock cycles)"""
+        """out_channel0_on_raw: The offset from the beginning of a new frame when CH0 is set (clock cycles)"""
         return self._get_iio_attr("channel0", "on_raw", True)
 
     @out_channel0_on_raw.setter
@@ -209,7 +209,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel0_off_ms(self) -> float:
-        """out_channel0_off_ms: The offset from the beggining of a new frame when CH0 is reset (ms)"""
+        """out_channel0_off_ms: The offset from the beginning of a new frame when CH0 is reset (ms)"""
         return self._get_iio_attr("channel0", "off_ms", True)
 
     @out_channel0_off_ms.setter
@@ -218,7 +218,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel0_off_raw(self) -> float:
-        """out_channel0_off_raw: The offset from the beggining of a new frame when CH0 is reset (clock cycles)"""
+        """out_channel0_off_raw: The offset from the beginning of a new frame when CH0 is reset (clock cycles)"""
         return self._get_iio_attr("channel0", "off_raw", True)
 
     @out_channel0_off_raw.setter
@@ -247,7 +247,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel1_on_ms(self) -> float:
-        """out_channel1_on_ms: The offset from the beggining of a new frame when CH1 is set (ms)"""
+        """out_channel1_on_ms: The offset from the beginning of a new frame when CH1 is set (ms)"""
         return self._get_iio_attr("channel1", "on_ms", True)
 
     @out_channel1_on_ms.setter
@@ -256,7 +256,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel1_on_raw(self) -> float:
-        """out_channel1_on_raw: The offset from the beggining of a new frame when CH1 is set (clock cycles)"""
+        """out_channel1_on_raw: The offset from the beginning of a new frame when CH1 is set (clock cycles)"""
         return self._get_iio_attr("channel1", "on_raw", True)
 
     @out_channel1_on_raw.setter
@@ -265,7 +265,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel1_off_ms(self) -> float:
-        """out_channel1_off_ms: The offset from the beggining of a new frame when CH1 is reset (ms)"""
+        """out_channel1_off_ms: The offset from the beginning of a new frame when CH1 is reset (ms)"""
         return self._get_iio_attr("channel1", "off_ms", True)
 
     @out_channel1_off_ms.setter
@@ -274,7 +274,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel1_off_raw(self) -> float:
-        """out_channel1_off_raw: The offset from the beggining of a new frame when CH1 is reset (clock cycles)"""
+        """out_channel1_off_raw: The offset from the beginning of a new frame when CH1 is reset (clock cycles)"""
         return self._get_iio_attr("channel1", "off_raw", True)
 
     @out_channel1_off_raw.setter
@@ -303,7 +303,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel2_on_ms(self) -> float:
-        """out_channel2_on_ms: The offset from the beggining of a new frame when CH2 is set (ms)"""
+        """out_channel2_on_ms: The offset from the beginning of a new frame when CH2 is set (ms)"""
         return self._get_iio_attr("channel2", "on_ms", True)
 
     @out_channel2_on_ms.setter
@@ -312,7 +312,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel2_on_raw(self) -> float:
-        """out_channel2_on_raw: The offset from the beggining of a new frame when CH2 is set (clock cycles)"""
+        """out_channel2_on_raw: The offset from the beginning of a new frame when CH2 is set (clock cycles)"""
         return self._get_iio_attr("channel2", "on_raw", True)
 
     @out_channel2_on_raw.setter
@@ -321,7 +321,7 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel2_off_ms(self) -> float:
-        """out_channel2_off_ms: The offset from the beggining of a new frame when CH2 is reset (ms)"""
+        """out_channel2_off_ms: The offset from the beginning of a new frame when CH2 is reset (ms)"""
         return self._get_iio_attr("channel2", "off_ms", True)
 
     @out_channel2_off_ms.setter
@@ -330,10 +330,9 @@ class tddn(context_manager, attribute):
 
     @property
     def out_channel2_off_raw(self) -> float:
-        """out_channel2_off_raw: The offset from the beggining of a new frame when CH2 is reset (clock cycles)"""
+        """out_channel2_off_raw: The offset from the beginning of a new frame when CH2 is reset (clock cycles)"""
         return self._get_iio_attr("channel2", "off_raw", True)
 
     @out_channel2_off_raw.setter
     def out_channel2_off_raw(self, value: float):
         self._set_iio_attr("channel2", "off_raw", True, value)
-

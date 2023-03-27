@@ -38,10 +38,10 @@ sdr = adi.Pluto()
 
 # Configure TDD properties
 tdd = adi.tddn("ip:pluto.local")
-tdd.frame_length_ms = 4         # each GPIO toggle is spaced 4ms apart
-tdd.startup_delay_ms = 0        # do not set a startup delay 
-tdd.burst_count = 3             # there is a burst of 3 toggles, then off for a long time
-tdd.out_channel0_on_ms = 0.5    # each GPIO pulse will be 100us (0.6ms - 0.5ms).  And the first trigger will happen 0.5ms into the buffer
+tdd.frame_length_ms = 4  # each GPIO toggle is spaced 4ms apart
+tdd.startup_delay_ms = 0  # do not set a startup delay
+tdd.burst_count = 3  # there is a burst of 3 toggles, then off for a long time
+tdd.out_channel0_on_ms = 0.5  # each GPIO pulse will be 100us (0.6ms - 0.5ms).  And the first trigger will happen 0.5ms into the buffer
 tdd.out_channel0_off_ms = 0.6
 tdd.out_channel0_enable = True  # Enable CH0 output
 tdd.sync_external = True
