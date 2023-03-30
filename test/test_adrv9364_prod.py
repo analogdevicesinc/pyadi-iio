@@ -13,10 +13,10 @@ classname = "adi.ad9364"
     "voltage_raw, low, high",
     [
         ("in_temp0", 20, 50),
-        ("in_voltage0", 2120, 2713),
-        ("in_voltage1", 2120, 2713),
-        ("in_voltage2", 2940, 3532),
-        ("in_voltage3", 2040, 2632),
+        ("in_voltage0", 2081, 2179),
+        ("in_voltage1", 2081, 2179),
+        ("in_voltage2", 2939, 3532),
+        ("in_voltage3", 2030, 2632),
         ("in_voltage4", 1060, 1648),
         ("in_voltage5", 1060, 1648),
     ],
@@ -330,7 +330,7 @@ def test_ad9364_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
 )
 @pytest.mark.parametrize(
     "low, high",
-    [([-20.0, -120.0, -120.0, -125.0], [-10.0, -75.0, -75.0, -80.0])],
+    [([-20.0, -120.0, -120.0, -125.0, -125.0], [-10.0, -75.0, -75.0, -80.0, -80.0])],
 )
 def test_harmonic_values(
     test_harmonics, classname, iio_uri, channel, param_set, low, high, frequency, scale, plot=False
@@ -372,5 +372,5 @@ def test_harmonic_values(
     "low, high",
     [([-20.0, -120.0, -120.0, -125.0], [-10.0, -70.0, -70.0, -75.0])],
 )
-def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, frequency, scale, plot=False):
+def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, frequency, scale, plot=True):
     test_sfdrl(classname, iio_uri, channel, param_set, low, high, frequency, scale, plot=False)
