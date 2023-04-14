@@ -8,9 +8,12 @@ Supported Devices
    :maxdepth: 4
 
    adi.QuadMxFE_multi
-   adi.ad4130
+   adi.ad4020
    adi.ad4110
+   adi.ad4130
    adi.ad4630
+   adi.ad469x
+   adi.ad5592r
    adi.ad5627
    adi.ad5686
    adi.ad5940
@@ -21,6 +24,8 @@ Supported Devices
    adi.ad7606
    adi.ad7689
    adi.ad7746
+   adi.ad7768
+   adi.ad777x
    adi.ad7799
    adi.ad9081
    adi.ad9081_mc
@@ -42,6 +47,7 @@ Supported Devices
    adi.ad9680
    adi.ad9739a
    adi.ada4961
+   adi.adaq8092
    adi.adar1000
    adi.adf4159
    adi.adf4355
@@ -71,6 +77,7 @@ Supported Devices
    adi.cn0511
    adi.cn0532
    adi.cn0540
+   adi.cn0554
    adi.daq2
    adi.daq3
    adi.fmc_vna
@@ -78,14 +85,20 @@ Supported Devices
    adi.fmcjesdadc1
    adi.fmclidar1
    adi.fmcomms5
+   adi.fmcomms11
    adi.gen_mux
    adi.jesd
    adi.lm75
    adi.ltc2314_14
+   adi.ltc2387
    adi.ltc2499
+   adi.ltc2688
    adi.ltc2983
    adi.max11205
    adi.max31855
+   adi.max31865
+   adi.max9611
+
    adi.one_bit_adc_dac
    adi.tdd
 

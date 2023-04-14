@@ -20,7 +20,7 @@ or by grabbing the source directly for a more up to date version
 
   git clone https://github.com/analogdevicesinc/pyadi-iio.git
   cd pyadi-iio
-  (sudo) python3 setup.py install
+  (sudo) pip install .
 
 To install the optional dependencies for JESD debugging and control
 
@@ -37,6 +37,15 @@ Note that this is only needed for the ADRV9009-ZU11EG multi-SOM configuration.
   .. code-block:: bash
 
     export PYTHONPATH=$PYTHONPATH:/usr/lib/python{PYTHON VERSION}/site-packages
+
+Conda Install
+-------------
+
+For those who use the Anaconda or Conda environments, it is possible to install libiio from within those environments with the provided package managers. To install libiio, pylibiio, and pyadi-iio run:
+
+.. code-block:: bash
+
+   conda install -c conda-forge pyadi-iio
 
 Install Checks
 --------------
