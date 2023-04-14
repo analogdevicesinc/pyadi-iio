@@ -146,6 +146,16 @@ cn0540:
       - filename: cn0540.xml
       - data_devices:
           - iio:device0
+cn0554:
+  - ad7124-8
+  - ltc2688
+  - pyadi_iio_class_support:
+      - cn0554
+  - emulate:
+      - filename: cn0554.xml
+      - data_devices:
+          - iio:device0
+          - iio:device1                    
 
 # SOMS
 adrv9361:
