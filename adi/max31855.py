@@ -47,7 +47,7 @@ class max31855(rx, context_manager, attribute):
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("max31855")
+        self._ctrl = self._ctx.find_device("maxim_thermocouple")
 
         if self._ctrl is None:
             raise Exception("No device found")
