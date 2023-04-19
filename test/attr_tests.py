@@ -62,12 +62,11 @@ def attribute_single_value(
             val = floor_step_size(val, str(step))
         # Check hardware
         if sub_channel:
-            assert (
-                dev_interface_sub_channel(uri, classname, sub_channel, val, attr, tol)
-                <= tol
+            assert dev_interface_sub_channel(
+                uri, classname, sub_channel, val, attr, tol
             )
         else:
-            assert dev_interface(uri, classname, val, attr, tol) <= tol
+            assert dev_interface(uri, classname, val, attr, tol)
 
 
 def attribute_single_value_boolean(uri, classname, attr, value):
@@ -135,7 +134,7 @@ def attribute_single_value_pow2(uri, classname, attr, max_pow, tol, repeats=1):
         ind = random.randint(0, len(nums) - 1)
         val = nums[ind]
         # Check hardware
-        assert dev_interface(uri, classname, val, attr, tol) <= tol
+        assert dev_interface(uri, classname, val, attr, tol)
 
 
 def attribute_multipe_values(uri, classname, attr, values, tol, repeats=1, sleep=0):
@@ -162,7 +161,7 @@ def attribute_multipe_values(uri, classname, attr, values, tol, repeats=1, sleep
             if isinstance(val, str):
                 assert dev_interface(uri, classname, val, attr, 0, sleep=sleep)
             else:
-                assert dev_interface(uri, classname, val, attr, tol, sleep=sleep) <= tol
+                assert dev_interface(uri, classname, val, attr, tol, sleep=sleep)
 
 
 def attribute_multipe_values_with_depends(
@@ -194,13 +193,13 @@ def attribute_multipe_values_with_depends(
         if isinstance(depends[p], str):
             assert dev_interface(uri, classname, depends[p], p, 0)
         else:
-            assert dev_interface(uri, classname, depends[p], p, tol) <= tol
+            assert dev_interface(uri, classname, depends[p], p, tol)
     for _ in range(repeats):
         for val in values:
             if isinstance(val, str):
                 assert dev_interface(uri, classname, val, attr, 0)
             else:
-                assert dev_interface(uri, classname, val, attr, tol) <= tol
+                assert dev_interface(uri, classname, val, attr, tol)
 
 
 def attribute_write_only_str(uri, classname, attr, value):
