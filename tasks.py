@@ -214,6 +214,7 @@ def checkemulation(c):
         "adrv9009_zu11eg_fmcomms8",
         "adar1000_array",
         "ad9081_mc",
+        "ad7134",
         "ad717x",
         "ad916x",
         "ad719x",
