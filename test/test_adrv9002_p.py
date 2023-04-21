@@ -1,8 +1,10 @@
 import time
 from os import listdir
 from os.path import dirname, join, realpath
+from random import randint
 
 import pytest
+from numpy import floor
 
 hardware = "adrv9002"
 classname = "adi.adrv9002"
@@ -17,16 +19,40 @@ lte_5_cmos_profile = profile_path + "lte_5_cmos_api_68_0_6.json"
 lte_5_cmos_stream = profile_path + "lte_5_cmos_api_68_0_6.stream"
 
 
+def random_values_in_range(start, stop, step, to_generate=1):
+    """random_values_in_range:
+    Generate random values in range
+    This is performed a defined number of times and the value written
+    is randomly determined based in input parameters
+
+    parameters:
+        start: type=integer
+            Lower bound of possible values attribute can be
+        stop: type=integer
+            Upper bound of possible values attribute can be
+        step: type=integer
+            Difference between successive values attribute can be
+        to_generate: type=integer
+            Number of random values to tests. Generated from uniform distribution
+    """
+    # Pick random number in operational range
+    values = []
+    for _ in range(to_generate):
+        numints = int((stop - start) / step)
+        ind = randint(0, numints)
+        val = start + step * ind
+        if isinstance(val, float):
+            val = floor(val / step) * step
+        values.append(val)
+    return values
+
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
     [
-        ("rx_hardwaregain_chan0", 0, 34, 0.5, 0),
-        ("rx_hardwaregain_chan1", 0, 34, 0.5, 0),
-        ("tx_hardwaregain_chan0", -40, 0.0, 0.05, 0),
-        ("tx_hardwaregain_chan1", -40, 0.0, 0.05, 0),
         ("tx0_lo", 30000000, 6000000000, 1, 8),
         ("tx1_lo", 30000000, 6000000000, 1, 8),
         ("rx0_lo", 30000000, 6000000000, 1, 8),
@@ -37,6 +63,42 @@ def test_adrv9002_float_attr(
     test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
     test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize(
+    "attr, val, depends",
+    [
+        (
+            "rx_hardwaregain_chan0",
+            random_values_in_range(0, 34, 0.5, 10),
+            dict(gain_control_mode_chan0="spi", rx_ensm_mode_chan0="rf_enabled",),
+        ),
+        (
+            "rx_hardwaregain_chan0",
+            random_values_in_range(0, 34, 0.5, 10),
+            dict(gain_control_mode_chan1="spi", rx_ensm_mode_chan1="rf_enabled",),
+        ),
+        (
+            "tx_hardwaregain_chan0",
+            random_values_in_range(-40, 0, 0.05, 10),
+            dict(atten_control_mode_chan0="spi"),
+        ),
+        (
+            "tx_hardwaregain_chan1",
+            random_values_in_range(-40, 0, 0.05, 10),
+            dict(atten_control_mode_chan1="spi"),
+        ),
+    ],
+)
+def test_adrv9002_hardware_gain(
+    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
+):
+    test_attribute_multipe_values_with_depends(
+        iio_uri, classname, attr, depends, val, 0
+    )
 
 
 #########################################
