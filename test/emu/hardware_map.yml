@@ -301,6 +301,15 @@ ad5592r:
       - data_devices:
           - iio:device0
 
+ad7291:
+  - ad7291
+  - pyadi_iio_class_support:
+      - ad7291
+  - emulate:
+      - filename: cn0566.xml
+      - data_devices:
+          - iio:device1
+
 max31865:
   - max31865
   - pyadi_iio_class_support:
