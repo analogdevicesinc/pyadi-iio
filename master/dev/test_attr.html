@@ -188,6 +188,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7124.html">ad7124</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad717x.html">ad717x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7291.html">ad7291</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7689.html">ad7689</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7746.html">ad7746</a></li>
@@ -447,6 +448,34 @@ in input parameters</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_readonly">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_readonly" title="Permalink to this definition"></a></dt>
+<dd><p>attribute_single_value:
+Write and read back integer class property
+This is performed a defined number of times and the value written
+is randomly determined based in input parameters</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+<dt>lower: type=integer or float</dt><dd><p>Lower bound of possible values attribute can be</p>
+</dd>
+<dt>upper: type=integer or float</dt><dd><p>Upper bound of possible values attribute can be</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of random values to tests. Generated from uniform distribution</p>
+</dd>
+<dt>sub_channel: type=string</dt><dd><p>Name of sub channel (nested class) to be tested</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_str">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_str" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value_str: Write and read back string class property</p>
@@ -587,6 +616,7 @@ are properties and values are values to be written</p>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value"><code class="docutils literal notranslate"><span class="pre">attribute_single_value()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value_boolean"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_boolean()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value_pow2"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_pow2()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_single_value_readonly"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_readonly()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value_str"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_str()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str_with_depends()</span></code></a></li>
