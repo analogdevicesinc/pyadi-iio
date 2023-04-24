@@ -63,6 +63,11 @@ def test_attribute_single_value(request):
 
 
 @pytest.fixture()
+def test_attribute_single_value_readonly(request):
+    yield attribute_single_value_readonly
+
+
+@pytest.fixture()
 def test_attribute_single_value_boolean(request):
     yield attribute_single_value_boolean
 
