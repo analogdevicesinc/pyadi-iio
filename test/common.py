@@ -137,7 +137,9 @@ def dev_interface(uri, classname, val, attr, tol, sub_channel=None, sleep=0):
         return val == str(rval)
 
 
-def dev_interface_sub_channel(uri, classname, sub_channel, val, attr, tol):
+def dev_interface_sub_channel(
+    uri, classname, sub_channel, val, attr, tol, readonly=False
+):
     sdr = eval(classname + "(uri='" + uri + "')")
     # Check hardware
     if not hasattr(sdr, sub_channel):
@@ -151,7 +153,8 @@ def dev_interface_sub_channel(uri, classname, sub_channel, val, attr, tol):
         l = len(rval)
         val = [val] * l
 
-    setattr(getattr(sdr, sub_channel), attr, val)
+    if readonly is False:
+        setattr(getattr(sdr, sub_channel), attr, val)
     rval = getattr(getattr(sdr, sub_channel), attr)
 
     del sdr

@@ -108,6 +108,48 @@ def attribute_single_value_str(uri, classname, attr, val, tol):
     assert dev_interface(uri, classname, str(val), attr, tol)
 
 
+def attribute_single_value_readonly(
+    uri, classname, attr, lower, upper, repeats=1, sub_channel=None
+):
+    """attribute_single_value:
+    Write and read back integer class property
+    This is performed a defined number of times and the value written
+    is randomly determined based in input parameters
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        lower: type=integer or float
+            Lower bound of possible values attribute can be
+        upper: type=integer or float
+            Upper bound of possible values attribute can be
+        repeats: type=integer
+            Number of random values to tests. Generated from uniform distribution
+        sub_channel: type=string
+            Name of sub channel (nested class) to be tested
+    """
+
+    for _ in range(repeats):
+
+        val = (upper + lower) / 2  # center point
+        tol = (upper - lower) / 2  # half the range
+        # print("subchannel: ", sub_channel)
+        # print("val: ", val)
+        # print("tol: ", tol)
+
+        # Check hardware
+        if sub_channel:
+            assert dev_interface_sub_channel(
+                uri, classname, sub_channel, val, attr, tol, readonly=True
+            )
+        else:
+            assert dev_interface(uri, classname, val, attr, tol, readonly=True)
+
+
 def attribute_single_value_pow2(uri, classname, attr, max_pow, tol, repeats=1):
     """attribute_single_value_pow2: Write and read back integer class property
     where the integer is a power of 2. This is performed a defined
