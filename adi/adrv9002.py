@@ -243,6 +243,8 @@ class adrv9002(rx_tx, context_manager):
     def rx_hardwaregain_chan0(self, value):
         if self.gain_control_mode_chan0 == "spi":
             self._set_iio_attr("voltage0", "hardwaregain", False, value)
+        else:
+            raise RuntimeError("gain_control_mode_chan0 must be set to spi")
 
     @property
     def rx_hardwaregain_chan1(self):
@@ -254,6 +256,8 @@ class adrv9002(rx_tx, context_manager):
     def rx_hardwaregain_chan1(self, value):
         if self.gain_control_mode_chan1 == "spi":
             self._set_iio_attr("voltage1", "hardwaregain", False, value)
+        else:
+            raise RuntimeError("gain_control_mode_chan1 must be set to spi")
 
     @property
     def tx_hardwaregain_chan0(self):
@@ -264,6 +268,8 @@ class adrv9002(rx_tx, context_manager):
     def tx_hardwaregain_chan0(self, value):
         if self.atten_control_mode_chan0 == "spi":
             self._set_iio_attr("voltage0", "hardwaregain", True, value)
+        else:
+            raise RuntimeError("atten_control_mode_chan0 must be set to spi")
 
     @property
     def tx_hardwaregain_chan1(self):
@@ -274,6 +280,8 @@ class adrv9002(rx_tx, context_manager):
     def tx_hardwaregain_chan1(self, value):
         if self.atten_control_mode_chan1 == "spi":
             self._set_iio_attr("voltage1", "hardwaregain", True, value)
+        else:
+            raise RuntimeError("atten_control_mode_chan1 must be set to spi")
 
     @property
     def interface_gain_chan0(self):

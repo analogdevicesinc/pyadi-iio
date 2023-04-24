@@ -123,12 +123,12 @@ def dev_interface(uri, classname, val, attr, tol, sub_channel=None, sleep=0):
         return val == rval
 
     if not isinstance(val, str):
-        abs_val = np.argmax(abs(np.array(val) - np.array(rval)))
+        abs_val = np.max(abs(np.array(val) - np.array(rval)))
         if abs_val > tol:
-            print("Failed to set: " + attr)
-            print("Set: " + str(val))
-            print("Got: " + str(rval))
-        return abs_val
+            print(f"Failed to set: {attr}")
+            print(f"Set: {str(val)}")
+            print(f"Got: {str(rval)}")
+        return abs_val <= tol
     else:
         if val != str(rval):
             print(f"Failed to set: {attr}")
@@ -163,11 +163,10 @@ def dev_interface_sub_channel(uri, classname, sub_channel, val, attr, tol):
         return val == rval
 
     if not isinstance(val, str):
-        abs_val = np.argmax(abs(np.array(val) - np.array(rval)))
+        abs_val = np.max(abs(np.array(val) - np.array(rval)))
         if abs_val > tol:
-            print("Failed to set: " + attr)
-            print("Set: " + str(val))
-            print("Got: " + str(rval))
-        return abs_val
-    else:
-        return val == str(rval)
+            print(f"Failed to set: {attr}")
+            print(f"Set: {str(val)}")
+            print(f"Got: {str(rval)}")
+        return abs_val <= tol
+    return val == str(rval)
