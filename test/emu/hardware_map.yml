@@ -155,7 +155,16 @@ cn0554:
       - filename: cn0554.xml
       - data_devices:
           - iio:device0
-          - iio:device1                    
+          - iio:device1
+
+cn0566:
+  - ad7291
+  - pyadi_iio_class_support:
+      - CN0566
+  - emulate:
+      - filename: cn0566.xml
+      - data_devices:
+          - iio:device1
 
 # SOMS
 adrv9361:
