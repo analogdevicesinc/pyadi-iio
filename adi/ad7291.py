@@ -33,7 +33,7 @@ temp0():                        Returns temperature in degrees Celsius
 
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad7291"]
+        compatible_parts = ["ad7291_1"]
 
         self._ctrl = None
         index = 0
