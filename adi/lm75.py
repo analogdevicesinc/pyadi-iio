@@ -36,14 +36,37 @@ from adi.context_manager import context_manager
 
 
 class lm75(context_manager, attribute):
-    """ LM75 Temperature Sensor """
 
-    _device_name = "lm75"
+    """ LM75 Temperature Sensor
 
-    def __init__(self, uri=""):
+    Parameters
+    ----------
+    uri: type=string
+        Context URI. Default: Empty (auto-scan)
+    device_index: type=integer
+        Device index in contexts with multiple LM75 compatible devices. Default: 0
+    returns:
+        LM75 compatible device
+    """
+
+    _device_name = ""
+
+    def __init__(self, uri="", device_index=0):
 
         context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("lm75")
+
+        compatible_parts = ["lm75", "adt75"]
+
+        self._ctrl = None
+        index = 0
+        # Select the device_index-th device from the lm75 family as working device.
+        for device in self._ctx.devices:
+            if device.name in compatible_parts:
+                if index == device_index:
+                    self._ctrl = device
+                    break
+                else:
+                    index += 1
 
     @property
     def update_interval(self):
@@ -82,3 +105,7 @@ class lm75(context_manager, attribute):
     def max_hyst(self, value):
         """LM75 max_hyst value"""
         return self._set_iio_attr("temp1", "max_hyst", False, value)
+
+    def __call__(self):
+        """Utility function, returns deg. C"""
+        return self.input / 1000

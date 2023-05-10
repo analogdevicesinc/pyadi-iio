@@ -13,7 +13,7 @@ classname = "adi.lm75"
         ("max_hyst", -55000, 125000, 30000, 1, 10),
     ],
 )
-def test_adxrs355_attr(
+def test_lm75_attr(
     test_attribute_single_value,
     iio_uri,
     classname,

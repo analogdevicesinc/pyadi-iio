@@ -99,6 +99,7 @@ from adi.adxrs290 import adxrs290
 from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.cn0554 import cn0554
+from adi.cn0575 import cn0575
 from adi.daq2 import DAQ2
 from adi.daq3 import DAQ3
 from adi.fmc_vna import fmcvna
