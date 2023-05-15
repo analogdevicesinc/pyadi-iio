@@ -103,6 +103,7 @@ class max14001(rx, context_manager):
 
         @property
         def offset(self):
+            """MAX14001 channel offset."""
             return self._get_iio_attr(self.name, "offset", False)
 
     def to_volts(self, index, val):
