@@ -246,6 +246,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0554.html">cn0554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0575.html">cn0575</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
@@ -319,9 +320,19 @@
 <span id="lm75"></span><h1>lm75<a class="headerlink" href="#module-adi.lm75" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.lm75.lm75">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.lm75.</span></span><span class="sig-name descname"><span class="pre">lm75</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.lm75.lm75" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.lm75.</span></span><span class="sig-name descname"><span class="pre">lm75</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.lm75.lm75" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
 <p>LM75 Temperature Sensor</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>uri: type=string</dt><dd><p>Context URI. Default: Empty (auto-scan)</p>
+</dd>
+<dt>device_index: type=integer</dt><dd><p>Device index in contexts with multiple LM75 compatible devices. Default: 0</p>
+</dd>
+<dt>returns:</dt><dd><p>LM75 compatible device</p>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.lm75.lm75.input">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input</span></span><a class="headerlink" href="#adi.lm75.lm75.input" title="Permalink to this definition"></a></dt>
@@ -358,6 +369,7 @@
 <dd><p>Update Interval</p>
 </dd></dl>
 
+</section>
 </dd></dl>
 
 </section>
