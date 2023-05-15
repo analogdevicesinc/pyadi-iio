@@ -157,6 +157,17 @@ cn0554:
           - iio:device0
           - iio:device1                    
 
+cn0575:
+  - adt75
+  - one-bit-adc-dac
+  - pyadi_iio_class_support:
+      - cn0575
+  - emulate:
+      - filename: cn0575.xml
+      - data_devices:
+          - hwmon2
+          - iio:device0  
+
 # SOMS
 adrv9361:
   - ad7291
