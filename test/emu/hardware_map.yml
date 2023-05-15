@@ -319,6 +319,15 @@ max31865:
       - data_devices:
           - iio:device0
 
+max14001:
+  - max14001
+  - pyadi_iio_class_support:
+      - max14001
+  - emulate:
+      - filename: max14001.xml
+      - data_devices:
+          - iio:device0
+
 max9611:
   - max9611
   - pyadi_iio_class_support:
