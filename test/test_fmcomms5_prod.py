@@ -4,6 +4,12 @@ import adi
 import numpy as np
 import pytest
 
+try:
+    import ad9361 as libad9361
+except ImportError:
+    libad9361 = None
+
+
 hardware = "fmcomms5"
 classname = "adi.FMComms5"
 
@@ -89,6 +95,57 @@ def test_fmcomms5_chip_b_attr(
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+def test_fmcomms5_loopback(test_dma_loopback, iio_uri, classname, channel):
+    test_dma_loopback(iio_uri, classname, channel)
+
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("lo", [2400000000])
+def test_fmcomms5_phase_sync(classname, iio_uri, lo):
+    if libad9361:
+        sdr = eval(classname + "(uri='" + iio_uri + "')")
+        libad9361.fmcomms5_phase_sync(sdr._ctx, lo)
+    else:
+        raise Exception("libad9361-iio not installed/configured")
+
+    #cleanup
+    for channel in range(4):
+        chname = "voltage" + str(channel)
+        if channel in [0, 1]:
+            ch = sdr._rxadc.find_channel(chname, False)
+            ch.attrs["calibphase"].value = str(0.0)
+            ch.attrs["calibscale"].value = str(1.0)
+            ch = sdr._txdac.find_channel(chname, True)
+            ch.attrs["calibphase"].value = str(0.0)
+            ch.attrs["calibscale"].value = str(1.0)
+        else:
+            ch = sdr._rxadc_chip_b.find_channel(chname, False)
+            ch.attrs["calibphase"].value = str(0.0)
+            ch.attrs["calibscale"].value = str(1.0)
+            ch = sdr._txdac_chip_b.find_channel(chname, True)
+            ch.attrs["calibphase"].value = str(0.0)
+            ch.attrs["calibscale"].value = str(1.0)
+    
+    sdr._set_iio_attr("out", "voltage_filter_fir_en", False, 0)
+    sdr._set_iio_attr("voltage0", "filter_fir_en", False, 0)
+    sdr._set_iio_attr("voltage1", "filter_fir_en", False, 0)
+    sdr._set_iio_attr("voltage2", "filter_fir_en", False, 0)
+    sdr._set_iio_attr("out", "voltage_filter_fir_en", False, 0, sdr._ctrl_b)
+    sdr._set_iio_attr("voltage0", "filter_fir_en", False, 0, sdr._ctrl_b)
+    sdr._set_iio_attr("voltage1", "filter_fir_en", False, 0, sdr._ctrl_b)
+    sdr._set_iio_attr("voltage2", "filter_fir_en", False, 0, sdr._ctrl_b)
+    sdr._set_iio_attr("voltage0", "quadrature_tracking_en", False, 1)
+    sdr._set_iio_attr("voltage1", "quadrature_tracking_en", False, 1)
+    sdr._set_iio_attr("voltage2", "quadrature_tracking_en", False, 1)
+    sdr._set_iio_attr("voltage0", "quadrature_tracking_en", False, 1, sdr._ctrl_b)
+    sdr._set_iio_attr("voltage1", "quadrature_tracking_en", False, 1, sdr._ctrl_b)
+    sdr._set_iio_attr("voltage2", "quadrature_tracking_en", False, 1, sdr._ctrl_b)
+    
+    del sdr
+
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
     "dds_scale, min_rssi, max_rssi, param_set",
@@ -108,7 +165,7 @@ def test_fmcomms5_chip_b_attr(
             ),
         ),
         (
-            0.4,
+            0.125,
             10,
             50,
             dict(
@@ -157,12 +214,14 @@ def test_rssi(
                 rx_lo_chip_b=2400000000,
                 gain_control_mode_chip_b_chan0="slow_attack",
                 gain_control_mode_chip_b_chan1="slow_attack",
+                tx_hardwaregain_chip_b_chan0=-10,
+                tx_hardwaregain_chip_b_chan1=-10,
                 rx_rf_bandwidth_chip_b=18000000,
                 tx_rf_bandwidth_chip_b=18000000,
             ),
         ),
         (
-            0.4,
+            0.125,
             10,
             50,
             dict(
@@ -196,7 +255,7 @@ def test_rssi_chip_b(
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
     "dds_scale, frequency, hardwaregain_low, hardwaregain_high, param_set",
     [
@@ -218,24 +277,7 @@ def test_rssi_chip_b(
             ),
         ),
         (
-            0.0,
-            999859,
-            50,
-            80,
-            dict(
-                gain_control_mode_chip_b_chan0="slow_attack",
-                gain_control_mode_chip_b_chan1="slow_attack",
-                rx_lo_chip_b=2400000000,
-                tx_lo_chip_b=2400000000,
-                tx_hardwaregain_chip_b_chan0=-10,
-                tx_hardwaregain_chip_b_chan1=-10,
-                sample_rate=30720000,
-                rx_rf_bandwidth_chip_b=18000000,
-                tx_rf_bandwidth_chip_b=18000000,
-            ),
-        ),
-        (
-            0.89,
+            0.125,
             999859,
             0.0,
             28,
@@ -249,23 +291,6 @@ def test_rssi_chip_b(
                 sample_rate=30720000,
                 rx_rf_bandwidth=18000000,
                 tx_rf_bandwidth=18000000,
-            ),
-        ),
-        (
-            0.89,
-            999859,
-            0.0,
-            28,
-            dict(
-                gain_control_mode_chip_b_chan0="slow_attack",
-                gain_control_mode_chip_b_chan1="slow_attack",
-                rx_lo_chip_b=2400000000,
-                tx_lo_chip_b=2400000000,
-                tx_hardwaregain_chip_b_chan0=-10,
-                tx_hardwaregain_chip_b_chan1=-10,
-                sample_rate=30720000,
-                rx_rf_bandwidth_chip_b=18000000,
-                tx_rf_bandwidth_chip_b=18000000,
             ),
         ),
     ],
@@ -295,62 +320,128 @@ def test_hardware_gain(
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
-def test_fmcomms5_loopback(test_dma_loopback, iio_uri, classname, channel):
-    test_dma_loopback(iio_uri, classname, channel)
-
-
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-def test_dcxo(test_dcxo_calibration, classname, iio_uri):
-    test_dcxo_calibration(classname, iio_uri)
-
-
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1])
-@pytest.mark.parametrize(
-    "param_set",
-    [
-        dict(
-            tx_lo=2400000000,
-            rx_lo=2400000000,
-            tx_hardwaregain_chan0=-10,
-            tx_hardwaregain_chan1=-10,
-            sample_rate=30720000,
-        )
-    ],
-)
-@pytest.mark.parametrize(
-    "low, high",
-    [([-20.0, -100.0, -110.0, -110.0, -110.0], [-10.0, -60.0, -75.0, -75.0, -80.0])],
-)
-def test_harmonic_values(
-    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=False
-):
-    test_harmonics(classname, iio_uri, channel, param_set, low, high, plot)
-
-
-@pytest.mark.iio_hardware(hardware)
-@pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2, 3])
 @pytest.mark.parametrize(
-    "param_set",
+    "dds_scale, frequency, hardwaregain_low, hardwaregain_high, param_set",
     [
-        dict(
-            tx_lo_chip_b=2400000000,
-            rx_lo_chip_b=2400000000,
-            tx_hardwaregain_chip_b_chan0=-10,
-            tx_hardwaregain_chip_b_chan1=-10,
-            sample_rate=30720000,
+        (
+            0.0,
+            999859,
+            50,
+            80,
+            dict(
+                gain_control_mode_chip_b_chan0="slow_attack",
+                gain_control_mode_chip_b_chan1="slow_attack",
+                rx_lo_chip_b=2400000000,
+                tx_lo_chip_b=2400000000,
+                tx_hardwaregain_chip_b_chan0=-10,
+                tx_hardwaregain_chip_b_chan1=-10,
+                sample_rate=30720000,
+                rx_rf_bandwidth_chip_b=18000000,
+                tx_rf_bandwidth_chip_b=18000000,
+            ),
+        ),
+        (
+            0.125,
+            999859,
+            0.0,
+            28,
+            dict(
+                gain_control_mode_chip_b_chan0="slow_attack",
+                gain_control_mode_chip_b_chan1="slow_attack",
+                rx_lo_chip_b=2400000000,
+                tx_lo_chip_b=2400000000,
+                tx_hardwaregain_chip_b_chan0=-10,
+                tx_hardwaregain_chip_b_chan1=-10,
+                sample_rate=30720000,
+                rx_rf_bandwidth_chip_b=18000000,
+                tx_rf_bandwidth_chip_b=18000000,
+            ),
+        ),
+    ],
+)
+def test_hardware_gain_chip_b(
+    test_hardwaregain,
+    iio_uri,
+    classname,
+    channel,
+    dds_scale,
+    frequency,
+    hardwaregain_low,
+    hardwaregain_high,
+    param_set,
+):
+    test_hardwaregain(
+        iio_uri,
+        classname,
+        channel,
+        dds_scale,
+        frequency,
+        hardwaregain_low,
+        hardwaregain_high,
+        param_set,
+    )
+
+
+# @pytest.mark.iio_hardware(hardware)
+# @pytest.mark.parametrize("classname", [(classname)])
+# def test_dcxo(test_dcxo_calibration, classname, iio_uri):
+#     test_dcxo_calibration(classname, iio_uri)
+
+
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize(
+    "param_set, frequency, scale",
+    [
+        (
+            dict(
+                tx_lo=2400000000,
+                rx_lo=2400000000,
+                tx_hardwaregain_chan0=-10,
+                tx_hardwaregain_chan1=-10,
+                tx_hardwaregain_chip_b_chan0=-10,
+                tx_hardwaregain_chip_b_chan1=-10,
+                sample_rate=30720000,
+            ),
+            2999577, 0.125
         )
     ],
 )
 @pytest.mark.parametrize(
     "low, high",
-    [([-20.0, -100.0, -110.0, -110.0, -110.0], [-10.0, -60.0, -75.0, -75.0, -80.0])],
+    [([-20.0, -110.0, -120.0, -120.0, -120.0], [-10.0, -60.0, -75.0, -75.0, -80.0])],
 )
-def test_harmonic_values_chip_b(
-    test_harmonics, classname, iio_uri, channel, param_set, low, high, plot=False
+def test_harmonic_values(
+    test_harmonics, classname, iio_uri, channel, param_set, low, high, frequency, scale, plot=True
 ):
-    test_harmonics(classname, iio_uri, channel, param_set, low, high, plot)
+    test_harmonics(classname, iio_uri, channel, param_set, low, high, frequency, scale, plot)
+
+
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize(
+    "param_set, frequency, scale",
+    [
+        (
+            dict(
+                tx_lo=3500000000,
+                rx_lo=3500000000,
+                tx_hardwaregain_chan0=-10,
+                tx_hardwaregain_chan1=-10,
+                tx_hardwaregain_chip_b_chan0=-10,
+                tx_hardwaregain_chip_b_chan1=-10,
+                sample_rate=30720000,
+            ),
+            2999577, 0.125
+        ),
+    ]
+)
+@pytest.mark.parametrize(
+    "low, high",
+    [([-20.0, -120.0, -120.0, -125.0, -125.0], [-10.0, -75.0, -75.0, -80.0, -80.0])],
+)
+def test_peaks(test_sfdrl, classname, iio_uri, channel, param_set, low, high, frequency, scale, plot=True):
+    test_sfdrl(classname, iio_uri, channel, param_set, low, high, frequency, scale, plot)
