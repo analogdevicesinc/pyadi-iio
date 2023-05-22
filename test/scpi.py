@@ -36,7 +36,7 @@ def find_instrument():
             if idn in supported_instruments:
                 break
             else:
-                pytest.skip("This instrument is currently not supported!")
+                raise Exception("No supported instrument found")
         except Exception as e:
             my_instrument = None
             continue
@@ -100,11 +100,7 @@ def get_clk_rate(classname, iio_uri):
     return float(clk_rate)
 
 
-def dcxo_calibrate(context_desc, classname, iio_uri):
-    prev_diff = 0
-    diff = 0
-    finetune = False
-    step = 1
+def dcxo_calibrate(context_desc, classname, iio_uri, snumber="", masterfile="", eeprom_path_var=""):
     direction = -2
     current_frq = 0
     # setting initial values at half the value from eeprom to make the tuning process faster
@@ -114,11 +110,12 @@ def dcxo_calibrate(context_desc, classname, iio_uri):
 
     instr = find_instrument()
     if instr is None:
-        pytest.skip("No supported instrument found")
+        pytest.fail("No supported instrument found")
         return
     target_frq = get_clk_rate(classname, iio_uri)
+    measured_frq = get_freq(instr)
     if classname == "adi.FMComms5":
-        save_to_eeprom_rate(iio_uri, target_frq)
+        save_to_eeprom_rate(iio_uri, int(measured_frq), snumber, masterfile, eeprom_path_var)
         return
 
     sdr = eval(classname + "(uri='" + iio_uri + "')")
