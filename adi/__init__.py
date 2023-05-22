@@ -25,6 +25,7 @@ from adi.ad6676 import ad6676
 from adi.ad7124 import ad7124
 from adi.ad7134 import ad7134
 from adi.ad7291 import ad7291
+from adi.ad74413r import ad74413r
 from adi.ad7606 import ad7606
 from adi.ad7689 import ad7689
 from adi.ad7746 import ad7746
@@ -115,6 +116,7 @@ from adi.ltc2983 import ltc2983
 from adi.max9611 import max9611
 from adi.max11205 import max11205
 from adi.max14001 import max14001
+from adi.max14906 import max14906
 from adi.max31855 import max31855
 from adi.max31865 import max31865
 from adi.one_bit_adc_dac import one_bit_adc_dac
