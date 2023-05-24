@@ -84,7 +84,7 @@ class lm75(context_manager, attribute):
     @property
     def input(self):
         """LM75 temperature input value"""
-        return self._get_iio_attr("temp1", "input", False)
+        return self._get_iio_attr("temp", "raw", False)
 
     @property
     def max(self):
