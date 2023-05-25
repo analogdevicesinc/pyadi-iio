@@ -22,7 +22,7 @@ def test_adxl355_rx_data(test_dma_rx, iio_uri, classname, channel):
         ("calibbias", -30000, 30000, 10000, 1, 3, "accel_z"),
     ],
 )
-def test_adxrs355_attr(
+def test_adxl355_attr(
     test_attribute_single_value,
     iio_uri,
     classname,
