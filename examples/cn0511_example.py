@@ -87,3 +87,6 @@ rpi_sig_gen.amp_enable = False
 print("Amplifier enabled: ", rpi_sig_gen.amp_enable)
 rpi_sig_gen.tx_enable = False
 print("Output enabled: ", rpi_sig_gen.tx_enable)
+
+# Check if board was calibrated in production
+print("Board was calibrated in production: ", rpi_sig_gen.board_calibrated)
