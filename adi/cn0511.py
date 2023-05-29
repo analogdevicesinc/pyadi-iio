@@ -106,9 +106,7 @@ class cn0511(ad9166_adi):
         """calibrated_output: ["desired_output_amplitude_in_dbm", "desired_output_frequency_in_Hz"]]"""
         if libad9166:
             return [int(20 * np.log10(self.raw / (2 ** 15))), self.frequency]
-        else:
-            print("Warning: Missing libad9166, calibration failed.")
-            return [None, None]
+        print("Warning: Missing libad9166, calibration failed.")
 
     @calibrated_output.setter
     def calibrated_output(self, value):
@@ -120,3 +118,10 @@ class cn0511(ad9166_adi):
             )
         else:
             print("Warning: Missing libad9166, calibration failed.")
+
+    @property
+    def board_calibrated(self):
+        """ board_calibrated: 1 if board was calibrated in production, 0 if board was not calibrated in production"""
+        if libad9166:
+            return libad9166.device_is_calibrated(self.__calibration_data)
+        print("Warning: Missing libad9166, calibration failed.")
