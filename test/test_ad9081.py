@@ -7,6 +7,19 @@ hardware = ["ad9081", "ad9081_tdd"]
 classname = "adi.ad9081"
 
 
+def scale_field(param_set, iio_uri):
+    # Scale fields to match number of channels
+    import adi
+
+    dev = adi.ad9081(uri=iio_uri)
+    for field in param_set:
+        if param_set[field] is not list:
+            continue
+        existing_val = getattr(dev, field)
+        param_set[field] = param_set[field][0] * len(existing_val)
+    return param_set
+
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -123,6 +136,7 @@ def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
 def test_ad9081_cyclic_buffers(
     test_cyclic_buffer, iio_uri, classname, channel, param_set
 ):
+    param_set = scale_field(param_set, iio_uri)
     test_cyclic_buffer(iio_uri, classname, channel, param_set)
 
 
@@ -151,6 +165,7 @@ def test_ad9081_cyclic_buffers(
 def test_ad9081_cyclic_buffers_exception(
     test_cyclic_buffer_exception, iio_uri, classname, channel, param_set
 ):
+    param_set = scale_field(param_set, iio_uri)
     test_cyclic_buffer_exception(iio_uri, classname, channel, param_set)
 
 
@@ -186,6 +201,7 @@ def test_ad9081_loopback(test_dma_loopback, iio_uri, classname, channel):
 )
 @pytest.mark.parametrize("sfdr_min", [70])
 def test_ad9081_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min):
+    param_set = scale_field(param_set, iio_uri)
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min, full_scale=0.5)
 
 
@@ -221,6 +237,7 @@ def test_ad9081_dds_loopback(
     scale,
     peak_min,
 ):
+    param_set = scale_field(param_set, iio_uri)
     test_dds_loopback(
         iio_uri, classname, param_set, channel, frequency, scale, peak_min
     )
@@ -269,6 +286,7 @@ def test_ad9081_dds_loopback(
     ],
 )
 def test_ad9081_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param_set):
+    param_set = scale_field(param_set, iio_uri)
     test_iq_loopback(iio_uri, classname, channel, param_set)
 
 
@@ -306,6 +324,7 @@ def test_ad9081_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
 def test_ad9081_nco_loopback(
     test_tone_loopback, iio_uri, classname, param_set, channel, frequency, peak_min,
 ):
+    param_set = scale_field(param_set, iio_uri)
     test_tone_loopback(iio_uri, classname, param_set, channel, frequency, peak_min)
 
 
