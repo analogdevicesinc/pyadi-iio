@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Analog Devices, Inc.
+# Copyright (C) 2021-2023 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 

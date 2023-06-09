@@ -2,7 +2,7 @@
 # Description: IIO python script for CN0548
 # Author: Antoniu Miclaus (antoniu.miclaus@analog.com)
 #
-# Copyright 2021(c) Analog Devices, Inc.
+# Copyright 2019-2019-2023(c) Analog Devices, Inc.
 #
 # All rights reserved.
 #

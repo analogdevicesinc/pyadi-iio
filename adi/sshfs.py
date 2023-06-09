@@ -1,5 +1,5 @@
 # Copyright (C) 2021 Xiphos Systems Corp.
-#
+# SKIP LICENSE INSERTION
 # SPDX short identifier: ADIBSD
 
 from contextlib import suppress

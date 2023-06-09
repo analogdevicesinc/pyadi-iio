@@ -1,3 +1,6 @@
+# Copyright (C) 2023 Analog Devices, Inc.
+#
+# SPDX short identifier: ADIBSD
 import numbers
 from collections import OrderedDict
 from collections.abc import Iterable
