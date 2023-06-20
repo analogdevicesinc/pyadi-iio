@@ -1,6 +1,6 @@
 import pytest
 
-hardware = ["ad7768"]
+hardware = ["ad7768-4"]
 classname = "adi.ad7768_4"
 
 #########################################
