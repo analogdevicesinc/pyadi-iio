@@ -30,7 +30,7 @@ class ad7768(rx, context_manager):
             self._device_name = "cf_axi_adc"
 
         if not self._ctrl:
-            raise Exception("Error in selecting matching device")    
+            raise Exception("Error in selecting matching device")
 
         if not self._rxadc:
             raise Exception("Error in selecting matching device")

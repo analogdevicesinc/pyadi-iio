@@ -8,6 +8,7 @@ from time import sleep
 import adi
 import matplotlib.pyplot as plt
 
+
 def display_settings(power_mode, sampling_frequency, filter_type, rx_enabled_channels):
     print("Power Mode: ", power_mode)
     print("Sampling Frequency: ", sampling_frequency)
@@ -40,7 +41,12 @@ my_adc.filter_type = "WIDEBAND"
 my_adc.rx_output_type = "SI"
 
 # Verify settings:
-display_settings(my_adc.power_mode, my_adc.sampling_frequency, my_adc.filter_type, my_adc.rx_enabled_channels)
+display_settings(
+    my_adc.power_mode,
+    my_adc.sampling_frequency,
+    my_adc.filter_type,
+    my_adc.rx_enabled_channels,
+)
 
 plt.clf()
 sleep(0.5)
