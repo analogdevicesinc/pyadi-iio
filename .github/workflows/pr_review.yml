@@ -14,7 +14,7 @@ jobs:
       id: reviewer_check
       run: |
         echo "Reviewers: ${{ github.event.pull_request.requested_reviewers }}"
-        echo "Reviewers: ${{ fromJson(github.event.pull_request.requested_reviewers) }}"
+        echo "Reviewers: ${{ fromJSON(github.event.pull_request.requested_reviewers) }}"
         if [ -z "${{ github.event.pull_request.requested_reviewers }}" ]; then
           echo "No reviewer set. Adding a bot message on PR"
         fi
