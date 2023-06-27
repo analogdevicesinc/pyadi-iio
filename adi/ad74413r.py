@@ -18,26 +18,36 @@ class ad74413r(rx, context_manager):
 		self._rx_channel_names = []
 		self._tx_channel_names = []
 
+		self.rx_channel = []
+		self.tx_channel = []
+
 		if not self._ctrl:
 			raise Exception("No ad74413r device found")
 
+		_rx_channels = []
+		_tx_channels = []
 		_channels = []
 		for ch in self._ctrl.channels:
 			if ch.output:
 				self._tx_channel_names.append(ch.id)
+				self.tx_channel.append((ch.id, self._channel(self._ctrl, ch.id, ch.output)))
+				_tx_channels.append((ch.id, self._channel(self._ctrl, ch.id, ch.output)))
 			else:
 				self._rx_channel_names.append(ch.id)
+				self.rx_channel.append((ch.id, self._channel(self._ctrl, ch.id, ch.output)))
+				_rx_channels.append((ch.id, self._channel(self._ctrl, ch.id, ch.output)))
 			_channels.append((ch.id, self._channel(self._ctrl, ch.id, ch.output)))
 		self.channel = OrderedDict(_channels)
+		self.rx_channel = OrderedDict(_rx_channels)
+		self.tx_channel = OrderedDict(_tx_channels)
 
 		rx.__init__(self)
 
 	def reg_read(self, reg):
-		self._set_iio_debug_attr_str("direct_reg_access", reg, self._ctrl)
-		return self._get_iio_debug_attr_str("direct_reg_access", self._ctrl)
+		return self._ctrl.reg_read(reg)
 
 	def reg_write(self, reg, value):
-		self._set_iio_debug_attr_str("direct_reg_access", f"{reg} {value}", self._ctrl)
+		return self._ctrl.reg_write(reg, value)
 
 	class _channel(attribute):
 
@@ -71,5 +81,19 @@ class ad74413r(rx, context_manager):
 			return self._set_iio_attr(self.name, "sampling_frequency", self.output, value)
 
 		@property
+		def sampling_frequency_available(self):
+			return self._get_iio_attr(self.name, "sampling_frequency_available", self.output)
+
+		@property
 		def processed(self):
 			return self._get_iiio_attr(self.name, "processed", self.output)
+
+		@property
+		def threshold(self):
+			return self._get_iio_attr(self.name, "threshold", self.output)
+
+		@threshold.setter
+		def threshold(self, value):
+			return self._set_iio_attr(self.name, "threshold", self.output, value)
+
+
