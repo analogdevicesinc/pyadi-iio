@@ -125,3 +125,11 @@ class swiot(rx, context_manager, attribute):
 	@mode.setter
 	def mode(self, value):
 		self._set_iio_dev_attr_str("mode", value)
+
+	@property
+	def identify(self):
+		return self._get_iio_dev_attr_str("identify")
+
+	@identify.setter
+	def identify(self, value):
+		return self._set_iio_dev_attr_str("identify", value)
