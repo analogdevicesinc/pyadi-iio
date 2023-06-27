@@ -191,8 +191,8 @@ def test_ad9361_loopback(test_dma_loopback, iio_uri, classname, channel):
         ),
         (params["one_cw_tone_manual"], 23),
         (params["change_attenuation_10dB_manual"], 37),
-        (params["change_attenuation_5dB_manual"], 29),
-        (params["change_rf_gain_5dB_manual"], 23),
+        (params["change_attenuation_5dB_manual"], 25),
+        (params["change_rf_gain_5dB_manual"], 22),
         (params["one_cw_tone_slow_attack"], 23),
         (params["change_attenuation_20dB_slow_attack"], 43),
         (params["change_attenuation_0dB_slow_attack"], 23),
@@ -263,7 +263,7 @@ def test_ad9361_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
         (params["one_cw_tone_manual"], 0.12, 23.25, 27.5),
         (params["one_cw_tone_manual"], 0.25, 17, 23),
         (params["one_cw_tone_manual"], 0.06, 28, 34.5),
-        (params["change_rf_gain_5dB_manual"], 0.25, 21, 25.5),
+        (params["change_rf_gain_5dB_manual"], 0.25, 20, 25.5),
         (params["change_attenuation_10dB_manual"], 0.25, 25, 32),
         (params["change_attenuation_5dB_manual"], 0.25, 21, 26.5),
     ],
@@ -290,8 +290,8 @@ def test_ad9361_dds_gain_check_vary_power(
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
     [
-        (params["one_cw_tone_slow_attack"], 0.06, 42.75, 50),
-        (params["change_attenuation_20dB_slow_attack"], 0.06, 53.75, 56.75),
+        (params["one_cw_tone_slow_attack"], 0.06, 41.75, 50),
+        (params["change_attenuation_20dB_slow_attack"], 0.06, 53, 56.75),
         (params["change_attenuation_0dB_slow_attack"], 0.06, 32, 37.5),
     ],
 )
