@@ -23,14 +23,22 @@ class ad7768(rx, context_manager):
         self._ctrl = self._ctx.find_device("ad7768")
         self._rxadc = self._ctx.find_device("ad7768")
         self._device_name = "ad7768"
+
         if not self._rxadc:
             self._ctrl = self._ctx.find_device("cf_axi_adc")
             self._rxadc = self._ctx.find_device("cf_axi_adc")
             self._device_name = "cf_axi_adc"
 
+        if not self._ctrl:
+            raise Exception("Error in selecting matching device")
+
+        if not self._rxadc:
+            raise Exception("Error in selecting matching device")
+
         for ch in self._rxadc.channels:
             name = ch._id
             self._rx_channel_names.append(name)
+
         rx.__init__(self)
 
     @property
@@ -94,4 +102,30 @@ class ad7768(rx, context_manager):
             raise ValueError(
                 "Error: Filter type not supported \nUse one of: "
                 + str(self.filter_type_avail)
+            )
+
+
+class ad7768_4(ad7768):
+
+    """ AD7768 4-channel, Simultaneous Sampling Sigma-Delta ADC """
+
+    @property
+    def sync_start_enable_available(self):
+        """Get available sync start enable types."""
+        return self._get_iio_dev_attr_str("sync_start_enable_available")
+
+    @property
+    def sync_start_enable(self):
+        """Get sync start enable."""
+        return self._get_iio_dev_attr_str("sync_start_enable")
+
+    @sync_start_enable.setter
+    def sync_start_enable(self, ftype):
+        """Set sync start enable."""
+        if ftype in self.sync_start_enable_available:
+            self._set_iio_dev_attr_str("sync_start_enable", ftype)
+        else:
+            raise ValueError(
+                "Error: Sync start enable not supported \nUse one of: "
+                + str(self.sync_start_enable_available)
             )
