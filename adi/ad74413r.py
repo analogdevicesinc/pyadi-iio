@@ -86,7 +86,7 @@ class ad74413r(rx, context_manager):
 
 		@property
 		def processed(self):
-			return self._get_iiio_attr(self.name, "processed", self.output)
+			return self._get_iio_attr(self.name, "processed", self.output)
 
 		@property
 		def threshold(self):

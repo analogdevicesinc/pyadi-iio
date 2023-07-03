@@ -6,7 +6,7 @@ import time
 import pandas as pd
 import numpy as np
 
-dev_uri = "ip:10.48.65.112"
+dev_uri = "ip:10.48.65.168"
 
 """
 	Possible values:
@@ -17,7 +17,7 @@ dev_uri = "ip:10.48.65.112"
 				       current_in_ext_hart, current_in_loop_hart
 
 """
-channel_config = ["digital_input", "current_in_ext", "current_in_loop", "output"]
+channel_config = ["voltage_in", "current_in_ext", "current_out", "output"]
 
 # Possible values: 0, 1
 channel_enable = [1, 1, 1, 1]
@@ -57,7 +57,7 @@ print("AD74413R rev ID:", ad74413r.reg_read(0x46))
 
 max14906.channel["voltage3"].raw = 1
 
-print("0x7:", max14906.reg_read(0x7))
+# print("0x7:", max14906.reg_read(0x7))
 # max14906.reg_write(0xF, 0xFF)
 
 print("AD74413R input (ADC) channels:", ad74413r._rx_channel_names)
@@ -101,7 +101,6 @@ ad74413r.sample_rate = 4800
 
 # The number of data samples. This may be changed accordingly.
 ad74413r.rx_buffer_size = 4800
-
 
 data = ad74413r.rx()
 ad74413r.rx_destroy_buffer()
