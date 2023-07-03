@@ -133,3 +133,18 @@ class swiot(rx, context_manager, attribute):
 	@identify.setter
 	def identify(self, value):
 		return self._set_iio_dev_attr_str("identify", value)
+
+	class _channel(attribute):
+
+		def __init__(self, ctrl, channel_name):
+			self.name = channel_name
+			self._ctrl = ctrl
+			self.output = False
+
+		@property
+		def raw(self):
+			return self._get_iio_attr(self.name, "raw", False)
+
+		@property
+		def scale(self):
+			return self._get_iio_attr(self.name, "scale", False)
