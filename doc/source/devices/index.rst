@@ -80,6 +80,7 @@ Supported Devices
    adi.cn0540
    adi.cn0554
    adi.cn0575
+   adi.cn0579
    adi.daq2
    adi.daq3
    adi.fmc_vna
