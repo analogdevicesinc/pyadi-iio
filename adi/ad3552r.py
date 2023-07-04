@@ -54,17 +54,24 @@ class ad3552r(tx, context_manager, attribute):
         self._ctrl = None
 
         if not device_name:
-            device_name = compatible_parts[0]
+            # Select any device matching compatible_parts list as working device
+            for device in self._ctx.devices:
+                if device.name in compatible_parts:
+                    print("Found device {}".format(device.name))
+                    self._ctrl = device
+                    self._txdac = device
+                    break
         else:
             if device_name not in compatible_parts:
                 raise Exception("Not a compatible device: " + device_name)
 
-                # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._txdac = device
-                break
+            # Select the device matching device_name as working device
+            for device in self._ctx.devices:
+                if device.name == device_name:
+                    print("Found device {}".format(device.name))
+                    self._ctrl = device
+                    self._txdac = device
+                    break
 
         for ch in self._ctrl.channels:
             name = ch.id
