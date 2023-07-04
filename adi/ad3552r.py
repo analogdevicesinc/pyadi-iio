@@ -34,7 +34,6 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import tx
@@ -124,7 +123,7 @@ class ad3552r(tx, context_manager, attribute):
 
         @en.setter
         def en(self, value):
-            self._set_iio_attr(self.name, "en", True)
+            self._set_iio_attr(self.name, "en", True, value)
 
         @property
         def scale(self):
@@ -133,7 +132,7 @@ class ad3552r(tx, context_manager, attribute):
 
         @scale.setter
         def scale(self, value):
-            self._set_iio_attr(self.name, "scale", True)
+            self._set_iio_attr(self.name, "scale", True, value)
 
         @property
         def offset(self):
@@ -142,4 +141,4 @@ class ad3552r(tx, context_manager, attribute):
 
         @offset.setter
         def offset(self, value):
-            self._set_iio_attr(self.name, "offset", True)
+            self._set_iio_attr(self.name, "offset", True, value)
