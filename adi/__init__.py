@@ -10,7 +10,7 @@ from adi.ad936x import Pluto, ad9361, ad9363, ad9364
 from adi.ad4020 import ad4020
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
-from adi.ad4630 import ad4630
+from adi.ad4630 import ad4630, adaq42xx
 from adi.ad4858 import ad4858
 from adi.ad5592r import ad5592r
 from adi.ad5686 import ad5686
