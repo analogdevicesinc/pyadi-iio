@@ -307,6 +307,7 @@ class tx(dds, rx_tx_common):
     _txdac: iio.Device = []
     _tx_channel_names: List[str] = []
     _complex_data = False
+    _tx_data_type = np.int16
     __txbuf = None
     _output_byte_filename = "out.bin"
     _push_to_file = False
@@ -459,7 +460,7 @@ class tx(dds, rx_tx_common):
 
             indx = 0
             stride = self._num_tx_channels_enabled * 2
-            data = np.empty(stride * len(data_np[0]), dtype=np.int16)
+            data = np.empty(stride * len(data_np[0]), dtype=self._tx_data_type)
             for chan in data_np:
                 i = np.real(chan)
                 q = np.imag(chan)
@@ -475,7 +476,7 @@ class tx(dds, rx_tx_common):
 
             indx = 0
             stride = self._num_tx_channels_enabled
-            data = np.empty(stride * len(data_np[0]), dtype=np.int16)
+            data = np.empty(stride * len(data_np[0]), dtype=self._tx_data_type)
             for chan in data_np:
                 data[indx::stride] = chan.astype(int)
                 indx = indx + 1
