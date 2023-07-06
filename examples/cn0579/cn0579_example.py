@@ -8,16 +8,16 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
-import sin_params
 from adi import cn0579
 
 # Lets try to reuse the ./examples/ad4630/sin_params.py file instead of having
-# our own copy.
+# our own copy. Add path prior to importing sin_params
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 ad4630_dir = os.path.join(parentdir, "ad4630")
 sys.path.insert(0, ad4630_dir)
 
+import sin_params
 
 # from save_for_pscope import save_for_pscope
 
