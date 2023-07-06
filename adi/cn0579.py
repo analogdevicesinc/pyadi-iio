@@ -25,7 +25,6 @@ class cn0579(ad7768_4):
     def shift_voltage0(self):
         """shift_voltage: Shift voltage in mV from AD5696 to bias sensor data"""
         dac_chan = self._ad5696
-        dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
         raw = self._get_iio_attr("voltage0", "raw", True, dac_chan)
         return raw  # * dac_scale * 1.22
 
@@ -38,7 +37,6 @@ class cn0579(ad7768_4):
     def shift_voltage1(self):
         """shift_voltage: Shift voltage in mV from AD5696 to bias sensor data"""
         dac_chan = self._ad5696
-        dac_scale = float(self._get_iio_attr("voltage1", "scale", True, dac_chan))
         raw = self._get_iio_attr("voltage1", "raw", True, dac_chan)
         return raw  # * dac_scale * 1.22
 
@@ -51,7 +49,6 @@ class cn0579(ad7768_4):
     def shift_voltage2(self):
         """shift_voltage: Shift voltage in mV from AD5696 to bias sensor data"""
         dac_chan = self._ad5696
-        dac_scale = float(self._get_iio_attr("voltage2", "scale", True, dac_chan))
         raw = self._get_iio_attr("voltage2", "raw", True, dac_chan)
         return raw  # * dac_scale * 1.22
 
@@ -64,7 +61,6 @@ class cn0579(ad7768_4):
     def shift_voltage3(self):
         """shift_voltage: Shift voltage in mV from AD5696 to bias sensor data"""
         dac_chan = self._ad5696
-        dac_scale = float(self._get_iio_attr("voltage3", "scale", True, dac_chan))
         raw = self._get_iio_attr("voltage3", "raw", True, dac_chan)
         return raw  # * dac_scale * 1.22
 
