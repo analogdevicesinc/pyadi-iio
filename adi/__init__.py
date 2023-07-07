@@ -25,6 +25,8 @@ from adi.ad7799 import ad7799
 from adi.ad9081 import ad9081
 from adi.ad9081_mc import QuadMxFE, ad9081_mc
 from adi.ad9083 import ad9083
+from adi.ad9084 import ad9084
+from adi.ad9084_mc import Triton, ad9084_mc
 from adi.ad9094 import ad9094
 from adi.ad9136 import ad9136
 from adi.ad9144 import ad9144
