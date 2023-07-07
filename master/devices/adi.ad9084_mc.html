@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="fmc_vna" href="adi.fmc_vna.html" /><link rel="prev" title="daq2" href="adi.daq2.html" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad9094" href="adi.ad9094.html" /><link rel="prev" title="ad9081" href="adi.ad9084.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
-        <title>daq3 - Analog Devices Hardware Python Interfaces 0.0.16</title>
+        <title>ad9084_mc - Analog Devices Hardware Python Interfaces 0.0.16</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -199,7 +199,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9084.html">ad9081</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad9084_mc.html">ad9084_mc</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad9084_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
@@ -250,7 +250,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0554.html">cn0554</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0575.html">cn0575</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
@@ -318,13 +318,83 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.daq3">
-<span id="daq3"></span><h1>daq3<a class="headerlink" href="#module-adi.daq3" title="Permalink to this heading"></a></h1>
+          <section id="ad9084-mc">
+<h1>ad9084_mc<a class="headerlink" href="#ad9084-mc" title="Permalink to this heading"></a></h1>
+<p>The multi-chip python interface for ad9084 is scalable to any number of ad9084s within a single libIIO context. It will automatically determine the correct main driver, manage the CDDC/FDDC/CDUC/FDUC arrangement uniquely for each chip, and DMA/DDS IP. However, the interface a bit unique with <strong>pyadi-iio</strong> since it is almost identical to the single ad9084 class but it exposes properties in a slightly different way.</p>
+<p>When using <strong>adi.ad9084</strong>, properties are generally simple types like strings, ints, floats, or lists of these types. For example, when reading back the <strong>rx_channel_nco_frequencies</strong> you would observe something like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>import<span class="w"> </span>adi
+&gt;&gt;&gt;<span class="w"> </span><span class="nv">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.ad9084<span class="o">()</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies
+<span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>
+</pre></div>
+</div>
+<p>For the case of a multi-chip configuration a dict is returned with an entry for each MxFE chip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>import<span class="w"> </span>adi
+&gt;&gt;&gt;<span class="w"> </span><span class="nv">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.ad9084_mc<span class="o">()</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies
+<span class="o">{</span><span class="s1">&#39;axi-ad9084-rx1&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx2&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx3&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx-hpc&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]}</span>
+</pre></div>
+</div>
+<p>The same dict can be passed back to the property when writing, which will contain all or a subset of the chips to be address if desired. Alternatively, a list can be passed with only the values themselves if a dict does not want to be used. This is useful when performing array based DSP were data is approach in aggregate. However, in this case entries must be provided for all chip, not just a subset. Otherwise an error is returned.</p>
+<p>When passing a list only, the chips are address based on the attribute <strong>_default_ctrl_names</strong>. Below is an example of this API:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>import<span class="w"> </span>adi
+&gt;&gt;&gt;<span class="w"> </span><span class="nv">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.ad9084_mc<span class="o">()</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies
+<span class="o">{</span><span class="s1">&#39;axi-ad9084-rx1&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx2&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx3&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx-hpc&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span>,<span class="w"> </span><span class="m">0</span><span class="o">]}</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="m">0</span>,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15<span class="o">]</span>
+&gt;&gt;&gt;<span class="w"> </span>dev.rx_channel_nco_frequencies
+<span class="o">{</span><span class="s1">&#39;axi-ad9084-rx1&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">0</span>,<span class="w"> </span><span class="m">1</span>,<span class="w"> </span><span class="m">2</span>,<span class="w"> </span><span class="m">3</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx2&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">4</span>,<span class="w"> </span><span class="m">5</span>,<span class="w"> </span><span class="m">6</span>,<span class="w"> </span><span class="m">7</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx3&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">8</span>,<span class="w"> </span><span class="m">9</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">11</span><span class="o">]</span>,
+<span class="w"> </span><span class="s1">&#39;axi-ad9084-rx-hpc&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="m">12</span>,<span class="w"> </span><span class="m">13</span>,<span class="w"> </span><span class="m">14</span>,<span class="w"> </span><span class="m">15</span><span class="o">]}</span>
+</pre></div>
+</div>
+<span class="target" id="module-adi.ad9084_mc"></span><dl class="py class">
+<dt class="sig sig-object py" id="adi.ad9084_mc.Triton">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084_mc.</span></span><span class="sig-name descname"><span class="pre">Triton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_board_attached</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084_mc.Triton" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad9084_mc.ad9084_mc" title="adi.ad9084_mc.ad9084_mc"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9084_mc</span></code></a></p>
+<p>Quad ad9084 Mixed-Signal Front End (MxFE) Development System</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>Optional parameter for the URI of IIO context with QuadMxFE.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084_mc.Triton.rx_dsa_gain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa_gain</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.rx_dsa_gain" title="Permalink to this definition"></a></dt>
+<dd><p>rx_dsa_gain: Receiver digital step attenuator gain</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.daq3.DAQ3">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.daq3.</span></span><span class="sig-name descname"><span class="pre">DAQ3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.daq3.DAQ3" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad9152.html#adi.ad9152.ad9152" title="adi.ad9152.ad9152"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9152</span></code></a>, <a class="reference internal" href="adi.ad9680.html#adi.ad9680.ad9680" title="adi.ad9680.ad9680"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9680</span></code></a></p>
-<p>DAQ3 High-Speed Data Aquistion Device</p>
+<dt class="sig sig-object py" id="adi.ad9084_mc.ad9084_mc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084_mc.</span></span><span class="sig-name descname"><span class="pre">ad9084_mc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phy_dev_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084_mc.ad9084_mc" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="adi.ad9084.html#adi.ad9084.ad9084" title="adi.ad9084.ad9084"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9084</span></code></a></p>
+<p>ad9084 Mixed-Signal Front End (MxFE) Multi-Chip Interface</p>
+<blockquote>
+<div><p>This class is a generic interface for boards that utilize multiple ad9084
+devices.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>Optional parameter for the URI of IIO context with ad9084(s).</p>
+</dd>
+<dt>phy_dev_name: type=string</dt><dd><p>Optional parameter name of main control driver for multi-ad9084 board.
+If no argument is given the driver with the most channel attributes is
+assumed to be the main PHY driver</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -334,23 +404,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.fmc_vna.html">
+          <a class="next-page" href="adi.ad9094.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">fmc_vna</div>
+                <div class="title">ad9094</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.daq2.html">
+          <a class="prev-page" href="adi.ad9084.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">daq2</div>
+                <div class="title">ad9081</div>
                 
               </div>
             </a>
@@ -384,8 +454,12 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">daq3</a><ul>
-<li><a class="reference internal" href="#adi.daq3.DAQ3"><code class="docutils literal notranslate"><span class="pre">DAQ3</span></code></a></li>
+<li><a class="reference internal" href="#">ad9084_mc</a><ul>
+<li><a class="reference internal" href="#adi.ad9084_mc.Triton"><code class="docutils literal notranslate"><span class="pre">Triton</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad9084_mc.Triton.rx_dsa_gain"><code class="docutils literal notranslate"><span class="pre">Triton.rx_dsa_gain</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad9084_mc.ad9084_mc"><code class="docutils literal notranslate"><span class="pre">ad9084_mc</span></code></a></li>
 </ul>
 </li>
 </ul>
