@@ -320,6 +320,15 @@ ad5592r:
       - filename: ad5592r.xml
       - data_devices:
           - iio:device0
+          
+ad578x:
+  - ad578x
+  - pyadi_iio_class_support:
+      - ad578x
+  - emulate:
+      - filename: ad578x.xml
+      - data_devices: 
+          - iio:device0
 
 ad7291:
   - ad7291
