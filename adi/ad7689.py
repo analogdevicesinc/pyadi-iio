@@ -12,14 +12,13 @@ from adi.rx_tx import rx
 
 
 class ad7689(rx, context_manager):
-    """ AD7689 ADC """
+    """AD7689 ADC"""
 
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
 
     def __init__(self, uri="", device_name=""):
-
         context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = [
@@ -27,6 +26,7 @@ class ad7689(rx, context_manager):
             "ad7682",
             "ad7949",
             "ad7699",
+            "ad7690",
         ]
 
         self._ctrl = None
