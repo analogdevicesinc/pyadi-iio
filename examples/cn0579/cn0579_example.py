@@ -17,11 +17,11 @@ parentdir = os.path.dirname(currentdir)
 ad4630_dir = os.path.join(parentdir, "ad4630")
 sys.path.insert(0, ad4630_dir)
 
-import sin_params
+import sin_params  # isort:skip
 
 # from save_for_pscope import save_for_pscope
 
-# Optionally passs URI as command line argument,
+# Optionally pass URI as command line argument,
 # else use default ip:analog.local
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
