@@ -2,7 +2,6 @@
 #
 # SPDX short identifier: ADIBSD
 
-from adi.ad5686 import ad5686
 from adi.ad7768 import ad7768_4
 from adi.context_manager import context_manager
 
@@ -15,7 +14,6 @@ class cn0579(ad7768_4):
         self, uri="ip:analog.local",
     ):
 
-        context_manager.__init__(self, uri, self._device_name)
         ad7768_4.__init__(self, uri)
 
         self._gpio = self._ctx.find_device("cn0579_control")
