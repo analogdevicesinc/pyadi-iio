@@ -3,7 +3,6 @@
 # SPDX short identifier: ADIBSD
 
 from adi.ad7768 import ad7768_4
-from adi.context_manager import context_manager
 
 
 class cn0579(ad7768_4):
