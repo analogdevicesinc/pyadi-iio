@@ -115,6 +115,16 @@ ad9081_tdd:
       - data_devices:
           - iio:device3
           - iio:device4
+ad9084:
+  - axi-ad9084-tx-hpc
+  - axi-ad9084-rx-hpc
+  - pyadi_iio_class_support:
+      - ad9084
+  - emulate:
+      - filename: ad9084.xml
+      - data_devices:
+          - iio:device13
+          - iio:device14
 ad9172:
   - axi-ad9172-hpc,2
   - hmc7044
@@ -165,6 +175,17 @@ cn0566:
       - filename: cn0566.xml
       - data_devices:
           - iio:device1
+
+cn0575:
+  - adt75
+  - one-bit-adc-dac
+  - pyadi_iio_class_support:
+      - cn0575
+  - emulate:
+      - filename: cn0575.xml
+      - data_devices:
+          - hwmon2
+          - iio:device0  
 
 # SOMS
 adrv9361:
@@ -300,7 +321,16 @@ ad7768:
       - filename: ad7768.xml
       - data_devices:
           - iio:device0
-          
+
+ad7768-4:
+  - ad7768-4
+  - pyadi_iio_class_support:
+      - ad7768_4
+  - emulate:
+      - filename: ad7768-4.xml
+      - data_devices:
+          - iio:device0
+
 ad5592r:
   - ad5592r
   - pyadi_iio_class_support:
@@ -325,6 +355,15 @@ max31865:
       - max31865
   - emulate:
       - filename: max31865.xml
+      - data_devices:
+          - iio:device0
+
+max14001:
+  - max14001
+  - pyadi_iio_class_support:
+      - max14001
+  - emulate:
+      - filename: max14001.xml
       - data_devices:
           - iio:device0
 

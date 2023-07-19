@@ -1,35 +1,6 @@
-# Copyright (C) 2019 Analog Devices, Inc.
+# Copyright (C) 2019-2023 Analog Devices, Inc.
 #
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
-#     - Redistributions of source code must retain the above copyright
-#       notice, this list of conditions and the following disclaimer.
-#     - Redistributions in binary form must reproduce the above copyright
-#       notice, this list of conditions and the following disclaimer in
-#       the documentation and/or other materials provided with the
-#       distribution.
-#     - Neither the name of Analog Devices, Inc. nor the names of its
-#       contributors may be used to endorse or promote products derived
-#       from this software without specific prior written permission.
-#     - The use of this software may or may not infringe the patent rights
-#       of one or more patent holders.  This license does not release you
-#       from the requirement that you obtain separate licenses from these
-#       patent holders to use this software.
-#     - Use of the software either in source or binary form, must be run
-#       on or directly connected to an Analog Devices Inc. component.
-#
-# THIS SOFTWARE IS PROVIDED BY ANALOG DEVICES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-# INCLUDING, BUT NOT LIMITED TO, NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A
-# PARTICULAR PURPOSE ARE DISCLAIMED.
-#
-# IN NO EVENT SHALL ANALOG DEVICES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, INTELLECTUAL PROPERTY
-# RIGHTS, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-# THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# SPDX short identifier: ADIBSD
 
 from adi.ad469x import ad469x
 from adi.ad717x import ad717x
@@ -49,11 +20,13 @@ from adi.ad7291 import ad7291
 from adi.ad7606 import ad7606
 from adi.ad7689 import ad7689
 from adi.ad7746 import ad7746
-from adi.ad7768 import ad7768
+from adi.ad7768 import ad7768, ad7768_4
 from adi.ad7799 import ad7799
 from adi.ad9081 import ad9081
 from adi.ad9081_mc import QuadMxFE, ad9081_mc
 from adi.ad9083 import ad9083
+from adi.ad9084 import ad9084
+from adi.ad9084_mc import Triton, ad9084_mc
 from adi.ad9094 import ad9094
 from adi.ad9136 import ad9136
 from adi.ad9144 import ad9144
@@ -100,6 +73,7 @@ from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.cn0554 import cn0554
 from adi.cn0566 import CN0566
+from adi.cn0575 import cn0575
 from adi.daq2 import DAQ2
 from adi.daq3 import DAQ3
 from adi.fmc_vna import fmcvna
@@ -117,6 +91,7 @@ from adi.ltc2688 import ltc2688
 from adi.ltc2983 import ltc2983
 from adi.max9611 import max9611
 from adi.max11205 import max11205
+from adi.max14001 import max14001
 from adi.max31855 import max31855
 from adi.max31865 import max31865
 from adi.one_bit_adc_dac import one_bit_adc_dac
