@@ -185,7 +185,18 @@ cn0575:
       - filename: cn0575.xml
       - data_devices:
           - hwmon2
-          - iio:device0  
+          - iio:device0
+
+cn0579:
+  - cf_axi_adc
+  - cn0579_control
+  - ad5696
+  - pyadi_iio_class_support:
+      - cn0579
+  - emulate:
+      - filename: cn0579.xml
+      - data_devices:
+          - iio:device1
 
 # SOMS
 adrv9361:
