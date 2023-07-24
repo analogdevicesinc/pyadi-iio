@@ -37,7 +37,7 @@ class adrv9002(rx_tx, context_manager):
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q"]
     _rx2_channel_names = ["voltage0_i", "voltage0_q"]
-    _tx_channel_names = ["voltage0", "voltage1"]
+    _tx_channel_names = ["voltage0", "voltage1", "", ""]
     _tx2_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
 
@@ -51,9 +51,10 @@ class adrv9002(rx_tx, context_manager):
 
         if len(rxdevs) > 1:
             self._rx_dma_mode = "split"
+            self._split_cores = True
             self._rxadc = self._ctx.find_device("axi-adrv9002-rx-lpc")
-            self._rxadc2 = self._ctx.find_device("axi-adrv9002-rx2-lpc")
-            self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
+            self._rxadc_chip_b = self._ctx.find_device("axi-adrv9002-rx2-lpc")
+            self._rx2 = obs(self._ctx, self._rxadc_chip_b, self._rx2_channel_names)
             setattr(adrv9002, "rx1", rx1)
             setattr(adrv9002, "rx2", rx2)
             remap(self._rx2, "rx_", "rx2_", type(self))
@@ -70,9 +71,10 @@ class adrv9002(rx_tx, context_manager):
 
         if len(txdevs) > 1:
             self._tx_dma_mode = "split"
+            self._split_cores = True
             self._txdac = self._ctx.find_device("axi-adrv9002-tx-lpc")
-            self._txdac2 = self._ctx.find_device("axi-adrv9002-tx2-lpc")
-            self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
+            self._txdac_chip_b = self._ctx.find_device("axi-adrv9002-tx2-lpc")
+            self._tx2 = tx_two(self._ctx, self._txdac_chip_b, self._tx2_channel_names)
             setattr(adrv9002, "tx1", tx1)
             setattr(adrv9002, "tx2", tx2)
             remap(self._tx2, "tx_", "tx2_", type(self))
@@ -649,41 +651,81 @@ class adrv9002(rx_tx, context_manager):
         """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", False)
 
+    @rx0_rf_bandwidth.setter
+    def rx0_rf_bandwidth(self, value):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
+        return self._set_iio_attr("voltage0", "rf_bandwidth", False, value)
+
     @property
     def tx0_rf_bandwidth(self):
         """tx_rf_bandwidth: Bandwidth of front-end analog filter of TX1 path"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", True)
+    
+    @tx0_rf_bandwidth.setter
+    def tx0_rf_bandwidth(self, value):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
+        return self._set_iio_attr("voltage0", "rf_bandwidth", True, value)
 
     @property
     def rx0_sample_rate(self):
         """rx_sample_rate: Sample rate RX1 path in samples per second"""
         return self._get_iio_attr("voltage0", "sampling_frequency", False)
+    
+    @rx0_sample_rate.setter
+    def rx0_sample_rate(self, value):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
+        return self._set_iio_attr("voltage0", "sampling_frequency", False, value)
 
     @property
     def tx0_sample_rate(self):
         """tx_sample_rate: Sample rate TX1 path in samples per second"""
         return self._get_iio_attr("voltage0", "sampling_frequency", True)
-
+    
+    @tx0_sample_rate.setter
+    def tx0_sample_rate(self, value):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
+        return self._set_iio_attr("voltage0", "sampling_frequency", True, value)
+    
     @property
     def rx1_rf_bandwidth(self):
         """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX2 path"""
         return self._get_iio_attr("voltage1", "rf_bandwidth", False)
 
+    @rx1_rf_bandwidth.setter
+    def rx1_rf_bandwidth(self, value):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
+        return self._set_iio_attr("voltage1", "rf_bandwidth", False, value)
+    
     @property
     def tx1_rf_bandwidth(self):
         """tx_rf_bandwidth: Bandwidth of front-end analog filter of TX2 path"""
         return self._get_iio_attr("voltage1", "rf_bandwidth", True)
 
+    @tx1_rf_bandwidth.setter
+    def tx1_rf_bandwidth(self, value):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
+        return self._set_iio_attr("voltage1", "rf_bandwidth", True, value)
+    
     @property
     def rx1_sample_rate(self):
         """rx_sample_rate: Sample rate RX2 path in samples per second"""
         return self._get_iio_attr("voltage1", "sampling_frequency", False)
 
+    @rx1_sample_rate.setter
+    def rx1_sample_rate(self, value):
+        """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX1 path"""
+        return self._set_iio_attr("voltage1", "sampling_frequency", False, value)
+    
     @property
     def tx1_sample_rate(self):
         """tx_sample_rate: Sample rate TX2 path in samples per second"""
         return self._get_iio_attr("voltage1", "sampling_frequency", True)
 
+    @tx1_sample_rate.setter
+    def tx1_sample_rate(self, value):
+        """tx_sample_rate: Sample rate TX2 path in samples per second"""
+        return self._set_iio_attr("voltage1", "sampling_frequency", True, value)
+    
     @property
     def rx0_lo(self):
         """rx0_lo: Carrier frequency of RX1 path"""
