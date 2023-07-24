@@ -632,6 +632,128 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
+def sfdr_low(classname, uri, channel, param_set, low, high, sfdr1_min, sfdr2_min, frequency, scale, rxtx2=False, plot=False, use_obs=False):
+    """t_sfdrl: Test SFDR loopback of tone with connected loopback cables.
+    This test requires a devices with TX and RX onboard where the transmit
+    signal can be recovered. Sinuoidal data is passed to DMAs which is then
+    estimated on the RX side. The peak and second peak are determined in
+    the received signal to determine the sfdr.
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=list
+            List of integers or list of list of integers of channels to
+            enable through tx_enabled_channels
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            generated and received
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    for p in param_set.keys():
+        print("at param", p)
+        setattr(sdr, p, param_set[p])
+    time.sleep(1)
+    
+    sdr.dds_single_tone(frequency, scale, channel)
+    time.sleep(1)
+
+    N = 2 ** 12
+    if(rxtx2):
+        sdr._tx2.tx_cyclic_buffer = True
+        sdr._tx2.tx_enabled_channels = [0]
+        sdr._tx2.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
+    else:
+        sdr.tx_cyclic_buffer = True
+        sdr.tx_enabled_channels = [0]
+        sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)    
+
+    if use_obs:
+        sdr.obs.rx_enabled_channels = [channel]
+        sdr.obs.rx_buffer_size = N * 2 * len(sdr.obs.rx_enabled_channels)
+    elif rxtx2:
+        sdr._rx2.rx_enabled_channels = [0]
+        sdr._rx2.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = [0]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
+    ref = 2 ** 14
+
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate)
+    else:
+        RXFS = int(sdr.rx0_sample_rate)
+
+    # fc = RXFS * 0.1
+    # fc = int(fc / (RXFS / N)) * (RXFS / N)
+
+    # full_scale = 0.9
+    # ts = 1 / float(RXFS)
+    # t = np.arange(0, N * ts, ts)
+    # i = np.cos(2 * np.pi * t * fc) * ref * full_scale
+    # q = np.sin(2 * np.pi * t * fc) * ref * full_scale
+    # iq = i + 1j * q
+
+    try:
+        amp = 0
+        freq = 0
+        for i in range(8):
+            if rxtx2:
+                data = sdr.rx2()
+            else:
+                data = sdr.obs.rx() if use_obs else sdr.rx() 
+            time.sleep(1)
+            amps, freq = spec.spec_est(
+                data, fs=RXFS, ref=ref, num_ffts=1, enable_windowing=True, plot=False
+            )
+            amp += amps
+        amp /= 8
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+
+    sfdr, peaks, indxs, sfdr2 = spec.sfdr_signal(data, amp, freq, plot=False)
+
+    ml = indxs[0]
+    n = len(low)
+    # assert freq[int(np.floor(N/2))]/2 - 750000 < freq[ml] < freq[int(np.floor(N/2))]/2 + 750000
+    if plot:
+        import matplotlib.pyplot as plt
+
+        plt.subplot(2, 1, 1)
+        plt.plot(data, ".-")
+        plt.plot(1, 1, "r.")
+        plt.margins(0.1, 0.1)
+        plt.xlabel("Time [s]")
+
+        plt.subplot(2, 1, 2)
+        plt.plot(fftshift(freq), fftshift(amp))
+        plt.plot(freq[ml], amp[ml], "y.")
+        plt.plot(freq[indxs[1:n]], amp[indxs[1:n]], "y.")
+
+        plt.margins(0.1, 0.1)
+        plt.annotate("Fundamental", (freq[ml], amp[ml]))
+        plt.xlabel("Frequency [Hz]")
+        plt.tight_layout()
+        if use_obs:
+            plt.savefig("./results_log/graph_obs" + str(channel) + ".png")
+        else:
+            plt.savefig("./results_log/graph_ch" + str(channel) + str(param_set["tx0_lo"]/1000000000) + "GHz.png")
+        plt.close()
+        # plt.show()
+
+    print("sfdr1 is ", sfdr)
+    print("sfdr2 is ", sfdr2)
+    assert sfdr1_min < sfdr
+    assert sfdr2_min < sfdr2
+    for i in range(n):
+        print("Peak should be between ", low[i], high[i])
+        print("Peak is ", peaks[i], freq[indxs[i]])
+        assert low[i] <= peaks[i] <= high[i]
+
 def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9):
     """t_sfdr: Test SFDR loopback of tone with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
