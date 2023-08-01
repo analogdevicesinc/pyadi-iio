@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   Test:
     runs-on: ubuntu-latest
-    
+
     strategy:
       fail-fast: false
       matrix:
@@ -83,11 +83,9 @@ jobs:
 
       - name: Lint
         run: |
-          git --version
-          ls -lh
+          git config --global --add safe.directory `pwd`
           pre-commit run --all-files 2> /dev/null
           ec=$?
-          cat /github/home/.cache/pre-commit/pre-commit.log
           git diff -U0 > log.txt && cat log.txt
           exit $ec
 
