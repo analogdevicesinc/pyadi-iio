@@ -1,7 +1,7 @@
 import pytest
 
 hardware = ["fmcadc3"]
-classname = ["adi.fmcadc3"]
+classname = "adi.fmcadc3"
 
 
 #########################################
