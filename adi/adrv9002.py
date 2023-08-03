@@ -187,7 +187,7 @@ class adrv9002(rx_tx, context_manager):
     @property
     def gain_control_mode_chan0(self):
         """gain_control_mode_chan0: Mode of receive path AGC. Options are:
-        manual_spi, manual_pin, automatic"""
+        spi, pin, automatic"""
         return self._get_iio_attr_str("voltage0", "gain_control_mode", False)
 
     @gain_control_mode_chan0.setter
@@ -197,7 +197,7 @@ class adrv9002(rx_tx, context_manager):
     @property
     def gain_control_mode_chan1(self):
         """gain_control_mode_chan1: Mode of receive path AGC. Options are:
-        manual_spi, manual_pin, automatic"""
+        spi, pin, automatic"""
         return self._get_iio_attr_str("voltage1", "gain_control_mode", False)
 
     @gain_control_mode_chan1.setter
@@ -687,35 +687,35 @@ class adrv9002(rx_tx, context_manager):
     @property
     def rx0_lo(self):
         """rx0_lo: Carrier frequency of RX1 path"""
-        return self._get_iio_attr("altvoltage0", "RX1_LO_frequency", True)
+        return self._get_iio_attr("altvoltage0", "frequency", True)
 
     @rx0_lo.setter
     def rx0_lo(self, value):
-        self._set_iio_attr("altvoltage0", "RX1_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage0", "frequency", True, value)
 
     @property
     def rx1_lo(self):
         """rx1_lo: Carrier frequency of RX2 path"""
-        return self._get_iio_attr("altvoltage1", "RX2_LO_frequency", True)
+        return self._get_iio_attr("altvoltage1", "frequency", True)
 
     @rx1_lo.setter
     def rx1_lo(self, value):
-        self._set_iio_attr("altvoltage1", "RX2_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage1", "frequency", True, value)
 
     @property
     def tx0_lo(self):
         """tx1_lo: Carrier frequency of TX1 path"""
-        return self._get_iio_attr("altvoltage2", "TX1_LO_frequency", True)
+        return self._get_iio_attr("altvoltage2", "frequency", True)
 
     @tx0_lo.setter
     def tx0_lo(self, value):
-        self._set_iio_attr("altvoltage2", "TX1_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage2", "frequency", True, value)
 
     @property
     def tx1_lo(self):
         """tx1_lo: Carrier frequency of TX2 path"""
-        return self._get_iio_attr("altvoltage3", "TX2_LO_frequency", True)
+        return self._get_iio_attr("altvoltage3", "frequency", True)
 
     @tx1_lo.setter
     def tx1_lo(self, value):
-        self._set_iio_attr("altvoltage3", "TX2_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage3", "frequency", True, value)
