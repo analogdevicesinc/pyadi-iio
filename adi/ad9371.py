@@ -235,29 +235,29 @@ class ad9371(rx_tx, context_manager, sync_start):
     @property
     def rx_lo(self):
         """rx_lo: Carrier frequency of RX path"""
-        return self._get_iio_attr("altvoltage0", "RX_LO_frequency", True)
+        return self._get_iio_attr("altvoltage0", "frequency", True)
 
     @rx_lo.setter
     def rx_lo(self, value):
-        self._set_iio_attr("altvoltage0", "RX_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage0", "frequency", True, value)
 
     @property
     def tx_lo(self):
         """tx_lo: Carrier frequency of TX path"""
-        return self._get_iio_attr("altvoltage1", "TX_LO_frequency", True)
+        return self._get_iio_attr("altvoltage1", "frequency", True)
 
     @tx_lo.setter
     def tx_lo(self, value):
-        self._set_iio_attr("altvoltage1", "TX_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage1", "frequency", True, value)
 
     @property
     def sn_lo(self):
         """sn_lo: Carrier frequency of Sniffer/ORx path"""
-        return self._get_iio_attr("altvoltage2", "RX_SN_LO_frequency", True)
+        return self._get_iio_attr("altvoltage2", "frequency", True)
 
     @sn_lo.setter
     def sn_lo(self, value):
-        self._set_iio_attr("altvoltage2", "RX_SN_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage2", "frequency", True, value)
 
     @property
     def obs_gain_control_mode(self):

@@ -1,7 +1,7 @@
 import pytest
 
 hardware = ["ad9467"]
-classname = ["adi.ad9467"]
+classname = "adi.ad9467"
 
 
 #########################################
