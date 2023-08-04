@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad469x" href="adi.ad469x.html" /><link rel="prev" title="ad4130" href="adi.ad4130.html" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adi.max31855 module" href="adi.max31855.html" /><link rel="prev" title="adi.max11205 module" href="adi.max11205.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
-        <title>ad4630 - Analog Devices Hardware Python Interfaces 0.0.16</title>
+        <title>adi.max14001 module - Analog Devices Hardware Python Interfaces 0.0.16</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -178,7 +178,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4130.html">ad4130</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4630.html">ad4630</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad469x.html">ad469x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5592r.html">ad5592r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
@@ -269,7 +269,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2688.html">ltc2688</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max11205.html">adi.max11205 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.max14001.html">adi.max14001 module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">adi.max14001 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31865.html">adi.max31865 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max9611.html">adi.max9611 module</a></li>
@@ -321,66 +321,22 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ad4630">
-<span id="ad4630"></span><h1>ad4630<a class="headerlink" href="#module-adi.ad4630" title="Permalink to this heading"></a></h1>
+          <section id="module-adi.max14001">
+<span id="adi-max14001-module"></span><h1>adi.max14001 module<a class="headerlink" href="#module-adi.max14001" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4630.</span></span><span class="sig-name descname"><span class="pre">ad4630</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ad4630-24'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
-<p>AD4630 is low power 24-bit precision SAR ADC</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.operating_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">operating_mode</span></span><a class="headerlink" href="#adi.ad4630.ad4630.operating_mode" title="Permalink to this definition"></a></dt>
-<dd><p>Get/Set the operating mode.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.operating_mode_avail">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">operating_mode_avail</span></span><a class="headerlink" href="#adi.ad4630.ad4630.operating_mode_avail" title="Permalink to this definition"></a></dt>
-<dd><p>Get list of all the operating mode available.</p>
-</dd></dl>
+<dt class="sig sig-object py" id="adi.max14001.max14001">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max14001.</span></span><span class="sig-name descname"><span class="pre">max14001</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max14001.max14001" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>MAX14001 ADC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.max14001.max14001.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.max14001.max14001.channel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.output_data_mode">
-<span class="sig-name descname"><span class="pre">output_data_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630.output_data_mode" title="Permalink to this definition"></a></dt>
-<dd><p>Determine the output data mode in which device is configured.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630.rx" title="Permalink to this definition"></a></dt>
-<dd><p>Receive data from hardware buffers for each channel index in
-rx_enabled_channels.</p>
-<dl class="simple">
-<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
-is enabled containing samples from a channel or set of channels.
-Data will be complex when using a complex data device.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_averaging">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_averaging</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_averaging" title="Permalink to this definition"></a></dt>
-<dd><p>Get/Set the sample averaging. Only available in 30bit averaged mode.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_averaging_avail">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_averaging_avail</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_averaging_avail" title="Permalink to this definition"></a></dt>
-<dd><p>Get list of all the sample averaging values available. Only available in 30bit averaged mode.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_rate" title="Permalink to this definition"></a></dt>
-<dd><p>Get/Set the sampling frequency.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_rate_avail">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate_avail</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_rate_avail" title="Permalink to this definition"></a></dt>
-<dd><p>Get list of all the sampling frequency available.</p>
+<dt class="sig sig-object py" id="adi.max14001.max14001.to_volts">
+<span class="sig-name descname"><span class="pre">to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max14001.max14001.to_volts" title="Permalink to this definition"></a></dt>
+<dd><p>Converts raw value to SI.</p>
 </dd></dl>
 
 </dd></dl>
@@ -392,23 +348,23 @@ Data will be complex when using a complex data device.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.ad469x.html">
+          <a class="next-page" href="adi.max31855.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ad469x</div>
+                <div class="title">adi.max31855 module</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ad4130.html">
+          <a class="prev-page" href="adi.max11205.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">ad4130</div>
+                <div class="title">adi.max11205 module</div>
                 
               </div>
             </a>
@@ -442,16 +398,10 @@ Data will be complex when using a complex data device.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">ad4630</a><ul>
-<li><a class="reference internal" href="#adi.ad4630.ad4630"><code class="docutils literal notranslate"><span class="pre">ad4630</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.operating_mode"><code class="docutils literal notranslate"><span class="pre">ad4630.operating_mode</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.operating_mode_avail"><code class="docutils literal notranslate"><span class="pre">ad4630.operating_mode_avail</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.output_data_mode"><code class="docutils literal notranslate"><span class="pre">ad4630.output_data_mode()</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.rx"><code class="docutils literal notranslate"><span class="pre">ad4630.rx()</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.sample_averaging"><code class="docutils literal notranslate"><span class="pre">ad4630.sample_averaging</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.sample_averaging_avail"><code class="docutils literal notranslate"><span class="pre">ad4630.sample_averaging_avail</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.sample_rate"><code class="docutils literal notranslate"><span class="pre">ad4630.sample_rate</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.sample_rate_avail"><code class="docutils literal notranslate"><span class="pre">ad4630.sample_rate_avail</span></code></a></li>
+<li><a class="reference internal" href="#">adi.max14001 module</a><ul>
+<li><a class="reference internal" href="#adi.max14001.max14001"><code class="docutils literal notranslate"><span class="pre">max14001</span></code></a><ul>
+<li><a class="reference internal" href="#adi.max14001.max14001.channel"><code class="docutils literal notranslate"><span class="pre">max14001.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.max14001.max14001.to_volts"><code class="docutils literal notranslate"><span class="pre">max14001.to_volts()</span></code></a></li>
 </ul>
 </li>
 </ul>
