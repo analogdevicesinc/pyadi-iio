@@ -96,4 +96,16 @@ class ad74413r(rx, context_manager):
 		def threshold(self, value):
 			return self._set_iio_attr(self.name, "threshold", self.output, value)
 
+		@property
+		def diag_function(self):
+			return self._get_iio_attr_str(self.name, "diag_function", self.output)
+
+		@property
+		def diag_function_available(self):
+			return self._get_iio_attr_str(self.name, "diag_function_available", self.output)
+
+		@diag_function.setter
+		def diag_function(self, value):
+			return self._set_iio_attr(self.name, "diag_function", self.output, value)
+
 
