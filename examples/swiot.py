@@ -6,7 +6,7 @@ import time
 import pandas as pd
 import numpy as np
 
-dev_uri = "ip:10.48.65.168"
+dev_uri = "ip:169.254.97.40"
 
 """
 	Possible values:
@@ -17,13 +17,13 @@ dev_uri = "ip:10.48.65.168"
 				       current_in_ext_hart, current_in_loop_hart
 
 """
-channel_config = ["voltage_in", "current_in_ext", "current_out", "output"]
+channel_config = ["resistance", "voltage_in", "voltage_in", "voltage_in"]
 
 # Possible values: 0, 1
 channel_enable = [1, 1, 1, 1]
 
 # Possible values: "ad74413r", "max14906"
-channel_device = ["ad74413r", "ad74413r", "ad74413r", "max14906"]
+channel_device = ["ad74413r", "ad74413r", "ad74413r", "ad74413r"]
 
 swiot = adi.swiot(uri=dev_uri)
 swiot.mode = "config"
@@ -52,10 +52,10 @@ swiot = adi.swiot(uri=dev_uri)
 
 # Rev ID should be 0x8
 print("AD74413R rev ID:", ad74413r.reg_read(0x46))
-# max14906.reg_write(0xA, 0x3)
-# max14906.reg_write(0x1, 0xFF)
+max14906.reg_write(0xA, 0x3)
+max14906.reg_write(0x1, 0xFF)
 
-max14906.channel["voltage3"].raw = 1
+# max14906.channel["voltage3"].raw = 1
 
 # print("0x7:", max14906.reg_read(0x7))
 # max14906.reg_write(0xF, 0xFF)
@@ -83,7 +83,13 @@ print("AD74413R output (DAC) channels:", ad74413r._tx_channel_names)
 # Reading temperature data from the ADT75 (degrees Celsius).
 print("ADT75 temperature reading:", adt75() * 62.5)
 
-# ad74413r.tx_channel["voltage0"].raw = 2048
+print("Resistance: ", ad74413r.channel["resistance0"].processed)
+print("Voltage4 diag function: ", ad74413r.channel["voltage4"].diag_function)
+print("Diag function available: ", ad74413r.channel["voltage4"].diag_function_available)
+ad74413r.channel["voltage4"].diag_function = "temp"
+print("Voltage4 diag function: ", ad74413r.channel["voltage4"].diag_function)
+print("Voltage4 diag function: ", ad74413r.channel["voltage4"].scale)
+# ad74413r.tx_channel["voltage0"].raw = 3048
 # ad74413r.rx_channel["voltage0"].threshold = 2048
 # print("Threshold ", ad74413r.rx_channel["voltage0"].threshold)
 # print("AD74413R current0 scale:", ad74413r.channel["current0"].scale)
@@ -95,14 +101,20 @@ print("ADT75 temperature reading:", adt75() * 62.5)
 ad74413r.rx_output_type = "SI"
 
 # The channels from which to sample the data. Should be one of the ADC channels.
-ad74413r.rx_enabled_channels = ["voltage0"]
+ad74413r.rx_enabled_channels = ["voltage4"]
 # The sample rate should be the same as what is set on the device (4800 is the default).
+
 ad74413r.sample_rate = 4800
 
 # The number of data samples. This may be changed accordingly.
 ad74413r.rx_buffer_size = 4800
-
 data = ad74413r.rx()
+
+# for _ in range(60 * 24):
+# 	data = np.append(data, ad74413r.rx())
+
+print(data)
+
 ad74413r.rx_destroy_buffer()
 plt.clf()
 plt.plot(data)
