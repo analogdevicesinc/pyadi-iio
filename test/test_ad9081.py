@@ -13,10 +13,9 @@ def scale_field(param_set, iio_uri):
 
     dev = adi.ad9081(uri=iio_uri)
     for field in param_set:
-        if param_set[field] is not list:
-            continue
-        existing_val = getattr(dev, field)
-        param_set[field] = param_set[field][0] * len(existing_val)
+        if isinstance(param_set[field], list):
+            existing_val = getattr(dev, field)
+            param_set[field] = [param_set[field][0]] * len(existing_val)
     return param_set
 
 
