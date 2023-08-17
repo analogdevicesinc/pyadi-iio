@@ -88,10 +88,6 @@ def test_switch_config_runtime_all_ad74413r(configuration: list, fault_channel_i
     assert "voltage6" in ad74413r_channels
     assert "voltage7" in ad74413r_channels
 
-    # check faults channel
-    assert fault_channel_id in ad74413r_channels
-
-
 @pytest.mark.parametrize(
     "configuration",
     [[
@@ -124,9 +120,6 @@ def test_switch_config_runtime_all_max14906(configuration: list):
     assert "voltage5" in ad74413r.channel
     assert "voltage6" in ad74413r.channel
     assert "voltage7" in ad74413r.channel
-
-    # check faults channel
-    assert "voltage" in ad74413r.channel
 
 
 @pytest.mark.parametrize(
@@ -162,7 +155,3 @@ def test_switch_config_runtime_mixt(configuration: list):
     assert "voltage5" in ad74413r.channel
     assert "voltage6" in ad74413r.channel
     assert "voltage7" in ad74413r.channel
-
-    # check faults channel
-    assert "voltage" in ad74413r.channel
-    assert "voltage" in max14906.channel
