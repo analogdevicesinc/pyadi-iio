@@ -42,7 +42,7 @@ def random_values_in_range(start, stop, step, to_generate=1):
         ind = randint(0, numints)
         val = start + step * ind
         if isinstance(val, float):
-            val = floor(val / step) * step
+            val = round(floor(val / step) * step, 2)
         values.append(val)
     return values
 
