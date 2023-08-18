@@ -27,6 +27,8 @@ def test_ad74413r_voltage_out_short_circuits(configuration: list):
     ad74413r.channel["voltage2"].raw = 4096
     ad74413r.channel["voltage3"].raw = 4096
 
+    sleep(0.1)
+
     faults = ad74413r.reg_read(0x2E)
     faults = faults & 0xF
 
@@ -71,6 +73,8 @@ def test_ad74413r_voltage_out_open_circuits(configuration: list):
     ad74413r.channel["current1"].raw = 4096
     ad74413r.channel["current2"].raw = 4096
     ad74413r.channel["current3"].raw = 4096
+
+    sleep(0.1)
 
     faults = ad74413r.reg_read(0x2E)
     faults = faults & 0xF
@@ -121,6 +125,8 @@ def test_max14906_short_vdd_err(configuration: list):
 
     faults = max14906.reg_read(0x06)
     faults = faults & 0x0F
+
+    max14906.reg_write(0x09, 0x00)
 
     assert faults == 0x0
 
