@@ -45,7 +45,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [0, 0], [0, 20], "voltage"
+            ], [0, 0], [0, 30], "voltage"
         ],
 
         [
@@ -54,7 +54,7 @@ from time import sleep
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [1, 0], [0, 20], "voltage"
+            ], [1, 0], [0, 30], "voltage"
         ],
 
         [
@@ -63,7 +63,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"]
-            ], [2, 0], [0, 20], "voltage"
+            ], [2, 0], [0, 30], "voltage"
         ],
 
         [
@@ -72,7 +72,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"]
-            ], [3, 0], [0, 20], "voltage"
+            ], [3, 0], [0, 30], "voltage"
         ],
 
 
@@ -82,7 +82,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [0, 1342], [1342, 20], "voltage"
+            ], [0, 1342], [1342, 30], "voltage"
         ],
 
         [
@@ -91,7 +91,7 @@ from time import sleep
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [1, 1342], [1342, 20], "voltage"
+            ], [1, 1342], [1342, 30], "voltage"
         ],
 
         [
@@ -100,7 +100,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"]
-            ], [2, 1342], [1342, 20], "voltage"
+            ], [2, 1342], [1342, 30], "voltage"
         ],
 
         [
@@ -109,7 +109,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"]
-            ], [3, 1342], [1342, 20], "voltage"
+            ], [3, 1342], [1342, 30], "voltage"
         ],
 
 
@@ -119,7 +119,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [0, 5371], [5371, 20], "voltage"
+            ], [0, 5371], [5371, 30], "voltage"
         ],
 
         [
@@ -128,7 +128,7 @@ from time import sleep
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [1, 5371], [5371, 20], "voltage"
+            ], [1, 5371], [5371, 30], "voltage"
         ],
 
         [
@@ -137,7 +137,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"]
-            ], [2, 5371], [5371, 20], "voltage"
+            ], [2, 5371], [5371, 30], "voltage"
         ],
 
         [
@@ -146,7 +146,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"]
-            ], [3, 5371], [5371, 20], "voltage"
+            ], [3, 5371], [5371, 30], "voltage"
         ],
 
 
@@ -156,7 +156,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [0, 10000], [10000, 20], "voltage"
+            ], [0, 10000], [10000, 30], "voltage"
         ],
 
         [
@@ -165,7 +165,7 @@ from time import sleep
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [1, 10000], [10000, 20], "voltage"
+            ], [1, 10000], [10000, 30], "voltage"
         ],
 
         [
@@ -174,7 +174,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"]
-            ], [2, 10000], [10000, 20], "voltage"
+            ], [2, 10000], [10000, 30], "voltage"
         ],
 
         [
@@ -183,7 +183,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"]
-            ], [3, 10000], [10000, 20], "voltage"
+            ], [3, 10000], [10000, 30], "voltage"
         ],
 
 
@@ -193,7 +193,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [0, 10998], [10000, 20], "voltage"
+            ], [0, 10998], [10000, 30], "voltage"
         ],
 
         [
@@ -202,7 +202,7 @@ from time import sleep
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"]
-            ], [1, 10998], [10000, 20], "voltage"
+            ], [1, 10998], [10000, 30], "voltage"
         ],
 
         [
@@ -211,7 +211,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"],
                 ["ad74413r", "voltage_in"]
-            ], [2, 10998], [10000, 20], "voltage"
+            ], [2, 10998], [10000, 30], "voltage"
         ],
 
         [
@@ -220,7 +220,7 @@ from time import sleep
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_in"],
                 ["ad74413r", "voltage_out"]
-            ], [3, 10998], [10000, 20], "voltage"
+            ], [3, 10998], [10000, 30], "voltage"
         ],
 
 
