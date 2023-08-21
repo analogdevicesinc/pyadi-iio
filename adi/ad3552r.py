@@ -40,7 +40,7 @@ from adi.rx_tx import tx
 
 
 class ad3552r(tx, context_manager, attribute):
-    """AD3552R DAC"""
+    """AD3552R Converter Frontend DAC"""
 
     _device_name = ""
     channel = []  # type: ignore
@@ -49,7 +49,12 @@ class ad3552r(tx, context_manager, attribute):
     def __init__(self, uri="", device_name=""):
 
         context_manager.__init__(self, uri, self._device_name)
-        compatible_parts = ["axi-ad3552r-0", "axi-ad3552r-1", "axi-ad3552r"]
+        compatible_parts = [
+            "axi-ad3552r-0",
+            "axi-ad3552r-1",
+            "axi-ad3552r",
+            "cf-ad3552r-dds-core-lpc",
+        ]
 
         self._ctrl = None
 
