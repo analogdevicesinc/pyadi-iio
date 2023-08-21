@@ -55,6 +55,8 @@ class ad3552r(tx, context_manager, attribute):
             "axi-ad3552r-1",
             "axi-ad3552r",
             "cf-ad3552r-dds-core-lpc",
+            "cf-ad3552r-dds-core-lpc0",
+            "cf-ad3552r-dds-core-lpc1",
         ]
 
         self._ctrl = None
