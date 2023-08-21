@@ -45,6 +45,7 @@ class ad3552r(tx, context_manager, attribute):
     _device_name = ""
     channel = []  # type: ignore
     _complex_data = False
+    _tx_channel_names = ["voltage0", "voltage1"]
 
     def __init__(self, uri="", device_name=""):
 
@@ -93,15 +94,6 @@ class ad3552r(tx, context_manager, attribute):
     @sample_rate.setter
     def sample_rate(self, value):
         self._set_iio_dev_attr("sampling_frequency", value, self._txdac)
-
-    @property
-    def input_source(self):
-        """Input source of the DAC"""
-        return self._get_iio_dev_attr_str("input_source", self._txdac)
-
-    @input_source.setter
-    def input_source(self, value):
-        self._set_iio_dev_attr_str("input_source", value, self._txdac)
 
     @property
     def stream_status(self):
@@ -163,3 +155,12 @@ class ad3552r(tx, context_manager, attribute):
         @offset.setter
         def offset(self, value):
             self._set_iio_attr(self.name, "offset", True, value)
+
+        @property
+        def input_source(self):
+            """Input source of the DAC channel"""
+            return self._get_iio_attr_str("input_source", self._txdac)
+
+        @input_source.setter
+        def input_source(self, value):
+            self._set_iio_attr_str("input_source", value, self._txdac)
