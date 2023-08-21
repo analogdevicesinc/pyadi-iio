@@ -51,9 +51,9 @@ print("Sample data max:", samples.max())
 ad3552r.output_range = "-10/+10V"
 print("output_range:dac:", ad3552r.output_range)
 
-# available options:"adc_input", "dma_input", "ramp_input"
+# available options:"adc_input", "dma_input", "ramp_input", "dds_input"
 
-ad3552r.input_source = "dma_input"
+ad3552r.input_source = "dds_input"
 
 print("input_source:dac:", ad3552r.input_source)
 ad3552r.tx([samples, samples])
