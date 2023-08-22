@@ -69,7 +69,7 @@ Here is a full example of a virtual environment setup and install of pyadi-iio:
   dave@hal:~$ source /home/dave/venv/pyadi-iio/bin/activate
   (pyadi-iio) dave@hal:~$ pip install pyadi-iio
   Collecting pyadi-iio
-    Downloading htt
+    Downloading ...
 
 
 Conda Install
