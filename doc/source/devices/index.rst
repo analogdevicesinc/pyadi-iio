@@ -31,8 +31,6 @@ Supported Devices
    adi.ad9081
    adi.ad9081_mc
    adi.ad9083
-   adi.ad9084
-   adi.ad9084_mc
    adi.ad9094
    adi.ad9136
    adi.ad9144
@@ -48,7 +46,6 @@ Supported Devices
    adi.ad9467
    adi.ad9625
    adi.ad9680
-   adi.ad4858
    adi.ad9739a
    adi.ada4961
    adi.adaq8092
@@ -67,7 +64,10 @@ Supported Devices
    adi.adpd1080
    adi.adpd188
    adi.adpd410x
+   adi.adrf5020
    adi.adrf5720
+   adi.adrf5730
+   adi.adrf5740
    adi.adrv9002
    adi.adrv9009
    adi.adrv9009_zu11eg
@@ -82,9 +82,7 @@ Supported Devices
    adi.cn0532
    adi.cn0540
    adi.cn0554
-   adi.cn0566
    adi.cn0575
-   adi.cn0579
    adi.daq2
    adi.daq3
    adi.fmc_vna
@@ -106,6 +104,8 @@ Supported Devices
    adi.max31855
    adi.max31865
    adi.max9611
+   adi.xmw_rx_platform
+   adi.xmw_tx_platform
 
    adi.one_bit_adc_dac
    adi.tdd
