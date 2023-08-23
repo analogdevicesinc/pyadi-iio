@@ -19,7 +19,7 @@ lock(label: 'adgt_test_harness_boards') {
       harness.set_env('netbox_token', TOKEN)
     }
     harness.set_env('netbox_devices_tag','active')
-    
+
     //update first the agent with the required deps
     harness.set_required_agent(["sdg-nuc-01","sdg-nuc-02"])
     harness.update_agents()
