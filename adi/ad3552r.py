@@ -46,31 +46,30 @@ class ad3552r(tx, context_manager, attribute):
     channel = []  # type: ignore
     _complex_data = False
     _tx_channel_names = ["voltage0", "voltage1"]
+    compatible_parts = [
+        "ad3541r",
+        "ad3542r-12",
+        "ad3542r-16",
+        "ad3551r",
+        "ad3552r",
+    ]
 
     def __init__(self, uri="", device_name=""):
 
         context_manager.__init__(self, uri, self._device_name)
-        compatible_parts = [
-            "axi-ad3552r-0",
-            "axi-ad3552r-1",
-            "axi-ad3552r",
-            "cf-ad3552r-dds-core-lpc",
-            "cf-ad3552r-dds-core-lpc0",
-            "cf-ad3552r-dds-core-lpc1",
-        ]
 
         self._ctrl = None
 
         if not device_name:
             # Select any device matching compatible_parts list as working device
             for device in self._ctx.devices:
-                if device.name in compatible_parts:
+                if device.name in self.compatible_parts:
                     print("Found device {}".format(device.name))
                     self._ctrl = device
                     self._txdac = device
                     break
         else:
-            if device_name not in compatible_parts:
+            if device_name not in self.compatible_parts:
                 raise Exception("Not a compatible device: " + device_name)
 
             # Select the device matching device_name as working device
@@ -97,6 +96,61 @@ class ad3552r(tx, context_manager, attribute):
     def sample_rate(self, value):
         self._set_iio_dev_attr("sampling_frequency", value, self._txdac)
 
+    class _channel(attribute):
+        """AD3552R channel"""
+
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property
+        def raw(self):
+            """AD3552R channel raw value"""
+            return self._get_iio_attr(self.name, "raw", True)
+
+        @raw.setter
+        def raw(self, value):
+            self._set_iio_attr(self.name, "raw", True, value)
+
+        @property
+        def en(self):
+            """AD3552R channel en value"""
+            return self._get_iio_attr(self.name, "en", True)
+
+        @en.setter
+        def en(self, value):
+            self._set_iio_attr(self.name, "en", True, value)
+
+        @property
+        def scale(self):
+            """AD3552R channel scale value"""
+            return self._get_iio_attr(self.name, "scale", True)
+
+        @scale.setter
+        def scale(self, value):
+            self._set_iio_attr(self.name, "scale", True, value)
+
+        @property
+        def offset(self):
+            """AD3552R channel offset value"""
+            return self._get_iio_attr(self.name, "offset", True)
+
+        @offset.setter
+        def offset(self, value):
+            self._set_iio_attr(self.name, "offset", True, value)
+
+
+class axi_ad3552r(ad3552r, context_manager, attribute):
+
+    compatible_parts = [
+        "axi-ad3552r-0",
+        "axi-ad3552r-1",
+        "axi-ad3552r",
+        "cf-ad3552r-dds-core-lpc",
+        "cf-ad3552r-dds-core-lpc0",
+        "cf-ad3552r-dds-core-lpc1",
+    ]
+
     @property
     def stream_status(self):
         """Stream status of the DAC"""
@@ -116,7 +170,7 @@ class ad3552r(tx, context_manager, attribute):
         self._set_iio_dev_attr_str("output_range", value, self._txdac)
 
     class _channel(attribute):
-        """AD3552R channel"""
+        """AXI_AD3552R channel"""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
