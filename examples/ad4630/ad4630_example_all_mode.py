@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sin_params as sp
 
-device_name = "ad4030-24"
+device_name = "ad4630-24"
 fs = 2000000  # Sampling Frequency
 N = 65536  # Length of rx buffer
 
@@ -18,13 +18,10 @@ N = 65536  # Length of rx buffer
 def main():
     """ Instantiate the device and set th parameters."""
     adc = adi.ad4630(
-        uri="ip:169.254.92.202", device_name=device_name
-    )  # To connect via ip address 169.254.92.202
+        uri="ip:192.168.10.171", device_name=device_name
+    )  # To connect via ip address
     adc.rx_buffer_size = N
     adc.sample_rate = fs
-
-    """To switch the device b/w low_power_mode and normal_operating_mode."""
-    adc.operating_mode = "normal_operating_mode"
 
     """sample_averaging is only supported by 30bit mode. and in this mode it cannot be OFF."""
     if adc.output_data_mode == "30bit_avg":
@@ -34,11 +31,11 @@ def main():
     print(adc.output_data_mode)
 
     """ Differential Channel attributes"""
-    adc.chan0.hw_gain = 2
-    adc.chan0.offset = 2
+    adc.chan0.calibscale = 1
+    adc.chan0.calibbias = 2
     if device_name == "ad4630-24":
-        adc.chan1.hw_gain = 2
-        adc.chan1.offset = 2
+        adc.chan1.calibscale = 1
+        adc.chan1.calibbias = 2
 
     data = adc.rx()  # Receive the data
     adc.rx_destroy_buffer()  # Destroy the remaining data in buffer
@@ -110,11 +107,11 @@ def analysis(bits, op_data):
     print("Binwidth = ", bin_width)
     print("SNR (dB) = ", snr)
     print("SNR of Adjacent chan (dB) =", snr_adj)
-    print("thd = " + str(thd) + " calculated thd = " + thd_calc)
-    print("sfdr = " + str(sfdr) + " adjacent chan sfdr = " + sfdr_adj)
-    print("ENOB = " + str(enob) + " calculated ENOB = " + enob_calc)
-    print("sinad = " + str(sinad) + " calculated sinad = " + sinad_calc)
-    print("Max code = " + str(max_code) + "Min code = " + str(min_code))
+    print("thd = " + str(thd) + " calculated thd = " + str(thd_calc))
+    print("sfdr = " + str(sfdr) + " adjacent chan sfdr = " + str(sfdr_adj))
+    print("ENOB = " + str(enob) + " calculated ENOB = " + str(enob_calc))
+    print("sinad = " + str(sinad) + " calculated sinad = " + str(sinad_calc))
+    print("Max code = " + str(max_code) + " Min code = " + str(min_code))
     print("Lent of each captured array =", len(op_data))
 
 
