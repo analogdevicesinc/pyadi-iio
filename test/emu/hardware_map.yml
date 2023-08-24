@@ -397,3 +397,12 @@ ad4858:
       - data_devices:
           - iio:device0
           - iio:device2
+
+adis16475:
+  - adis16475
+  - emulate:
+      - filename: adis16475.xml
+      - data_devices:
+        - iio:device0
+  - pyadi_iio_class_support:
+      - adis16475
