@@ -277,6 +277,14 @@ adrv9371:
       - data_devices:
           - iio:device4
           - iio:device6
+adrv9375:
+  - ad9371-phy
+  - emulate:
+      - filename: ad9375.xml
+      - data_devices:
+          - iio:device4
+          - iio:device5
+          - iio:device6
 adxl355:
   - adxl355
   - emulate:

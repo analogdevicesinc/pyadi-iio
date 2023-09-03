@@ -1,7 +1,7 @@
-ad9371
+ad937x
 =================
 
-.. automodule:: adi.ad9371
+.. automodule:: adi.ad937x
    :members:
    :undoc-members:
    :show-inheritance:

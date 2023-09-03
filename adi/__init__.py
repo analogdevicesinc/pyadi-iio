@@ -9,6 +9,7 @@ from adi.ad717x import ad717x
 from adi.ad719x import ad719x
 from adi.ad777x import ad777x
 from adi.ad936x import Pluto, ad9361, ad9363, ad9364
+from adi.ad937x import ad9371, ad9375
 from adi.ad4020 import ad4020
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
@@ -40,7 +41,6 @@ from adi.ad9166 import ad9166
 from adi.ad9172 import ad9172
 from adi.ad9250 import ad9250
 from adi.ad9265 import ad9265
-from adi.ad9371 import ad9371
 from adi.ad9434 import ad9434
 from adi.ad9467 import ad9467
 from adi.ad9625 import ad9625
