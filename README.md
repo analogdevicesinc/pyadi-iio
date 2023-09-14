@@ -58,37 +58,38 @@ data = sdr.rx()
 
 ### Installing from source
 ```
-tcollins@jeeves:~$ git clone https://github.com/analogdevicesinc/pyadi-iio.git
-tcollins@jeeves:~$ cd pyadi-iio
-tcollins@jeeves:~$ (sudo) pip install .
+git clone https://github.com/analogdevicesinc/pyadi-iio.git
+cd pyadi-iio
+(sudo) python3 -m pip install pip -U
+(sudo) pip install .
 ```
 ### Installing from pip
 ```
-tcollins@jeeves:~$ (sudo) pip install pyadi-iio
+(sudo) pip install pyadi-iio
 ```
 
 To get optional dependency for JESD debugging
 ```
-tcollins@jeeves:~$ (sudo) pip install pyadi-iio[jesd]
+(sudo) pip install pyadi-iio[jesd]
 ```
 
 ### Building doc
 Install necessary tools
 ```
-tcollins@jeeves:~$ (sudo) pip install -r requirements_doc.txt
+(sudo) pip install -r requirements_doc.txt
 ```
 Build actual doc with sphinx
 ```
-tcollins@jeeves:~$ cd doc
-tcollins@jeeves:~$ make html
+cd doc
+make html
 ```
 ### Developing
 Install necessary tools
 ```
-tcollins@jeeves:~$ (sudo) pip install -r requirements_dev.txt
+(sudo) pip install -r requirements_dev.txt
 ```
 
 Running pre-commit checks
 ```
-tcollins@jeeves:~$ pre-commit run --all-files
+pre-commit run --all-files
 ```
