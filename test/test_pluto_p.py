@@ -221,3 +221,67 @@ def test_pluto_verify_underflow(
     test_verify_underflow, iio_uri, classname, channel, buffer_size, sample_rate
 ):
     test_verify_underflow(iio_uri, classname, channel, buffer_size, sample_rate)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.parametrize("loopback", [0, 1])
+@pytest.mark.parametrize("toggle_sr", [0, 1])
+def test_repeat_sample_rate_updates(iio_uri, loopback, toggle_sr):
+    # This test should be run with Pluto with cabled loopback
+    import adi
+    import time
+    import numpy as np
+
+    sdr = adi.Pluto(uri=iio_uri)
+    sdr.loopback = loopback
+    sdr.rx_rf_bandwidth = 4000000
+    sdr.rx_lo = 2000000000
+    sdr.tx_lo = 2000000000
+    sdr.tx_cyclic_buffer = True
+    sdr.tx_hardwaregain_chan0 = -53
+    sdr.gain_control_mode_chan0 = "manual"
+    sdr.rx_hardwaregain_chan0 = 50
+    sdr.sample_rate = 7.5e6
+
+    sdr.rx_enabled_channels = [0]
+    sdr.tx_enabled_channels = [0]
+
+    # Create a sinewave waveform
+    fs = int(sdr.sample_rate)
+    N = 1024
+    fc = int(1000000 / (fs / N)) * (fs / N)
+    ts = 1 / float(fs)
+    t = np.arange(0, N * ts, ts)
+    i = np.cos(2 * np.pi * t * fc) * 2 ** 14
+    q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+    iq = i + 1j * q
+
+    # Send data
+    sdr.tx(iq)
+
+    peaks = []
+
+    # Collect data
+    for r in range(20):
+        if toggle_sr:
+            sdr.sample_rate = 7.5e6  # THIS SEEMS TO TOGGLE THE BEHAVIOR
+        sdr.tx_destroy_buffer()
+        sdr.tx(iq)
+
+        # Wait for transmitter to become ready
+        time.sleep(1)
+
+        # Flush old data from buffers
+        for _ in range(100):
+            x = sdr.rx()
+
+        peak = np.max(np.abs(x))
+        print(f"Run {r} | Peak: {peak}")
+
+        peaks.append(peak)
+
+    del sdr
+
+    # Compare delta in peaks
+    assert np.max(peaks) - np.min(peaks) < 400
