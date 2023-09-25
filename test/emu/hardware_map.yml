@@ -229,6 +229,14 @@ packrf:
   - pyadi_iio_class_support:
       - ad9361
 
+#platforms
+triton:
+  - axi-ad9084-tx-hpc
+  - axi-ad9084-rx-hpc
+  - axi-ad9084-rx1
+  - axi-ad9084-rx2
+  - axi-ad9084-rx3
+
 # Generics
 ad9361:
   - ad9361-phy
