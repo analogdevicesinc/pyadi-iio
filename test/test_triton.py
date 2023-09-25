@@ -1,7 +1,11 @@
+from os import listdir
+from os.path import dirname, join, realpath
+
 import pytest
 
-hardware = ["fmcomms7"]
-classname = "adi.ad9364"
+
+hardware = ["triton"]
+classname = "adi.triton"
 
 
 # def test_something():
