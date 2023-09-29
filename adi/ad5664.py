@@ -1,4 +1,4 @@
-# Copyright (C) 2020 Analog Devices, Inc.
+# Copyright (C) 2023 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -34,59 +34,37 @@
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
-
-class _dyn_property:
-    """ Class descriptor for accessing individual attributes """
-
-    def __init__(self, attr, dev, channel_name, output):
-        self._dev = dev
-        self._attr = attr
-        self._channel_name = channel_name
-        self._output = output
-
-    def __get__(self, instance, owner):
-        return instance._get_iio_attr(
-            self._channel_name, self._attr, self._output, self._dev
-        )
-
-    def __set__(self, instance, value):
-        instance._set_iio_attr_int(
-            self._channel_name, self._attr, self._output, int(value), self._dev
-        )
-
-
-class one_bit_adc_dac(attribute, context_manager):
-    """One bit ADC/DAC (GPIO). This driver will create a handle for the
-        GPIO device as well as properties for each GPIO pin it accesses.
-        Each GPIO pin name will be lowercase and of the format:
-        "gpio_{pin name}"
+class ad5664(attribute, context_manager):
+    """
+    AD5664 Quad 16-Bit nanoDAC
 
     parameters:
+        vref: type=int
+            Voltage reference in for the part
         uri: type=string
-            URI of IIO context with GPIO pins
-        name: type=string
-            String identifying the device by name from the device tree.
-            Dynamic class properties will be created for each channel.
+            URI of IIO context with ADMV8818
+        device_name: type=string
+            Name of device in IIO context  
     """
+    _device_name    = "ad5664"
+    _dac_resolution = 16
+    _ndac_channels  = ["voltage0", "voltage1",
+                       "voltage2", "voltage3"]
 
-    _device_name = ""
+    def __init__(self, vref, uri="", device_name=""):
+        context_manager.__init__(self, uri, self._device_name)
 
-    def __init__(self, uri="", name="one-bit-adc-dac"):
+        self._vref        = vref
+        self._device_name = device_name
 
-        try:
-            context_manager.__init__(self, uri, self._device_name)
-        except Exception:
-            raise Exception(f"No device found for {name}")
-
-        self._ctrl = self._ctx.find_device(name)
+        self._ctrl = self._ctx.find_device(self._device_name)
         if not self._ctrl:
-            raise Exception(f"No device found for {name}")
+            raise Exception(f"AD5664 device with name {device_name} not found")
+        
 
-        for chan in self._ctrl.channels:
-            setattr(
-                type(self),
-                f"gpio_{chan.attrs['label'].value.lower()}",
-                _dyn_property(
-                    "raw", dev=self._ctrl, channel_name=chan.id, output=chan.output
-                ),
-            )
+    def vout(self, channel, value):
+        """Set vout for specific channel with given value in Volts"""
+        raw_val = (value / self._vref) * (2 ** self._dac_resolution)
+
+        self._set_iio_attr(channel, "raw", True, raw_val, self._ctrl)
+
