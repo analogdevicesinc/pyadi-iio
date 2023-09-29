@@ -33,10 +33,6 @@ class adf4382(attribute, context_manager):
         "9.500000",
         "11.100000",
     )
-    _reference_doubler_options = (
-	    "enable",
-	    "disable",
-    )
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, self._device_name)
@@ -123,18 +119,12 @@ class adf4382(attribute, context_manager):
         self._set_iio_dev_attr("reference_divider", value, self._ctrl)
         
     @property
-    def reference_doubler(self):
-        return self._get_iio_dev_attr("reference_doubler", self._ctrl)
+    def reference_doubler_en(self):
+        return self._get_iio_dev_attr("reference_doubler_en", self._ctrl)
 
-    @reference_doubler.setter
-    def reference_doubler(self, value):
-        # Check that the value is valid
-        if value.lower().strip() not in self._reference_doubler_options:
-            raise ValueError(
-                f"reference_doubler of \"{value}\" is invalid. Valid options: {', '.join(self._reference_doubler_options)}"
-            )
-            
-        self._set_iio_dev_attr("reference_doubler", value, self._ctrl)
+    @reference_doubler_en.setter
+    def reference_doubler_en(self, value):
+        self._set_iio_dev_attr("reference_doubler_en", value, self._ctrl)
 
     @property
     def reference_frequency(self):
