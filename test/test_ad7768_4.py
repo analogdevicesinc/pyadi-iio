@@ -37,5 +37,5 @@ def test_ad7768_4_rx_data(test_dma_rx, iio_uri, classname, channel):
         ("sync_start_enable", ["arm"],),
     ],
 )
-def test_ad7768_4_attr(test_attribute_multipe_values, iio_uri, classname, attr, val):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+def test_ad7768_4_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0)

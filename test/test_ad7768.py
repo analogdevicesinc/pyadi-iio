@@ -36,5 +36,5 @@ def test_ad7768_rx_data(test_dma_rx, iio_uri, classname, channel):
         ("power_mode", ["MEDIAN_MODE", "FAST_MODE"],),
     ],
 )
-def test_ad4630_attr(test_attribute_multipe_values, iio_uri, classname, attr, val):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+def test_ad4630_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0)

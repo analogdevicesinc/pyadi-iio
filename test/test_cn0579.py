@@ -38,9 +38,9 @@ def test_cn0579_rx_data(test_dma_rx, iio_uri, classname, channel):
     ],
 )
 def test_cn0579_attr_multiple(
-    test_attribute_multipe_values, iio_uri, classname, attr, val
+    test_attribute_multiple_values, iio_uri, classname, attr, val
 ):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0)
 
 
 #########################################
