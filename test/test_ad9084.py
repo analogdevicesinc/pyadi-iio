@@ -47,8 +47,8 @@ def scale_field(param_set, iio_uri):
         ),
     ],
 )
-def test_ad9084_str_attr(test_attribute_multipe_values, iio_uri, classname, attr, val):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+def test_ad9084_str_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0)
 
 
 #########################################
