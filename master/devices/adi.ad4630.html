@@ -330,18 +330,6 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4630.</span></span><span class="sig-name descname"><span class="pre">ad4630</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ad4630-24'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
 <p>AD4630 is low power 24-bit precision SAR ADC</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.operating_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">operating_mode</span></span><a class="headerlink" href="#adi.ad4630.ad4630.operating_mode" title="Permalink to this definition"></a></dt>
-<dd><p>Get/Set the operating mode.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.operating_mode_avail">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">operating_mode_avail</span></span><a class="headerlink" href="#adi.ad4630.ad4630.operating_mode_avail" title="Permalink to this definition"></a></dt>
-<dd><p>Get list of all the operating mode available.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630.output_data_mode">
 <span class="sig-name descname"><span class="pre">output_data_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630.output_data_mode" title="Permalink to this definition"></a></dt>
@@ -364,7 +352,7 @@ Data will be complex when using a complex data device.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_averaging">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_averaging</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_averaging" title="Permalink to this definition"></a></dt>
-<dd><p>Get/Set the sample averaging. Only available in 30bit averaged mode.</p>
+<dd><p>Get the sample averaging. Only available in 30bit averaged mode.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -376,13 +364,7 @@ Data will be complex when using a complex data device.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_rate">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_rate" title="Permalink to this definition"></a></dt>
-<dd><p>Get/Set the sampling frequency.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_rate_avail">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate_avail</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_rate_avail" title="Permalink to this definition"></a></dt>
-<dd><p>Get list of all the sampling frequency available.</p>
+<dd><p>Get the sampling frequency.</p>
 </dd></dl>
 
 </dd></dl>
@@ -446,14 +428,11 @@ Data will be complex when using a complex data device.</p>
             <ul>
 <li><a class="reference internal" href="#">ad4630</a><ul>
 <li><a class="reference internal" href="#adi.ad4630.ad4630"><code class="docutils literal notranslate"><span class="pre">ad4630</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.operating_mode"><code class="docutils literal notranslate"><span class="pre">ad4630.operating_mode</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.operating_mode_avail"><code class="docutils literal notranslate"><span class="pre">ad4630.operating_mode_avail</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad4630.ad4630.output_data_mode"><code class="docutils literal notranslate"><span class="pre">ad4630.output_data_mode()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad4630.ad4630.rx"><code class="docutils literal notranslate"><span class="pre">ad4630.rx()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad4630.ad4630.sample_averaging"><code class="docutils literal notranslate"><span class="pre">ad4630.sample_averaging</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad4630.ad4630.sample_averaging_avail"><code class="docutils literal notranslate"><span class="pre">ad4630.sample_averaging_avail</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad4630.ad4630.sample_rate"><code class="docutils literal notranslate"><span class="pre">ad4630.sample_rate</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4630.ad4630.sample_rate_avail"><code class="docutils literal notranslate"><span class="pre">ad4630.sample_rate_avail</span></code></a></li>
 </ul>
 </li>
 </ul>
