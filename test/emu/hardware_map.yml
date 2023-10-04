@@ -93,6 +93,16 @@ daq3:
       - data_devices:
           - iio:device3
           - iio:device4
+
+ad2s1210:
+  - ad2s1210
+  - pyadi_iio_class_support:
+      - ad2s1210
+  - emulate:
+      - filename: ad2s1210.xml
+      - data_devices:
+          - iio:device1
+
 ad9081:
   - axi-ad9081-tx-hpc
   - axi-ad9081-rx-hpc
