@@ -91,7 +91,7 @@ class rx(rx_tx_common):
         self.__rx_buffer_size = value
 
     @property
-    def rx_enabled_channels(self) -> List[int]:
+    def rx_enabled_channels(self) -> Union[List[int], List[str]]:
         """rx_enabled_channels: List of enabled channels (channel 1 is 0)
 
         Either a list of channel numbers or channel names can be used to set
