@@ -170,6 +170,7 @@ def checkparts(c):
         "adrv9009_zu11eg_fmcomms8",
         "adar1000_array",
         "ad9081_mc",
+        "ad9084_mc",
         "ad717x",
         "ad916x",
         "ad719x",
@@ -193,7 +194,7 @@ def checkparts(c):
         count = 0
         for p in parts:
             p = p.replace("_", "-")
-            if not p in rm.lower():
+            if not p.lower() in rm.lower():
                 count += 1
                 print("Missing", p, "from README")
         if count == 0:
@@ -215,6 +216,7 @@ def checkemulation(c):
         "adrv9009_zu11eg_fmcomms8",
         "adar1000_array",
         "ad9081_mc",
+        "ad9084_mc",
         "ad717x",
         "ad916x",
         "ad719x",
@@ -253,6 +255,7 @@ def checkemulation(c):
         "adf5610",
         "adg2128",
         "adis16460",
+        "adis16475",
         "adis16495",
         "adis16507",
         "adl5240",
@@ -267,6 +270,7 @@ def checkemulation(c):
         "adxl345",
         "adxrs290",
         "cn0532",
+        "cn0566",
         "ltc2314_14",
         "ltc2499",
         "ltc2983",

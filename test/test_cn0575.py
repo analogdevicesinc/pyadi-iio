@@ -36,5 +36,5 @@ def test_adt75_attr(
 @pytest.mark.parametrize(
     "attr, val", [("led", [1, 0],),],
 )
-def test_led_attr(test_attribute_multipe_values, iio_uri, classname, attr, val):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0, repeats=10)
+def test_led_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0, repeats=10)

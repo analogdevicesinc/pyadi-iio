@@ -28,7 +28,7 @@ maintainers = [
 ]
 dependencies = [
     'numpy >= 1.20',
-    'pylibiio >= 0.23.1',
+    'pylibiio >= 0.25',
 ]
 
 [tool.setuptools.dynamic]

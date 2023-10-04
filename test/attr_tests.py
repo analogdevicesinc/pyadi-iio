@@ -179,8 +179,8 @@ def attribute_single_value_pow2(uri, classname, attr, max_pow, tol, repeats=1):
         assert dev_interface(uri, classname, val, attr, tol)
 
 
-def attribute_multipe_values(uri, classname, attr, values, tol, repeats=1, sleep=0):
-    """attribute_multipe_values: Write and read back multiple class properties
+def attribute_multiple_values(uri, classname, attr, values, tol, repeats=1, sleep=0):
+    """attribute_multiple_values: Write and read back multiple class properties
     in a loop where all values are pre-defined. This is performed a defined
     number of times.
 
@@ -206,10 +206,10 @@ def attribute_multipe_values(uri, classname, attr, values, tol, repeats=1, sleep
                 assert dev_interface(uri, classname, val, attr, tol, sleep=sleep)
 
 
-def attribute_multipe_values_with_depends(
+def attribute_multiple_values_with_depends(
     uri, classname, attr, depends, values, tol, repeats=1
 ):
-    """attribute_multipe_values_with_depends: Write and read back multiple class
+    """attribute_multiple_values_with_depends: Write and read back multiple class
     properties in a loop where all values are pre-defined, where a set of
     dependent attributes are written first. This is performed a defined
     number of times.

@@ -42,7 +42,7 @@ def random_values_in_range(start, stop, step, to_generate=1):
         ind = randint(0, numints)
         val = start + step * ind
         if isinstance(val, float):
-            val = floor(val / step) * step
+            val = round(floor(val / step) * step, 2)
         values.append(val)
     return values
 
@@ -94,9 +94,9 @@ def test_adrv9002_float_attr(
     ],
 )
 def test_adrv9002_hardware_gain(
-    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
+    test_attribute_multiple_values_with_depends, iio_uri, classname, attr, depends, val
 ):
-    test_attribute_multipe_values_with_depends(
+    test_attribute_multiple_values_with_depends(
         iio_uri, classname, attr, depends, val, 0
     )
 
@@ -138,9 +138,9 @@ def test_adrv9002_hardware_gain(
     ],
 )
 def test_adrv9002_boolean_attr(
-    test_attribute_multipe_values, iio_uri, classname, attr, val
+    test_attribute_multiple_values, iio_uri, classname, attr, val
 ):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0)
 
 
 #########################################
@@ -166,10 +166,10 @@ def test_adrv9002_boolean_attr(
     ],
 )
 def test_adrv9002_str_attr(
-    test_attribute_multipe_values, iio_uri, classname, attr, val
+    test_attribute_multiple_values, iio_uri, classname, attr, val
 ):
     sleep = 3 if "ensm_mode" in attr else 0
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0, sleep=sleep)
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0, sleep=sleep)
 
 
 #########################################
@@ -198,7 +198,7 @@ def test_adrv9002_str_attr(
     ],
 )
 def test_adrv9002_interface_gain_narrowband(
-    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
+    test_attribute_multiple_values_with_depends, iio_uri, classname, attr, depends, val
 ):
     from adi.adrv9002 import adrv9002
 
@@ -214,7 +214,7 @@ def test_adrv9002_interface_gain_narrowband(
                 "Baseband RX2 Sample Rate should be less than 1MHz to run this test."
             )
 
-    test_attribute_multipe_values_with_depends(
+    test_attribute_multiple_values_with_depends(
         iio_uri, classname, attr, depends, val, 0
     )
 

@@ -38,6 +38,40 @@ Note that this is only needed for the ADRV9009-ZU11EG multi-SOM configuration.
 
     export PYTHONPATH=$PYTHONPATH:/usr/lib/python{PYTHON VERSION}/site-packages
 
+Using Virtual Environments
+--------------------------
+
+It is recommended to use virtual environments when installing pyadi-iio. This will prevent any conflicts with other python packages that may be installed on your system. Newer versions of such Linux distributions, like Debian, do not allow the installation of global packages either. Therefore, if a package is not within their package managers you must your virtual environments. To create a virtual environment run:
+
+.. code-block:: bash
+
+  python3 -m venv /path/to/new/virtual/environment
+
+To activate the virtual environment run:
+
+.. code-block:: bash
+
+  source /path/to/new/virtual/environment/bin/activate
+
+To deactivate the virtual environment run:
+
+.. code-block:: bash
+
+  deactivate
+
+Once the virtual environment is activated, you can install pyadi-iio as normal with pip.
+
+Here is a full example of a virtual environment setup and install of pyadi-iio:
+
+.. code-block:: bash
+
+  dave@hal:~$ python3 -m venv /home/dave/venv/pyadi-iio
+  dave@hal:~$ source /home/dave/venv/pyadi-iio/bin/activate
+  (pyadi-iio) dave@hal:~$ pip install pyadi-iio
+  Collecting pyadi-iio
+    Downloading ...
+
+
 Conda Install
 -------------
 

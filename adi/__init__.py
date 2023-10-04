@@ -12,8 +12,10 @@ from adi.ad4020 import ad4020
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
 from adi.ad4630 import ad4630
+from adi.ad4858 import ad4858
 from adi.ad5592r import ad5592r
 from adi.ad5686 import ad5686
+from adi.ad5754r import ad5754r
 from adi.ad5940 import ad5940
 from adi.ad6676 import ad6676
 from adi.ad7124 import ad7124
@@ -26,6 +28,8 @@ from adi.ad7799 import ad7799
 from adi.ad9081 import ad9081
 from adi.ad9081_mc import QuadMxFE, ad9081_mc
 from adi.ad9083 import ad9083
+from adi.ad9084 import ad9084
+from adi.ad9084_mc import Triton, ad9084_mc
 from adi.ad9094 import ad9094
 from adi.ad9136 import ad9136
 from adi.ad9144 import ad9144
@@ -49,6 +53,7 @@ from adi.adf4371 import adf4371
 from adi.adf5610 import adf5610
 from adi.adg2128 import adg2128
 from adi.adis16460 import adis16460
+from adi.adis16475 import adis16475
 from adi.adis16495 import adis16495
 from adi.adis16507 import adis16507
 from adi.adl5240 import adl5240
@@ -71,7 +76,9 @@ from adi.adxrs290 import adxrs290
 from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.cn0554 import cn0554
+from adi.cn0566 import CN0566
 from adi.cn0575 import cn0575
+from adi.cn0579 import cn0579
 from adi.daq2 import DAQ2
 from adi.daq3 import DAQ3
 from adi.fmc_vna import fmcvna
@@ -101,5 +108,5 @@ try:
 except ImportError:
     pass
 
-__version__ = "0.0.16"
+__version__ = "0.0.17"
 name = "Analog Devices Hardware Interfaces"

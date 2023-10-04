@@ -155,13 +155,13 @@ if not disable_prod_tests:
 
 
 @pytest.fixture()
-def test_attribute_multipe_values(request):
-    yield attribute_multipe_values
+def test_attribute_multiple_values(request):
+    yield attribute_multiple_values
 
 
 @pytest.fixture()
-def test_attribute_multipe_values_with_depends(request):
-    yield attribute_multipe_values_with_depends
+def test_attribute_multiple_values_with_depends(request):
+    yield attribute_multiple_values_with_depends
 
 
 @pytest.fixture()
