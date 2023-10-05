@@ -331,50 +331,32 @@ class ad9375(ad9371):
     @property
     def tx_clgc_tracking_en_chan0(self):
         """Enable CLGC tracking for channel 0"""
-        if self._get_iio_attr("voltage0", "clgc_tracking_en", True) == 1:
-            return True
-        elif self._get_iio_attr("voltage0", "clgc_tracking_en", True) == 0:
-            return False
-        return 
+        return self._get_iio_attr("voltage0", "clgc_tracking_en", True)
 
     @tx_clgc_tracking_en_chan0.setter
     def tx_clgc_tracking_en_chan0(self, value):
-        if value == True or value == False:
-            if value == True:
-                value = 1
-            elif value == False:
-                value = 0    
-            self._set_iio_attr("voltage0", "clgc_tracking_en", True, value)
+        self._set_iio_attr("voltage0", "clgc_tracking_en", True, value)
 
     @property
     def tx_clgc_tracking_en_chan1(self):
         """Enable CLGC tracking for channel 1"""
-        if self._get_iio_attr("voltage1", "clgc_tracking_en", True) == 1:
-            return True
-        elif self._get_iio_attr("voltage1", "clgc_tracking_en", True) == 0:
-            return False
-        return 
+        return self._get_iio_attr("voltage1", "clgc_tracking_en", True)
 
     @tx_clgc_tracking_en_chan1.setter
     def tx_clgc_tracking_en_chan1(self, value):
-        if value == True or value == False:
-            if value == True:
-                value = 1
-            elif value == False:
-                value = 0    
-            self._set_iio_attr("voltage1", "clgc_tracking_en", True, value)
+        self._set_iio_attr("voltage1", "clgc_tracking_en", True, value)
 
     @property
     def tx_clgc_current_gain_chan0(self):
         if self.tx_clgc_tracking_en_chan0 == 1:
-            """tx_clgc_current_gain: Current measured gain in 1/100ths dB scale in channel 0. 
+            """tx_clgc_current_gain: Current measured gain in 1/100ths dB scale in channel 0.
             Current GaindB = currentGain/100"""
             return self._get_iio_attr("voltage0", "clgc_current_gain", True)
         return
 
     @property
     def tx_clgc_current_gain_chan1(self):
-        """tx_clgc_current_gain: Current measured gain in 1/100ths dB scale in channel 1. 
+        """tx_clgc_current_gain: Current measured gain in 1/100ths dB scale in channel 1.
         Current GaindB = currentGain/100"""
         if self.tx_clgc_tracking_en_chan1 == 1:
             return self._get_iio_attr("voltage1", "clgc_current_gain", True)
@@ -382,7 +364,7 @@ class ad9375(ad9371):
 
     @property
     def tx_clgc_desired_gain_chan0(self):
-        """tx_clgc_desired_gain: Desired gain from channel 0 output to orx input. 
+        """tx_clgc_desired_gain: Desired gain from channel 0 output to orx input.
         Desired_gain (dB) = Desired_gain/100"""
         if self.tx_clgc_tracking_en_chan0 == 1:
             return self._get_iio_attr("voltage0", "clgc_desired_gain", True) / 100
@@ -395,7 +377,7 @@ class ad9375(ad9371):
 
     @property
     def tx_clgc_desired_gain_chan1(self):
-        """tx_clgc_desired_gain: Desired gain from channel 1 output to orx input. 
+        """tx_clgc_desired_gain: Desired gain from channel 1 output to orx input.
         Desired_gain (dB) = Desired_gain/100"""
         if self.tx_clgc_tracking_en_chan1 == 1:
             return self._get_iio_attr("voltage1", "clgc_desired_gain", True) / 100
@@ -408,7 +390,7 @@ class ad9375(ad9371):
 
     @property
     def tx_clgc_orx_rms_chan0(self):
-        """tx_clgc_orx_rms: RMS orx digital sample power measured in the DPD block on the orx side is returned 
+        """tx_clgc_orx_rms: RMS orx digital sample power measured in the DPD block on the orx side is returned
         with measurement resolution of 0.01 dB for channel 0. Prms dBFs = orxRMS/100"""
         if self.tx_clgc_tracking_en_chan0 == 1:
             return self._get_iio_attr("voltage0", "clgc_orx_rms", True) / 100
@@ -416,7 +398,7 @@ class ad9375(ad9371):
 
     @property
     def tx_clgc_track_count_chan0(self):
-        """tx_clgc_track_count: The control reads back the number of times the CLGC has successfully run since 
+        """tx_clgc_track_count: The control reads back the number of times the CLGC has successfully run since
         CLGC initialization calibration for channel 0"""
         if self.tx_clgc_tracking_en_chan0 == 1:
             return self._get_iio_attr("voltage0", "clgc_track_count", True)
@@ -424,7 +406,7 @@ class ad9375(ad9371):
 
     @property
     def tx_clgc_track_count_chan1(self):
-        """tx_clgc_track_count: The control reads back the number of times the CLGC has successfully run since 
+        """tx_clgc_track_count: The control reads back the number of times the CLGC has successfully run since
         CLGC initialization calibration for channel 1"""
         if self.tx_clgc_tracking_en_chan1 == 1:
             return self._get_iio_attr("voltage1", "clgc_track_count", True)
@@ -432,7 +414,7 @@ class ad9375(ad9371):
 
     @property
     def tx_clgc_tx_gain_chan0(self):
-        """tx_clgc_tx_gain: It controls the current channel 0 attenuation for a channel in 0.05 dB resolution. 
+        """tx_clgc_tx_gain: It controls the current channel 0 attenuation for a channel in 0.05 dB resolution.
         Tx_Attenuation(dB) = Tx_gain/200"""
         if self.tx_clgc_tracking_en_chan0 == 1:
             return self._get_iio_attr("voltage0", "clgc_tx_gain", True) * 0.05
@@ -447,7 +429,7 @@ class ad9375(ad9371):
 
     @property
     def tx_clgc_tx_rms_chan0(self):
-        """tx_clgc_tx_rms: The controls returns the RMS channel 0 digital sample power measured at DPD actuator output 
+        """tx_clgc_tx_rms: The controls returns the RMS channel 0 digital sample power measured at DPD actuator output
         with measurement resolution of 0.01 dB. Prms dBFs = txRMS/100"""
         if self.tx_clgc_tracking_en_chan0 == 1:
             return self._get_iio_attr("voltage0", "clgc_tx_rms", True) / 100
@@ -455,7 +437,7 @@ class ad9375(ad9371):
 
     @property
     def tx_clgc_tx_rms_chan1(self):
-        """tx_clgc_tx_rms: The controls returns the RMS channel 1 digital sample power measured at DPD actuator output 
+        """tx_clgc_tx_rms: The controls returns the RMS channel 1 digital sample power measured at DPD actuator output
         with measurement resolution of 0.01 dB. Prms dBFs = txRMS/100"""
         if self.tx_clgc_tracking_en_chan1 == 1:
             return self._get_iio_attr("voltage1", "clgc_tx_rms", True) / 100
@@ -464,78 +446,42 @@ class ad9375(ad9371):
     @property
     def tx_dpd_actuator_en_chan0(self):
         """Enable DPD actuator for channel 0"""
-        if self._get_iio_attr("voltage0", "dpd_actuator_en", True) == 1:
-            return True
-        elif self._get_iio_attr("voltage0", "dpd_actuator_en", True) == 0:
-            return False
-        return 
+        return self._get_iio_attr("voltage0", "dpd_actuator_en", True)
 
     @tx_dpd_actuator_en_chan0.setter
     def tx_dpd_actuator_en_chan0(self, value):
-        if value == True or value == False:
-            if value == True:
-                value = 1
-            elif value == False:
-                value = 0  
-            self._set_iio_attr("voltage0", "dpd_actuator_en", True, value)
+        self._set_iio_attr("voltage0", "dpd_actuator_en", True, value)
 
     @property
     def tx_dpd_actuator_en_chan1(self):
         """Enable DPD actuator for channel 1"""
-        if self._get_iio_attr("voltage1", "dpd_actuator_en", True) == 1:
-            return True
-        elif self._get_iio_attr("voltage1", "dpd_actuator_en", True) == 0:
-            return False
-        return 
+        return self._get_iio_attr("voltage1", "dpd_actuator_en", True)
 
     @tx_dpd_actuator_en_chan1.setter
     def tx_dpd_actuator_en_chan1(self, value):
-        if value == True or value == False:
-            if value == True:
-                value = 1
-            elif value == False:
-                value = 0  
-            self._set_iio_attr("voltage1", "dpd_actuator_en", True, value)
+        self._set_iio_attr("voltage1", "dpd_actuator_en", True, value)
 
     @property
     def tx_dpd_tracking_en_chan0(self):
         """Enable DPD tracking for channel 0"""
-        if self._get_iio_attr("voltage0", "dpd_tracking_en", True) == 1:
-            return True
-        elif self._get_iio_attr("voltage0", "dpd_tracking_en", True) == 0:
-            return False
-        return 
+        return self._get_iio_attr("voltage0", "dpd_tracking_en", True)
 
     @tx_dpd_tracking_en_chan0.setter
     def tx_dpd_tracking_en_chan0(self, value):
-        if value == True or value == False:
-            if value == True:
-                value = 1
-            elif value == False:
-                value = 0  
-            self._set_iio_attr("voltage0", "dpd_tracking_en", True, value)
+        self._set_iio_attr("voltage0", "dpd_tracking_en", True, value)
 
     @property
     def tx_dpd_tracking_en_chan1(self):
         """Enable DPD tracking for channel 1"""
-        if self._get_iio_attr("voltage1", "dpd_tracking_en", True) == 1:
-            return True
-        elif self._get_iio_attr("voltage1", "dpd_tracking_en", True) == 0:
-            return False
-        return 
+        return self._get_iio_attr("voltage1", "dpd_tracking_en", True)
 
     @tx_dpd_tracking_en_chan1.setter
     def tx_dpd_tracking_en_chan1(self, value):
-        if value == True or value == False:
-            if value == True:
-                value = 1
-            elif value == False:
-                value = 0  
-            self._set_iio_attr("voltage1", "dpd_tracking_en", True, value)
+        self._set_iio_attr("voltage1", "dpd_tracking_en", True, value)
 
     @property
     def tx_dpd_external_path_delay_chan0(self):
-        """tx_dpd_external_path_delay: The control reads back the external path delay 
+        """tx_dpd_external_path_delay: The control reads back the external path delay
         from channel 0 output to orx input at 1/16 sample resolution of the ORx sample rate"""
         if self.tx_dpd_tracking_en_chan0 == 1:
             return self._get_iio_attr("voltage0", "dpd_external_path_delay", True) / 16
@@ -543,7 +489,7 @@ class ad9375(ad9371):
 
     @property
     def tx_dpd_external_path_delay_chan1(self):
-        """tx_dpd_external_path_delay: The control reads back the external path delay 
+        """tx_dpd_external_path_delay: The control reads back the external path delay
         from channel 1 output to orx input at 1/16 sample resolution of the ORx sample rate"""
         if self.tx_dpd_tracking_en_chan1 == 1:
             return self._get_iio_attr("voltage1", "dpd_external_path_delay", True) / 16
@@ -562,17 +508,15 @@ class ad9375(ad9371):
         if self.tx_dpd_tracking_en_chan1 == 1:
             return self._get_iio_attr("voltage1", "dpd_model_error", True) / 10
         return
-    
+
     def tx_dpd_reset_en_chan0(self, value):
         """Enable DPD reset for channel 0"""
-        if value == True:
-            value = 1
-            self._set_iio_attr("voltage0", "dpd_reset_en", True, value) 
+        if value == 1:
+            self._set_iio_attr("voltage0", "dpd_reset_en", True, value)
 
     def tx_dpd_reset_en_chan1(self, value):
         """Enable DPD reset for channel 1"""
-        if value == True:
-            value = 1
+        if value == 1:
             self._set_iio_attr("voltage1", "dpd_reset_en", True, value)
 
     @property
@@ -580,24 +524,24 @@ class ad9375(ad9371):
         """tx_dpd_status: It reads back the DPD calibration status from the ARM processor for channel 0"""
         # DPD status lookup
         dpdstat_lookup = {
-                0 : "No Error",
-                1 : "Error: ORx disabled",
-                2 : "Error: Tx disabled",
-                3 : "Error: DPD initialization not run",
-                4 : "Error: Path delay not setup",
-                5 : "Error: ORx signal too low",
-                6 : "Error: ORx signal saturated",
-                7 : "Error: Tx signal too low",
-                8 : "Error: Tx signal saturated",
-                9 : "Error: Model error high",
-                10 : "Error: AM AM outliers",
-                11 : "Error: Invalid Tx profile",
-                12 : "Error: ORx QEC Disabled"
-                }
+            0: "No Error",
+            1: "Error: ORx disabled",
+            2: "Error: Tx disabled",
+            3: "Error: DPD initialization not run",
+            4: "Error: Path delay not setup",
+            5: "Error: ORx signal too low",
+            6: "Error: ORx signal saturated",
+            7: "Error: Tx signal too low",
+            8: "Error: Tx signal saturated",
+            9: "Error: Model error high",
+            10: "Error: AM AM outliers",
+            11: "Error: Invalid Tx profile",
+            12: "Error: ORx QEC Disabled",
+        }
         if self.tx_dpd_tracking_en_chan0 == 1:
-           dpdstat_val = self._get_iio_attr("voltage0", "dpd_status", True)
-           if(dpdstat_val in dpdstat_lookup.keys()):
-               return dpdstat_lookup[dpdstat_val]
+            dpdstat_val = self._get_iio_attr("voltage0", "dpd_status", True)
+            if dpdstat_val in dpdstat_lookup.keys():
+                return dpdstat_lookup[dpdstat_val]
         return
 
     @property
@@ -605,29 +549,29 @@ class ad9375(ad9371):
         """tx_dpd_status: It reads back the DPD calibration status from the ARM processor for channel 1"""
         # DPD status lookup
         dpdstat_lookup = {
-                0 : "No Error",
-                1 : "Error: ORx disabled",
-                2 : "Error: Tx disabled",
-                3 : "Error: DPD initialization not run",
-                4 : "Error: Path delay not setup",
-                5 : "Error: ORx signal too low",
-                6 : "Error: ORx signal saturated",
-                7 : "Error: Tx signal too low",
-                8 : "Error: Tx signal saturated",
-                9 : "Error: Model error high",
-                10 : "Error: AM AM outliers",
-                11 : "Error: Invalid Tx profile",
-                12 : "Error: ORx QEC Disabled"
-                }
+            0: "No Error",
+            1: "Error: ORx disabled",
+            2: "Error: Tx disabled",
+            3: "Error: DPD initialization not run",
+            4: "Error: Path delay not setup",
+            5: "Error: ORx signal too low",
+            6: "Error: ORx signal saturated",
+            7: "Error: Tx signal too low",
+            8: "Error: Tx signal saturated",
+            9: "Error: Model error high",
+            10: "Error: AM AM outliers",
+            11: "Error: Invalid Tx profile",
+            12: "Error: ORx QEC Disabled",
+        }
         if self.tx_dpd_tracking_en_chan1 == 1:
-             dpdstat_val = self._get_iio_attr("voltage1", "dpd_status", True)
-             if(dpdstat_val in dpdstat_lookup.keys()):
+            dpdstat_val = self._get_iio_attr("voltage1", "dpd_status", True)
+            if dpdstat_val in dpdstat_lookup.keys():
                 return dpdstat_lookup[dpdstat_val]
         return
 
     @property
     def tx_dpd_track_count_chan0(self):
-        """tx_dpd_track_count: It reads back the number of times the DPD has successfully run since 
+        """tx_dpd_track_count: It reads back the number of times the DPD has successfully run since
         DPD initialization calibration for channel 0"""
         if self.tx_dpd_tracking_en_chan0 == 1:
             return self._get_iio_attr("voltage0", "dpd_track_count", True)
@@ -635,7 +579,7 @@ class ad9375(ad9371):
 
     @property
     def tx_dpd_track_count_chan1(self):
-        """tx_dpd_track_count: It reads back the number of times the DPD has successfully run since 
+        """tx_dpd_track_count: It reads back the number of times the DPD has successfully run since
         DPD initialization calibration for channel 1"""
         if self.tx_dpd_tracking_en_chan1 == 1:
             return self._get_iio_attr("voltage1", "dpd_track_count", True)
@@ -644,38 +588,20 @@ class ad9375(ad9371):
     @property
     def tx_vswr_tracking_en_chan0(self):
         """Enable VSWR tracking for channel 0"""
-        if self._get_iio_attr("voltage0", "vswr_tracking_en", True) == 1:
-            return True
-        elif self._get_iio_attr("voltage0", "vswr_tracking_en", True) == 0:
-            return False
-        return 
+        return self._get_iio_attr("voltage0", "vswr_tracking_en", True)
 
     @tx_vswr_tracking_en_chan0.setter
     def tx_vswr_tracking_en_chan0(self, value):
-        if value == True or value == False:
-            if value == True:
-                value = 1
-            elif value == False:
-                value = 0  
-            self._set_iio_attr("voltage0", "vswr_tracking_en", True, value)
+        self._set_iio_attr("voltage0", "vswr_tracking_en", True, value)
 
     @property
     def tx_vswr_tracking_en_chan1(self):
         """Enable VSWR tracking for channel 1"""
-        if self._get_iio_attr("voltage1", "vswr_tracking_en", True) == 1:
-            return True
-        elif self._get_iio_attr("voltage1", "vswr_tracking_en", True) == 0:
-            return False
-        return 
+        return self._get_iio_attr("voltage1", "vswr_tracking_en", True)
 
     @tx_vswr_tracking_en_chan1.setter
     def tx_vswr_tracking_en_chan1(self, value):
-        if value == True or value == False:
-            if value == True:
-                value = 1
-            elif value == False:
-                value = 0  
-            self._set_iio_attr("voltage1", "vswr_tracking_en", True, value)
+        self._set_iio_attr("voltage1", "vswr_tracking_en", True, value)
 
     @property
     def tx_vswr_forward_gain_chan0(self):
@@ -721,7 +647,7 @@ class ad9375(ad9371):
 
     @property
     def tx_vswr_forward_orx_chan0(self):
-        """tx_vswr_forward_orx: RMS Orx digital sample power measured at DPD block for ORx data in the forward measurement mode 
+        """tx_vswr_forward_orx: RMS Orx digital sample power measured at DPD block for ORx data in the forward measurement mode
         with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan0 == 1:
             return (self._get_iio_attr("voltage0", "vswr_forward_orx", True) / 100) + 21
@@ -761,28 +687,36 @@ class ad9375(ad9371):
     def tx_vswr_reflected_gain_imag_chan0(self):
         """tx_vswr_reflected_gain_imag: Imaginary part of the reflected path complex gain for channel 0. 1 = 0.01 linear gain"""
         if self.tx_vswr_tracking_en_chan0 == 1:
-            return self._get_iio_attr("voltage0", "vswr_reflected_gain_imag", True) * 0.01
+            return (
+                self._get_iio_attr("voltage0", "vswr_reflected_gain_imag", True) * 0.01
+            )
         return
 
     @property
     def tx_vswr_reflected_gain_imag_chan1(self):
         """tx_vswr_reflected_gain_imag: Imaginary part of the reflected path complex gain for channel 1. 1 = 0.01 linear gain"""
         if self.tx_vswr_tracking_en_chan1 == 1:
-            return self._get_iio_attr("voltage1", "vswr_reflected_gain_imag", True) * 0.01
+            return (
+                self._get_iio_attr("voltage1", "vswr_reflected_gain_imag", True) * 0.01
+            )
         return
 
     @property
     def tx_vswr_reflected_gain_real_chan0(self):
         """tx_vswr_reflected_gain_real: Real part of the reflected path complex gain for channel 0. 1 = 0.01 linear gain"""
         if self.tx_vswr_tracking_en_chan0 == 1:
-            return self._get_iio_attr("voltage0", "vswr_reflected_gain_real", True) * 0.01
+            return (
+                self._get_iio_attr("voltage0", "vswr_reflected_gain_real", True) * 0.01
+            )
         return
 
     @property
     def tx_vswr_reflected_gain_real_chan1(self):
         """tx_vswr_reflected_gain_real: Real part of the reflected path complex gain for channel 1. 1 = 0.01 linear gain"""
         if self.tx_vswr_tracking_en_chan1 == 1:
-            return self._get_iio_attr("voltage1", "vswr_reflected_gain_real", True) * 0.01
+            return (
+                self._get_iio_attr("voltage1", "vswr_reflected_gain_real", True) * 0.01
+            )
         return
 
     @property
@@ -790,7 +724,9 @@ class ad9375(ad9371):
         """tx_vswr_reflected_orx: RMS ORx digital sample power measured at DPD block for the ORx data in the reverse measurement mode
        with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = orxRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan0 == 1:
-            return (self._get_iio_attr("voltage0", "vswr_reflected_orx", True) / 100) + 21
+            return (
+                self._get_iio_attr("voltage0", "vswr_reflected_orx", True) / 100
+            ) + 21
         return
 
     @property
@@ -798,7 +734,9 @@ class ad9375(ad9371):
         """tx_vswr_reflected_tx: RMS Tx digital sample power measured at DPD actuator for the reverse measurement
        with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan0 == 1:
-            return  (self._get_iio_attr("voltage0", "vswr_reflected_tx", True) / 100) + 21
+            return (
+                self._get_iio_attr("voltage0", "vswr_reflected_tx", True) / 100
+            ) + 21
         return
 
     @property
@@ -806,12 +744,14 @@ class ad9375(ad9371):
         """tx_vswr_reflected_tx: RMS Tx digital sample power measured at DPD actuator for the reverse measurement
        with measurement resolution of 0.01 dB and 21 dB offset for channel 1. Prms dBFS = txRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan1 == 1:
-            return (self._get_iio_attr("voltage1", "vswr_reflected_tx", True) / 100) + 21
+            return (
+                self._get_iio_attr("voltage1", "vswr_reflected_tx", True) / 100
+            ) + 21
         return
 
     @property
     def tx_vswr_track_count_chan0(self):
-        """tx_vswr_track_count: The control reads back the number of times the VSWR has successfully run 
+        """tx_vswr_track_count: The control reads back the number of times the VSWR has successfully run
         since VSWR initialization calibration for channel 0"""
         if self.tx_vswr_tracking_en_chan0 == 1:
             return self._get_iio_attr("voltage0", "vswr_track_count", True)
@@ -819,7 +759,7 @@ class ad9375(ad9371):
 
     @property
     def tx_vswr_track_count_chan1(self):
-        """tx_vswr_track_count: The control reads back the number of times the VSWR has successfully run since 
+        """tx_vswr_track_count: The control reads back the number of times the VSWR has successfully run since
         VSWR initialization calibration for channel 1"""
         if self.tx_vswr_tracking_en_chan1 == 1:
             return self._get_iio_attr("voltage1", "vswr_track_count", True)

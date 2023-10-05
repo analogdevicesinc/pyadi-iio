@@ -347,7 +347,9 @@ def attribute_write_only_str_with_depends(uri, classname, attr, value, depends):
         raise Exception(e)
 
 
-def attribute_check_range_readonly_with_depends(uri, classname, attr, depends, start, stop):
+def attribute_check_range_readonly_with_depends(
+    uri, classname, attr, depends, start, stop
+):
     """attribute_check_range_readonly_with_depends: Read only integer class
     property with dependent write properties
 

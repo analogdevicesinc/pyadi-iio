@@ -69,8 +69,8 @@ for r in range(20):
 
 # ad9375 ONLY
 # Enable CLGC tracking
-sdr.tx_clgc_tracking_en_chan0 = True
-sdr.tx_clgc_tracking_en_chan1 = True
+sdr.tx_clgc_tracking_en_chan0 = 1
+sdr.tx_clgc_tracking_en_chan1 = 1
 
 # Configure and read CLGC desired gain property
 sdr.tx_clgc_desired_gain_chan0 = -3
@@ -85,37 +85,37 @@ print("CLGC tx rms channel 1", sdr.tx_clgc_tx_rms_chan0)
 print("CLGC tx rms channel 2", sdr.tx_clgc_tx_rms_chan1)
 
 # Disable CLGC tracking
-sdr.tx_clgc_tracking_en_chan0 = False
-sdr.tx_clgc_tracking_en_chan1 = False
+sdr.tx_clgc_tracking_en_chan0 = 0
+sdr.tx_clgc_tracking_en_chan1 = 0
 
 # Enable DPD tracking
-sdr.tx_dpd_tracking_en_chan0 = True
-sdr.tx_dpd_tracking_en_chan1 = True
+sdr.tx_dpd_tracking_en_chan0 = 1
+sdr.tx_dpd_tracking_en_chan1 = 1
 
 # Enable DPD actuator
-sdr.tx_dpd_actuator_en_chan0 = True
-sdr.tx_dpd_actuator_en_chan1 = True
+sdr.tx_dpd_actuator_en_chan0 = 1
+sdr.tx_dpd_actuator_en_chan1 = 1
 
 # Read DPD properties
 print("DPD status channel 1:", sdr.tx_dpd_status_chan0)
 print("DPD status channel 2:", sdr.tx_dpd_status_chan1)
 
-# Enable DPD reset 
-sdr.tx_dpd_reset_en_chan0 = True
-sdr.tx_dpd_reset_en_chan1 = True
+# Enable DPD reset
+sdr.tx_dpd_reset_en_chan0 = 1
+sdr.tx_dpd_reset_en_chan1 = 1
 
 # Disable DPD tracking
-sdr.tx_dpd_tracking_en_chan0 = False
-sdr.tx_dpd_tracking_en_chan1 = False
+sdr.tx_dpd_tracking_en_chan0 = 0
+sdr.tx_dpd_tracking_en_chan1 = 0
 
 # Enable VSWR tracking
-sdr.tx_vswr_tracking_en_chan0 = True
-sdr.tx_vswr_tracking_en_chan1 = True
+sdr.tx_vswr_tracking_en_chan0 = 1
+sdr.tx_vswr_tracking_en_chan1 = 1
 
 # Read VSWR properties
 print("VSWR forward gain channel 1:", sdr.tx_vswr_forward_gain_chan0)
 print("VSWR forward gain channel 2:", sdr.tx_vswr_forward_gain_chan1)
 
 # Disable VSWR tracking
-sdr.tx_vswr_tracking_en_chan0 = False
-sdr.tx_vswr_tracking_en_chan1 = False
+sdr.tx_vswr_tracking_en_chan0 = 0
+sdr.tx_vswr_tracking_en_chan1 = 0

@@ -11,27 +11,27 @@ test_profiles = [join(profile_path, f) for f in listdir(profile_path)]
 
 
 clgc_tracking_en_0 = {
-    "tx_clgc_tracking_en_chan0" : True,
+    "tx_clgc_tracking_en_chan0": 1,
 }
 
 dpd_tracking_en_0 = {
-    "tx_dpd_tracking_en_chan0" : True,
+    "tx_dpd_tracking_en_chan0": 1,
 }
 
 vswr_tracking_en_0 = {
-    "tx_vswr_tracking_en_chan0" : True,
+    "tx_vswr_tracking_en_chan0": 1,
 }
 
 clgc_tracking_en_1 = {
-    "tx_clgc_tracking_en_chan1" : True,
+    "tx_clgc_tracking_en_chan1": 1,
 }
 
 dpd_tracking_en_1 = {
-    "tx_dpd_tracking_en_chan1" : True,
+    "tx_dpd_tracking_en_chan1": 1,
 }
 
 vswr_tracking_en_1 = {
-    "tx_vswr_tracking_en_chan1" : True,
+    "tx_vswr_tracking_en_chan1": 1,
 }
 
 
@@ -375,14 +375,23 @@ def test_ad9375_profile_write(
 @pytest.mark.parametrize(
     "attr, depends, values, tol, repeats",
     [
-        ("tx_clgc_desired_gain_chan0", clgc_tracking_en_0, desired_gain_values, 0.5, 1),
-        ("tx_clgc_desired_gain_chan1", clgc_tracking_en_1, desired_gain_values, 0.5, 5),
+        ("tx_clgc_desired_gain_chan0", clgc_tracking_en_0, desired_gain_values, 0.5, 2),
+        ("tx_clgc_desired_gain_chan1", clgc_tracking_en_1, desired_gain_values, 0.5, 2),
     ],
 )
 def test_ad9375_attr_with_depends(
-    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, values, tol, repeats
+    test_attribute_multiple_values_with_depends,
+    iio_uri,
+    classname,
+    attr,
+    depends,
+    values,
+    tol,
+    repeats,
 ):
-    test_attribute_multipe_values_with_depends(iio_uri, classname, attr, depends, values, tol, repeats)
+    test_attribute_multiple_values_with_depends(
+        iio_uri, classname, attr, depends, values, tol, repeats
+    )
 
 
 ########################################
@@ -391,39 +400,39 @@ def test_ad9375_attr_with_depends(
 @pytest.mark.parametrize(
     "attr, depends",
     [
-        ("tx_clgc_current_gain_chan0",  clgc_tracking_en_0),
-        ("tx_clgc_current_gain_chan1",  clgc_tracking_en_1),
-        ("tx_clgc_orx_rms_chan0",  clgc_tracking_en_0),
-        ("tx_clgc_track_count_chan0",  clgc_tracking_en_0),
-        ("tx_clgc_track_count_chan1",  clgc_tracking_en_1),
-        ("tx_clgc_tx_gain_chan0",  clgc_tracking_en_0),
-        ("tx_clgc_tx_gain_chan1",  clgc_tracking_en_1),
-        ("tx_clgc_tx_rms_chan0",  clgc_tracking_en_0),
-        ("tx_clgc_tx_rms_chan1",  clgc_tracking_en_1),
-        ("tx_dpd_track_count_chan0",  dpd_tracking_en_0),
-        ("tx_dpd_track_count_chan1",  dpd_tracking_en_1),
-        ("tx_dpd_status_chan0",  dpd_tracking_en_0),
-        ("tx_dpd_status_chan1",  dpd_tracking_en_1),
-        ("tx_vswr_forward_gain_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_forward_gain_chan1",  vswr_tracking_en_1),
-        ("tx_vswr_forward_gain_imag_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_forward_gain_imag_chan1",  vswr_tracking_en_1),
-        ("tx_vswr_forward_gain_real_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_forward_gain_real_chan1",  vswr_tracking_en_1),
-        ("tx_vswr_forward_orx_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_forward_tx_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_forward_tx_chan1",  vswr_tracking_en_1),
-        ("tx_vswr_reflected_gain_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_reflected_gain_chan1",  vswr_tracking_en_1),
-        ("tx_vswr_reflected_gain_imag_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_reflected_gain_imag_chan1",  vswr_tracking_en_1),
-        ("tx_vswr_reflected_gain_real_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_reflected_gain_real_chan1",  vswr_tracking_en_1),
-        ("tx_vswr_reflected_orx_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_reflected_tx_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_reflected_tx_chan1",  vswr_tracking_en_1),
-        ("tx_vswr_track_count_chan0",  vswr_tracking_en_0),
-        ("tx_vswr_track_count_chan1",  vswr_tracking_en_1),
+        ("tx_clgc_current_gain_chan0", clgc_tracking_en_0),
+        ("tx_clgc_current_gain_chan1", clgc_tracking_en_1),
+        ("tx_clgc_orx_rms_chan0", clgc_tracking_en_0),
+        ("tx_clgc_track_count_chan0", clgc_tracking_en_0),
+        ("tx_clgc_track_count_chan1", clgc_tracking_en_1),
+        ("tx_clgc_tx_gain_chan0", clgc_tracking_en_0),
+        ("tx_clgc_tx_gain_chan1", clgc_tracking_en_1),
+        ("tx_clgc_tx_rms_chan0", clgc_tracking_en_0),
+        ("tx_clgc_tx_rms_chan1", clgc_tracking_en_1),
+        ("tx_dpd_track_count_chan0", dpd_tracking_en_0),
+        ("tx_dpd_track_count_chan1", dpd_tracking_en_1),
+        ("tx_dpd_status_chan0", dpd_tracking_en_0),
+        ("tx_dpd_status_chan1", dpd_tracking_en_1),
+        ("tx_vswr_forward_gain_chan0", vswr_tracking_en_0),
+        ("tx_vswr_forward_gain_chan1", vswr_tracking_en_1),
+        ("tx_vswr_forward_gain_imag_chan0", vswr_tracking_en_0),
+        ("tx_vswr_forward_gain_imag_chan1", vswr_tracking_en_1),
+        ("tx_vswr_forward_gain_real_chan0", vswr_tracking_en_0),
+        ("tx_vswr_forward_gain_real_chan1", vswr_tracking_en_1),
+        ("tx_vswr_forward_orx_chan0", vswr_tracking_en_0),
+        ("tx_vswr_forward_tx_chan0", vswr_tracking_en_0),
+        ("tx_vswr_forward_tx_chan1", vswr_tracking_en_1),
+        ("tx_vswr_reflected_gain_chan0", vswr_tracking_en_0),
+        ("tx_vswr_reflected_gain_chan1", vswr_tracking_en_1),
+        ("tx_vswr_reflected_gain_imag_chan0", vswr_tracking_en_0),
+        ("tx_vswr_reflected_gain_imag_chan1", vswr_tracking_en_1),
+        ("tx_vswr_reflected_gain_real_chan0", vswr_tracking_en_0),
+        ("tx_vswr_reflected_gain_real_chan1", vswr_tracking_en_1),
+        ("tx_vswr_reflected_orx_chan0", vswr_tracking_en_0),
+        ("tx_vswr_reflected_tx_chan0", vswr_tracking_en_0),
+        ("tx_vswr_reflected_tx_chan1", vswr_tracking_en_1),
+        ("tx_vswr_track_count_chan0", vswr_tracking_en_0),
+        ("tx_vswr_track_count_chan1", vswr_tracking_en_1),
     ],
 )
 def test_ad9375_attr_readonly_with_depends(
@@ -443,9 +452,17 @@ def test_ad9375_attr_readonly_with_depends(
     ],
 )
 def test_ad9375_attr_range_readonly(
-    test_attribute_check_range_readonly_with_depends, iio_uri, classname, attr, depends, start, stop
+    test_attribute_check_range_readonly_with_depends,
+    iio_uri,
+    classname,
+    attr,
+    depends,
+    start,
+    stop,
 ):
-    test_attribute_check_range_readonly_with_depends(iio_uri, classname, attr, depends, start, stop)
+    test_attribute_check_range_readonly_with_depends(
+        iio_uri, classname, attr, depends, start, stop
+    )
 
 
 #########################################
@@ -454,22 +471,22 @@ def test_ad9375_attr_range_readonly(
 @pytest.mark.parametrize(
     "attr, value",
     [
-        ("tx_clgc_tracking_en_chan0", True),
-        ("tx_clgc_tracking_en_chan0", False),
-        ("tx_clgc_tracking_en_chan1", True),
-        ("tx_clgc_tracking_en_chan1", False),
-        ("tx_dpd_actuator_en_chan0", True),
-        ("tx_dpd_actuator_en_chan0", False),
-        ("tx_dpd_actuator_en_chan1", True),
-        ("tx_dpd_actuator_en_chan1", False),
-        ("tx_vswr_tracking_en_chan0", True),
-        ("tx_vswr_tracking_en_chan0", False),
-        ("tx_vswr_tracking_en_chan1", True),
-        ("tx_vswr_tracking_en_chan1", False),
-        ("tx_dpd_tracking_en_chan0", True),
-        ("tx_dpd_tracking_en_chan0", False),
-        ("tx_dpd_tracking_en_chan1", True),
-        ("tx_dpd_tracking_en_chan1", False),
+        ("tx_clgc_tracking_en_chan0", 1),
+        ("tx_clgc_tracking_en_chan0", 0),
+        ("tx_clgc_tracking_en_chan1", 1),
+        ("tx_clgc_tracking_en_chan1", 0),
+        ("tx_dpd_actuator_en_chan0", 1),
+        ("tx_dpd_actuator_en_chan0", 0),
+        ("tx_dpd_actuator_en_chan1", 1),
+        ("tx_dpd_actuator_en_chan1", 0),
+        ("tx_vswr_tracking_en_chan0", 1),
+        ("tx_vswr_tracking_en_chan0", 0),
+        ("tx_vswr_tracking_en_chan1", 1),
+        ("tx_vswr_tracking_en_chan1", 0),
+        ("tx_dpd_tracking_en_chan0", 1),
+        ("tx_dpd_tracking_en_chan0", 0),
+        ("tx_dpd_tracking_en_chan1", 1),
+        ("tx_dpd_tracking_en_chan1", 0),
     ],
 )
 def test_ad9375_attr_boolean(
@@ -482,11 +499,7 @@ def test_ad9375_attr_boolean(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, value",
-    [
-        ("tx_dpd_reset_en_chan0", 1),
-        ("tx_dpd_reset_en_chan1", 1),
-    ],
+    "attr, value", [("tx_dpd_reset_en_chan0", 1), ("tx_dpd_reset_en_chan1", 1),],
 )
 def test_ad9375_attr_write_only(
     test_attribute_write_only_str, iio_uri, classname, attr, value
