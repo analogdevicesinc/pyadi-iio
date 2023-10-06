@@ -17,10 +17,10 @@ dev_uri = "ip:169.254.97.40"
 				       current_in_ext_hart, current_in_loop_hart
 
 """
-channel_config = ["resistance", "voltage_in", "voltage_in", "voltage_in"]
+channel_config = ["current_out", "current_in_loop", "voltage_in", "voltage_in"]
 
 # Possible values: 0, 1
-channel_enable = [1, 1, 1, 1]
+channel_enable = [1, 1, 0, 0]
 
 # Possible values: "ad74413r", "max14906"
 channel_device = ["ad74413r", "ad74413r", "ad74413r", "ad74413r"]
@@ -52,8 +52,6 @@ swiot = adi.swiot(uri=dev_uri)
 
 # Rev ID should be 0x8
 print("AD74413R rev ID:", ad74413r.reg_read(0x46))
-max14906.reg_write(0xA, 0x3)
-max14906.reg_write(0x1, 0xFF)
 
 # max14906.channel["voltage3"].raw = 1
 
@@ -62,6 +60,20 @@ max14906.reg_write(0x1, 0xFF)
 
 print("AD74413R input (ADC) channels:", ad74413r._rx_channel_names)
 print("AD74413R output (DAC) channels:", ad74413r._tx_channel_names)
+
+ad74413r.channel["current0"].raw = 1700
+ad74413r.channel["current1"].raw = 8000
+
+i = 0
+ch1_scale = ad74413r.rx_channel["current1"].scale
+ch1_offset = ad74413r.rx_channel["current1"].offset
+
+while True:
+	time.sleep(0.2)
+	raw = ad74413r.rx_channel["current1"].raw
+	res = (raw + ch1_offset) * ch1_scale
+
+	ad74413r.channel["current0"].raw = (res / 25) * 8191
 
 # Write the raw value for a DAC channel. This is the raw code.
 # ad74413r.channel["voltage0"].raw = 0
