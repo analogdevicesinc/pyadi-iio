@@ -8,6 +8,7 @@ import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+import random
 
 
 def measure_phase(chan0, chan1):
@@ -23,7 +24,7 @@ plot_time_domain = False
 fhm = True
 
 # Create radio
-sdr = adi.adrv9009_zu11eg(uri="ip:10.44.3.65")
+sdr = adi.adrv9009_zu11eg(uri="ip:10.44.3.62")
 sdr._rxadc.set_kernel_buffers_count(1)
 
 # Configure properties
@@ -49,25 +50,27 @@ if fhm:
     print("Setting FHM trigger to SPI")
     sdr._ctrl.debug_attrs["adi,fhm-mode-fhm-trigger-mode"].value = "1"
     print("Setting FHM init frequency")
-    sdr._ctrl.debug_attrs["adi,fhm-mode-fhm-init-frequency_hz"].value = "2319000000"
+    sdr._ctrl.debug_attrs["adi,fhm-mode-fhm-init-frequency_hz"].value = "2450000000"
     print("Setting FHM Min frequency")
-    sdr._ctrl.debug_attrs["adi,fhm-config-fhm-min-freq_mhz"].value = "1000"
+    sdr._ctrl.debug_attrs["adi,fhm-config-fhm-min-freq_mhz"].value = "200"
     print("Setting FHM Max frequency")
-    sdr._ctrl.debug_attrs["adi,fhm-config-fhm-max-freq_mhz"].value = "5000"
+    sdr._ctrl.debug_attrs["adi,fhm-config-fhm-max-freq_mhz"].value = "6000"
     print("Set MCS+FHM")
     sdr._ctrl.debug_attrs["adi,fhm-mode-enable-mcs-sync"].value = "1"
+    sdr._ctrl.debug_attrs["adi,fhm-config-fhm-gpio-pin"].value = "8"
 
     print("setting up FHM Chip B")
     print("Setting FHM trigger to SPI")
     sdr._ctrl_b.debug_attrs["adi,fhm-mode-fhm-trigger-mode"].value = "1"
     print("Setting FHM init frequency")
-    sdr._ctrl_b.debug_attrs["adi,fhm-mode-fhm-init-frequency_hz"].value = "2500000000"
+    sdr._ctrl_b.debug_attrs["adi,fhm-mode-fhm-init-frequency_hz"].value = "2450000000"
     print("Setting FHM Min frequency")
-    sdr._ctrl_b.debug_attrs["adi,fhm-config-fhm-min-freq_mhz"].value = "1000"
+    sdr._ctrl_b.debug_attrs["adi,fhm-config-fhm-min-freq_mhz"].value = "200"
     print("Setting FHM Max frequency")
-    sdr._ctrl_b.debug_attrs["adi,fhm-config-fhm-max-freq_mhz"].value = "5000"
+    sdr._ctrl_b.debug_attrs["adi,fhm-config-fhm-max-freq_mhz"].value = "6000"
     print("Set MCS+FHM")
     sdr._ctrl_b.debug_attrs["adi,fhm-mode-enable-mcs-sync"].value = "1"
+    sdr._ctrl_b.debug_attrs["adi,fhm-config-fhm-gpio-pin"].value = "8"
 
     print("Syncing")
     # this will renitialize both ADRV9009s from reset and sync them together using the jesd204-fsm
@@ -87,11 +90,11 @@ if fhm:
     sdr.frequency_hopping_mode = nextLO
     sdr.frequency_hopping_mode_chip_b = nextLO
 
-sdr.dds_single_tone(200000, 0.8)
+sdr.dds_single_tone(500000, 0.8)
 
 # Collect data
-M = 30
-N = 10
+M = 50
+N = 1
 p1 = np.zeros(M)
 p2 = np.zeros(M)
 p1v = np.zeros(M)
@@ -100,14 +103,18 @@ for k in range(M):
     pf1 = np.zeros(N)
     pf2 = np.zeros(N)
 
+    next_freq_lj = random.randrange(200000000, 5999000000, 10)
+    if k % 5 == 0:
+        next_freq_sj = random.randrange(2000000000, 2001000000, 10000)
+
     if True:
         ############################
         print("RUN #", k)
         print("Off tune to ", nextLO)
         tobemovedto = sdr.frequency_hopping_mode
         # Tell LO to move and set next frequency
-        sdr.frequency_hopping_mode = 2000000000
-        sdr.frequency_hopping_mode_chip_b = 2000000000
+        sdr.frequency_hopping_mode = next_freq_sj
+        sdr.frequency_hopping_mode_chip_b = next_freq_sj
         nextLO = sdr.frequency_hopping_mode
         print("Current LO", tobemovedto)
         time.sleep(0.1)
@@ -115,8 +122,8 @@ for k in range(M):
         print("Tune back to", nextLO)
         tobemovedto = sdr.frequency_hopping_mode
         # Tell LO to move and set next frequency
-        sdr.frequency_hopping_mode = 3000000000
-        sdr.frequency_hopping_mode_chip_b = 3000000000
+        sdr.frequency_hopping_mode = next_freq_lj
+        sdr.frequency_hopping_mode_chip_b = next_freq_lj
         nextLO = sdr.frequency_hopping_mode
         print("Current LO", tobemovedto)
         time.sleep(0.1)
@@ -124,21 +131,18 @@ for k in range(M):
         print("FH Mode Enable", sdr.frequency_hopping_mode_en)
         print("FH Mode Enable Chip B", sdr.frequency_hopping_mode_en_chip_b)
     else:
-        if k % 2 == 0:
-            nextLO = 2000000000
-        else:
-            nextLO = 3000000000
-
         if fhm:
-            sdr.frequency_hopping_mode = nextLO
-            sdr.frequency_hopping_mode_chip_b = nextLO
+            sdr.frequency_hopping_mode = next_freq_sj
+            sdr.frequency_hopping_mode_chip_b = next_freq_sj
+            sdr.frequency_hopping_mode = next_freq_lj
+            sdr.frequency_hopping_mode_chip_b = next_freq_lj
         else:
-            sdr.trx_lo = nextLO
-            sdr.trx_lo_chip_b = nextLO
+            sdr.trx_lo = next_freq_sj
+            sdr.trx_lo_chip_b = next_freq_sj
 
     # Flush
-    for r in range(N):
-        x = sdr.rx()
+    #for r in range(N):
+        #x = sdr.rx()
 
     for r in range(N):
         x = sdr.rx()
