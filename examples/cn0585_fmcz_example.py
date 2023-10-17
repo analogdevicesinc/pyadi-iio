@@ -72,14 +72,13 @@ hdl_dut_write_channel = adi.mwpicore(uri=my_uri, device_name="mwipcore0:mmwr-cha
 hdl_dut_read_channel = adi.mwpicore(uri=my_uri, device_name="mwipcore0:mmrd-channel1")
 
 if hdl_dut_write_channel.check_matlab_ip() :
-    hdl_dut_write_channel.axi4_lite_register_write(0x100, 0x2)
-    hdl_dut_write_channel.axi4_lite_register_write(0x104, 0xB)
+    hdl_dut_write_channel.axi4_lite_register_write(0x100, 0x1)
+ 
 
 if hdl_dut_write_channel.check_matlab_ip() :
     reg_value = hdl_dut_read_channel.axi4_lite_register_read(0x108)
-    reg_value1 = hdl_dut_read_channel.axi4_lite_register_read(0x10C)
-    print("AXI4-Lite 0x108 register value:", reg_value)
-    print("AXI4-Lite 0x10c register value:", reg_value1)
+    print("AXI4-Lite 0x104 register value:", reg_value)
+
     
 ##############################################################################
 
@@ -121,8 +120,8 @@ ad3552r_1.output_range = "-10/+10V"
 
 # available options:"adc_input", "dma_input", "ramp_input"
 
-ad3552r_0.input_source = "dma_input"
-ad3552r_1.input_source = "dma_input"
+ad3552r_0.input_source = "adc_input"
+ad3552r_1.input_source = "adc_input"
 
 print("input_source:dac0:", ad3552r_0.input_source)
 print("input_source:dac1:", ad3552r_1.input_source)
@@ -146,23 +145,13 @@ data = adaq23876_adc.rx()
 x = np.arange(0, adaq23876_adc.rx_buffer_size)
 
 voltage_0 = (data[0] * -adaq23876_vref) / (adaq23876_gain * 2 ** 16)
-voltage_1 = (data[1] * -adaq23876_vref) / (adaq23876_gain * 2 ** 16)
-voltage_2 = (data[2] * -adaq23876_vref) / (adaq23876_gain * 2 ** 16)
-voltage_3 = (data[3] * -adaq23876_vref) / (adaq23876_gain * 2 ** 16)
-fig, (ch1, ch2, ch3, ch4) = plt.subplots(4, 1)
+fig, (ch1) = plt.subplots(1, 1)
 
-fig.suptitle("ADAQ23876 Channels")
+fig.suptitle("ADAQ23876 Channel 1")
 ch1.plot(x, voltage_0[0 : adaq23876_adc.rx_buffer_size])
-ch2.plot(x, voltage_1[0 : adaq23876_adc.rx_buffer_size])
-ch3.plot(x, voltage_2[0 : adaq23876_adc.rx_buffer_size])
-ch4.plot(x, voltage_3[0 : adaq23876_adc.rx_buffer_size])
 ch1.set_ylabel("Channel 1 voltage [V]")
-ch2.set_ylabel("Channel 2 voltage [V]")
-ch3.set_ylabel("Channel 3 voltage [V]")
-ch4.set_ylabel("Channel 4 voltage [V]")
-ch4.set_xlabel("Samples")
+ch1.set_xlabel("Samples")
 plt.show()
-
 # stop stream and destroy buffers 
 
 ad3552r_1.stream_status = "stop_stream"
@@ -171,3 +160,42 @@ ad3552r_0.stream_status = "stop_stream"
 ad3552r_1.tx_destroy_buffer()
 ad3552r_0.tx_destroy_buffer()
 adaq23876_adc.rx_destroy_buffer()
+
+
+print("An infinite loop which increase the gain from 1 to 10 will start untill you press enter")
+gain = 0
+while True:
+    if gain <=10 :
+        gain = gain + 1
+    else :
+        gain =1
+    if hdl_dut_write_channel.check_matlab_ip() :
+        hdl_dut_write_channel.axi4_lite_register_write(0x100, gain)
+    if hdl_dut_write_channel.check_matlab_ip() :
+        reg_value = hdl_dut_read_channel.axi4_lite_register_read(0x108)
+        print("Gain value is", reg_value)
+
+    ad3552r_1.tx([samples,samples])
+    ad3552r_0.tx([samples,samples])
+    ad3552r_1.stream_status = "start_stream_synced"
+    ad3552r_0.stream_status = "start_stream_synced"
+
+    user_input = input("Enter 'exit' to quit the loop: ")
+    print("You entered:", user_input)
+    if user_input.lower() == 'exit':
+        ad3552r_1.stream_status = "stop_stream"
+        ad3552r_0.stream_status = "stop_stream"
+        ad3552r_1.tx_destroy_buffer()
+        ad3552r_0.tx_destroy_buffer()
+        break 
+
+    ad3552r_1.stream_status = "stop_stream"
+    ad3552r_0.stream_status = "stop_stream"
+    ad3552r_1.tx_destroy_buffer()
+    ad3552r_0.tx_destroy_buffer()
+
+
+
+  
+
+
