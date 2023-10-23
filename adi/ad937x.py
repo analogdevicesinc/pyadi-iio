@@ -34,6 +34,7 @@ class ad9371(rx_tx, context_manager, sync_start):
         self._rxadc = self._ctx.find_device("axi-ad9371-rx-hpc")
         self._rxobs = self._ctx.find_device("axi-ad9371-rx-obs-hpc")
         self._txdac = self._ctx.find_device("axi-ad9371-tx-hpc")
+        self._ctx.set_timeout(30000)  # Needed for loading profiles
 
         if not disable_jesd_control and jesd:
             self._jesd = jesd(uri, username=username, password=password)
@@ -323,6 +324,17 @@ class ad9371(rx_tx, context_manager, sync_start):
     @property
     def jesd204_statuses(self):
         return self._jesd.get_all_statuses()
+
+    @property
+    def profile(self):
+        """Load profile file. Provide path to profile file to attribute"""
+        return self._get_iio_dev_attr("profile_config")
+
+    @profile.setter
+    def profile(self, value):
+        with open(value, "r") as file:
+            data = file.read()
+        self._set_iio_dev_attr_str("profile_config", data)
 
 
 class ad9375(ad9371):
