@@ -39,6 +39,7 @@ from adi.admv8818 import admv8818
 from adi.adrf5720 import adrf5720
 from adi.adrf6780 import adrf6780
 from adi.ad5664 import ad5664
+from adi.ad4696 import ad4696
 from adi.gen_mux import genmux
 from adi.one_bit_adc_dac import one_bit_adc_dac
 
@@ -53,6 +54,7 @@ class fmc_8p_vna(adrf5720, ad9083, admv8818, genmux, adf4371,
         self.lo     = adf4371(uri)
         self.bpf    = admv8818(uri, device_name="admv8818")
         self.ndac   = ad5664(3.3, uri, device_name="ad5664r5")
+        self.adcmon = ad4696(uri, device_name="ad4696")
         self.rfin_attenuator    = adrf5720(uri, device_name="adrf5720-rfin")
         self.rfin2_attenuator   = adrf5720(uri, device_name="adrf5720-rfin2")
         self.sig_upconv         = adrf6780(uri, device_name="adrf6780-sig")
