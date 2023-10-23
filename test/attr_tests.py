@@ -83,6 +83,10 @@ def attribute_single_value_boolean(uri, classname, attr, value):
             Value to write and read back from attribute
     """
     bi = eval(classname + "(uri='" + uri + "')")
+
+    if not hasattr(bi, attr):
+        raise AttributeError(f"no attribute named: {attr}")
+
     setattr(bi, attr, value)
     rval = getattr(bi, attr)
     del bi
@@ -258,6 +262,10 @@ def attribute_write_only_str(uri, classname, attr, value):
             Value to write into attr property
     """
     sdr = eval(classname + "(uri='" + uri + "')")
+
+    if not hasattr(sdr, attr):
+        raise AttributeError(f"no attribute named: {attr}")
+
     try:
         setattr(sdr, attr, value)
         del sdr
@@ -284,6 +292,14 @@ def attribute_write_only_str_with_depends(uri, classname, attr, value, depends):
             are properties and values are values to be written
     """
     sdr = eval(classname + "(uri='" + uri + "')")
+
+    for p in depends:
+        if not hasattr(sdr, p):
+            raise AttributeError(f"no attribute named: {p}")
+
+    if not hasattr(sdr, attr):
+        raise AttributeError(f"no attribute named: {attr}")
+
     for p in depends:
         setattr(sdr, p, depends[p])
     try:

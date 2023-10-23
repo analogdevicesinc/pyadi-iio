@@ -3,13 +3,20 @@
 # SPDX short identifier: ADIBSD
 
 
+import sys
+
 import adi
 import matplotlib.pyplot as plt
 import numpy as np
 
-device_name = "ad4630-23"
+# Optionally pass URI as command line argument,
+# else use default context manager search
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
+print("uri: " + str(my_uri))
 
-adc = ad4630(uri="ip:192.168.0.130", device_name=device_name)
+device_name = "ad4630-24"
+
+adc = adi.ad4630(uri=my_uri, device_name=device_name)
 adc.rx_buffer_size = 500
 adc.sample_rate = 2000000
 
