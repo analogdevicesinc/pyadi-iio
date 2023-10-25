@@ -223,7 +223,7 @@ def test_adrv9002_interface_gain_narrowband(
 @pytest.mark.lvds_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr", ["profile"])
+@pytest.mark.parametrize("attr", ["write_profile"])
 @pytest.mark.parametrize(
     "profile_file, depends",
     [
@@ -248,7 +248,7 @@ def test_adrv9002_profile_write(
 @pytest.mark.lvds_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr", ["profile"])
+@pytest.mark.parametrize("attr", ["write_profile"])
 @pytest.mark.parametrize(
     "profile_file, depends", [(nco_test_profile, {"write_stream": nco_test_stream})]
 )
@@ -269,7 +269,7 @@ def test_adrv9002_nco_write_profile(
 @pytest.mark.cmos_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr", ["profile"])
+@pytest.mark.parametrize("attr", ["write_profile"])
 @pytest.mark.parametrize(
     "profile_file, depends", [(lte_5_cmos_profile, {"write_stream": lte_5_cmos_stream})]
 )
