@@ -2,7 +2,7 @@ name: TestPyPI
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   DeployTestPyPI:
     runs-on: ubuntu-latest

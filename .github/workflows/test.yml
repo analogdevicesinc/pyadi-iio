@@ -118,10 +118,10 @@ jobs:
           cd doc && make html
           cd ..
 
-  DeployMasterDoc:
+  DeployMainDoc:
     runs-on: ubuntu-latest
     needs: [Test,Lint,Doc]
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v2
@@ -147,13 +147,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./doc/build/html
-          destination_dir: master
+          destination_dir: main
 
   DeployDevelopmentDoc:
     runs-on: ubuntu-latest
     needs: [Test,Lint,Doc]
-    # Only run on pull requests to master and non-forks
-    if: github.event_name == 'pull_request' && github.base_ref == 'master' && ! github.event.pull_request.head.repo.fork
+    # Only run on pull requests to main and non-forks
+    if: github.event_name == 'pull_request' && github.base_ref == 'main' && ! github.event.pull_request.head.repo.fork
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.7
