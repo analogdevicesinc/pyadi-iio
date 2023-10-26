@@ -1,21 +1,18 @@
 import argparse
-import sys
+import os
+import sys  # We need sys so that we can pass argv to QApplication
 import threading
 import time
 from queue import Full, Queue
+from random import randint
 
 import adi
 import numpy as np
-
+import pyqtgraph as pg
+from PyQt5 import QtCore, QtWidgets
+from pyqtgraph import GraphicsLayoutWidget, PlotWidget, plot
 from scipy import signal
 from scipy.fftpack import fft
-
-from PyQt5 import QtWidgets, QtCore
-from pyqtgraph import PlotWidget, plot, GraphicsLayoutWidget
-import pyqtgraph as pg
-import sys  # We need sys so that we can pass argv to QApplication
-import os
-from random import randint
 
 pg.setConfigOptions(antialias=True)
 pg.setConfigOption("background", "k")
@@ -33,7 +30,7 @@ class ADIPlotter(object):
             self.stream.rx_lo = 1000000000
             self.stream.tx_lo = 1000000000
             self.stream.dds_single_tone(3000000, 0.9)
-        self.stream.rx_buffer_size = 2**12
+        self.stream.rx_buffer_size = 2 ** 12
         self.stream.rx_enabled_channels = [0]
 
         self.app = QtWidgets.QApplication(sys.argv)
@@ -61,9 +58,9 @@ class ADIPlotter(object):
         wf_xaxis.setLabel(units="Seconds")
 
         if REAL_DEV_NAME in classname.lower():
-            wf_ylabels = [(0, "0"), (2**11, "2047")]
+            wf_ylabels = [(0, "0"), (2 ** 11, "2047")]
         else:
-            wf_ylabels = [(-2 * 11, "-2047"), (0, "0"), (2**11, "2047")]
+            wf_ylabels = [(-2 * 11, "-2047"), (0, "0"), (2 ** 11, "2047")]
         wf_yaxis = pg.AxisItem(orientation="left")
         wf_yaxis.setTicks([wf_ylabels])
 
@@ -71,16 +68,10 @@ class ADIPlotter(object):
         sp_xaxis.setLabel(units="Hz")
 
         self.waveform = self.win.addPlot(
-            title="WAVEFORM",
-            row=1,
-            col=1,
-            axisItems={"bottom": wf_xaxis},
+            title="WAVEFORM", row=1, col=1, axisItems={"bottom": wf_xaxis},
         )
         self.spectrum = self.win.addPlot(
-            title="SPECTRUM",
-            row=2,
-            col=1,
-            axisItems={"bottom": sp_xaxis},
+            title="SPECTRUM", row=2, col=1, axisItems={"bottom": sp_xaxis},
         )
         self.waveform.showGrid(x=True, y=True)
         self.spectrum.showGrid(x=True, y=True)
@@ -175,30 +166,24 @@ class ADIPlotter(object):
                 else -1 * self.stream.sample_rate / 2
             )
             self.spectrum.setXRange(
-                start,
-                self.stream.sample_rate / 2,
-                padding=0.005,
+                start, self.stream.sample_rate / 2, padding=0.005,
             )
         elif name == "waveform":
             self.traces[name] = self.waveform.plot(pen="c", width=3)
-            self.waveform.setYRange(-(2**11) - 200, 2**11 + 200, padding=0)
+            self.waveform.setYRange(-(2 ** 11) - 200, 2 ** 11 + 200, padding=0)
             self.waveform.setXRange(
-                0,
-                self.stream.rx_buffer_size / self.stream.sample_rate,
-                padding=0.005,
+                0, self.stream.rx_buffer_size / self.stream.sample_rate, padding=0.005,
             )
 
     def update(self):
         while not self.q.empty():
             wf_data = self.q.get()
             self.set_plotdata(
-                name="waveform",
-                data_x=self.x,
-                data_y=np.real(wf_data),
+                name="waveform", data_x=self.x, data_y=np.real(wf_data),
             )
             sp_data = np.fft.fft(wf_data)
             sp_data = np.abs(np.fft.fftshift(sp_data)) / self.stream.rx_buffer_size
-            sp_data = 20 * np.log10(sp_data / (2**11))
+            sp_data = 20 * np.log10(sp_data / (2 ** 11))
             self.set_plotdata(name="spectrum", data_x=self.f, data_y=sp_data)
 
             if not self.markers_added:
