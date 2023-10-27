@@ -45,11 +45,17 @@ namespaces = true
 jesd = [
     "paramiko"
 ]
+tools = [
+    "pyqtgraph", "matplotlib", "PyQt5", "scipy"
+]
 
 [project.urls]
 homepage = "https://analogdevicesinc.github.io/pyadi-iio/"
 documentation = "https://analogdevicesinc.github.io/pyadi-iio/"
 repository = "https://github/analogdevicesinc/pyadi-iio"
+
+[project.gui-scripts]
+adiplot = "adi.tools.adiplot:run_adi_plot"
 
 [tool.isort]
 multi_line_output=3

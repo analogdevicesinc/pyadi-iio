@@ -292,7 +292,8 @@ class ADIPlotter(object):
         self.run_source = False
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+def run_adi_plot():
     parser = argparse.ArgumentParser(description="ADI fast plotting app")
     parser.add_argument(
         "class", help="pyadi class name to use as plot source", action="store"

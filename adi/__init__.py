@@ -108,5 +108,10 @@ try:
 except ImportError:
     pass
 
+try:
+    from adi.tools.adiplot import run_adi_plot
+except ImportError:
+    pass
+
 __version__ = "0.0.17"
 name = "Analog Devices Hardware Interfaces"
