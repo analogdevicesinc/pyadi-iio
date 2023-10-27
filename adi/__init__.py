@@ -4,6 +4,7 @@
 
 from adi.ad2s1210 import ad2s1210
 from adi.ad469x import ad469x
+from adi.ad578x import ad578x
 from adi.ad717x import ad717x
 from adi.ad719x import ad719x
 from adi.ad777x import ad777x
