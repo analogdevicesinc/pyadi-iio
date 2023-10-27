@@ -30,6 +30,12 @@ To install the optional dependencies for JESD debugging and control
 
 Note that this is only needed for the ADRV9009-ZU11EG multi-SOM configuration.
 
+To install the optional dependencies for leverage the built-in CLI tools
+
+.. code-block:: bash
+
+  (sudo) pip install pyadi-iio[tools]
+
 .. note::
 
   On Linux the libiio python bindings are sometimes installed in locations not on path when building from source. On Ubuntu this is a common fix
