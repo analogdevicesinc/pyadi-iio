@@ -1,6 +1,7 @@
 include LICENSE
 include README.md
 include adi/*
+include adi/tools/*
 
 exclude setup.cfg
 
