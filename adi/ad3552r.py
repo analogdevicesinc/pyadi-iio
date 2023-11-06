@@ -38,6 +38,10 @@ from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import tx
 
+# Idealy, we would be able to have a nice abstraction in which axi-ad3552r would
+# be a subclass of ad3552r if the drivers for upstream ad3552r and axi-ad3552r
+# hadn't completely different set of attributes.
+
 
 class ad3552r(tx, context_manager, attribute):
     """AD3552R DAC"""
@@ -49,6 +53,92 @@ class ad3552r(tx, context_manager, attribute):
     def __init__(self, uri="", device_name=""):
 
         context_manager.__init__(self, uri, self._device_name)
+
+        compatible_parts = ["ad3552r", "ad3542r"]
+        self._ctrl = None
+
+        if not device_name:
+            # Select any device matching compatible_parts list as working device
+            for device in self._ctx.devices:
+                if device.name in compatible_parts:
+                    print("Found device {}".format(device.name))
+                    self._ctrl = device
+                    self._txdac = device
+                    break
+        else:
+            if device_name not in compatible_parts:
+                raise Exception("Not a compatible device: " + device_name)
+
+            # Select the device matching device_name as working device
+            for device in self._ctx.devices:
+                if device.name == device_name:
+                    print("Found device {}".format(device.name))
+                    self._ctrl = device
+                    self._txdac = device
+                    break
+
+        for ch in self._ctrl.channels:
+            name = ch.id
+            self._tx_channel_names.append(name)
+            self.channel.append(self._channel(self._ctrl, name))
+
+        tx.__init__(self)
+
+    class _channel(attribute):
+        """AD3552R channel"""
+
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property
+        def raw(self):
+            """AD3552R channel raw value"""
+            return self._get_iio_attr(self.name, "raw", True)
+
+        @raw.setter
+        def raw(self, value):
+            self._set_iio_attr(self.name, "raw", True, value)
+
+        @property
+        def en(self):
+            """AD3552R channel en value"""
+            return self._get_iio_attr(self.name, "en", True)
+
+        @en.setter
+        def en(self, value):
+            self._set_iio_attr_int(self.name, "en", True, value)
+
+        @property
+        def scale(self):
+            """AD3552R channel scale value"""
+            return self._get_iio_attr(self.name, "scale", True)
+
+        @scale.setter
+        def scale(self, value):
+            self._set_iio_attr(self.name, "scale", True, value)
+
+        @property
+        def offset(self):
+            """AD3552R channel offset value"""
+            return self._get_iio_attr(self.name, "offset", True)
+
+        @offset.setter
+        def offset(self, value):
+            self._set_iio_attr(self.name, "offset", True, value)
+
+
+class axi_ad3552r(tx, context_manager, attribute):
+    """AD3552R DAC for AXI DDS PCORE/COREFPGA Module"""
+
+    _device_name = ""
+    channel = []  # type: ignore
+    _complex_data = False
+
+    def __init__(self, uri="", device_name=""):
+
+        context_manager.__init__(self, uri, self._device_name)
+
         compatible_parts = ["axi-ad3552r-0", "axi-ad3552r-1", "axi-ad3552r"]
 
         self._ctrl = None
@@ -117,7 +207,7 @@ class ad3552r(tx, context_manager, attribute):
         self._set_iio_dev_attr_str("output_range", value, self._txdac)
 
     class _channel(attribute):
-        """AD3552R channel"""
+        """AXI-AD3552R channel"""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
@@ -125,36 +215,9 @@ class ad3552r(tx, context_manager, attribute):
 
         @property
         def raw(self):
-            """AD3552R channel raw value"""
+            """AXI-AD3552R channel raw value"""
             return self._get_iio_attr(self.name, "raw", True)
 
         @raw.setter
         def raw(self, value):
             self._set_iio_attr(self.name, "raw", True, value)
-
-        @property
-        def en(self):
-            """AD3552R channel en value"""
-            return self._get_iio_attr(self.name, "en", True)
-
-        @en.setter
-        def en(self, value):
-            self._set_iio_attr(self.name, "en", True, value)
-
-        @property
-        def scale(self):
-            """AD3552R channel scale value"""
-            return self._get_iio_attr(self.name, "scale", True)
-
-        @scale.setter
-        def scale(self, value):
-            self._set_iio_attr(self.name, "scale", True, value)
-
-        @property
-        def offset(self):
-            """AD3552R channel offset value"""
-            return self._get_iio_attr(self.name, "offset", True)
-
-        @offset.setter
-        def offset(self, value):
-            self._set_iio_attr(self.name, "offset", True, value)

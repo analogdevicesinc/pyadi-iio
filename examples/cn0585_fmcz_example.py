@@ -23,8 +23,8 @@ class adaq23876(adi.ltc2387):
 # device connections
 
 adaq23876_adc = adaq23876(my_uri)
-ad3552r_0 = adi.ad3552r(uri=my_uri, device_name="axi-ad3552r-0")
-ad3552r_1 = adi.ad3552r(uri=my_uri, device_name="axi-ad3552r-1")
+ad3552r_0 = adi.axi_ad3552r(uri=my_uri, device_name="axi-ad3552r-0")
+ad3552r_1 = adi.axi_ad3552r(uri=my_uri, device_name="axi-ad3552r-1")
 voltage_monitor = adi.ad7291(uri=my_uri)
 gpio_controller = adi.one_bit_adc_dac(uri=my_uri, name="one-bit-adc-dac")
 

@@ -14,7 +14,7 @@ print("uri: " + str(my_uri))
 
 # device connections
 
-ad3552r = adi.ad3552r(uri=my_uri, device_name="axi-ad3552r")
+ad3552r = adi.axi_ad3552r(uri=my_uri, device_name="axi-ad3552r")
 
 # device configurations
 
