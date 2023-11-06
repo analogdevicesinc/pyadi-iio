@@ -1,7 +1,7 @@
 import pytest
 
-hardware = ["ad3552r"]
-classname = "adi.ad3552r"
+hardware = ["axi_ad3552r"]
+classname = "adi.axi_ad3552r"
 
 
 @pytest.mark.iio_hardware(hardware)
