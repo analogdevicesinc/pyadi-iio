@@ -72,15 +72,15 @@ print("Channel 7: ", voltage_monitor.voltage7(), " millivolts")
 hdl_dut_write_channel = adi.mwpicore(uri=my_uri, device_name="mwipcore0:mmwr-channel0")
 hdl_dut_read_channel = adi.mwpicore(uri=my_uri, device_name="mwipcore0:mmrd-channel1")
 
-if hdl_dut_write_channel.check_matlab_ip() :
+if hdl_dut_write_channel.check_matlab_ip():
     hdl_dut_write_channel.axi4_lite_register_write(0x100, 0x1)
- 
+
 
 if hdl_dut_write_channel.check_matlab_ip():
     reg_value = hdl_dut_read_channel.axi4_lite_register_read(0x108)
     print("AXI4-Lite 0x104 register value:", reg_value)
 
-    
+
 ##############################################################################
 
 adaq23876_adc.rx_buffer_size = 1000
@@ -163,40 +163,36 @@ ad3552r_0.tx_destroy_buffer()
 adaq23876_adc.rx_destroy_buffer()
 
 
-print("An infinite loop which increase the gain from 1 to 10 will start untill you press enter")
+print(
+    "An infinite loop which increase the gain from 1 to 10 will start until you press enter"
+)
 gain = 0
 while True:
-    if gain <=10 :
+    if gain <= 10:
         gain = gain + 1
-    else :
-        gain =1
-    if hdl_dut_write_channel.check_matlab_ip() :
+    else:
+        gain = 1
+    if hdl_dut_write_channel.check_matlab_ip():
         hdl_dut_write_channel.axi4_lite_register_write(0x100, gain)
-    if hdl_dut_write_channel.check_matlab_ip() :
+    if hdl_dut_write_channel.check_matlab_ip():
         reg_value = hdl_dut_read_channel.axi4_lite_register_read(0x108)
         print("Gain value is", reg_value)
 
-    ad3552r_1.tx([samples,samples])
-    ad3552r_0.tx([samples,samples])
+    ad3552r_1.tx([samples, samples])
+    ad3552r_0.tx([samples, samples])
     ad3552r_1.stream_status = "start_stream_synced"
     ad3552r_0.stream_status = "start_stream_synced"
 
     user_input = input("Enter 'exit' to quit the loop: ")
     print("You entered:", user_input)
-    if user_input.lower() == 'exit':
+    if user_input.lower() == "exit":
         ad3552r_1.stream_status = "stop_stream"
         ad3552r_0.stream_status = "stop_stream"
         ad3552r_1.tx_destroy_buffer()
         ad3552r_0.tx_destroy_buffer()
-        break 
+        break
 
     ad3552r_1.stream_status = "stop_stream"
     ad3552r_0.stream_status = "stop_stream"
     ad3552r_1.tx_destroy_buffer()
     ad3552r_0.tx_destroy_buffer()
-
-
-
-  
-
-
