@@ -1,3 +1,4 @@
+import adi
 import pytest
 
 hardware = ["ad4030-24", "ad4630-24"]
@@ -54,4 +55,41 @@ def test_ad4630_channel_attrs(
 ):
     test_attribute_single_value(
         iio_uri, classname, attr, start, stop, step, tol, repeats, sub_channel
+    )
+
+
+hardware = ["adaq4224"]
+classname = "adi.adaq42xx"
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize(
+    "attr, avail_attr, tol, repeats, sub_channel",
+    [("scale", "scale_available", 0, 1, "chan0",),],
+)
+def test_adaq42xx_scale_attr(
+    test_attribute_multiple_values,
+    iio_uri,
+    classname,
+    attr,
+    avail_attr,
+    tol,
+    repeats,
+    sub_channel,
+):
+    # Get the device
+    sdr = eval(classname + "(uri='" + iio_uri + "')")
+
+    # Check hardware
+    if not hasattr(sdr, sub_channel):
+        raise AttributeError(sub_channel + " not defined in " + classname)
+    if not hasattr(getattr(sdr, sub_channel), avail_attr):
+        raise AttributeError(avail_attr + " not defined in " + classname)
+
+    # Get the list of available scale values
+    val = getattr(getattr(sdr, sub_channel), avail_attr)
+
+    test_attribute_multiple_values(
+        iio_uri, classname, attr, val, tol, repeats, sub_channel=sub_channel
     )
