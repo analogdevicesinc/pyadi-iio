@@ -201,6 +201,8 @@ def attribute_multiple_values(uri, classname, attr, values, tol, repeats=1, slee
             Allowable error of written value compared to read back value
         repeats: type=integer
             Number of times to repeatedly write values
+        sleep: type=integer
+            Seconds to sleep between writing to attribute and reading it back
     """
     for _ in range(repeats):
         for val in values:
