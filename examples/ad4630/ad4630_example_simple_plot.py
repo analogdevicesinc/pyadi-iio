@@ -29,6 +29,6 @@ data = adc.rx()
 
 for ch in range(0, len(data)):
     x = np.arange(0, len(data[ch]))
-    plt.figure(adc._ctrl._channels[ch]._name)
+    plt.figure(adc._ctrl.channels[ch]._name)
     plt.plot(x, data[ch])
 plt.show()
