@@ -54,7 +54,14 @@ class ad3552r(tx, context_manager, attribute):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad3552r", "ad3542r"]
+        compatible_parts = [
+            "ad3552r",
+            "ad3542r",
+            "ad3541r",
+            "ad3542r-12",
+            "ad3542r-16",
+            "ad3551r",
+        ]
         self._ctrl = None
 
         if not device_name:
