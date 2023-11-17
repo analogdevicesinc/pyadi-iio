@@ -2,6 +2,7 @@
 #
 # SPDX short identifier: ADIBSD
 
+from decimal import Decimal
 
 import numpy as np
 from adi.attribute import attribute
@@ -25,6 +26,7 @@ class ad4630(rx, context_manager, attribute):
 
     """ AD4630 is low power 24-bit precision SAR ADC """
 
+    _compatible_parts = ["ad4630-24", "ad4030-24", "ad4630-16"]
     _complex_data = False
     _data_type = np.uint32
     _device_name = ""
@@ -36,14 +38,12 @@ class ad4630(rx, context_manager, attribute):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad4630-24", "ad4030-24", "ad4630-16"]
-
-        if device_name not in compatible_parts:
+        if device_name not in self._compatible_parts:
             raise Exception(
                 "Not a compatible device: "
                 + str(device_name)
                 + ". Please select from "
-                + str(compatible_parts)
+                + str(self.self._compatible_parts)
             )
         else:
             self._ctrl = self._ctx.find_device(device_name)
@@ -166,3 +166,30 @@ class ad4630(rx, context_manager, attribute):
         def calibscale(self, calibscale):
             """Set calibration scale value."""
             self._set_iio_attr(self.name, "calibscale", False, calibscale, self._ctrl)
+
+
+class adaq42xx(ad4630):
+
+    """ ADAQ4224 is a 24-bit precision SAR ADC data acquisition module """
+
+    _compatible_parts = ["adaq4224", "adaq4216", "adaq4220"]
+
+    def __init__(self, uri="", device_name="adaq4224"):
+        super().__init__(uri, device_name)
+
+    class _channel(ad4630._channel):
+        """ADAQ42xx differential channel."""
+
+        @property
+        def scale_available(self):
+            """Provides all available scale(gain) settings for the ADAQ42xx channel"""
+            return self._get_iio_attr(self.name, "scale_available", False)
+
+        @property
+        def scale(self):
+            """ADAQ42xx channel scale"""
+            return float(self._get_iio_attr_str(self.name, "scale", False))
+
+        @scale.setter
+        def scale(self, value):
+            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))

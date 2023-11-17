@@ -183,7 +183,9 @@ def attribute_single_value_pow2(uri, classname, attr, max_pow, tol, repeats=1):
         assert dev_interface(uri, classname, val, attr, tol)
 
 
-def attribute_multiple_values(uri, classname, attr, values, tol, repeats=1, sleep=0):
+def attribute_multiple_values(
+    uri, classname, attr, values, tol, repeats=1, sleep=0, sub_channel=None
+):
     """attribute_multiple_values: Write and read back multiple class properties
     in a loop where all values are pre-defined. This is performed a defined
     number of times.
@@ -201,11 +203,19 @@ def attribute_multiple_values(uri, classname, attr, values, tol, repeats=1, slee
             Allowable error of written value compared to read back value
         repeats: type=integer
             Number of times to repeatedly write values
+        sleep: type=integer
+            Seconds to sleep between writing to attribute and reading it back
+        sub_channel: type=string
+            Name of sub channel (nested class) to be tested
     """
     for _ in range(repeats):
         for val in values:
             if isinstance(val, str):
-                assert dev_interface(uri, classname, val, attr, 0, sleep=sleep)
+                tol = 0
+            if sub_channel:
+                assert dev_interface_sub_channel(
+                    uri, classname, sub_channel, val, attr, tol, sleep=sleep
+                )
             else:
                 assert dev_interface(uri, classname, val, attr, tol, sleep=sleep)
 
