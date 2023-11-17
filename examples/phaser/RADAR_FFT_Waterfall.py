@@ -339,10 +339,19 @@ class Window(QMainWindow):
         self.waterfall.addItem(self.imageitem)
         # Use a viridis colormap
         pos = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
-        color = np.array([[68, 1, 84,255], [59, 82, 139,255], [33, 145, 140,255], [94, 201, 98,255], [253, 231, 37,255]], dtype=np.ubyte)
+        color = np.array(
+            [
+                [68, 1, 84, 255],
+                [59, 82, 139, 255],
+                [33, 145, 140, 255],
+                [94, 201, 98, 255],
+                [253, 231, 37, 255],
+            ],
+            dtype=np.ubyte,
+        )
         lut = pg.ColorMap(pos, color).getLookupTable(0.0, 1.0, 256)
         self.imageitem.setLookupTable(lut)
-        self.imageitem.setLevels([0,1])
+        self.imageitem.setLevels([0, 1])
         # self.imageitem.scale(0.35, sample_rate / (N))  # this is deprecated -- we have to use setTransform instead
         tr = QtGui.QTransform()
         tr.scale(0.35, sample_rate / (N))
