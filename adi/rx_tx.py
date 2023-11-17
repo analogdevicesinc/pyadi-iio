@@ -307,7 +307,7 @@ class tx(dds, rx_tx_common):
     _txdac: iio.Device = []
     _tx_channel_names: List[str] = []
     _complex_data = False
-    _tx_data_type = np.int16
+    _tx_data_type = None
     __txbuf = None
     _output_byte_filename = "out.bin"
     _push_to_file = False
@@ -432,6 +432,16 @@ class tx(dds, rx_tx_common):
             is enabled containing samples from a channel or set of channels.
             Data must be complex when using a complex data device.
         """
+
+        if not self._tx_data_type:
+            # Find channel data format
+            chan_name = self._tx_channel_names[self.tx_enabled_channels[0]]
+            chan = self._txdac.find_channel(chan_name, True)
+            df = chan.data_format
+            fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
+            fmt = ">" + fmt if df.is_be else fmt
+            self._tx_data_type = np.dtype(fmt)
+
         if not self.__tx_enabled_channels and data_np:
             raise Exception(
                 "When tx_enabled_channels is None or empty,"
@@ -464,8 +474,8 @@ class tx(dds, rx_tx_common):
             for chan in data_np:
                 i = np.real(chan)
                 q = np.imag(chan)
-                data[indx::stride] = i.astype(int)
-                data[indx + 1 :: stride] = q.astype(int)
+                data[indx::stride] = i.astype(self._tx_data_type)
+                data[indx + 1 :: stride] = q.astype(self._tx_data_type)
                 indx = indx + 2
         else:
             if self._num_tx_channels_enabled == 1:
@@ -478,7 +488,7 @@ class tx(dds, rx_tx_common):
             stride = self._num_tx_channels_enabled
             data = np.empty(stride * len(data_np[0]), dtype=self._tx_data_type)
             for chan in data_np:
-                data[indx::stride] = chan.astype(int)
+                data[indx::stride] = chan.astype(self._tx_data_type)
                 indx = indx + 1
 
         if not self.__txbuf:
