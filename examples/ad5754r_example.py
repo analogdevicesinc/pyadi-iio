@@ -34,8 +34,8 @@
 import adi
 
 # Set up AD5754R
-ad578x_dev = adi.ad5754r(uri="serial:COM46,230400,8n1n")
-ad578x.int_ref_powerup = "powerup"
+ad5754r_dev = adi.ad5754r(uri="serial:COM46,230400,8n1n")
+ad5754r_dev.int_ref_powerup = "powerup"
 
 # Configure channel 0
 chn_num = 0
