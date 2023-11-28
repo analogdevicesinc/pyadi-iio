@@ -43,6 +43,9 @@ class rx(rx_tx_common):
     _rx_unbuffered_data = False
     _rx_annotated = False
     _rx_stack_interleaved = True  # Convert from channel to sample interleaved
+    _rx_buffer_mask = None
+    __rx_stream = None
+    _rx_buffer_num_blocks = 4
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -178,23 +181,30 @@ class rx(rx_tx_common):
         return rx_offset
 
     def _rx_init_channels(self):
-        for m in self._rx_channel_names:
-            v = self._rxadc.find_channel(m)
-            if not v:
-                raise Exception(f"Channel {m} not found")
-            v.enabled = False
 
+        if not self._rx_buffer_mask:
+            self._rx_buffer_mask = iio.ChannelsMask(self._rxadc)
+
+        channels = []
         if self._complex_data:
             for m in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[m * 2])
-                v.enabled = True
+                channels.append(v)
                 v = self._rxadc.find_channel(self._rx_channel_names[m * 2 + 1])
-                v.enabled = True
+                channels.append(v)
         else:
             for m in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[m])
-                v.enabled = True
-        self.__rxbuf = iio.Buffer(self._rxadc, self.__rx_buffer_size, False)
+                channels.append(v)
+
+        self._rx_buffer_mask.channels = channels
+
+        self.__rxbuf = iio.Buffer(self._rxadc, self._rx_buffer_mask)
+        self.__rx_stream = iio.Stream(
+            buffer=self.__rxbuf,
+            nb_blocks=self._rx_buffer_num_blocks,
+            samples_count=self.rx_buffer_size,
+        )
 
     def __rx_unbuffered_data(self):
         x = []
@@ -232,7 +242,7 @@ class rx(rx_tx_common):
         """
         if not self.__rxbuf:
             self._rx_init_channels()
-        self.__rxbuf.refill()
+        rx_block = next(self.__rx_stream)
 
         data_channel_interleaved = []
         ecn = []
@@ -246,7 +256,7 @@ class rx(rx_tx_common):
 
         for name in ecn:
             chan = self._rxadc.find_channel(name)
-            bytearray_data = chan.read(self.__rxbuf)  # Do local type conversion
+            bytearray_data = chan.read(rx_block)  # Do local type conversion
             # create format strings
             df = chan.data_format
             fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
