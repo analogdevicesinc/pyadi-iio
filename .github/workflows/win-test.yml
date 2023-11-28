@@ -1,6 +1,7 @@
 name: Windows Tests
 
-on: [push, pull_request]
+# on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   CondaBased:
