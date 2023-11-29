@@ -450,3 +450,14 @@ adis16475:
         - iio:device0
   - pyadi_iio_class_support:
       - adis16475
+
+ad7124-8:
+  - ad7124
+  - pyadi_iio_class_support:
+      - ad7124
+  - emulate:
+      - filename: ad7124-8.xml
+      - data_devices:
+          - iio:device0
+  - pyadi_iio_class_support:
+      - ad7124

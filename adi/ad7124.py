@@ -36,31 +36,15 @@ class ad7124(rx, context_manager):
                 else:
                     index += 1
 
-        # dynamically get channels and sorting them after the index of the first voltage channel
-        self._ctrl.channels.sort(key=lambda x: int(x.id[7 : x.id.find("-")]))
+        self._rx_channel_names = [chan.name for chan in self._ctrl.channels]
+        if "-" in self._rx_channel_names[0]:
+            self._rx_channel_names.sort(key=lambda x: int(x[7:].split("-")[0]))
+        else:
+            self._rx_channel_names.sort(key=lambda x: int(x[7:]))
 
-        for ch in self._ctrl.channels:
-            name = ch._id
-            self._rx_channel_names.append(name)
+        for name in self._rx_channel_names:
             self.channel.append(self._channel(self._ctrl, name))
         rx.__init__(self)
-
-    def rx(self):
-        sig = super().rx()
-
-        if (
-            self._rx_unbuffered_data
-            or self._complex_data
-            or self.rx_output_type == "raw"
-        ):
-            return sig
-        else:
-            mv_sig = []
-
-            for signal in sig:
-                mv_sig.append(signal / 1000)
-
-            return mv_sig
 
     @property
     def sample_rate(self):
