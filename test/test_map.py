@@ -91,6 +91,10 @@ def get_test_map():
         "zynq-zc706-adv7511-adrv9375",
         "zynqmp-zcu102-rev10-adrv9375",
     ]
+    test_map["adrv9375"] = [
+        "zynq-zc706-adv7511-adrv9375",
+        "zynqmp-zcu102-rev10-adrv9375",
+    ]
     test_map["adrv9009"] = [
         "socfpga_arria10_socdk_adrv9009",
         "zynqmp-zcu102-rev10-adrv9008-1",

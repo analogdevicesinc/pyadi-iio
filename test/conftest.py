@@ -165,6 +165,11 @@ def test_attribute_multiple_values_with_depends(request):
 
 
 @pytest.fixture()
+def test_attribute_readonly_with_depends(request):
+    yield attribute_readonly_with_depends
+
+
+@pytest.fixture()
 def test_attribute_write_only_str_with_depends(request):
     yield attribute_write_only_str_with_depends
 
@@ -172,6 +177,11 @@ def test_attribute_write_only_str_with_depends(request):
 @pytest.fixture
 def test_attribute_write_only_str(request):
     yield attribute_write_only_str
+
+
+@pytest.fixture
+def test_attribute_check_range_readonly_with_depends(request):
+    yield attribute_check_range_readonly_with_depends
 
 
 @pytest.fixture()

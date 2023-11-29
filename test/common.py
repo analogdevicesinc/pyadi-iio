@@ -97,7 +97,9 @@ def pytest_generate_tests(metafunc):
 
 
 #################################################
-def dev_interface(uri, classname, val, attr, tol, sub_channel=None, sleep=0):
+def dev_interface(
+    uri, classname, val, attr, tol, sub_channel=None, sleep=0, readonly=False
+):
     sdr = eval(classname + "(uri='" + uri + "')")
     # Check hardware
     if not hasattr(sdr, attr):
@@ -114,10 +116,16 @@ def dev_interface(uri, classname, val, attr, tol, sub_channel=None, sleep=0):
         time.sleep(sleep)
     rval = getattr(sdr, attr)
 
-    del sdr
-
     if not isinstance(rval, str) and not is_list:
         rval = float(rval)
+        for _ in range(5):
+            setattr(sdr, attr, val)
+            time.sleep(0.3)
+            rval = float(getattr(sdr, attr))
+            if rval == val:
+                break
+
+    del sdr
 
     if is_list and isinstance(rval[0], str):
         return val == rval
