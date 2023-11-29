@@ -337,19 +337,6 @@
 <span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad7124.ad7124.channel" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124.rx" title="Permalink to this definition"></a></dt>
-<dd><p>Receive data from hardware buffers for each channel index in
-rx_enabled_channels.</p>
-<dl class="simple">
-<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
-is enabled containing samples from a channel or set of channels.
-Data will be complex when using a complex data device.</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad7124.ad7124.sample_rate">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad7124.ad7124.sample_rate" title="Permalink to this definition"></a></dt>
@@ -430,7 +417,6 @@ Data will be complex when using a complex data device.</p>
 <li><a class="reference internal" href="#">ad7124</a><ul>
 <li><a class="reference internal" href="#adi.ad7124.ad7124"><code class="docutils literal notranslate"><span class="pre">ad7124</span></code></a><ul>
 <li><a class="reference internal" href="#adi.ad7124.ad7124.channel"><code class="docutils literal notranslate"><span class="pre">ad7124.channel</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad7124.ad7124.rx"><code class="docutils literal notranslate"><span class="pre">ad7124.rx()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad7124.ad7124.sample_rate"><code class="docutils literal notranslate"><span class="pre">ad7124.sample_rate</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad7124.ad7124.scale_available"><code class="docutils literal notranslate"><span class="pre">ad7124.scale_available</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad7124.ad7124.to_volts"><code class="docutils literal notranslate"><span class="pre">ad7124.to_volts()</span></code></a></li>
