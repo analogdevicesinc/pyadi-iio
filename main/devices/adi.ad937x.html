@@ -1,0 +1,1012 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adi.ad9434 module" href="adi.ad9434.html" /><link rel="prev" title="ad936x" href="adi.ad936x.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>ad937x - Analog Devices Hardware Python Interfaces 0.0.17</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  --color-sidebar-item-background--current: black;
+  --color-sidebar-link-text: black;
+  --color-sidebar-link-text--top-level: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-sidebar-item-background--current: white;
+  --color-sidebar-link-text: white;
+  --color-sidebar-link-text--top-level: white;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-sidebar-item-background--current: white;
+  --color-sidebar-link-text: white;
+  --color-sidebar-link-text--top-level: white;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Analog Devices Hardware Python Interfaces 0.0.17</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/logos/PyADI-IIO_Logo_w_300_cropped.png" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Analog Devices Hardware Python Interfaces 0.0.17</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4130.html">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4630.html">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad469x.html">ad469x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5592r.html">ad5592r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad578x.html">ad578x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5754r.html">ad5754r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5940.html">adi.ad5940 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad6676.html">adi.ad6676 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad717x.html">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7291.html">ad7291</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7746.html">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7768.html">ad7768</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad777x.html">ad777x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7799.html">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9084.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9084_mc.html">ad9084_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9162.html">adi.ad9162 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9166.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9250.html">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9265.html">adi.ad9265 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad937x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9434.html">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9467.html">adi.ad9467 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9625.html">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4858.html">ad4858</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9739a.html">adi.ad9739a module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ada4961.html">adi.ada4961 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adaq8092.html">adaq8092</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf4355.html">adi.adf4355 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16475.html">adis16475</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adl5240.html">adi.adl5240 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adpd410x.html">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrf5720.html">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adt7420.html">adi.adt7420 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl313.html">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0554.html">cn0554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0566.html">adi.cn0566 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0575.html">cn0575</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0579.html">cn0579</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">lm75</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2387.html">ltc2387</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2499.html">adi.ltc2499 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2688.html">ltc2688</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.max11205.html">adi.max11205 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.max14001.html">adi.max14001 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.max31865.html">adi.max31865 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.max9611.html">adi.max9611 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="module-adi.ad937x">
+<span id="ad937x"></span><h1>ad937x<a class="headerlink" href="#module-adi.ad937x" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad937x.</span></span><span class="sig-name descname"><span class="pre">ad9371</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_jesd_control</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad937x.ad9371" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_tx" title="adi.rx_tx.rx_tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx_tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start" title="adi.sync_start.sync_start"><code class="xref py py-class docutils literal notranslate"><span class="pre">sync_start</span></code></a></p>
+<p>AD9371 Transceiver</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.ensm_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensm_mode</span></span><a class="headerlink" href="#adi.ad937x.ad9371.ensm_mode" title="Permalink to this definition"></a></dt>
+<dd><p>ensm_mode: Enable State Machine State Allows real time control over
+the current state of the device. Options are: radio_on, radio_off</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.gain_control_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_control_mode</span></span><a class="headerlink" href="#adi.ad937x.ad9371.gain_control_mode" title="Permalink to this definition"></a></dt>
+<dd><p>gain_control_mode: Mode of receive path AGC. Options are:
+automatic, hybrid, manual</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.jesd204_statuses">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_statuses</span></span><a class="headerlink" href="#adi.ad937x.ad9371.jesd204_statuses" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.obs_gain_control_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">obs_gain_control_mode</span></span><a class="headerlink" href="#adi.ad937x.ad9371.obs_gain_control_mode" title="Permalink to this definition"></a></dt>
+<dd><p>obs_gain_control_mode: Mode of Obs/Sniffer receive path AGC. Options are:
+automatic, hybrid, manual</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.obs_hardwaregain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">obs_hardwaregain</span></span><a class="headerlink" href="#adi.ad937x.ad9371.obs_hardwaregain" title="Permalink to this definition"></a></dt>
+<dd><p>obs_hardwaregain: Gain applied to Obs/Sniffer receive path chan0. Only applicable when
+obs_gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.obs_quadrature_tracking_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">obs_quadrature_tracking_en</span></span><a class="headerlink" href="#adi.ad937x.ad9371.obs_quadrature_tracking_en" title="Permalink to this definition"></a></dt>
+<dd><p>Enable Quadrature tracking calibration for OBS chan0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.obs_rf_port_select">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">obs_rf_port_select</span></span><a class="headerlink" href="#adi.ad937x.ad9371.obs_rf_port_select" title="Permalink to this definition"></a></dt>
+<dd><p>obs_rf_port_select: Observation path source. Options are:</p>
+<ul class="simple">
+<li><p>OFF - SnRx path is disabled</p></li>
+<li><p>ORX1_TX_LO – SnRx operates in observation mode on ORx1 with Tx LO synthesizer</p></li>
+<li><p>ORX2_TX_LO – SnRx operates in observation mode on ORx2 with Tx LO synthesizer</p></li>
+<li><p>INTERNALCALS – enables scheduled Tx calibrations while using SnRx path. The enableTrackingCals function needs to be called in RADIO_OFF state. It sets the calibration mask, which the scheduler will later use to schedule the desired calibrations. This command is issued in RADIO_OFF. Once the AD9371 moves to RADIO_ON state, the internal scheduler will use the enabled calibration mask to schedule calibrations whenever possible, based on the state of the transceiver. The Tx calibrations will not be scheduled until INTERNALCALS is selected and the Tx calibrations are enabled in the cal mask.</p></li>
+<li><p>OBS_SNIFFER – SnRx operates in sniffer mode with latest selected Sniffer Input – for hardware pin control operation. In pin mode, the GPIO pins designated for ORX_MODE would select SNIFFER mode. Then MYKONOS_setSnifferChannel function would choose the channel.</p></li>
+<li><p>ORX1_SN_LO – SnRx operates in observation mode on ORx1 with SNIFFER LO synthesizer</p></li>
+<li><p>ORX2_SN_LO – SnRx operates in observation mode on ORx2 with SNIFFER LO synthesizer</p></li>
+<li><p>SN_A – SnRx operates in sniffer mode on SnRxA with SNIFFER LO synthesizer</p></li>
+<li><p>SN_B – SnRx operates in sniffer mode on SnRxB with SNIFFER LO synthesizer</p></li>
+<li><p>SN_C – SnRx operates in sniffer mode on SnRxC with SNIFFER LO synthesizer</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.obs_temp_comp_gain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">obs_temp_comp_gain</span></span><a class="headerlink" href="#adi.ad937x.ad9371.obs_temp_comp_gain" title="Permalink to this definition"></a></dt>
+<dd><p>obs_temp_comp_gain:</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.orx_sample_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">orx_sample_rate</span></span><a class="headerlink" href="#adi.ad937x.ad9371.orx_sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p>orx_sample_rate: Sample rate ORX path in samples per second
+This value will reflect the correct value when 8x decimator is enabled</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.profile">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">profile</span></span><a class="headerlink" href="#adi.ad937x.ad9371.profile" title="Permalink to this definition"></a></dt>
+<dd><p>Load profile file. Provide path to profile file to attribute</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_enable_dec8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enable_dec8</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_enable_dec8" title="Permalink to this definition"></a></dt>
+<dd><p>rx_enable_dec8: Enable x8 decimation filter in RX path</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_hardwaregain_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_hardwaregain_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path channel 0. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_hardwaregain_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_hardwaregain_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>rx_hardwaregain: Gain applied to RX path channel 1. Only applicable when
+gain_control_mode is set to ‘manual’</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_lo">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_lo</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_lo" title="Permalink to this definition"></a></dt>
+<dd><p>rx_lo: Carrier frequency of RX path</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_quadrature_tracking_en_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_quadrature_tracking_en_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_quadrature_tracking_en_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>Enable Quadrature tracking calibration for RX1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_quadrature_tracking_en_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_quadrature_tracking_en_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_quadrature_tracking_en_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>Enable Quadrature tracking calibration for RX2</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_rf_bandwidth">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_rf_bandwidth</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_rf_bandwidth" title="Permalink to this definition"></a></dt>
+<dd><p>rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_sample_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sample_rate</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p>rx_sample_rate: Sample rate RX path in samples per second
+This value will reflect the correct value when 8x decimator is enabled</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_temp_comp_gain_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_temp_comp_gain_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_temp_comp_gain_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>rx_temp_comp_gain_chan0:</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.rx_temp_comp_gain_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_temp_comp_gain_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9371.rx_temp_comp_gain_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>rx_temp_comp_gain_chan1:</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.sn_lo">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sn_lo</span></span><a class="headerlink" href="#adi.ad937x.ad9371.sn_lo" title="Permalink to this definition"></a></dt>
+<dd><p>sn_lo: Carrier frequency of Sniffer/ORx path</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.tx_enable_int8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_enable_int8</span></span><a class="headerlink" href="#adi.ad937x.ad9371.tx_enable_int8" title="Permalink to this definition"></a></dt>
+<dd><p>tx_enable_int8: Enable x8 interpolation filter in TX path</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.tx_hardwaregain_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9371.tx_hardwaregain_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.tx_hardwaregain_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9371.tx_hardwaregain_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_hardwaregain: Attenuation applied to TX path channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.tx_lo">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_lo</span></span><a class="headerlink" href="#adi.ad937x.ad9371.tx_lo" title="Permalink to this definition"></a></dt>
+<dd><p>tx_lo: Carrier frequency of TX path</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.tx_quadrature_tracking_en_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_quadrature_tracking_en_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9371.tx_quadrature_tracking_en_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>Enable Quadrature tracking calibration for TX1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.tx_quadrature_tracking_en_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_quadrature_tracking_en_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9371.tx_quadrature_tracking_en_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>Enable Quadrature tracking calibration for TX2</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.tx_rf_bandwidth">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_rf_bandwidth</span></span><a class="headerlink" href="#adi.ad937x.ad9371.tx_rf_bandwidth" title="Permalink to this definition"></a></dt>
+<dd><p>tx_rf_bandwidth: Bandwidth of front-end analog filter of TX path</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9371.tx_sample_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sample_rate</span></span><a class="headerlink" href="#adi.ad937x.ad9371.tx_sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p>tx_sample_rate: Sample rate TX path in samples per second
+This value will reflect the correct value when 8x interpolator is enabled</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad937x.</span></span><span class="sig-name descname"><span class="pre">ad9375</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_jesd_control</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad937x.ad9375" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad937x.ad9371" title="adi.ad937x.ad9371"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9371</span></code></a></p>
+<p>AD9375 Transceiver</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_current_gain_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_current_gain_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_current_gain_chan0" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_current_gain_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_current_gain_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_current_gain_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_current_gain: Current measured gain in 1/100ths dB scale in channel 1.
+Current GaindB = currentGain/100</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_desired_gain_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_desired_gain_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_desired_gain_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_desired_gain: Desired gain from channel 0 output to orx input.
+Desired_gain (dB) = Desired_gain/100</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_desired_gain_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_desired_gain_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_desired_gain_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_desired_gain: Desired gain from channel 1 output to orx input.
+Desired_gain (dB) = Desired_gain/100</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_orx_rms_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_orx_rms_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_orx_rms_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_orx_rms: RMS orx digital sample power measured in the DPD block on the orx side is returned
+with measurement resolution of 0.01 dB for channel 0. Prms dBFs = orxRMS/100</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_track_count_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_track_count_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_track_count_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_track_count: The control reads back the number of times the CLGC has successfully run since
+CLGC initialization calibration for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_track_count_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_track_count_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_track_count_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_track_count: The control reads back the number of times the CLGC has successfully run since
+CLGC initialization calibration for channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_tracking_en_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_tracking_en_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_tracking_en_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>Enable CLGC tracking for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_tracking_en_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_tracking_en_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_tracking_en_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>Enable CLGC tracking for channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_tx_gain_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_tx_gain_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_tx_gain_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_tx_gain: It controls the current channel 0 attenuation for a channel in 0.05 dB resolution.
+Tx_Attenuation(dB) = Tx_gain/200</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_tx_gain_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_tx_gain_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_tx_gain_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_tx_gain: It controls the current channel 1 attenuation for a channel in 0.05 dB resolution. Tx_Attenuation(dB) = Tx_gain/200</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_tx_rms_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_tx_rms_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_tx_rms_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_tx_rms: The controls returns the RMS channel 0 digital sample power measured at DPD actuator output
+with measurement resolution of 0.01 dB. Prms dBFs = txRMS/100</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_clgc_tx_rms_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_clgc_tx_rms_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_clgc_tx_rms_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_clgc_tx_rms: The controls returns the RMS channel 1 digital sample power measured at DPD actuator output
+with measurement resolution of 0.01 dB. Prms dBFs = txRMS/100</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_actuator_en_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_actuator_en_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_actuator_en_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>Enable DPD actuator for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_actuator_en_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_actuator_en_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_actuator_en_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>Enable DPD actuator for channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_external_path_delay_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_external_path_delay_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_external_path_delay_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dpd_external_path_delay: The control reads back the external path delay
+from channel 0 output to orx input at 1/16 sample resolution of the ORx sample rate</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_external_path_delay_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_external_path_delay_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_external_path_delay_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dpd_external_path_delay: The control reads back the external path delay
+from channel 1 output to orx input at 1/16 sample resolution of the ORx sample rate</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_model_error_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_model_error_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_model_error_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dpd_model_error: The control reads back the percent error of the PA model ×10 to include 1 decimal place for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_model_error_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_model_error_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_model_error_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dpd_model_error: The control reads back the percent error of the PA model ×10 to include 1 decimal place for channel 1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_reset_en_chan0">
+<span class="sig-name descname"><span class="pre">tx_dpd_reset_en_chan0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_reset_en_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>Enable DPD reset for channel 0</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_reset_en_chan1">
+<span class="sig-name descname"><span class="pre">tx_dpd_reset_en_chan1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_reset_en_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>Enable DPD reset for channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_status_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_status_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_status_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dpd_status: It reads back the DPD calibration status from the ARM processor for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_status_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_status_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_status_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dpd_status: It reads back the DPD calibration status from the ARM processor for channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_track_count_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_track_count_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_track_count_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dpd_track_count: It reads back the number of times the DPD has successfully run since
+DPD initialization calibration for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_track_count_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_track_count_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_track_count_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_dpd_track_count: It reads back the number of times the DPD has successfully run since
+DPD initialization calibration for channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_tracking_en_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_tracking_en_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_tracking_en_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>Enable DPD tracking for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_dpd_tracking_en_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_dpd_tracking_en_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_dpd_tracking_en_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>Enable DPD tracking for channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_gain_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_gain_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_forward: Forward rms gain measured from channel 0 to orx path. 0.01 dB = 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_gain_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_gain_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_forward: Forward rms gain measured from channel 1 to orx path. 0.01 dB = 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_gain_imag_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_gain_imag_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_imag_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_forward_gain_imag: Imaginary part of the forward path complex gain for channel 0 (1 = 0.01 linear gain)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_gain_imag_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_gain_imag_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_imag_chan1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_gain_real_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_gain_real_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_real_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_forward_gain_real: Real part of the forward path complex gain for channel 0 (1 = 0.01 linear gain)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_gain_real_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_gain_real_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_real_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_forward_gain_real: Real part of the forward path complex gain for channel 1 (1 = 0.01 linear gain)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_orx_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_orx_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_orx_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_forward_orx: RMS Orx digital sample power measured at DPD block for ORx data in the forward measurement mode
+with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_tx_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_tx_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_tx_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_forward_tx: RMS Tx digital sample power measured at DPD block for ORx data in the forward measurement mode
+with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_forward_tx_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_forward_tx_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_forward_tx_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_forward_tx: RMS Tx digital sample power measured at DPD block for ORx data in the forward measurement mode
+with measurement resolution of 0.01 dB and 21 dB offset for channel 1. Prms dBFS = txRms/100 + 21 dB</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_gain_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_gain_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_gain: Reflected path gain in RMS for channel 0. 1 = 0.01 dB gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_gain_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_gain_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_gain: Reflected path gain in RMS for channel 1. 1 = 0.01 dB gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_gain_imag_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_gain_imag_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_imag_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_gain_imag: Imaginary part of the reflected path complex gain for channel 0. 1 = 0.01 linear gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_gain_imag_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_gain_imag_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_imag_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_gain_imag: Imaginary part of the reflected path complex gain for channel 1. 1 = 0.01 linear gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_gain_real_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_gain_real_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_real_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_gain_real: Real part of the reflected path complex gain for channel 0. 1 = 0.01 linear gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_gain_real_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_gain_real_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_real_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_gain_real: Real part of the reflected path complex gain for channel 1. 1 = 0.01 linear gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_orx_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_orx_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_orx_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_orx: RMS ORx digital sample power measured at DPD block for the ORx data in the reverse measurement mode
+with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = orxRms/100 + 21 dB</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_tx_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_tx_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_tx_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_tx: RMS Tx digital sample power measured at DPD actuator for the reverse measurement
+with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_reflected_tx_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_reflected_tx_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_reflected_tx_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_reflected_tx: RMS Tx digital sample power measured at DPD actuator for the reverse measurement
+with measurement resolution of 0.01 dB and 21 dB offset for channel 1. Prms dBFS = txRms/100 + 21 dB</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_track_count_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_track_count_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_track_count_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_track_count: The control reads back the number of times the VSWR has successfully run
+since VSWR initialization calibration for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_track_count_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_track_count_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_track_count_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>tx_vswr_track_count: The control reads back the number of times the VSWR has successfully run since
+VSWR initialization calibration for channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_tracking_en_chan0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_tracking_en_chan0</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_tracking_en_chan0" title="Permalink to this definition"></a></dt>
+<dd><p>Enable VSWR tracking for channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad937x.ad9375.tx_vswr_tracking_en_chan1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_vswr_tracking_en_chan1</span></span><a class="headerlink" href="#adi.ad937x.ad9375.tx_vswr_tracking_en_chan1" title="Permalink to this definition"></a></dt>
+<dd><p>Enable VSWR tracking for channel 1</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="adi.ad9434.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">adi.ad9434 module</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="adi.ad936x.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">ad936x</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2019-2022, Analog Devices, Inc
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">ad937x</a><ul>
+<li><a class="reference internal" href="#adi.ad937x.ad9371"><code class="docutils literal notranslate"><span class="pre">ad9371</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.ensm_mode"><code class="docutils literal notranslate"><span class="pre">ad9371.ensm_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.gain_control_mode"><code class="docutils literal notranslate"><span class="pre">ad9371.gain_control_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.jesd204_statuses"><code class="docutils literal notranslate"><span class="pre">ad9371.jesd204_statuses</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.obs_gain_control_mode"><code class="docutils literal notranslate"><span class="pre">ad9371.obs_gain_control_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.obs_hardwaregain"><code class="docutils literal notranslate"><span class="pre">ad9371.obs_hardwaregain</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.obs_quadrature_tracking_en"><code class="docutils literal notranslate"><span class="pre">ad9371.obs_quadrature_tracking_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.obs_rf_port_select"><code class="docutils literal notranslate"><span class="pre">ad9371.obs_rf_port_select</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.obs_temp_comp_gain"><code class="docutils literal notranslate"><span class="pre">ad9371.obs_temp_comp_gain</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.orx_sample_rate"><code class="docutils literal notranslate"><span class="pre">ad9371.orx_sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.profile"><code class="docutils literal notranslate"><span class="pre">ad9371.profile</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_enable_dec8"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_enable_dec8</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_hardwaregain_chan0"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_hardwaregain_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_hardwaregain_chan1"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_hardwaregain_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_lo"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_lo</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_quadrature_tracking_en_chan0"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_quadrature_tracking_en_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_quadrature_tracking_en_chan1"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_quadrature_tracking_en_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_rf_bandwidth"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_rf_bandwidth</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_sample_rate"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_temp_comp_gain_chan0"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_temp_comp_gain_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.rx_temp_comp_gain_chan1"><code class="docutils literal notranslate"><span class="pre">ad9371.rx_temp_comp_gain_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.sn_lo"><code class="docutils literal notranslate"><span class="pre">ad9371.sn_lo</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.tx_enable_int8"><code class="docutils literal notranslate"><span class="pre">ad9371.tx_enable_int8</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.tx_hardwaregain_chan0"><code class="docutils literal notranslate"><span class="pre">ad9371.tx_hardwaregain_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.tx_hardwaregain_chan1"><code class="docutils literal notranslate"><span class="pre">ad9371.tx_hardwaregain_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.tx_lo"><code class="docutils literal notranslate"><span class="pre">ad9371.tx_lo</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.tx_quadrature_tracking_en_chan0"><code class="docutils literal notranslate"><span class="pre">ad9371.tx_quadrature_tracking_en_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.tx_quadrature_tracking_en_chan1"><code class="docutils literal notranslate"><span class="pre">ad9371.tx_quadrature_tracking_en_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.tx_rf_bandwidth"><code class="docutils literal notranslate"><span class="pre">ad9371.tx_rf_bandwidth</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9371.tx_sample_rate"><code class="docutils literal notranslate"><span class="pre">ad9371.tx_sample_rate</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375"><code class="docutils literal notranslate"><span class="pre">ad9375</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_current_gain_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_current_gain_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_current_gain_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_current_gain_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_desired_gain_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_desired_gain_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_desired_gain_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_desired_gain_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_orx_rms_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_orx_rms_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_track_count_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_track_count_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_track_count_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_track_count_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_tracking_en_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_tracking_en_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_tracking_en_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_tracking_en_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_tx_gain_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_tx_gain_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_tx_gain_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_tx_gain_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_tx_rms_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_tx_rms_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_clgc_tx_rms_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_clgc_tx_rms_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_actuator_en_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_actuator_en_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_actuator_en_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_actuator_en_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_external_path_delay_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_external_path_delay_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_external_path_delay_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_external_path_delay_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_model_error_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_model_error_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_model_error_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_model_error_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_reset_en_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_reset_en_chan0()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_reset_en_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_reset_en_chan1()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_status_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_status_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_status_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_status_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_track_count_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_track_count_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_track_count_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_track_count_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_tracking_en_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_tracking_en_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_dpd_tracking_en_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_dpd_tracking_en_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_gain_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_gain_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_imag_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_gain_imag_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_imag_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_gain_imag_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_real_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_gain_real_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_gain_real_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_gain_real_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_orx_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_orx_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_tx_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_tx_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_forward_tx_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_forward_tx_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_gain_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_gain_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_imag_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_gain_imag_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_imag_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_gain_imag_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_real_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_gain_real_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_gain_real_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_gain_real_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_orx_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_orx_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_tx_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_tx_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_reflected_tx_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_reflected_tx_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_track_count_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_track_count_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_track_count_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_track_count_chan1</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_tracking_en_chan0"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_tracking_en_chan0</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad937x.ad9375.tx_vswr_tracking_en_chan1"><code class="docutils literal notranslate"><span class="pre">ad9375.tx_vswr_tracking_en_chan1</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>
