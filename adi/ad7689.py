@@ -28,6 +28,9 @@ class ad7689(rx, context_manager):
             "ad7949",
             "ad7699",
             "ad7690",
+            "ad7984",
+            "spi_clasic_ad7984",
+            "spi_engine_ad7984",
         ]
 
         self._ctrl = None
