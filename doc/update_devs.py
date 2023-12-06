@@ -46,6 +46,7 @@ def update_devs():
         "jesd_internal",
         "sync_start",
         "dsp",
+        "compat",
     ]
     adi_rst_path = os.path.join(root, "source", "devices", "adi.rst")
     with open(adi_rst_path, "r") as f:
