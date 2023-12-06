@@ -5,7 +5,7 @@ pip install -r requirements_dev.txt
 
 
 if [ "$LIBIIO_BRANCH" = "main" ]; then
-    pip install --force-reinstall pytest-libiio@git+https://github.com/tfcollins/pytest-libiio.git@libiio-v1-support
+    pip install --no-deps --force-reinstall pytest-libiio@git+https://github.com/tfcollins/pytest-libiio.git@libiio-v1-support
 else
     pip install pytest-libiio==0.0.14
 fi
