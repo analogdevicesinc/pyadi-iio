@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9, "3.10"]
+        libiio: ['main', 'v0.25']
 
     steps:
       - uses: actions/checkout@v2
@@ -18,6 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          export LIBIIO_BRANCH=${{ matrix.libiio }}
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
           bash ./.github/scripts/install_part_libs.sh
@@ -31,6 +33,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.7, 3.8, 3.9, "3.10"]
+        libiio: ['main', 'v0.25']
 
     steps:
       - uses: actions/checkout@v2
@@ -41,6 +44,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          export LIBIIO_BRANCH=${{ matrix.libiio }}
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_iioemu.sh
