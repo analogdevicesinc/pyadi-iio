@@ -54,7 +54,7 @@ class rx(rx_tx_common):
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
-        if self.__is_libiio_v1():
+        if self._is_libiio_v1():
             self._setup_v1_rx()
 
     @property
@@ -325,7 +325,7 @@ class tx(dds, rx_tx_common):
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
-        if self.__is_libiio_v1():
+        if self._is_libiio_v1():
             self._setup_v1_tx()
 
     def __del__(self):

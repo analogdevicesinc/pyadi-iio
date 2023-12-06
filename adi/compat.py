@@ -11,7 +11,7 @@ import iio
 class compat_libiio:
     """Compatibility class for libiio v1.X."""
 
-    def __is_libiio_v1(self):
+    def _is_libiio_v1(self) -> bool:
         """Check is we are using >= v1.X."""
         v = iio.version
         return v[0] >= 1
