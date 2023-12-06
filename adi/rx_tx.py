@@ -9,6 +9,7 @@ import iio
 
 import numpy as np
 from adi.attribute import attribute
+from adi.compat import compat_libiio
 from adi.context_manager import context_manager
 from adi.dds import dds
 
@@ -20,7 +21,7 @@ class phy(attribute):
         self._ctrl = []
 
 
-class rx_tx_common(attribute):
+class rx_tx_common(attribute, compat_libiio):
     """Common functions for RX and TX"""
 
     def _annotate(self, data, cnames: List[str], echans: List[int]):
@@ -43,9 +44,6 @@ class rx(rx_tx_common):
     _rx_unbuffered_data = False
     _rx_annotated = False
     _rx_stack_interleaved = True  # Convert from channel to sample interleaved
-    _rx_buffer_mask = None
-    __rx_stream = None
-    _rx_buffer_num_blocks = 4
 
     def __init__(self, rx_buffer_size=1024):
         if self._complex_data:
@@ -56,6 +54,8 @@ class rx(rx_tx_common):
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
+        if self.__is_libiio_v1():
+            self._setup_v1_rx()
 
     @property
     def rx_channel_names(self) -> List[str]:
@@ -181,30 +181,23 @@ class rx(rx_tx_common):
         return rx_offset
 
     def _rx_init_channels(self):
+        for m in self._rx_channel_names:
+            v = self._rxadc.find_channel(m)
+            if not v:
+                raise Exception(f"Channel {m} not found")
+            v.enabled = False
 
-        if not self._rx_buffer_mask:
-            self._rx_buffer_mask = iio.ChannelsMask(self._rxadc)
-
-        channels = []
         if self._complex_data:
             for m in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[m * 2])
-                channels.append(v)
+                v.enabled = True
                 v = self._rxadc.find_channel(self._rx_channel_names[m * 2 + 1])
-                channels.append(v)
+                v.enabled = True
         else:
             for m in self.rx_enabled_channels:
                 v = self._rxadc.find_channel(self._rx_channel_names[m])
-                channels.append(v)
-
-        self._rx_buffer_mask.channels = channels
-
-        self.__rxbuf = iio.Buffer(self._rxadc, self._rx_buffer_mask)
-        self.__rx_stream = iio.Stream(
-            buffer=self.__rxbuf,
-            nb_blocks=self._rx_buffer_num_blocks,
-            samples_count=self.rx_buffer_size,
-        )
+                v.enabled = True
+        self.__rxbuf = iio.Buffer(self._rxadc, self.__rx_buffer_size, False)
 
     def __rx_unbuffered_data(self):
         x = []
@@ -242,7 +235,7 @@ class rx(rx_tx_common):
         """
         if not self.__rxbuf:
             self._rx_init_channels()
-        rx_block = next(self.__rx_stream)
+        self.__rxbuf.refill()
 
         data_channel_interleaved = []
         ecn = []
@@ -256,7 +249,7 @@ class rx(rx_tx_common):
 
         for name in ecn:
             chan = self._rxadc.find_channel(name)
-            bytearray_data = chan.read(rx_block)  # Do local type conversion
+            bytearray_data = chan.read(self.__rxbuf)  # Do local type conversion
             # create format strings
             df = chan.data_format
             fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
@@ -332,6 +325,8 @@ class tx(dds, rx_tx_common):
         self.tx_enabled_channels = tx_enabled_channels
         self.tx_cyclic_buffer = tx_cyclic_buffer
         dds.__init__(self)
+        if self.__is_libiio_v1():
+            self._setup_v1_tx()
 
     def __del__(self):
         self.__txbuf = []
@@ -518,8 +513,11 @@ class tx(dds, rx_tx_common):
             f.write(bytearray(data))
             f.close()
         else:
-            self.__txbuf.write(bytearray(data))
-            self.__txbuf.push()
+            self.__tx_buffer_push(data)
+
+    def __tx_buffer_push(self, data):
+        self.__txbuf.write(bytearray(data))
+        self.__txbuf.push()
 
 
 class rx_tx(rx, tx, phy):
@@ -594,7 +592,6 @@ class shared_def(context_manager, metaclass=ABCMeta):
     def __init__(
         self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
-
         # Handle Older API and Newer APIs
         uri_ctx = self.__handle_init_args(args, kwargs)
 
@@ -653,7 +650,6 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
     def __init__(
         self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
-
         shared_def.__init__(self, *args, **kwargs)
 
         if self._rx_data_device_name:
@@ -701,7 +697,6 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
     def __init__(
         self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
-
         shared_def.__init__(self, *args, **kwargs)
 
         if self._tx_data_device_name:

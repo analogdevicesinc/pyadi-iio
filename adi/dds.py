@@ -142,6 +142,8 @@ class dds(attribute):
                     + "_F1",
                     True,
                 )
+            if not chan:
+                raise Exception(f"DDS Channel {channel} not found")
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(90000)
             chan.attrs["scale"].value = str(scale)
