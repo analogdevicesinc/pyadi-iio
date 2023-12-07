@@ -23,7 +23,7 @@ class compat_libiio_v1_rx:
     _rx_stream = None
     _rx_buffer_num_blocks = 4
 
-    def _rx_init_channels_v1(self):
+    def _rx_init_channels(self):
         if not self._rx_buffer_mask:
             self._rx_buffer_mask = iio.ChannelsMask(self._rxadc)
 
@@ -49,6 +49,9 @@ class compat_libiio_v1_rx:
         )
 
     def _rx_buffered_data(self):
+        if not self._rx_stream:
+            self._rx_init_channels()
+
         block = next(self._rx_stream)
 
         data_channel_interleaved = []
@@ -89,16 +92,27 @@ class compat_libiio_v1_tx:
         self._tx_buffer_mask.channels = channels
 
         self._txbuf = iio.Buffer(self._txdac, self._tx_buffer_mask)
-        self._tx_block = iio.Block(self._txbuf, self._tx_buffer_size)
+        if not self._tx_cyclic_buffer:
+            self._tx_stream = iio.Stream(
+                buffer=self._txbuf,
+                nb_blocks=self._tx_buffer_num_blocks,
+                samples_count=self._tx_buffer_size,
+            )
+        else:
+            self._tx_block = iio.Block(self._txbuf, self._tx_buffer_size)
 
     def _tx_buffer_push(self, data):
         """Push data to TX buffer.
 
         data: bytearray
         """
-        self._tx_block.write(data)
-        self._tx_block.enqueue(None, self._tx_cyclic_buffer)
-        self._txbuf.enabled = True
+        if self._tx_cyclic_buffer:
+            self._tx_block.write(data)
+            self._tx_block.enqueue(None, self._tx_cyclic_buffer)
+            self._txbuf.enabled = True
+        else:
+            block = next(self._tx_stream)
+            block.write(data)
 
 
 class compat_libiio_v0_rx:
