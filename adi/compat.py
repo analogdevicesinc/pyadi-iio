@@ -48,6 +48,19 @@ class compat_libiio_v1_rx:
             samples_count=self.rx_buffer_size,
         )
 
+    def _rx_buffered_data(self):
+        block = next(self._rx_stream)
+
+        data_channel_interleaved = []
+        for chan in self._rx_buffer_mask.channels:
+            bytearray_data = chan.read(block)
+            # create format strings
+            df = chan.data_format
+            fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
+            data_channel_interleaved.append(np.frombuffer(bytearray_data, dtype=fmt))
+
+        return data_channel_interleaved
+
 
 class compat_libiio_v1_tx:
     """Compatibility class for libiio v1.X TX."""
