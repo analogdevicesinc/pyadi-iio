@@ -427,10 +427,15 @@ array<span class="o">([</span><span class="w">     </span><span class="m">49151<
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.rx">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx_buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.rx_tx.rx_core">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx_core</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx_buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_core" title="Permalink to this definition"></a></dt>
 <dd><p>Buffer handling for receive devices</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.rx_tx.rx.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx.rx" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.rx_core.rx">
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_core.rx" title="Permalink to this definition"></a></dt>
 <dd><p>Receive data from hardware buffers for each channel index in
 rx_enabled_channels.</p>
 <dl class="simple">
@@ -442,32 +447,32 @@ Data will be complex when using a complex data device.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.rx_tx.rx.rx_annotated">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_annotated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.rx_tx.rx.rx_annotated" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.rx_core.rx_annotated">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_annotated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.rx_tx.rx_core.rx_annotated" title="Permalink to this definition"></a></dt>
 <dd><p>rx_annotated: Set output data from rx() to be annotated</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.rx_tx.rx.rx_buffer_size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.rx_tx.rx.rx_buffer_size" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.rx_core.rx_buffer_size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.rx_tx.rx_core.rx_buffer_size" title="Permalink to this definition"></a></dt>
 <dd><p>rx_buffer_size: Size of receive buffer in samples</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.rx_tx.rx.rx_channel_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.rx_tx.rx.rx_channel_names" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.rx_core.rx_channel_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.rx_tx.rx_core.rx_channel_names" title="Permalink to this definition"></a></dt>
 <dd><p>rx_channel_names: List of RX channel names</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.rx_tx.rx.rx_destroy_buffer">
-<span class="sig-name descname"><span class="pre">rx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx.rx_destroy_buffer" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.rx_core.rx_destroy_buffer">
+<span class="sig-name descname"><span class="pre">rx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx_core.rx_destroy_buffer" title="Permalink to this definition"></a></dt>
 <dd><p>rx_destroy_buffer: Clears RX buffer</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.rx_tx.rx.rx_enabled_channels">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.rx_tx.rx.rx_enabled_channels" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.rx_core.rx_enabled_channels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.rx_tx.rx_core.rx_enabled_channels" title="Permalink to this definition"></a></dt>
 <dd><p>rx_enabled_channels: List of enabled channels (channel 1 is 0)</p>
 <p>Either a list of channel numbers or channel names can be used to set
 rx_enabled_channels. When channel names are used, they will be
@@ -475,8 +480,8 @@ translated to channel numbers.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.rx_tx.rx.rx_output_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.rx_tx.rx.rx_output_type" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.rx_core.rx_output_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.rx_tx.rx_core.rx_output_type" title="Permalink to this definition"></a></dt>
 <dd><p>rx_output_type: Set output data type from rx()</p>
 </dd></dl>
 
@@ -514,10 +519,15 @@ translated to channel numbers.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.tx">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">tx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx_cyclic_buffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.rx_tx.tx_core">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">tx_core</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx_cyclic_buffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx_core" title="Permalink to this definition"></a></dt>
 <dd><p>Buffer handling for transmit devices</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.rx_tx.tx.tx">
-<span class="sig-name descname"><span class="pre">tx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_np</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.tx_core.tx">
+<span class="sig-name descname"><span class="pre">tx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_np</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx_core.tx" title="Permalink to this definition"></a></dt>
 <dd><p>Transmit data to hardware buffers for each channel index in
 tx_enabled_channels.</p>
 <dl class="simple">
@@ -529,26 +539,26 @@ Data must be complex when using a complex data device.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.rx_tx.tx.tx_channel_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_names</span></span><a class="headerlink" href="#adi.rx_tx.tx.tx_channel_names" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.tx_core.tx_channel_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_names</span></span><a class="headerlink" href="#adi.rx_tx.tx_core.tx_channel_names" title="Permalink to this definition"></a></dt>
 <dd><p>tx_channel_names: Names of the transmit channels</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.rx_tx.tx.tx_cyclic_buffer">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_cyclic_buffer</span></span><a class="headerlink" href="#adi.rx_tx.tx.tx_cyclic_buffer" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.tx_core.tx_cyclic_buffer">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_cyclic_buffer</span></span><a class="headerlink" href="#adi.rx_tx.tx_core.tx_cyclic_buffer" title="Permalink to this definition"></a></dt>
 <dd><p>tx_cyclic_buffer: Enable cyclic buffer for TX</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.rx_tx.tx.tx_destroy_buffer">
-<span class="sig-name descname"><span class="pre">tx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx.tx_destroy_buffer" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.tx_core.tx_destroy_buffer">
+<span class="sig-name descname"><span class="pre">tx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.tx_core.tx_destroy_buffer" title="Permalink to this definition"></a></dt>
 <dd><p>tx_destroy_buffer: Clears TX buffer</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.rx_tx.tx.tx_enabled_channels">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_enabled_channels</span></span><a class="headerlink" href="#adi.rx_tx.tx.tx_enabled_channels" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.rx_tx.tx_core.tx_enabled_channels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_enabled_channels</span></span><a class="headerlink" href="#adi.rx_tx.tx_core.tx_enabled_channels" title="Permalink to this definition"></a></dt>
 <dd><p>tx_enabled_channels: List of enabled channels (channel 1 is 0)</p>
 <p>Either a list of channel numbers or channel names can be used to set
 tx_enabled_channels. When channel names are used, they will be
@@ -673,14 +683,15 @@ translated to channel numbers.</p>
 <li><a class="reference internal" href="#annotated-buffers">Annotated Buffers</a></li>
 <li><a class="reference internal" href="#buffer-units">Buffer Units</a></li>
 <li><a class="reference internal" href="#module-adi.rx_tx">Members</a><ul>
-<li><a class="reference internal" href="#adi.rx_tx.rx"><code class="docutils literal notranslate"><span class="pre">rx</span></code></a><ul>
-<li><a class="reference internal" href="#adi.rx_tx.rx.rx"><code class="docutils literal notranslate"><span class="pre">rx.rx()</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.rx.rx_annotated"><code class="docutils literal notranslate"><span class="pre">rx.rx_annotated</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.rx.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">rx.rx_buffer_size</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.rx.rx_channel_names"><code class="docutils literal notranslate"><span class="pre">rx.rx_channel_names</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.rx.rx_destroy_buffer"><code class="docutils literal notranslate"><span class="pre">rx.rx_destroy_buffer()</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.rx.rx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">rx.rx_enabled_channels</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.rx.rx_output_type"><code class="docutils literal notranslate"><span class="pre">rx.rx_output_type</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx"><code class="docutils literal notranslate"><span class="pre">rx</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_core"><code class="docutils literal notranslate"><span class="pre">rx_core</span></code></a><ul>
+<li><a class="reference internal" href="#adi.rx_tx.rx_core.rx"><code class="docutils literal notranslate"><span class="pre">rx_core.rx()</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_core.rx_annotated"><code class="docutils literal notranslate"><span class="pre">rx_core.rx_annotated</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_core.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">rx_core.rx_buffer_size</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_core.rx_channel_names"><code class="docutils literal notranslate"><span class="pre">rx_core.rx_channel_names</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_core.rx_destroy_buffer"><code class="docutils literal notranslate"><span class="pre">rx_core.rx_destroy_buffer()</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_core.rx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">rx_core.rx_enabled_channels</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.rx_core.rx_output_type"><code class="docutils literal notranslate"><span class="pre">rx_core.rx_output_type</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#adi.rx_tx.rx_def"><code class="docutils literal notranslate"><span class="pre">rx_def</span></code></a></li>
@@ -688,12 +699,13 @@ translated to channel numbers.</p>
 <li><a class="reference internal" href="#adi.rx_tx.rx_tx_common"><code class="docutils literal notranslate"><span class="pre">rx_tx_common</span></code></a></li>
 <li><a class="reference internal" href="#adi.rx_tx.rx_tx_def"><code class="docutils literal notranslate"><span class="pre">rx_tx_def</span></code></a></li>
 <li><a class="reference internal" href="#adi.rx_tx.shared_def"><code class="docutils literal notranslate"><span class="pre">shared_def</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.tx"><code class="docutils literal notranslate"><span class="pre">tx</span></code></a><ul>
-<li><a class="reference internal" href="#adi.rx_tx.tx.tx"><code class="docutils literal notranslate"><span class="pre">tx.tx()</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.tx.tx_channel_names"><code class="docutils literal notranslate"><span class="pre">tx.tx_channel_names</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.tx.tx_cyclic_buffer"><code class="docutils literal notranslate"><span class="pre">tx.tx_cyclic_buffer</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.tx.tx_destroy_buffer"><code class="docutils literal notranslate"><span class="pre">tx.tx_destroy_buffer()</span></code></a></li>
-<li><a class="reference internal" href="#adi.rx_tx.tx.tx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">tx.tx_enabled_channels</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx"><code class="docutils literal notranslate"><span class="pre">tx</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx_core"><code class="docutils literal notranslate"><span class="pre">tx_core</span></code></a><ul>
+<li><a class="reference internal" href="#adi.rx_tx.tx_core.tx"><code class="docutils literal notranslate"><span class="pre">tx_core.tx()</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx_core.tx_channel_names"><code class="docutils literal notranslate"><span class="pre">tx_core.tx_channel_names</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx_core.tx_cyclic_buffer"><code class="docutils literal notranslate"><span class="pre">tx_core.tx_cyclic_buffer</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx_core.tx_destroy_buffer"><code class="docutils literal notranslate"><span class="pre">tx_core.tx_destroy_buffer()</span></code></a></li>
+<li><a class="reference internal" href="#adi.rx_tx.tx_core.tx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">tx_core.tx_enabled_channels</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#adi.rx_tx.tx_def"><code class="docutils literal notranslate"><span class="pre">tx_def</span></code></a></li>
