@@ -1,10 +1,7 @@
 import adi
-import matplotlib.pyplot as plt
 import numpy as np
-import time
 
-import pandas as pd
-import numpy as np
+AD74413R_DAC_MAX_CODE = 8192
 
 dev_uri = "ip:169.254.97.40"
 
@@ -17,7 +14,7 @@ dev_uri = "ip:169.254.97.40"
 				       current_in_ext_hart, current_in_loop_hart
 
 """
-channel_config = ["resistance", "voltage_in", "voltage_in", "voltage_in"]
+channel_config = ["voltage_out", "voltage_out", "voltage_out", "resistance"]
 
 # Possible values: 0, 1
 channel_enable = [1, 1, 1, 1]
@@ -28,8 +25,6 @@ channel_device = ["ad74413r", "ad74413r", "ad74413r", "ad74413r"]
 swiot = adi.swiot(uri=dev_uri)
 swiot.mode = "config"
 swiot = adi.swiot(uri=dev_uri)
-
-# swiot.identify = 1
 
 swiot.ch0_device = channel_device[0]
 swiot.ch0_function = channel_config[0]
@@ -52,71 +47,46 @@ swiot = adi.swiot(uri=dev_uri)
 
 # Rev ID should be 0x8
 print("AD74413R rev ID:", ad74413r.reg_read(0x46))
-max14906.reg_write(0xA, 0x3)
-max14906.reg_write(0x1, 0xFF)
 
-# max14906.channel["voltage3"].raw = 1
-
-# print("0x7:", max14906.reg_read(0x7))
-# max14906.reg_write(0xF, 0xFF)
-
+# Channels which may be used to sample data from the AD74413R
 print("AD74413R input (ADC) channels:", ad74413r._rx_channel_names)
+
+# Channels which may be used to set DAC values
 print("AD74413R output (DAC) channels:", ad74413r._tx_channel_names)
 
-# Write the raw value for a DAC channel. This is the raw code.
-# ad74413r.channel["voltage0"].raw = 0
-
-# Reading channel attributes for AD74413R.
-# print("AD74413R voltage0 raw:", ad74413r.channel["voltage3"].raw)
-# print("AD74413R voltage0 scale:", ad74413r.channel["voltage3"].scale)
-# print("AD74413R voltage0 offset:", ad74413r.channel["voltage3"].offset)
-
-# print("MAX14906 input channels:", max14906._rx_channel_names)
-# print("MAX14906 output channels:", max14906._tx_channel_names)
-
-# Setting the output value of MAX14906 channel (0 or 1)
-# max14906.channel["voltage3"].raw = 1
-
-# Reading the value of a MAX14906 channel. It's the same for either input or output channels.
-# print("MAX14906 channel 3 value:", max14906.channel["voltage3"].raw)
-
-# Reading temperature data from the ADT75 (degrees Celsius).
 print("ADT75 temperature reading:", adt75() * 62.5)
 
-print("Resistance: ", ad74413r.channel["resistance0"].processed)
-print("Voltage4 diag function: ", ad74413r.channel["voltage4"].diag_function)
-print("Diag function available: ", ad74413r.channel["voltage4"].diag_function_available)
-ad74413r.channel["voltage4"].diag_function = "temp"
-print("Voltage4 diag function: ", ad74413r.channel["voltage4"].diag_function)
-print("Voltage4 diag function: ", ad74413r.channel["voltage4"].scale)
-# ad74413r.tx_channel["voltage0"].raw = 3048
-# ad74413r.rx_channel["voltage0"].threshold = 2048
-# print("Threshold ", ad74413r.rx_channel["voltage0"].threshold)
-# print("AD74413R current0 scale:", ad74413r.channel["current0"].scale)
+# Set the sampling rate for the resistance channel to 4800 for faster update 
+ad74413r.channel["resistance3"].sampling_frequency = 4800
 
-# print("AD74413R voltage0 raw:", ad74413r.channel["voltage3"].raw)
-# print("AD74413R voltage0 scale:", ad74413r.tx_channel["voltage0"].scale)
-# print("AD74413R voltage0 offset:", ad74413r.tx_channel["voltage0"].offset)
+voltage_dac_scale = ad74413r.channel["voltage0"].scale
+voltage_dac_offset = ad74413r.channel["voltage0"].offset
 
-ad74413r.rx_output_type = "SI"
+while True:
+	# Get the potentiometer's resistance value in Ohms
+	resistance = ad74413r.channel["resistance3"].processed / 1000
+	red_channel_val = (resistance / 11000) * AD74413R_DAC_MAX_CODE
+	ad74413r.channel["voltage0"].raw = red_channel_val
+
+# ad74413r.rx_output_type = "SI"
 
 # The channels from which to sample the data. Should be one of the ADC channels.
-ad74413r.rx_enabled_channels = ["voltage4"]
+# ad74413r.rx_enabled_channels = ["voltage4"]
 # The sample rate should be the same as what is set on the device (4800 is the default).
 
-ad74413r.sample_rate = 4800
+# ad74413r.sample_rate = 4800
 
 # The number of data samples. This may be changed accordingly.
-ad74413r.rx_buffer_size = 4800
-data = ad74413r.rx()
+# ad74413r.rx_buffer_size = 4800
+# data = ad74413r.rx()
 
 # for _ in range(60 * 24):
 # 	data = np.append(data, ad74413r.rx())
 
-print(data)
+# print(data)
 
-ad74413r.rx_destroy_buffer()
-plt.clf()
-plt.plot(data)
-plt.ylabel("mV")
-plt.show(block=True)
+# ad74413r.rx_destroy_buffer()
+# plt.clf()
+# plt.plot(data)
+# plt.ylabel("mV")
+# plt.show(block=True)
