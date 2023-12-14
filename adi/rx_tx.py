@@ -213,13 +213,13 @@ class rx(rx_tx_common):
 
         for samp in range(self.rx_buffer_size):
             for i, m in enumerate(self.rx_enabled_channels):
-                s = self._get_iio_attr(
+                raw = self._get_iio_attr(
                     self._rx_channel_names[m], "raw", False, self._rxadc
                 )
                 if self._rx_output_type == "SI":
-                    x[i][samp] = rx_scale[i] * s + rx_offset[i]
+                    x[i][samp] = (raw + rx_offset[i]) * rx_scale[i]
                 else:
-                    x[i][samp] = s
+                    x[i][samp] = raw
 
         return x
 
@@ -270,7 +270,7 @@ class rx(rx_tx_common):
             rx_scale = self.__get_rx_channel_scales()
             rx_offset = self.__get_rx_channel_offsets()
             x = x if isinstance(x, list) else [x]
-            x = [rx_scale[i] * x[i] + rx_offset[i] for i in range(len(x))]
+            x = [rx_scale[i] * (x[i] + rx_offset[i]) for i in range(len(x))]
         elif self._rx_output_type != "raw":
             raise Exception("_rx_output_type undefined")
 
