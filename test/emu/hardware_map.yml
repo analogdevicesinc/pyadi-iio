@@ -176,7 +176,18 @@ cn0554:
       - data_devices:
           - iio:device0
           - iio:device1
-
+cn0556:
+  - ad7124-8
+  - ltc2688
+  - one-bit-adc-dac
+  - pyadi_iio_class_support:
+      - cn0556
+  - emulate:
+      - filename: cn0556.xml
+      - data_devices:
+          - iio:device0
+          - iio:device1
+          - iio:device2
 cn0565:
   - ad5940
   - adg2128
