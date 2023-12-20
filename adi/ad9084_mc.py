@@ -14,7 +14,7 @@ from adi.sync_start import sync_start
 
 
 def _map_to_dict(paths, ch, dev_name):
-    if "label" in ch.attrs and "buffer_only" in ch.attrs["label"].value:
+    if "->" not in ch.attrs["label"].value:
         return paths, False
     side, fddc, cddc, adc = ch.attrs["label"].value.replace(":", "->").split("->")
     if dev_name not in paths.keys():

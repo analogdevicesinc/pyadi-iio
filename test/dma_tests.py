@@ -295,7 +295,8 @@ def dds_loopback(
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
     else:
-        RXFS = int(sdr.orx_sample_rate) if use_obs else int(sdr.rx_sample_rate)
+        RXFS = int(sdr.orx_sample_rate) if use_obs else int(sdr.rx_sample_rate["axi-ad9084-rx-hpc"])
+
 
     sdr.dds_single_tone(frequency, scale, channel)
 
