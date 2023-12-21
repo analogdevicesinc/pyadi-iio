@@ -676,9 +676,9 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
 
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
-        RXFS = int(sdr.sample_rate)
+        RXFS = int(sdr.sample_rate["axi-ad9084-rx-hpc"])
     else:
-        RXFS = int(sdr.rx_sample_rate)
+        RXFS =int(sdr.rx_sample_rate["axi-ad9084-rx-hpc"])
 
     fc = RXFS * 0.1
     fc = int(fc / (RXFS / N)) * (RXFS / N)
