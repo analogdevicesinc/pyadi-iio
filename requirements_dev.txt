@@ -8,9 +8,9 @@ scapy
 scipy
 pytest-cov
 coveralls
-pytest-libiio==0.0.13
+pytest-libiio>=0.0.18
 bump2version
-pytest-html
+pytest-html==3.2.0
 plotly-express
 pyvisa
 matplotlib

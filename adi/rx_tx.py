@@ -7,10 +7,18 @@ from typing import List, Union
 
 import iio
 
+import adi.compat as cl
 import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.dds import dds
+
+if cl._is_libiio_v1():
+    from adi.compat import compat_libiio_v1_rx as crx
+    from adi.compat import compat_libiio_v1_tx as ctx
+else:
+    from adi.compat import compat_libiio_v0_rx as crx
+    from adi.compat import compat_libiio_v0_tx as ctx
 
 
 class phy(attribute):
@@ -27,7 +35,7 @@ class rx_tx_common(attribute):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
 
-class rx(rx_tx_common):
+class rx_core(rx_tx_common, metaclass=ABCMeta):
     """Buffer handling for receive devices"""
 
     _rxadc: iio.Device = []
@@ -36,10 +44,10 @@ class rx(rx_tx_common):
     _rx_data_type = np.int16
     _rx_data_si_type = np.int16
     _rx_shift = 0
-    __rx_buffer_size = 1024
+    _rx_buffer_size = 1024
     __rx_enabled_channels = [0]
     _rx_output_type = "raw"
-    __rxbuf = None
+    _rxbuf = None
     _rx_unbuffered_data = False
     _rx_annotated = False
     _rx_stack_interleaved = True  # Convert from channel to sample interleaved
@@ -84,11 +92,11 @@ class rx(rx_tx_common):
     @property
     def rx_buffer_size(self):
         """rx_buffer_size: Size of receive buffer in samples"""
-        return self.__rx_buffer_size
+        return self._rx_buffer_size
 
     @rx_buffer_size.setter
     def rx_buffer_size(self, value):
-        self.__rx_buffer_size = value
+        self._rx_buffer_size = value
 
     @property
     def rx_enabled_channels(self) -> Union[List[int], List[str]]:
@@ -145,10 +153,10 @@ class rx(rx_tx_common):
 
     def rx_destroy_buffer(self):
         """rx_destroy_buffer: Clears RX buffer"""
-        self.__rxbuf = None
+        self._rxbuf = None
 
     def __del__(self):
-        self.__rxbuf = []
+        self._rxbuf = []
         if hasattr("self", "_rxadc") and self._rxadc:
             for m in self._rx_channel_names:
                 v = self._rxadc.find_channel(m)
@@ -177,25 +185,6 @@ class rx(rx_tx_common):
             rx_offset.append(offset)
         return rx_offset
 
-    def _rx_init_channels(self):
-        for m in self._rx_channel_names:
-            v = self._rxadc.find_channel(m)
-            if not v:
-                raise Exception(f"Channel {m} not found")
-            v.enabled = False
-
-        if self._complex_data:
-            for m in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[m * 2])
-                v.enabled = True
-                v = self._rxadc.find_channel(self._rx_channel_names[m * 2 + 1])
-                v.enabled = True
-        else:
-            for m in self.rx_enabled_channels:
-                v = self._rxadc.find_channel(self._rx_channel_names[m])
-                v.enabled = True
-        self.__rxbuf = iio.Buffer(self._rxadc, self.__rx_buffer_size, False)
-
     def __rx_unbuffered_data(self):
         x = []
         t = (
@@ -223,39 +212,8 @@ class rx(rx_tx_common):
 
         return x
 
-    def __rx_buffered_data(self) -> Union[List[np.ndarray], np.ndarray]:
-        """__rx_buffered_data: Read data from RX buffer
-
-        Returns:
-            List of numpy arrays containing the data from the RX buffer that are
-            channel interleaved
-        """
-        if not self.__rxbuf:
-            self._rx_init_channels()
-        self.__rxbuf.refill()
-
-        data_channel_interleaved = []
-        ecn = []
-        if self._complex_data:
-            for m in self.rx_enabled_channels:
-                ecn.extend(
-                    (self._rx_channel_names[m * 2], self._rx_channel_names[m * 2 + 1])
-                )
-        else:
-            ecn = [self._rx_channel_names[m] for m in self.rx_enabled_channels]
-
-        for name in ecn:
-            chan = self._rxadc.find_channel(name)
-            bytearray_data = chan.read(self.__rxbuf)  # Do local type conversion
-            # create format strings
-            df = chan.data_format
-            fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
-            data_channel_interleaved.append(np.frombuffer(bytearray_data, dtype=fmt))
-
-        return data_channel_interleaved
-
     def __rx_complex(self):
-        x = self.__rx_buffered_data()
+        x = self._rx_buffered_data()
         if len(x) % 2 != 0:
             raise Exception(
                 "Complex data must have an even number of component channels"
@@ -265,7 +223,7 @@ class rx(rx_tx_common):
         return out[0] if len(x) == 2 else out
 
     def __rx_non_complex(self):
-        x = self.__rx_buffered_data()
+        x = self._rx_buffered_data()
         if self._rx_output_type == "SI":
             rx_scale = self.__get_rx_channel_scales()
             rx_offset = self.__get_rx_channel_offsets()
@@ -299,8 +257,18 @@ class rx(rx_tx_common):
             )
         return data
 
+    @abstractmethod
+    def _rx_init_channels(self):
+        """Initialize RX channels"""
+        raise NotImplementedError
 
-class tx(dds, rx_tx_common):
+    @abstractmethod
+    def _rx_buffered_data(self):
+        """Read data from RX buffer"""
+        raise NotImplementedError
+
+
+class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
     """Buffer handling for transmit devices"""
 
     _tx_buffer_size = 1024
@@ -308,9 +276,10 @@ class tx(dds, rx_tx_common):
     _tx_channel_names: List[str] = []
     _complex_data = False
     _tx_data_type = None
-    __txbuf = None
+    _txbuf = None
     _output_byte_filename = "out.bin"
     _push_to_file = False
+    _tx_cyclic_buffer = False
 
     def __init__(self, tx_cyclic_buffer=False):
         if self._complex_data:
@@ -324,7 +293,7 @@ class tx(dds, rx_tx_common):
         dds.__init__(self)
 
     def __del__(self):
-        self.__txbuf = []
+        self._txbuf = []
         if hasattr("self", "_txdac") and self._txdac:
             for m in self._tx_channel_names:
                 v = self._txdac.find_channel(m)
@@ -334,16 +303,16 @@ class tx(dds, rx_tx_common):
     @property
     def tx_cyclic_buffer(self):
         """tx_cyclic_buffer: Enable cyclic buffer for TX"""
-        return self.__tx_cyclic_buffer
+        return self._tx_cyclic_buffer
 
     @tx_cyclic_buffer.setter
     def tx_cyclic_buffer(self, value):
-        if self.__txbuf:
+        if self._txbuf:
             raise Exception(
                 "TX buffer already created, buffer must be "
                 "destroyed then recreated to modify tx_cyclic_buffer"
             )
-        self.__tx_cyclic_buffer = value
+        self._tx_cyclic_buffer = value
 
     @property
     def _num_tx_channels_enabled(self):
@@ -406,22 +375,7 @@ class tx(dds, rx_tx_common):
 
     def tx_destroy_buffer(self):
         """tx_destroy_buffer: Clears TX buffer"""
-        self.__txbuf = None
-
-    def _tx_init_channels(self):
-        if self._complex_data:
-            for m in self.tx_enabled_channels:
-                v = self._txdac.find_channel(self._tx_channel_names[m * 2], True)
-                v.enabled = True
-                v = self._txdac.find_channel(self._tx_channel_names[m * 2 + 1], True)
-                v.enabled = True
-        else:
-            for m in self.tx_enabled_channels:
-                v = self._txdac.find_channel(self._tx_channel_names[m], True)
-                v.enabled = True
-        self.__txbuf = iio.Buffer(
-            self._txdac, self._tx_buffer_size, self.__tx_cyclic_buffer
-        )
+        self._txbuf = None
 
     def tx(self, data_np=None):
         """Transmit data to hardware buffers for each channel index in
@@ -455,7 +409,7 @@ class tx(dds, rx_tx_common):
                     return
             raise Exception("No DDS channels found for TX, TX zeroing does not apply")
 
-        if self.__txbuf and self.tx_cyclic_buffer:
+        if self._txbuf and self.tx_cyclic_buffer:
             raise Exception(
                 "TX buffer has been submitted in cyclic mode. "
                 "To push more data the tx buffer must be destroyed first."
@@ -491,7 +445,7 @@ class tx(dds, rx_tx_common):
                 data[indx::stride] = chan.astype(self._tx_data_type)
                 indx = indx + 1
 
-        if not self.__txbuf:
+        if not self._txbuf:
             self.disable_dds()
             self._tx_buffer_size = len(data) // stride
             self._tx_init_channels()
@@ -508,8 +462,28 @@ class tx(dds, rx_tx_common):
             f.write(bytearray(data))
             f.close()
         else:
-            self.__txbuf.write(bytearray(data))
-            self.__txbuf.push()
+            self._tx_buffer_push(data)
+
+    @abstractmethod
+    def _tx_buffer_push(self, data):
+        """Push data to TX buffer.
+
+        data: bytearray
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def _tx_init_channels(self):
+        """Initialize TX channels"""
+        raise NotImplementedError
+
+
+class rx(crx, rx_core):
+    pass
+
+
+class tx(ctx, tx_core):
+    pass
 
 
 class rx_tx(rx, tx, phy):
