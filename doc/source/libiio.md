@@ -115,3 +115,7 @@ Output:
 ```bash
 ID: 0xa
 ```
+
+## libiio v1.X support
+
+**pyadi-iio** supports **libiio** v1.X and v0.X. However, the **libiio** python bindings are not available on PyPI for v1.X and they are currently unstable. If you require stable operation, please use **libiio** v0.X. Its also possible that not all ecosystem features are available yet for v1.X. Please report any issues you find with v1.X.
