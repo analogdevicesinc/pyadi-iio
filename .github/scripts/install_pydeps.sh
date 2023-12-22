@@ -17,5 +17,5 @@ if [ "$LIBIIO_BRANCH" = "main" ]; then
     cd ..
     rm -rf libiio
 else
-    pip install "pytest-libiio>=0.0.14"
+    pip install "pytest-libiio>=0.0.18"
 fi
