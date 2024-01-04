@@ -74,6 +74,7 @@ class ADIStream(object):
         )
         self.stream.tx_cyclic_buffer = True
         self.wave_list = wave_list
+        self.stream._ctx.set_timeout(100000)
 
         # Sort channels list
         chn_list.sort()
@@ -137,7 +138,7 @@ class ADIStream(object):
                 str(int(self.sampling_freq) // self.npts),
             )
 
-        gen_obj = WaveformGen(
+        gen_obj = WaveformGen(  # noqa: F841 ,variable is being used in the eval function below
             self.npts,
             self.out_freq,
             self.code_sel,
@@ -340,7 +341,7 @@ def run_adi_stream(argv=None, test_flag=False):
         print("Device test enabled")
     else:
         supported_devices = [
-            "ad578x",
+            "ad579x",
             "ad3552r",
             "ad3530r",
             "ad5754r",
