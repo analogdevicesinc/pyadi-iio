@@ -74,6 +74,7 @@ class ADIStream(object):
         )
         self.stream.tx_cyclic_buffer = True
         self.wave_list = wave_list
+        self.stream._ctx.set_timeout(100000)
 
         # Sort channels list
         chn_list.sort()
