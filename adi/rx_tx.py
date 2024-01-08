@@ -12,6 +12,7 @@ import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.dds import dds
+from adi.dma_helpers import dma_channel
 
 if cl._is_libiio_v1():
     from adi.compat import compat_libiio_v1_rx as crx
@@ -603,6 +604,7 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
     be populated as available channels.
     """
     _rx_channel_names = None
+    _rx_enabled_channel_components = False
 
     @property
     @abstractmethod
@@ -636,10 +638,20 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
             if not self._rx_channel_names:
                 raise Exception(f"No scan elements found for device {self._rxadc.name}")
 
+        # Add DMA control and sample read properties
+        if self._rx_enabled_channel_components:
+            self.__add_component_channels()
+
         rx.__init__(self)
 
         if self.__run_rx_post_init__:
             self.__post_init__()
+
+    def __add_component_channels(self):
+        """Dynamically add component channels to access DMA channels individually"""
+        self.channel = [
+            dma_channel(self._ctrl, cname) for cname in self._rx_channel_names
+        ]
 
 
 class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
