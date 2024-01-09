@@ -127,8 +127,8 @@ def test_ad9084_dds_loopback(
     hpf_value,
     lpf_value,
 ):
-    dev.hpf_ctrl.select = hpf_value
-    dev.lpf_ctrl.select = lpf_value 
+    dev.hpf_ctrl = hpf_value
+    dev.lpf_ctrl = lpf_value 
     param_set = scale_field(param_set, iio_uri)
     test_dds_loopback(
         iio_uri, classname, param_set, channel, frequency, scale, peak_min
@@ -150,8 +150,8 @@ def test_ad9084_dds_loopback(
 )
 @pytest.mark.parametrize("sfdr_min", [30])
 def test_Triton_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min, hpf_value, lpf_value):
-    dev.hpf_ctrl.select = hpf_value
-    dev.lpf_ctrl.select = lpf_value 
+    dev.hpf_ctrl = hpf_value
+    dev.lpf_ctrl = lpf_value 
     print(channel)
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
