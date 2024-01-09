@@ -16,8 +16,6 @@ import shutil
 import sys
 from typing import List
 
-import sphinx_rtd_theme
-
 sys.path.insert(0, os.path.abspath("../.."))
 sys.setrecursionlimit(1500)
 
@@ -83,6 +81,12 @@ exclude_patterns: List[str] = []
 coverage_show_missing_items = True
 coverage_ignore_classes = ["phy"]
 coverage_ignore_modules = ["test.dma_tests", "test.generics"]
+
+# -- Options for PDF output --------------------------------------------------
+if os.path.exists(os.path.join("_themes", "pdf_theme")):
+    extensions.append("sphinx_simplepdf")
+    html_theme_path = ["_themes"]
+    simplepdf_theme = "pdf_theme"
 
 # -- Options for HTML output -------------------------------------------------
 
