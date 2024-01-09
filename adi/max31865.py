@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023 Analog Devices, Inc.
+# Copyright (C) 2022-2024 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 import numpy as np
