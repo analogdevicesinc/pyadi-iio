@@ -53,10 +53,7 @@ class rx_core(rx_tx_common, metaclass=ABCMeta):
     _rx_stack_interleaved = True  # Convert from channel to sample interleaved
 
     def __init__(self, rx_buffer_size=1024):
-        if self._complex_data:
-            N = 2
-        else:
-            N = 1
+        N = 2 if self._complex_data else 1
         rx_enabled_channels = list(range(len(self._rx_channel_names) // N))
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
@@ -282,10 +279,7 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
     _tx_cyclic_buffer = False
 
     def __init__(self, tx_cyclic_buffer=False):
-        if self._complex_data:
-            N = 2
-        else:
-            N = 1
+        N = 2 if self._complex_data else 1
         tx_enabled_channels = list(range(len(self._tx_channel_names) // N))
         self._num_tx_channels = len(self._tx_channel_names)
         self.tx_enabled_channels = tx_enabled_channels
