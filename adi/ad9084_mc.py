@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Analog Devices, Inc.
+# Copyright (C) 2023-2024 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -331,8 +331,8 @@ class Triton(ad9084_mc):
 
         self._rx_dsa = self._ctx.find_device("hmc425a")
 
-        self.lpf_ctrl = genmux(uri, device_name="lpf-ctrl")
-        self.hpf_ctrl = genmux(uri, device_name="hpf-ctrl")
+        self._lpf_ctrl = genmux(uri, device_name="lpf-ctrl")
+        self._hpf_ctrl = genmux(uri, device_name="hpf-ctrl")
 
         if calibration_board_attached:
             self._ad5592r = self._ctx.find_device("ad5592r")
@@ -346,3 +346,21 @@ class Triton(ad9084_mc):
     @rx_dsa_gain.setter
     def rx_dsa_gain(self, value):
         self._set_iio_attr("voltage0", "hardwaregain", True, value, self._rx_dsa)
+
+    @property
+    def lpf_ctrl(self):
+        """lpf_ctrl: Low Pass Filter cutoff"""
+        return self._lpf_ctrl.select
+
+    @lpf_ctrl.setter
+    def lpf_ctrl(self, value):
+        self._lpf_ctrl.select = value
+
+    @property
+    def hpf_ctrl(self):
+        """hpf_ctrl: High Pass Filter cutoff"""
+        return self._hpf_ctrl.select
+
+    @hpf_ctrl.setter
+    def hpf_ctrl(self, value):
+        self._hpf_ctrl.select = value
