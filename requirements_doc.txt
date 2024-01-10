@@ -1,7 +1,7 @@
 sphinx>=2.0
-sphinx-rtd-theme
 myst-parser
 furo
 sphinx-favicon
 sphinxcontrib-mermaid
+sphinx-simplepdf
 pillow

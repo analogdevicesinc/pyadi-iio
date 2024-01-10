@@ -79,12 +79,12 @@ Sections
    attr/index
    guides/examples
    guides/connectivity
-   devices/index
    buffers/index
    fpga/index
-   dev/index
    libiio
    support
+   dev/index
+   devices/index
 
 Indices and tables
 ==================
