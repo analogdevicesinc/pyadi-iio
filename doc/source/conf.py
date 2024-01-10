@@ -11,6 +11,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import contextlib
+import datetime
 import os
 import shutil
 import sys
@@ -44,11 +45,13 @@ import adi  # isort:skip
 # -- Project information -----------------------------------------------------
 
 project = "Analog Devices Hardware Python Interfaces"
-copyright = "2019-2022, Analog Devices, Inc"
+year_now = datetime.datetime.now().year
+copyright = f"2019-{year_now}, Analog Devices, Inc"
 author = "Travis Collins"
 
 # The full version, including alpha/beta/rc tags
 release = adi.__version__
+version = release
 
 
 # -- General configuration ---------------------------------------------------
