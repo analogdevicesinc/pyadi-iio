@@ -73,7 +73,7 @@ Requirements
 Sections
 ==================
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    guides/quick
    attr/index
