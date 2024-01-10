@@ -93,3 +93,18 @@ body>div>aside>div>div>div.sidebar-scroll>div>ul {
 element.style {
     display: none;
 }
+
+/* Animate page entries */
+.article-container > article:nth-child(3) {
+    animation-duration: 0.2s;
+    animation-delay: 0s;
+    animation-name: fadeInBottom;
+}
+
+@keyframes fadeInBottom {
+    from {
+        opacity: 0;
+        transform: translateY(1%);
+    }
+    to { opacity: 1 }
+}
