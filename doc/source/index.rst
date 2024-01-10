@@ -68,7 +68,11 @@ Analog Devices Hardware Python Interfaces
 Requirements
 ==================
 * `libiio <http://github.com/analogdevicesinc/libiio/>`_
-* `(Optional) libad9361 for AD9361 specific devices <http://github.com/analogdevicesinc/libad9361/>`_
+* numpy
+* (Optional) paramiko for JESD204 debugging
+* `(Optional) libad9361 for AD9361 specific devices <http://github.com/analogdevicesinc/libad9361-iio/>`_
+* `(Optional) libad9166 for the CN0511 raspberry pi based DDS  <http://github.com/analogdevicesinc/libad9166-iio/>`_
+* `(Optional) libadrv9002 for ADRV9002 specific devices <http://github.com/analogdevicesinc/libadrv9002-iio/>`_
 
 Sections
 ==================
