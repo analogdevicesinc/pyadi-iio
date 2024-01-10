@@ -64,12 +64,19 @@ class ad9081(rx_tx, context_manager, sync_start):
     _dds_channel_names: List[str] = []
     _device_name = ""
 
-    _rx_attr_only_channel_names: List[str] = []
-    _tx_attr_only_channel_names: List[str] = []
-
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
     def __init__(self, uri=""):
+
+        # Reset default channel names
+        self._rx_channel_names = []
+        self._tx_channel_names = []
+        self._tx_control_channel_names = []
+        self._rx_coarse_ddc_channel_names = []
+        self._tx_coarse_duc_channel_names = []
+        self._rx_fine_ddc_channel_names = []
+        self._tx_fine_duc_channel_names = []
+        self._dds_channel_names = []
 
         context_manager.__init__(self, uri, self._device_name)
         # Default device for attribute writes
