@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,81 +326,81 @@
         </div>
         <article role="main">
           <section id="module-adi.cn0554">
-<span id="cn0554"></span><h1>cn0554<a class="headerlink" href="#module-adi.cn0554" title="Permalink to this heading"></a></h1>
+<span id="cn0554"></span><h1>cn0554<a class="headerlink" href="#module-adi.cn0554" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0554.</span></span><span class="sig-name descname"><span class="pre">cn0554</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ip:analog.local'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0554.cn0554" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0554.</span></span><span class="sig-name descname"><span class="pre">cn0554</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ip:analog.local'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0554.cn0554" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>CN0554 Mixed Signal Raspberry Pi Hat</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.adc_in_channels">
-<span class="sig-name descname"><span class="pre">adc_in_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.adc_in_channels" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">adc_in_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.adc_in_channels" title="Permalink to this definition">#</a></dt>
 <dd><p>dac_out_channels: DAC channel names derived from onboard LTC2688.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.convert_to_volts">
-<span class="sig-name descname"><span class="pre">convert_to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_voltage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0554.cn0554.convert_to_volts" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">convert_to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_voltage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0554.cn0554.convert_to_volts" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert ADC data using scale factors based on header configuration</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.dac_out_channels">
-<span class="sig-name descname"><span class="pre">dac_out_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.dac_out_channels" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dac_out_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.dac_out_channels" title="Permalink to this definition">#</a></dt>
 <dd><p>out_reference: DAC voltage reference in Volts. Valid values are 4.096 and 2.5.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.in_channels">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">in_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.in_channels" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">in_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.in_channels" title="Permalink to this definition">#</a></dt>
 <dd><p>Get number of ADC input channels</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.in_scale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">in_scale</span></span><a class="headerlink" href="#adi.cn0554.cn0554.in_scale" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">in_scale</span></span><a class="headerlink" href="#adi.cn0554.cn0554.in_scale" title="Permalink to this definition">#</a></dt>
 <dd><p>in_scale: unitless scale factor based on onboard resistor divider</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.out_channels">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">out_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.out_channels" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">out_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.out_channels" title="Permalink to this definition">#</a></dt>
 <dd><p>Get number of DAC output channels</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.out_reference">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">out_reference</span></span><a class="headerlink" href="#adi.cn0554.cn0554.out_reference" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">out_reference</span></span><a class="headerlink" href="#adi.cn0554.cn0554.out_reference" title="Permalink to this definition">#</a></dt>
 <dd><p>Get voltage reference used for DAC channels</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0554.cn0554.rx" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0554.cn0554.rx" title="Permalink to this definition">#</a></dt>
 <dd><p>Get data from enabled ADC channels</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.rx_buffer_size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.cn0554.cn0554.rx_buffer_size" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.cn0554.cn0554.rx_buffer_size" title="Permalink to this definition">#</a></dt>
 <dd><p>Get number of datapoints used during capture</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.rx_enabled_channels">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.rx_enabled_channels" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><a class="headerlink" href="#adi.cn0554.cn0554.rx_enabled_channels" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of enabled input adc channels</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.rx_output_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><a class="headerlink" href="#adi.cn0554.cn0554.rx_output_type" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><a class="headerlink" href="#adi.cn0554.cn0554.rx_output_type" title="Permalink to this definition">#</a></dt>
 <dd><p>Get value of CN0554’s rx output type (raw or SI)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0554.cn0554.sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.cn0554.cn0554.sample_rate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.cn0554.cn0554.sample_rate" title="Permalink to this definition">#</a></dt>
 <dd><p>Get CN0554’s AD7124 sampling rate</p>
 </dd></dl>
 

@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,23 +326,23 @@
         </div>
         <article role="main">
           <section id="module-adi.cn0575">
-<span id="cn0575"></span><h1>cn0575<a class="headerlink" href="#module-adi.cn0575" title="Permalink to this heading"></a></h1>
+<span id="cn0575"></span><h1>cn0575<a class="headerlink" href="#module-adi.cn0575" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.cn0575.cn0575">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0575.</span></span><span class="sig-name descname"><span class="pre">cn0575</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0575.cn0575" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0575.</span></span><span class="sig-name descname"><span class="pre">cn0575</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0575.cn0575" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>CN0575 class, exposing onboard temperature sensor, pushbutton,
 and LED. Also reads the platform CPU’s temperature, which under
 most operating conditions should be higher than the onboard sensor.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0575.cn0575.button">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">button</span></span><a class="headerlink" href="#adi.cn0575.cn0575.button" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">button</span></span><a class="headerlink" href="#adi.cn0575.cn0575.button" title="Permalink to this definition">#</a></dt>
 <dd><p>Read button state.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0575.cn0575.led">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">led</span></span><a class="headerlink" href="#adi.cn0575.cn0575.led" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">led</span></span><a class="headerlink" href="#adi.cn0575.cn0575.led" title="Permalink to this definition">#</a></dt>
 <dd><p>Read LED state.</p>
 </dd></dl>
 

@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="libiio Direct Access" href="../libiio.html" /><link rel="prev" title="DMA Tests" href="test_dma.html" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Supported Devices" href="../devices/index.html" /><link rel="prev" title="DMA Tests" href="test_dma.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
         <title>Generic Tests - Analog Devices Hardware Python Interfaces 0.0.17</title>
@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Developers</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Developers</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,11 +326,11 @@
         </div>
         <article role="main">
           <section id="generic-tests">
-<h1>Generic Tests<a class="headerlink" href="#generic-tests" title="Permalink to this heading"></a></h1>
+<h1>Generic Tests<a class="headerlink" href="#generic-tests" title="Permalink to this heading">#</a></h1>
 <p>Functions used by test fixtures for evaluating drivers without pyadi-iio classes or not by using pyadi-iio classes.</p>
 <span class="target" id="module-test.generics"></span><dl class="py function">
 <dt class="sig sig-object py" id="test.generics.iio_attribute_single_value">
-<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chan_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_attribute_single_value" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chan_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_attribute_single_value" title="Permalink to this definition">#</a></dt>
 <dd><p>iio_attribute_single_value: Test numeric attributes over ranges
 This is a generic test that does not use pyadi-iio classes
 but instead uses libiio directly.</p>
@@ -368,7 +368,7 @@ attribute under test</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.generics.iio_buffer_check">
-<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_buffer_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_fail</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_buffer_check" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_buffer_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_fail</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_buffer_check" title="Permalink to this definition">#</a></dt>
 <dd><p>iio_buffer_check: Check receive buffers for repeative patterns of zeros.
 This function does not require an interfaces class in pyadi but will
 construct a generic interface on the fly.</p>
@@ -395,12 +395,12 @@ buffers</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../libiio.html">
+          <a class="next-page" href="../devices/index.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">libiio Direct Access</div>
+                <div class="title">Supported Devices</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>

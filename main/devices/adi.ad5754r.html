@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,128 +326,128 @@
         </div>
         <article role="main">
           <section id="module-adi.ad5754r">
-<span id="ad5754r"></span><h1>ad5754r<a class="headerlink" href="#module-adi.ad5754r" title="Permalink to this heading"></a></h1>
+<span id="ad5754r"></span><h1>ad5754r<a class="headerlink" href="#module-adi.ad5754r" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5754r.</span></span><span class="sig-name descname"><span class="pre">ad5754r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5754r.ad5754r" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5754r.</span></span><span class="sig-name descname"><span class="pre">ad5754r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5754r.ad5754r" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
 <p>AD5754R DAC</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.all_chns_clear">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_chns_clear</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.all_chns_clear" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_chns_clear</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.all_chns_clear" title="Permalink to this definition">#</a></dt>
 <dd><p>Get current all_chns_clear setting</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.all_chns_clear_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_chns_clear_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.all_chns_clear_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_chns_clear_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.all_chns_clear_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all all_chns_clear settings</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad5754r.ad5754r.channel" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad5754r.ad5754r.channel" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.clamp_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clamp_enable</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.clamp_enable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clamp_enable</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.clamp_enable" title="Permalink to this definition">#</a></dt>
 <dd><p>Get clamp_en setting</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.clamp_enable_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clamp_enable_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.clamp_enable_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clamp_enable_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.clamp_enable_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all clamp_en settings</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.clear_setting">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear_setting</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.clear_setting" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear_setting</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.clear_setting" title="Permalink to this definition">#</a></dt>
 <dd><p>Get clear code setting</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.clear_setting_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear_setting_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.clear_setting_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear_setting_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.clear_setting_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all clear code settings</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.hw_ldac_trigger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.hw_ldac_trigger" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.hw_ldac_trigger" title="Permalink to this definition">#</a></dt>
 <dd><p>Get hw_ldac_trigger setting</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.hw_ldac_trigger_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_trigger_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.hw_ldac_trigger_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_trigger_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.hw_ldac_trigger_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all hw_ldac_trigger settings</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.int_ref_powerup">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">int_ref_powerup</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.int_ref_powerup" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">int_ref_powerup</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.int_ref_powerup" title="Permalink to this definition">#</a></dt>
 <dd><p>Get internal reference powerup</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.int_ref_powerup_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">int_ref_powerup_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.int_ref_powerup_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">int_ref_powerup_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.int_ref_powerup_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all internal reference powerup settings</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.oc_tsd">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oc_tsd</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.oc_tsd" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oc_tsd</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.oc_tsd" title="Permalink to this definition">#</a></dt>
 <dd><p>Get oc_tsd status</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.oc_tsd_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oc_tsd_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.oc_tsd_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oc_tsd_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.oc_tsd_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all possible oc_tsd status</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.sampling_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sampling_frequency" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sampling_frequency" title="Permalink to this definition">#</a></dt>
 <dd><p>Get sampling frequency</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.sdo_disable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sdo_disable</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sdo_disable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sdo_disable</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sdo_disable" title="Permalink to this definition">#</a></dt>
 <dd><p>Get sdo disable</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.sdo_disable_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sdo_disable_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sdo_disable_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sdo_disable_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sdo_disable_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all sdo enable/disable settings</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.sw_ldac_trigger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sw_ldac_trigger" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sw_ldac_trigger" title="Permalink to this definition">#</a></dt>
 <dd><p>Get sw_ldac_trigger setting</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.sw_ldac_trigger_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ldac_trigger_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sw_ldac_trigger_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ldac_trigger_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.sw_ldac_trigger_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all sw_ldac_trigger settings</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.tsd_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tsd_enable</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.tsd_enable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tsd_enable</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.tsd_enable" title="Permalink to this definition">#</a></dt>
 <dd><p>Get tsd_en setting</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5754r.ad5754r.tsd_enable_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tsd_enable_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.tsd_enable_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tsd_enable_available</span></span><a class="headerlink" href="#adi.ad5754r.ad5754r.tsd_enable_available" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all tsd_en settings</p>
 </dd></dl>
 

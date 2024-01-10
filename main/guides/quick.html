@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,7 +326,7 @@
         </div>
         <article role="main">
           <section id="quick-start">
-<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h1>
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading">#</a></h1>
 <p>Before installing pyadi-iio make sure you have <a class="reference external" href="https://github.com/analogdevicesinc/libiio">libiio</a> and <a class="reference external" href="https://github.com/analogdevicesinc/libiio/blob/master/bindings/python/iio.py">its python bindings</a> installed. Since libiio v0.21, the libiio python bindings have been available on pypi and conda. The conda package includes the built library but the pypi install will require that it is installed beforehand. If you install pyadi-iio directly from pypi or conda they will automatically install the python bindings for libiio (pylibiio).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -356,7 +356,7 @@ For releases v0.19+ of libiio, when building from source the -DPYTHON_BINDINGS=O
 </div>
 </div>
 <section id="using-virtual-environments">
-<h2>Using Virtual Environments<a class="headerlink" href="#using-virtual-environments" title="Permalink to this heading"></a></h2>
+<h2>Using Virtual Environments<a class="headerlink" href="#using-virtual-environments" title="Permalink to this heading">#</a></h2>
 <p>It is recommended to use virtual environments when installing pyadi-iio. This will prevent any conflicts with other python packages that may be installed on your system. Newer versions of such Linux distributions, like Debian, do not allow the installation of global packages either. Therefore, if a package is not within their package managers you must your virtual environments. To create a virtual environment run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>/path/to/new/virtual/environment
 </pre></div>
@@ -380,14 +380,14 @@ Collecting<span class="w"> </span>pyadi-iio
 </div>
 </section>
 <section id="conda-install">
-<h2>Conda Install<a class="headerlink" href="#conda-install" title="Permalink to this heading"></a></h2>
+<h2>Conda Install<a class="headerlink" href="#conda-install" title="Permalink to this heading">#</a></h2>
 <p>For those who use the Anaconda or Conda environments, it is possible to install libiio from within those environments with the provided package managers. To install libiio, pylibiio, and pyadi-iio run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>pyadi-iio
 </pre></div>
 </div>
 </section>
 <section id="install-checks">
-<h2>Install Checks<a class="headerlink" href="#install-checks" title="Permalink to this heading"></a></h2>
+<h2>Install Checks<a class="headerlink" href="#install-checks" title="Permalink to this heading">#</a></h2>
 <p>For check for libiio with the following from a command prompt or terminal:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dave@hal:~$<span class="w"> </span>python3
 Python<span class="w"> </span><span class="m">3</span>.6.8<span class="w"> </span><span class="o">(</span>default,<span class="w"> </span>Jan<span class="w"> </span><span class="m">14</span><span class="w"> </span><span class="m">2019</span>,<span class="w"> </span><span class="m">11</span>:02:34<span class="o">)</span>

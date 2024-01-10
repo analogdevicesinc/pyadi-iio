@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,7 +326,7 @@
         </div>
         <article role="main">
           <section id="analog-devices-hardware-python-interfaces">
-<h1>Analog Devices Hardware Python Interfaces<a class="headerlink" href="#analog-devices-hardware-python-interfaces" title="Permalink to this heading"></a></h1>
+<h1>Analog Devices Hardware Python Interfaces<a class="headerlink" href="#analog-devices-hardware-python-interfaces" title="Permalink to this heading">#</a></h1>
 <p><strong>pyadi-iio</strong> is a python abstraction module for ADI hardware with IIO drivers to make them easier to use. The libIIO interface although extremely flexible can be cumbersome to use due to the amount of boilerplate code required for even simple examples, especially when interfacing with buffers. This module has custom interfaces classes for specific parts and development systems which can generally make them easier to understand and use. To get up and running with a device can be as simple as a few lines of code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
@@ -377,14 +377,14 @@
 </a>
 </p></section>
 <section id="requirements">
-<h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h1>
+<h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">#</a></h1>
 <ul class="simple">
 <li><p><a class="reference external" href="http://github.com/analogdevicesinc/libiio/">libiio</a></p></li>
 <li><p><a class="reference external" href="http://github.com/analogdevicesinc/libad9361/">(Optional) libad9361 for AD9361 specific devices</a></p></li>
 </ul>
 </section>
 <section id="sections">
-<h1>Sections<a class="headerlink" href="#sections" title="Permalink to this heading"></a></h1>
+<h1>Sections<a class="headerlink" href="#sections" title="Permalink to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="guides/quick.html">Quick Start</a><ul>
@@ -396,6 +396,36 @@
 <li class="toctree-l1"><a class="reference internal" href="attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#cyclic-mode">Cyclic Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#annotated-buffers">Annotated Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#buffer-units">Buffer Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#module-adi.rx_tx">Members</a></li>
+<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#buffer-examples">Buffer Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#direct-digital-synthesizers">Direct Digital Synthesizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#module-adi.dds">DDS Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#dma-synchronization">DMA Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#module-adi.sync_start">Sync_Start Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="libiio.html">libiio Direct Access</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="libiio.html#libiio-entry-points">libiio Entry Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libiio.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libiio.html#libiio-v1-x-support">libiio v1.X support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#invoke">Invoke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#precommit">Precommit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#set-up-isolated-environment">Set Up Isolated Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/index.html#emulation">Emulation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="devices/index.html">Supported Devices</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad2s1210.html">ad2s1210</a></li>
@@ -504,41 +534,11 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#cyclic-mode">Cyclic Mode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#annotated-buffers">Annotated Buffers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#buffer-units">Buffer Units</a></li>
-<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#module-adi.rx_tx">Members</a></li>
-<li class="toctree-l2"><a class="reference internal" href="buffers/index.html#buffer-examples">Buffer Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#direct-digital-synthesizers">Direct Digital Synthesizers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#module-adi.dds">DDS Methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#dma-synchronization">DMA Synchronization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fpga/index.html#module-adi.sync_start">Sync_Start Methods</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Developers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev/index.html#invoke">Invoke</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/index.html#precommit">Precommit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/index.html#testing">Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/index.html#set-up-isolated-environment">Set Up Isolated Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/index.html#emulation">Emulation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="libiio.html">libiio Direct Access</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="libiio.html#libiio-entry-points">libiio Entry Points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="libiio.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="libiio.html#libiio-v1-x-support">libiio v1.X support</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 </ul>
 </div>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">#</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>

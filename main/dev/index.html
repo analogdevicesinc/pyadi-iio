@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Attribute Tests" href="test_attr.html" /><link rel="prev" title="FPGA Features" href="../fpga/index.html" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Attribute Tests" href="test_attr.html" /><link rel="prev" title="Support" href="../support.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
         <title>Developers - Analog Devices Hardware Python Interfaces 0.0.17</title>
@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Developers</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Developers</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,14 +326,14 @@
         </div>
         <article role="main">
           <section id="developers">
-<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this heading"></a></h1>
+<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this heading">#</a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This section is only for developers and advanced users.</p>
 </div>
 <p>When submitting code or running tests, there are a few ways things are done in pyadi-iio.</p>
 <section id="invoke">
-<h2>Invoke<a class="headerlink" href="#invoke" title="Permalink to this heading"></a></h2>
+<h2>Invoke<a class="headerlink" href="#invoke" title="Permalink to this heading">#</a></h2>
 <p>To make repetitve tasks easier, pyadi-iio utilizes pyinvoke. To see the available options (once pyinvoke is installed) run:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke --list</span>
 <span class="go">Available tasks:</span>
@@ -351,7 +351,7 @@
 </div>
 </section>
 <section id="precommit">
-<h2>Precommit<a class="headerlink" href="#precommit" title="Permalink to this heading"></a></h2>
+<h2>Precommit<a class="headerlink" href="#precommit" title="Permalink to this heading">#</a></h2>
 <p><strong>pre-commit</strong> is heavily relied on for keeping code in order and for eliminating certain bugs. Be sure to run these checks before submitting code. This can be run through pyinvoke or directly from the repo root as:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke precommit</span>
 </pre></div>
@@ -361,7 +361,7 @@
 </div>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
 <p>Testing pyadi-iio requires hardware, but fortunately by default it assumes no hardware is connected unless found. It will only load specific tests for hardware it can find and skip all other tests. <strong>pytest</strong>, which is the framework pyadi-iio uses, can be call as following:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke test</span>
 </pre></div>
@@ -370,7 +370,7 @@
 </pre></div>
 </div>
 <section id="test-configuration">
-<h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Permalink to this heading"></a></h3>
+<h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Permalink to this heading">#</a></h3>
 <p>There are several advanced features of pytest that are utilized by pyadi-iio. Specifically custom markers and custom plugins.</p>
 <p>Markers are a way of labeling tests, which can be then used to filter specific tests. Markers are provided through the <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/test/test_map.py">test_map.py</a> file in the test directory. These markers are used to map FPGA based boards with daughtercards to specific tests. <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/embedded_arm_images">Reference design folder names</a> from the ADI SD cards are using as the markers, which them can be passed through the <em>-m</em> flag to enabled certain tests. For example, the following would enable all tests related to <em>ADRV9009</em>, assuming the hardware is available:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pytest -m zynqmp-zcu102-rev10-adrv9009</span>
@@ -383,7 +383,7 @@
 <p>If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps">pytest-libiio CLI</a>.</p>
 </section>
 <section id="new-hardware-requirements">
-<h3>New Hardware Requirements<a class="headerlink" href="#new-hardware-requirements" title="Permalink to this heading"></a></h3>
+<h3>New Hardware Requirements<a class="headerlink" href="#new-hardware-requirements" title="Permalink to this heading">#</a></h3>
 <p>In order to maintain pyadi-iio, for all new drivers the development team will require emulation contexts to be submitted alongside the new class interfaces. This is to ensure that the new drivers are tested and maintained. Emulation contexts can be created using <a class="reference external" href="https://pytest-libiio.readthedocs.io/en/latest/emulation/#adding-device-support">xml_gen</a>. CI will automatically validate that all hardware interfaces have emulation contexts and prevent merging if they are missing.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -391,7 +391,7 @@
 </div>
 </section>
 <section id="test-functions-and-fixtures">
-<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this heading"></a></h3>
+<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this heading">#</a></h3>
 <p>pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links belows to the different test categories:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -443,10 +443,10 @@
 </section>
 </section>
 <section id="set-up-isolated-environment">
-<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Permalink to this heading"></a></h2>
+<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Permalink to this heading">#</a></h2>
 <p>This section will discuss a method to do isolated development with the correct package versions. The main purpose here is to eliminate any discrepancies that can arise (especially with the linting tools) when running precommit and other checks. This is also useful to not pollute your local global packages. The approach here relies upon leveraging <strong>pyenv</strong> and <strong>pipenv</strong> together.</p>
 <section id="install-pyenv">
-<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this heading"></a></h3>
+<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this heading">#</a></h3>
 <p><strong>pyenv</strong> is a handy tool for installing different and isolated versions of python on your system. Since distributions can ship with rather random versions of python, pyenv can help us install exactly the versions we want. The quick way to install pyenv is with their bash script:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>https://pyenv.run<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </pre></div>
@@ -463,7 +463,7 @@
 </div>
 </section>
 <section id="create-isolated-install-with-pipenv">
-<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this heading"></a></h3>
+<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this heading">#</a></h3>
 <p>Get the repo, set python version, and setup env</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pipenv
 pyenv<span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="m">3</span>.6.9
@@ -483,7 +483,7 @@ pipenv<span class="w"> </span>shell
 </section>
 </section>
 <section id="emulation">
-<h2>Emulation<a class="headerlink" href="#emulation" title="Permalink to this heading"></a></h2>
+<h2>Emulation<a class="headerlink" href="#emulation" title="Permalink to this heading">#</a></h2>
 <p>By leveraging <a class="reference external" href="https://github.com/analogdevicesinc/iio-emu">iio-emu</a>, hardware or contexts can be emulated for testing without physical devices. However, currently this emulation does not validate attribute rates, states of drivers, or equivalent data sources. This feature should be used to test a library itself rather than hardware drivers.</p>
 <p><strong>pyadi-iio</strong> uses <em>iio-emu</em> through <em>pytest-libiio</em>, which handles loading the correct context files based on the fixtures used for each test. Essentially, when <em>pytest</em> is run, based on the fixture below, <em>pytest-libiio</em> will spawn the correct context with <em>iio-emu</em> and pass the URI of that context to the test.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
@@ -514,14 +514,14 @@ pipenv<span class="w"> </span>shell
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../fpga/index.html">
+          <a class="prev-page" href="../support.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">FPGA Features</div>
+                <div class="title">Support</div>
                 
               </div>
             </a>

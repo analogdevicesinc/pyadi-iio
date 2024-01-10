@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,10 +326,10 @@
         </div>
         <article role="main">
           <section id="module-adi.QuadMxFE_multi">
-<span id="quadmxfe-multi"></span><h1>QuadMxFE_multi<a class="headerlink" href="#module-adi.QuadMxFE_multi" title="Permalink to this heading"></a></h1>
+<span id="quadmxfe-multi"></span><h1>QuadMxFE_multi<a class="headerlink" href="#module-adi.QuadMxFE_multi" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.QuadMxFE_multi.</span></span><span class="sig-name descname"><span class="pre">QuadMxFE_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_uris</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_jesd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_jesds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.QuadMxFE_multi.</span></span><span class="sig-name descname"><span class="pre">QuadMxFE_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_uris</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_jesd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_jesds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>ADQUADMXFExEBZ Multi-SOM Manager</p>
 <dl class="simple">
@@ -348,12 +348,12 @@ to this SOM</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel">
-<span class="sig-name descname"><span class="pre">hmc7044_cap_sel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hmc7044_cap_sel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay">
-<span class="sig-name descname"><span class="pre">hmc7044_car_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hmc7044_car_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay" title="Permalink to this definition">#</a></dt>
 <dd><p>hmc7044_car_output_delay:</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -370,7 +370,7 @@ increments of ~25 ps. Range is from 100ps to 700ps.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay">
-<span class="sig-name descname"><span class="pre">hmc7044_ext_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hmc7044_ext_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay" title="Permalink to this definition">#</a></dt>
 <dd><p>hmc7044_ext_output_delay:</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -387,7 +387,7 @@ increments of ~25 ps. Range is from 100ps to 700ps.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel">
-<span class="sig-name descname"><span class="pre">hmc7044_set_cap_sel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hmc7044_set_cap_sel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel" title="Permalink to this definition">#</a></dt>
 <dd><p>hmc7044_set_cap_sel:</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -401,13 +401,13 @@ Typically the list returned form hmc7044_cap_sel</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize">
-<span class="sig-name descname"><span class="pre">reinitialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reinitialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize" title="Permalink to this definition">#</a></dt>
 <dd><p>reinitialize: reinitialize all transceivers</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx" title="Permalink to this definition">#</a></dt>
 <dd><p>Receive data from multiple hardware buffers for each channel index in
 rx_enabled_channels of each child object (primary,secondaries[indx]).</p>
 <dl class="simple">
@@ -420,18 +420,18 @@ Data will be complex when using a complex data device.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_buffer_size: Size of receive buffer in samples for each device</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.secondaries">
-<span class="sig-name descname"><span class="pre">secondaries</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="adi.ad9081_mc.html#adi.ad9081_mc.QuadMxFE" title="adi.ad9081_mc.QuadMxFE"><span class="pre">QuadMxFE</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.secondaries" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">secondaries</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="adi.ad9081_mc.html#adi.ad9081_mc.QuadMxFE" title="adi.ad9081_mc.QuadMxFE"><span class="pre">QuadMxFE</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.secondaries" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request">
-<span class="sig-name descname"><span class="pre">sysref_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sysref_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request" title="Permalink to this definition">#</a></dt>
 <dd><p>sysref_request: Sysref request for parent HMC7044</p>
 </dd></dl>
 

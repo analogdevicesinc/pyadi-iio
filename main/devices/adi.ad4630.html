@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,21 +326,21 @@
         </div>
         <article role="main">
           <section id="module-adi.ad4630">
-<span id="ad4630"></span><h1>ad4630<a class="headerlink" href="#module-adi.ad4630" title="Permalink to this heading"></a></h1>
+<span id="ad4630"></span><h1>ad4630<a class="headerlink" href="#module-adi.ad4630" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4630.</span></span><span class="sig-name descname"><span class="pre">ad4630</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ad4630-24'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4630.</span></span><span class="sig-name descname"><span class="pre">ad4630</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ad4630-24'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
 <p>AD4630 is low power 24-bit precision SAR ADC</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630.output_data_mode">
-<span class="sig-name descname"><span class="pre">output_data_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630.output_data_mode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output_data_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630.output_data_mode" title="Permalink to this definition">#</a></dt>
 <dd><p>Determine the output data mode in which device is configured.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630.rx" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.ad4630.rx" title="Permalink to this definition">#</a></dt>
 <dd><p>Receive data from hardware buffers for each channel index in
 rx_enabled_channels.</p>
 <dl class="simple">
@@ -353,19 +353,19 @@ Data will be complex when using a complex data device.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_averaging">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_averaging</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_averaging" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_averaging</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_averaging" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the sample averaging. Only available in 30bit averaged mode.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_averaging_avail">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_averaging_avail</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_averaging_avail" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_averaging_avail</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_averaging_avail" title="Permalink to this definition">#</a></dt>
 <dd><p>Get list of all the sample averaging values available. Only available in 30bit averaged mode.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad4630.ad4630.sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_rate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad4630.ad4630.sample_rate" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the sampling frequency.</p>
 </dd></dl>
 
@@ -373,7 +373,7 @@ Data will be complex when using a complex data device.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad4630.adaq42xx">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4630.</span></span><span class="sig-name descname"><span class="pre">adaq42xx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adaq4224'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.adaq42xx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4630.</span></span><span class="sig-name descname"><span class="pre">adaq42xx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adaq4224'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4630.adaq42xx" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.ad4630.ad4630" title="adi.ad4630.ad4630"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad4630</span></code></a></p>
 <p>ADAQ4224 is a 24-bit precision SAR ADC data acquisition module</p>
 </dd></dl>

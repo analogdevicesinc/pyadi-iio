@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,82 +326,82 @@
         </div>
         <article role="main">
           <section id="module-adi.ad9084">
-<span id="ad9081"></span><h1>ad9081<a class="headerlink" href="#module-adi.ad9084" title="Permalink to this heading"></a></h1>
+<span id="ad9081"></span><h1>ad9081<a class="headerlink" href="#module-adi.ad9084" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084.</span></span><span class="sig-name descname"><span class="pre">ad9084</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084.ad9084" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084.</span></span><span class="sig-name descname"><span class="pre">ad9084</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084.ad9084" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_tx" title="adi.rx_tx.rx_tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx_tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start" title="adi.sync_start.sync_start"><code class="xref py py-class docutils literal notranslate"><span class="pre">sync_start</span></code></a></p>
 <p>AD9084 Mixed-Signal Front End (MxFE)</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.adc_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adc_frequency</span></span><a class="headerlink" href="#adi.ad9084.ad9084.adc_frequency" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adc_frequency</span></span><a class="headerlink" href="#adi.ad9084.ad9084.adc_frequency" title="Permalink to this definition">#</a></dt>
 <dd><p>adc_frequency: ADC frequency in Hz</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.api_version">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">api_version</span></span><a class="headerlink" href="#adi.ad9084.ad9084.api_version" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">api_version</span></span><a class="headerlink" href="#adi.ad9084.ad9084.api_version" title="Permalink to this definition">#</a></dt>
 <dd><p>api_version: API version</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.chip_version">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chip_version</span></span><a class="headerlink" href="#adi.ad9084.ad9084.chip_version" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chip_version</span></span><a class="headerlink" href="#adi.ad9084.ad9084.chip_version" title="Permalink to this definition">#</a></dt>
 <dd><p>chip_version: Chip version information</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.dac_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dac_frequency</span></span><a class="headerlink" href="#adi.ad9084.ad9084.dac_frequency" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dac_frequency</span></span><a class="headerlink" href="#adi.ad9084.ad9084.dac_frequency" title="Permalink to this definition">#</a></dt>
 <dd><p>dac_frequency: DAC frequency in Hz</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.jesd204_device_status">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_device_status</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_device_status" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_device_status</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_device_status" title="Permalink to this definition">#</a></dt>
 <dd><p>jesd204_device_status: Device jesd204 link status information</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.jesd204_device_status_check">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_device_status_check</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_device_status_check" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_device_status_check</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_device_status_check" title="Permalink to this definition">#</a></dt>
 <dd><p>jesd204_device_status_check: Device jesd204 link status check</p>
 <p>Returns ‘True’ in case error conditions are detected, ‘False’ otherwise</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.jesd204_fsm_ctrl">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_ctrl</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_ctrl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_ctrl</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_ctrl" title="Permalink to this definition">#</a></dt>
 <dd><p>jesd204_fsm_ctrl: jesd204-fsm control</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.jesd204_fsm_error">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_error</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_error" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_error</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_error" title="Permalink to this definition">#</a></dt>
 <dd><p>jesd204_fsm_error: jesd204-fsm error</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.jesd204_fsm_paused">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_paused</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_paused" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_paused</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_paused" title="Permalink to this definition">#</a></dt>
 <dd><p>jesd204_fsm_paused: jesd204-fsm paused</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.jesd204_fsm_resume">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_resume</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_resume" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_resume</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_resume" title="Permalink to this definition">#</a></dt>
 <dd><p>jesd204_fsm_resume: jesd204-fsm resume</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.jesd204_fsm_state">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_state</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_state" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_fsm_state</span></span><a class="headerlink" href="#adi.ad9084.ad9084.jesd204_fsm_state" title="Permalink to this definition">#</a></dt>
 <dd><p>jesd204_fsm_state: jesd204-fsm state</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.loopback_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loopback_mode</span></span><a class="headerlink" href="#adi.ad9084.ad9084.loopback_mode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loopback_mode</span></span><a class="headerlink" href="#adi.ad9084.ad9084.loopback_mode" title="Permalink to this definition">#</a></dt>
 <dd><p>loopback_mode: Enable loopback mode RX-&gt;TX</p>
 <p>When enabled JESD RX FIFO is connected to JESD TX FIFO,
 making the entire datasource for the TX path the RX path. No
@@ -413,86 +413,86 @@ link.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.path_map">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path_map</span></span><a class="headerlink" href="#adi.ad9084.ad9084.path_map" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path_map</span></span><a class="headerlink" href="#adi.ad9084.ad9084.path_map" title="Permalink to this definition">#</a></dt>
 <dd><p>path_map: Map of channelizers both coarse and fine to
 individual driver channel names</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_channel_nco_frequencies">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_channel_nco_frequencies" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_channel_nco_frequencies" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_channel_nco_frequencies: Receive path fine DDC NCO frequencies</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_channel_nco_phases">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_nco_phases</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_channel_nco_phases" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_nco_phases</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_channel_nco_phases" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_channel_nco_phases: Receive path fine DDC NCO phases</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_main_nco_frequencies">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_main_nco_frequencies" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_main_nco_frequencies" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_main_nco_frequencies: Receive path coarse DDC NCO frequencies</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_main_nco_phases">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_nco_phases</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_main_nco_phases" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_nco_phases</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_main_nco_phases" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_main_nco_phases: Receive path coarse DDC NCO phases</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_nyquist_zone">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_nyquist_zone</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_nyquist_zone" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_nyquist_zone</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_nyquist_zone" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_nyquist_zone: ADC nyquist zone. Options are: odd, even</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sample_rate</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_sample_rate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sample_rate</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_sample_rate" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_sampling_frequency: Sample rate after decimation</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_test_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_test_mode</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_test_mode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_test_mode</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_test_mode" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_test_mode: NCO Test Mode</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_channel_nco_frequencies">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_frequencies" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_frequencies" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_channel_nco_frequencies: Transmit path fine DUC NCO frequencies</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_channel_nco_gain_scales">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_gain_scales</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_gain_scales" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_gain_scales</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_gain_scales" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_channel_nco_gain_scales Transmit path fine DUC NCO gain scale</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_channel_nco_phases">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_phases</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_phases" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_phases</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_phases" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_channel_nco_phases: Transmit path fine DUC NCO phases</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_channel_nco_test_tone_en">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_test_tone_en</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_test_tone_en" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_test_tone_en</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_test_tone_en" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_channel_nco_test_tone_en: Transmit path fine DUC NCO test tone enable</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_channel_nco_test_tone_scales">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_test_tone_scales</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_test_tone_scales" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_channel_nco_test_tone_scales</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_channel_nco_test_tone_scales" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_channel_nco_test_tone_scales: Transmit path fine DUC NCO test tone scale</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_ddr_offload">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_ddr_offload</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_ddr_offload" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_ddr_offload</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_ddr_offload" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_ddr_offload: Enable DDR offload</p>
 <p>When true the DMA will pass buffers into the BRAM FIFO for data repeating.
 This is necessary when operating at high DAC sample rates. This can reduce
@@ -502,31 +502,31 @@ underflow due to memory bottlenecks.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_main_nco_frequencies">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_main_nco_frequencies" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_frequencies</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_main_nco_frequencies" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_main_nco_frequencies: Transmit path coarse DUC NCO frequencies</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_main_nco_phases">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_phases</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_main_nco_phases" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_phases</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_main_nco_phases" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_main_nco_phases: Transmit path coarse DUC NCO phases</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_main_nco_test_tone_en">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_test_tone_en</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_main_nco_test_tone_en" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_test_tone_en</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_main_nco_test_tone_en" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_main_nco_test_tone_en: Transmit path coarse DUC NCO test tone enable</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_main_nco_test_tone_scales">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_test_tone_scales</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_main_nco_test_tone_scales" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_main_nco_test_tone_scales</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_main_nco_test_tone_scales" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_main_nco_test_tone_scales: Transmit path coarse DUC NCO test tone scale</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sample_rate</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_sample_rate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sample_rate</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_sample_rate" title="Permalink to this definition">#</a></dt>
 <dd><p>tx_sampling_frequency: Sample rate before interpolation</p>
 </dd></dl>
 

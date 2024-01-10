@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Supported Devices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,7 +326,7 @@
         </div>
         <article role="main">
           <section id="ad9081-mc">
-<h1>ad9081_mc<a class="headerlink" href="#ad9081-mc" title="Permalink to this heading"></a></h1>
+<h1>ad9081_mc<a class="headerlink" href="#ad9081-mc" title="Permalink to this heading">#</a></h1>
 <p>The multi-chip python interface for AD9081 is scalable to any number of AD9081s within a single libIIO context. It will automatically determine the correct main driver, manage the CDDC/FDDC/CDUC/FDUC arrangement uniquely for each chip, and DMA/DDS IP. However, the interface a bit unique with <strong>pyadi-iio</strong> since it is almost identical to the single AD9081 class but it exposes properties in a slightly different way.</p>
 <p>When using <strong>adi.ad9081</strong>, properties are generally simple types like strings, ints, floats, or lists of these types. For example, when reading back the <strong>rx_channel_nco_frequencies</strong> you would observe something like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>import<span class="w"> </span>adi
@@ -364,7 +364,7 @@
 </div>
 <span class="target" id="module-adi.ad9081_mc"></span><dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9081_mc.QuadMxFE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9081_mc.</span></span><span class="sig-name descname"><span class="pre">QuadMxFE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_board_attached</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9081_mc.QuadMxFE" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9081_mc.</span></span><span class="sig-name descname"><span class="pre">QuadMxFE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_board_attached</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9081_mc.QuadMxFE" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.ad9081_mc.ad9081_mc" title="adi.ad9081_mc.ad9081_mc"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9081_mc</span></code></a></p>
 <p>Quad AD9081 Mixed-Signal Front End (MxFE) Development System</p>
 <dl class="simple">
@@ -376,7 +376,7 @@
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9081_mc.QuadMxFE.rx_dsa_gain">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa_gain</span></span><a class="headerlink" href="#adi.ad9081_mc.QuadMxFE.rx_dsa_gain" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa_gain</span></span><a class="headerlink" href="#adi.ad9081_mc.QuadMxFE.rx_dsa_gain" title="Permalink to this definition">#</a></dt>
 <dd><p>rx_dsa_gain: Receiver digital step attenuator gain</p>
 </dd></dl>
 
@@ -384,7 +384,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9081_mc.ad9081_mc">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9081_mc.</span></span><span class="sig-name descname"><span class="pre">ad9081_mc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phy_dev_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9081_mc.ad9081_mc" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9081_mc.</span></span><span class="sig-name descname"><span class="pre">ad9081_mc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phy_dev_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9081_mc.ad9081_mc" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="adi.ad9081.html#adi.ad9081.ad9081" title="adi.ad9081.ad9081"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9081</span></code></a></p>
 <p>AD9081 Mixed-Signal Front End (MxFE) Multi-Chip Interface</p>
 <blockquote>

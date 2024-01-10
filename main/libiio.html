@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-    <link href="_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Support" href="support.html" /><link rel="prev" title="Generic Tests" href="dev/test_generics.html" />
+    <link href="_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Support" href="support.html" /><link rel="prev" title="FPGA Features" href="fpga/index.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
         <title>libiio Direct Access - Analog Devices Hardware Python Interfaces 0.0.17</title>
@@ -173,7 +173,17 @@
 <li class="toctree-l1"><a class="reference internal" href="attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/connectivity.html">Connectivity</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_generics.html">Generic Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="devices/index.html">Supported Devices</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4020.html">ad4020</a></li>
@@ -281,16 +291,6 @@
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.tdd.html">tdd</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="dev/index.html">Developers</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dev/test_generics.html">Generic Tests</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">libiio Direct Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 </ul>
 
 </div>
@@ -326,10 +326,10 @@
         </div>
         <article role="main">
           <section id="libiio-direct-access">
-<h1>libiio Direct Access<a class="headerlink" href="#libiio-direct-access" title="Permalink to this heading"></a></h1>
+<h1>libiio Direct Access<a class="headerlink" href="#libiio-direct-access" title="Permalink to this heading">#</a></h1>
 <p><strong>pyadi-iio</strong> is built on-top of <strong>libiio</strong>, specifically its python bindings <a class="reference external" href="https://pypi.org/project/pylibiio/">pylibiio</a>. However, <strong>pyadi-iio</strong> tries to limit or shape the top-level access of certain properties of drivers exposed by <em>libiio</em> and its structure so users do not have to understand how <strong>libiio</strong> works. This is great until you need access to something not directly exposed by one of <strong>pyadi-iio</strong>’s classes. Fortunately, there is an easy way to directly access the <a class="reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html">libiio python API</a> when necessary.</p>
 <section id="libiio-entry-points">
-<h2>libiio Entry Points<a class="headerlink" href="#libiio-entry-points" title="Permalink to this heading"></a></h2>
+<h2>libiio Entry Points<a class="headerlink" href="#libiio-entry-points" title="Permalink to this heading">#</a></h2>
 <p>The main object interface to <strong>libiio</strong> is through the <strong>ctx</strong> property, which is available in every device-specific class. The context is used internally by <strong>ctx</strong> to do all <strong>libiio</strong> specific operations. Here is an example of using the <strong>ctx</strong> property with <strong>pyadi-iio</strong> and <strong>libiio</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 <span class="kn">import</span> <span class="nn">iio</span>
@@ -352,7 +352,7 @@ cf-ad9361-lpc<span class="w"> </span><span class="p">|</span><span class="w"> </
 <p>Please refer to the <a class="reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html">libiio python API</a> for documentation on using <strong>libiio</strong> directly.</p>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
 <p>Here is an example of setting the enable state machine on Pluto through the <strong>libiio</strong> API through <strong>pyadi-iio</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
@@ -427,7 +427,7 @@ adi,txmon-1-front-end-gain<span class="w"> </span>adi,txmon-1-front-end-gain
 </div>
 </section>
 <section id="libiio-v1-x-support">
-<h2>libiio v1.X support<a class="headerlink" href="#libiio-v1-x-support" title="Permalink to this heading"></a></h2>
+<h2>libiio v1.X support<a class="headerlink" href="#libiio-v1-x-support" title="Permalink to this heading">#</a></h2>
 <p><strong>pyadi-iio</strong> supports <strong>libiio</strong> v1.X and v0.X. However, the <strong>libiio</strong> python bindings are not available on PyPI for v1.X and they are currently unstable. If you require stable operation, please use <strong>libiio</strong> v0.X. Its also possible that not all ecosystem features are available yet for v1.X. Please report any issues you find with v1.X.</p>
 </section>
 </section>
@@ -446,14 +446,14 @@ adi,txmon-1-front-end-gain<span class="w"> </span>adi,txmon-1-front-end-gain
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="dev/test_generics.html">
+          <a class="prev-page" href="fpga/index.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Generic Tests</div>
+                <div class="title">FPGA Features</div>
                 
               </div>
             </a>
