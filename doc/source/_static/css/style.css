@@ -50,7 +50,7 @@ body>div>aside>div>div>div.sidebar-scroll>div>ul {
 .sidebar-tree .current>.reference {
     border-radius: 25px;
     color: var(--sidebar-highligh-color);
-    padding-bottom: 5px;
+    padding-bottom: 1px;
     padding-top: 5px;
 }
 
@@ -67,7 +67,7 @@ body>div>aside>div>div>div.sidebar-scroll>div>ul {
 .sidebar-tree .current>.reference:hover {
     color: var(--sidebar-highligh-color-hover);
     border: 1px solid var(--sidebar-highligh-color-hover);
-    padding-bottom: 4px;
+    padding-bottom: 1px;
     padding-top: 4px;
 }
 
