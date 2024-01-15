@@ -86,6 +86,7 @@ Supported Devices
    adi.cn0532
    adi.cn0540
    adi.cn0554
+   adi.cn0565
    adi.cn0566
    adi.cn0575
    adi.cn0579

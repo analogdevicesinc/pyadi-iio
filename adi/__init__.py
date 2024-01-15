@@ -77,6 +77,7 @@ from adi.adxrs290 import adxrs290
 from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.cn0554 import cn0554
+from adi.cn0565 import cn0565
 from adi.cn0566 import CN0566
 from adi.cn0575 import cn0575
 from adi.cn0579 import cn0579

@@ -177,6 +177,17 @@ cn0554:
           - iio:device0
           - iio:device1
 
+cn0565:
+  - ad5940
+  - adg2128
+  - pyadi_iio_class_support:
+      - cn0565
+  - emulate:
+      - filename: cn0565.xml
+      - data_devices:
+          - iio:device0
+          - iio:device1
+
 cn0566:
   - ad7291
   - pyadi_iio_class_support:
