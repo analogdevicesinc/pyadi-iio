@@ -1,6 +1,15 @@
+import logging
+import os
+
 import pyvisa
 
-import logging
+if os.name == "nt":
+    # Add Keysight IO Libraries to path
+    KS_LIB_PATH = os.get.environ(
+        "KS_LIB_PATH", r"C:\Program Files\Keysight\IO Libraries Suite\bin"
+    )
+    os.add_dll_directory(KS_LIB_PATH)
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -66,16 +75,28 @@ class channel:
 class E36233A:
     id = "E36233A"
     num_channels = 2
+    driver = "ktvisa32"
 
     """Keysight E36233A Power Supply"""
 
-    def __init__(self, address=None) -> None:
+    def __init__(self, address=None, driver=None) -> None:
+        """Initialize the instrument
+
+        Args:
+            address (str, optional): VISA address of the instrument. Defaults to autodiscovery.
+            driver (str, optional): VISA driver to use. Defaults to ktvisa32.
+        """
+        if driver:
+            self.driver = driver
         if not address:
             self._find_device()
         else:
             self.address = address
-            self._instr = pyvisa.ResourceManager().open_resource(self.address)
-            if self._instr.query("*IDN?") != self.id:
+            self._instr = pyvisa.ResourceManager(self.driver).open_resource(
+                self.address
+            )
+            idn = self._instr.query("*IDN?")
+            if self.id not in idn:
                 raise Exception(f"Device at {self.address} is not a {self.id}")
 
         self.ch1 = channel(self, 1)
@@ -84,13 +105,13 @@ class E36233A:
     def _find_device(self):
         """Find desired devices automatically"""
 
-        rm = pyvisa.ResourceManager()
+        rm = pyvisa.ResourceManager(self.driver)
         all_resources = rm.list_resources()
         for res in all_resources:
             logging.debug(f"Inspecting: {res}")
             idn = rm.open_resource(res).query("*IDN?")
             logging.debug(f"Found ID: {idn}")
-            if idn == self.id:
+            if self.id in idn:
                 self.address = res
                 self._instr = rm.open_resource(self.address)
                 return
@@ -100,3 +121,8 @@ class E36233A:
     def reset(self):
         """Reset the instrument"""
         self._instr.write("*RST")
+
+
+if __name__ == "__main__":
+    inst = E36233A()
+    print(inst.ch1.voltage)
