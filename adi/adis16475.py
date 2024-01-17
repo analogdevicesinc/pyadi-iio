@@ -65,6 +65,21 @@ class adis16475(rx, context_manager):
             self._ctrl = self._ctx.find_device(device_name)
             self._rxadc = self._ctx.find_device(device_name)
 
+        if self._ctrl is None:
+            print(
+                "No device found with device_name = "
+                + device_name
+                + ". Searching for a device found in the compatible list."
+            )
+            for i in compatible_parts:
+                self._ctrl = self._ctx.find_device(i)
+                self._rxadc = self._ctx.find_device(i)
+                if self._ctrl is not None:
+                    print("Fond device = " + i + ". Will use this device instead.")
+                    break
+            if self._ctrl is None:
+                raise Exception("No compatible device found")
+
         self.anglvel_x = self._channel_with_offset(self._ctrl, "anglvel_x")
         self.anglvel_y = self._channel_with_offset(self._ctrl, "anglvel_y")
         self.anglvel_z = self._channel_with_offset(self._ctrl, "anglvel_z")
