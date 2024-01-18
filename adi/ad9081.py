@@ -5,6 +5,7 @@
 from typing import Dict, List
 
 from adi.context_manager import context_manager
+from adi.jesd import jesd
 from adi.rx_tx import rx_tx
 from adi.sync_start import sync_start
 
@@ -66,7 +67,9 @@ class ad9081(rx_tx, context_manager, sync_start):
 
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
-    def __init__(self, uri=""):
+    def __init__(
+        self, uri="", username="root", password="analog", disable_jesd_control=True
+    ):
 
         # Reset default channel names
         self._rx_channel_names = []
@@ -84,6 +87,9 @@ class ad9081(rx_tx, context_manager, sync_start):
         # Devices with buffers
         self._rxadc = self._ctx.find_device("axi-ad9081-rx-hpc")
         self._txdac = self._ctx.find_device("axi-ad9081-tx-hpc")
+
+        if not disable_jesd_control and jesd:
+            self._jesd = jesd(uri, username=username, password=password)
 
         # Get DDC and DUC mappings
         paths = {}

@@ -2,12 +2,10 @@
 #
 # SPDX short identifier: ADIBSD
 
-from abc import ABCMeta, abstractmethod
-
 from .sshfs import sshfs
 
 
-class eye_scan(metaclass=ABCMeta):
+class eye_scan(object):
     _jesd_es_duration_ms = 100
     _jesd_prbs = 7
 

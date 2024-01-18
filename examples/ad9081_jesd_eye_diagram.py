@@ -4,7 +4,7 @@ import adi
 import matplotlib.pyplot as plt
 from scipy import signal
 
-dev = adi.ad9081("ip:10.44.3.92")
+dev = adi.ad9081("ip:10.44.3.92", disable_jesd_control=False)
 
 # Configure properties
 print("--Setting up chip")
@@ -13,7 +13,7 @@ dev._ctx.set_timeout(90000)
 
 fig = plt.figure()
 
-eye_data_per_lane = dev.get_eye_data()
+eye_data_per_lane = dev._jesd.get_eye_data()
 num_lanes = len(eye_data_per_lane.keys())
 
 for lane in eye_data_per_lane:
