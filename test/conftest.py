@@ -14,6 +14,7 @@ from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
 from test.html import pytest_html_report_title, pytest_runtest_makereport
+from test.jesd import check_jesd_links
 
 import adi
 import numpy as np
@@ -202,3 +203,8 @@ def test_verify_overflow(request):
 @pytest.fixture()
 def test_verify_underflow(request):
     yield verify_underflow
+
+
+@pytest.fixture()
+def test_check_jesd_links(request):
+    yield check_jesd_links
