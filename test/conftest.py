@@ -202,3 +202,8 @@ def test_verify_overflow(request):
 @pytest.fixture()
 def test_verify_underflow(request):
     yield verify_underflow
+
+
+@pytest.fixture()
+def test_attribute_single_value_pow2_device(request):
+    yield attribute_single_value_pow2_device

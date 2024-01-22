@@ -3,6 +3,7 @@ from decimal import Decimal
 from test.common import (
     dev_interface,
     dev_interface_sub_channel,
+    dev_interface_device,
     pytest_collection_modifyitems,
     pytest_configure,
 )
@@ -379,3 +380,32 @@ def attribute_check_range_readonly_with_depends(
     except Exception as e:
         del sdr
         raise Exception(e)
+
+
+def attribute_single_value_pow2_device(uri, classname, device_name, attr, max_pow, tol, repeats=1):
+    """attribute_single_value_pow2: Write and read back integer class property
+    where the integer is a power of 2. This is performed a defined
+    number of times and the value written is randomly determined based
+    in input parameters
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        max_pow: type=integer
+            Largest power of 2 attribute allow to be
+        tol: type=integer
+            Allowable error of written value compared to read back value
+        repeats: type=integer
+            Number of random values to tests. Generated from uniform distribution
+    """
+    # Pick random number in operational range
+    nums = [2 ** k for k in range(max_pow)]
+    for _ in range(repeats):
+        ind = random.randint(0, len(nums) - 1)
+        val = nums[ind]
+        # Check hardware
+        assert dev_interface_device(uri, classname, device_name, val, attr, tol)
