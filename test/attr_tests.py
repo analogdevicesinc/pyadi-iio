@@ -379,3 +379,53 @@ def attribute_check_range_readonly_with_depends(
     except Exception as e:
         del sdr
         raise Exception(e)
+
+
+def attribute_multiple_values_available_readonly(uri, classname, attr):
+    """attribute_multiple_values_available_readonly:
+    Read only class property where the available attribute values are returned.
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    try:
+        if not hasattr(sdr, attr):
+            raise AttributeError(attr + " not defined in " + classname)
+        rval = getattr(sdr, attr)
+        assert type(rval) != None
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+
+def attribute_single_value_channel_readonly(uri, classname, channel, attr):
+    """attribute_single_value:
+        Read only class property where the channel name is specified.
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            classname: type=string
+                Name of pyadi interface class which contain attribute
+            channel: type=string
+                Channel name of the target board/system
+            attr: type=string
+                Attribute name to be written. Must be property of classname
+        """
+    sdr = eval(classname + "(uri='" + uri + "')." + channel + "")
+    try:
+        if not hasattr(sdr, attr):
+            raise AttributeError(attr + " not defined in " + classname)
+        rval = getattr(sdr, attr)
+        assert type(rval) != None
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
