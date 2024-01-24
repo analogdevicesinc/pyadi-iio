@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad5686" href="adi.ad5686.html" /><link rel="prev" title="ad5592r" href="adi.ad5592r.html" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="cn0565" href="adi.cn0565.html" /><link rel="prev" title="cn0554" href="adi.cn0554.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
-        <title>ad5627 - Analog Devices Hardware Python Interfaces 0.0.17</title>
+        <title>cn0556 - Analog Devices Hardware Python Interfaces 0.0.17</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -192,7 +192,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4630.html">ad4630</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad469x.html">ad469x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5592r.html">ad5592r</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad578x.html">ad578x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5754r.html">ad5754r</a></li>
@@ -263,7 +263,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0554.html">cn0554</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.cn0556.html">cn0556</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">cn0556</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0565.html">cn0565</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0566.html">adi.cn0566 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0575.html">cn0575</a></li>
@@ -327,23 +327,195 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ad5627">
-<span id="ad5627"></span><h1>ad5627<a class="headerlink" href="#module-adi.ad5627" title="Permalink to this heading">#</a></h1>
+          <section id="module-adi.cn0556">
+<span id="cn0556"></span><h1>cn0556<a class="headerlink" href="#module-adi.cn0556" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad5627.ad5627">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5627.</span></span><span class="sig-name descname"><span class="pre">ad5627</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5627.ad5627" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>AD5627 Low Power Dual nanoDAC</p>
+<dt class="sig sig-object py" id="adi.cn0556.cn0556">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0556.</span></span><span class="sig-name descname"><span class="pre">cn0556</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ip:analog.local'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0556.cn0556" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="adi.cn0554.html#adi.cn0554.cn0554" title="adi.cn0554.cn0554"><code class="xref py py-class docutils literal notranslate"><span class="pre">cn0554</span></code></a></p>
+<p>The CN0556 class inherits features from the CN0554 (providing full
+control and monitoring of the input and output voltages and currents)
+and the one_bit_adc_dac (sets the mode of the regulator to either Buck
+or Boost and enables and disables the LT8228). These combined
+functionalities are utilized for a Programmable High Current and
+Voltage Source/Sink Power Supply.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of the platform</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad5627.ad5627.apdbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">apdbias</span></span><a class="headerlink" href="#adi.ad5627.ad5627.apdbias" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the APD Bias.</p>
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.boost_input_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_input_current</span></span><a class="headerlink" href="#adi.cn0556.cn0556.boost_input_current" title="Permalink to this definition">#</a></dt>
+<dd><p>Read boost input current at V2 terminals. Convert ADC data using scale and offset factors based on resistor divider at IMON2 node.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad5627.ad5627.tiltvoltage">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tiltvoltage</span></span><a class="headerlink" href="#adi.ad5627.ad5627.tiltvoltage" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the Tilt Voltage.</p>
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.boost_input_current_limit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_input_current_limit</span></span><a class="headerlink" href="#adi.cn0556.cn0556.boost_input_current_limit" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute for the target boost input current limit set
+using DAC data and scale and offset factors based on resistor divider network at ISET2N node.</p>
+<p>returns boost target input current limit and DAC output voltage in volts (V)
+return type: (float, float)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.boost_input_undervoltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_input_undervoltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.boost_input_undervoltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute for the boost input undervoltage set at V2 side
+using DAC data and scale and offset factors based on resistor divider network at UV2 node.</p>
+<p>returns boost input undervoltage and DAC output voltage in volts (V)
+return type: (float, float)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.boost_input_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_input_voltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.boost_input_voltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Read boost input voltage at V2 terminals. Convert ADC data using scale and offset factors based on resistor divider network.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.boost_output_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_output_current</span></span><a class="headerlink" href="#adi.cn0556.cn0556.boost_output_current" title="Permalink to this definition">#</a></dt>
+<dd><p>Read boost output current at V1 terminals. Convert ADC data using scale and offset factors based on resistor divider at IMON1 node.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.boost_output_current_limit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_output_current_limit</span></span><a class="headerlink" href="#adi.cn0556.cn0556.boost_output_current_limit" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute for the target boost output current limit set
+using DAC data and scale and offset factors based on resistor divider network at ISET1N node.</p>
+<p>returns boost target output current limit and DAC output voltage in volts (V)
+return type: (float, float)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.boost_output_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_output_voltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.boost_output_voltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Read boost output voltage at V1 terminals. Convert ADC data using scale and offset factors based on resistor divider network.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.boost_target_output_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_target_output_voltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.boost_target_output_voltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute for the target boost output voltage set at V1 side
+using DAC data and scale and offset factors based on resistor divider network at FB1 node.</p>
+<p>returns boost target output voltage and DAC output voltage in volts (V)
+return type: (float, float)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.buck_input_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buck_input_current</span></span><a class="headerlink" href="#adi.cn0556.cn0556.buck_input_current" title="Permalink to this definition">#</a></dt>
+<dd><p>Read buck input current at V1 terminals. Convert ADC data using scale and offset factors based on resistor divider at IMON1 node.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.buck_input_current_limit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buck_input_current_limit</span></span><a class="headerlink" href="#adi.cn0556.cn0556.buck_input_current_limit" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute for the target buck input current limit set
+using DAC data and scale and offset factors based on resistor divider network at ISET1P node.</p>
+<p>returns buck target input current limit and DAC output voltage in volts (V)
+return type: (float, float)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.buck_input_undervoltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buck_input_undervoltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.buck_input_undervoltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute for the buck input undervoltage set at V1 side
+using DAC data and scale and offset factors based on resistor divider network at UV1 node.</p>
+<p>returns buck input undervoltage and DAC output voltage in volts (V)
+return type: (float, float)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.buck_input_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buck_input_voltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.buck_input_voltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Read buck input voltage at V1 terminals. Convert ADC data using scale and offset factors based on a resistor divider network.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.buck_output_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buck_output_current</span></span><a class="headerlink" href="#adi.cn0556.cn0556.buck_output_current" title="Permalink to this definition">#</a></dt>
+<dd><p>Read buck output current at V2 terminals. Convert ADC data using scale and offset factors based on resistor divider at IMON2 node.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.buck_output_current_limit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buck_output_current_limit</span></span><a class="headerlink" href="#adi.cn0556.cn0556.buck_output_current_limit" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute for the target buck output current limit set
+using DAC data and scale and offset factors based on resistor divider network at ISET2P node.</p>
+<p>returns buck target output current limit and DAC output voltage in volts (V)
+return type: (float, float)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.buck_output_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buck_output_voltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.buck_output_voltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Read buck output voltage at V2 terminals. Convert ADC data using scale and offset factors based on resistor divider network.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.buck_target_output_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buck_target_output_voltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.buck_target_output_voltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute for the target buck output voltage set at V2 side
+using DAC data and scale and offset factors based on resistor divider network at FB2 node.</p>
+<p>returns buck target output voltage and DAC output voltage in volts (V)
+return type: (float, float)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.drxn">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">drxn</span></span><a class="headerlink" href="#adi.cn0556.cn0556.drxn" title="Permalink to this definition">#</a></dt>
+<dd><p>drxn: operating mode of the board. Returns ‘1’ if in Buck Mode and ‘0’ if in Boost Mode</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable</span></span><a class="headerlink" href="#adi.cn0556.cn0556.enable" title="Permalink to this definition">#</a></dt>
+<dd><p>enable the LT8228 device when True.
+When set to false, device is disabled, DAC outputs set to 0, and sets the DRXN to boost mode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.fault">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fault</span></span><a class="headerlink" href="#adi.cn0556.cn0556.fault" title="Permalink to this definition">#</a></dt>
+<dd><p>fault: checks if a fault is present. Returns True if a fault occurred.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.intvcc_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intvcc_voltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.intvcc_voltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Return voltage at INTVCC pin in volts (V)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.read_value">
+<span class="sig-name descname"><span class="pre">read_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0556.cn0556.read_value" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert ADC data using the scale factor and offset based on simplified formulas derived and scaling
+factors derived using the resistor divider networks at the feedback nodes.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.report">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">report</span></span><a class="headerlink" href="#adi.cn0556.cn0556.report" title="Permalink to this definition">#</a></dt>
+<dd><p>Check if REPORT is triggered. Returns True if REPORT pin is HIGH.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.set_value">
+<span class="sig-name descname"><span class="pre">set_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0556.cn0556.set_value" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert user input value to equivalent DAC output voltage to control the output voltage and current limits
+using the scale factor and offset based on simplified formulas derived using the resistor
+divider networks at the feedback nodes.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0556.cn0556.share_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">share_voltage</span></span><a class="headerlink" href="#adi.cn0556.cn0556.share_voltage" title="Permalink to this definition">#</a></dt>
+<dd><p>Return voltage at SHARE pin in volts (V)</p>
 </dd></dl>
 
 </dd></dl>
@@ -355,23 +527,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.ad5686.html">
+          <a class="next-page" href="adi.cn0565.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ad5686</div>
+                <div class="title">cn0565</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="adi.ad5592r.html">
+          <a class="prev-page" href="adi.cn0554.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">ad5592r</div>
+                <div class="title">cn0554</div>
                 
               </div>
             </a>
@@ -405,10 +577,32 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">ad5627</a><ul>
-<li><a class="reference internal" href="#adi.ad5627.ad5627"><code class="docutils literal notranslate"><span class="pre">ad5627</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad5627.ad5627.apdbias"><code class="docutils literal notranslate"><span class="pre">ad5627.apdbias</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad5627.ad5627.tiltvoltage"><code class="docutils literal notranslate"><span class="pre">ad5627.tiltvoltage</span></code></a></li>
+<li><a class="reference internal" href="#">cn0556</a><ul>
+<li><a class="reference internal" href="#adi.cn0556.cn0556"><code class="docutils literal notranslate"><span class="pre">cn0556</span></code></a><ul>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.boost_input_current"><code class="docutils literal notranslate"><span class="pre">cn0556.boost_input_current</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.boost_input_current_limit"><code class="docutils literal notranslate"><span class="pre">cn0556.boost_input_current_limit</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.boost_input_undervoltage"><code class="docutils literal notranslate"><span class="pre">cn0556.boost_input_undervoltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.boost_input_voltage"><code class="docutils literal notranslate"><span class="pre">cn0556.boost_input_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.boost_output_current"><code class="docutils literal notranslate"><span class="pre">cn0556.boost_output_current</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.boost_output_current_limit"><code class="docutils literal notranslate"><span class="pre">cn0556.boost_output_current_limit</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.boost_output_voltage"><code class="docutils literal notranslate"><span class="pre">cn0556.boost_output_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.boost_target_output_voltage"><code class="docutils literal notranslate"><span class="pre">cn0556.boost_target_output_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.buck_input_current"><code class="docutils literal notranslate"><span class="pre">cn0556.buck_input_current</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.buck_input_current_limit"><code class="docutils literal notranslate"><span class="pre">cn0556.buck_input_current_limit</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.buck_input_undervoltage"><code class="docutils literal notranslate"><span class="pre">cn0556.buck_input_undervoltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.buck_input_voltage"><code class="docutils literal notranslate"><span class="pre">cn0556.buck_input_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.buck_output_current"><code class="docutils literal notranslate"><span class="pre">cn0556.buck_output_current</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.buck_output_current_limit"><code class="docutils literal notranslate"><span class="pre">cn0556.buck_output_current_limit</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.buck_output_voltage"><code class="docutils literal notranslate"><span class="pre">cn0556.buck_output_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.buck_target_output_voltage"><code class="docutils literal notranslate"><span class="pre">cn0556.buck_target_output_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.drxn"><code class="docutils literal notranslate"><span class="pre">cn0556.drxn</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.enable"><code class="docutils literal notranslate"><span class="pre">cn0556.enable</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.fault"><code class="docutils literal notranslate"><span class="pre">cn0556.fault</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.intvcc_voltage"><code class="docutils literal notranslate"><span class="pre">cn0556.intvcc_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.read_value"><code class="docutils literal notranslate"><span class="pre">cn0556.read_value()</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.report"><code class="docutils literal notranslate"><span class="pre">cn0556.report</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.set_value"><code class="docutils literal notranslate"><span class="pre">cn0556.set_value()</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0556.cn0556.share_voltage"><code class="docutils literal notranslate"><span class="pre">cn0556.share_voltage</span></code></a></li>
 </ul>
 </li>
 </ul>
