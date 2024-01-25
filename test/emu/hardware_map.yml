@@ -307,6 +307,14 @@ adrv9375:
           - iio:device4
           - iio:device5
           - iio:device6
+adxrs290:
+  - adxrs290
+  - pyadi_iio_class_support:
+      - adxrs290
+  - emulate:
+      - filename: adxrs290.xml
+      - data_devices:
+          - iio:device0
 adxl355:
   - adxl355
   - emulate:
