@@ -5,7 +5,7 @@ import pyvisa
 
 if os.name == "nt":
     # Add Keysight IO Libraries to path
-    KS_LIB_PATH = os.get.environ(
+    KS_LIB_PATH = os.environ.get(
         "KS_LIB_PATH", r"C:\Program Files\Keysight\IO Libraries Suite\bin"
     )
     os.add_dll_directory(KS_LIB_PATH)
