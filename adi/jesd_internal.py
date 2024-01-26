@@ -78,11 +78,11 @@ class jesd(object):
 
 
 class jesd_eye_scan(jesd):
-    _jesd_es_duration_ms = 100
+    _jesd_es_duration_ms = 10
     _jesd_prbs = 7
     _max_possible_lanes_index = 24
 
-    _half_rate = {"mode": "Half Fate", "scale": 0.004}
+    _half_rate = {"mode": "Half Rate", "scale": 1}
     _quarter_rate = {"mode": "Quarter Rate", "scale": 4}
 
     lanes = {}
@@ -173,7 +173,18 @@ class jesd_eye_scan(jesd):
             if lane not in available_lanes:
                 raise Exception(f"Lane {lane} not found for device {device}.")
 
+        # Enable PRBS on TX side
+        devices_root = "/sys/bus/platform/devices/"
+        dev_list = self.fs.listdir(devices_root)
+        tx_dev = next((dev for dev in dev_list if "adxcvr-tx" in dev), None)
+        if not tx_dev:
+            raise Exception("No adxcvr-tx device found. Cannot enable PRBS.")
+
+        self.fs.echo_to_fd("7", f"{devices_root}/{tx_dev}/prbs_select")
+
         lane_eye_data = {}
+
+        print("Hold tight while we get the eye data...")
 
         for lane in lanes:
             # Configure BIST
@@ -205,14 +216,15 @@ class jesd_eye_scan(jesd):
                 else:
                     spo = [float(x) for x in eye_line.split(",")]
                     x.append(spo[0])
-                    y1.append(spo[1] * scale / 1000)
-                    y2.append(spo[2] * scale / 1000)
+                    y1.append(spo[1] * scale)
+                    y2.append(spo[2] * scale)
 
             if len(x) == 0:
                 raise Exception(f"No eye data found for lane {lane}.")
 
             graph_helpers = {
                 "xlim": [-info[1] / 2, info[1] / 2 - 1],
+                "ylim": [-256, 256],
                 "xlabel": "SPO",
                 "ylabel": "EYE Voltage (mV)",
                 "title": "JESD204 2D Eye Scan",

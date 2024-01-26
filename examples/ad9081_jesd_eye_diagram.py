@@ -16,13 +16,13 @@ fig = plt.figure()
 eye_data_per_lane = dev._jesd.get_eye_data()
 num_lanes = len(eye_data_per_lane.keys())
 
-for lane in eye_data_per_lane:
+for i, lane in enumerate(eye_data_per_lane):
 
     x = eye_data_per_lane[lane]["x"]
     y1 = eye_data_per_lane[lane]["y1"]
     y2 = eye_data_per_lane[lane]["y2"]
 
-    plt.subplot(int(num_lanes / 2), 2, int(lane) + 1)
+    plt.subplot(int(num_lanes / 2), 2, int(i) + 1)
     plt.scatter(x, y1, marker="+", color="blue")
     plt.scatter(x, y2, marker="+", color="red")
     plt.xlim(eye_data_per_lane[lane]["graph_helpers"]["xlim"])
@@ -36,5 +36,6 @@ for lane in eye_data_per_lane:
     )
     plt.axvline(0, color="black")  # vertical
     plt.axhline(0, color="black")  # horizontal
+    plt.grid(True)
 
 plt.show()
