@@ -5,7 +5,7 @@
 from typing import Dict, List
 
 from adi.context_manager import context_manager
-from adi.jesd import jesd
+from adi.jesd import jesd_eye_scan
 from adi.rx_tx import rx_tx
 from adi.sync_start import sync_start
 
@@ -88,8 +88,8 @@ class ad9081(rx_tx, context_manager, sync_start):
         self._rxadc = self._ctx.find_device("axi-ad9081-rx-hpc")
         self._txdac = self._ctx.find_device("axi-ad9081-tx-hpc")
 
-        if not disable_jesd_control and jesd:
-            self._jesd = jesd(uri, username=username, password=password)
+        if not disable_jesd_control and jesd_eye_scan:
+            self._jesd = jesd_eye_scan(self, uri, username=username, password=password)
 
         # Get DDC and DUC mappings
         paths = {}
