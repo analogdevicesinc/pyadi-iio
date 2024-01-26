@@ -1,0 +1,317 @@
+Do 28. Sep 14:01:43 CEST 2023
+Linux: 79196b8af26db8f79f2cea2daa96dd8cc11276ad
+
+Commits not in master:
+
+
+commit bec0407fc4da96d3453aa02243ff1b075735b71e
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Mon Aug 7 17:07:16 2023 +0200
+
+    iio: jesd204: axi_jesd204_rx: Support for up to 24 Lanes
+    
+    Future proof axi_jesd204_rx by adding support for more lanes and
+    also allow non-power of 2 lane configurations.
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 7d83d06ba3d34e19746066a818e421880146beb1
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Aug 11 09:01:20 2023 +0200
+
+    iio: adc: cf_axi_adc_core: Fix IIO_VAL_INT_64 value composition
+    
+    Properly cast values.
+    
+    Fixes: dced6c9ccd31 ("iio: adc: cf_axi_adc_core: Support for 64-bit IIO_CHAN_INFO_SAMP_FREQ")
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit b3ab02cc42080e8fb164da49f3e2f456644ca76a
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Aug 11 09:09:24 2023 +0200
+
+    iio: adc: ad9081: IIO_CHAN_INFO_SAMP_FREQ handle output channels
+    
+    Handle IIO_CHAN_INFO_SAMP_FREQ output channels and use proper macros.
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 17280a50d9fc1a45ff5e79b4e57c152a502f2745
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Tue Mar 7 17:23:39 2023 +0100
+
+    dts: vcu118_quad_ad9084: Add device name lables and config 3wire modes
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit a6734d405979a0ab97b03eb5d5c2ca45dd0dfec3
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Tue Mar 7 17:21:59 2023 +0100
+
+    iio: adc: apollo: Support 3-wire SPI from dt
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 15dfafe9cf9d1f4f19531bbd3b1070ae5a72e952
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Tue Mar 7 16:27:58 2023 +0100
+
+    iio: frequency: adf4382: Support for 3-wire SPI mode
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 340ff35d759070fa691cf1683ffea5692292b37b
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Mar 3 10:35:34 2023 +0100
+
+    iio: adc: apollo: Update to API Version 0.0.210
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 36e1114f533d40fad703c4153f436eca51feca58
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Tue Feb 21 15:39:08 2023 +0100
+
+    iio: adc: apollo: Update API v0.0.208
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 40be94bfcf7c0c5909128e6ea42b64bef9164f26
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Tue Feb 21 13:51:58 2023 +0100
+
+    arch/microblaze/configs/adi_mb_defconfig: Add more profiles
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 6959195c07e350159640eb45ab963852b6e71dac
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Tue Feb 21 11:56:32 2023 +0100
+
+    iio: adc: apollo: ad9088: Read NCOs from profile support
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 3c1b98be3c2d3a807d8b40f10b5101c99968764f
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Mon Feb 20 13:15:22 2023 +0100
+
+    iio: frequency: ltc6952: Fix clobbering of follower flag
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 3b251041c1af6e0657dc3665231866d6ebd550f8
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Mon Feb 20 13:14:38 2023 +0100
+
+    dts/vcu118_quad_ad9084: GPIO updates
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit c4f4dbcc307ada948ecd0f714b0a963fc3818ed3
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Feb 17 10:49:25 2023 +0100
+
+    iio: adc: apollo: Add missing adi_apollo_dac files
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 795332de453fdb1742a073aafc8226932263d66b
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Feb 17 10:48:31 2023 +0100
+
+    adc: apollo: ad9088_dt: Handle multi device instances
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 167de351160c7f70510160210248ad15e6ca2883
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Feb 17 10:47:58 2023 +0100
+
+    dts/vcu118_quad_ad9084: Initial version for Quad-Apollo
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit bb39c310fad967f32a7abdc663655fa45d20ca77
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Thu Feb 16 17:27:35 2023 +0100
+
+    iio: adc: apollo: Enable CDDC and FDDC digital gain support
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit c5b6586bf8979c2b9c48bd679000a1e62a7f2896
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Thu Feb 16 17:25:37 2023 +0100
+
+    dts/vcu118_ad9084.dts: Enable HWMON devices
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 30aa0112a7d5b1f712cc6da02a6608a7ee6d952e
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Thu Feb 16 12:39:12 2023 +0100
+
+    hwmon: pmbus: ltc2978: Add support for LTM4681
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit cbb8c7a44e6bbf0f376bfd18309fb3a4d340bd88
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Wed Feb 15 10:29:43 2023 +0100
+
+    iio: adc: apollo: Update API 0.0.206
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit fa40fa86e354a5474b806d41a76bea9f5ac3b674
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Feb 10 11:08:27 2023 +0100
+
+    dts: apollo: Updates
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 9591afc60e339255461fd433991d0d571c20aa2c
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Feb 10 11:07:55 2023 +0100
+
+    iio: adc: apollo: Support for binary profiles and parent clock control
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 18afb1ebf353e819d3764a5abd6d2502521d63c8
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Feb 10 10:57:16 2023 +0100
+
+    iio: frequency: adf4382: CCF parent clock support and misc fixes
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 964b0be1483e592a7073d68f76bff6ae0b9444e3
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Feb 10 10:39:26 2023 +0100
+
+    iio: frequency: ltc6952: Support for LTC6953, CCF parents, jesd204-fsm
+    
+    This adds support for the LTC6953 device derivative.
+    Allows common clock framework parent clocks for REFin or VCOin.
+    Provide necessary hooks for the jesd204-fsm.
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit a3196d101944b74b60d9121c6395300f3fdb121c
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Feb 3 16:39:53 2023 +0100
+
+    iio: adc: apollo: Devicetree profile support
+    
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 0f06c8176c19e0242f86532f47c4dab1d81fb1c0
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Mon Jan 16 12:18:45 2023 +0100
+
+    iio: adc: apollo: Add API sources
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit f5c72759a738682e80a9c6f8cb8997f0d7604fa3
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Mon Jan 16 11:19:21 2023 +0100
+
+    drivers/iio/adc/apollo/ad9088: TMU support
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 5f3038dbbc7ef5f1202d855948218d6e60423a72
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Fri Jan 13 09:36:24 2023 +0100
+
+    drivers/iio/adc/apollo/ad9088: NCO freq available
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 66d8ad72590a251114c3fbf92211906fbe3de595
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Thu Jan 12 16:35:57 2023 +0100
+
+    drivers/iio/adc/apollo/ad9088: Test Tone Support
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit ebc5fa59e92a077c805955bff33ad92d9f778d8d
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Thu Jan 12 13:41:49 2023 +0100
+
+    drivers/iio/adc/apollo/ad9088: NCO phase support
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit d2af801d84953240edf650dc0f15f2f98df447b1
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Tue Jan 10 13:41:59 2023 +0100
+
+    drivers/iio/adc/apollo/ad9088: Update
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 455a6075e245c4a57895c7ce95d4979c1984b6e1
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Wed Nov 30 15:02:12 2022 +0100
+
+    iio: frequency: adf4382: Change power and add power up frequency
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 4874ea99ce1c492d95fdb20ab16a8003aad0391f
+Author: Michael Hennerich <michael.hennerich@analog.com>
+Date:   Wed Nov 30 15:01:31 2022 +0100
+
+    drivers/iio/adc/apollo/ad9088: Initial support
+    
+    Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+
+commit 93af7a427b4c9a72e0bc187be2be13edf19332a7
+Author: Ciprian Hegbeli <ciprian.hegbeli@analog.com>
+Date:   Tue Nov 29 18:18:07 2022 +0200
+
+    drivers: iio: frequency: adf4382 soft reset
+    
+    Added soft reset to the init function. This will have to be revised as
+    it might not respect the necessary timing of the reset.
+    
+    Signed-off-by: Ciprian Hegbeli <ciprian.hegbeli@analog.com>
+
+commit e4c3249e6a1345082c0495883492cfc525151e8b
+Author: Ciprian Hegbeli <ciprian.hegbeli@analog.com>
+Date:   Tue Nov 29 18:00:55 2022 +0200
+
+    drivers: iio: frequency: adf4382 set freq.
+    
+    Added the default register configuration written during the
+    initialization stage.
+    
+    Implemented the set frequency function based on the provided API.
+    
+    Signed-off-by: Ciprian Hegbeli <ciprian.hegbeli@analog.com>
+
+commit a0746e79041a7e10e77487192fc4aae47b85810e
+Author: Ciprian Hegbeli <ciprian.hegbeli@analog.com>
+Date:   Tue Nov 29 17:43:41 2022 +0200
+
+    drivers: iio: frequency: adf4382 add ref_clk
+    
+    Added reading of the reference clock from the DTS
+    
+    Signed-off-by: Ciprian Hegbeli <ciprian.hegbeli@analog.com>
+
+commit b3f83b5af1f57af1d9594aebe365efd620f0718f
+Author: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Date:   Mon Oct 10 11:05:53 2022 +0300
+
+    drivers: iio: frequency: add support for adf4382
+    
+    Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
