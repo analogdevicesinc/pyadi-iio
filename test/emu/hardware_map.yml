@@ -355,6 +355,15 @@ ltc2387:
       - filename: ltc2387.xml
       - data_devices:
           - iio:device0
+ltc2664:
+  - ltc2664
+  - pyadi_iio_class_support:
+      - ltc2664
+  - emulate:
+      - filename: ltc2664.xml
+      - data_devices:
+          - iio:device0
+
 ltc2688:
   - ltc2688
   - pyadi_iio_class_support:

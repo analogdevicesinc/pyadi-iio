@@ -95,6 +95,7 @@ from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2387 import ltc2387
 from adi.ltc2499 import ltc2499
+from adi.ltc2664 import ltc2664
 from adi.ltc2688 import ltc2688
 from adi.ltc2983 import ltc2983
 from adi.max9611 import max9611
