@@ -447,12 +447,12 @@ ad5592r:
       - data_devices:
           - iio:device0
           
-ad578x:
-  - ad578x
+ad579x:
+  - ad579x
   - pyadi_iio_class_support:
-      - ad578x
+      - ad579x
   - emulate:
-      - filename: ad578x.xml
+      - filename: ad579x.xml
       - data_devices: 
           - iio:device0
 

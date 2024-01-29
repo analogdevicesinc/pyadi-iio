@@ -10,15 +10,15 @@ from adi.context_manager import context_manager
 from adi.rx_tx import tx
 
 
-class ad578x(tx, context_manager):
-    """ AD578x DAC """
+class ad579x(tx, context_manager):
+    """ AD579x DAC """
 
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
 
     def __init__(self, uri="", device_name=""):
-        """Constructor for AD578x class."""
+        """Constructor for AD579x class."""
         context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = [
@@ -66,7 +66,7 @@ class ad578x(tx, context_manager):
 
     @property
     def powerdown_mode(self):
-        """Ad578x powerdown_mode config"""
+        """Ad579x powerdown_mode config"""
         return self._get_iio_dev_attr_str("powerdown_mode")
 
     @powerdown_mode.setter
@@ -75,12 +75,12 @@ class ad578x(tx, context_manager):
 
     @property
     def powerdown_mode_available(self):
-        """AD578x powedown mode available"""
+        """AD579x powedown mode available"""
         return self._get_iio_dev_attr_str("powerdown_mode_available")
 
     @property
     def sampling_frequency(self):
-        """AD578x sampling frequency config"""
+        """AD579x sampling frequency config"""
         return self._get_iio_dev_attr_str("sampling_frequency")
 
     @sampling_frequency.setter
@@ -89,7 +89,7 @@ class ad578x(tx, context_manager):
 
     @property
     def code_select(self):
-        """AD578x code format config"""
+        """AD579x code format config"""
         return self._get_iio_dev_attr_str("code_select")
 
     @code_select.setter
@@ -98,11 +98,11 @@ class ad578x(tx, context_manager):
 
     @property
     def code_select_available(self):
-        """AD578x code format available"""
+        """AD579x code format available"""
         return self._get_iio_dev_attr_str("code_select_available")
 
     class _channel(attribute):
-        """AD578x channel"""
+        """AD579x channel"""
 
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
@@ -110,7 +110,7 @@ class ad578x(tx, context_manager):
 
         @property
         def raw(self):
-            """AD578x channel raw value"""
+            """AD579x channel raw value"""
             return self._get_iio_attr(self.name, "raw", True)
 
         @raw.setter
@@ -119,7 +119,7 @@ class ad578x(tx, context_manager):
 
         @property
         def offset(self):
-            """AD578x channel offset"""
+            """AD579x channel offset"""
             return self._get_iio_attr(self.name, "offset", True)
 
         @offset.setter
@@ -128,7 +128,7 @@ class ad578x(tx, context_manager):
 
         @property
         def scale(self):
-            """AD578x channel scale"""
+            """AD579x channel scale"""
             return self._get_iio_attr(self.name, "scale", True)
 
         @scale.setter
@@ -137,7 +137,7 @@ class ad578x(tx, context_manager):
 
         @property
         def powerdown(self):
-            """AD578x powerdown config"""
+            """AD579x powerdown config"""
             return self._get_iio_attr(self.name, "powerdown", True)
 
         @powerdown.setter
