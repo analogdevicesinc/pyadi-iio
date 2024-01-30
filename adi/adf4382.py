@@ -61,6 +61,22 @@ class adf4382(attribute, context_manager):
     @altvolt0_output_power.setter
     def altvolt0_output_power(self, value):
         self._set_iio_attr_int("altvoltage0", "output_power", True, int(value), self._ctrl)
+        
+    @property
+    def altvolt0_frequency(self):
+        return self._get_iio_attr("altvoltage0", "frequency", True, self._ctrl)
+
+    @altvolt0_frequency.setter
+    def altvolt0_frequency(self, value):
+        self._set_iio_attr_int("altvoltage0", "frequency", True, value, self._ctrl)
+        
+    @property
+    def altvolt0_phase(self):
+        return self._get_iio_attr("altvoltage0", "phase", True, self._ctrl)
+
+    @altvolt0_phase.setter
+    def altvolt0_phase(self, value):
+        self._set_iio_attr_int("altvoltage0", "phase", True, value, self._ctrl)
 
     @property
     def altvolt1_en(self):
@@ -79,6 +95,22 @@ class adf4382(attribute, context_manager):
     @altvolt1_output_power.setter
     def altvolt1_output_power(self, value):
         self._set_iio_attr_int("altvoltage1", "output_power", True, int(value), self._ctrl)
+        
+    @property
+    def altvolt1_frequency(self):
+        return self._get_iio_attr("altvoltage1", "frequency", True, self._ctrl)
+
+    @altvolt1_frequency.setter
+    def altvolt1_frequency(self, value):
+        self._set_iio_attr_int("altvoltage1", "frequency", True, value, self._ctrl)
+        
+    @property
+    def altvolt1_phase(self):
+        return self._get_iio_attr("altvoltage1", "phase", True, self._ctrl)
+
+    @altvolt1_phase.setter
+    def altvolt1_phase(self, value):
+        self._set_iio_attr_int("altvoltage1", "phase", True, value, self._ctrl)
 
     @property
     def bleed_current(self):
@@ -101,15 +133,7 @@ class adf4382(attribute, context_manager):
             )
             
         self._set_iio_dev_attr("charge_pump_current", value, self._ctrl)
-    
-    @property
-    def output_frequency(self):
-        return self._get_iio_dev_attr("output_frequency", self._ctrl)
-
-    @output_frequency.setter
-    def output_frequency(self, value):
-        self._set_iio_dev_attr("output_frequency", value, self._ctrl)
-        
+            
     @property
     def reference_divider(self):
         return self._get_iio_dev_attr("reference_divider", self._ctrl)
