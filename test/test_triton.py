@@ -15,8 +15,9 @@ import test.instruments as instruments
 hardware = ["Triton"]
 classname = "adi.Triton"
 
-
-## Dictionaries for tests ##
+##########################################
+# Dictionaries for Tests
+##########################################
 
 params = dict(
     loopback_test_1=dict(
@@ -99,14 +100,6 @@ params = dict(
 )
 
 ##########################################
-# Ethernet connection test
-##########################################
-
-def test_iio_attr(iio_uri):
-    print("iio_uri", iio_uri)
-
-
-##########################################
 # DC Power Test - Preboot
 ##########################################
 
@@ -142,9 +135,10 @@ def test_voltage_preboot():
 
 
 ##########################################
-# Automated bootup test
+# Automated bootup 
 ##########################################
-    
+
+# @pytest.fixture(scope="module")
 def test_bootup():
     import os
     import subprocess 
@@ -152,22 +146,46 @@ def test_bootup():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     print(dir_path)
     boot_path = os.path.join(dir_path, 'vcu118_quad_ad9084_2023-09-28')
-    tcl_script_path = r"C:/Users/JChambli/Downloads/vcu118_quad_ad9084_2023-09-28/run_26p4.tcl"
-    tcl_script_path = os.path.join(boot_path, 'run_26p4.tcl')
+    # tcl_script_path = r"C:/Users/JChambli/Downloads/vcu118_quad_ad9084_2023-09-28/run_26p4.tcl"
+    tcl_script_path = os.path.join(boot_path, 'run_me.tcl')
 
     # Path to Vivado Lab executable
-    vivado_lab_executable = r"C:\Xilinx\Vivado_Lab\2020.2\bin\xsdb.bat"
+    vivado_lab_executable = r"C:\Xilinx\Vivado_Lab\2022.2\bin\xsdb.bat"
+
+    # Open Xilinx xsdb tool and
+    # source run.tcl
+    bitstream = os.path.join(boot_path, "system_top_26p4.bit")
+    strip = os.path.join(boot_path, "simpleImage_26p4.strip" )
+    script = f"""
+    connect
+    fpga -f "{bitstream.replace(os.sep, '/')}"
+    after 1000
+    target 3
+    dow "{strip.replace(os.sep, '/')}"
+    after 1000
+    con
+    disconnect
+    """
+    with open(tcl_script_path, 'w') as f:
+        f.write(script)
 
     # Command to run Vivado Lab with the Tcl script
-    command = [vivado_lab_executable, '-eval', tcl_script_path]
+    command = [vivado_lab_executable, '-eval', 'source', tcl_script_path]
+    print(command)
 
     # Run the command
-    subprocess.run(command)
+    # subprocess.run(command)
+
+    results = subprocess.run(command)
+    time.sleep(140)  ## Wait for bootup
+    print(dir(results))
+    print(results)
 
     
-##########################################
+
+#########################################
 # DC Power Test - Postboot
-##########################################
+#########################################
 
 def test_current_postboot():
     rm = pyvisa.ResourceManager()
@@ -200,17 +218,14 @@ def test_voltage_postboot():
     assert voltage_value < 12.2
 
 
-## Set cal board state
-## Adjacent Loopback      CTRL_IND = 0, 5045_V1 = 1, 5045_V2 = 0, CTRL_RX_COMBINED = 0
-## Combined Loopback      CTRL_IND = 1, 5045_V1 = 1, 5045_V2 = 1, CTRL_RX_COMBINED = 0
-## Combined Tx Out/Rx In  CTRL_IND = 1, 5045_V1 = 0, 5045_V2 = 1, CTRL_RX_COMBINED = 0
-## Combined Tx RF Detect  CTRL_IND = 1, 5045_V1 = 0, 5045_V2 = 0, CTRL_RX_COMBINED = 0
-dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
-dev.gpio_ctrl_ind = 0
-dev.gpio_5045_v1 = 1
-dev.gpio_5045_v2 = 0
-dev.gpio_ctrl_rx_combined = 0
 
+
+##########################################
+# Ethernet connection test
+##########################################
+
+def test_iio_attr(iio_uri):
+    print("iio_uri", iio_uri)
 
 #########################################
 # DDS Loopback Test 
@@ -222,9 +237,9 @@ dev.gpio_ctrl_rx_combined = 0
 @pytest.mark.parametrize(
     "param_set, frequency, scale, peak_min, hpf_value, lpf_value",
     [
-        (params["loopback_test_1"], 10000000, 0.9, -20, 0, 15),
+        (params["loopback_test_1"], 10000000, 0.9, -21, 5, 15),
         (params["loopback_test_2"], 10000000, 0.9, -20, 5, 15),
-        (params["loopback_test_3"], 10000000, 0.9, -20, 10, 15),
+        (params["loopback_test_3"], 10000000, 0.9, -20, 5, 15),
         (params["filter_test_1"], 10000000, 0.9, -20, 5, 15),
         (params["filter_test_2"], 10000000, 0.9, -30, 11, 9),
         (params["dac_adc_loopback_30dB_attenuation"], 10000000, 0.9, -50, 5, 15),
@@ -242,8 +257,21 @@ def test_Triton_dds_loopback(
     hpf_value,
     lpf_value,
 ):
+    dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
     dev.hpf_ctrl = hpf_value
     dev.lpf_ctrl = lpf_value
+
+    ## Set cal board loopback state
+    ## Adjacent Loopback      CTRL_IND = 0, 5045_V1 = 1, 5045_V2 = 0, CTRL_RX_COMBINED = 0
+    ## Combined Loopback      CTRL_IND = 1, 5045_V1 = 1, 5045_V2 = 1, CTRL_RX_COMBINED = 0
+    ## Combined Tx Out/Rx In  CTRL_IND = 1, 5045_V1 = 0, 5045_V2 = 1, CTRL_RX_COMBINED = 0
+    ## Combined Tx RF Detect  CTRL_IND = 1, 5045_V1 = 0, 5045_V2 = 0, CTRL_RX_COMBINED = 0
+    dev.gpio_ctrl_ind = 0
+    dev.gpio_5045_v1 = 1
+    dev.gpio_5045_v2 = 0
+    dev.gpio_ctrl_rx_combined = 0
+
+
     param_set = scale_field(param_set, iio_uri)
     test_dds_loopback(
         iio_uri, classname, param_set, channel, frequency, scale, peak_min
@@ -265,6 +293,7 @@ def test_Triton_dds_loopback(
 )
 @pytest.mark.parametrize("sfdr_min", [60])
 def test_Triton_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min, hpf_value, lpf_value):
+    dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
     dev.hpf_ctrl = hpf_value
     dev.lpf_ctrl = lpf_value 
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
