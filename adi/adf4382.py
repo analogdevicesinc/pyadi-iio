@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Analog Devices, Inc.
+# Copyright (C) 2023-2024 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -46,9 +46,7 @@ class adf4382(attribute, context_manager):
 
     @property
     def altvolt0_en(self):
-        return bool(
-            self._get_iio_attr("altvoltage0", "en", True, self._ctrl)
-        )
+        return bool(self._get_iio_attr("altvoltage0", "en", True, self._ctrl))
 
     @altvolt0_en.setter
     def altvolt0_en(self, value):
@@ -60,8 +58,10 @@ class adf4382(attribute, context_manager):
 
     @altvolt0_output_power.setter
     def altvolt0_output_power(self, value):
-        self._set_iio_attr_int("altvoltage0", "output_power", True, int(value), self._ctrl)
-        
+        self._set_iio_attr_int(
+            "altvoltage0", "output_power", True, int(value), self._ctrl
+        )
+
     @property
     def altvolt0_frequency(self):
         return self._get_iio_attr("altvoltage0", "frequency", True, self._ctrl)
@@ -69,7 +69,7 @@ class adf4382(attribute, context_manager):
     @altvolt0_frequency.setter
     def altvolt0_frequency(self, value):
         self._set_iio_attr_int("altvoltage0", "frequency", True, value, self._ctrl)
-        
+
     @property
     def altvolt0_phase(self):
         return self._get_iio_attr("altvoltage0", "phase", True, self._ctrl)
@@ -80,9 +80,7 @@ class adf4382(attribute, context_manager):
 
     @property
     def altvolt1_en(self):
-        return bool(
-            self._get_iio_attr("altvoltage1", "en", True, self._ctrl)
-        )
+        return bool(self._get_iio_attr("altvoltage1", "en", True, self._ctrl))
 
     @altvolt1_en.setter
     def altvolt1_en(self, value):
@@ -94,8 +92,10 @@ class adf4382(attribute, context_manager):
 
     @altvolt1_output_power.setter
     def altvolt1_output_power(self, value):
-        self._set_iio_attr_int("altvoltage1", "output_power", True, int(value), self._ctrl)
-        
+        self._set_iio_attr_int(
+            "altvoltage1", "output_power", True, int(value), self._ctrl
+        )
+
     @property
     def altvolt1_frequency(self):
         return self._get_iio_attr("altvoltage1", "frequency", True, self._ctrl)
@@ -103,7 +103,7 @@ class adf4382(attribute, context_manager):
     @altvolt1_frequency.setter
     def altvolt1_frequency(self, value):
         self._set_iio_attr_int("altvoltage1", "frequency", True, value, self._ctrl)
-        
+
     @property
     def altvolt1_phase(self):
         return self._get_iio_attr("altvoltage1", "phase", True, self._ctrl)
@@ -119,7 +119,7 @@ class adf4382(attribute, context_manager):
     @bleed_current.setter
     def bleed_current(self, value):
         self._set_iio_dev_attr("bleed_current", value, self._ctrl)
-        
+
     @property
     def charge_pump_current(self):
         return self._get_iio_dev_attr("charge_pump_current", self._ctrl)
@@ -131,9 +131,9 @@ class adf4382(attribute, context_manager):
             raise ValueError(
                 f"charge_pump_current of \"{value}\" is invalid. Valid options: {', '.join(self._charge_pump_options)}"
             )
-            
+
         self._set_iio_dev_attr("charge_pump_current", value, self._ctrl)
-            
+
     @property
     def reference_divider(self):
         return self._get_iio_dev_attr("reference_divider", self._ctrl)
@@ -141,7 +141,7 @@ class adf4382(attribute, context_manager):
     @reference_divider.setter
     def reference_divider(self, value):
         self._set_iio_dev_attr("reference_divider", value, self._ctrl)
-        
+
     @property
     def reference_doubler_en(self):
         return self._get_iio_dev_attr("reference_doubler_en", self._ctrl)
