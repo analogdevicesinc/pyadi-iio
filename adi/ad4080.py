@@ -10,17 +10,26 @@ class ad4080(rx, context_manager):
 
     """ AD4080 ADC """
 
+    _compatible_parts = ["ad4080"]
     _complex_data = False
     _rx_channel_names = ["voltage0"]
-    _device_name = "ad4080"
+    _device_name = ""
 
-    def __init__(self, uri=""):
+    def __init__(self, uri="", device_name="ad4080"):
 
         """Initialize."""
         context_manager.__init__(self, uri, self._device_name)
 
-        self._rxadc = self._ctx.find_device("ad4080")
-        self._ctrl = self._ctx.find_device("ad4080")
+        if device_name not in self._compatible_parts:
+            raise Exception(
+                "Not a compatible device: "
+                + str(device_name)
+                + ". Please select from "
+                + str(self.self._compatible_parts)
+            )
+        else:
+            self._ctrl = self._ctx.find_device(device_name)
+            self._rxadc = self._ctx.find_device(device_name)
 
         rx.__init__(self)
 

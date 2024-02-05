@@ -42,7 +42,7 @@ from adi import ad4080
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
 
-my_adc = ad4080(uri=my_uri)
+my_adc = ad4080(uri=my_uri, device_name="ad4080")
 
 print("Sampling frequency: ", my_adc.sampling_frequency)
 print("Test mode: ", my_adc.test_mode)
