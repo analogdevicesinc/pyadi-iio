@@ -23,7 +23,7 @@ class ad719x(rx, context_manager):
         """Constructor for AD719x class."""
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad7190", "ad7192", "ad7193", "ad7195"]
+        compatible_parts = ["ad7190", "ad7192", "ad7193", "ad7194", "ad7195"]
 
         self._ctrl = None
 
@@ -77,7 +77,7 @@ class ad719x(rx, context_manager):
 
         @property
         def offset(self):
-            """AD717x channel offset."""
+            """AD719x channel offset."""
             return float(self._get_iio_attr_str(self.name, "offset", False))
 
         @offset.setter
