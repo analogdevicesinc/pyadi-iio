@@ -12,6 +12,7 @@ import time
 import test.instruments as instruments
 
 
+
 hardware = ["Triton"]
 classname = "adi.Triton"
 
@@ -134,9 +135,9 @@ def test_voltage_preboot():
     assert voltage_value < 12.2
 
 
-##########################################
-# Automated bootup 
-##########################################
+# ##########################################
+# # Automated bootup 
+# ##########################################
 
 # @pytest.fixture(scope="module")
 def test_bootup():
@@ -183,9 +184,9 @@ def test_bootup():
 
     
 
-#########################################
-# DC Power Test - Postboot
-#########################################
+# #########################################
+# # DC Power Test - Postboot
+# #########################################
 
 def test_current_postboot():
     rm = pyvisa.ResourceManager()
@@ -220,9 +221,9 @@ def test_voltage_postboot():
 
 
 
-##########################################
-# Ethernet connection test
-##########################################
+# ##########################################
+# # Ethernet connection test
+# ##########################################
 
 def test_iio_attr(iio_uri):
     print("iio_uri", iio_uri)
