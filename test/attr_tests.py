@@ -2,6 +2,7 @@ import random
 from decimal import Decimal
 from test.common import (
     dev_interface,
+    dev_interface_device_name_channel,
     dev_interface_sub_channel,
     pytest_collection_modifyitems,
     pytest_configure,
@@ -375,6 +376,251 @@ def attribute_check_range_readonly_with_depends(
         rval = getattr(sdr, attr)
         end = stop + 1
         assert rval in range(start, end)
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+
+def attribute_single_value_device_name_channel_readonly(
+    uri, classname, device_name, channel, attr
+):
+    """attribute_single_value:
+    Read only class property with device name and channel parameters
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        device_name: type=string
+            Device name of target board/system
+        channel: type=string
+            Channel name of the target board/system
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+    """
+    sdr = eval(
+        classname
+        + "(uri='"
+        + uri
+        + "', device_name='"
+        + device_name
+        + "').channel['"
+        + channel
+        + "']"
+    )
+    try:
+        if not hasattr(sdr, attr):
+            raise AttributeError(attr + " not defined in " + classname)
+        rval = getattr(sdr, attr)
+        assert type(rval) != None
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+
+def attribute_write_only_str_device_channel(
+    uri, classname, device_name, channel, attr, value
+):
+    """attribute_write_only_str_device_channel: Write only string class property
+        with device name and channel parameters
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        device_name: type=string
+            Device name of target board/system
+        channel: type=string
+            Channel name of the target board/system
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        value: type=string
+            Value to write into attr property
+
+
+    """
+    sdr = eval(
+        classname
+        + "(uri='"
+        + uri
+        + "', device_name='"
+        + device_name
+        + "').channel['"
+        + channel
+        + "']"
+    )
+
+    if not hasattr(sdr, attr):
+        raise AttributeError(f"no attribute named: {attr}")
+
+    try:
+        setattr(sdr, attr, value)
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+
+def attribute_single_value_range_channel(
+    uri,
+    classname,
+    device_name,
+    channel,
+    attr,
+    start,
+    stop,
+    step,
+    tol,
+    repeats=1,
+    sub_channel=None,
+):
+    """attribute_single_value_range_channel:
+    Write and read back integer class property
+    This is performed a defined number of times and the value written
+    is randomly determined based in input parameters
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        device_name: type=string
+            Device name of target board/system
+        channel: type=string
+            Channel name of the attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        start: type=integer
+            Lower bound of possible values attribute can be
+        stop: type=integer
+            Upper bound of possible values attribute can be
+        step: type=integer
+            Difference between successive values attribute can be
+        tol: type=integer
+            Allowable error of written value compared to read back value
+        repeats: type=integer
+            Number of random values to tests. Generated from uniform distribution
+        sub_channel: type=string
+            Name of sub channel (nested class) to be tested
+    """
+    # Pick random number in operational range
+    numints = (stop - start) / step
+    for _ in range(repeats):
+        ind = np.random.uniform(0, numints)
+        val = start + step * ind
+        if isinstance(val, float):
+            val = floor_step_size(val, str(step))
+        # Check hardware
+        if sub_channel:
+            assert dev_interface_sub_channel(
+                uri, classname, sub_channel, val, attr, tol
+            )
+        else:
+            assert dev_interface_device_name_channel(
+                uri, classname, device_name, channel, val, attr, tol
+            )
+
+
+def attribute_multiple_values_device_channel(
+    uri,
+    classname,
+    device_name,
+    channel,
+    attr,
+    values,
+    tol,
+    repeats=1,
+    sleep=0,
+    sub_channel=None,
+):
+    """attribute_multiple_values_device_channel: Write and read back multiple class properties
+    in a loop where all values are pre-defined and device name and channel are specified.
+    This is performed a defined number of times.
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        device_name: type=string
+            Device name of target board/system
+        channel: type=string
+            Channel name of the attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        values: type=list
+            A list of values to write and check as attributes
+        tol: type=integer
+            Allowable error of written value compared to read back value
+        repeats: type=integer
+            Number of times to repeatedly write values
+        sleep: type=integer
+            Seconds to sleep between writing to attribute and reading it back
+        sub_channel: type=string
+            Name of sub channel (nested class) to be tested
+    """
+    for _ in range(repeats):
+        for val in values:
+            if isinstance(val, str):
+                tol = 0
+            if sub_channel:
+                assert dev_interface_sub_channel(
+                    uri, classname, sub_channel, val, attr, tol, sleep=sleep
+                )
+            else:
+                assert dev_interface_device_name_channel(
+                    uri, classname, device_name, channel, val, attr, tol
+                )
+
+
+def attribute_multiple_values_available_readonly(uri, classname, attr):
+    """attribute_multiple_values_available_readonly:
+    Read only class property where the available attribute values are returned.
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+    """
+    sdr = eval(classname + "(uri='" + uri + "')")
+    try:
+        if not hasattr(sdr, attr):
+            raise AttributeError(attr + " not defined in " + classname)
+        rval = getattr(sdr, attr)
+        assert type(rval) != None
+        del sdr
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+
+
+def attribute_single_value_channel_readonly(uri, classname, channel, attr):
+    """attribute_single_value:
+        Read only class property where the channel name is specified.
+
+        parameters:
+            uri: type=string
+                URI of IIO context of target board/system
+            classname: type=string
+                Name of pyadi interface class which contain attribute
+            channel: type=string
+                Channel name of the target board/system
+            attr: type=string
+                Attribute name to be written. Must be property of classname
+        """
+    sdr = eval(classname + "(uri='" + uri + "')." + channel + "")
+    try:
+        if not hasattr(sdr, attr):
+            raise AttributeError(attr + " not defined in " + classname)
+        rval = getattr(sdr, attr)
+        assert type(rval) != None
         del sdr
     except Exception as e:
         del sdr

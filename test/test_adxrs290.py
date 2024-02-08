@@ -4,7 +4,7 @@ hardware = "adxrs290"
 classname = "adi.adxrs290"
 
 #########################################
-@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr", [("hpf_3db_frequency_available"), ("lpf_3db_frequency_available"),],
@@ -16,7 +16,7 @@ def test_adxrs290_attr_readonly(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "channel, attr",
@@ -34,7 +34,7 @@ def test_adxrs290_attr_readonly_channel(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, values, tol, repeats",
