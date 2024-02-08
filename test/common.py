@@ -25,9 +25,7 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "obs_required: mark tests that require observation data paths"
     )
-    config.addinivalue_line(
-        "markers", "no_os_test: mark tests that run on No-OS"
-    )
+    config.addinivalue_line("markers", "no_os_test: mark tests that run on No-OS")
     config.addinivalue_line("markers", "lvds_test: mark tests for LVDS")
     config.addinivalue_line("markers", "cmos_test: mark tests for CMOS")
 
@@ -79,14 +77,12 @@ def pytest_runtest_setup(item):
         pytest.skip(
             "Testing requiring observation disabled. Use --obs-enable flag to enable"
         )
-        
+
     # Handle No-OS devices
     no_os = item.config.getoption("--no-os")
     marks = [mark.name for mark in item.iter_markers()]
     if not no_os and "no_os_test" in marks:
-        pytest.skip(
-            "No-OS tests disabled. Use --no-os flag to enable"
-        )
+        pytest.skip("No-OS tests disabled. Use --no-os flag to enable")
 
     # Handle CMOS and LVDS tests
     cmos = item.config.getoption("--cmos")
