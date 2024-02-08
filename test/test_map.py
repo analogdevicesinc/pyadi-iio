@@ -103,6 +103,7 @@ def get_test_map():
         "zynq-zc706-adv7511-adrv9009",
         "zynq-zc706-adv7511-adrv9008-1",
         "zynq-zc706-adv7511-adrv9008-2",
+        "zynqmp_adrv9009_zu11eg_revb_adrv2crr_fmc_revb",
     ]
     test_map["zu11eg"] = [
         "zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb",
