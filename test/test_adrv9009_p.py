@@ -11,7 +11,7 @@ except:
     skip_jesd = True
 
 
-hardware = "adrv9009"
+hardware = ["adrv9009", "fmcomms8", "zu11eg"]
 classname = "adi.adrv9009"
 
 profile_path = dirname(realpath(__file__)) + "/adrv9009_profiles/"
