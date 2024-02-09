@@ -27,6 +27,7 @@ class ltc2983(rx, context_manager):
 
         # dynamically get channels
         _channels = []
+        self._rx_channel_names = []
         for ch in self._ctrl.channels:
             self._rx_channel_names.append(ch.id)
             _channels.append((ch.id, self._channel(self._ctrl, ch.id)))

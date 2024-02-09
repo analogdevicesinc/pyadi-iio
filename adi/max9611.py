@@ -39,6 +39,7 @@ class max9611(rx, context_manager):
             raise Exception("Error in selecting matching device")
 
         # Dynamically get channels after the index
+        self._rx_channel_names = []
         for ch in self._ctrl.channels:
             name = ch._id
 

@@ -54,6 +54,8 @@ class ad578x(tx, context_manager):
             raise Exception("Error in selecting matching device")
 
         self.output_bits = []
+        self.channel = []
+        self._tx_channel_names = []
         for ch in self._ctrl.channels:
             name = ch.id
             self.output_bits.append(ch.data_format.bits)

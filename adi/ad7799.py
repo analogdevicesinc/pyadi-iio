@@ -21,6 +21,7 @@ class ad7799(rx, context_manager):
 
         self._rxadc = self._ctx.find_device("AD7799")
 
+        self.channel = []
         for name in self._rx_channel_names:
             self.channel.append(self._channel(self._rxadc, name))
 

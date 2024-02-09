@@ -41,6 +41,7 @@ class ad7746(rx, context_manager):
                 break
         # dynamically get channels
         _channels = []
+        self._rx_channel_names = []
         for ch in self._ctrl.channels:
             self._rx_channel_names.append(ch.id)
             if "capacitance" in ch.id:

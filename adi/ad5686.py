@@ -61,6 +61,7 @@ class ad5686(context_manager, attribute):
                 else:
                     index += 1
 
+        self.channel = []
         for ch in self._ctrl.channels:
             name = ch.id
             self.channel.append(self._channel(self._ctrl, name))

@@ -12,6 +12,8 @@ class adaq8092(rx, context_manager):
     """ADAQ8092 14-Bit, 105MSPS, Dual-Channel uModule Data Acquisition Solution"""
 
     _device_name = "adaq8092"
+    _rx_stack_interleaved = True
+    _rx_data_type = np.int16
 
     def __init__(
         self, uri="",
@@ -27,8 +29,7 @@ class adaq8092(rx, context_manager):
             self._rxadc = self._ctx.find_device("cf_axi_adc")
             self._device_name = "cf_axi_adc"
 
-        rx._rx_stack_interleaved = True
-        rx._rx_data_type = np.int16
+        self._rx_channel_names = []
         for ch in self._rxadc.channels:
             name = ch._id
             self._rx_channel_names.append(name)

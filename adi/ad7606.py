@@ -48,6 +48,8 @@ class ad7606(rx, context_manager):
                 self._rxadc = device
                 break
 
+        self._rx_channel_names = []
+        self.channel = []
         for ch in self._ctrl.channels:
             name = ch._id
             self._rx_channel_names.append(name)
