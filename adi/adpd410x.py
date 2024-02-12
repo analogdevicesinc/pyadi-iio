@@ -30,6 +30,7 @@ class adpd410x(rx, context_manager):
 
         self._rxadc = self._ctx.find_device("adpd410x")
 
+        self.channel = []
         for name in self._rx_channel_names:
             self.channel.append(self._channel(self._rxadc, name))
 

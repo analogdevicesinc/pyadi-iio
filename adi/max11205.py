@@ -47,6 +47,8 @@ class max11205(rx, context_manager):
         if not self._rxadc:
             raise Exception("Error in selecting matching device")
 
+        self._rx_channel_names = []
+        self.channel = []
         for ch in self._ctrl.channels:
             name = ch._id
             self._rx_channel_names.append(name)

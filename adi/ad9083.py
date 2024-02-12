@@ -25,6 +25,7 @@ class ad9083(sync_start, rx, context_manager):
         if not self._rxadc:
             raise Exception("Cannot find device axi-ad9083-rx-hpc")
 
+        self._rx_channel_names = []
         for ch in self._rxadc.channels:
             if ch.scan_element and not ch.output:
                 self._rx_channel_names.append(ch._id)

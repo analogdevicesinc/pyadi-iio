@@ -25,6 +25,7 @@ class ad9172(tx, context_manager, sync_start):
         if not self._txdac:
             raise RuntimeError("Could not find axi-ad9172-hpc")
 
+        self._tx_channel_names = []
         for chan in self._txdac.channels:
             if (
                 hasattr(chan, "scan_element")

@@ -24,6 +24,7 @@ class ltc2499(rx, context_manager):
             raise Exception("No device found")
 
         _channels = []
+        self._rx_channel_names = []
         for ch in self._ctrl.channels:
             self._rx_channel_names.append(ch.id)
             _channels.append((ch.id, self._channel(self._ctrl, ch.id)))

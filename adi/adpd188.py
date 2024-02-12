@@ -35,7 +35,8 @@ class adpd188(rx, context_manager):
 
         # dynamically get channels and sorting them after the color
         # self._ctrl.channels.sort(key=lambda x: str(x.id[14:]))
-
+        self._rx_channel_names = []
+        self.channel = []
         for ch in self._ctrl._channels:
             name = ch._id
             self._rx_channel_names.append(name)
