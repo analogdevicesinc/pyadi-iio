@@ -426,6 +426,17 @@ ad7291:
       - data_devices:
           - iio:device1
 
+ad7944:
+  - ad7944
+  - ad7985
+  - ad7986
+  - pyadi_iio_class_support:
+      - ad7944
+  - emulate:
+      - filename: ad7944.xml
+      - data_devices:
+          - iio:device1
+
 max31865:
   - max31865
   - pyadi_iio_class_support:
