@@ -186,10 +186,28 @@ def dev_interface_sub_channel(
 
 
 def dev_interface_device_name_channel(
-        uri, classname, device_name, channel, val, attr, tol, sub_channel=None, sleep=0.3, readonly=False
+    uri,
+    classname,
+    device_name,
+    channel,
+    val,
+    attr,
+    tol,
+    sub_channel=None,
+    sleep=0.3,
+    readonly=False,
 ):
-    
-    sdr = eval(classname + "(uri='" + uri + "', device_name='" + device_name + "').channel['" + channel + "']")
+
+    sdr = eval(
+        classname
+        + "(uri='"
+        + uri
+        + "', device_name='"
+        + device_name
+        + "').channel['"
+        + channel
+        + "']"
+    )
     # Check hardware
     if not hasattr(sdr, attr):
         raise AttributeError(attr + " not defined in " + classname)

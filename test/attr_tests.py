@@ -2,8 +2,8 @@ import random
 from decimal import Decimal
 from test.common import (
     dev_interface,
-    dev_interface_sub_channel,
     dev_interface_device_name_channel,
+    dev_interface_sub_channel,
     pytest_collection_modifyitems,
     pytest_configure,
 )
@@ -400,7 +400,16 @@ def attribute_single_value_device_name_channel_readonly(
         attr: type=string
             Attribute name to be written. Must be property of classname
     """
-    sdr = eval(classname + "(uri='" + uri + "', device_name='" + device_name + "').channel['" + channel + "']")
+    sdr = eval(
+        classname
+        + "(uri='"
+        + uri
+        + "', device_name='"
+        + device_name
+        + "').channel['"
+        + channel
+        + "']"
+    )
     try:
         if not hasattr(sdr, attr):
             raise AttributeError(attr + " not defined in " + classname)
@@ -434,7 +443,16 @@ def attribute_write_only_str_device_channel(
 
 
     """
-    sdr = eval(classname + "(uri='" + uri + "', device_name='" + device_name + "').channel['" + channel + "']")
+    sdr = eval(
+        classname
+        + "(uri='"
+        + uri
+        + "', device_name='"
+        + device_name
+        + "').channel['"
+        + channel
+        + "']"
+    )
 
     if not hasattr(sdr, attr):
         raise AttributeError(f"no attribute named: {attr}")
@@ -447,7 +465,18 @@ def attribute_write_only_str_device_channel(
         raise Exception(e)
 
 
-def attribute_single_value_range_channel(uri, classname, device_name, channel, attr, start, stop, step, tol, repeats=1, sub_channel=None
+def attribute_single_value_range_channel(
+    uri,
+    classname,
+    device_name,
+    channel,
+    attr,
+    start,
+    stop,
+    step,
+    tol,
+    repeats=1,
+    sub_channel=None,
 ):
     """attribute_single_value_range_channel:
     Write and read back integer class property
@@ -496,7 +525,17 @@ def attribute_single_value_range_channel(uri, classname, device_name, channel, a
             )
 
 
-def attribute_multiple_values_device_channel(uri, classname, device_name, channel, attr, values, tol, repeats=1, sleep=0, sub_channel=None
+def attribute_multiple_values_device_channel(
+    uri,
+    classname,
+    device_name,
+    channel,
+    attr,
+    values,
+    tol,
+    repeats=1,
+    sleep=0,
+    sub_channel=None,
 ):
     """attribute_multiple_values_device_channel: Write and read back multiple class properties
     in a loop where all values are pre-defined and device name and channel are specified.
