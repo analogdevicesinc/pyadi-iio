@@ -17,7 +17,13 @@ except:
 
 
 def dma_rx(
-    uri, classname, channel, use_rx2=False, buffer_size=2 ** 15, annotated=False
+    uri,
+    classname,
+    channel,
+    use_rx2=False,
+    buffer_size=2 ** 15,
+    annotated=False,
+    param_set=None,
 ):
     """dma_rx: Construct RX buffers and verify data is non-zero when pulled.
     Collected buffer is of size 2**15 and 10 buffers are checked
@@ -36,8 +42,15 @@ def dma_rx(
             Size of RX buffer in samples. Defaults to 2**15
         annotated: type=bool
             If True, annotated output is provided (dict)
+        param_set: type=dict
+            Dictionary of attribute and values to be set before tone is
+            received
     """
     sdr = eval(classname + "(uri='" + uri + "')")
+    # Set custom device parameters
+    if param_set:
+        for p in param_set.keys():
+            setattr(sdr, p, param_set[p])
     N = buffer_size
 
     if use_rx2:
