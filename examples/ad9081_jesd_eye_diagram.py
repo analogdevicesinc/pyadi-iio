@@ -14,6 +14,7 @@ dev._ctx.set_timeout(90000)
 fig = plt.figure()
 
 eye_data_per_lane = dev._jesd.get_eye_data()
+
 num_lanes = len(eye_data_per_lane.keys())
 
 for i, lane in enumerate(eye_data_per_lane):
@@ -22,7 +23,7 @@ for i, lane in enumerate(eye_data_per_lane):
     y1 = eye_data_per_lane[lane]["y1"]
     y2 = eye_data_per_lane[lane]["y2"]
 
-    plt.subplot(int(num_lanes / 2), 2, int(i) + 1)
+    ax1 = plt.subplot(int(num_lanes / 2), 2, int(i) + 1)
     plt.scatter(x, y1, marker="+", color="blue")
     plt.scatter(x, y2, marker="+", color="red")
     plt.xlim(eye_data_per_lane[lane]["graph_helpers"]["xlim"])
@@ -37,5 +38,15 @@ for i, lane in enumerate(eye_data_per_lane):
     plt.axvline(0, color="black")  # vertical
     plt.axhline(0, color="black")  # horizontal
     plt.grid(True)
+    # Add secondary x-axis
+    x_norm = [round(n * 0.1, 2) for n in range(11)]
+    x.sort()
+    x = np.linspace(min(x), max(x), 11)
+
+    ax2 = ax1.twiny()
+    ax2.set_xlim(ax1.get_xlim())
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(x_norm)
+    ax2.set_xlabel("Unit Interval (UI)")
 
 plt.show()
