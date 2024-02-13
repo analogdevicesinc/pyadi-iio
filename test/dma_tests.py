@@ -17,7 +17,13 @@ except:
 
 
 def dma_rx(
-    uri, classname, channel, use_rx2=False, buffer_size=2 ** 15, annotated=False, param_set=None
+    uri,
+    classname,
+    channel,
+    use_rx2=False,
+    buffer_size=2 ** 15,
+    annotated=False,
+    param_set=None,
 ):
     """dma_rx: Construct RX buffers and verify data is non-zero when pulled.
     Collected buffer is of size 2**15 and 10 buffers are checked

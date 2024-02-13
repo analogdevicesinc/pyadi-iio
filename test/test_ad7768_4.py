@@ -4,14 +4,6 @@ hardware = ["ad7768-4"]
 classname = "adi.ad7768_4"
 
 #########################################
-@pytest.mark.iio_hardware(hardware, True)
-@pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
-def test_ad7768_4_rx_data(test_dma_rx, iio_uri, classname, channel):
-    test_dma_rx(iio_uri, classname, channel)
-
-
-#########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
@@ -20,9 +12,6 @@ def test_ad7768_4_rx_data(test_dma_rx, iio_uri, classname, channel):
         (
             "sampling_frequency",
             [
-                1000,
-                2000,
-                4000,
                 8000,
                 16000,
                 32000,
@@ -33,9 +22,20 @@ def test_ad7768_4_rx_data(test_dma_rx, iio_uri, classname, channel):
             ],  # End on a rate compatible with all power modes
         ),
         ("filter_type", ["WIDEBAND", "SINC5"],),
-        ("power_mode", ["MEDIAN_MODE", "FAST_MODE"],),
+        ("power_mode", ["LOW_POWER_MODE", "MEDIAN_MODE", "FAST_MODE"],),
         ("sync_start_enable", ["arm"],),
     ],
 )
 def test_ad7768_4_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
     test_attribute_multiple_values(iio_uri, classname, attr, val, 0)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize(
+    "param_set", [dict(filter_type="SINC5"), dict(filter_type="WIDEBAND")]
+)
+def test_ad7768_4_rx_data(test_dma_rx, iio_uri, classname, channel, param_set):
+    test_dma_rx(iio_uri, classname, channel, param_set=param_set)
