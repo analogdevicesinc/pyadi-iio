@@ -331,6 +331,44 @@ ad9265:
       - filename: ad9265.xml
       - data_devices:
           - iio:device2
+ad4000:
+  - ad4004
+  - ad4008
+  - pyadi_iio_class_support:
+      - ad4000
+  - emulate:
+      - filename: ad4000.xml
+      - data_devices:
+          - iio:device1
+ad4001:
+  - ad4001
+  - ad4005
+  - pyadi_iio_class_support:
+      - ad4001
+  - emulate:
+      - filename: ad4001.xml
+      - data_devices:
+          - iio:device1
+ad4002:
+  - ad4002
+  - ad4006
+  - ad4010
+  - pyadi_iio_class_support:
+      - ad4002
+  - emulate:
+      - filename: ad4002.xml
+      - data_devices:
+          - iio:device1
+ad4003:
+  - ad4003
+  - ad4007
+  - ad4011
+  - pyadi_iio_class_support:
+      - ad4003
+  - emulate:
+      - filename: ad4003.xml
+      - data_devices:
+          - iio:device1
 ad4020:
   - ad4020
   - pyadi_iio_class_support:
