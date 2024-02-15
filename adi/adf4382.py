@@ -165,3 +165,12 @@ class adf4382(attribute, context_manager):
     @sync_en.setter
     def sync_en(self, value):
         self._set_iio_dev_attr("sync_en", value, self._ctrl)
+        
+    def reg_read(self, reg):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", reg, self._ctrl)
+        return self._get_iio_debug_attr_str("direct_reg_access", self._ctrl)
+
+    def reg_write(self, reg, value):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", f"{reg} {value}", self._ctrl)
