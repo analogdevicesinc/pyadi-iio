@@ -87,20 +87,6 @@ class ad579x(tx, context_manager):
     def sampling_frequency(self, value):
         self._set_iio_dev_attr_str("sampling_frequency", value)
 
-    @property
-    def code_select(self):
-        """AD579x code format config"""
-        return self._get_iio_dev_attr_str("code_select")
-
-    @code_select.setter
-    def code_select(self, value):
-        self._set_iio_dev_attr_str("code_select", value)
-
-    @property
-    def code_select_available(self):
-        """AD579x code format available"""
-        return self._get_iio_dev_attr_str("code_select_available")
-
     class _channel(attribute):
         """AD579x channel"""
 
@@ -138,8 +124,13 @@ class ad579x(tx, context_manager):
         @property
         def powerdown(self):
             """AD579x powerdown config"""
-            return self._get_iio_attr(self.name, "powerdown", True)
+            return self._get_iio_attr_str(self.name, "powerdown", True)
 
         @powerdown.setter
         def powerdown(self, value):
             self._set_iio_attr(self.name, "powerdown", True, value)
+
+        @property
+        def powerdown_available(self):
+            """AD579x powedown available"""
+            return self._get_iio_attr_str(self.name, "powerdown_available", True)
