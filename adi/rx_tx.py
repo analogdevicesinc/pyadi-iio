@@ -381,15 +381,6 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
             Data must be complex when using a complex data device.
         """
 
-        if not self._tx_data_type:
-            # Find channel data format
-            chan_name = self._tx_channel_names[self.tx_enabled_channels[0]]
-            chan = self._txdac.find_channel(chan_name, True)
-            df = chan.data_format
-            fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
-            fmt = ">" + fmt if df.is_be else fmt
-            self._tx_data_type = np.dtype(fmt)
-
         if not self.__tx_enabled_channels and data_np:
             raise Exception(
                 "When tx_enabled_channels is None or empty,"
@@ -402,6 +393,15 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
                     chan.attrs["raw"].value = "0"
                     return
             raise Exception("No DDS channels found for TX, TX zeroing does not apply")
+
+        if not self._tx_data_type:
+            # Find channel data format
+            chan_name = self._tx_channel_names[self.tx_enabled_channels[0]]
+            chan = self._txdac.find_channel(chan_name, True)
+            df = chan.data_format
+            fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
+            fmt = ">" + fmt if df.is_be else fmt
+            self._tx_data_type = np.dtype(fmt)
 
         if self._txbuf and self.tx_cyclic_buffer:
             raise Exception(
