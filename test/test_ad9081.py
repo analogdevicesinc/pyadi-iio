@@ -7,6 +7,16 @@ hardware = ["ad9081", "ad9081_tdd"]
 classname = "adi.ad9081"
 
 
+def is_channel(channel, iio_uri):
+    import adi
+
+    dev = adi.ad9081(uri=iio_uri)
+    channels = list(
+        set([int("".join(filter(str.isdigit, s))) for s in dev._tx_channel_names])
+    )
+    return channel in channels
+
+
 def scale_field(param_set, iio_uri):
     # Scale fields to match number of channels
     import adi
@@ -97,6 +107,8 @@ def test_ad9081_attr(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 def test_ad9081_rx_data(test_dma_rx, iio_uri, classname, channel):
+    if not is_channel(channel, iio_uri):
+        pytest.skip("Skipping test: Channel " + str(channel) + "not available.")
     test_dma_rx(iio_uri, classname, channel)
 
 
@@ -105,6 +117,8 @@ def test_ad9081_rx_data(test_dma_rx, iio_uri, classname, channel):
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
+    if not is_channel(channel, iio_uri):
+        pytest.skip("Skipping test: Channel " + str(channel) + "not available.")
     test_dma_tx(iio_uri, classname, channel)
 
 
@@ -135,6 +149,8 @@ def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
 def test_ad9081_cyclic_buffers(
     test_cyclic_buffer, iio_uri, classname, channel, param_set
 ):
+    if not is_channel(channel, iio_uri):
+        pytest.skip("Skipping test: Channel " + str(channel) + "not available.")
     param_set = scale_field(param_set, iio_uri)
     test_cyclic_buffer(iio_uri, classname, channel, param_set)
 
@@ -164,6 +180,8 @@ def test_ad9081_cyclic_buffers(
 def test_ad9081_cyclic_buffers_exception(
     test_cyclic_buffer_exception, iio_uri, classname, channel, param_set
 ):
+    if not is_channel(channel, iio_uri):
+        pytest.skip("Skipping test: Channel " + str(channel) + "not available.")
     param_set = scale_field(param_set, iio_uri)
     test_cyclic_buffer_exception(iio_uri, classname, channel, param_set)
 
