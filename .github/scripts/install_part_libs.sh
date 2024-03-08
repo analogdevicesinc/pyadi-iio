@@ -11,7 +11,7 @@ fi
 
 
 
-git clone -b 'master' --single-branch --depth 1 https://github.com/analogdevicesinc/libad9361-iio.git
+git clone -b 'main' --single-branch --depth 1 https://github.com/analogdevicesinc/libad9361-iio.git
 cd libad9361-iio
 if [ "$LIBIIO_BRANCH" = "main" ]; then
     cmake -DPYTHON_BINDINGS=ON -DLIBIIO_INCLUDEDIR=/usr/include/iio .
@@ -27,7 +27,7 @@ sudo ldconfig
 cd ..
 rm -rf libad9361-iio
 
-git clone -b 'master' --single-branch --depth 1 https://github.com/analogdevicesinc/libad9166-iio.git
+git clone -b 'main' --single-branch --depth 1 https://github.com/analogdevicesinc/libad9166-iio.git
 cd libad9166-iio
 if [ "$LIBIIO_BRANCH" = "main" ]; then
     cmake -DPYTHON_BINDINGS=ON -DLIBIIO_INCLUDEDIR=/usr/include/iio .
