@@ -1,0 +1,44 @@
+# JINJA2 TEMPLATE
+
+{% for device in devices -%}
+{{ device['@name'] }}: Device: {{ device['@name'] }} {
+  shape: sql_table
+  {% for attribute in device['attribute'] -%}
+    {{ attribute['@name'] }}: "{{ attribute['@value'] }}" {constraint: test}
+  {% endfor %}
+}
+
+{% for channel in device['channel'] -%}
+{{ device['@name'] }}_{{ channel['@id'] }}: Channel: {{ channel['@id'] }} {{ channel['@type'] }} {
+    shape: sql_table
+    {% for attribute in channel['attribute'] -%}
+        {{ attribute['@name'] }}: "{{ attribute['@value'] }}" {constraint: test}
+    {% endfor %}
+}
+
+{{ device['@name'] }} -> {{ device['@name'] }}_{{ channel['@id'] }}
+
+{% endfor %}
+
+
+{% endfor -%}
+
+
+ad9361-phy: Device: ad9361-phy {
+  shape: sql_table
+  xo_correction: int
+  gain_control: str {constraint: test}
+  # id: int {constraint: primary_key}
+  # last_updated: timestamp with time zone
+}
+cf-ad9361-lpc
+
+voltage0
+voltage1
+voltage2
+voltage3
+
+ad9361-phy -> voltage0
+ad9361-phy -> voltage1
+ad9361-phy -> voltage2
+ad9361-phy -> voltage3

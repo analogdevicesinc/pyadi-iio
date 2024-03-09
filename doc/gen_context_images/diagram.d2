@@ -1,0 +1,674 @@
+# JINJA2 TEMPLATE
+
+ad7291: Device: ad7291 {
+  shape: sql_table
+  
+}
+
+ad7291_voltage6: Channel: voltage6 input {
+    shape: sql_table
+    raw: "2" {constraint: test}
+    scale: "0.610351562" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_voltage6
+
+ad7291_temp0: Channel: temp0 input {
+    shape: sql_table
+    mean_raw: "137" {constraint: test}
+    raw: "138" {constraint: test}
+    scale: "250" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_temp0
+
+ad7291_voltage3: Channel: voltage3 input {
+    shape: sql_table
+    raw: "1301" {constraint: test}
+    scale: "0.610351562" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_voltage3
+
+ad7291_voltage7: Channel: voltage7 input {
+    shape: sql_table
+    raw: "2" {constraint: test}
+    scale: "0.610351562" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_voltage7
+
+ad7291_voltage0: Channel: voltage0 input {
+    shape: sql_table
+    raw: "3357" {constraint: test}
+    scale: "0.610351562" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_voltage0
+
+ad7291_voltage4: Channel: voltage4 input {
+    shape: sql_table
+    raw: "2502" {constraint: test}
+    scale: "0.610351562" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_voltage4
+
+ad7291_voltage1: Channel: voltage1 input {
+    shape: sql_table
+    raw: "3361" {constraint: test}
+    scale: "0.610351562" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_voltage1
+
+ad7291_voltage5: Channel: voltage5 input {
+    shape: sql_table
+    raw: "1302" {constraint: test}
+    scale: "0.610351562" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_voltage5
+
+ad7291_voltage2: Channel: voltage2 input {
+    shape: sql_table
+    raw: "3361" {constraint: test}
+    scale: "0.610351562" {constraint: test}
+    
+}
+
+ad7291 -> ad7291_voltage2
+
+
+
+
+ad9361-phy: Device: ad9361-phy {
+  shape: sql_table
+  calib_mode: "auto" {constraint: test}
+  calib_mode_available: "auto manual manual_tx_quad tx_quad rf_dc_offs rssi_gain_step" {constraint: test}
+  dcxo_tune_coarse: "8" {constraint: test}
+  dcxo_tune_coarse_available: "[0 1 63]" {constraint: test}
+  dcxo_tune_fine: "5920" {constraint: test}
+  dcxo_tune_fine_available: "[0 1 8191]" {constraint: test}
+  ensm_mode: "fdd" {constraint: test}
+  ensm_mode_available: "sleep wait alert fdd pinctrl pinctrl_fdd_indep" {constraint: test}
+  filter_fir_config: "FIR Rx: 128,2 Tx: 128,2" {constraint: test}
+  gain_table_config: "ERROR" {constraint: test}
+  multichip_sync: "ERROR" {constraint: test}
+  rssi_gain_step_error: "lna_error: 0 0 0 0 mixer_error: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 gain_step_calib_reg_val: 0 0 0 0 0" {constraint: test}
+  rx_path_rates: "BBPLL:983040000 ADC:491520000 R2:245760000 R1:122880000 RF:61440000 RXSAMP:30720000" {constraint: test}
+  trx_rate_governor: "nominal" {constraint: test}
+  trx_rate_governor_available: "nominal highest_osr" {constraint: test}
+  tx_path_rates: "BBPLL:983040000 DAC:245760000 T2:122880000 T1:61440000 TF:61440000 TXSAMP:30720000" {constraint: test}
+  xo_correction: "40000000" {constraint: test}
+  xo_correction_available: "[40000000 1 40000000]" {constraint: test}
+  
+}
+
+ad9361-phy_altvoltage1: Channel: altvoltage1 output {
+    shape: sql_table
+    external: "0" {constraint: test}
+    fastlock_load: "0" {constraint: test}
+    fastlock_recall: "ERROR" {constraint: test}
+    fastlock_save: "0 250,158,187,187,254,187,187,187,187,187,254,187,254,187,187,187" {constraint: test}
+    fastlock_store: "0" {constraint: test}
+    frequency: "2300000000" {constraint: test}
+    frequency_available: "[46875001 1 6000000000]" {constraint: test}
+    powerdown: "0" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_altvoltage1
+
+ad9361-phy_voltage1: Channel: voltage1 output {
+    shape: sql_table
+    filter_fir_en: "1" {constraint: test}
+    hardwaregain: "-10.000000 dB" {constraint: test}
+    hardwaregain_available: "[-89.750000 0.250000 0.000000]" {constraint: test}
+    rf_bandwidth: "18000000" {constraint: test}
+    rf_bandwidth_available: "[200000 1 40000000]" {constraint: test}
+    rf_port_select: "A" {constraint: test}
+    rf_port_select_available: "A B" {constraint: test}
+    rssi: "0.00 dB" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    sampling_frequency_available: "[1041666 1 61440000]" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_voltage1
+
+ad9361-phy_voltage0: Channel: voltage0 input {
+    shape: sql_table
+    bb_dc_offset_tracking_en: "1" {constraint: test}
+    filter_fir_en: "1" {constraint: test}
+    gain_control_mode: "slow_attack" {constraint: test}
+    gain_control_mode_available: "manual fast_attack slow_attack hybrid" {constraint: test}
+    hardwaregain: "14.000000 dB" {constraint: test}
+    hardwaregain_available: "[-3 1 71]" {constraint: test}
+    quadrature_tracking_en: "1" {constraint: test}
+    rf_bandwidth: "18000000" {constraint: test}
+    rf_bandwidth_available: "[200000 1 56000000]" {constraint: test}
+    rf_dc_offset_tracking_en: "1" {constraint: test}
+    rf_port_select: "A_BALANCED" {constraint: test}
+    rf_port_select_available: "A_BALANCED B_BALANCED C_BALANCED A_N A_P B_N B_P C_N C_P TX_MONITOR1 TX_MONITOR2 TX_MONITOR1_2" {constraint: test}
+    rssi: "36.50 dB" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    sampling_frequency_available: "[1041666 1 61440000]" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_voltage0
+
+ad9361-phy_voltage1: Channel: voltage1 input {
+    shape: sql_table
+    bb_dc_offset_tracking_en: "1" {constraint: test}
+    filter_fir_en: "1" {constraint: test}
+    gain_control_mode: "slow_attack" {constraint: test}
+    gain_control_mode_available: "manual fast_attack slow_attack hybrid" {constraint: test}
+    hardwaregain: "57.000000 dB" {constraint: test}
+    hardwaregain_available: "[-3 1 71]" {constraint: test}
+    quadrature_tracking_en: "1" {constraint: test}
+    rf_bandwidth: "18000000" {constraint: test}
+    rf_bandwidth_available: "[200000 1 56000000]" {constraint: test}
+    rf_dc_offset_tracking_en: "1" {constraint: test}
+    rf_port_select: "A_BALANCED" {constraint: test}
+    rf_port_select_available: "A_BALANCED B_BALANCED C_BALANCED A_N A_P B_N B_P C_N C_P TX_MONITOR1 TX_MONITOR2 TX_MONITOR1_2" {constraint: test}
+    rssi: "75.75 dB" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    sampling_frequency_available: "[1041666 1 61440000]" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_voltage1
+
+ad9361-phy_voltage3: Channel: voltage3 output {
+    shape: sql_table
+    filter_fir_en: "1" {constraint: test}
+    raw: "306" {constraint: test}
+    rf_bandwidth: "18000000" {constraint: test}
+    rf_bandwidth_available: "[200000 1 40000000]" {constraint: test}
+    rf_port_select_available: "A B" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    sampling_frequency_available: "[1041666 1 61440000]" {constraint: test}
+    scale: "1.000000" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_voltage3
+
+ad9361-phy_altvoltage0: Channel: altvoltage0 output {
+    shape: sql_table
+    external: "0" {constraint: test}
+    fastlock_load: "0" {constraint: test}
+    fastlock_recall: "ERROR" {constraint: test}
+    fastlock_save: "0 22,22,22,22,22,22,119,22,22,30,22,22,22,22,22,22" {constraint: test}
+    fastlock_store: "0" {constraint: test}
+    frequency: "2300000000" {constraint: test}
+    frequency_available: "[70000000 1 6000000000]" {constraint: test}
+    powerdown: "0" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_altvoltage0
+
+ad9361-phy_voltage2: Channel: voltage2 output {
+    shape: sql_table
+    filter_fir_en: "1" {constraint: test}
+    raw: "306" {constraint: test}
+    rf_bandwidth: "18000000" {constraint: test}
+    rf_bandwidth_available: "[200000 1 40000000]" {constraint: test}
+    rf_port_select_available: "A B" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    sampling_frequency_available: "[1041666 1 61440000]" {constraint: test}
+    scale: "1.000000" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_voltage2
+
+ad9361-phy_temp0: Channel: temp0 input {
+    shape: sql_table
+    : "" {constraint: test}
+    : "" {constraint: test}
+    : "" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_temp0
+
+ad9361-phy_voltage0: Channel: voltage0 output {
+    shape: sql_table
+    filter_fir_en: "1" {constraint: test}
+    hardwaregain: "-10.000000 dB" {constraint: test}
+    hardwaregain_available: "[-89.750000 0.250000 0.000000]" {constraint: test}
+    rf_bandwidth: "18000000" {constraint: test}
+    rf_bandwidth_available: "[200000 1 40000000]" {constraint: test}
+    rf_port_select: "A" {constraint: test}
+    rf_port_select_available: "A B" {constraint: test}
+    rssi: "0.00 dB" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    sampling_frequency_available: "[1041666 1 61440000]" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_voltage0
+
+ad9361-phy_voltage2: Channel: voltage2 input {
+    shape: sql_table
+    bb_dc_offset_tracking_en: "1" {constraint: test}
+    filter_fir_en: "1" {constraint: test}
+    gain_control_mode_available: "manual fast_attack slow_attack hybrid" {constraint: test}
+    offset: "57" {constraint: test}
+    quadrature_tracking_en: "1" {constraint: test}
+    raw: "650" {constraint: test}
+    rf_bandwidth: "18000000" {constraint: test}
+    rf_bandwidth_available: "[200000 1 56000000]" {constraint: test}
+    rf_dc_offset_tracking_en: "1" {constraint: test}
+    rf_port_select_available: "A_BALANCED B_BALANCED C_BALANCED A_N A_P B_N B_P C_N C_P TX_MONITOR1 TX_MONITOR2 TX_MONITOR1_2" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    sampling_frequency_available: "[1041666 1 61440000]" {constraint: test}
+    scale: "0.305250" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_voltage2
+
+ad9361-phy_out: Channel: out input {
+    shape: sql_table
+    : "" {constraint: test}
+    : "" {constraint: test}
+    : "" {constraint: test}
+    
+}
+
+ad9361-phy -> ad9361-phy_out
+
+
+
+
+xadc: Device: xadc {
+  shape: sql_table
+  : "" {constraint: test}
+  : "" {constraint: test}
+  
+}
+
+xadc_voltage5: Channel: voltage5 input {
+    shape: sql_table
+    raw: "2003" {constraint: test}
+    scale: "0.732421875" {constraint: test}
+    
+}
+
+xadc -> xadc_voltage5
+
+xadc_voltage0: Channel: voltage0 input {
+    shape: sql_table
+    raw: "1341" {constraint: test}
+    scale: "0.732421875" {constraint: test}
+    
+}
+
+xadc -> xadc_voltage0
+
+xadc_voltage4: Channel: voltage4 input {
+    shape: sql_table
+    raw: "2439" {constraint: test}
+    scale: "0.732421875" {constraint: test}
+    
+}
+
+xadc -> xadc_voltage4
+
+xadc_temp0: Channel: temp0 input {
+    shape: sql_table
+    offset: "-2219" {constraint: test}
+    raw: "2641" {constraint: test}
+    scale: "123.040771484" {constraint: test}
+    
+}
+
+xadc -> xadc_temp0
+
+xadc_voltage7: Channel: voltage7 input {
+    shape: sql_table
+    raw: "-6" {constraint: test}
+    scale: "0.732421875" {constraint: test}
+    
+}
+
+xadc -> xadc_voltage7
+
+xadc_voltage1: Channel: voltage1 input {
+    shape: sql_table
+    raw: "2444" {constraint: test}
+    scale: "0.732421875" {constraint: test}
+    
+}
+
+xadc -> xadc_voltage1
+
+xadc_voltage2: Channel: voltage2 input {
+    shape: sql_table
+    raw: "1341" {constraint: test}
+    scale: "0.732421875" {constraint: test}
+    
+}
+
+xadc -> xadc_voltage2
+
+xadc_voltage3: Channel: voltage3 input {
+    shape: sql_table
+    raw: "1337" {constraint: test}
+    scale: "0.732421875" {constraint: test}
+    
+}
+
+xadc -> xadc_voltage3
+
+xadc_voltage6: Channel: voltage6 input {
+    shape: sql_table
+    raw: "1695" {constraint: test}
+    scale: "0.732421875" {constraint: test}
+    
+}
+
+xadc -> xadc_voltage6
+
+
+
+
+adf4351-udc-tx-pmod: Device: adf4351-udc-tx-pmod {
+  shape: sql_table
+  
+}
+
+adf4351-udc-tx-pmod_: Channel:   {
+    shape: sql_table
+    
+}
+
+adf4351-udc-tx-pmod -> adf4351-udc-tx-pmod_
+
+adf4351-udc-tx-pmod_: Channel:   {
+    shape: sql_table
+    
+}
+
+adf4351-udc-tx-pmod -> adf4351-udc-tx-pmod_
+
+adf4351-udc-tx-pmod_: Channel:   {
+    shape: sql_table
+    
+}
+
+adf4351-udc-tx-pmod -> adf4351-udc-tx-pmod_
+
+
+
+
+adf4351-udc-rx-pmod: Device: adf4351-udc-rx-pmod {
+  shape: sql_table
+  
+}
+
+adf4351-udc-rx-pmod_: Channel:   {
+    shape: sql_table
+    
+}
+
+adf4351-udc-rx-pmod -> adf4351-udc-rx-pmod_
+
+adf4351-udc-rx-pmod_: Channel:   {
+    shape: sql_table
+    
+}
+
+adf4351-udc-rx-pmod -> adf4351-udc-rx-pmod_
+
+adf4351-udc-rx-pmod_: Channel:   {
+    shape: sql_table
+    
+}
+
+adf4351-udc-rx-pmod -> adf4351-udc-rx-pmod_
+
+
+
+
+cf-ad9361-dds-core-lpc: Device: cf-ad9361-dds-core-lpc {
+  shape: sql_table
+  
+}
+
+cf-ad9361-dds-core-lpc_voltage0: Channel: voltage0 output {
+    shape: sql_table
+    calibphase: "0.000000" {constraint: test}
+    calibscale: "1.000000" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_voltage0
+
+cf-ad9361-dds-core-lpc_voltage1: Channel: voltage1 output {
+    shape: sql_table
+    calibphase: "0.000000" {constraint: test}
+    calibscale: "1.000000" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_voltage1
+
+cf-ad9361-dds-core-lpc_voltage2: Channel: voltage2 output {
+    shape: sql_table
+    calibphase: "0.000000" {constraint: test}
+    calibscale: "1.000000" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_voltage2
+
+cf-ad9361-dds-core-lpc_voltage3: Channel: voltage3 output {
+    shape: sql_table
+    calibphase: "0.000000" {constraint: test}
+    calibscale: "1.000000" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_voltage3
+
+cf-ad9361-dds-core-lpc_altvoltage3: Channel: altvoltage3 output {
+    shape: sql_table
+    frequency: "2000186" {constraint: test}
+    phase: "0" {constraint: test}
+    raw: "1" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    scale: "0.119995" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_altvoltage3
+
+cf-ad9361-dds-core-lpc_altvoltage1: Channel: altvoltage1 output {
+    shape: sql_table
+    frequency: "2000186" {constraint: test}
+    phase: "90000" {constraint: test}
+    raw: "1" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    scale: "0.119995" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_altvoltage1
+
+cf-ad9361-dds-core-lpc_altvoltage0: Channel: altvoltage0 output {
+    shape: sql_table
+    frequency: "999859" {constraint: test}
+    phase: "90000" {constraint: test}
+    raw: "1" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    scale: "0.059998" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_altvoltage0
+
+cf-ad9361-dds-core-lpc_altvoltage7: Channel: altvoltage7 output {
+    shape: sql_table
+    frequency: "9279985" {constraint: test}
+    phase: "0" {constraint: test}
+    raw: "1" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    scale: "0.000000" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_altvoltage7
+
+cf-ad9361-dds-core-lpc_altvoltage6: Channel: altvoltage6 output {
+    shape: sql_table
+    frequency: "999859" {constraint: test}
+    phase: "0" {constraint: test}
+    raw: "1" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    scale: "0.000000" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_altvoltage6
+
+cf-ad9361-dds-core-lpc_altvoltage5: Channel: altvoltage5 output {
+    shape: sql_table
+    frequency: "9279985" {constraint: test}
+    phase: "0" {constraint: test}
+    raw: "1" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    scale: "0.000000" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_altvoltage5
+
+cf-ad9361-dds-core-lpc_altvoltage2: Channel: altvoltage2 output {
+    shape: sql_table
+    frequency: "999859" {constraint: test}
+    phase: "0" {constraint: test}
+    raw: "1" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    scale: "0.059998" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_altvoltage2
+
+cf-ad9361-dds-core-lpc_altvoltage4: Channel: altvoltage4 output {
+    shape: sql_table
+    frequency: "999859" {constraint: test}
+    phase: "0" {constraint: test}
+    raw: "1" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    scale: "0.000000" {constraint: test}
+    
+}
+
+cf-ad9361-dds-core-lpc -> cf-ad9361-dds-core-lpc_altvoltage4
+
+
+
+
+cf-ad9361-lpc: Device: cf-ad9361-lpc {
+  shape: sql_table
+  
+}
+
+cf-ad9361-lpc_voltage0: Channel: voltage0 input {
+    shape: sql_table
+    calibbias: "0" {constraint: test}
+    calibphase: "0.000000" {constraint: test}
+    calibscale: "1.000000" {constraint: test}
+    samples_pps: "ERROR" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    
+}
+
+cf-ad9361-lpc -> cf-ad9361-lpc_voltage0
+
+cf-ad9361-lpc_voltage1: Channel: voltage1 input {
+    shape: sql_table
+    calibbias: "0" {constraint: test}
+    calibphase: "0.000000" {constraint: test}
+    calibscale: "1.000000" {constraint: test}
+    samples_pps: "ERROR" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    
+}
+
+cf-ad9361-lpc -> cf-ad9361-lpc_voltage1
+
+cf-ad9361-lpc_voltage2: Channel: voltage2 input {
+    shape: sql_table
+    calibbias: "0" {constraint: test}
+    calibphase: "0.000000" {constraint: test}
+    calibscale: "1.000000" {constraint: test}
+    samples_pps: "ERROR" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    
+}
+
+cf-ad9361-lpc -> cf-ad9361-lpc_voltage2
+
+cf-ad9361-lpc_voltage3: Channel: voltage3 input {
+    shape: sql_table
+    calibbias: "0" {constraint: test}
+    calibphase: "0.000000" {constraint: test}
+    calibscale: "1.000000" {constraint: test}
+    samples_pps: "ERROR" {constraint: test}
+    sampling_frequency: "30720000" {constraint: test}
+    
+}
+
+cf-ad9361-lpc -> cf-ad9361-lpc_voltage3
+
+
+
+
+: Device:  {
+  shape: sql_table
+  add_trigger: "ERROR" {constraint: test}
+  remove_trigger: "ERROR" {constraint: test}
+  
+}
+
+
+
+
+ad9361-phy: Device: ad9361-phy {
+  shape: sql_table
+  xo_correction: int
+  gain_control: str {constraint: test}
+  # id: int {constraint: primary_key}
+  # last_updated: timestamp with time zone
+}
+cf-ad9361-lpc
+
+voltage0
+voltage1
+voltage2
+voltage3
+
+ad9361-phy -> voltage0
+ad9361-phy -> voltage1
+ad9361-phy -> voltage2
+ad9361-phy -> voltage3
