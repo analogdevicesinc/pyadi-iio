@@ -378,6 +378,7 @@ def test_adrv9009_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 ########################################
+@pytest.mark.no_obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
@@ -706,6 +707,7 @@ def test_adrv9009_dds_gain_check_agc_with_10db_splitter(
 
 
 #########################################
+@pytest.mark.no_obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
@@ -835,6 +837,7 @@ def test_adrv9009_dds_gain_check_vary_power_with_10dB_splitter(
 #########################################
 # TODO: Test, see what's its difference with dds_loopback, PROBLEMATIC
 # OSError: [Errno 5] Input/output error
+@pytest.mark.no_obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
