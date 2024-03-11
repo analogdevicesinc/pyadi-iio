@@ -1,6 +1,6 @@
 sphinx>=2.0
 myst-parser
-sphinx-favicon
+# sphinx-favicon
 sphinxcontrib-mermaid
 sphinx-simplepdf
 pillow

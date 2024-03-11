@@ -67,7 +67,7 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
     "myst_parser",
-    "sphinx_favicon",
+    # "sphinx_favicon",
     "sphinxcontrib.mermaid",
     "sphinx.ext.intersphinx",
     "sphinxcontrib.wavedrom",
@@ -115,7 +115,7 @@ if os.path.exists(os.path.join("_themes", "pdf_theme")):
 html_theme = "cosmic"
 
 html_title = f"{project} {release}"
-favicons = ["favicon.png"]
+# favicons = ["favicon.png"]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
