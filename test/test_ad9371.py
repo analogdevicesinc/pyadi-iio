@@ -477,6 +477,7 @@ def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 #########################################
+@pytest.mark.no_obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
@@ -598,6 +599,7 @@ def test_ad9371_dds_loopback_for_obs(
 
 
 #########################################
+@pytest.mark.no_obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
@@ -669,6 +671,7 @@ def test_ad9371_two_tone_loopback_with_10dB_splitter(
 
 
 #########################################
+@pytest.mark.no_obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
@@ -743,6 +746,7 @@ def test_ad9371_dds_gain_check_vary_power_with_10dB_splitter(
 
 
 #########################################
+@pytest.mark.no_obs_required
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
