@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="adi.fmcadc3 module" href="adi.fmcadc3.html" /><link rel="prev" title="daq3" href="adi.daq3.html" />
+    <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="tdd" href="adi.tdd.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
-        <title>fmc_vna - Analog Devices Hardware Python Interfaces 0.0.17</title>
+        <title>tddn - Analog Devices Hardware Python Interfaces 0.0.17</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -270,7 +270,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0579.html">cn0579</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
@@ -291,7 +291,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.max9611.html">adi.max9611 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.tddn.html">tddn</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">tddn</a></li>
 </ul>
 </li>
 </ul>
@@ -328,17 +328,95 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.fmc_vna">
-<span id="fmc-vna"></span><h1>fmc_vna<a class="headerlink" href="#module-adi.fmc_vna" title="Permalink to this heading">#</a></h1>
+          <section id="module-adi.tddn">
+<span id="tddn"></span><h1>tddn<a class="headerlink" href="#module-adi.tddn" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.fmc_vna.fmcvna">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.fmc_vna.</span></span><span class="sig-name descname"><span class="pre">fmcvna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmc_vna.fmcvna" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.adrf5720.html#adi.adrf5720.adrf5720" title="adi.adrf5720.adrf5720"><code class="xref py py-class docutils literal notranslate"><span class="pre">adrf5720</span></code></a>, <a class="reference internal" href="adi.ad9083.html#adi.ad9083.ad9083" title="adi.ad9083.ad9083"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9083</span></code></a>, <a class="reference internal" href="adi.admv8818.html#adi.admv8818.admv8818" title="adi.admv8818.admv8818"><code class="xref py py-class docutils literal notranslate"><span class="pre">admv8818</span></code></a>, <a class="reference internal" href="adi.gen_mux.html#adi.gen_mux.genmux" title="adi.gen_mux.genmux"><code class="xref py py-class docutils literal notranslate"><span class="pre">genmux</span></code></a>, <a class="reference internal" href="adi.adf5610.html#adi.adf5610.adf5610" title="adi.adf5610.adf5610"><code class="xref py py-class docutils literal notranslate"><span class="pre">adf5610</span></code></a>, <a class="reference internal" href="adi.adl5960.html#adi.adl5960.adl5960" title="adi.adl5960.adl5960"><code class="xref py py-class docutils literal notranslate"><span class="pre">adl5960</span></code></a></p>
-<p>FMCVNA Scalable 8-port Vector Network Analyzer Board</p>
+<dt class="sig sig-object py" id="adi.tddn.tddn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.tddn.</span></span><span class="sig-name descname"><span class="pre">tddn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.tddn.tddn" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>TDDN Controller</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.burst_count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">burst_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#adi.tddn.tddn.burst_count" title="Permalink to this definition">#</a></dt>
+<dd><p>burst_count: Amount of frames to produce, where 0 means repeat indefinitely</p>
+</dd></dl>
+
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.fmc_vna.fmcvna.frontend">
-<span class="sig-name descname"><span class="pre">frontend</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0]</span></em><a class="headerlink" href="#adi.fmc_vna.fmcvna.frontend" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="adi.tddn.tddn.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.tddn.tddn.channel" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.tddn.tddn.enable" title="Permalink to this definition">#</a></dt>
+<dd><p>enable: Enable or disable the TDD engine</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.frame_length_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frame_length_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#adi.tddn.tddn.frame_length_ms" title="Permalink to this definition">#</a></dt>
+<dd><p>frame_length_ms: TDD frame length (ms)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.frame_length_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frame_length_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#adi.tddn.tddn.frame_length_raw" title="Permalink to this definition">#</a></dt>
+<dd><p>frame_length_raw: TDD frame length (clock cycles)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.internal_sync_period_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">internal_sync_period_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#adi.tddn.tddn.internal_sync_period_ms" title="Permalink to this definition">#</a></dt>
+<dd><p>internal_sync_period_ms: Period of the internal sync generator (ms)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.internal_sync_period_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">internal_sync_period_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#adi.tddn.tddn.internal_sync_period_raw" title="Permalink to this definition">#</a></dt>
+<dd><p>internal_sync_period_raw: Period of the internal sync generator (clock cycles)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.startup_delay_ms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startup_delay_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#adi.tddn.tddn.startup_delay_ms" title="Permalink to this definition">#</a></dt>
+<dd><p>startup_delay_ms: Initial delay before the first frame (ms)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.startup_delay_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startup_delay_raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#adi.tddn.tddn.startup_delay_raw" title="Permalink to this definition">#</a></dt>
+<dd><p>startup_delay_raw: Initial delay before the first frame (clock cycles)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#adi.tddn.tddn.state" title="Permalink to this definition">#</a></dt>
+<dd><p>state: The current state of the internal FSM</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.sync_external">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_external</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.tddn.tddn.sync_external" title="Permalink to this definition">#</a></dt>
+<dd><p>sync_external: Enable the external sync trigger</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.sync_internal">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_internal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.tddn.tddn.sync_internal" title="Permalink to this definition">#</a></dt>
+<dd><p>sync_internal: Enable the internal sync trigger</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.sync_reset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_reset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.tddn.tddn.sync_reset" title="Permalink to this definition">#</a></dt>
+<dd><p>sync_reset: Reset the internal counter when receiving a sync event</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.tddn.tddn.sync_soft">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_soft</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.tddn.tddn.sync_soft" title="Permalink to this definition">#</a></dt>
+<dd><p>sync_soft: Trigger one software sync pulse</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -349,23 +427,15 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="adi.fmcadc3.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">adi.fmcadc3 module</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="adi.daq3.html">
+          
+          <a class="prev-page" href="adi.tdd.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">daq3</div>
+                <div class="title">tdd</div>
                 
               </div>
             </a>
@@ -399,9 +469,22 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">fmc_vna</a><ul>
-<li><a class="reference internal" href="#adi.fmc_vna.fmcvna"><code class="docutils literal notranslate"><span class="pre">fmcvna</span></code></a><ul>
-<li><a class="reference internal" href="#adi.fmc_vna.fmcvna.frontend"><code class="docutils literal notranslate"><span class="pre">fmcvna.frontend</span></code></a></li>
+<li><a class="reference internal" href="#">tddn</a><ul>
+<li><a class="reference internal" href="#adi.tddn.tddn"><code class="docutils literal notranslate"><span class="pre">tddn</span></code></a><ul>
+<li><a class="reference internal" href="#adi.tddn.tddn.burst_count"><code class="docutils literal notranslate"><span class="pre">tddn.burst_count</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.channel"><code class="docutils literal notranslate"><span class="pre">tddn.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.enable"><code class="docutils literal notranslate"><span class="pre">tddn.enable</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.frame_length_ms"><code class="docutils literal notranslate"><span class="pre">tddn.frame_length_ms</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.frame_length_raw"><code class="docutils literal notranslate"><span class="pre">tddn.frame_length_raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.internal_sync_period_ms"><code class="docutils literal notranslate"><span class="pre">tddn.internal_sync_period_ms</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.internal_sync_period_raw"><code class="docutils literal notranslate"><span class="pre">tddn.internal_sync_period_raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.startup_delay_ms"><code class="docutils literal notranslate"><span class="pre">tddn.startup_delay_ms</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.startup_delay_raw"><code class="docutils literal notranslate"><span class="pre">tddn.startup_delay_raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.state"><code class="docutils literal notranslate"><span class="pre">tddn.state</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.sync_external"><code class="docutils literal notranslate"><span class="pre">tddn.sync_external</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.sync_internal"><code class="docutils literal notranslate"><span class="pre">tddn.sync_internal</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.sync_reset"><code class="docutils literal notranslate"><span class="pre">tddn.sync_reset</span></code></a></li>
+<li><a class="reference internal" href="#adi.tddn.tddn.sync_soft"><code class="docutils literal notranslate"><span class="pre">tddn.sync_soft</span></code></a></li>
 </ul>
 </li>
 </ul>

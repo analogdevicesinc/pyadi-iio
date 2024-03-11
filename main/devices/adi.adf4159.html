@@ -291,6 +291,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.max9611.html">adi.max9611 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.tddn.html">tddn</a></li>
 </ul>
 </li>
 </ul>
@@ -335,6 +336,42 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
 <p>ADF4159 is a 13 GHz Fractional-N Frequency Synthesizer</p>
 <dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.clk1_div_value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clk1_div_value</span></span><a class="headerlink" href="#adi.adf4159.adf4159.clk1_div_value" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the PLL frequency deviation time.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.clk1_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clk1_mode</span></span><a class="headerlink" href="#adi.adf4159.adf4159.clk1_mode" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the mode of 1st clk.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.clk2_div_value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clk2_div_value</span></span><a class="headerlink" href="#adi.adf4159.adf4159.clk2_div_value" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the PLL frequency deviation time.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.delay_clk">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delay_clk</span></span><a class="headerlink" href="#adi.adf4159.adf4159.delay_clk" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the clk delay enable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.delay_start_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delay_start_en</span></span><a class="headerlink" href="#adi.adf4159.adf4159.delay_start_en" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the delay start enable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.delay_word">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delay_word</span></span><a class="headerlink" href="#adi.adf4159.adf4159.delay_word" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the delay word.</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4159.adf4159.enable">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable</span></span><a class="headerlink" href="#adi.adf4159.adf4159.enable" title="Permalink to this definition">#</a></dt>
 <dd><p>Get/Set the enable status of the RF output.</p>
@@ -365,9 +402,51 @@
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.muxout_sel">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">muxout_sel</span></span><a class="headerlink" href="#adi.adf4159.adf4159.muxout_sel" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the PLL frequency deviation time.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.phase_value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phase_value</span></span><a class="headerlink" href="#adi.adf4159.adf4159.phase_value" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the PLL frequency deviation time.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.ramp_delay_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ramp_delay_en</span></span><a class="headerlink" href="#adi.adf4159.adf4159.ramp_delay_en" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set ramp delay enable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.ramp_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ramp_en</span></span><a class="headerlink" href="#adi.adf4159.adf4159.ramp_en" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the ramp enable.</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4159.adf4159.ramp_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ramp_mode</span></span><a class="headerlink" href="#adi.adf4159.adf4159.ramp_mode" title="Permalink to this definition">#</a></dt>
 <dd><p>Get/Set the Ramp output mode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.sing_ful_tri">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sing_ful_tri</span></span><a class="headerlink" href="#adi.adf4159.adf4159.sing_ful_tri" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set Single-full-triangle-enable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.trig_delay_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trig_delay_en</span></span><a class="headerlink" href="#adi.adf4159.adf4159.trig_delay_en" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set the txdata-trigger-delay-enable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4159.adf4159.tx_trig_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_trig_en</span></span><a class="headerlink" href="#adi.adf4159.adf4159.tx_trig_en" title="Permalink to this definition">#</a></dt>
+<dd><p>Get/Set tx data trigger enable.</p>
 </dd></dl>
 
 </dd></dl>
@@ -431,12 +510,25 @@
             <ul>
 <li><a class="reference internal" href="#">adf4159</a><ul>
 <li><a class="reference internal" href="#adi.adf4159.adf4159"><code class="docutils literal notranslate"><span class="pre">adf4159</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.clk1_div_value"><code class="docutils literal notranslate"><span class="pre">adf4159.clk1_div_value</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.clk1_mode"><code class="docutils literal notranslate"><span class="pre">adf4159.clk1_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.clk2_div_value"><code class="docutils literal notranslate"><span class="pre">adf4159.clk2_div_value</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.delay_clk"><code class="docutils literal notranslate"><span class="pre">adf4159.delay_clk</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.delay_start_en"><code class="docutils literal notranslate"><span class="pre">adf4159.delay_start_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.delay_word"><code class="docutils literal notranslate"><span class="pre">adf4159.delay_word</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4159.adf4159.enable"><code class="docutils literal notranslate"><span class="pre">adf4159.enable</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4159.adf4159.freq_dev_range"><code class="docutils literal notranslate"><span class="pre">adf4159.freq_dev_range</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4159.adf4159.freq_dev_step"><code class="docutils literal notranslate"><span class="pre">adf4159.freq_dev_step</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4159.adf4159.freq_dev_time"><code class="docutils literal notranslate"><span class="pre">adf4159.freq_dev_time</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4159.adf4159.frequency"><code class="docutils literal notranslate"><span class="pre">adf4159.frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.muxout_sel"><code class="docutils literal notranslate"><span class="pre">adf4159.muxout_sel</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.phase_value"><code class="docutils literal notranslate"><span class="pre">adf4159.phase_value</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.ramp_delay_en"><code class="docutils literal notranslate"><span class="pre">adf4159.ramp_delay_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.ramp_en"><code class="docutils literal notranslate"><span class="pre">adf4159.ramp_en</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4159.adf4159.ramp_mode"><code class="docutils literal notranslate"><span class="pre">adf4159.ramp_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.sing_ful_tri"><code class="docutils literal notranslate"><span class="pre">adf4159.sing_ful_tri</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.trig_delay_en"><code class="docutils literal notranslate"><span class="pre">adf4159.trig_delay_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4159.adf4159.tx_trig_en"><code class="docutils literal notranslate"><span class="pre">adf4159.tx_trig_en</span></code></a></li>
 </ul>
 </li>
 </ul>
