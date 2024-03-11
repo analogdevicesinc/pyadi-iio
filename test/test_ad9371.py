@@ -3,7 +3,7 @@ from os.path import dirname, join, realpath
 
 import pytest
 
-hardware = "ad9371"
+hardware = ["ad9371", "adrv9371"]
 classname = "adi.ad9371"
 
 profile_path = dirname(realpath(__file__)) + "/ad9371_5_profiles/"
