@@ -1,4 +1,4 @@
-sphinx>=2.0
+sphinx>=5.0
 myst-parser
 # sphinx-favicon
 sphinxcontrib-mermaid
