@@ -5,3 +5,5 @@ sphinx-favicon
 sphinxcontrib-mermaid
 sphinx-simplepdf
 pillow
+https://github.com/analogdevicesinc/doctools/releases/download/latest/adi-doctools.tar.gz
+sphinxcontrib.wavedrom

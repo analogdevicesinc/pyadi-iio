@@ -44,7 +44,7 @@ import adi  # isort:skip
 
 # -- Project information -----------------------------------------------------
 
-project = "Analog Devices Hardware Python Interfaces"
+project = "pyadi-iio"
 year_now = datetime.datetime.now().year
 copyright = f"2019-{year_now}, Analog Devices, Inc"
 author = "Travis Collins"
@@ -69,7 +69,13 @@ extensions = [
     "myst_parser",
     "sphinx_favicon",
     "sphinxcontrib.mermaid",
+    "sphinx.ext.intersphinx",
+    "sphinxcontrib.wavedrom",
+    "adi_doctools",
 ]
+
+
+needs_extensions = {"adi_doctools": "0.3"}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -84,6 +90,17 @@ coverage_show_missing_items = True
 coverage_ignore_classes = ["phy"]
 coverage_ignore_modules = ["test.dma_tests", "test.generics"]
 
+# -- External docs configuration ----------------------------------------------
+
+intersphinx_mapping = {
+    "doctools": ("https://analogdevicesinc.github.io/doctools", None)
+}
+
+# -- Custom extensions configuration ------------------------------------------
+
+hide_collapsible_content = True
+validate_links = False
+
 # -- Options for PDF output --------------------------------------------------
 if os.path.exists(os.path.join("_themes", "pdf_theme")):
     extensions.append("sphinx_simplepdf")
@@ -95,7 +112,7 @@ if os.path.exists(os.path.join("_themes", "pdf_theme")):
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "furo"
+html_theme = "cosmic"
 
 html_title = f"{project} {release}"
 favicons = ["favicon.png"]
@@ -105,24 +122,24 @@ favicons = ["favicon.png"]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-html_css_files = [
-    "css/style.css",
-]
+# html_css_files = [
+#     "css/style.css",
+# ]
 
-html_theme_options = {
-    "light_logo": os.path.join("logos", "PyADI-IIO_Logo_300_cropped.png"),
-    "dark_logo": os.path.join("logos", "PyADI-IIO_Logo_w_300_cropped.png"),
-    "dark_css_variables": {
-        "color-sidebar-item-background--current": "white",
-        "color-sidebar-link-text": "white",
-        "color-sidebar-link-text--top-level": "white",
-    },
-    "light_css_variables": {
-        "color-sidebar-item-background--current": "black",
-        "color-sidebar-link-text": "black",
-        "color-sidebar-link-text--top-level": "black",
-    },
-}
+# html_theme_options = {
+#     "light_logo": os.path.join("logos", "PyADI-IIO_Logo_300_cropped.png"),
+#     "dark_logo": os.path.join("logos", "PyADI-IIO_Logo_w_300_cropped.png"),
+#     "dark_css_variables": {
+#         "color-sidebar-item-background--current": "white",
+#         "color-sidebar-link-text": "white",
+#         "color-sidebar-link-text--top-level": "white",
+#     },
+#     "light_css_variables": {
+#         "color-sidebar-item-background--current": "black",
+#         "color-sidebar-link-text": "black",
+#         "color-sidebar-link-text--top-level": "black",
+#     },
+# }
 
 if os.getenv("DEV_BUILD"):
     branch = os.getenv("GIT_BRANCH")
