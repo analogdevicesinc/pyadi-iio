@@ -24,7 +24,7 @@ import adi  # isort:skip
 
 # -- Project information -----------------------------------------------------
 
-repository = 'pyadi-iio'
+repository = "pyadi-iio"
 project = "Analog Devices Hardware Python Interfaces"
 year_now = datetime.datetime.now().year
 copyright = f"2019-{year_now}, Analog Devices, Inc"
@@ -47,7 +47,7 @@ extensions = [
     "myst_parser",
     "sphinxcontrib.mermaid",
     "adi_doctools",
-    "ext_pyadi_iio"
+    "ext_pyadi_iio",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -72,7 +72,7 @@ if os.path.exists(os.path.join("_themes", "pdf_theme")):
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "cosmic"
-html_favicon = os.path.join('_static', 'favicon.png')
+html_favicon = os.path.join("_static", "favicon.png")
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
