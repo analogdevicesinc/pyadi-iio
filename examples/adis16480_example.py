@@ -8,6 +8,11 @@ import matplotlib.pyplot as plt
 # Set up ADIS16480
 dev = adi.adis16480(uri="ip:localhost", device_name="adis16480")
 
+dev.rx_output_type = "raw"
+dev.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+dev.sample_rate = 10
+dev.rx_buffer_size = 10
+
 
 print("\nX acceleration: " + str(dev.accel_x_conv) + " m/s^2")
 print("Y acceleration: " + str(dev.accel_y_conv) + " m/s^2")
@@ -31,3 +36,12 @@ print("Temperature offset value: " + str(dev.temp.offset))
 print("X-axis gyro channel calibbias value: " + str(dev.anglvel_x_calibbias))
 print("X-axis gyro channel calibscale value: " + str(dev.anglvel_y_calibscale))
 print("X-axis magnetometer bandwidth: " + str(dev.magn_x_filter_low_pass_3db_frequency))
+
+for _ in range(100):
+    data = dev.rx()
+    plt.clf()
+    for i, d in enumerate(data):
+        plt.plot(d, label=dev._rx_channel_names[i])
+    plt.legend()
+    plt.show(block=False)
+    plt.pause(0.1)

@@ -186,7 +186,15 @@ def dev_interface_sub_channel(
 
 
 def dev_interface_device(
-    uri, classname, device_name, val, attr, tol, sub_channel=None, sleep=0, readonly=False
+    uri,
+    classname,
+    device_name,
+    val,
+    attr,
+    tol,
+    sub_channel=None,
+    sleep=0,
+    readonly=False,
 ):
     sdr = eval(classname + "(uri='" + uri + "', device_name='" + device_name + "')")
     # Check hardware

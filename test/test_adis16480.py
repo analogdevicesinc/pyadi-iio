@@ -1,5 +1,5 @@
-import pytest
 import adi
+import pytest
 
 hardware = "adis16480"
 classname = "adi.adis16480"
@@ -8,7 +8,7 @@ device_name = "adis16480"
 ########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0])
+@pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 def test_adis16480_rx_data(test_dma_rx, iio_uri, classname, channel):
     test_dma_rx(iio_uri, classname, channel, buffer_size=16)
 
@@ -63,7 +63,6 @@ def test_adis16480_attr(
 @pytest.mark.parametrize(
     "attr, values, tol, repeats",
     [
-        
         ("sample_rate", [5, 10, 246, 1230, 2460], 0.5, 2),
         ("anglvel_x_filter_low_pass_3db_frequency", [0, 55, 275, 310], 0.5, 2),
         ("anglvel_y_filter_low_pass_3db_frequency", [0, 55, 275, 310], 0.5, 2),
@@ -77,14 +76,6 @@ def test_adis16480_attr(
     ],
 )
 def test_adis16480_attr_multiple_val(
-    test_attribute_multiple_values,
-    iio_uri,
-    classname,
-    attr,
-    values,
-    tol,
-    repeats,
+    test_attribute_multiple_values, iio_uri, classname, attr, values, tol, repeats,
 ):
-    test_attribute_multiple_values(
-        iio_uri, classname, attr, values, tol, repeats
-    )
+    test_attribute_multiple_values(iio_uri, classname, attr, values, tol, repeats)

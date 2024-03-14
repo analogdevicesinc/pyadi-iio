@@ -2,8 +2,8 @@ import random
 from decimal import Decimal
 from test.common import (
     dev_interface,
-    dev_interface_sub_channel,
     dev_interface_device,
+    dev_interface_sub_channel,
     pytest_collection_modifyitems,
     pytest_configure,
 )
@@ -382,7 +382,9 @@ def attribute_check_range_readonly_with_depends(
         raise Exception(e)
 
 
-def attribute_single_value_pow2_device(uri, classname, device_name, attr, max_pow, tol, repeats=1):
+def attribute_single_value_pow2_device(
+    uri, classname, device_name, attr, max_pow, tol, repeats=1
+):
     """attribute_single_value_pow2: Write and read back integer class property
     where the integer is a power of 2. This is performed a defined
     number of times and the value written is randomly determined based

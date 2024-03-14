@@ -2,8 +2,8 @@
 #
 # SPDX short identifier: ADIBSD
 
-from adi.attribute import attribute
 import numpy as np
+from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
@@ -27,7 +27,7 @@ class adis16480(rx, context_manager):
     ]
     _device_name = ""
 
-    def __init__(self, uri="", device_name="adis16480"):
+    def __init__(self, uri="", device_name="adis16480", trigger_name="adis16480-dev0"):
         context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = [
@@ -54,7 +54,7 @@ class adis16480(rx, context_manager):
         else:
             self._ctrl = self._ctx.find_device(device_name)
             self._rxadc = self._ctx.find_device(device_name)
-        
+
         if self._ctrl is None:
             print(
                 "No device found with device_name = "
@@ -82,6 +82,10 @@ class adis16480(rx, context_manager):
         self.magn_y = self._magn_channel(self._ctrl, "magn_y")
         self.magn_z = self._magn_channel(self._ctrl, "magn_z")
 
+        # Set default trigger
+        self._trigger = self._ctx.find_device(trigger_name)
+        self._rxadc._set_trigger(self._trigger)
+
         rx.__init__(self)
         self.rx_buffer_size = 16  # Make default buffer smaller
 
@@ -90,14 +94,14 @@ class adis16480(rx, context_manager):
         scale = self._get_iio_attr(channel_name, "scale", False)
 
         return raw * scale
-    
+
     def __get_scaled_sensor_temp(self, channel_name: str) -> float:
         raw = self._get_iio_attr(channel_name, "raw", False)
         scale = self._get_iio_attr(channel_name, "scale", False)
         offset = self._get_iio_attr(channel_name, "offset", False)
 
         return (raw + offset) * scale
-    
+
     def get_anglvel_x(self):
         """Value returned in radians per second."""
         return self.__get_scaled_sensor("anglvel_x")
@@ -155,15 +159,15 @@ class adis16480(rx, context_manager):
     def get_temp(self):
         """Value returned in millidegrees Celsius."""
         return self.__get_scaled_sensor_temp("temp0")
-    
+
     temp_conv = property(get_temp, None)
 
     def get_pressure(self):
         """Value returned in kilo Pascal."""
         return self.__get_scaled_sensor("pressure0")
-    
+
     pressure_conv = property(get_pressure, None)
-    
+
     @property
     def sample_rate(self):
         """sample_rate: Sample rate in samples per second"""
@@ -181,7 +185,7 @@ class adis16480(rx, context_manager):
     @current_timestamp_clock.setter
     def current_timestamp_clock(self, value):
         self._set_iio_dev_attr_str("current_timestamp_clock", value)
-    
+
     @property
     def anglvel_x_calibbias(self):
         """User calibration offset for gyroscope for the x-axis."""
@@ -410,7 +414,7 @@ class adis16480(rx, context_manager):
 
     class _temp_channel(attribute):
         """ADIS16480 temperature channel."""
-        
+
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
@@ -419,20 +423,20 @@ class adis16480(rx, context_manager):
         def raw(self):
             """ADIS16480 raw value"""
             return self._get_iio_attr(self.name, "raw", False)
-        
+
         @property
         def scale(self):
             """ADIS16480 scale value"""
             return self._get_iio_attr(self.name, "scale", False)
-        
+
         @property
         def offset(self):
             """ADIS16480 offset value"""
             return self._get_iio_attr(self.name, "offset", False)
-        
+
     class _pressure_channel(attribute):
         """ADIS16480 pressure channel."""
-        
+
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
@@ -441,12 +445,12 @@ class adis16480(rx, context_manager):
         def raw(self):
             """ADIS16480 raw value"""
             return self._get_iio_attr(self.name, "raw", False)
-        
+
         @property
         def scale(self):
             """ADIS16480 scale value"""
             return self._get_iio_attr(self.name, "scale", False)
-        
+
         @property
         def calibbias(self):
             """ADIS16480 calibration offset"""
@@ -455,7 +459,7 @@ class adis16480(rx, context_manager):
         @calibbias.setter
         def calibbias(self, value):
             self._set_iio_attr(self.name, "calibbias", False, value)
-    
+
     class _magn_channel(_pressure_channel):
         """ADIS16480 magnetometer channel."""
 
@@ -478,7 +482,7 @@ class adis16480(rx, context_manager):
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
-        
+
         @property
         def calibscale(self):
             """ADIS16480 calibscale value"""
