@@ -630,8 +630,8 @@ def attribute_single_value_channel_readonly(uri, classname, channel, attr):
 def attribute_check_range_singleval_with_depends(
     uri, classname, attr, depends, start, stop, step, tol, repeats=1, sub_channel=None
 ):
-    """attribute_single_value:
-    Write and read back integer class property
+    """attribute_check_range_singleval_with_depends:
+    Write and read back integer class property with dependent write properties
     This is performed a defined number of times and the value written
     is randomly determined based in input parameters
 
@@ -642,6 +642,9 @@ def attribute_check_range_singleval_with_depends(
             Name of pyadi interface class which contain attribute
         attr: type=string
             Attribute name to be written. Must be property of classname
+        depends: type=dict
+            Dictionary of properties to write before value is written. Keys
+            are properties and values are values to be written
         start: type=integer
             Lower bound of possible values attribute can be
         stop: type=integer

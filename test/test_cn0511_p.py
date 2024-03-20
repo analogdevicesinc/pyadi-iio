@@ -8,11 +8,10 @@ classname = "adi.cn0511"
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, start, stop, step, tol, param_set",
+    "attr, start, stop, step, tol, repeats",
     [
-        ("frequency", 1, 2949120000, 1, 8, dict(sample_rate=5898240000)),
-        ("raw", 1, 2 ** 15 - 1, 1, 8, None),
-        ("sample_rate", 4915200000, 5775360000, 122880000, 8, None),
+        ("raw", 1, 2 ** 15 - 1, 1, 8, 1),
+        ("sample_rate", 4915200000, 5775360000, 122880000, 8, 1),
     ],
 )
 def test_cn0511_attr(
@@ -24,10 +23,36 @@ def test_cn0511_attr(
     stop,
     step,
     tol,
-    param_set,
+    repeats,
 ):
     test_attribute_single_value(
-        iio_uri, classname, attr, start, stop, step, tol, param_set
+        iio_uri, classname, attr, start, stop, step, tol, repeats
+    )
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize(
+    "attr, depends, start, stop, step, tol, repeats",
+    [
+        ("frequency", dict(sample_rate=5898240000), 1, 2949120000, 1, 8, 2),
+    ],
+)
+def test_cn0511_attr_with_depends(
+    test_attribute_check_range_singleval_with_depends,
+    iio_uri,
+    classname,
+    attr,
+    depends, 
+    start, 
+    stop, 
+    step, 
+    tol, 
+    repeats
+):
+    test_attribute_check_range_singleval_with_depends(
+        iio_uri, classname, attr,depends, start, stop, step, tol, repeats
     )
 
 
