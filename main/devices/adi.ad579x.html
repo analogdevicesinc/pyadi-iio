@@ -6,7 +6,7 @@
     <link href="../_static/favicon.png" sizes="32x32" rel="icon" type="image/png"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ad5754r" href="adi.ad5754r.html" /><link rel="prev" title="ad5686" href="adi.ad5686.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
-        <title>ad578x - Analog Devices Hardware Python Interfaces 0.0.17</title>
+        <title>ad579x - Analog Devices Hardware Python Interfaces 0.0.17</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -194,7 +194,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5592r.html">ad5592r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad578x</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ad579x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5754r.html">ad5754r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5940.html">adi.ad5940 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad6676.html">adi.ad6676 module</a></li>
@@ -328,46 +328,34 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-adi.ad578x">
-<span id="ad578x"></span><h1>ad578x<a class="headerlink" href="#module-adi.ad578x" title="Permalink to this heading">#</a></h1>
+          <section id="module-adi.ad579x">
+<span id="ad579x"></span><h1>ad579x<a class="headerlink" href="#module-adi.ad579x" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad578x.ad578x">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad578x.</span></span><span class="sig-name descname"><span class="pre">ad578x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad578x.ad578x" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="adi.ad579x.ad579x">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad579x.</span></span><span class="sig-name descname"><span class="pre">ad579x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad579x.ad579x" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>AD578x DAC</p>
+<p>AD579x DAC</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad578x.ad578x.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad578x.ad578x.channel" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="adi.ad579x.ad579x.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad579x.ad579x.channel" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad578x.ad578x.code_select">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">code_select</span></span><a class="headerlink" href="#adi.ad578x.ad578x.code_select" title="Permalink to this definition">#</a></dt>
-<dd><p>AD578x code format config</p>
+<dt class="sig sig-object py" id="adi.ad579x.ad579x.powerdown_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown_mode</span></span><a class="headerlink" href="#adi.ad579x.ad579x.powerdown_mode" title="Permalink to this definition">#</a></dt>
+<dd><p>Ad579x powerdown_mode config</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad578x.ad578x.code_select_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">code_select_available</span></span><a class="headerlink" href="#adi.ad578x.ad578x.code_select_available" title="Permalink to this definition">#</a></dt>
-<dd><p>AD578x code format available</p>
+<dt class="sig sig-object py" id="adi.ad579x.ad579x.powerdown_mode_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown_mode_available</span></span><a class="headerlink" href="#adi.ad579x.ad579x.powerdown_mode_available" title="Permalink to this definition">#</a></dt>
+<dd><p>AD579x powedown mode available</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad578x.ad578x.powerdown_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown_mode</span></span><a class="headerlink" href="#adi.ad578x.ad578x.powerdown_mode" title="Permalink to this definition">#</a></dt>
-<dd><p>Ad578x powerdown_mode config</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad578x.ad578x.powerdown_mode_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown_mode_available</span></span><a class="headerlink" href="#adi.ad578x.ad578x.powerdown_mode_available" title="Permalink to this definition">#</a></dt>
-<dd><p>AD578x powedown mode available</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad578x.ad578x.sampling_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad578x.ad578x.sampling_frequency" title="Permalink to this definition">#</a></dt>
-<dd><p>AD578x sampling frequency config</p>
+<dt class="sig sig-object py" id="adi.ad579x.ad579x.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad579x.ad579x.sampling_frequency" title="Permalink to this definition">#</a></dt>
+<dd><p>AD579x sampling frequency config</p>
 </dd></dl>
 
 </dd></dl>
@@ -429,14 +417,12 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">ad578x</a><ul>
-<li><a class="reference internal" href="#adi.ad578x.ad578x"><code class="docutils literal notranslate"><span class="pre">ad578x</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad578x.ad578x.channel"><code class="docutils literal notranslate"><span class="pre">ad578x.channel</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad578x.ad578x.code_select"><code class="docutils literal notranslate"><span class="pre">ad578x.code_select</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad578x.ad578x.code_select_available"><code class="docutils literal notranslate"><span class="pre">ad578x.code_select_available</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad578x.ad578x.powerdown_mode"><code class="docutils literal notranslate"><span class="pre">ad578x.powerdown_mode</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad578x.ad578x.powerdown_mode_available"><code class="docutils literal notranslate"><span class="pre">ad578x.powerdown_mode_available</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad578x.ad578x.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad578x.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#">ad579x</a><ul>
+<li><a class="reference internal" href="#adi.ad579x.ad579x"><code class="docutils literal notranslate"><span class="pre">ad579x</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad579x.ad579x.channel"><code class="docutils literal notranslate"><span class="pre">ad579x.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad579x.ad579x.powerdown_mode"><code class="docutils literal notranslate"><span class="pre">ad579x.powerdown_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad579x.ad579x.powerdown_mode_available"><code class="docutils literal notranslate"><span class="pre">ad579x.powerdown_mode_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad579x.ad579x.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad579x.sampling_frequency</span></code></a></li>
 </ul>
 </li>
 </ul>
