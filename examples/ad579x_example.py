@@ -34,17 +34,17 @@
 import adi
 import numpy as np
 
-# Set up AD578X
-ad578x_dev = adi.ad578x(uri="ip:analog")
+# Set up AD579X
+ad579x_dev = adi.ad579x(uri="ip:analog")
 
 chn = 0
-ad578x_dev._tx_data_type = np.int32
-ad578x_dev.tx_enabled_channels = [chn]
+ad579x_dev._tx_data_type = np.int32
+ad579x_dev.tx_enabled_channels = [chn]
 
-raw = ad578x_dev.channel[0].raw
+raw = ad579x_dev.channel[0].raw
 print(raw)
 
 arr = [0, 1000, 2000, 3000, 4000]
 data = np.array(arr)
 
-ad578x_dev.tx(data)
+ad579x_dev.tx(data)
