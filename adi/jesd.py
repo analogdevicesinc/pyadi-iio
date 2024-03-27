@@ -6,6 +6,6 @@
 
 try:
     from .sshfs import sshfs
-    from .jesd_internal import jesd
+    from .jesd_internal import jesd, jesd_eye_scan
 except ImportError:
     jesd = None

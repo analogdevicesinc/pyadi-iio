@@ -31,6 +31,12 @@ def scale_field(param_set, iio_uri):
 
 #########################################
 @pytest.mark.iio_hardware(hardware)
+def test_ad9081_jesd_links(test_check_jesd_links, iio_uri):
+    test_check_jesd_links(classname, iio_uri)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val",
