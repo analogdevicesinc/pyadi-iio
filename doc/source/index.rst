@@ -21,10 +21,10 @@ Analog Devices Hardware Python Interfaces
 
     <center>
     <div style="width:70%;">
-    <div id="indexlogo_dark">
+    <div id="indexlogo" class="only-light">
     <img src="_static/logos/PyADI-IIO_Logo_600.png" alt="PyADI-IIO Logo" />
     </div>
-    <div id="indexlogo_light">
+    <div id="indexlogo" class="only-dark">
     <img src="_static/logos/PyADI-IIO_Logo_w_600.png" alt="PyADI-IIO Logo" />
     </div>
     </div>
@@ -32,7 +32,7 @@ Analog Devices Hardware Python Interfaces
 
 .. raw:: html
 
-    <p align="center">
+    <div align="center" id="badges">
     <a href="https://github.com/analogdevicesinc/pyadi-iio/actions">
     <img src="https://github.com/analogdevicesinc/pyadi-iio/actions/workflows/test.yml/badge.svg" alt="Build Status">
     </a>
@@ -48,9 +48,9 @@ Analog Devices Hardware Python Interfaces
     <a href="https://www.python.org/download/releases/3.6.0/">
     <img src="https://img.shields.io/badge/python-3.6+-blue.svg" alt="Python Version">
     </a>
-    </p>
+    </div>
 
-    <p align="center">
+    <div align="center" id="badges">
     <a href="http://analogdevicesinc.github.io/pyadi-iio/">
     <img alt="GitHub Pages" src="https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg">
     </a>
@@ -62,7 +62,7 @@ Analog Devices Hardware Python Interfaces
     <a href="https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio">
     <img alt="Analog Wiki" src="https://img.shields.io/badge/Wiki-on%20wiki.analog.com-blue.svg">
     </a>
-    </p>
+    </div>
 
 
 Requirements
