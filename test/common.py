@@ -183,3 +183,80 @@ def dev_interface_sub_channel(
             print(f"Got: {str(rval)}")
         return abs_val <= tol
     return val == str(rval)
+
+
+def dev_interface_device_name_channel(
+    uri,
+    classname,
+    device_name,
+    channel,
+    val,
+    attr,
+    tol,
+    sub_channel=None,
+    sleep=0.3,
+    readonly=False,
+):
+    """dev_interface_device_name_channel:
+    Includes device name and channel in the source to be evaluated
+    """
+
+    sdr = eval(
+        classname
+        + "(uri='"
+        + uri
+        + "', device_name='"
+        + device_name
+        + "').channel['"
+        + channel
+        + "']"
+    )
+    # Check hardware
+    if not hasattr(sdr, attr):
+        raise AttributeError(attr + " not defined in " + classname)
+
+    rval = getattr(sdr, attr)
+    is_list = isinstance(rval, list)
+    if is_list:
+        l = len(rval)
+        val = [val] * l
+
+    setattr(sdr, attr, val)
+    if sleep > 0:
+        time.sleep(sleep)
+    rval = getattr(sdr, attr)
+
+    if not isinstance(rval, str) and not is_list:
+        rval = float(rval)
+        for _ in range(5):
+            setattr(sdr, attr, val)
+            time.sleep(0.3)
+            rval = float(getattr(sdr, attr))
+            if rval == val:
+                break
+    else:
+        for _ in range(2):
+            setattr(sdr, attr, val)
+            time.sleep(0.3)
+            rval = str(getattr(sdr, attr))
+            if rval == val:
+                break
+
+    del sdr
+
+    if is_list and isinstance(rval[0], str):
+        return val == rval
+
+    if not isinstance(val, str):
+        abs_val = np.max(abs(np.array(val) - np.array(rval)))
+        if abs_val > tol:
+            print(f"Failed to set1: {attr}")
+            print(f"Set: {str(val)}")
+            print(f"Got: {str(rval)}")
+        return abs_val <= tol
+    else:
+        if val != str(rval):
+            print(f"Failed to set: {attr}")
+            print(f"Set: {val}")
+            print(f"Got: {rval}")
+        return val == str(rval)

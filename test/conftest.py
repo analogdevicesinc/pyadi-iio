@@ -202,3 +202,33 @@ def test_verify_overflow(request):
 @pytest.fixture()
 def test_verify_underflow(request):
     yield verify_underflow
+
+
+@pytest.fixture
+def test_attribute_single_value_device_name_channel_readonly(request):
+    yield attribute_single_value_device_name_channel_readonly
+
+
+@pytest.fixture
+def test_attribute_write_only_str_device_channel(request):
+    yield attribute_write_only_str_device_channel
+
+
+@pytest.fixture
+def test_attribute_single_value_range_channel(request):
+    yield attribute_single_value_range_channel
+
+
+@pytest.fixture
+def test_attribute_multiple_values_device_channel(request):
+    yield attribute_multiple_values_device_channel
+
+
+@pytest.fixture
+def test_attribute_multiple_values_available_readonly(request):
+    yield attribute_multiple_values_available_readonly
+
+
+@pytest.fixture
+def test_attribute_single_value_channel_readonly(request):
+    yield attribute_single_value_channel_readonly
