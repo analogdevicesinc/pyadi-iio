@@ -45,11 +45,17 @@ namespaces = true
 jesd = [
     "paramiko"
 ]
+tools = [
+    "pynput"
+]
 
 [project.urls]
 homepage = "https://analogdevicesinc.github.io/pyadi-iio/"
 documentation = "https://analogdevicesinc.github.io/pyadi-iio/"
 repository = "https://github/analogdevicesinc/pyadi-iio"
+
+[project.gui-scripts]
+adistream = "adi.tools.adistream:run_adi_stream"
 
 [tool.isort]
 multi_line_output=3
