@@ -5,7 +5,7 @@ Supported Devices
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
    adi.QuadMxFE_multi
    adi.ad2s1210
