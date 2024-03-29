@@ -87,7 +87,25 @@
         <nav>
           <ul>
 <li><a class="reference internal" href="#">ad5592r</a><ul>
-<li><a class="reference internal" href="#adi.ad5592r.ad5592r"><code class="docutils literal notranslate"><span class="pre">ad5592r</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r"><code class="docutils literal notranslate"><span class="pre">ad5592r</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_adc"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_adc</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_adc.raw"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_adc.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_adc.scale"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_adc.scale</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_adc.scale_available"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_adc.scale_available</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_dac"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_dac</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_dac.raw"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_dac.raw</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_temp"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_temp</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_temp.offset"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_temp.offset</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_temp.raw"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_temp.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5592r.ad5592r.channel_temp.scale"><code class="docutils literal notranslate"><span class="pre">ad5592r.channel_temp.scale</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -267,10 +285,92 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.ad5592r.ad5592r">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5592r.</span></span><span class="sig-name descname"><span class="pre">ad5592r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5592r.ad5592r" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>AD5592R and AD5593R SPI / I2C interface,
-8-channel, 12-bit Confiburable ADC/DAC, digital GPIO</p>
+<p>AD5592R and AD5593R SPI / I2C interface, 8-channel, 12-bit Confiburable ADC/DAC, digital GPIO</p>
+<dl>
+<dt>Analog I/O pins are configured in the device tree and can be ADC, DAC, or both. Channel attributes are as follows, where X corresponds to device channel number:</dt><dd><p>voltageX_adc.raw:              Raw 12-bit ADC code. read only for ADC channels</p>
+<p>voltageX_adc.scale:            ADC scale, millivolts per lsb</p>
+<p>voltageX_adc.scale_available:  Available scales, corresponding to Vref*1, Vref*2</p>
+<p>voltageX():                    Returns ADC reading in millivolts (read only)</p>
+<p>voltageX_dac.raw:              Raw 12-bit DAC code. read/write for DAC channels</p>
+<p>voltageX_dac.scale:            ADC scale, millivolts per lsb</p>
+<p>voltageX_dac.scale_available:  Available scales (corresponding to 1X/2X gain)</p>
+<p>voltageX(1234.5):              Sets/Returns ADC reading in millivolts</p>
+<p>temp.raw:                      Temperature raw value</p>
+<p>temp.scale:                    Temperature scale value</p>
+<p>temp.offset                    Temperature offset value</p>
+<p>temp():                        Returns temperature in degrees Celsius</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_adc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channel_adc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_adc" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>AD5592R Input Voltage Channels</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_adc.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_adc.raw" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_adc.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_adc.scale" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_adc.scale_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale_available</span></span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_adc.scale_available" title="Permalink to this definition">#</a></dt>
+<dd><p>Available scales</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_dac">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channel_dac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_dac" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad5592r.ad5592r.channel_adc" title="adi.ad5592r.ad5592r.channel_adc"><code class="xref py py-class docutils literal notranslate"><span class="pre">channel_adc</span></code></a></p>
+<p>AD5592R Output Voltage Channels
+(Add setter to raw property)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_dac.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_dac.raw" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_temp">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channel_temp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_temp" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>AD5592R Temperature Channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_temp.offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_temp.offset" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_temp.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_temp.raw" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5592r.ad5592r.channel_temp.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad5592r.ad5592r.channel_temp.scale" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<p>The number of individual channels is based on the hardware configuration of the device. The are individually accessed as properties like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dev</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad5592r</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:analog&quot;</span><span class="p">)</span>
+<span class="n">dev</span><span class="o">.</span><span class="n">dac_0</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">dev</span><span class="o">.</span><span class="n">dac_1</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">dev</span><span class="o">.</span><span class="n">adc_0</span><span class="o">.</span><span class="n">raw</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">temp_c</span> <span class="o">=</span> <span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">temp_0</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="n">dev</span><span class="o">.</span><span class="n">temp_0</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">*</span> <span class="n">dev</span><span class="o">.</span><span class="n">temp_0</span><span class="o">.</span><span class="n">scale</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">temp_c</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 
 
