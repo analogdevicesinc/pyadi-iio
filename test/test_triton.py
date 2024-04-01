@@ -109,9 +109,10 @@ def test_current_preboot():
     rm.list_resources()
     inst = rm.open_resource('TCPIP0::192.168.10.1::inst0::INSTR')
 
+    inst.write("OUTP:PAIR PAR")
     inst.write("INST CH1")
     inst.write("SOUR:VOLT 12")
-    inst.write("SOUR:CURR 20")
+    inst.write("SOUR:CURR 40")
     print(inst.query("MEASure:CURR?"))
 
     current_value = float(inst.query("MEASure:CURR?"))
@@ -124,6 +125,7 @@ def test_voltage_preboot():
     rm.list_resources()
     inst = rm.open_resource('TCPIP0::192.168.10.1::inst0::INSTR')
 
+    inst.write("OUTP:PAIR PAR")
     inst.write("INST CH1")
     inst.write("SOUR:VOLT 12")
     inst.write("SOUR:CURR 20")
@@ -193,9 +195,10 @@ def test_current_postboot():
     rm.list_resources()
     inst = rm.open_resource('TCPIP0::192.168.10.1::inst0::INSTR')
 
+    inst.write("OUTP:PAIR PAR")
     inst.write("INST CH1")
     inst.write("SOUR:VOLT 12")
-    inst.write("SOUR:CURR 20")
+    inst.write("SOUR:CURR 40")
     print(inst.query("MEASure:CURR?"))
 
     current_value = float(inst.query("MEASure:CURR?"))
@@ -208,9 +211,10 @@ def test_voltage_postboot():
     rm.list_resources()
     inst = rm.open_resource('TCPIP0::192.168.10.1::inst0::INSTR')
 
+    inst.write("OUTP:PAIR PAR")
     inst.write("INST CH1")
     inst.write("SOUR:VOLT 12")
-    inst.write("SOUR:CURR 20")
+    inst.write("SOUR:CURR 40")
     print(inst.query("MEASure:VOLT?"))
 
     voltage_value = float(inst.query("MEASure:VOLT?"))
@@ -238,9 +242,9 @@ def test_iio_attr(iio_uri):
 @pytest.mark.parametrize(
     "param_set, frequency, scale, peak_min, hpf_value, lpf_value",
     [
-        (params["loopback_test_1"], 10000000, 0.9, -21, 5, 15),
-        (params["loopback_test_2"], 10000000, 0.9, -20, 5, 15),
-        (params["loopback_test_3"], 10000000, 0.9, -20, 5, 15),
+        (params["loopback_test_1"], 10000000, 0.9, -25, 5, 15),
+        (params["loopback_test_2"], 10000000, 0.9, -25, 5, 15),
+        (params["loopback_test_3"], 10000000, 0.9, -25, 5, 15),
         (params["filter_test_1"], 10000000, 0.9, -20, 5, 15),
         (params["filter_test_2"], 10000000, 0.9, -30, 11, 9),
         (params["dac_adc_loopback_30dB_attenuation"], 10000000, 0.9, -50, 5, 15),
@@ -259,20 +263,15 @@ def test_Triton_dds_loopback(
     lpf_value,
 ):
     dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
+    ## Set low pass and high pass filter values
     dev.hpf_ctrl = hpf_value
     dev.lpf_ctrl = lpf_value
-
     ## Set cal board loopback state
-    ## Adjacent Loopback      CTRL_IND = 0, 5045_V1 = 1, 5045_V2 = 0, CTRL_RX_COMBINED = 0
-    ## Combined Loopback      CTRL_IND = 1, 5045_V1 = 1, 5045_V2 = 1, CTRL_RX_COMBINED = 0
-    ## Combined Tx Out/Rx In  CTRL_IND = 1, 5045_V1 = 0, 5045_V2 = 1, CTRL_RX_COMBINED = 0
-    ## Combined Tx RF Detect  CTRL_IND = 1, 5045_V1 = 0, 5045_V2 = 0, CTRL_RX_COMBINED = 0
     dev.gpio_ctrl_ind = 0
     dev.gpio_5045_v1 = 1
     dev.gpio_5045_v2 = 0
     dev.gpio_ctrl_rx_combined = 0
-
-
+    ## Param set and DDS test
     param_set = scale_field(param_set, iio_uri)
     test_dds_loopback(
         iio_uri, classname, param_set, channel, frequency, scale, peak_min
@@ -295,8 +294,10 @@ def test_Triton_dds_loopback(
 @pytest.mark.parametrize("sfdr_min", [60])
 def test_Triton_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min, hpf_value, lpf_value):
     dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
+    ## Set low pass and high pass filter values
     dev.hpf_ctrl = hpf_value
     dev.lpf_ctrl = lpf_value 
+    ## SFDR test
     test_sfdr(iio_uri, classname, channel, param_set, sfdr_min)
 
 
