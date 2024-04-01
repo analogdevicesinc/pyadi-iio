@@ -36,7 +36,7 @@ class ad7124(rx, context_manager):
                 else:
                     index += 1
 
-        self._rx_channel_names = [chan.name for chan in self._ctrl.channels]
+        self._rx_channel_names = [chan.id for chan in self._ctrl.channels]
         if "-" in self._rx_channel_names[0]:
             self._rx_channel_names.sort(key=lambda x: int(x[7:].split("-")[0]))
         else:
