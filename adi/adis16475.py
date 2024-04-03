@@ -64,6 +64,7 @@ class adis16475(rx, context_manager):
         else:
             self._ctrl = self._ctx.find_device(device_name)
             self._rxadc = self._ctx.find_device(device_name)
+            trigger_name = device_name + "-dev0"
 
         if self._ctrl is None:
             print(
@@ -76,9 +77,14 @@ class adis16475(rx, context_manager):
                 self._rxadc = self._ctx.find_device(i)
                 if self._ctrl is not None:
                     print("Fond device = " + i + ". Will use this device instead.")
+                    trigger_name = i + "-dev0"
                     break
             if self._ctrl is None:
                 raise Exception("No compatible device found")
+
+        # Set default trigger
+        self._trigger = self._ctx.find_device(trigger_name)
+        self._rxadc._set_trigger(self._trigger)
 
         self.anglvel_x = self._channel_with_offset(self._ctrl, "anglvel_x")
         self.anglvel_y = self._channel_with_offset(self._ctrl, "anglvel_y")
