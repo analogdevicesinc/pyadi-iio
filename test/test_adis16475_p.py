@@ -12,7 +12,7 @@ def test_adis16475_rx_data(test_dma_rx, iio_uri, classname, channel):
     test_dma_rx(iio_uri, classname, channel, buffer_size=16)
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16475_filter_low_pass_3db_frequency(iio_uri):
     adis16475 = adi.adis16475(uri=iio_uri)
 
@@ -49,35 +49,35 @@ def test_adis16475_filter_low_pass_3db_frequency(iio_uri):
         assert adis16475.filter_low_pass_3db_frequency <= 720
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16475_firmware_date(iio_uri):
     adis16475 = adi.adis16475(uri=iio_uri)
 
     assert adis16475.firmware_date != "00-00-0000"
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16475_firmware_revision(iio_uri):
     adis16475 = adi.adis16475(uri=iio_uri)
 
     assert adis16475.firmware_revision != "0.0"
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16475_product_id(iio_uri):
     adis16475 = adi.adis16475(uri=iio_uri)
 
     assert adis16475.product_id != 0
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16475_serial_number(iio_uri):
     adis16475 = adi.adis16475(uri=iio_uri)
 
     assert adis16475.serial_number != "0x0000"
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16476_conv_data(iio_uri):
     adis16475 = adi.adis16475(uri=iio_uri)
 
@@ -90,7 +90,7 @@ def test_adis16476_conv_data(iio_uri):
     assert adis16475.temp_conv != 0.0
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
