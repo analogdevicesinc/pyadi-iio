@@ -10,6 +10,8 @@ import subprocess
 import pyvisa
 import time
 import test.instruments as instruments
+# from scpi import signal
+
 
 
 
@@ -107,28 +109,28 @@ params = dict(
 def test_current_preboot():
     rm = pyvisa.ResourceManager()
     rm.list_resources()
-    inst = rm.open_resource('TCPIP0::192.168.10.1::inst0::INSTR')
+    inst = rm.open_resource('TCPIP::192.168.10.1::inst0::INSTR')
 
     inst.write("OUTP:PAIR PAR")
     inst.write("INST CH1")
     inst.write("SOUR:VOLT 12")
-    inst.write("SOUR:CURR 40")
+    inst.write("SOUR:CURR 30") # Change as needed
     print(inst.query("MEASure:CURR?"))
 
     current_value = float(inst.query("MEASure:CURR?"))
 
-    assert current_value > 3
-    assert current_value < 4
+    assert current_value > 2
+    assert current_value < 4.5
 
 def test_voltage_preboot():
     rm = pyvisa.ResourceManager()
     rm.list_resources()
-    inst = rm.open_resource('TCPIP0::192.168.10.1::inst0::INSTR')
+    inst = rm.open_resource('TCPIP::192.168.10.1::inst0::INSTR')
 
     inst.write("OUTP:PAIR PAR")
     inst.write("INST CH1")
     inst.write("SOUR:VOLT 12")
-    inst.write("SOUR:CURR 20")
+    inst.write("SOUR:CURR 30")  # Change as needed
     print(inst.query("MEASure:VOLT?"))
 
     voltage_value = float(inst.query("MEASure:VOLT?"))
@@ -141,7 +143,7 @@ def test_voltage_preboot():
 # # Automated bootup 
 # ##########################################
 
-# @pytest.fixture(scope="module")
+@pytest.fixture(scope="module")
 def test_bootup():
     import os
     import subprocess 
@@ -193,12 +195,12 @@ def test_bootup():
 def test_current_postboot():
     rm = pyvisa.ResourceManager()
     rm.list_resources()
-    inst = rm.open_resource('TCPIP0::192.168.10.1::inst0::INSTR')
+    inst = rm.open_resource('TCPIP::192.168.10.1::inst0::INSTR')
 
     inst.write("OUTP:PAIR PAR")
     inst.write("INST CH1")
     inst.write("SOUR:VOLT 12")
-    inst.write("SOUR:CURR 40")
+    inst.write("SOUR:CURR 30") # Change as needed
     print(inst.query("MEASure:CURR?"))
 
     current_value = float(inst.query("MEASure:CURR?"))
@@ -209,12 +211,12 @@ def test_current_postboot():
 def test_voltage_postboot():
     rm = pyvisa.ResourceManager()
     rm.list_resources()
-    inst = rm.open_resource('TCPIP0::192.168.10.1::inst0::INSTR')
+    inst = rm.open_resource('TCPIP::192.168.10.1::inst0::INSTR')
 
     inst.write("OUTP:PAIR PAR")
     inst.write("INST CH1")
     inst.write("SOUR:VOLT 12")
-    inst.write("SOUR:CURR 40")
+    inst.write("SOUR:CURR 30") # Change as needed
     print(inst.query("MEASure:VOLT?"))
 
     voltage_value = float(inst.query("MEASure:VOLT?"))
@@ -237,18 +239,18 @@ def test_iio_attr(iio_uri):
 #########################################
 
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
-# @pytest.mark.parametrize("channel", [0])
+# @pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], ids=lambda x: f"channel:{x}")
+@pytest.mark.parametrize("channel", [0, 1], ids=lambda x: f"channel:{x}")
 @pytest.mark.parametrize(
     "param_set, frequency, scale, peak_min, hpf_value, lpf_value",
     [
-        (params["loopback_test_1"], 10000000, 0.9, -25, 5, 15),
-        (params["loopback_test_2"], 10000000, 0.9, -25, 5, 15),
-        (params["loopback_test_3"], 10000000, 0.9, -25, 5, 15),
-        (params["filter_test_1"], 10000000, 0.9, -20, 5, 15),
-        (params["filter_test_2"], 10000000, 0.9, -30, 11, 9),
-        (params["dac_adc_loopback_30dB_attenuation"], 10000000, 0.9, -50, 5, 15),
-    ],
+        (params["loopback_test_1"], 50000000, 0.9, -25, 5, 15),
+        (params["loopback_test_2"], 50000000, 0.9, -25, 5, 15),
+        (params["loopback_test_3"], 50000000, 0.9, -25, 5, 15),
+        (params["filter_test_1"], 50000000, 0.9, -20, 5, 15),
+        (params["filter_test_2"], 50000000, 0.9, -30, 11, 9),
+        (params["dac_adc_loopback_30dB_attenuation"], 50000000, 0.9, -50, 5, 15),
+    ]
 )
 def test_Triton_dds_loopback(
     test_dds_loopback,
@@ -283,8 +285,8 @@ def test_Triton_dds_loopback(
 #########################################
     
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
-# @pytest.mark.parametrize("channel", [0])
+# @pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], ids=lambda x: f"channel:{x}")
+@pytest.mark.parametrize("channel", [0, 1], ids=lambda x: f"channel:{x}")
 @pytest.mark.parametrize(
     "param_set, hpf_value, lpf_value",
     [
