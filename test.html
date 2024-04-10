@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>pyadi-iio Test Report</title>
+    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) { // eslint-disable-line no-redeclare
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function findAll(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sortColumn(elem) {
+    toggleSortStates(elem);
+    const colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    let key;
+    if (elem.classList.contains('result')) {
+        key = keyResult;
+    } else if (elem.classList.contains('links')) {
+        key = keyLink;
+    } else {
+        key = keyAlpha;
+    }
+    sortTable(elem, key(colIndex));
+}
+
+function showAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(showExtras);
+}
+
+function hideAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(hideExtras);
+}
+
+function showExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.remove('collapsed');
+    expandcollapse.classList.remove('expander');
+    expandcollapse.classList.add('collapser');
+}
+
+function hideExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.add('collapsed');
+    expandcollapse.classList.remove('collapser');
+    expandcollapse.classList.add('expander');
+}
+
+function showFilters() {
+    let visibleString = getQueryParameter('visible') || 'all';
+    visibleString = visibleString.toLowerCase();
+    const checkedItems = visibleString.split(',');
+
+    const filterItems = document.getElementsByClassName('filter');
+    for (let i = 0; i < filterItems.length; i++) {
+        filterItems[i].hidden = false;
+
+        if (visibleString != 'all') {
+            filterItems[i].checked = checkedItems.includes(filterItems[i].getAttribute('data-test-result'));
+            filterTable(filterItems[i]);
+        }
+    }
+}
+
+function addCollapse() {
+    // Add links for show/hide all
+    const resulttable = find('table#results-table');
+    const showhideall = document.createElement('p');
+    showhideall.innerHTML = '<a href="javascript:showAllExtras()">Show all details</a> / ' +
+                            '<a href="javascript:hideAllExtras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    findAll('.col-result').forEach(function(elem) {
+        const collapsed = getQueryParameter('collapsed') || 'Passed';
+        const extras = elem.parentNode.nextElementSibling;
+        const expandcollapse = document.createElement('span');
+        if (extras.classList.contains('collapsed')) {
+            expandcollapse.classList.add('expander');
+        } else if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add('collapsed');
+            expandcollapse.classList.add('expander');
+        } else {
+            expandcollapse.classList.add('collapser');
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener('click', function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains('collapsed')) {
+                showExtras(event.currentTarget);
+            } else {
+                hideExtras(event.currentTarget);
+            }
+        });
+    });
+}
+
+function getQueryParameter(name) {
+    const match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () { // eslint-disable-line no-unused-vars
+    resetSortHeaders();
+
+    addCollapse();
+
+    showFilters();
+
+    sortColumn(find('.initial-sort'));
+
+    findAll('.sortable').forEach(function(elem) {
+        elem.addEventListener('click',
+            function() {
+                sortColumn(elem);
+            }, false);
+    });
+}
+
+function sortTable(clicked, keyFunc) {
+    const rows = findAll('.results-table-row');
+    const reversed = !clicked.classList.contains('asc');
+    const sortedRows = sort(rows, keyFunc, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    const thead = document.getElementById('results-table-head');
+    document.getElementById('results-table').remove();
+    const parent = document.createElement('table');
+    parent.id = 'results-table';
+    parent.appendChild(thead);
+    sortedRows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName('BODY')[0].appendChild(parent);
+}
+
+function sort(items, keyFunc, reversed) {
+    const sortArray = items.map(function(item, i) {
+        return [keyFunc(item), i];
+    });
+
+    sortArray.sort(function(a, b) {
+        const keyA = a[0];
+        const keyB = b[0];
+
+        if (keyA == keyB) return 0;
+
+        if (reversed) {
+            return keyA < keyB ? 1 : -1;
+        } else {
+            return keyA > keyB ? 1 : -1;
+        }
+    });
+
+    return sortArray.map(function(item) {
+        const index = item[1];
+        return items[index];
+    });
+}
+
+function keyAlpha(colIndex) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[colIndex].firstChild.data.toLowerCase();
+    };
+}
+
+function keyLink(colIndex) {
+    return function(elem) {
+        const dataCell = elem.childNodes[1].childNodes[colIndex].firstChild;
+        return dataCell == null ? '' : dataCell.innerText.toLowerCase();
+    };
+}
+
+function keyResult(colIndex) {
+    return function(elem) {
+        const strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+            'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[colIndex].firstChild.data);
+    };
+}
+
+function resetSortHeaders() {
+    findAll('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    findAll('.sortable').forEach(function(elem) {
+        const icon = document.createElement('div');
+        icon.className = 'sort-icon';
+        icon.textContent = 'vvv';
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove('desc', 'active');
+        elem.classList.add('asc', 'inactive');
+    });
+}
+
+function toggleSortStates(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        resetSortHeaders();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function isAllRowsHidden(value) {
+    return value.hidden == false;
+}
+
+function filterTable(elem) { // eslint-disable-line no-unused-vars
+    const outcomeAtt = 'data-test-result';
+    const outcome = elem.getAttribute(outcomeAtt);
+    const classOutcome = outcome + ' results-table-row';
+    const outcomeRows = document.getElementsByClassName(classOutcome);
+
+    for(let i = 0; i < outcomeRows.length; i++){
+        outcomeRows[i].hidden = !elem.checked;
+    }
+
+    const rows = findAll('.results-table-row').filter(isAllRowsHidden);
+    const allRowsHidden = rows.length == 0 ? true : false;
+    const notFoundMessage = document.getElementById('not-found-message');
+    notFoundMessage.hidden = !allRowsHidden;
+}
+</script>
+    <h1>pyadi-iio Test Report</h1>
+    <p>Report generated on 10-Apr-2024 at 14:08:47 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
+    <h2>Summary</h2>
+    <p>170 tests ran in 723.59 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">170 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable" col="duration">Duration</th>
+          <th class="sortable links" col="links">Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">38.84</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 0 input and connect spectrum analyzer into channel 0 output.  Press Enter when complete 
+
+Power level (dBm): -1.993954E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.508462E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.06</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.423036E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.434560E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.124143E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.422807E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.713770E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.927985E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.958836E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:0-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.166031E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">17.61</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 1 input and connect spectrum analyzer into channel 1 output.  Press Enter when complete 
+
+Power level (dBm): -2.114427E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.596993E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.515358E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.435777E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.202303E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.439084E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.685491E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.878478E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.901216E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:1-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.241534E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">23.30</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 2 input and connect spectrum analyzer into channel 2 output.  Press Enter when complete 
+
+Power level (dBm): -1.991549E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.10</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.514659E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.452373E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.507069E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.288894E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.437535E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.701786E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.855451E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.896702E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:2-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.213811E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">16.93</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 3 input and connect spectrum analyzer into channel 3 output.  Press Enter when complete 
+
+Power level (dBm): -2.112304E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.641124E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.533229E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.558508E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.458470E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.439078E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.701880E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.899109E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.933261E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:3-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.210537E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">11.99</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 4 input and connect spectrum analyzer into channel 4 output.  Press Enter when complete 
+
+Power level (dBm): -1.980559E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.444369E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.378995E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.443228E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.233782E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.456426E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.10</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.709487E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.888331E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.894208E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:4-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.202686E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">18.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 5 input and connect spectrum analyzer into channel 5 output.  Press Enter when complete 
+
+Power level (dBm): -2.083569E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.614560E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.509312E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.459831E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.246636E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.464600E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.707309E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.936636E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.893693E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:5-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.05</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.218611E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">15.54</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 6 input and connect spectrum analyzer into channel 6 output.  Press Enter when complete 
+
+Power level (dBm): -2.026429E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.551971E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.431257E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.468519E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.385063E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.467166E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.692708E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.896517E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.904863E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:6-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.245092E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">24.27</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 7 input and connect spectrum analyzer into channel 7 output.  Press Enter when complete 
+
+Power level (dBm): -1.914384E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.492049E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.411543E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.436798E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.313219E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.455219E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.689711E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.890231E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.887699E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:7-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.202414E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">16.25</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 8 input and connect spectrum analyzer into channel 8 output.  Press Enter when complete 
+
+Power level (dBm): -1.966074E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.479824E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.384719E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.411545E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.334993E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.07</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.202775E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.472009E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.294920E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.312851E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:8-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.08</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.664192E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">17.12</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 9 input and connect spectrum analyzer into channel 9 output.  Press Enter when complete 
+
+Power level (dBm): -1.986030E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.504679E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.423977E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.306752E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.209537E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.277603E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.08</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.547169E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.240055E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.330992E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:9-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.752595E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">26.26</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 10 input and connect spectrum analyzer into channel 10 output.  Press Enter when complete 
+
+Power level (dBm): -2.070835E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.464830E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.372793E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.521016E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.385495E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.235184E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.482876E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.232035E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.331266E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:10-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.714868E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">13.92</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 11 input and connect spectrum analyzer into channel 11 output.  Press Enter when complete 
+
+Power level (dBm): -2.107702E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.585339E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.476745E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.603771E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.390834E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.213705E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.522259E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.263716E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.341585E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:11-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.760705E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">14.27</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 12 input and connect spectrum analyzer into channel 12 output.  Press Enter when complete 
+
+Power level (dBm): -2.110463E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.606191E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.543264E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.628441E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.391249E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.515682E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.710275E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.857360E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.923874E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:12-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.324035E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">13.08</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 13 input and connect spectrum analyzer into channel 13 output.  Press Enter when complete 
+
+Power level (dBm): -2.233255E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.635666E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.558259E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.654685E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.486023E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.508287E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.742882E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.835188E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.925118E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:13-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.09</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.264330E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">11.80</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 14 input and connect spectrum analyzer into channel 14 output.  Press Enter when complete 
+
+Power level (dBm): -2.014260E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.521003E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.390863E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.446054E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.09</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.322129E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.525124E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.690696E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.858456E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.936198E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:14-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.246559E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-adjacent_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">17.43</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 15 input and connect spectrum analyzer into channel 15 output.  Press Enter when complete 
+
+Power level (dBm): -2.142560E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-adjacent_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.656389E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-adjacent_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -3.558505E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-adjacent_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.623102E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-adjacent_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.394006E+00
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-combined_loopback-Frequency (MHz):8000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.524234E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-combined_loopback-Frequency (MHz):9000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.753675E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-combined_loopback-Frequency (MHz):10000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.915437E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-combined_loopback-Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -4.969296E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_loopback[channel:15-combined_loopback-Frequency (MHz):12000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -5.280259E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_tx_combined_out[Frequency (MHz):8000]</td>
+          <td class="col-duration">47.65</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into channel 0 input.  Connect spectrum analyzer to the combined Tx out SMA port on top of the board.  Press enter when complete
+
+Power level (dBm): -1.780052E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_tx_combined_out[Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -1.910696E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_tx_combined_out[Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.134972E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_tx_combined_out[Frequency (MHz):11000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.219287E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_tx_combined_out[Frequency (MHz):12000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.346185E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_rx_combined_in[Frequency (MHz):8000]</td>
+          <td class="col-duration">65.08</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Connect signal generator into Rx SMA input on top of the board.  Connect spectrum analyzer into channel 0 output.  Press enter when complete
+
+Power level (dBm): -1.842821E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_rx_combined_in[Frequency (MHz):9000]</td>
+          <td class="col-duration">2.03</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -1.921201E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_rx_combined_in[Frequency (MHz):10000]</td>
+          <td class="col-duration">2.02</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.082514E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_rx_combined_in[Frequency (MHz):11000]</td>
+          <td class="col-duration">2.01</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.147413E+01
+
+<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_triton_cal.py::test_rx_combined_in[Frequency (MHz):12000]</td>
+          <td class="col-duration">2.04</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>
+
+Power level (dBm): -2.311755E+01
+
+<br/></div></td></tr></tbody></table></body></html>
