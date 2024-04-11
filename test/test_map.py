@@ -171,7 +171,7 @@ def get_test_map():
         "socfpga-arria10-socdk-ad9081-np12",
         "versal-vck190-reva-ad9081",
         "zynq-zc706-adv7511-ad9081",
-        "zynq-zc706-adv7511-ad9081-np12"
+        "zynq-zc706-adv7511-ad9081-np12",
         "zynqmp-zcu102-rev10-ad9081-204b-txmode9-rxmode4",
         "zynqmp-zcu102-rev10-ad9081-204c-txmode0-rxmode1",
         "zynqmp-zcu102-rev10-ad9081-m8-l4",
