@@ -7,7 +7,9 @@ import pyvisa
 import pyfirmata
 import time
 
+
 # # Connect to Arduino Uno    
+## Note: if first time installing pyfirmata, need to replace "getargspec" with "getfullargspec" in pyfirmata code
 board = pyfirmata.Arduino("COM10", baudrate=57600)
 
 # # Establish VISA control of spectrum analyzer and signal generator
@@ -20,7 +22,7 @@ FieldFox = rm.open_resource('TCPIP::192.168.100.23::INSTR')
 ### Cal Board Control Functions ###
 ###################################
 
-def set_adjacent_loopback():
+def _set_adjacent_loopback():
 
     board.digital[4].write(0)
     board.digital[5].write(1)
@@ -28,24 +30,24 @@ def set_adjacent_loopback():
     board.digital[7].write(0)
     
 
-def set_combined_loopback():
+def _set_combined_loopback():
 
     board.digital[4].write(1)
     board.digital[5].write(1)
     board.digital[6].write(1)
     board.digital[7].write(0)
 
-def set_SMA_inout():
+def _set_SMA_inout():
     board.digital[4].write(0)
     board.digital[5].write(1)
     board.digital[6].write(1)
     board.digital[7].write(1)
 
-def set_state(state):
+def _set_state(state):
     if state == "adjacent_loopback":
-        set_adjacent_loopback()
+        _set_adjacent_loopback()
     if state == 'combined_loopback':
-        set_combined_loopback()
+        _set_combined_loopback()
 
 
 #######################################
@@ -105,10 +107,10 @@ def test_loopback(channel, cal_board_state, frequency):
 
     if (cal_board_state == "adjacent_loopback" and frequency == 8000):
         input('\n\nConnect signal generator into channel {} input and connect spectrum analyzer into channel {} output.  Press Enter when complete '.format(channel, channel))
-        set_adjacent_loopback()
+        _set_adjacent_loopback()
 
     if cal_board_state == "combined_loopback":
-        set_combined_loopback()
+        _set_combined_loopback()
 
     # Set up signal generator
     _set_frequency_MHz(frequency, HMCT2220)  # Set frequency of sig gen
@@ -127,6 +129,8 @@ def test_loopback(channel, cal_board_state, frequency):
     peak_power = _get_peak_power_level(1, FieldFox) # Gets the power at marker 1
     print("\n\nPower level (dBm): {}".format(peak_power))
 
+
+
     if cal_board_state == "adjacent_loopback":
         assert int(float(peak_power)) > -20
     if cal_board_state == "combined_loopback":
@@ -142,7 +146,7 @@ def test_tx_combined_out(frequency):
     # Combined Tx Out test
     if (frequency == 8000):
         input('\n\nConnect signal generator into channel 0 input.  Connect spectrum analyzer to the combined Tx out SMA port on top of the board.  Press enter when complete')
-        set_SMA_inout()
+        _set_SMA_inout()
 
     # Set up signal generator
     _set_frequency_MHz(frequency, HMCT2220)  # Set frequency of sig gen
@@ -174,7 +178,7 @@ def test_rx_combined_in(frequency):
     # Combined Rx In test
     if (frequency == 8000):
         input('\n\nConnect signal generator into Rx SMA input on top of the board.  Connect spectrum analyzer into channel 0 output.  Press enter when complete')
-        set_SMA_inout()    
+        _set_SMA_inout()    
 
 
     # Set up signal generator
