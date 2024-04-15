@@ -65,7 +65,7 @@ class adrv9009(rx_tx, context_manager, sync_start):
         phys = [p for p in self.__dict__.keys() if "_ctrl" in p]
         phys = sorted(phys)
         for phy in phys[1:] + [phys[0]]:
-            self._set_iio_dev_attr_str("profile_config", data, self.getattr(phy))
+            self._set_iio_dev_attr_str("profile_config", data, getattr(self, phy))
 
     @property
     def frequency_hopping_mode(self):
