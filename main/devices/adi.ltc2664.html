@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>adf4371 &#8212; Analog Devices Hardware Python Interfaces 0.0.17 documentation</title>
+    <title>ltc2664 &#8212; Analog Devices Hardware Python Interfaces 0.0.17 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/style.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css" />
@@ -20,8 +20,8 @@
     <link rel="shortcut icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="adf5610" href="adi.adf5610.html" />
-    <link rel="prev" title="adi.adf4355 module" href="adi.adf4355.html" />
+    <link rel="next" title="ltc2688" href="adi.ltc2688.html" />
+    <link rel="prev" title="adi.ltc2499 module" href="adi.ltc2499.html" />
    
   
     <meta name="robots" content="noindex">
@@ -87,18 +87,9 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adf4371</a><ul>
-<li><a class="reference internal" href="#adi.adf4371.adf4371"><code class="docutils literal notranslate"><span class="pre">adf4371</span></code></a><ul>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.muxout_mode"><code class="docutils literal notranslate"><span class="pre">adf4371.muxout_mode</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.rf16_enable"><code class="docutils literal notranslate"><span class="pre">adf4371.rf16_enable</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.rf16_frequency"><code class="docutils literal notranslate"><span class="pre">adf4371.rf16_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.rf32_enable"><code class="docutils literal notranslate"><span class="pre">adf4371.rf32_enable</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.rf32_frequency"><code class="docutils literal notranslate"><span class="pre">adf4371.rf32_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.rf8_enable"><code class="docutils literal notranslate"><span class="pre">adf4371.rf8_enable</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.rf8_frequency"><code class="docutils literal notranslate"><span class="pre">adf4371.rf8_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.rfaux8_enable"><code class="docutils literal notranslate"><span class="pre">adf4371.rfaux8_enable</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.rfaux8_frequency"><code class="docutils literal notranslate"><span class="pre">adf4371.rfaux8_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4371.adf4371.temperature"><code class="docutils literal notranslate"><span class="pre">adf4371.temperature</span></code></a></li>
+<li><a class="reference internal" href="#">ltc2664</a><ul>
+<li><a class="reference internal" href="#adi.ltc2664.ltc2664"><code class="docutils literal notranslate"><span class="pre">ltc2664</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ltc2664.ltc2664.channel_names"><code class="docutils literal notranslate"><span class="pre">ltc2664.channel_names</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -203,7 +194,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4355.html">adi.adf4355 module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf4371.html">adf4371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf5610.html">adf5610</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adg2128.html">adi.adg2128 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
@@ -250,7 +241,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2387.html">ltc2387</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2499.html">adi.ltc2499 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ltc2664.html">ltc2664</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ltc2664</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2688.html">ltc2688</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max11205.html">adi.max11205 module</a></li>
@@ -276,80 +267,17 @@ Content on this topic
         <div class="bodywrapper" id="top-anchor">
           <div class="body" role="main">
             
-  <section id="module-adi.adf4371">
-<span id="adf4371"></span><h1>adf4371<a class="headerlink" href="#module-adi.adf4371" title="Permalink to this heading">#</a></h1>
+  <section id="module-adi.ltc2664">
+<span id="ltc2664"></span><h1>ltc2664<a class="headerlink" href="#module-adi.ltc2664" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf4371.</span></span><span class="sig-name descname"><span class="pre">adf4371</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4371.adf4371" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>ADF4371 Microwave Wideband Synthesizer
-with Integrated VCO</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>uri: type=string</dt><dd><p>URI of IIO context with ADF4371</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.muxout_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">muxout_mode</span></span><a class="headerlink" href="#adi.adf4371.adf4371.muxout_mode" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the MUX output mode</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.rf16_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rf16_enable</span></span><a class="headerlink" href="#adi.adf4371.adf4371.rf16_enable" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the enable status of the 16GHz RF output</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.rf16_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rf16_frequency</span></span><a class="headerlink" href="#adi.adf4371.adf4371.rf16_frequency" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the frequency of the 16GHz RF output</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.rf32_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rf32_enable</span></span><a class="headerlink" href="#adi.adf4371.adf4371.rf32_enable" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the enable status of the 32GHz RF output</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.rf32_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rf32_frequency</span></span><a class="headerlink" href="#adi.adf4371.adf4371.rf32_frequency" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the frequency of the 32GHz RF output</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.rf8_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rf8_enable</span></span><a class="headerlink" href="#adi.adf4371.adf4371.rf8_enable" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the enable status of the 8GHz RF output</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.rf8_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rf8_frequency</span></span><a class="headerlink" href="#adi.adf4371.adf4371.rf8_frequency" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the frequency of the 8GHz RF output</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.rfaux8_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rfaux8_enable</span></span><a class="headerlink" href="#adi.adf4371.adf4371.rfaux8_enable" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the enable status of the Auxiliary 8GHz RF output</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.rfaux8_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rfaux8_frequency</span></span><a class="headerlink" href="#adi.adf4371.adf4371.rfaux8_frequency" title="Permalink to this definition">#</a></dt>
-<dd><p>Get/Set the frequency of the Auxiliary 8GHz RF output</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4371.adf4371.temperature">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature</span></span><a class="headerlink" href="#adi.adf4371.adf4371.temperature" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the temperature reading</p>
-</dd></dl>
+<dt class="sig sig-object py" id="adi.ltc2664.ltc2664">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ltc2664.</span></span><span class="sig-name descname"><span class="pre">ltc2664</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ip:analog.local'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ltc2664.ltc2664" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>LTC2664 DAC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ltc2664.ltc2664.channel_names">
+<span class="sig-name descname"><span class="pre">channel_names</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ltc2664.ltc2664.channel_names" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -359,8 +287,8 @@ with Integrated VCO</p>
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.adf4355.html" title="Previous document" class="prev">adi.adf4355 module</a>
-    <a href="adi.adf5610.html" title="Next document" class="next">adf5610</a>
+    <a href="adi.ltc2499.html" title="Previous document" class="prev">adi.ltc2499 module</a>
+    <a href="adi.ltc2688.html" title="Next document" class="next">ltc2688</a>
               </div>
           
         </div>
