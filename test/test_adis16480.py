@@ -6,7 +6,7 @@ classname = "adi.adis16480"
 device_name = "adis16480"
 
 ########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 def test_adis16480_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -14,7 +14,7 @@ def test_adis16480_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16480_conv_data(iio_uri):
     adis16480 = adi.adis16480(uri=iio_uri)
 
@@ -28,7 +28,7 @@ def test_adis16480_conv_data(iio_uri):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
@@ -58,7 +58,7 @@ def test_adis16480_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, values, tol, repeats",
@@ -82,28 +82,28 @@ def test_adis16480_attr_multiple_val(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16480_firmware_date(iio_uri):
     adis16480 = adi.adis16480(uri=iio_uri)
 
     assert adis16480.firmware_date != "00-00-0000"
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16480_firmware_revision(iio_uri):
     adis16480 = adi.adis16480(uri=iio_uri)
 
     assert adis16480.firmware_revision != "0.0"
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16480_product_id(iio_uri):
     adis16480 = adi.adis16480(uri=iio_uri)
 
     assert adis16480.product_id != 0
 
 
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adis16480_serial_number(iio_uri):
     adis16480 = adi.adis16480(uri=iio_uri)
 
