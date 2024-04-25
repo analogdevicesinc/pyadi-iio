@@ -3,7 +3,7 @@
 # SPDX short identifier: ADIBSD
 
 from adi.adrv9009 import adrv9009
-
+import pickle
 
 class adrv9009_zu11eg(adrv9009):
     """ ADRV9009-ZU11EG System-On-Module
@@ -48,6 +48,9 @@ class adrv9009_zu11eg(adrv9009):
         self._clock_chip_carrier = self._ctx.find_device("hmc7044-car")
         # Used for multi-som sync
         self._clock_chip_ext = self._ctx.find_device("hmc7044-ext")
+        # Phase calibration values:
+        self.num_elements = 4
+        self.pcal = [0.0 for i in range(0, (self.num_elements - 1))]
 
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize both transceivers """
@@ -223,3 +226,38 @@ class adrv9009_zu11eg(adrv9009):
     @trx_lo_chip_b.setter
     def trx_lo_chip_b(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl_b)
+
+    @property
+    def pcal(self):
+        """pcal: phase differences in degrees [(rx0 - rx1) (rx0 - rx2) (rx0 - rx3)]"""
+        return self.pcal
+
+    @pcal.setter
+    def pcal(self, pcal):
+        if isinstance(pcal, list) and all(isinstance(item, float) for item in pcal):
+            if len(pcal) == (self.num_elements - 1):
+                self._data = pcal
+            else:
+                raise ValueError("Input array length doesn't match the expected length")
+        else:
+            raise TypeError("Input must be a list of floats")
+
+    def save_phase_cal(self, filename="phase_cal_val.pkl"):
+        """ Saves phase calibration file."""
+        with open(filename, "wb") as file:
+            pickle.dump(self.pcal, file)  # save calibrated phase value to a file
+            file.close()
+
+    def load_phase_cal(self, filename="phase_cal_val.pkl"):
+        """Load phase calibrated value, if not calibrated set all channel phase correction to 0.
+        Parameters
+        ----------
+        filename: type=stringf
+            Provide path of phase calibration file
+        """
+        try:
+            with open(filename, "rb") as file:
+                self.pcal = pickle.load(file)  # Load gain cal values
+        except FileNotFoundError:
+            print("file not found, loading default (no phase shift)")
+            self.pcal = [0.0] * (self.num_elements - 1)
