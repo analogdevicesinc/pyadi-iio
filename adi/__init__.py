@@ -69,6 +69,7 @@ from adi.adrv9009 import adrv9009
 from adi.adrv9009_zu11eg import adrv9009_zu11eg
 from adi.adrv9009_zu11eg_fmcomms8 import adrv9009_zu11eg_fmcomms8
 from adi.adrv9009_zu11eg_multi import adrv9009_zu11eg_multi
+from adi.adrv9025 import adrv9025
 from adi.adt7420 import adt7420
 from adi.adxl313 import adxl313
 from adi.adxl345 import adxl345
