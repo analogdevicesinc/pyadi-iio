@@ -229,12 +229,6 @@ def do_cal_phase(my_talise):
     avg_ph_diff_ch0_minus_ch2 = sum_ph_diff_ch0_minus_ch2/repeat_ph_calculations
     avg_ph_diff_ch0_minus_ch3 = sum_ph_diff_ch0_minus_ch3/repeat_ph_calculations
 
-    # Save Phase differences in degrees in .pkl file
-#     values = [avg_ph_diff_ch0_minus_ch1, avg_ph_diff_ch0_minus_ch2, avg_ph_diff_ch0_minus_ch3]
-#     if isinstance(values, list) and all(isinstance(item, float) for item in values):
-#         if len(values) == (my_talise.num_elements - 1):
-#                 x = values
-#         print("IF OK: " + str(x))
     my_talise.pcal = [avg_ph_diff_ch0_minus_ch1, avg_ph_diff_ch0_minus_ch2, avg_ph_diff_ch0_minus_ch3]
     print("pcal values: " + str(my_talise.pcal))
     my_talise.save_phase_cal()
@@ -294,7 +288,7 @@ def do_cal_phase(my_talise):
     # For testing:
     # print(my_talise.pcal)
 
-    # TODO: test untill here
+    # TODO: add find peak of signal
     
     # PhaseValues, plot_data = my_phaser.phase_calibration(
     #     verbose=True
@@ -308,7 +302,8 @@ def do_cal_phase(my_talise):
     # plt.ylabel("Amplitude (ADC counts)")
     # for i in range(0, 7):
     #     plt.plot(PhaseValues, plot_data[i], color=colors[i])
-
+    
+    
     # Stop transmitting
     my_talise.tx_destroy_buffer()
     plt.show()
@@ -320,6 +315,7 @@ def do_cal_phase(my_talise):
 try:
     print("Attempting to connect to Talise via ip:localhost...")
     my_talise = adi.adrv9009_zu11eg(uri="ip:localhost")
+    config.sample_rate = my_talise.rx_sample_rate
     print("Found Talise.")
 
 except:
@@ -338,6 +334,48 @@ if func == "cal":
 
 if func == "plot":
     do_plot = True
+    # Performing Beamforming
+    plt.ion()
+    print("Starting, use control-c to stop")
+    try:
+        while True:
+            half_lambda = 1
+            quarter_lambda = 2
+            powers = [] # main DOA result
+            angle_of_arrivals = []
+            phase_cal = [0, my_talise.pcal[0], my_talise.pcal[1], my_talise.pcal[2]]
+            elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(2*quarter_lambda)
+            print("Element spacing of: " + str(elem_spacing) + " meters")
+            signal_freq = config.lo_freq #+ config.tx_sine_baseband_freq
+            for phase in np.arange(-180/quarter_lambda, 180/quarter_lambda, 2): # sweep over angle
+                rx_samples = my_talise.rx()
+                print(phase)
+                # set phase difference between the adjacent channels of devices
+                for i in range(4):
+                    # /2 because lambda/4 = d
+                    channel_phase = ((phase * i) + phase_cal[i]) % 360.0 # Analog Devices had this forced to be a multiple of phase_step_size (2.8125 or 360/2**6bits) but it doesn't seem nessesary
+                    channel_phase_rad = np.deg2rad(channel_phase)
+                    rx_samples[i] = rx_samples[i] * np.exp(1j * channel_phase_rad)
+                steer_angle = np.degrees(np.arcsin(max(min(1, (3e8 * np.radians(phase)) / (2 * np.pi * signal_freq * elem_spacing)), -1))) # arcsin argument must be between 1 and -1, or numpy will throw a warning
+                # If you're looking at the array side of Phaser (32 squares) then add a *-1 to steer_angle
+                angle_of_arrivals.append(steer_angle)
+                data_sum = rx_samples[0] + rx_samples[1] + rx_samples[2] + rx_samples[3] # sum the two subarrays (within each subarray the 4 channels have already been summed)
+                power_dB = 10*np.log10(np.sum(np.abs(data_sum)**2))
+                powers.append(power_dB)
+                # in addition to just taking the power in the signal, we could also do the FFT then grab the value of the max bin, effectively filtering out noise, results came out almost exactly the same in my tests
+                #PSD = 10*np.log10(np.abs(np.fft.fft(data_sum * np.blackman(len(data_sum))))**2) # in dB
+            powers -= np.max(powers) # normalize so max is at 0 dB
+            print("Angles of arrivals: " + str(angle_of_arrivals))
+            plt.figure(6)
+            plt.plot(angle_of_arrivals, powers, '.-')
+            plt.xlabel("Angle of Arrival")
+            plt.ylabel("Magnitude [dB]")
+            plt.draw()
+            plt.pause(0.001)
+            plt.clf()
+            
+    except KeyboardInterrupt:
+        sys.exit() # quit python
 else:
     do_plot = False
 
