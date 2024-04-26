@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import time
 from scipy import signal
 
-from talise_functions import (
-    phase_calibration,
-)
+# from talise_functions import (
+#     phase_calibration,
+# )
 
 try:
     import config_custom_talise as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
@@ -30,7 +30,7 @@ def talise_init(my_talise):
     print("Numeric value of discrete amplitude of transmitted signal: " + str(config.amplitude_discrete))
     # frequency = 245760  # 245.760 kHz
     # amplitude = 2**14
-    my_talise.rx_sample_rate = config.sample_rate
+    # my_talise.rx_sample_rate = config.sample_rate
     print("Number of samples per call to rx(): " + str(config.num_samps))
     # num_samps = int((20*sample_rate)/frequency) # number of samples per call to rx()
 
@@ -90,6 +90,19 @@ def measure_phase_degrees(chan0, chan1):
     error = np.mean(errorV)
     return error
 
+def adjust_phase(talise_obj, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
+    ph1 = np.deg2rad(talise_obj.pcal[0])
+    print("Phase of " + str(talise_obj.pcal[0]) + " to radians = " + str(ph1))
+    ph2 = np.deg2rad(talise_obj.pcal[1])
+    print("Phase of " + str(talise_obj.pcal[1]) + " to radians = " + str(ph2))
+    ph3 = np.deg2rad(talise_obj.pcal[2])
+    print("Phase of " + str(talise_obj.pcal[2]) + " to radians = " + str(ph3))
+    rx_samples_ch1 = rx_samples_ch1 * np.exp(1j * ph1)
+    rx_samples_ch2 = rx_samples_ch2 * np.exp(1j * ph2)
+    rx_samples_ch3 = rx_samples_ch3 * np.exp(1j * ph3)
+    
+    return [rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]   
+    
 def do_cal_phase(my_talise):
     # Configure talise and load calibration constants from file
     talise_init(my_talise)
@@ -200,7 +213,7 @@ def do_cal_phase(my_talise):
 
     for i in range(repeat_ph_calculations):
         rx_samples = my_talise.rx()
-        print("Iteration " + str(repeat_ph_calculations) + ":")
+        print("Iteration " + str(i) + ":")
         print("Ph Diff Between ch0 and ch1: " + str(measure_phase_degrees(rx_samples[0], rx_samples[1])))
         ph_diff_ch0_minus_ch1.append(measure_phase_degrees(rx_samples[0], rx_samples[1]))
         print("Ph Diff Between ch0 and ch2: " + str(measure_phase_degrees(rx_samples[0], rx_samples[2])))
@@ -217,9 +230,16 @@ def do_cal_phase(my_talise):
     avg_ph_diff_ch0_minus_ch3 = sum_ph_diff_ch0_minus_ch3/repeat_ph_calculations
 
     # Save Phase differences in degrees in .pkl file
+#     values = [avg_ph_diff_ch0_minus_ch1, avg_ph_diff_ch0_minus_ch2, avg_ph_diff_ch0_minus_ch3]
+#     if isinstance(values, list) and all(isinstance(item, float) for item in values):
+#         if len(values) == (my_talise.num_elements - 1):
+#                 x = values
+#         print("IF OK: " + str(x))
     my_talise.pcal = [avg_ph_diff_ch0_minus_ch1, avg_ph_diff_ch0_minus_ch2, avg_ph_diff_ch0_minus_ch3]
+    print("pcal values: " + str(my_talise.pcal))
     my_talise.save_phase_cal()
     my_talise.load_phase_cal()
+    print("pcal values after save: " + str(my_talise.pcal))
 
     print("Avg ph diff for ch0 - ch1: " + str(avg_ph_diff_ch0_minus_ch1))
     print("Avg ph diff for ch0 - ch2: " + str(avg_ph_diff_ch0_minus_ch2))
@@ -242,9 +262,37 @@ def do_cal_phase(my_talise):
     print("Min diff in phase ch0-ch3: " + str(min_ph_diff_ch0_minus_ch3))
 
     print("Max variance: " + str(max((max_ph_diff_ch0_minus_ch1 - min_ph_diff_ch0_minus_ch1), (max_ph_diff_ch0_minus_ch2 - min_ph_diff_ch0_minus_ch2), (max_ph_diff_ch0_minus_ch3 - max_ph_diff_ch0_minus_ch3))))
+    
+    # Adjust phase
+    arrays_adjusted = adjust_phase(my_talise, rx_samples[1], rx_samples[2], rx_samples[3])
+    rx_samples[1] = arrays_adjusted[0]
+    rx_samples[2] = arrays_adjusted[1]
+    rx_samples[3] = arrays_adjusted[2]
+    # Display time plot with phase adjusted
+    # Time values
+    t = np.arange(config.num_samps) / config.sample_rate
 
+    # Plot Rx time domain
+    plt.figure(5)
+
+    plt.plot(np.real(rx_samples[0]), label = "Ch0 I (Real)")
+    plt.plot(np.imag(rx_samples[0]), label = "Ch0 I (Real)")
+
+    plt.plot(np.real(rx_samples[1]), label = "Ch1 I (Real)")
+    plt.plot(np.imag(rx_samples[1]), label = "Ch1 I (Real)")
+
+    plt.plot(np.real(rx_samples[2]), label = "Ch2 I (Real)")
+    plt.plot(np.imag(rx_samples[2]), label = "Ch2 I (Real)")
+
+    plt.plot(np.real(rx_samples[3]), label = "Ch3 I (Real)")
+    plt.plot(np.imag(rx_samples[3]), label = "Ch3 I (Real)")
+
+    plt.legend()
+    plt.title('Rx time domain after Ph Cal')
+    plt.xlabel('Time (seconds)')
+    plt.ylabel('Amplitude') 
     # For testing:
-    print(my_talise.pcal)
+    # print(my_talise.pcal)
 
     # TODO: test untill here
     
@@ -284,7 +332,7 @@ func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
 if func == "cal":
     print("Calibrating Phase, verbosely, then saving cal file...")
     # TODO: add do cal_gain
-    do_cal_phase()  # Start Phase Calibration
+    do_cal_phase(my_talise)  # Start Phase Calibration
     print("Done calibration")
 
 

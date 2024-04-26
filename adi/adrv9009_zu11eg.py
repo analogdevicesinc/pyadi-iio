@@ -50,7 +50,7 @@ class adrv9009_zu11eg(adrv9009):
         self._clock_chip_ext = self._ctx.find_device("hmc7044-ext")
         # Phase calibration values:
         self.num_elements = 4
-        self.pcal = [0.0 for i in range(0, (self.num_elements - 1))]
+        self.pcal_data = [0.0 for i in range(0, (self.num_elements - 1))]
 
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize both transceivers """
@@ -230,13 +230,13 @@ class adrv9009_zu11eg(adrv9009):
     @property
     def pcal(self):
         """pcal: phase differences in degrees [(rx0 - rx1) (rx0 - rx2) (rx0 - rx3)]"""
-        return self.pcal
+        return self.pcal_data
 
     @pcal.setter
-    def pcal(self, pcal):
-        if isinstance(pcal, list) and all(isinstance(item, float) for item in pcal):
-            if len(pcal) == (self.num_elements - 1):
-                self._data = pcal
+    def pcal(self, values):
+        if isinstance(values, list) and all(isinstance(item, float) for item in values):
+            if len(values) == (self.num_elements - 1):
+                self.pcal_data = values
             else:
                 raise ValueError("Input array length doesn't match the expected length")
         else:
