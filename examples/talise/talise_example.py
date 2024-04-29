@@ -40,6 +40,8 @@ def talise_init(my_talise):
 
     my_talise.trx_lo = config.lo_freq
     my_talise.trx_lo_chip_b = config.lo_freq
+    
+    config.sample_rate = my_talise.rx_sample_rate
 
     my_talise.tx_cyclic_buffer = True
 
@@ -315,7 +317,6 @@ def do_cal_phase(my_talise):
 try:
     print("Attempting to connect to Talise via ip:localhost...")
     my_talise = adi.adrv9009_zu11eg(uri="ip:localhost")
-    config.sample_rate = my_talise.rx_sample_rate
     print("Found Talise.")
 
 except:
@@ -334,6 +335,11 @@ if func == "cal":
 
 if func == "plot":
     do_plot = True
+    # Vrify cal coeff
+    my_talise.load_phase_cal()
+    print("ch0-1ch ph: " + str(my_talise.pcal[0]))
+    print("ch0-2ch ph: " + str(my_talise.pcal[1]))
+    print("ch0-3ch ph: " + str(my_talise.pcal[2]))
     # Performing Beamforming
     plt.ion()
     print("Starting, use control-c to stop")
@@ -354,6 +360,7 @@ if func == "plot":
                 for i in range(4):
                     # /2 because lambda/4 = d
                     channel_phase = ((phase * i) + phase_cal[i]) % 360.0 # Analog Devices had this forced to be a multiple of phase_step_size (2.8125 or 360/2**6bits) but it doesn't seem nessesary
+                    print("cal coefficent for " + str(i) + " channel: " + str(phase_cal[i]))
                     channel_phase_rad = np.deg2rad(channel_phase)
                     rx_samples[i] = rx_samples[i] * np.exp(1j * channel_phase_rad)
                 steer_angle = np.degrees(np.arcsin(max(min(1, (3e8 * np.radians(phase)) / (2 * np.pi * signal_freq * elem_spacing)), -1))) # arcsin argument must be between 1 and -1, or numpy will throw a warning
