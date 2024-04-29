@@ -28,6 +28,8 @@ def talise_init(my_talise):
     # TODO: after first test, use config file 
     print("Transmitted baseband complex sinusoid frequency: " + str(config.tx_sine_baseband_freq))
     print("Numeric value of discrete amplitude of transmitted signal: " + str(config.amplitude_discrete))
+    my_talise.load_phase_cal()
+    my_talise.load_gain_cal()
     # frequency = 245760  # 245.760 kHz
     # amplitude = 2**14
     # my_talise.rx_sample_rate = config.sample_rate
@@ -93,12 +95,25 @@ def measure_phase_degrees(chan0, chan1):
     return error
 
 def adjust_gain(talise_obj, rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
-    rx_samples_ch0 = rx_samples_ch1 * my_talise.gcal[0]
+    rx_samples_ch0 = rx_samples_ch0 * my_talise.gcal[0]
     rx_samples_ch1 = rx_samples_ch1 * my_talise.gcal[1]
-    rx_samples_ch2 = rx_samples_ch1 * my_talise.gcal[2]
-    rx_samples_ch3 = rx_samples_ch1 * my_talise.gcal[3]
+    rx_samples_ch2 = rx_samples_ch2 * my_talise.gcal[2]
+    rx_samples_ch3 = rx_samples_ch3 * my_talise.gcal[3]
 
     return [rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
+
+def adjust_phase(talise_obj, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
+    ph1 = np.deg2rad(talise_obj.pcal[0])
+    print("Phase of " + str(talise_obj.pcal[0]) + " to radians = " + str(ph1))
+    ph2 = np.deg2rad(talise_obj.pcal[1])
+    print("Phase of " + str(talise_obj.pcal[1]) + " to radians = " + str(ph2))
+    ph3 = np.deg2rad(talise_obj.pcal[2])
+    print("Phase of " + str(talise_obj.pcal[2]) + " to radians = " + str(ph3))
+    rx_samples_ch1 = rx_samples_ch1 * np.exp(1j * ph1)
+    rx_samples_ch2 = rx_samples_ch2 * np.exp(1j * ph2)
+    rx_samples_ch3 = rx_samples_ch3 * np.exp(1j * ph3)
+    
+    return [rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
 
 def do_cal_gain(my_talise):
     # Configure talise and load calibration constants from file
@@ -163,7 +178,8 @@ def do_cal_gain(my_talise):
     ############################################################################################################
     # Receive and plot time domain data before calibration
     rx_samples = my_talise.rx()
-
+    
+    time.sleep(1) # wait for internal calibrations
     # Adjust phase
     arrays_adjusted = adjust_phase(my_talise, rx_samples[1], rx_samples[2], rx_samples[3])
     rx_samples[1] = arrays_adjusted[0]
@@ -174,7 +190,7 @@ def do_cal_gain(my_talise):
     t = np.arange(config.num_samps) / config.sample_rate
 
     # Plot Rx time domain
-    plt.figure(1)
+    plt.figure(4)
 
     plt.plot(np.real(rx_samples[0]), label = "Ch0 I (Real)")
     plt.plot(np.imag(rx_samples[0]), label = "Ch0 I (Real)")
@@ -193,23 +209,28 @@ def do_cal_gain(my_talise):
     plt.xlabel('Time (seconds)')
     plt.ylabel('Amplitude')
 
-    amplitudes = np.empty(my_talise.num_elements, dtype=complex)
+    amplitudes = [1.0] * (my_talise.num_elements)
     max_amplitude = 0
     elem_with_max_amplitude = 0
     # Save received amplitudes from each channel
     for i in range(my_talise.num_elements):
-        max_amp_ch_i = np.max(rx_samples[i])
-        np.append(amplitudes, max_amp_ch_i)
+        max_amp_ch_i = np.max(np.real(rx_samples[i]))
+        amplitudes[i] = max_amp_ch_i
         if max_amp_ch_i > max_amplitude:
             elem_with_max_amplitude = i
     
+    print("Amplitudes list: " + str(amplitudes))
+    
     # Calculate the calibration coeffiecnts between the amplitude on the channel with max amplitude and other channels
-    amplitude_cal_coeff = np.empty(my_talise.num_elements, dtype=float)
+    amplitude_cal_coeff = [1.0] * (my_talise.num_elements)
+    print("Empty aplitude_cal_coeff list" + str(type(amplitude_cal_coeff)))
     for i in range(my_talise.num_elements):
         if i != elem_with_max_amplitude:
             amplitude_cal_coeff[i] = amplitudes[elem_with_max_amplitude]/amplitudes[i]
         else:
-            amplitude_cal_coeff[i] = 1
+            amplitude_cal_coeff[i] = 1.0
+            
+    print("Type of amplitude_cal_coeff: " + str(type(amplitude_cal_coeff[0])))
 
     # Save gain calibration coefficents and print them
     my_talise.gcal = amplitude_cal_coeff
@@ -217,7 +238,7 @@ def do_cal_gain(my_talise):
     my_talise.save_gain_cal()
     my_talise.load_gain_cal()
 
-    # Adjust phase
+    # Adjust gain
     arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
     rx_samples[0] = arrays_adjusted[0]
     rx_samples[1] = arrays_adjusted[1]
@@ -225,7 +246,7 @@ def do_cal_gain(my_talise):
     rx_samples[3] = arrays_adjusted[3]
 
     # Plot Rx time domain after gain calibration
-    plt.figure(2)
+    plt.figure(5)
 
     plt.plot(np.real(rx_samples[0]), label = "Ch0 I (Real)")
     plt.plot(np.imag(rx_samples[0]), label = "Ch0 I (Real)")
@@ -240,26 +261,13 @@ def do_cal_gain(my_talise):
     plt.plot(np.imag(rx_samples[3]), label = "Ch3 I (Real)")
 
     plt.legend()
-    plt.title('Rx time domain before Gain Cal')
+    plt.title('Rx time domain after Gain Cal')
     plt.xlabel('Time (seconds)')
     plt.ylabel('Amplitude')
 
     # Stop transmitting
     my_talise.tx_destroy_buffer()
-    plt.show()
-
-def adjust_phase(talise_obj, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
-    ph1 = np.deg2rad(talise_obj.pcal[0])
-    print("Phase of " + str(talise_obj.pcal[0]) + " to radians = " + str(ph1))
-    ph2 = np.deg2rad(talise_obj.pcal[1])
-    print("Phase of " + str(talise_obj.pcal[1]) + " to radians = " + str(ph2))
-    ph3 = np.deg2rad(talise_obj.pcal[2])
-    print("Phase of " + str(talise_obj.pcal[2]) + " to radians = " + str(ph3))
-    rx_samples_ch1 = rx_samples_ch1 * np.exp(1j * ph1)
-    rx_samples_ch2 = rx_samples_ch2 * np.exp(1j * ph2)
-    rx_samples_ch3 = rx_samples_ch3 * np.exp(1j * ph3)
-    
-    return [rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]   
+    plt.show()   
     
 def do_cal_phase(my_talise):
     # Configure talise and load calibration constants from file
@@ -422,6 +430,13 @@ def do_cal_phase(my_talise):
 
     print("Max variance: " + str(max((max_ph_diff_ch0_minus_ch1 - min_ph_diff_ch0_minus_ch1), (max_ph_diff_ch0_minus_ch2 - min_ph_diff_ch0_minus_ch2), (max_ph_diff_ch0_minus_ch3 - max_ph_diff_ch0_minus_ch3))))
     
+    # Adjust Gain
+    arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
+    rx_samples[0] = arrays_adjusted[0]
+    rx_samples[1] = arrays_adjusted[1]
+    rx_samples[2] = arrays_adjusted[2]
+    rx_samples[3] = arrays_adjusted[3]
+    
     # Adjust phase
     arrays_adjusted = adjust_phase(my_talise, rx_samples[1], rx_samples[2], rx_samples[3])
     rx_samples[1] = arrays_adjusted[0]
@@ -504,6 +519,7 @@ if func == "plot":
     do_plot = True
     # Vrify cal coeff
     my_talise.load_phase_cal()
+    my_talise.load_gain_cal()
     print("ch0-1ch ph: " + str(my_talise.pcal[0]))
     print("ch0-2ch ph: " + str(my_talise.pcal[1]))
     print("ch0-3ch ph: " + str(my_talise.pcal[2]))
@@ -517,28 +533,25 @@ if func == "plot":
             powers = [] # main DOA result
             angle_of_arrivals = []
             phase_cal = [0, my_talise.pcal[0], my_talise.pcal[1], my_talise.pcal[2]]
-            elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(2*quarter_lambda)
+            elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(2*half_lambda)
             print("Element spacing of: " + str(elem_spacing) + " meters")
             signal_freq = config.lo_freq #+ config.tx_sine_baseband_freq
-
             # Receive samples
-            received_samples = my_talise.rx()
 
-            # Apply Gain coefficients
-            arrays_adjusted = adjust_gain(my_talise, received_samples[0], received_samples[1], received_samples[2], received_samples[3])
-            received_samples[0] = arrays_adjusted[0]
-            received_samples[1] = arrays_adjusted[1]
-            received_samples[2] = arrays_adjusted[2]
-            received_samples[3] = arrays_adjusted[3]
-
-            for phase in np.arange(-180/quarter_lambda, 180/quarter_lambda, 2): # sweep over angle
-                rx_samples = received_samples
-                print(phase)
+            # TODO: try to call my_talise.rx() function outside of the below for
+            for phase in np.arange(-180/half_lambda, 180/half_lambda, 2): # sweep over angle
+                rx_samples = my_talise.rx()
+                # Apply Gain coefficients
+                arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
+                rx_samples[0] = arrays_adjusted[0]
+                rx_samples[1] = arrays_adjusted[1]
+                rx_samples[2] = arrays_adjusted[2]
+                rx_samples[3] = arrays_adjusted[3]
                 # set phase difference between the adjacent channels of devices
                 for i in range(4):
                     # /2 because lambda/4 = d
                     channel_phase = ((phase * i) + phase_cal[i]) % 360.0 # Analog Devices had this forced to be a multiple of phase_step_size (2.8125 or 360/2**6bits) but it doesn't seem nessesary
-                    print("cal coefficent for " + str(i) + " channel: " + str(phase_cal[i]))
+                    # print("cal coefficent for " + str(i) + " channel: " + str(phase_cal[i]))
                     channel_phase_rad = np.deg2rad(channel_phase)
                     rx_samples[i] = rx_samples[i] * np.exp(1j * channel_phase_rad)
                 steer_angle = np.degrees(np.arcsin(max(min(1, (3e8 * np.radians(phase)) / (2 * np.pi * signal_freq * elem_spacing)), -1))) # arcsin argument must be between 1 and -1, or numpy will throw a warning
@@ -550,7 +563,7 @@ if func == "plot":
                 # in addition to just taking the power in the signal, we could also do the FFT then grab the value of the max bin, effectively filtering out noise, results came out almost exactly the same in my tests
                 #PSD = 10*np.log10(np.abs(np.fft.fft(data_sum * np.blackman(len(data_sum))))**2) # in dB
             powers -= np.max(powers) # normalize so max is at 0 dB
-            print("Angles of arrivals: " + str(angle_of_arrivals))
+            # print("Angles of arrivals: " + str(angle_of_arrivals))
             plt.figure(6)
             plt.plot(angle_of_arrivals, powers, '.-')
             plt.xlabel("Angle of Arrival")
