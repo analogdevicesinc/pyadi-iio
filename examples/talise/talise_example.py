@@ -92,6 +92,162 @@ def measure_phase_degrees(chan0, chan1):
     error = np.mean(errorV)
     return error
 
+def adjust_gain(talise_obj, rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
+    rx_samples_ch0 = rx_samples_ch1 * my_talise.gcal[0]
+    rx_samples_ch1 = rx_samples_ch1 * my_talise.gcal[1]
+    rx_samples_ch2 = rx_samples_ch1 * my_talise.gcal[2]
+    rx_samples_ch3 = rx_samples_ch1 * my_talise.gcal[3]
+
+    return [rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
+
+def do_cal_gain(my_talise):
+    # Configure talise and load calibration constants from file
+    talise_init(my_talise)
+
+    ############################################################################################################
+    # Create and plot a complex sinusoid #######################################################################
+    ############################################################################################################
+
+    # Calculate time values
+    t = np.arange(config.num_samps) / config.sample_rate
+    # Generate sinusoidal waveform
+    phase_shift = -np.pi/2  # Shift by -90 degrees
+    tx_samples = config.amplitude_discrete * (np.cos(2 * np.pi * config.tx_sine_baseband_freq * t + phase_shift) + 1j*np.sin(2 * np.pi * config.tx_sine_baseband_freq * t + phase_shift))
+
+    # Plot Tx time domain
+    plt.figure(1)
+    plt.plot(t, np.real(tx_samples), label = "I (Real)")
+    plt.plot(t, np.imag(tx_samples), label = "Q (Imag)")
+    plt.legend()
+    plt.title('Tx time domain')
+    plt.xlabel('Time (seconds)')
+    plt.ylabel('Amplitude')
+
+    # Calculate Tx spectrum in dBFS
+    tx_samples_fft = tx_samples * np.hanning(config.num_samps)
+    ampl_tx = (np.abs(np.fft.fftshift(np.fft.fft(tx_samples_fft))))
+    fft_txvals_iq_dbFS = 10*np.log10(np.real(ampl_tx)**2 + np.imag(ampl_tx)**2) + 20*np.log10(2/2**(16-1))\
+                                            - 20*np.log10(len(ampl_tx))
+    f = np.linspace(config.sample_rate/-2, config.sample_rate/2, len(fft_txvals_iq_dbFS))
+
+    # Plot Tx freq domain
+    plt.figure(2)
+    plt.plot(f/1e6, fft_txvals_iq_dbFS)
+    plt.xlabel("Frequency [MHz]")
+    plt.ylabel("dBFS")
+    plt.title('Tx FFT')
+
+    # Constellation plot for the transmit data
+    plt.figure(3)
+    plt.plot(np.real(tx_samples), np.imag(tx_samples), '.')
+    plt.xlabel("I (Real) Sample Value")
+    plt.ylabel("Q (Imag) Sample Value")
+    plt.grid(True)
+    plt.title('Constellation Plot Tx')
+    ############################################################################################################
+    ############################################################################################################
+
+    ############################################################################################################
+    # Call Tx function to start transmission ###################################################################
+    ############################################################################################################
+    my_talise.tx(tx_samples) # start transmitting
+    ############################################################################################################
+    ############################################################################################################
+    
+    time.sleep(1) # wait for internal calibrations
+    # Clear buffer just to be safe
+    for i in range (0, 40):
+        raw_data = my_talise.rx()
+    ############################################################################################################
+    # Call Rx function to receive transmission and plot the data################################################
+    ############################################################################################################
+    # Receive and plot time domain data before calibration
+    rx_samples = my_talise.rx()
+
+    # Adjust phase
+    arrays_adjusted = adjust_phase(my_talise, rx_samples[1], rx_samples[2], rx_samples[3])
+    rx_samples[1] = arrays_adjusted[0]
+    rx_samples[2] = arrays_adjusted[1]
+    rx_samples[3] = arrays_adjusted[2]
+
+    # Time values
+    t = np.arange(config.num_samps) / config.sample_rate
+
+    # Plot Rx time domain
+    plt.figure(1)
+
+    plt.plot(np.real(rx_samples[0]), label = "Ch0 I (Real)")
+    plt.plot(np.imag(rx_samples[0]), label = "Ch0 I (Real)")
+
+    plt.plot(np.real(rx_samples[1]), label = "Ch1 I (Real)")
+    plt.plot(np.imag(rx_samples[1]), label = "Ch1 I (Real)")
+
+    plt.plot(np.real(rx_samples[2]), label = "Ch2 I (Real)")
+    plt.plot(np.imag(rx_samples[2]), label = "Ch2 I (Real)")
+
+    plt.plot(np.real(rx_samples[3]), label = "Ch3 I (Real)")
+    plt.plot(np.imag(rx_samples[3]), label = "Ch3 I (Real)")
+
+    plt.legend()
+    plt.title('Rx time domain before Gain Cal')
+    plt.xlabel('Time (seconds)')
+    plt.ylabel('Amplitude')
+
+    amplitudes = np.empty(my_talise.num_elements, dtype=complex)
+    max_amplitude = 0
+    elem_with_max_amplitude = 0
+    # Save received amplitudes from each channel
+    for i in range(my_talise.num_elements):
+        max_amp_ch_i = np.max(rx_samples[i])
+        np.append(amplitudes, max_amp_ch_i)
+        if max_amp_ch_i > max_amplitude:
+            elem_with_max_amplitude = i
+    
+    # Calculate the calibration coeffiecnts between the amplitude on the channel with max amplitude and other channels
+    amplitude_cal_coeff = np.empty(my_talise.num_elements, dtype=float)
+    for i in range(my_talise.num_elements):
+        if i != elem_with_max_amplitude:
+            amplitude_cal_coeff[i] = amplitudes[elem_with_max_amplitude]/amplitudes[i]
+        else:
+            amplitude_cal_coeff[i] = 1
+
+    # Save gain calibration coefficents and print them
+    my_talise.gcal = amplitude_cal_coeff
+    print("Gain calibration coefficents: " + str(amplitude_cal_coeff))
+    my_talise.save_gain_cal()
+    my_talise.load_gain_cal()
+
+    # Adjust phase
+    arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
+    rx_samples[0] = arrays_adjusted[0]
+    rx_samples[1] = arrays_adjusted[1]
+    rx_samples[2] = arrays_adjusted[2]
+    rx_samples[3] = arrays_adjusted[3]
+
+    # Plot Rx time domain after gain calibration
+    plt.figure(2)
+
+    plt.plot(np.real(rx_samples[0]), label = "Ch0 I (Real)")
+    plt.plot(np.imag(rx_samples[0]), label = "Ch0 I (Real)")
+
+    plt.plot(np.real(rx_samples[1]), label = "Ch1 I (Real)")
+    plt.plot(np.imag(rx_samples[1]), label = "Ch1 I (Real)")
+
+    plt.plot(np.real(rx_samples[2]), label = "Ch2 I (Real)")
+    plt.plot(np.imag(rx_samples[2]), label = "Ch2 I (Real)")
+
+    plt.plot(np.real(rx_samples[3]), label = "Ch3 I (Real)")
+    plt.plot(np.imag(rx_samples[3]), label = "Ch3 I (Real)")
+
+    plt.legend()
+    plt.title('Rx time domain before Gain Cal')
+    plt.xlabel('Time (seconds)')
+    plt.ylabel('Amplitude')
+
+    # Stop transmitting
+    my_talise.tx_destroy_buffer()
+    plt.show()
+
 def adjust_phase(talise_obj, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
     ph1 = np.deg2rad(talise_obj.pcal[0])
     print("Phase of " + str(talise_obj.pcal[0]) + " to radians = " + str(ph1))
@@ -168,6 +324,13 @@ def do_cal_phase(my_talise):
     ############################################################################################################
     # Receive and plot time domain data before calibration
     rx_samples = my_talise.rx()
+
+    # Adjust Gain
+    arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
+    rx_samples[0] = arrays_adjusted[0]
+    rx_samples[1] = arrays_adjusted[1]
+    rx_samples[2] = arrays_adjusted[2]
+    rx_samples[3] = arrays_adjusted[3]
 
     # Time values
     t = np.arange(config.num_samps) / config.sample_rate
@@ -326,12 +489,16 @@ time.sleep(0.5)
 
 func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
 
-if func == "cal":
+if func == "cal_phase":
     print("Calibrating Phase, verbosely, then saving cal file...")
     # TODO: add do cal_gain
     do_cal_phase(my_talise)  # Start Phase Calibration
     print("Done calibration")
 
+if func == "cal_gain":
+    print("Calibrating Gain, verbosely, then saving cal file...")
+    do_cal_gain(my_talise)
+    print("Done calibration")
 
 if func == "plot":
     do_plot = True
@@ -353,8 +520,19 @@ if func == "plot":
             elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(2*quarter_lambda)
             print("Element spacing of: " + str(elem_spacing) + " meters")
             signal_freq = config.lo_freq #+ config.tx_sine_baseband_freq
+
+            # Receive samples
+            received_samples = my_talise.rx()
+
+            # Apply Gain coefficients
+            arrays_adjusted = adjust_gain(my_talise, received_samples[0], received_samples[1], received_samples[2], received_samples[3])
+            received_samples[0] = arrays_adjusted[0]
+            received_samples[1] = arrays_adjusted[1]
+            received_samples[2] = arrays_adjusted[2]
+            received_samples[3] = arrays_adjusted[3]
+
             for phase in np.arange(-180/quarter_lambda, 180/quarter_lambda, 2): # sweep over angle
-                rx_samples = my_talise.rx()
+                rx_samples = received_samples
                 print(phase)
                 # set phase difference between the adjacent channels of devices
                 for i in range(4):
