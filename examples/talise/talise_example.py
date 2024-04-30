@@ -518,29 +518,33 @@ if func == "cal_gain":
 if func == "plot":
     do_plot = True
     # Vrify cal coeff
-    my_talise.load_phase_cal()
-    my_talise.load_gain_cal()
+#     my_talise.load_phase_cal()
+#     my_talise.load_gain_cal()
+    talise_init(my_talise)
     print("ch0-1ch ph: " + str(my_talise.pcal[0]))
     print("ch0-2ch ph: " + str(my_talise.pcal[1]))
     print("ch0-3ch ph: " + str(my_talise.pcal[2]))
     # Performing Beamforming
     plt.ion()
     print("Starting, use control-c to stop")
+    
+    half_lambda = 1
+    quarter_lambda = 2
+    phase_cal = [0, my_talise.pcal[0], my_talise.pcal[1], my_talise.pcal[2]]
+    elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(2*half_lambda)
+    print("Element spacing of: " + str(elem_spacing) + " meters")
+    signal_freq = config.lo_freq #+ config.tx_sine_baseband_freq
+    
     try:
         while True:
-            half_lambda = 1
-            quarter_lambda = 2
             powers = [] # main DOA result
             angle_of_arrivals = []
-            phase_cal = [0, my_talise.pcal[0], my_talise.pcal[1], my_talise.pcal[2]]
-            elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(2*half_lambda)
-            print("Element spacing of: " + str(elem_spacing) + " meters")
-            signal_freq = config.lo_freq #+ config.tx_sine_baseband_freq
+            
             # Receive samples
-
-            # TODO: try to call my_talise.rx() function outside of the below for
-            for phase in np.arange(-180/half_lambda, 180/half_lambda, 2): # sweep over angle
-                rx_samples = my_talise.rx()
+            receive_samples = my_talise.rx()
+            
+            for phase in np.arange(-180/half_lambda, 180/half_lambda, 5): # sweep over angle
+                rx_samples = list(receive_samples) # use list() to copy content and not the address
                 # Apply Gain coefficients
                 arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
                 rx_samples[0] = arrays_adjusted[0]
@@ -548,8 +552,7 @@ if func == "plot":
                 rx_samples[2] = arrays_adjusted[2]
                 rx_samples[3] = arrays_adjusted[3]
                 # set phase difference between the adjacent channels of devices
-                for i in range(4):
-                    # /2 because lambda/4 = d
+                for i in range(my_talise.num_elements):
                     channel_phase = ((phase * i) + phase_cal[i]) % 360.0 # Analog Devices had this forced to be a multiple of phase_step_size (2.8125 or 360/2**6bits) but it doesn't seem nessesary
                     # print("cal coefficent for " + str(i) + " channel: " + str(phase_cal[i]))
                     channel_phase_rad = np.deg2rad(channel_phase)

@@ -1,5 +1,5 @@
 talise_address = "ip:192.168.2.1"  
-lo_freq = 1000000000 - 245760#700000000#int(4.1e9)
+lo_freq = 1020000000 - 245760#700000000#int(4.1e9)
 tx_sine_baseband_freq = 245760# 245760  # 245.760 kHz
 amplitude_discrete = 2**14
 sample_rate = 245760000 # Hz
