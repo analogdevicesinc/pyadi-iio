@@ -15,3 +15,4 @@ plotly-express
 pyvisa
 matplotlib
 pytoml
+git+https://github.com/tfcollins/pybench.git@main
