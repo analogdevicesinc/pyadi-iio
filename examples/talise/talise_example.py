@@ -30,6 +30,7 @@ def talise_init(my_talise):
     print("Numeric value of discrete amplitude of transmitted signal: " + str(config.amplitude_discrete))
     my_talise.load_phase_cal()
     my_talise.load_gain_cal()
+    my_talise.num_rx_elements = config.used_rx_channels
     # frequency = 245760  # 245.760 kHz
     # amplitude = 2**14
     # my_talise.rx_sample_rate = config.sample_rate
@@ -94,26 +95,48 @@ def measure_phase_degrees(chan0, chan1):
     error = np.mean(errorV)
     return error
 
-def adjust_gain(talise_obj, rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
-    rx_samples_ch0 = rx_samples_ch0 * my_talise.gcal[0]
-    rx_samples_ch1 = rx_samples_ch1 * my_talise.gcal[1]
-    rx_samples_ch2 = rx_samples_ch2 * my_talise.gcal[2]
-    rx_samples_ch3 = rx_samples_ch3 * my_talise.gcal[3]
+# def adjust_gain(talise_obj, rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
+#     rx_samples_ch0 = rx_samples_ch0 * my_talise.gcal[0]
+#     rx_samples_ch1 = rx_samples_ch1 * my_talise.gcal[1]
+#     rx_samples_ch2 = rx_samples_ch2 * my_talise.gcal[2]
+#     rx_samples_ch3 = rx_samples_ch3 * my_talise.gcal[3]
 
-    return [rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
+#     return [rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
 
-def adjust_phase(talise_obj, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
-    ph1 = np.deg2rad(talise_obj.pcal[0])
-    print("Phase of " + str(talise_obj.pcal[0]) + " to radians = " + str(ph1))
-    ph2 = np.deg2rad(talise_obj.pcal[1])
-    print("Phase of " + str(talise_obj.pcal[1]) + " to radians = " + str(ph2))
-    ph3 = np.deg2rad(talise_obj.pcal[2])
-    print("Phase of " + str(talise_obj.pcal[2]) + " to radians = " + str(ph3))
-    rx_samples_ch1 = rx_samples_ch1 * np.exp(1j * ph1)
-    rx_samples_ch2 = rx_samples_ch2 * np.exp(1j * ph2)
-    rx_samples_ch3 = rx_samples_ch3 * np.exp(1j * ph3)
+def adjust_gain(talise_obj, *args):
+    adjusted_samples = []
+    if (len(args) == config.used_rx_channels):
+        for i, samples in enumerate(args):
+            adjusted_samples.append(samples * talise_obj.gcal[i])
+        return adjusted_samples
+    else:
+        print("WARNING: Wrong number of input arrays, check used_rx_channels in the config file!")
+        return 0
+
+# def adjust_phase(talise_obj, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
+#     ph1 = np.deg2rad(talise_obj.pcal[0])
+#     print("Phase of " + str(talise_obj.pcal[0]) + " to radians = " + str(ph1))
+#     ph2 = np.deg2rad(talise_obj.pcal[1])
+#     print("Phase of " + str(talise_obj.pcal[1]) + " to radians = " + str(ph2))
+#     ph3 = np.deg2rad(talise_obj.pcal[2])
+#     print("Phase of " + str(talise_obj.pcal[2]) + " to radians = " + str(ph3))
+#     rx_samples_ch1 = rx_samples_ch1 * np.exp(1j * ph1)
+#     rx_samples_ch2 = rx_samples_ch2 * np.exp(1j * ph2)
+#     rx_samples_ch3 = rx_samples_ch3 * np.exp(1j * ph3)
     
-    return [rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
+#     return [rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
+
+def adjust_phase(talise_obj, *args):
+    adjusted_samples = []
+    if (len(args) == (config.used_rx_channels - 1)):
+        for i, samples in enumerate(args):
+            phase_rad = np.deg2rad(talise_obj.pcal[i])
+            print("Phase of " + str(talise_obj.pcal[i]) + " to radians = " + str(phase_rad))
+            adjusted_samples.append(samples * np.exp(1j * phase_rad))
+        return adjusted_samples
+    else:
+        print("WARNING: Wrong number of input arrays, check used_rx_channels in the config file!")
+        return 0
 
 def do_cal_gain(my_talise):
     # Configure talise and load calibration constants from file
@@ -182,9 +205,8 @@ def do_cal_gain(my_talise):
     time.sleep(1) # wait for internal calibrations
     # Adjust phase
     arrays_adjusted = adjust_phase(my_talise, rx_samples[1], rx_samples[2], rx_samples[3])
-    rx_samples[1] = arrays_adjusted[0]
-    rx_samples[2] = arrays_adjusted[1]
-    rx_samples[3] = arrays_adjusted[2]
+    for i in range(my_talise.num_rx_elements - 1):
+        rx_samples[i] = arrays_adjusted[i]
 
     # Time values
     t = np.arange(config.num_samps) / config.sample_rate
@@ -209,11 +231,11 @@ def do_cal_gain(my_talise):
     plt.xlabel('Time (seconds)')
     plt.ylabel('Amplitude')
 
-    amplitudes = [1.0] * (my_talise.num_elements)
+    amplitudes = [1.0] * (my_talise.num_rx_elements)
     max_amplitude = 0
     elem_with_max_amplitude = 0
     # Save received amplitudes from each channel
-    for i in range(my_talise.num_elements):
+    for i in range(my_talise.num_rx_elements):
         max_amp_ch_i = np.max(np.real(rx_samples[i]))
         amplitudes[i] = max_amp_ch_i
         if max_amp_ch_i > max_amplitude:
@@ -222,9 +244,9 @@ def do_cal_gain(my_talise):
     print("Amplitudes list: " + str(amplitudes))
     
     # Calculate the calibration coeffiecnts between the amplitude on the channel with max amplitude and other channels
-    amplitude_cal_coeff = [1.0] * (my_talise.num_elements)
+    amplitude_cal_coeff = [1.0] * (my_talise.num_rx_elements)
     print("Empty aplitude_cal_coeff list" + str(type(amplitude_cal_coeff)))
-    for i in range(my_talise.num_elements):
+    for i in range(my_talise.num_rx_elements):
         if i != elem_with_max_amplitude:
             amplitude_cal_coeff[i] = amplitudes[elem_with_max_amplitude]/amplitudes[i]
         else:
@@ -240,10 +262,8 @@ def do_cal_gain(my_talise):
 
     # Adjust gain
     arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
-    rx_samples[0] = arrays_adjusted[0]
-    rx_samples[1] = arrays_adjusted[1]
-    rx_samples[2] = arrays_adjusted[2]
-    rx_samples[3] = arrays_adjusted[3]
+    for i in range(my_talise.num_rx_elements):
+        rx_samples[i] = arrays_adjusted[i]
 
     # Plot Rx time domain after gain calibration
     plt.figure(5)
@@ -335,10 +355,9 @@ def do_cal_phase(my_talise):
 
     # Adjust Gain
     arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
-    rx_samples[0] = arrays_adjusted[0]
-    rx_samples[1] = arrays_adjusted[1]
-    rx_samples[2] = arrays_adjusted[2]
-    rx_samples[3] = arrays_adjusted[3]
+    for i in range(my_talise.num_rx_elements):
+        rx_samples[i] = arrays_adjusted[i]
+
 
     # Time values
     t = np.arange(config.num_samps) / config.sample_rate
@@ -432,16 +451,14 @@ def do_cal_phase(my_talise):
     
     # Adjust Gain
     arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
-    rx_samples[0] = arrays_adjusted[0]
-    rx_samples[1] = arrays_adjusted[1]
-    rx_samples[2] = arrays_adjusted[2]
-    rx_samples[3] = arrays_adjusted[3]
-    
+    for i in range(my_talise.num_rx_elements):
+        rx_samples[i] = arrays_adjusted[i]
+
     # Adjust phase
     arrays_adjusted = adjust_phase(my_talise, rx_samples[1], rx_samples[2], rx_samples[3])
-    rx_samples[1] = arrays_adjusted[0]
-    rx_samples[2] = arrays_adjusted[1]
-    rx_samples[3] = arrays_adjusted[2]
+    for i in range(my_talise.num_rx_elements - 1):
+        rx_samples[i] = arrays_adjusted[i]
+
     # Display time plot with phase adjusted
     # Time values
     t = np.arange(config.num_samps) / config.sample_rate
@@ -465,24 +482,6 @@ def do_cal_phase(my_talise):
     plt.title('Rx time domain after Ph Cal')
     plt.xlabel('Time (seconds)')
     plt.ylabel('Amplitude') 
-    # For testing:
-    # print(my_talise.pcal)
-
-    # TODO: add find peak of signal
-    
-    # PhaseValues, plot_data = my_phaser.phase_calibration(
-    #     verbose=True
-    # # )  # Start Phase Calibration
-    # PhaseValues, plot_data = phase_calibration(
-    #     my_talise, verbose=True
-    # )  # Start Phase Calibration
-    # plt.figure(5)
-    # plt.title("Phase sweeps of adjacent elements")
-    # plt.xlabel("Phase difference (degrees)")
-    # plt.ylabel("Amplitude (ADC counts)")
-    # for i in range(0, 7):
-    #     plt.plot(PhaseValues, plot_data[i], color=colors[i])
-    
     
     # Stop transmitting
     my_talise.tx_destroy_buffer()
@@ -494,7 +493,7 @@ def do_cal_phase(my_talise):
 
 try:
     print("Attempting to connect to Talise via ip:localhost...")
-    my_talise = adi.adrv9009_zu11eg(uri="ip:localhost")
+    my_talise = adi.adrv9009_zu11eg(uri=config.talise_address)
     print("Found Talise.")
 
 except:
@@ -506,32 +505,31 @@ func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
 
 if func == "cal_phase":
     print("Calibrating Phase, verbosely, then saving cal file...")
-    # TODO: add do cal_gain
     do_cal_phase(my_talise)  # Start Phase Calibration
-    print("Done calibration")
+    print("Done Phase Calibration")
 
 if func == "cal_gain":
     print("Calibrating Gain, verbosely, then saving cal file...")
     do_cal_gain(my_talise)
-    print("Done calibration")
+    print("Done Gain Calibration")
 
 if func == "plot":
-    do_plot = True
-    # Vrify cal coeff
-#     my_talise.load_phase_cal()
-#     my_talise.load_gain_cal()
+    # Initialize talise
     talise_init(my_talise)
-    print("ch0-1ch ph: " + str(my_talise.pcal[0]))
-    print("ch0-2ch ph: " + str(my_talise.pcal[1]))
-    print("ch0-3ch ph: " + str(my_talise.pcal[2]))
+
+    # Print Phase calibration coefficients
+    for i in range(len(my_talise.pcal)):
+        print("PhCh0 - " + "PhCh" + str(i) + ": " + str(my_talise.pcal[i]))
+
+    # Print Gain calibraiton coefficients
+    for i in range(len(my_talise.gcal)):
+        print("Gain coeff ch: " + str(i) + ": " + str(my_talise.gcal[i]))   
     # Performing Beamforming
     plt.ion()
     print("Starting, use control-c to stop")
     
-    half_lambda = 1
-    quarter_lambda = 2
     phase_cal = [0, my_talise.pcal[0], my_talise.pcal[1], my_talise.pcal[2]]
-    elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(2*half_lambda)
+    elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(config.lambda_over_d_spacing)
     print("Element spacing of: " + str(elem_spacing) + " meters")
     signal_freq = config.lo_freq #+ config.tx_sine_baseband_freq
     
@@ -543,18 +541,17 @@ if func == "plot":
             # Receive samples
             receive_samples = my_talise.rx()
             
-            for phase in np.arange(-180/half_lambda, 180/half_lambda, 5): # sweep over angle
+            for phase in np.arange(-180/config.lambda_over_d_spacing, 180/config.lambda_over_d_spacing, 5): # sweep over angle
                 rx_samples = list(receive_samples) # use list() to copy content and not the address
+
                 # Apply Gain coefficients
                 arrays_adjusted = adjust_gain(my_talise, rx_samples[0], rx_samples[1], rx_samples[2], rx_samples[3])
-                rx_samples[0] = arrays_adjusted[0]
-                rx_samples[1] = arrays_adjusted[1]
-                rx_samples[2] = arrays_adjusted[2]
-                rx_samples[3] = arrays_adjusted[3]
-                # set phase difference between the adjacent channels of devices
-                for i in range(my_talise.num_elements):
+                for i in range(my_talise.num_rx_elements):
+                    rx_samples[i] = arrays_adjusted[i]
+
+                # Set phase difference between the adjacent channels of devices
+                for i in range(my_talise.num_rx_elements):
                     channel_phase = ((phase * i) + phase_cal[i]) % 360.0 # Analog Devices had this forced to be a multiple of phase_step_size (2.8125 or 360/2**6bits) but it doesn't seem nessesary
-                    # print("cal coefficent for " + str(i) + " channel: " + str(phase_cal[i]))
                     channel_phase_rad = np.deg2rad(channel_phase)
                     rx_samples[i] = rx_samples[i] * np.exp(1j * channel_phase_rad)
                 steer_angle = np.degrees(np.arcsin(max(min(1, (3e8 * np.radians(phase)) / (2 * np.pi * signal_freq * elem_spacing)), -1))) # arcsin argument must be between 1 and -1, or numpy will throw a warning
@@ -578,11 +575,5 @@ if func == "plot":
     except KeyboardInterrupt:
         sys.exit() # quit python
 else:
-    do_plot = False
+    print("Warning: When calling talise_example.py add one arguments between: plot, cal_phase, cal_gain")
 
-# while do_plot == True:
-#     try:
-#         # TODO: plot antenna pattern
-#     except KeyboardInterrupt:
-#         do_plot = False
-#         print("Exiting Loop")
