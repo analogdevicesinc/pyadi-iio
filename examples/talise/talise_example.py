@@ -5,10 +5,6 @@ import matplotlib.pyplot as plt
 import time
 from scipy import signal
 
-# from talise_functions import (
-#     phase_calibration,
-# )
-
 try:
     import config_custom_talise as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
 
@@ -30,14 +26,14 @@ def talise_init(my_talise):
     print("Numeric value of discrete amplitude of transmitted signal: " + str(config.amplitude_discrete))
     my_talise.load_phase_cal()
     my_talise.load_gain_cal()
-    my_talise.num_rx_elements = config.used_rx_channels
-    # frequency = 245760  # 245.760 kHz
-    # amplitude = 2**14
-    # my_talise.rx_sample_rate = config.sample_rate
-    print("Number of samples per call to rx(): " + str(config.num_samps))
-    # num_samps = int((20*sample_rate)/frequency) # number of samples per call to rx()
+    if((config.used_rx_channels > 0) and (config.used_rx_channels <= 4)):
+        my_talise.num_rx_elements = config.used_rx_channels
+    else:
+        print("WARNING: Wrong number of used_rx_channels! Modify config file!")
+        my_talise.num_rx_elements = 4
 
-    # TODO: print text for every parameter set:
+    print("Number of samples per call to rx(): " + str(config.num_samps))
+
     my_talise.rx_enabled_channels = config.rx_channels_used
     my_talise.tx_enabled_channels = config.tx_channels_used
 
@@ -83,25 +79,10 @@ def talise_init(my_talise):
     my_talise.calibrate_chip_b = 1
     print("Done calibrating")
 
-    #TODO: load gain calibration coefficients (from .pkl files)
-    # for phase they are needed to be loaded as degrees
-    # TODO: add below two functions in adi.adrv9009_zu11eg
-    # my_talise.load_gain_cal("gain_cal_val.pkl")
-    # my_talise.load_phase_cal("phase_cal_val.pkl")
-    # TODO: add in adi.adrv9009_zu11eg, phase constants as degrees between rx channel 0 and 1,2,3
-
 def measure_phase_degrees(chan0, chan1):
     errorV = np.angle(chan0 * np.conj(chan1)) * 180 / np.pi
     error = np.mean(errorV)
     return error
-
-# def adjust_gain(talise_obj, rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
-#     rx_samples_ch0 = rx_samples_ch0 * my_talise.gcal[0]
-#     rx_samples_ch1 = rx_samples_ch1 * my_talise.gcal[1]
-#     rx_samples_ch2 = rx_samples_ch2 * my_talise.gcal[2]
-#     rx_samples_ch3 = rx_samples_ch3 * my_talise.gcal[3]
-
-#     return [rx_samples_ch0, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
 
 def adjust_gain(talise_obj, *args):
     adjusted_samples = []
@@ -112,19 +93,6 @@ def adjust_gain(talise_obj, *args):
     else:
         print("WARNING: Wrong number of input arrays, check used_rx_channels in the config file!")
         return 0
-
-# def adjust_phase(talise_obj, rx_samples_ch1, rx_samples_ch2, rx_samples_ch3):
-#     ph1 = np.deg2rad(talise_obj.pcal[0])
-#     print("Phase of " + str(talise_obj.pcal[0]) + " to radians = " + str(ph1))
-#     ph2 = np.deg2rad(talise_obj.pcal[1])
-#     print("Phase of " + str(talise_obj.pcal[1]) + " to radians = " + str(ph2))
-#     ph3 = np.deg2rad(talise_obj.pcal[2])
-#     print("Phase of " + str(talise_obj.pcal[2]) + " to radians = " + str(ph3))
-#     rx_samples_ch1 = rx_samples_ch1 * np.exp(1j * ph1)
-#     rx_samples_ch2 = rx_samples_ch2 * np.exp(1j * ph2)
-#     rx_samples_ch3 = rx_samples_ch3 * np.exp(1j * ph3)
-    
-#     return [rx_samples_ch1, rx_samples_ch2, rx_samples_ch3]
 
 def adjust_phase(talise_obj, *args):
     adjusted_samples = []
@@ -206,7 +174,7 @@ def do_cal_gain(my_talise):
     # Adjust phase
     arrays_adjusted = adjust_phase(my_talise, rx_samples[1], rx_samples[2], rx_samples[3])
     for i in range(my_talise.num_rx_elements - 1):
-        rx_samples[i] = arrays_adjusted[i]
+        rx_samples[i + 1] = arrays_adjusted[i]
 
     # Time values
     t = np.arange(config.num_samps) / config.sample_rate
@@ -457,7 +425,7 @@ def do_cal_phase(my_talise):
     # Adjust phase
     arrays_adjusted = adjust_phase(my_talise, rx_samples[1], rx_samples[2], rx_samples[3])
     for i in range(my_talise.num_rx_elements - 1):
-        rx_samples[i] = arrays_adjusted[i]
+        rx_samples[i + 1] = arrays_adjusted[i]
 
     # Display time plot with phase adjusted
     # Time values
@@ -506,14 +474,12 @@ func = sys.argv[1] if len(sys.argv) >= 2 else "plot"
 if func == "cal_phase":
     print("Calibrating Phase, verbosely, then saving cal file...")
     do_cal_phase(my_talise)  # Start Phase Calibration
-    print("Done Phase Calibration")
-
-if func == "cal_gain":
+    print("Done Phase Calibration")   
+elif func == "cal_gain":
     print("Calibrating Gain, verbosely, then saving cal file...")
     do_cal_gain(my_talise)
     print("Done Gain Calibration")
-
-if func == "plot":
+elif func == "plot":
     # Initialize talise
     talise_init(my_talise)
 
@@ -531,6 +497,7 @@ if func == "plot":
     phase_cal = [0, my_talise.pcal[0], my_talise.pcal[1], my_talise.pcal[2]]
     elem_spacing = (3e8/(config.lo_freq + config.tx_sine_baseband_freq))/(config.lambda_over_d_spacing)
     print("Element spacing of: " + str(elem_spacing) + " meters")
+    print("Number of elements: " + str(my_talise.num_rx_elements))
     signal_freq = config.lo_freq #+ config.tx_sine_baseband_freq
     
     try:
@@ -541,7 +508,7 @@ if func == "plot":
             # Receive samples
             receive_samples = my_talise.rx()
             
-            for phase in np.arange(-180/config.lambda_over_d_spacing, 180/config.lambda_over_d_spacing, 5): # sweep over angle
+            for phase in np.arange(-360/config.lambda_over_d_spacing, 360/config.lambda_over_d_spacing, 2): # sweep over angle
                 rx_samples = list(receive_samples) # use list() to copy content and not the address
 
                 # Apply Gain coefficients

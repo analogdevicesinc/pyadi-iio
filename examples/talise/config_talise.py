@@ -4,11 +4,10 @@ lo_freq = 1020000000 - 245760 # lo frequency of talise
 tx_sine_baseband_freq = 245760 # sine frequency transmitted
 amplitude_discrete = 2**14
 lambda_over_d_spacing = 2
-used_rx_channels = 4
 ####################################
 
+used_rx_channels = 4
 rx_channels_used = [0, 1, 2, 3]
-
 for i in range(used_rx_channels):
     if(used_rx_channels <= 4):
         rx_channels_used.append(i)
