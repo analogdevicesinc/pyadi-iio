@@ -1,5 +1,5 @@
 adrv9025/adrv9026/adrv9029
-===================
+===========================
 
 `ADRV9026/ADRV9029 product page <https://www.analog.com/en/products/adrv9026.html>`_
 
