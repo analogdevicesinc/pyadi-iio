@@ -77,6 +77,7 @@ Supported Devices
    adi.adrv9009_zu11eg
    adi.adrv9009_zu11eg_fmcomms8
    adi.adrv9009_zu11eg_multi
+   adi.adrv9025
    adi.adt7420
    adi.adxl313
    adi.adxl345
