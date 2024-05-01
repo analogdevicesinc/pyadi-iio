@@ -23,8 +23,26 @@ class adrv9025(rx_tx, context_manager, sync_start):
     """
 
     _complex_data = True
-    _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q", "voltage2_i", "voltage2_q", "voltage3_i", "voltage3_q"]
-    _tx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q", "voltage2_i", "voltage2_q", "voltage3_i", "voltage3_q"]
+    _rx_channel_names = [
+        "voltage0_i",
+        "voltage0_q",
+        "voltage1_i",
+        "voltage1_q",
+        "voltage2_i",
+        "voltage2_q",
+        "voltage3_i",
+        "voltage3_q",
+    ]
+    _tx_channel_names = [
+        "voltage0_i",
+        "voltage0_q",
+        "voltage1_i",
+        "voltage1_q",
+        "voltage2_i",
+        "voltage2_q",
+        "voltage3_i",
+        "voltage3_q",
+    ]
     _device_name = ""
 
     def __init__(self, uri="", jesd_monitor=False, jesd=None):
@@ -53,6 +71,42 @@ class adrv9025(rx_tx, context_manager, sync_start):
     #     phys = sorted(phys)
     #     for phy in phys[1:] + [phys[0]]:
     #         self._set_iio_dev_attr_str("profile_config", data, getattr(self, phy))
+
+    @property
+    def en0_rx(self):
+        """en0_rx: Enable channel 0 RX"""
+        return self._get_iio_attr("voltage0", "en", False)
+
+    @en0_rx.setter
+    def en0_rx(self, value):
+        self._set_iio_attr("voltage0", "en", False, value)
+
+    @property
+    def en1_rx(self):
+        """en1_rx: Enable channel 1 RX"""
+        return self._get_iio_attr("voltage1", "en", False)
+
+    @en1_rx.setter
+    def en1_rx(self, value):
+        self._set_iio_attr("voltage1", "en", False, value)
+
+    @property
+    def en0_tx(self):
+        """en0_tx: Enable channel 0 TX"""
+        return self._get_iio_attr("voltage0", "en", True)
+
+    @en0_tx.setter
+    def en0_tx(self, value):
+        self._set_iio_attr("voltage0", "en", True, value)
+
+    @property
+    def en1_tx(self):
+        """en1_tx: Enable channel 1 TX"""
+        return self._get_iio_attr("voltage1", "en", True)
+
+    @en1_tx.setter
+    def en1_tx(self, value):
+        self._set_iio_attr("voltage1", "en", True, value)
 
     @property
     def calibrate_rx_qec_en(self):
@@ -210,7 +264,7 @@ class adrv9025(rx_tx, context_manager, sync_start):
     def lo2(self):
         """lo2: Carrier frequency of LO2"""
         return self._get_iio_attr("LO2", "frequency", True)
-    
+
     @lo2.setter
     def lo2(self, value):
         self._set_iio_attr("LO2", "frequency", True, value)
