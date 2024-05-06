@@ -67,6 +67,10 @@ vna.hsdac.main1_nco_frequency   = 1000000000
 if_frequency = fs
 vna.nco0_frequency = if_frequency
 
+# Rev. D: Switch freq source (example)
+vna.dac_sw3_in_mux      = "rf-dac02-out"    # rf-dac02-out/rf-dac0-out
+vna.lf_hf_sw_out_mux    = "rf-amp-out"      # rf-dac02-out/rf-amp-out
+
 for i in range(0, 8):
     vna.frontend[i].lo_mode = "x1"
     vna.frontend[i].offset_mode = "off"

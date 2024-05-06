@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Analog Devices, Inc.
+# Copyright (C) 2024 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -30,6 +30,10 @@
 # BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#####################################################
+################## 8p VNA Rev. D ####################
+#####################################################
 
 from adi.ad9083 import ad9083
 from adi.ad9173 import ad9173
@@ -71,6 +75,9 @@ class fmc_8p_vna(adrf5720, ad9083, admv8818, genmux, adf4371,
         self.rfin2_mux      = genmux(uri, device_name="mux-rfin2")
         self.prten_mux      = genmux(uri, device_name="mux-prten")
         self.port_rfin_en   = one_bit_adc_dac(uri, name="port-rfin-en")
+
+        self.dac_sw3_in_mux    = genmux(uri, device_name="mux-rf-dac-sw3-in")
+        self.lf_hf_sw_out_mux  = genmux(uri, device_name="mux-lf-hf-sw-out")
 
         self.siglo_mux      = genmux(uri, device_name="mux-adf4371-siglo")
         self.dbrlo_mux      = genmux(uri, device_name="mux-adf4371-dbrlo")
