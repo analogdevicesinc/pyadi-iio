@@ -11,6 +11,7 @@ from adi.ad717x import ad717x
 from adi.ad719x import ad719x
 from adi.ad738x import ad738x
 from adi.ad777x import ad777x
+from adi.ad9213 import ad9213
 from adi.ad936x import Pluto, ad9361, ad9363, ad9364
 from adi.ad937x import ad9371, ad9375
 from adi.ad3552r import ad3552r
