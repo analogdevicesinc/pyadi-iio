@@ -29,13 +29,7 @@ class ad7944(rx, context_manager):
             if device_name not in self._compatible_parts:
                 raise Exception(f"Not a compatible device: {device_name}")
 
-        # TODO: if/when pyadi-iio and libiio get refactored, this could
-        # be done more gracefully. The device object should have a
-        # trigger property that is directly accessible for the sampling
-        # frequency, but this is broken in libiio 0.25.
-        trigger_name = "trigger0"
         self._rxadc = self._ctrl = self._ctx.find_device(device_name)
-        self._trigger = self._ctx.find_device(trigger_name)
 
         if not self._ctrl:
             raise Exception(f"Error in selecting matching device {device_name}")
@@ -49,12 +43,12 @@ class ad7944(rx, context_manager):
     @property
     def sampling_frequency(self):
         """Get sampling frequency."""
-        return self._trigger.frequency
+        return self._get_iio_dev_attr("sampling_frequency")
 
     @sampling_frequency.setter
     def sampling_frequency(self, rate):
         """Set sampling frequency."""
-        self._trigger.frequency = rate
+        self._set_iio_dev_attr("sampling_frequency", rate)
 
 
 class ad7985(ad7944):
