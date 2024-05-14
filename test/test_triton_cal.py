@@ -187,6 +187,7 @@ def test_rx_combined_in(frequency):
     _set_output('ON', HMCT2220) # Set sig gen output on
     time.sleep(1) # Buffer time of 1 second
 
+
     # Set up spectrum analyzer
     _set_mode('SA', FieldFox)  # Select spectrum analyzer mode for FieldFox
     _set_attenuation_level(0, FieldFox) # Set attenuation level to 0 dB
