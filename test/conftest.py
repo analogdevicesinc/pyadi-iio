@@ -13,8 +13,8 @@ from test.common import (
 from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
-from test.html import pytest_html_report_title, pytest_runtest_makereport
-
+# from test.html import pytest_html_report_title, pytest_runtest_makereport, pytest_html_results_table_header, generate_header_with_image, image_to_base64
+from test.html import pytest_runtest_makereport, pytest_html_results_summary, pytest_html_report_title
 import adi
 import numpy as np
 import pytest
