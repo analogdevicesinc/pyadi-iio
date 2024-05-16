@@ -26,8 +26,10 @@ dev.rx_channel_nco_frequencies = [0, 0, 0, 0]
 dev.tx_dac_en = [1, 1, 1, 1]
 dev.tx_channel_nco_phases = [0,0,0,0]
 
-dev.tx_main_nco_frequencies = [1000000000] * 4
-dev.rx_main_nco_frequencies = [1000000000] * 4
+dev.tx_main_nco_frequencies = [2000000000, 2100000000, 2200000000, 2300000000]
+dev.rx_main_nco_frequencies = [2000000000, 2100000000, 2200000000, 2300000000]
+#dev.tx_main_nco_frequencies = [1000000000] * 4
+#dev.rx_main_nco_frequencies = [1000000000] * 4
 
 dev.tx_enabled_channels = [0, 1, 2, 3]
 dev.rx_enabled_channels = [0, 1, 2, 3]
