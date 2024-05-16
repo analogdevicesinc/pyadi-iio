@@ -3,7 +3,7 @@
 # SPDX short identifier: ADIBSD
 
 from adi.adrv9009_zu11eg import adrv9009_zu11eg
-
+import pickle
 
 class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
     """ ADRV9009-ZU11EG System-On-Module + FMCOMMS8
@@ -61,6 +61,9 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         self._ctrl_c = self._ctx.find_device("adrv9009-phy-c")
         self._ctrl_d = self._ctx.find_device("adrv9009-phy-d")
         self._clock_chip_fmc = self._ctx.find_device("hmc7044-fmc")
+        self.num_elements_fmcomms8 = 8
+        self.pcal_data_fmcomms8 = [0.0 for i in range(0, (self.num_elements - 1))]
+        self.gcal_data_fmcomms8 = [0.0 for i in range(0, (self.num_elements - 1))]
 
     def mcs_chips(self):
         """mcs_chips: MCS Synchronize all four transceivers """
@@ -341,3 +344,73 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
     @trx_lo_chip_d.setter
     def trx_lo_chip_d(self, value):
         self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl_d)
+        
+    @property
+    def gcal_fmcomms8(self):
+        """pcal: linear gain coefficents for each channel [gain_ch1, gain_ch2, gain_ch3, gain_ch4]"""
+        return self.gcal_data_fmcomms8
+
+    @gcal_fmcomms8.setter
+    def gcal_fmcomms8(self, values):
+        if isinstance(values, list) and all(isinstance(item, float) for item in values):
+            if len(values) == (self.num_elements_fmcomms8):
+                self.gcal_data_fmcomms8 = values
+            else:
+                raise ValueError("Input array length doesn't match the expected length")
+        else:
+            raise TypeError("Input must be a list of floats")
+
+    def save_gain_cal_fmcomms8(self, filename="gain_cal_val.pkl"):
+        """ Saves gain calibration file."""
+        with open(filename, "wb") as file:
+            pickle.dump(self.gcal_fmcomms8, file)  # save calibrated phase value to a file
+            file.close()
+
+    def load_gain_cal_fmcomms8(self, filename="gain_cal_val.pkl"):
+        """Load gain calibrated value, if not calibrated set all channel gain correction to 1.
+        Parameters
+        ----------
+        filename: type=stringf
+            Provide path of phase calibration file
+        """
+        try:
+            with open(filename, "rb") as file:
+                self.gcal_fmcomms8 = pickle.load(file)  # Load gain cal values
+        except FileNotFoundError:
+            print("file not found, loading default (no phase shift)")
+            self.gcal_fmcomms8 = [1.1] * (self.num_elements_fmcomms8)
+
+    @property
+    def pcal_fmcomms8(self):
+        """pcal: phase differences in degrees [(rx0 - rx1) (rx0 - rx2) (rx0 - rx3)]"""
+        return self.pcal_data_fmcomms8
+    
+    @pcal_fmcomms8.setter
+    def pcal_fmcomms8(self, values):
+        if isinstance(values, list) and all(isinstance(item, float) for item in values):
+            if len(values) == (self.num_elements_fmcomms8 - 1):
+                self.pcal_data_fmcomms8 = values
+            else:
+                raise ValueError("Input array length doesn't match the expected length")
+        else:
+            raise TypeError("Input must be a list of floats")
+
+    def save_phase_cal_fmcomms8(self, filename="phase_cal_val.pkl"):
+        """ Saves phase calibration file."""
+        with open(filename, "wb") as file:
+            pickle.dump(self.pcal_fmcomms8, file)  # save calibrated phase value to a file
+            file.close()
+
+    def load_phase_cal_fmcomms8(self, filename="phase_cal_val.pkl"):
+        """Load phase calibrated value, if not calibrated set all channel phase correction to 0.
+        Parameters
+        ----------
+        filename: type=stringf
+            Provide path of phase calibration file
+        """
+        try:
+            with open(filename, "rb") as file:
+                self.pcal_fmcomms8 = pickle.load(file)  # Load gain cal values
+        except FileNotFoundError:
+            print("file not found, loading default (no phase shift)")
+            self.pcal_fmcomms8 = [0.0] * (self.num_elements_fmcomms8 - 1)

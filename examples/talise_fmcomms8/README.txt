@@ -1,5 +1,6 @@
 Setup: adrv9009_zu11eg
-	   4 antennas spaced at lambda/2
+	   fmcomms8 
+	   8 antennas spaced at lambda/2
 
 To calibrate Phase:
 # Place transmitter at boresight
