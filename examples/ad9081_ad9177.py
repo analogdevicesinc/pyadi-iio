@@ -28,8 +28,6 @@ dev.tx_channel_nco_phases = [0,0,0,0]
 
 dev.tx_main_nco_frequencies = [2000000000, 2100000000, 2200000000, 2300000000]
 dev.rx_main_nco_frequencies = [2000000000, 2100000000, 2200000000, 2300000000]
-#dev.tx_main_nco_frequencies = [1000000000] * 4
-#dev.rx_main_nco_frequencies = [1000000000] * 4
 
 dev.tx_enabled_channels = [0, 1, 2, 3]
 dev.rx_enabled_channels = [0, 1, 2, 3]
@@ -37,6 +35,7 @@ dev.rx_enabled_channels = [0, 1, 2, 3]
 #dev.rx_nyquist_zone = ["odd"] * 4
 dev.tx_cyclic_buffer = True
 fs = int(dev.tx_sample_rate)
+print(dev.rx_main_nco_frequencies)
 print("Sample Rate = ")
 print(fs)
 # Create arbitary sinewave waveform / buffer to pass to tx() method. Data buffers are actually read from custom HDL.
@@ -47,9 +46,8 @@ dev.loopback_mode = 0
 dev.tx_channel_nco_gain_scales = ([0.6, 0.6, 0.6, 0.6])
 dev.tx([iq0_sine, iq0_sine, iq0_sine, iq0_sine])
 
-dev.rx_buffer_size = 200
+dev.rx_buffer_size = 1024
 
-#for i in range(5):
 data = dev.rx()
 x = np.arange(0, dev.rx_buffer_size)
 fig, (ch1, ch2, ch3, ch4) = plt.subplots(4, 1)
