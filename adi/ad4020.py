@@ -97,6 +97,15 @@ class ad4020(rx, context_manager):
         def scale(self):
             return float(self._get_iio_attr_str(self.name, "scale", False))
 
+        @scale.setter
+        def scale(self, value):
+            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
+
+        @property
+        def scale_available(self):
+            """Provides all available scale(gain) settings for the ADC channel"""
+            return self._get_iio_attr(self.name, "scale_available", False)
+
         def __call__(self):
             """Convenience function, get voltages in IIO units (millivolts)"""
             return self.raw * self.scale
