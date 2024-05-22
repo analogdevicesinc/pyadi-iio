@@ -197,6 +197,7 @@ def get_test_map():
         "vc707_fmcjesdadc1",
     ]
     test_map["ad4020"] = ["zynq-zed-adv7511-ad4020"]
+    test_map["adaq4003"] = ["zynq-zed-adv7511-adaq4003"]
     test_map["ad4630"] = ["zynq-zed-adv7511-ad4630-24"]
     test_map["ad9467"] = [
         "zynq-zed-adv7511-ad9467-fmc-250ebz",
