@@ -83,6 +83,6 @@ plt.ylim([1e-6, 4])
 plt.xlabel("frequency [Hz]")
 plt.ylabel("Voltage (mV)")
 plt.draw()
-plt.pause(0.05)
+plt.show()
 
 del my_adc
