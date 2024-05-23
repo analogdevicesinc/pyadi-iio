@@ -46,12 +46,19 @@ class adis16475(rx, context_manager):
             "adis16467-2",
             "adis16467-3",
             "adis16500",
+            "adis16501",
             "adis16505-1",
             "adis16505-2",
             "adis16505-3",
             "adis16507-1",
             "adis16507-2",
             "adis16507-3",
+            "adis16575-2",
+            "adis16575-3",
+            "adis16576-2",
+            "adis16576-3",
+            "adis16577-2",
+            "adis16577-3",
         ]
 
         if device_name not in compatible_parts:
