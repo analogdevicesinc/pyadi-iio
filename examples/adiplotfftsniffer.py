@@ -50,7 +50,6 @@ class ADIFFTSnifferPlotter(object):
         self.stream.sorting_enable = False
         self.stream.real_mode = True
 
-
         self.stream.is_complex = self.stream.fft_mode == "Complex"
         self.stream.rx_buffer_size = self.stream.fft_size
         self.stream.sample_rate = int(self.stream.adc_sampling_rate_Hz)
@@ -90,14 +89,20 @@ class ADIFFTSnifferPlotter(object):
         else:
             title = "SPECTRUM"
         self.spectrum = self.win.addPlot(
-            title=title, row=1, col=1, axisItems={"bottom": sp_xaxis},
+            title=title,
+            row=1,
+            col=1,
+            axisItems={"bottom": sp_xaxis},
         )
         self.spectrum.showGrid(x=True, y=True)
         if self.stream.is_complex:
             spq_xaxis = pg.AxisItem(orientation="bottom")
             spq_xaxis.setLabel(units="Hz")
             self.spectrum_q = self.win.addPlot(
-                title="SPECTRUM (Q)", row=2, col=1, axisItems={"bottom": spq_xaxis},
+                title="SPECTRUM (Q)",
+                row=2,
+                col=1,
+                axisItems={"bottom": spq_xaxis},
             )
             self.spectrum_q.showGrid(x=True, y=True)
         if self.stream.real_mode == 1:
@@ -122,14 +127,29 @@ class ADIFFTSnifferPlotter(object):
         self.measurements.hideAxis("left")
         self.measurements.hideAxis("bottom")
 
+        #### Add waterfall plot
+        self.waterfall_time_samples = 100
+        self.wf_vb = self.win.addViewBox(row=2, col=1)
+        self.wf_img = pg.ImageItem(
+            np.random.normal(size=(self.stream.fft_size, self.waterfall_time_samples))
+        )
+        self.wf_vb.addItem(self.wf_img)
+
+        # Define color map for FFT values of 0->127
+        colors = [(0, "blue"), (0.5, "green"), (1, "red")]
+        positions = [c[0] for c in colors]
+        color_values = [pg.mkColor(c[1]) for c in colors]
+        color_map = pg.ColorMap(positions, color_values)
+        self.wf_img.setLookupTable(color_map.getLookupTable(0.0, 1.0, 128))
+
         self.qmw.show()
 
         self.run_source = True
         self.thread = threading.Thread(target=self.source)
         self.thread.start()
 
-        # self.thread_sweeper = threading.Thread(target=self.sweeper)
-        # self.thread_sweeper.start()
+        self.thread_sweeper = threading.Thread(target=self.sweeper)
+        self.thread_sweeper.start()
 
         self.markers_added = False
 
@@ -139,7 +159,7 @@ class ADIFFTSnifferPlotter(object):
         direction = 1
         while self.run_source:
             self._ctrl.tx_main_nco_frequencies = [freq]
-            time.sleep(0.1)
+            time.sleep(0.5)
             if direction == 1:
                 freq += step
             else:
@@ -148,7 +168,6 @@ class ADIFFTSnifferPlotter(object):
                 direction = 0
             if freq <= 1000000000:
                 direction = 1
-
 
     def source(self):
         print("Thread running")
@@ -261,14 +280,18 @@ class ADIFFTSnifferPlotter(object):
             # )
             start = self.f[0]
             self.spectrum.setXRange(
-                start, self.stream.sample_rate / 2, padding=0.005,
+                start,
+                self.stream.sample_rate / 2,
+                padding=0.005,
             )
             if self.stream.is_complex:
                 self.traces["spectrum_q"] = self.spectrum_q.plot(pen="c", width=3)
                 self.spectrum_q.setLogMode(x=False, y=False)
                 self.spectrum_q.setYRange(self.min, 32, padding=0)
                 self.spectrum_q.setXRange(
-                    start, self.stream.sample_rate / 2, padding=0.005,
+                    start,
+                    self.stream.sample_rate / 2,
+                    padding=0.005,
                 )
 
     def update(self):
@@ -307,8 +330,15 @@ class ADIFFTSnifferPlotter(object):
             self.set_plotdata(name="spectrum", data_x=self.f, data_y=sp_data)
             if self.stream.is_complex:
                 self.set_plotdata(
-                    name="spectrum_q", data_x=self.f, data_y=np.imag(wf_data),
+                    name="spectrum_q",
+                    data_x=self.f,
+                    data_y=np.imag(wf_data),
                 )
+
+            # Update waterfall plot
+            self.waterfall_data = np.roll(self.wf_img.image, 1, axis=1)
+            self.waterfall_data[:, 0] = np.abs(wf_data)
+            self.wf_img.setImage(self.waterfall_data)
 
             if use_genalyzer and self.current_count != 0:
                 return
