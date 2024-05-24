@@ -138,13 +138,13 @@ class ad9081(rx_tx, context_manager, sync_start):
         # This is overridden by subclasses
         return self._set_iio_attr(channel_name, attr, output, value)
 
-    def _get_iio_attr_single(self, channel_name, attr, output):
+    def _get_iio_attr_single(self, channel_name, attr, output, _ctrl=None):
         # This is overridden by subclasses
-        return self._get_iio_attr(channel_name, attr, output)
+        return self._get_iio_attr(channel_name, attr, output, _ctrl)
 
-    def _set_iio_attr_single(self, channel_name, attr, output, value):
+    def _set_iio_attr_single(self, channel_name, attr, output, value, _ctrl=None):
         # This is overridden by subclasses
-        return self._set_iio_attr(channel_name, attr, output, value)
+        return self._set_iio_attr(channel_name, attr, output, value, _ctrl)
 
     def _get_iio_dev_attr_single(self, attr):
         # This is overridden by subclasses
@@ -627,7 +627,9 @@ class ad9081(rx_tx, context_manager, sync_start):
     @property
     def tx_sample_rate(self):
         """tx_sampling_frequency: Sample rate before interpolation"""
-        return self._get_iio_attr_single("voltage0_i", "sampling_frequency", True)
+        return self._get_iio_attr_single(
+            "voltage0_i", "sampling_frequency", True, self._txdac
+        )
 
     @property
     def dac_frequency(self):
