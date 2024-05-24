@@ -23,7 +23,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
     N = len(x)
 
     # Apply window
-    window = signal.kaiser(N, beta=38)
+    window = signal.windows.kaiser(N, beta=8.6)
     # x = multiply(x, window)
 
     # Use FFT to get the amplitude of the spectrum
@@ -147,10 +147,6 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
     main = peak_vals[0]
     next = peak_vals[1]
     sfdr = absolute(main - next)
-
-    print(main)
-    print(next)
-    print(sfdr)
 
     if plot:
         import matplotlib.pyplot as plt
