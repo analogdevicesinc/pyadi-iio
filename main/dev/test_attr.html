@@ -7,12 +7,12 @@
 
     <title>Attribute Tests &#8212; Analog Devices Hardware Python Interfaces 0.0.17 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=b4b07c60" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=8e0fb079" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=1b90c193"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=a4c09003"></script>
+    <script defer="" src="../_static/app.umd.js?v=7e1fdd13"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -101,14 +101,20 @@
 <li><a class="reference internal" href="#">Attribute Tests</a><ul>
 <li><a class="reference internal" href="#test.attr_tests.attribute_check_range_readonly_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_check_range_readonly_with_depends()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values_available_readonly"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values_available_readonly()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values_device_channel"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values_device_channel()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values_with_depends()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_readonly_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_readonly_with_depends()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value"><code class="docutils literal notranslate"><span class="pre">attribute_single_value()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value_boolean"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_boolean()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_single_value_channel_readonly"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_channel_readonly()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_single_value_device_name_channel_readonly"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_device_name_channel_readonly()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value_pow2"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_pow2()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_single_value_range_channel"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_range_channel()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value_readonly"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_readonly()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value_str"><code class="docutils literal notranslate"><span class="pre">attribute_single_value_str()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str_device_channel"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str_device_channel()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str_with_depends()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.floor_step_size"><code class="docutils literal notranslate"><span class="pre">floor_step_size()</span></code></a></li>
 </ul>
@@ -347,6 +353,57 @@ number of times.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values_available_readonly">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_available_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_available_readonly" title="Permalink to this definition">#</a></dt>
+<dd><p>attribute_multiple_values_available_readonly:
+Read only class property where the available attribute values are returned.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values_device_channel">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_device_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_device_channel" title="Permalink to this definition">#</a></dt>
+<dd><p>attribute_multiple_values_device_channel: Write and read back multiple class properties
+in a loop where all values are pre-defined and device name and channel are specified.
+This is performed a defined number of times.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>device_name: type=string</dt><dd><p>Device name of target board/system</p>
+</dd>
+<dt>channel: type=string</dt><dd><p>Channel name of the attribute</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+<dt>values: type=list</dt><dd><p>A list of values to write and check as attributes</p>
+</dd>
+<dt>tol: type=integer</dt><dd><p>Allowable error of written value compared to read back value</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of times to repeatedly write values</p>
+</dd>
+<dt>sleep: type=integer</dt><dd><p>Seconds to sleep between writing to attribute and reading it back</p>
+</dd>
+<dt>sub_channel: type=string</dt><dd><p>Name of sub channel (nested class) to be tested</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values_with_depends">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_with_depends" title="Permalink to this definition">#</a></dt>
 <dd><p>attribute_multiple_values_with_depends: Write and read back multiple class
@@ -447,6 +504,48 @@ is randomly determined based in input parameters</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_channel_readonly">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_channel_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_channel_readonly" title="Permalink to this definition">#</a></dt>
+<dd><p>attribute_single_value:
+Read only class property where the channel name is specified.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=string</dt><dd><p>Channel name of the target board/system</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_device_name_channel_readonly">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_device_name_channel_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_device_name_channel_readonly" title="Permalink to this definition">#</a></dt>
+<dd><p>attribute_single_value:
+Read only class property with device name and channel parameters</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>device_name: type=string</dt><dd><p>Device name of target board/system</p>
+</dd>
+<dt>channel: type=string</dt><dd><p>Channel name of the target board/system</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_pow2">
 <span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_pow2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_pow2" title="Permalink to this definition">#</a></dt>
 <dd><p>attribute_single_value_pow2: Write and read back integer class property
@@ -466,6 +565,42 @@ in input parameters</p>
 <dt>tol: type=integer</dt><dd><p>Allowable error of written value compared to read back value</p>
 </dd>
 <dt>repeats: type=integer</dt><dd><p>Number of random values to tests. Generated from uniform distribution</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_range_channel">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_range_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_range_channel" title="Permalink to this definition">#</a></dt>
+<dd><p>attribute_single_value_range_channel:
+Write and read back integer class property
+This is performed a defined number of times and the value written
+is randomly determined based in input parameters</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>device_name: type=string</dt><dd><p>Device name of target board/system</p>
+</dd>
+<dt>channel: type=string</dt><dd><p>Channel name of the attribute</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+<dt>start: type=integer</dt><dd><p>Lower bound of possible values attribute can be</p>
+</dd>
+<dt>stop: type=integer</dt><dd><p>Upper bound of possible values attribute can be</p>
+</dd>
+<dt>step: type=integer</dt><dd><p>Difference between successive values attribute can be</p>
+</dd>
+<dt>tol: type=integer</dt><dd><p>Allowable error of written value compared to read back value</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of random values to tests. Generated from uniform distribution</p>
+</dd>
+<dt>sub_channel: type=string</dt><dd><p>Name of sub channel (nested class) to be tested</p>
 </dd>
 </dl>
 </dd>
@@ -530,6 +665,30 @@ is randomly determined based in input parameters</p>
 <dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
 </dd>
 <dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+<dt>value: type=string</dt><dd><p>Value to write into attr property</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_write_only_str_device_channel">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str_device_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str_device_channel" title="Permalink to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>attribute_write_only_str_device_channel: Write only string class property</dt><dd><p>with device name and channel parameters</p>
+</dd>
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>device_name: type=string</dt><dd><p>Device name of target board/system</p>
+</dd>
+<dt>channel: type=string</dt><dd><p>Channel name of the target board/system</p>
 </dd>
 <dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
 </dd>
