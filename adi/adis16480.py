@@ -18,12 +18,9 @@ class adis16480(rx, context_manager):
         "accel_x",
         "accel_y",
         "accel_z",
-        "magn_x",
-        "magn_y",
-        "magn_z",
-        "pressure0",
         "temp0",
     ]
+
     _device_name = ""
 
     def __init__(self, uri="", device_name="adis16480", trigger_name="adis16480-dev0"):
@@ -76,10 +73,20 @@ class adis16480(rx, context_manager):
         self.accel_y = self._anglvel_accel_channels(self._ctrl, "accel_y")
         self.accel_z = self._anglvel_accel_channels(self._ctrl, "accel_z")
         self.temp = self._temp_channel(self._ctrl, "temp0")
-        self.pressure = self._pressure_channel(self._ctrl, "pressure0")
-        self.magn_x = self._magn_channel(self._ctrl, "magn_x")
-        self.magn_y = self._magn_channel(self._ctrl, "magn_y")
-        self.magn_z = self._magn_channel(self._ctrl, "magn_z")
+        if device_name == "adis16480" or device_name == "adis16488":
+            self._rx_channel_names.append("pressure0")
+            self._rx_channel_names.append("magn_x")
+            self._rx_channel_names.append("magn_y")
+            self._rx_channel_names.append("magn_z")
+            self.pressure = self._pressure_channel(self._ctrl, "pressure0")
+            self.magn_x = self._magn_channel(self._ctrl, "magn_x")
+            self.magn_y = self._magn_channel(self._ctrl, "magn_y")
+            self.magn_z = self._magn_channel(self._ctrl, "magn_z")
+        else:
+            self.pressure = 0
+            self.magn_x = 0
+            self.magn_y = 0
+            self.magn_z = 0
 
         # Set default trigger
         self._trigger = self._ctx.find_device(trigger_name)
@@ -139,19 +146,25 @@ class adis16480(rx, context_manager):
 
     def get_magn_x(self):
         """Value returned in radians."""
-        return self.__get_scaled_sensor("magn_x")
+        if self.magn_x:
+            return self.__get_scaled_sensor("magn_x")
+        return 0
 
     magn_x_conv = property(get_magn_x, None)
 
     def get_magn_y(self):
         """Value returned in radians."""
-        return self.__get_scaled_sensor("magn_y")
+        if self.magn_y:
+            return self.__get_scaled_sensor("magn_y")
+        return 0
 
     magn_y_conv = property(get_magn_y, None)
 
     def get_magn_z(self):
         """Value returned in radians."""
-        return self.__get_scaled_sensor("magn_z")
+        if self.magn_z:
+            return self.__get_scaled_sensor("magn_z")
+        return 0
 
     magn_z_conv = property(get_magn_z, None)
 
@@ -163,7 +176,9 @@ class adis16480(rx, context_manager):
 
     def get_pressure(self):
         """Value returned in kilo Pascal."""
-        return self.__get_scaled_sensor("pressure0")
+        if self.pressure:
+            return self.__get_scaled_sensor("pressure0")
+        return 0
 
     pressure_conv = property(get_pressure, None)
 
@@ -242,38 +257,50 @@ class adis16480(rx, context_manager):
     @property
     def magn_x_calibbias(self):
         """User calibration offset for magnetometer for the x-axis."""
-        return self._get_iio_attr("magn_x", "calibbias", False)
+        if self.magn_x:
+            return self._get_iio_attr("magn_x", "calibbias", False)
+        return 0
 
     @magn_x_calibbias.setter
     def magn_x_calibbias(self, value):
-        self._set_iio_attr("magn_x", "calibbias", False, value)
+        if self.magn_x:
+            self._set_iio_attr("magn_x", "calibbias", False, value)
 
     @property
     def magn_y_calibbias(self):
         """User calibration offset for magnetometer for the y-axis."""
-        return self._get_iio_attr("magn_y", "calibbias", False)
+        if self.magn_y:
+            return self._get_iio_attr("magn_y", "calibbias", False)
+        return 0
 
     @magn_y_calibbias.setter
     def magn_y_calibbias(self, value):
-        self._set_iio_attr("magn_y", "calibbias", False, value)
+        if self.magn_y:
+            self._set_iio_attr("magn_y", "calibbias", False, value)
 
     @property
     def magn_z_calibbias(self):
         """User calibration offset for magnetometer for the z-axis."""
-        return self._get_iio_attr("magn_z", "calibbias", False)
+        if self.magn_z:
+            return self._get_iio_attr("magn_z", "calibbias", False)
+        return 0
 
     @magn_z_calibbias.setter
     def magn_z_calibbias(self, value):
-        self._set_iio_attr("magn_z", "calibbias", False, value)
+        if self.magn_z:
+            self._set_iio_attr("magn_z", "calibbias", False, value)
 
     @property
     def pressure_calibbias(self):
         """User calibration offset for pressure."""
-        return self._get_iio_attr("pressure0", "calibbias", False)
+        if self.pressure:
+            return self._get_iio_attr("pressure0", "calibbias", False)
+        return 0
 
     @pressure_calibbias.setter
     def pressure_calibbias(self, value):
-        self._set_iio_attr("pressure0", "calibbias", False, value)
+        if self.pressure:
+            self._set_iio_attr("pressure0", "calibbias", False, value)
 
     #####
     @property
@@ -387,29 +414,38 @@ class adis16480(rx, context_manager):
     @property
     def magn_x_filter_low_pass_3db_frequency(self):
         """Bandwidth for magnetometer for the x-axis."""
-        return self._get_iio_attr("magn_x", "filter_low_pass_3db_frequency", False)
+        if self.magn_x:
+            return self._get_iio_attr("magn_x", "filter_low_pass_3db_frequency", False)
+        return 0
 
     @magn_x_filter_low_pass_3db_frequency.setter
     def magn_x_filter_low_pass_3db_frequency(self, value):
-        self._set_iio_attr("magn_x", "filter_low_pass_3db_frequency", False, value)
+        if self.magn_x:
+            self._set_iio_attr("magn_x", "filter_low_pass_3db_frequency", False, value)
 
     @property
     def magn_y_filter_low_pass_3db_frequency(self):
         """Bandwidth for magnetometer for the y-axis."""
-        return self._get_iio_attr("magn_y", "filter_low_pass_3db_frequency", False)
+        if self.magn_y:
+            return self._get_iio_attr("magn_y", "filter_low_pass_3db_frequency", False)
+        return 0
 
     @magn_y_filter_low_pass_3db_frequency.setter
     def magn_y_filter_low_pass_3db_frequency(self, value):
-        self._set_iio_attr("magn_y", "filter_low_pass_3db_frequency", False, value)
+        if self.magn_y:
+            self._set_iio_attr("magn_y", "filter_low_pass_3db_frequency", False, value)
 
     @property
     def magn_z_filter_low_pass_3db_frequency(self):
         """Bandwidth for magnetometer for the z-axis."""
-        return self._get_iio_attr("magn_z", "filter_low_pass_3db_frequency", False)
+        if self.magn_z:
+            return self._get_iio_attr("magn_z", "filter_low_pass_3db_frequency", False)
+        return 0
 
     @magn_z_filter_low_pass_3db_frequency.setter
     def magn_z_filter_low_pass_3db_frequency(self, value):
-        self._set_iio_attr("magn_z", "filter_low_pass_3db_frequency", False, value)
+        if self.magn_z:
+            self._set_iio_attr("magn_z", "filter_low_pass_3db_frequency", False, value)
 
     @property
     def firmware_revision(self):

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 dev = adi.adis16480(uri="ip:localhost", device_name="adis16480")
 
 dev.rx_output_type = "raw"
-dev.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+dev.rx_enabled_channels = [0, 1, 2, 3, 4, 5]
 dev.sample_rate = 10
 dev.rx_buffer_size = 10
 
