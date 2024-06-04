@@ -39,6 +39,21 @@ class adis16480(rx, context_manager):
             "adis16497-1",
             "adis16497-2",
             "adis16497-3",
+            "adis16545-1",
+            "adis16545-2",
+            "adis16545-3",
+            "adis16547-1",
+            "adis16547-2",
+            "adis16547-3",
+        ]
+
+        parts_with_delta_angl_in_buff = [
+            "adis16545-1",
+            "adis16545-2",
+            "adis16545-3",
+            "adis16547-1",
+            "adis16547-2",
+            "adis16547-3",
         ]
 
         if device_name not in compatible_parts:
@@ -95,6 +110,14 @@ class adis16480(rx, context_manager):
             self.magn_x = 0
             self.magn_y = 0
             self.magn_z = 0
+
+        if device_name in parts_with_delta_angl_in_buff:
+            self._rx_channel_names.append("deltaangl_x")
+            self._rx_channel_names.append("deltaangl_y")
+            self._rx_channel_names.append("deltaangl_z")
+            self._rx_channel_names.append("deltavelocity_x")
+            self._rx_channel_names.append("deltavelocity_y")
+            self._rx_channel_names.append("deltavelocity_z")
 
         # Set default trigger
         self._trigger = self._ctx.find_device(trigger_name)
