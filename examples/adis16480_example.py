@@ -57,7 +57,7 @@ for _ in range(100):
     data = dev.rx()
     plt.clf()
     for i, d in enumerate(data):
-        plt.plot(d, label=dev._rx_channel_names[i])
+        plt.plot(d, label=dev._rx_channel_names[dev.rx_enabled_channels[i]])
     plt.legend()
     plt.show(block=False)
     plt.pause(0.1)
