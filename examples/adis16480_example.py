@@ -30,12 +30,20 @@ print("\nX angular velocity: " + str(dev.anglvel_x_conv) + " rad/s")
 print("Y angular velocity: " + str(dev.anglvel_y_conv) + " rad/s")
 print("Z angular velocity: " + str(dev.anglvel_z_conv) + " rad/s")
 
+print("\nX delta velocity: " + str(dev.deltavelocity_x_conv) + " m/s")
+print("Y delta velocity: " + str(dev.deltavelocity_y_conv) + " m/s")
+print("Z delta velocity: " + str(dev.deltavelocity_z_conv) + " m/s")
+
+print("\nX delta angle: " + str(dev.deltaangl_x_conv) + " rad")
+print("Y delta angle: " + str(dev.deltaangl_y_conv) + " rad")
+print("Z delta angle: " + str(dev.deltaangl_z_conv) + " rad")
+
 dev.sample_rate = 2000
 dev.magn_x_filter_low_pass_3db_frequency = 100
 dev.anglvel_y_calibscale = 30
 dev.anglvel_x_calibbias = 100
 
-print("Sampling frequency: " + str(dev.sample_rate))
+print("\nSampling frequency: " + str(dev.sample_rate))
 
 print("Temperature raw value: " + str(dev.temp.raw))
 print("Temperature scale value: " + str(dev.temp.scale))

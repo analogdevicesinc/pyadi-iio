@@ -75,6 +75,12 @@ class adis16480(rx, context_manager):
         self.accel_y = self._anglvel_accel_channels(self._ctrl, "accel_y")
         self.accel_z = self._anglvel_accel_channels(self._ctrl, "accel_z")
         self.temp = self._temp_channel(self._ctrl, "temp0")
+        self.deltaangl_x = self._delta_channels(self._ctrl, "deltaangl_x")
+        self.deltaangl_y = self._delta_channels(self._ctrl, "deltaangl_y")
+        self.deltaangl_z = self._delta_channels(self._ctrl, "deltaangl_z")
+        self.deltavelocity_x = self._delta_channels(self._ctrl, "deltavelocity_x")
+        self.deltavelocity_y = self._delta_channels(self._ctrl, "deltavelocity_y")
+        self.deltavelocity_z = self._delta_channels(self._ctrl, "deltavelocity_z")
         if device_name == "adis16480" or device_name == "adis16488":
             self._rx_channel_names.append("pressure0")
             self._rx_channel_names.append("magn_x")
@@ -183,6 +189,42 @@ class adis16480(rx, context_manager):
         return 0
 
     pressure_conv = property(get_pressure, None)
+
+    def get_deltaangl_x(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("deltaangl_x")
+
+    deltaangl_x_conv = property(get_deltaangl_x, None)
+
+    def get_deltaangl_y(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("deltaangl_y")
+
+    deltaangl_y_conv = property(get_deltaangl_y, None)
+
+    def get_deltaangl_z(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("deltaangl_z")
+
+    deltaangl_z_conv = property(get_deltaangl_z, None)
+
+    def get_deltavelocity_x(self):
+        """Value returned in meters per second."""
+        return self.__get_scaled_sensor("deltavelocity_x")
+
+    deltavelocity_x_conv = property(get_deltavelocity_x, None)
+
+    def get_deltavelocity_y(self):
+        """Value returned in meters per second."""
+        return self.__get_scaled_sensor("deltavelocity_y")
+
+    deltavelocity_y_conv = property(get_deltavelocity_y, None)
+
+    def get_deltavelocity_z(self):
+        """Value returned in meters per second."""
+        return self.__get_scaled_sensor("deltavelocity_z")
+
+    deltavelocity_z_conv = property(get_deltavelocity_z, None)
 
     @property
     def sample_rate(self):
@@ -553,3 +595,10 @@ class adis16480(rx, context_manager):
         @calibscale.setter
         def calibscale(self, value):
             self._set_iio_attr(self.name, "calibscale", False, value)
+
+    class _delta_channels(attribute):
+        """ADIS16480 delta angle and delta velocity channels."""
+
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
