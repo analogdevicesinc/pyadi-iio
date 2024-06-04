@@ -11,6 +11,7 @@ class adis16480(rx, context_manager):
     """ ADIS16480 Ten Degrees of Freedom Inertial Sensor with Dynamic Orientation Outputs """
 
     _complex_data = False
+
     _rx_channel_names = [
         "anglvel_x",
         "anglvel_y",
@@ -50,6 +51,7 @@ class adis16480(rx, context_manager):
         else:
             self._ctrl = self._ctx.find_device(device_name)
             self._rxadc = self._ctx.find_device(device_name)
+            trigger_name = device_name + "-dev0"
 
         if self._ctrl is None:
             print(
