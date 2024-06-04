@@ -1,12 +1,16 @@
 # Copyright (C) 2021 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
+import sys
 
 import adi
 import matplotlib.pyplot as plt
 
 # Set up ADIS16480
-dev = adi.adis16480(uri="ip:localhost", device_name="adis16480")
+my_dev_name = sys.argv[1]
+my_uri = sys.argv[2]
+
+dev = adi.adis16480(device_name=my_dev_name, uri=my_uri)
 
 dev.rx_output_type = "raw"
 dev.rx_enabled_channels = [0, 1, 2, 3, 4, 5]
