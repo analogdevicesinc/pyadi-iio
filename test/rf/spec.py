@@ -148,6 +148,10 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
     next = peak_vals[1]
     sfdr = absolute(main - next)
 
+    print(main)
+    print(next)
+    print(sfdr)
+
     if plot:
         import matplotlib.pyplot as plt
 
