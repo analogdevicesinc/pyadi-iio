@@ -434,3 +434,12 @@ adis16475:
         - iio:device0
   - pyadi_iio_class_support:
       - adis16475
+
+ad7134:
+  - ad7134
+  - emulate:
+      - filename: ad7134.xml
+      - data_devices:
+        - iio:device0
+  - pyadi_iio_class_support:
+      - ad7134
