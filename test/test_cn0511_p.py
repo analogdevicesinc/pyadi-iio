@@ -35,24 +35,22 @@ def test_cn0511_attr(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, depends, start, stop, step, tol, repeats",
-    [
-        ("frequency", dict(sample_rate=5898240000), 1, 2949120000, 1, 8, 2),
-    ],
+    [("frequency", dict(sample_rate=5898240000), 1, 2949120000, 1, 8, 2),],
 )
 def test_cn0511_attr_with_depends(
     test_attribute_check_range_singleval_with_depends,
     iio_uri,
     classname,
     attr,
-    depends, 
-    start, 
-    stop, 
-    step, 
-    tol, 
-    repeats
+    depends,
+    start,
+    stop,
+    step,
+    tol,
+    repeats,
 ):
     test_attribute_check_range_singleval_with_depends(
-        iio_uri, classname, attr,depends, start, stop, step, tol, repeats
+        iio_uri, classname, attr, depends, start, stop, step, tol, repeats
     )
 
 
