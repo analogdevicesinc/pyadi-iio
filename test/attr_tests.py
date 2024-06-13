@@ -625,3 +625,57 @@ def attribute_single_value_channel_readonly(uri, classname, channel, attr):
     except Exception as e:
         del sdr
         raise Exception(e)
+
+
+def attribute_check_range_singleval_with_depends(
+    uri, classname, attr, depends, start, stop, step, tol, repeats=1, sub_channel=None
+):
+    """attribute_check_range_singleval_with_depends:
+    Write and read back integer class property with dependent write properties
+    This is performed a defined number of times and the value written
+    is randomly determined based in input parameters
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        depends: type=dict
+            Dictionary of properties to write before value is written. Keys
+            are properties and values are values to be written
+        start: type=integer
+            Lower bound of possible values attribute can be
+        stop: type=integer
+            Upper bound of possible values attribute can be
+        step: type=integer
+            Difference between successive values attribute can be
+        tol: type=integer
+            Allowable error of written value compared to read back value
+        repeats: type=integer
+            Number of random values to tests. Generated from uniform distribution
+        sub_channel: type=string
+            Name of sub channel (nested class) to be tested
+    """
+    # Set custom dependencies for the attr being tested
+    for p in depends.keys():
+        if isinstance(depends[p], str):
+            assert dev_interface(uri, classname, depends[p], p, 0)
+        else:
+            assert dev_interface(uri, classname, depends[p], p, tol)
+
+    # Pick random number in operational range
+    numints = int((stop - start) / step)
+    for _ in range(repeats):
+        ind = random.randint(0, numints)
+        val = start + step * ind
+        if isinstance(val, float):
+            val = floor_step_size(val, str(step))
+        # Check hardware
+        if sub_channel:
+            assert dev_interface_sub_channel(
+                uri, classname, sub_channel, val, attr, tol
+            )
+        else:
+            assert dev_interface(uri, classname, val, attr, tol)

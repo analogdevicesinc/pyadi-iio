@@ -232,3 +232,8 @@ def test_attribute_multiple_values_available_readonly(request):
 @pytest.fixture
 def test_attribute_single_value_channel_readonly(request):
     yield attribute_single_value_channel_readonly
+
+
+@pytest.fixture()
+def test_attribute_check_range_singleval_with_depends(request):
+    yield attribute_check_range_singleval_with_depends
