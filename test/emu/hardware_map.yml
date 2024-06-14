@@ -601,3 +601,12 @@ ad7134:
         - iio:device0
   - pyadi_iio_class_support:
       - ad7134
+      
+ad4170:
+ - ad4170
+ - pyadi_iio_class_support:
+     - ad4170
+ - emulate:
+     - filename: ad4170.xml
+     - data_devices:
+         - iio:device0
