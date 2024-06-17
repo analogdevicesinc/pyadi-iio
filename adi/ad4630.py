@@ -63,12 +63,7 @@ class ad4630(rx, context_manager, attribute):
         rx.__init__(self)
 
     def rx(self):
-        if not self._rx__rxbuf:
-            self._rx_init_channels()
-        self._rx__rxbuf.refill()
-        buff = np.frombuffer(self._rx__rxbuf.read(), dtype=np.uint32)
-
-        data = [buff[0::2], buff[1::2]]
+        data = self._rx_buffered_data()
         temp = []
         if self._num_rx_channels != 2:
             for ch in range(0, self._num_rx_channels):
