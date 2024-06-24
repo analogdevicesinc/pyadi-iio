@@ -592,3 +592,12 @@ ad405x:
      - filename: ad405x.xml
      - data_devices:
          - iio:device0
+
+ad7134:
+  - ad4134
+  - emulate:
+      - filename: ad7134.xml
+      - data_devices:
+        - iio:device0
+  - pyadi_iio_class_support:
+      - ad7134
