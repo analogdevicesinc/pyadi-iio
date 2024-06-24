@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>ad7291 &#8212; Analog Devices Hardware Python Interfaces 0.0.17 documentation</title>
+    <title>ad7134 &#8212; Analog Devices Hardware Python Interfaces 0.0.17 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=a3ba2641" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -16,8 +16,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ad7606" href="adi.ad7606.html" />
-    <link rel="prev" title="ad719x" href="adi.ad719x.html" />
+    <link rel="next" title="ad717x" href="adi.ad717x.html" />
+    <link rel="prev" title="ad7124" href="adi.ad7124.html" />
    
   
     <meta name="robots" content="noindex">
@@ -98,8 +98,12 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">ad7291</a><ul>
-<li><a class="reference internal" href="#adi.ad7291.ad7291"><code class="docutils literal notranslate"><span class="pre">ad7291</span></code></a></li>
+<li><a class="reference internal" href="#">ad7134</a><ul>
+<li><a class="reference internal" href="#adi.ad7134.ad7134"><code class="docutils literal notranslate"><span class="pre">ad7134</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad7134.ad7134.channels"><code class="docutils literal notranslate"><span class="pre">ad7134.channels</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7134.ad7134.to_volts"><code class="docutils literal notranslate"><span class="pre">ad7134.to_volts()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -168,10 +172,10 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5940.html">adi.ad5940 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad6676.html">adi.ad6676 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7124.html">ad7124</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad7134.html">ad7134</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ad7134</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad717x.html">ad717x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad719x.html">ad719x</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ad7291</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7291.html">ad7291</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7746.html">ad7746</a></li>
@@ -280,13 +284,24 @@ Content on this topic
         <div class="bodywrapper" id="top-anchor">
           <div class="body" role="main">
             
-  <section id="module-adi.ad7291">
-<span id="ad7291"></span><h1>ad7291<a class="headerlink" href="#module-adi.ad7291" title="Permalink to this heading">#</a></h1>
+  <section id="module-adi.ad7134">
+<span id="ad7134"></span><h1>ad7134<a class="headerlink" href="#module-adi.ad7134" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad7291.ad7291">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7291.</span></span><span class="sig-name descname"><span class="pre">ad7291</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7291.ad7291" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>AD7291 ADC</p>
+<dt class="sig sig-object py" id="adi.ad7134.ad7134">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7134.</span></span><span class="sig-name descname"><span class="pre">ad7134</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7134.ad7134" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD7134 ADC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad7134.ad7134.channels">
+<span class="sig-name descname"><span class="pre">channels</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad7134.ad7134.channels" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad7134.ad7134.to_volts">
+<span class="sig-name descname"><span class="pre">to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7134.ad7134.to_volts" title="Permalink to this definition">#</a></dt>
+<dd><p>Converts raw value to SI</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -295,8 +310,8 @@ Content on this topic
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.ad719x.html" title="Previous document (Ctrl+LeftArrow)" class="prev">ad719x</a>
-    <a href="adi.ad7606.html" title="Next document (Ctrl+RightArrow)" class="next">ad7606</a>
+    <a href="adi.ad7124.html" title="Previous document (Ctrl+LeftArrow)" class="prev">ad7124</a>
+    <a href="adi.ad717x.html" title="Next document (Ctrl+RightArrow)" class="next">ad717x</a>
               </div>
           
         </div>
