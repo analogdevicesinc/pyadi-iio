@@ -108,3 +108,30 @@ def test_adis16480_serial_number(iio_uri):
     adis16480 = adi.adis16480(uri=iio_uri)
 
     assert adis16480.serial_number != "0x0000"
+
+
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize(
+    "classname",
+    [
+        "adi.adis16375",
+        "adi.adis16480",
+        "adi.adis16485",
+        "adi.adis16488",
+        "adi.adis16490",
+        "adi.adis16495",
+        "adi.adis16497",
+        "adi.adis16545",
+        "adi.adis16547",
+    ],
+)
+def test_adis16XXX_create(iio_uri, classname):
+    # This test is a little hack to just enumerate all the classes even though
+    # we don't have the exact hardware
+    emulation_hw = "adis16480"
+    imu = eval(classname)
+    imu.compatible_parts = [emulation_hw]
+    imu.disable_trigger = True
+
+    # Try to create the object
+    imu = imu(uri=iio_uri)

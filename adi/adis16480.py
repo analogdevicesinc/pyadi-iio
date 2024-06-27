@@ -2,15 +2,17 @@
 #
 # SPDX short identifier: ADIBSD
 
+from abc import ABC, abstractmethod
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
 
-class adis16480(rx, context_manager):
-    """ ADIS16480 Ten Degrees of Freedom Inertial Sensor with Dynamic Orientation Outputs """
+class adis16XXX(rx, context_manager, ABC):
 
     _complex_data = False
+
     _rx_channel_names = [
         "anglvel_x",
         "anglvel_y",
@@ -18,41 +20,37 @@ class adis16480(rx, context_manager):
         "accel_x",
         "accel_y",
         "accel_z",
-        "magn_x",
-        "magn_y",
-        "magn_z",
-        "pressure0",
         "temp0",
     ]
+
     _device_name = ""
 
-    def __init__(self, uri="", device_name="adis16480", trigger_name="adis16480-dev0"):
+    """Disable mapping of trigger to RX device."""
+    disable_trigger = False
+
+    # @property
+    @abstractmethod
+    def compatible_parts(self):
+        raise NotImplementedError
+
+    def __init__(self, uri="", device_name=None, trigger_name=None):
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = [
-            "adis16375",
-            "adis16480",
-            "adis16485",
-            "adis16488",
-            "adis16490",
-            "adis16495-1",
-            "adis16495-2",
-            "adis16495-3",
-            "adis16497-1",
-            "adis16497-2",
-            "adis16497-3",
-        ]
+        if not device_name:
+            device_name = self.compatible_parts[0]
 
-        if device_name not in compatible_parts:
+        if device_name not in self.compatible_parts:
             raise Exception(
                 "Not a compatible device:"
                 + str(device_name)
                 + ".Please select from:"
-                + str(compatible_parts)
+                + str(self.compatible_parts)
             )
         else:
             self._ctrl = self._ctx.find_device(device_name)
             self._rxadc = self._ctx.find_device(device_name)
+            if not trigger_name:
+                trigger_name = device_name + "-dev0"
 
         if self._ctrl is None:
             print(
@@ -60,7 +58,7 @@ class adis16480(rx, context_manager):
                 + device_name
                 + ". Searching for a device found in the compatible list."
             )
-            for i in compatible_parts:
+            for i in self.compatible_parts:
                 self._ctrl = self._ctx.find_device(i)
                 self._rxadc = self._ctx.find_device(i)
                 if self._ctrl is not None:
@@ -76,14 +74,17 @@ class adis16480(rx, context_manager):
         self.accel_y = self._anglvel_accel_channels(self._ctrl, "accel_y")
         self.accel_z = self._anglvel_accel_channels(self._ctrl, "accel_z")
         self.temp = self._temp_channel(self._ctrl, "temp0")
-        self.pressure = self._pressure_channel(self._ctrl, "pressure0")
-        self.magn_x = self._magn_channel(self._ctrl, "magn_x")
-        self.magn_y = self._magn_channel(self._ctrl, "magn_y")
-        self.magn_z = self._magn_channel(self._ctrl, "magn_z")
+        self.deltaangl_x = self._delta_channels(self._ctrl, "deltaangl_x")
+        self.deltaangl_y = self._delta_channels(self._ctrl, "deltaangl_y")
+        self.deltaangl_z = self._delta_channels(self._ctrl, "deltaangl_z")
+        self.deltavelocity_x = self._delta_channels(self._ctrl, "deltavelocity_x")
+        self.deltavelocity_y = self._delta_channels(self._ctrl, "deltavelocity_y")
+        self.deltavelocity_z = self._delta_channels(self._ctrl, "deltavelocity_z")
 
         # Set default trigger
-        self._trigger = self._ctx.find_device(trigger_name)
-        self._rxadc._set_trigger(self._trigger)
+        if not self.disable_trigger:
+            self._trigger = self._ctx.find_device(trigger_name)
+            self._rxadc._set_trigger(self._trigger)
 
         rx.__init__(self)
         self.rx_buffer_size = 16  # Make default buffer smaller
@@ -137,35 +138,47 @@ class adis16480(rx, context_manager):
 
     accel_z_conv = property(get_accel_z, None)
 
-    def get_magn_x(self):
-        """Value returned in radians."""
-        return self.__get_scaled_sensor("magn_x")
-
-    magn_x_conv = property(get_magn_x, None)
-
-    def get_magn_y(self):
-        """Value returned in radians."""
-        return self.__get_scaled_sensor("magn_y")
-
-    magn_y_conv = property(get_magn_y, None)
-
-    def get_magn_z(self):
-        """Value returned in radians."""
-        return self.__get_scaled_sensor("magn_z")
-
-    magn_z_conv = property(get_magn_z, None)
-
     def get_temp(self):
         """Value returned in millidegrees Celsius."""
         return self.__get_scaled_sensor_temp("temp0")
 
     temp_conv = property(get_temp, None)
 
-    def get_pressure(self):
-        """Value returned in kilo Pascal."""
-        return self.__get_scaled_sensor("pressure0")
+    def get_deltaangl_x(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("deltaangl_x")
 
-    pressure_conv = property(get_pressure, None)
+    deltaangl_x_conv = property(get_deltaangl_x, None)
+
+    def get_deltaangl_y(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("deltaangl_y")
+
+    deltaangl_y_conv = property(get_deltaangl_y, None)
+
+    def get_deltaangl_z(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("deltaangl_z")
+
+    deltaangl_z_conv = property(get_deltaangl_z, None)
+
+    def get_deltavelocity_x(self):
+        """Value returned in meters per second."""
+        return self.__get_scaled_sensor("deltavelocity_x")
+
+    deltavelocity_x_conv = property(get_deltavelocity_x, None)
+
+    def get_deltavelocity_y(self):
+        """Value returned in meters per second."""
+        return self.__get_scaled_sensor("deltavelocity_y")
+
+    deltavelocity_y_conv = property(get_deltavelocity_y, None)
+
+    def get_deltavelocity_z(self):
+        """Value returned in meters per second."""
+        return self.__get_scaled_sensor("deltavelocity_z")
+
+    deltavelocity_z_conv = property(get_deltavelocity_z, None)
 
     @property
     def sample_rate(self):
@@ -238,42 +251,6 @@ class adis16480(rx, context_manager):
     @accel_z_calibbias.setter
     def accel_z_calibbias(self, value):
         self._set_iio_attr("accel_z", "calibbias", False, value)
-
-    @property
-    def magn_x_calibbias(self):
-        """User calibration offset for magnetometer for the x-axis."""
-        return self._get_iio_attr("magn_x", "calibbias", False)
-
-    @magn_x_calibbias.setter
-    def magn_x_calibbias(self, value):
-        self._set_iio_attr("magn_x", "calibbias", False, value)
-
-    @property
-    def magn_y_calibbias(self):
-        """User calibration offset for magnetometer for the y-axis."""
-        return self._get_iio_attr("magn_y", "calibbias", False)
-
-    @magn_y_calibbias.setter
-    def magn_y_calibbias(self, value):
-        self._set_iio_attr("magn_y", "calibbias", False, value)
-
-    @property
-    def magn_z_calibbias(self):
-        """User calibration offset for magnetometer for the z-axis."""
-        return self._get_iio_attr("magn_z", "calibbias", False)
-
-    @magn_z_calibbias.setter
-    def magn_z_calibbias(self, value):
-        self._set_iio_attr("magn_z", "calibbias", False, value)
-
-    @property
-    def pressure_calibbias(self):
-        """User calibration offset for pressure."""
-        return self._get_iio_attr("pressure0", "calibbias", False)
-
-    @pressure_calibbias.setter
-    def pressure_calibbias(self, value):
-        self._set_iio_attr("pressure0", "calibbias", False, value)
 
     #####
     @property
@@ -385,33 +362,6 @@ class adis16480(rx, context_manager):
         self._set_iio_attr("accel_z", "filter_low_pass_3db_frequency", False, value)
 
     @property
-    def magn_x_filter_low_pass_3db_frequency(self):
-        """Bandwidth for magnetometer for the x-axis."""
-        return self._get_iio_attr("magn_x", "filter_low_pass_3db_frequency", False)
-
-    @magn_x_filter_low_pass_3db_frequency.setter
-    def magn_x_filter_low_pass_3db_frequency(self, value):
-        self._set_iio_attr("magn_x", "filter_low_pass_3db_frequency", False, value)
-
-    @property
-    def magn_y_filter_low_pass_3db_frequency(self):
-        """Bandwidth for magnetometer for the y-axis."""
-        return self._get_iio_attr("magn_y", "filter_low_pass_3db_frequency", False)
-
-    @magn_y_filter_low_pass_3db_frequency.setter
-    def magn_y_filter_low_pass_3db_frequency(self, value):
-        self._set_iio_attr("magn_y", "filter_low_pass_3db_frequency", False, value)
-
-    @property
-    def magn_z_filter_low_pass_3db_frequency(self):
-        """Bandwidth for magnetometer for the z-axis."""
-        return self._get_iio_attr("magn_z", "filter_low_pass_3db_frequency", False)
-
-    @magn_z_filter_low_pass_3db_frequency.setter
-    def magn_z_filter_low_pass_3db_frequency(self, value):
-        self._set_iio_attr("magn_z", "filter_low_pass_3db_frequency", False, value)
-
-    @property
     def firmware_revision(self):
         """firmware_revision: the firmware revision for the internal firmware"""
         return self._get_iio_debug_attr_str("firmware_revision")
@@ -515,3 +465,270 @@ class adis16480(rx, context_manager):
         @calibscale.setter
         def calibscale(self, value):
             self._set_iio_attr(self.name, "calibscale", False, value)
+
+    class _delta_channels(attribute):
+        """ADIS16480 delta angle and delta velocity channels."""
+
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+
+class adis16XXX_with_delta_angl(adis16XXX):
+    def __init__(self, uri="", device_name=None, trigger_name=None):
+        adis16XXX.__init__(self, uri, device_name, trigger_name)
+
+        self._rx_channel_names.append("deltaangl_x")
+        self._rx_channel_names.append("deltaangl_y")
+        self._rx_channel_names.append("deltaangl_z")
+        self._rx_channel_names.append("deltavelocity_x")
+        self._rx_channel_names.append("deltavelocity_y")
+        self._rx_channel_names.append("deltavelocity_z")
+
+
+class adis16XXX_with_mag(adis16XXX):
+    def __init__(self, uri="", device_name=None, trigger_name=None):
+        adis16XXX.__init__(self, uri, device_name, trigger_name)
+
+        self._rx_channel_names.append("pressure0")
+        self._rx_channel_names.append("magn_x")
+        self._rx_channel_names.append("magn_y")
+        self._rx_channel_names.append("magn_z")
+        self.pressure = self._pressure_channel(self._ctrl, "pressure0")
+        self.magn_x = self._magn_channel(self._ctrl, "magn_x")
+        self.magn_y = self._magn_channel(self._ctrl, "magn_y")
+        self.magn_z = self._magn_channel(self._ctrl, "magn_z")
+
+    def get_magn_x(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("magn_x")
+
+    magn_x_conv = property(get_magn_x, None)
+
+    def get_magn_y(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("magn_y")
+
+    magn_y_conv = property(get_magn_y, None)
+
+    def get_magn_z(self):
+        """Value returned in radians."""
+        return self.__get_scaled_sensor("magn_z")
+
+    magn_z_conv = property(get_magn_z, None)
+
+    def get_pressure(self):
+        """Value returned in kilo Pascal."""
+        return self.__get_scaled_sensor("pressure0")
+
+    pressure_conv = property(get_pressure, None)
+
+    @property
+    def magn_x_calibbias(self):
+        """User calibration offset for magnetometer for the x-axis."""
+        if self.magn_x:
+            return self._get_iio_attr("magn_x", "calibbias", False)
+        return 0
+
+    @magn_x_calibbias.setter
+    def magn_x_calibbias(self, value):
+        if self.magn_x:
+            self._set_iio_attr("magn_x", "calibbias", False, value)
+
+    @property
+    def magn_y_calibbias(self):
+        """User calibration offset for magnetometer for the y-axis."""
+        if self.magn_y:
+            return self._get_iio_attr("magn_y", "calibbias", False)
+        return 0
+
+    @magn_y_calibbias.setter
+    def magn_y_calibbias(self, value):
+        if self.magn_y:
+            self._set_iio_attr("magn_y", "calibbias", False, value)
+
+    @property
+    def magn_z_calibbias(self):
+        """User calibration offset for magnetometer for the z-axis."""
+        if self.magn_z:
+            return self._get_iio_attr("magn_z", "calibbias", False)
+        return 0
+
+    @magn_z_calibbias.setter
+    def magn_z_calibbias(self, value):
+        if self.magn_z:
+            self._set_iio_attr("magn_z", "calibbias", False, value)
+
+    @property
+    def pressure_calibbias(self):
+        """User calibration offset for pressure."""
+        if self.pressure:
+            return self._get_iio_attr("pressure0", "calibbias", False)
+        return 0
+
+    @pressure_calibbias.setter
+    def pressure_calibbias(self, value):
+        if self.pressure:
+            self._set_iio_attr("pressure0", "calibbias", False, value)
+
+    @property
+    def magn_x_filter_low_pass_3db_frequency(self):
+        """Bandwidth for magnetometer for the x-axis."""
+        if self.magn_x:
+            return self._get_iio_attr("magn_x", "filter_low_pass_3db_frequency", False)
+        return 0
+
+    @magn_x_filter_low_pass_3db_frequency.setter
+    def magn_x_filter_low_pass_3db_frequency(self, value):
+        if self.magn_x:
+            self._set_iio_attr("magn_x", "filter_low_pass_3db_frequency", False, value)
+
+    @property
+    def magn_y_filter_low_pass_3db_frequency(self):
+        """Bandwidth for magnetometer for the y-axis."""
+        if self.magn_y:
+            return self._get_iio_attr("magn_y", "filter_low_pass_3db_frequency", False)
+        return 0
+
+    @magn_y_filter_low_pass_3db_frequency.setter
+    def magn_y_filter_low_pass_3db_frequency(self, value):
+        if self.magn_y:
+            self._set_iio_attr("magn_y", "filter_low_pass_3db_frequency", False, value)
+
+    @property
+    def magn_z_filter_low_pass_3db_frequency(self):
+        """Bandwidth for magnetometer for the z-axis."""
+        if self.magn_z:
+            return self._get_iio_attr("magn_z", "filter_low_pass_3db_frequency", False)
+        return 0
+
+    @magn_z_filter_low_pass_3db_frequency.setter
+    def magn_z_filter_low_pass_3db_frequency(self, value):
+        if self.magn_z:
+            self._set_iio_attr("magn_z", "filter_low_pass_3db_frequency", False, value)
+
+
+11
+
+
+class adis16375(adis16XXX):
+    """ADIS16375 Low Profile, Low Noise Six Degrees of Freedom Inertial Sensor
+
+    Args:
+        uri: URI of IIO context with ADIS16375 device
+        device_name: Name of the device in the IIO context. Default is adis16375
+        trigger_name: Name of the trigger in the IIO context. Default is adis16375-dev0
+    """
+
+    compatible_parts = ["adis16375"]
+
+
+class adis16480(adis16XXX_with_mag):
+    """ADIS16480 Ten Degrees of Freedom Inertial Sensor with Dynamic Orientation Outputs
+
+    Args:
+        uri: URI of IIO context with ADIS16480 device
+        device_name: Name of the device in the IIO context. Default is adis16480
+        trigger_name: Name of the trigger in the IIO context. Default is adis16480-dev0
+    """
+
+    compatible_parts = ["adis16480"]
+
+
+class adis16485(adis16XXX):
+    """ADIS16485 Tactical Grade Six Degrees of Freedom MEMS Inertial Sensor
+
+    Args:
+        uri: URI of IIO context with ADIS16485 device
+        device_name: Name of the device in the IIO context. Default is adis16485
+        trigger_name: Name of the trigger in the IIO context. Default is adis16485-dev0
+    """
+
+    compatible_parts = ["adis16485"]
+
+
+class adis16488(adis16XXX_with_mag):
+    """ADIS16488  Tactical Grade Ten Degrees of Freedom Inertial Sensor
+
+    Args:
+        uri: URI of IIO context with ADIS16488 device
+        device_name: Name of the device in the IIO context. Default is adis16488
+        trigger_name: Name of the trigger in the IIO context. Default is adis16488-dev0
+    """
+
+    compatible_parts = ["adis16488"]
+
+
+class adis16490(adis16XXX):
+    """ADIS16490 Tactical Grade, Six Degrees of Freedom Inertial Sensor
+
+    Args:
+        uri: URI of IIO context with ADIS16490 device
+        device_name: Name of the device in the IIO context. Default is adis16490
+        trigger_name: Name of the trigger in the IIO context. Default is adis16490-dev0
+    """
+
+    compatible_parts = ["adis16490"]
+
+
+class adis16495(adis16XXX):
+    """ADIS16495-X Tactical Grade, Six Degrees of Freedom Inertial Sensor
+
+    This class is compatible with the following parts:
+    - adis16495-1
+    - adis16495-2
+    - adis16495-3
+
+    Args:
+        uri: URI of IIO context with ADIS16495 device
+        device_name: Name of the device in the IIO context. Default is adis16495-1
+        trigger_name: Name of the trigger in the IIO context. Default is adis16495-1-dev0
+    """
+
+    compatible_parts = ["adis16495-1", "adis16495-2", "adis16495-3"]
+
+
+class adis16497(adis16XXX):
+    """ADIS16497-X Ten Degrees of Freedom Inertial Sensor with Dynamic Orientation Outputs
+
+    This class is compatible with the following parts:
+    - adis16497-1
+    - adis16497-2
+    - adis16497-3
+    """
+
+    compatible_parts = ["adis16497-1", "adis16497-2", "adis16497-3"]
+
+
+class adis16545(adis16XXX_with_delta_angl):
+    """ADIS16545-X Tactical Grade, Six Degrees of Freedom Inertial Sensor
+
+    This class is compatible with the following parts:
+    - adis16545-1
+    - adis16545-2
+    - adis16545-3
+
+    Args:
+        uri: URI of IIO context with ADIS16545 device
+        device_name: Name of the device in the IIO context. Default is adis16545-1
+        trigger_name: Name of the trigger in the IIO context. Default is adis16545-1-dev0
+    """
+
+    compatible_parts = ["adis16545-1", "adis16545-2", "adis16545-3"]
+
+
+class adis16547(adis16XXX_with_delta_angl):
+    """ADIS16547-X Tactical Grade, Six Degrees of Freedom Inertial Sensors
+
+    This class is compatible with the following parts:
+    - adis16547-1
+    - adis16547-2
+    - adis16547-3
+
+    Args:
+        uri: URI of IIO context with ADIS16547 device
+        device_name: Name of the device in the IIO context. Default is adis16547-1
+        trigger_name: Name of the trigger in the IIO context. Default is adis16547-1-dev0
+    """
+
+    compatible_parts = ["adis16547-1", "adis16547-2", "adis16547-3"]
