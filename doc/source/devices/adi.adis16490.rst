@@ -1,8 +1,8 @@
 
-adis16495
+adis16490
 =========
 
-.. autoclass:: adi.adis16495
+.. autoclass:: adi.adis16490
    :members:
    :undoc-members:
    :show-inheritance:
