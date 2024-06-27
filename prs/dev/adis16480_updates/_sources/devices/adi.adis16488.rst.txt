@@ -1,8 +1,8 @@
 
-adis16495
+adis16488
 =========
 
-.. automodule:: adi.adis16495
+.. automodule:: adi.adis16488
    :members:
    :undoc-members:
    :show-inheritance:
