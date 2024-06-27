@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="adis16475" href="adi.adis16475.html" />
-    <link rel="prev" title="adi.adg2128 module" href="adi.adg2128.html" />
+    <link rel="prev" title="adis16375" href="adi.adis16375.html" />
    
   
     <meta name="robots" content="noindex">
@@ -99,9 +99,17 @@
         <nav>
           <ul>
 <li><a class="reference internal" href="#">adis16460</a><ul>
-<li><a class="reference internal" href="#adi.adis16460.adis16460"><code class="docutils literal notranslate"><span class="pre">adis16460</span></code></a><ul>
-<li><a class="reference internal" href="#adi.adis16460.adis16460.current_timestamp_clock"><code class="docutils literal notranslate"><span class="pre">adis16460.current_timestamp_clock</span></code></a></li>
-<li><a class="reference internal" href="#adi.adis16460.adis16460.sample_rate"><code class="docutils literal notranslate"><span class="pre">adis16460.sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460"><code class="docutils literal notranslate"><span class="pre">adis16460</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adis16460.ctx"><code class="docutils literal notranslate"><span class="pre">adis16460.ctx</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.current_timestamp_clock"><code class="docutils literal notranslate"><span class="pre">adis16460.current_timestamp_clock</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.rx"><code class="docutils literal notranslate"><span class="pre">adis16460.rx()</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.rx_annotated"><code class="docutils literal notranslate"><span class="pre">adis16460.rx_annotated</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">adis16460.rx_buffer_size</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.rx_channel_names"><code class="docutils literal notranslate"><span class="pre">adis16460.rx_channel_names</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.rx_destroy_buffer"><code class="docutils literal notranslate"><span class="pre">adis16460.rx_destroy_buffer()</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.rx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">adis16460.rx_enabled_channels</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.rx_output_type"><code class="docutils literal notranslate"><span class="pre">adis16460.rx_output_type</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16460.sample_rate"><code class="docutils literal notranslate"><span class="pre">adis16460.sample_rate</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -213,11 +221,18 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4371.html">adf4371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf5610.html">adf5610</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16375.html">adis16375</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">adis16460</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16475.html">adis16475</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16480.html">adis16480</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16485.html">adis16485</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16488.html">adis16488</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16490.html">adis16490</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16497.html">adis16497</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16545.html">adis16545</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16547.html">adis16547</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5240.html">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
@@ -285,22 +300,80 @@ Content on this topic
         <div class="bodywrapper" id="top-anchor">
           <div class="body" role="main">
             
-  <section id="module-adi.adis16460">
-<span id="adis16460"></span><h1>adis16460<a class="headerlink" href="#module-adi.adis16460" title="Permalink to this heading">#</a></h1>
+  <section id="adis16460">
+<h1>adis16460<a class="headerlink" href="#adis16460" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.adis16460.adis16460">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adis16460.</span></span><span class="sig-name descname"><span class="pre">adis16460</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16460.adis16460" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="adi.adis16460">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.</span></span><span class="sig-name descname"><span class="pre">adis16460</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16460" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
 <p>ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.adis16460.adis16460.current_timestamp_clock">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_timestamp_clock</span></span><a class="headerlink" href="#adi.adis16460.adis16460.current_timestamp_clock" title="Permalink to this definition">#</a></dt>
-<dd><p>current_timestamp_clock: Source clock for timestamps</p>
+<dt class="sig sig-object py" id="adi.adis16460.ctx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ctx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Context</span></em><a class="headerlink" href="#adi.adis16460.ctx" title="Permalink to this definition">#</a></dt>
+<dd><p>IIO Context</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.adis16460.adis16460.sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.adis16460.adis16460.sample_rate" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="adi.adis16460.current_timestamp_clock">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_timestamp_clock</span></span><a class="headerlink" href="#adi.adis16460.current_timestamp_clock" title="Permalink to this definition">#</a></dt>
+<dd><p>current_timestamp_clock: Source clock for timestamps</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adis16460.rx">
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16460.rx" title="Permalink to this definition">#</a></dt>
+<dd><p>Receive data from hardware buffers for each channel index in
+rx_enabled_channels.</p>
+<dl class="simple">
+<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
+is enabled containing samples from a channel or set of channels.
+Data will be complex when using a complex data device.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16460.rx_annotated">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_annotated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.adis16460.rx_annotated" title="Permalink to this definition">#</a></dt>
+<dd><p>rx_annotated: Set output data from rx() to be annotated</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16460.rx_buffer_size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.adis16460.rx_buffer_size" title="Permalink to this definition">#</a></dt>
+<dd><p>rx_buffer_size: Size of receive buffer in samples</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16460.rx_channel_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.adis16460.rx_channel_names" title="Permalink to this definition">#</a></dt>
+<dd><p>rx_channel_names: List of RX channel names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adis16460.rx_destroy_buffer">
+<span class="sig-name descname"><span class="pre">rx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16460.rx_destroy_buffer" title="Permalink to this definition">#</a></dt>
+<dd><p>rx_destroy_buffer: Clears RX buffer</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16460.rx_enabled_channels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.adis16460.rx_enabled_channels" title="Permalink to this definition">#</a></dt>
+<dd><p>rx_enabled_channels: List of enabled channels (channel 1 is 0)</p>
+<p>Either a list of channel numbers or channel names can be used to set
+rx_enabled_channels. When channel names are used, they will be
+translated to channel numbers.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16460.rx_output_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.adis16460.rx_output_type" title="Permalink to this definition">#</a></dt>
+<dd><p>rx_output_type: Set output data type from rx()</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16460.sample_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.adis16460.sample_rate" title="Permalink to this definition">#</a></dt>
 <dd><p>sample_rate: Sample rate in samples per second</p>
 </dd></dl>
 
@@ -312,7 +385,7 @@ Content on this topic
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.adg2128.html" title="Previous document (Ctrl+LeftArrow)" class="prev">adi.adg2128 module</a>
+    <a href="adi.adis16375.html" title="Previous document (Ctrl+LeftArrow)" class="prev">adis16375</a>
     <a href="adi.adis16475.html" title="Next document (Ctrl+RightArrow)" class="next">adis16475</a>
               </div>
           
