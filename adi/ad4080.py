@@ -42,7 +42,16 @@ class ad4080(rx, context_manager):
     @test_mode.setter
     def test_mode(self, value):
         self._set_iio_attr_str("voltage0", "test_mode", False, value, self._rxadc)
-
+        
+    @property
+    def lvds_sync(self):
+        """test_mode: Select Test Mode. Options are:
+        off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp"""
+        return self._get_iio_attr_str("voltage0", "lvds_sync", False)
+    @lvds_sync.setter
+    def lvds_sync(self, value):
+        self._set_iio_attr_str("voltage0", "lvds_sync", False, value, self._rxadc)
+    
     @property
     def test_mode_available(self):
         """test_mode_available: Options are:
@@ -63,3 +72,13 @@ class ad4080(rx, context_manager):
     def sampling_frequency(self):
         """sampling_frequency: Sampling frequency value"""
         return self._get_iio_attr("voltage0", "sampling_frequency", False)
+    
+    def ad4080_register_read(self, reg):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", reg, self._ctrl)
+        ret = self._get_iio_debug_attr_str("direct_reg_access", self._ctrl)
+        return ret
+
+    def ad4080_register_write(self, reg, value):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", f"{reg} {value}", self._ctrl)
