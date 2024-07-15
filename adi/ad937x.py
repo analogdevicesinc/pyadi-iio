@@ -170,45 +170,58 @@ class ad9371(rx_tx, context_manager, sync_start):
     @property
     def rx_enable_dec8(self):
         """rx_enable_dec8: Enable x8 decimation filter in RX path"""
-        avail = self._get_iio_attr_str(
-            "voltage0_i", "sampling_frequency_available", False, self._rxadc
-        )
-        avail = avail.strip().split(" ")
         val = self._get_iio_attr_str(
-            "voltage0_i", "sampling_frequency", False, self._rxadc
-        )
-        return val == avail[1]
+                "voltage0_i", "sampling_frequency", False, self._rxadc
+            )
+        avail = None
+        try:
+            avail = self._get_iio_attr_str(
+            "voltage0_i", "sampling_frequency_available", False, self._rxadc
+            )
+            avail = avail.strip().split(" ")
+            return val == avail[1]
+        except KeyError:
+            return val == avail
 
     @rx_enable_dec8.setter
     def rx_enable_dec8(self, value):
-        avail = self._get_iio_attr_str(
-            "voltage0_i", "sampling_frequency_available", False, self._rxadc
-        )
-        avail = sorted(avail.strip().split(" "))
-        val = int(avail[1] if value else avail[0])
-        self._set_iio_attr("voltage0_i", "sampling_frequency", False, val, self._rxadc)
+        try:
+            avail = self._get_iio_attr_str(
+                "voltage0_i", "sampling_frequency_available", False, self._rxadc
+            )
+            avail = sorted(avail.strip().split(" "))
+            val = int(avail[1] if value else avail[0])
+            self._set_iio_attr("voltage0_i", "sampling_frequency", False, val, self._rxadc)
+        except KeyError:
+            print("x8 decimation filter is not supported.")
 
     @property
     def tx_enable_int8(self):
         """tx_enable_int8: Enable x8 interpolation filter in TX path"""
-        avail = self._get_iio_attr_str(
-            "voltage0", "sampling_frequency_available", True, self._txdac
-        )
-        avail = avail.strip().split(" ")
         val = self._get_iio_attr_str(
             "voltage0", "sampling_frequency", True, self._txdac
-        )
-        return val == avail[1]
+            )
+        avail = None
+        try:
+            avail = self._get_iio_attr_str(
+            "voltage0", "sampling_frequency_available", True, self._txdac
+            )
+            avail = avail.strip().split(" ")
+            return val == avail[1]
+        except KeyError:
+            return val == avail
 
     @tx_enable_int8.setter
     def tx_enable_int8(self, value):
-        avail = self._get_iio_attr_str(
-            "voltage0", "sampling_frequency_available", True, self._txdac
-        )
-        avail = sorted(avail.strip().split(" "))
-        val = int(avail[1] if value else avail[0])
-        self._set_iio_attr("voltage0", "sampling_frequency", True, val, self._txdac)
-
+        try:
+            avail = self._get_iio_attr_str(
+                "voltage0", "sampling_frequency_available", True, self._txdac
+            )
+            avail = sorted(avail.strip().split(" "))
+            val = int(avail[1] if value else avail[0])
+            self._set_iio_attr("voltage0", "sampling_frequency", True, val, self._txdac)
+        except KeyError:
+            print("x8 decimation filter is not supported.")
     @property
     def rx_sample_rate(self):
         """rx_sample_rate: Sample rate RX path in samples per second
