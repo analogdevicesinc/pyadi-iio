@@ -161,6 +161,14 @@ params = dict(
         tx_quadrature_tracking_en_chan0=1,
         tx_quadrature_tracking_en_chan1=1,
     ),
+    change_rf_gain_10dB_manual=dict(
+        ensm_mode="radio_on",
+        tx_lo=2500000000,
+        rx_lo=2500000000,
+        gain_control_mode="manual",
+        rx_hardwaregain_chan0=10,
+        rx_hardwaregain_chan1=10,
+    ),
     change_temp_gain_up=dict(
         ensm_mode="radio_on",
         tx_lo=2500000000,
@@ -345,7 +353,7 @@ def test_ad9375_dds_gain_check_vary_power(
         params["change_attenuation_0dB_auto"],
         params["change_attenuation_20dB_auto"],
         params["change_rf_gain_0dB_manual"],
-        params["change_rf_gain_20dB_manual"],
+        params["change_rf_gain_10dB_manual"],
         params["change_temp_gain_up"],
         params["change_temp_gain_down"],
     ],
