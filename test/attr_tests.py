@@ -717,3 +717,23 @@ def attribute_check_range_singleval_with_depends(
             )
         else:
             assert dev_interface(uri, classname, val, attr, tol)
+
+
+def attribute_single_value_boolean_readonly(uri, classname, attr):
+    """attribute_single_value_boolean: Read boolean class property
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+    """
+    bi = eval(classname + "(uri='" + uri + "')")
+
+    if not hasattr(bi, attr):
+        raise AttributeError(f"no attribute named: {attr}")
+
+    rval = getattr(bi, attr)
+    assert type(rval) != None
