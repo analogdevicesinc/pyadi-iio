@@ -201,8 +201,9 @@ plt.xlabel('Frequency (MHz)')
 plt.ylabel('Magnitude (dBm)')
 plt.title('Calibration Board Output Magnitude vs Frequency for Adjacent Loopback State (+15 dBm Input)')
 
-# Add legend
-plt.legend()
+# # Add legend
+# plt.legend()
+plt.savefig('adjacent_loopback_by_channel.png')
 
 # Create a new plot with adjacent loopback data
 plt.figure() 
@@ -231,9 +232,10 @@ plt.xlabel('Frequency (MHz)')
 plt.ylabel('Magnitude (dBm)')
 plt.title('Calibration Board Output Magnitude vs Frequency for Combined Loopback State (+15 dBm Input)')
 
-# Add legend
-plt.legend()
+# # Add legend
+# plt.legend()
 
+plt.savefig('combined_loopback_by_channel.png')
 # Show the plots
 plt.show()
 

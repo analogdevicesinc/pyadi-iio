@@ -1,6 +1,6 @@
-import adi
+
 import pytest
-import test
+
 import numpy as np
 import pyvisa
 
@@ -10,12 +10,12 @@ import time
 
 # # Connect to Arduino Uno    
 ## Note: if first time installing pyfirmata, need to replace "getargspec" with "getfullargspec" in pyfirmata code
-board = pyfirmata.Arduino("COM10", baudrate=57600)
+# board = pyfirmata.Arduino("/dev/ttyACM0", baudrate=57600)
 
 # # Establish VISA control of spectrum analyzer and signal generator
 rm = pyvisa.ResourceManager()
 x = rm.list_resources()
-HMCT2220 = rm.open_resource('ASRL11::INSTR')
+HMCT2220 = rm.open_resource('ASRL/dev/ttyACM1::INSTR')
 FieldFox = rm.open_resource('TCPIP::192.168.100.23::INSTR')
 
 ###################################
@@ -102,6 +102,7 @@ def _set_attenuation_level(attenuation, instr):
 @pytest.mark.parametrize("frequency", [8000, 9000, 10000, 11000, 12000], ids=lambda x: f"Frequency (MHz):{x}")
 @pytest.mark.parametrize("cal_board_state", ["adjacent_loopback", "combined_loopback"])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], ids=lambda x: f"channel:{x}")
+# @pytest.mark.parametrize("channel", [0])
 
 def test_loopback(channel, cal_board_state, frequency):
 
@@ -116,6 +117,7 @@ def test_loopback(channel, cal_board_state, frequency):
     _set_frequency_MHz(frequency, HMCT2220)  # Set frequency of sig gen
     _set_power_level_dBm(15, HMCT2220) # Set sig gen power level to 10 dBm
     _set_output('ON', HMCT2220) # Set sig gen output on
+
     time.sleep(1) # Buffer time of 1 second
 
     # Set up spectrum analyzer

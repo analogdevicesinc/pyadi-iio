@@ -23,7 +23,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
     N = len(x)
 
     # Apply window
-    window = signal.kaiser(N, beta=38)
+    window = signal.windows.kaiser(N, beta=38)
     # x = multiply(x, window)
 
     # Use FFT to get the amplitude of the spectrum
