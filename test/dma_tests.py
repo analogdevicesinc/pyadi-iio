@@ -7,6 +7,8 @@ import numpy as np
 import pytest
 from numpy.fft import fft, fftfreq, fftshift
 from scipy import signal
+# from signal import signal, SIGPIPE, SIG_DFL
+
 
 try:
     from .plot_logger import gen_line_plot_html
@@ -243,6 +245,7 @@ def dds_loopback(
     peak_min,
     use_obs=False,
     use_rx2=False,
+    tone_peak_values=None
 ):
     """dds_loopback: Test DDS loopback with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
@@ -269,6 +272,10 @@ def dds_loopback(
             Minimum acceptable value of maximum peak in dBFS of received tone
 
     """
+    
+    if tone_peak_values is None:
+        tone_peak_values = []
+
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
@@ -314,6 +321,9 @@ def dds_loopback(
     s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
     print(s)
 
+    tone_peak_values.append(tone_peaks[indx])
+    
+
     if do_html_log:
         pytest.data_log = {
             "html": gen_line_plot_html(
@@ -325,8 +335,11 @@ def dds_loopback(
             )
         }
 
+
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
+
+    return tone_peak_values
 
 
 def dds_two_tone(
@@ -633,7 +646,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9):
+def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9, sfdr_values=None):
     """t_sfdr: Test SFDR loopback of tone with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
     signal can be recovered. Sinuoidal data is passed to DMAs which is then
@@ -655,6 +668,13 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
             Minimum acceptable value of SFDR in dB
 
     """
+
+    if sfdr_values is None:
+        sfdr_values = []
+
+    # from signal import signal, SIGPIPE, SIG_DFL
+    # signal(SIGPIPE, SIG_DFL)
+    
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
@@ -699,6 +719,8 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
         raise Exception(e)
     del sdr
     val, amp, freqs = spec.sfdr(data, plot=False)
+    sfdr_values.append(val)
+
     if do_html_log:
         pytest.data_log = {
             "html": gen_line_plot_html(
@@ -710,7 +732,10 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
             )
         }
     print("SFDR:", val, "dB")
+
     assert val > sfdr_min
+
+    return sfdr_values
 
 
 def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi):

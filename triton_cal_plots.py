@@ -263,5 +263,86 @@ def graph_fixture():
     # # Add legend
     # plt.legend()
 
-    plt.savefig('combined.png')
+## 1x5 channel results array for each channel in combined loopback state
+ch0_combresults_y = [comb_8GHz_array[0], comb_9GHz_array[0], comb_10GHz_array[0], comb_11GHz_array[0], comb_12GHz_array[0]]
+ch1_combresults_y = [comb_8GHz_array[1], comb_9GHz_array[1], comb_10GHz_array[1], comb_11GHz_array[1], comb_12GHz_array[1]]
+ch2_combresults_y = [comb_8GHz_array[2], comb_9GHz_array[2], comb_10GHz_array[2], comb_11GHz_array[2], comb_12GHz_array[2]]
+ch3_combresults_y = [comb_8GHz_array[3], comb_9GHz_array[3], comb_10GHz_array[3], comb_11GHz_array[3], comb_12GHz_array[3]]
+ch4_combresults_y = [comb_8GHz_array[4], comb_9GHz_array[4], comb_10GHz_array[4], comb_11GHz_array[4], comb_12GHz_array[4]]
+ch5_combresults_y = [comb_8GHz_array[5], comb_9GHz_array[5], comb_10GHz_array[5], comb_11GHz_array[5], comb_12GHz_array[5]]
+ch6_combresults_y = [comb_8GHz_array[6], comb_9GHz_array[6], comb_10GHz_array[6], comb_11GHz_array[6], comb_12GHz_array[6]]
+ch7_combresults_y = [comb_8GHz_array[7], comb_9GHz_array[7], comb_10GHz_array[7], comb_11GHz_array[7], comb_12GHz_array[7]]
+ch8_combresults_y = [comb_8GHz_array[8], comb_9GHz_array[8], comb_10GHz_array[8], comb_11GHz_array[8], comb_12GHz_array[8]]
+ch9_combresults_y = [comb_8GHz_array[9], comb_9GHz_array[9], comb_10GHz_array[9], comb_11GHz_array[9], comb_12GHz_array[9]]
+ch10_combresults_y = [comb_8GHz_array[10], comb_9GHz_array[10], comb_10GHz_array[10], comb_11GHz_array[10], comb_12GHz_array[10]]
+ch11_combresults_y = [comb_8GHz_array[11], comb_9GHz_array[11], comb_10GHz_array[11], comb_11GHz_array[11], comb_12GHz_array[11]]
+ch12_combresults_y = [comb_8GHz_array[12], comb_9GHz_array[12], comb_10GHz_array[12], comb_11GHz_array[12], comb_12GHz_array[12]]
+ch13_combresults_y = [comb_8GHz_array[13], comb_9GHz_array[13], comb_10GHz_array[13], comb_11GHz_array[13], comb_12GHz_array[13]]
+ch14_combresults_y = [comb_8GHz_array[14], comb_9GHz_array[14], comb_10GHz_array[14], comb_11GHz_array[14], comb_12GHz_array[14]]
+ch15_combresults_y = [comb_8GHz_array[15], comb_9GHz_array[15], comb_10GHz_array[15], comb_11GHz_array[15], comb_12GHz_array[15]]
+
+# Create a new plot with adjacent loopback data
+plt.figure() 
+plt.plot(frequency_array, ch0_adjresults_y, label='Channel 0')
+plt.plot(frequency_array, ch1_adjresults_y, label='Channel 1')
+plt.plot(frequency_array, ch2_adjresults_y, label='Channel 2')
+plt.plot(frequency_array, ch3_adjresults_y, label='Channel 3')
+plt.plot(frequency_array, ch4_adjresults_y, label='Channel 4')
+plt.plot(frequency_array, ch5_adjresults_y, label='Channel 5')
+plt.plot(frequency_array, ch6_adjresults_y, label='Channel 6')
+plt.plot(frequency_array, ch7_adjresults_y, label='Channel 7')
+plt.plot(frequency_array, ch8_adjresults_y, label='Channel 8')
+plt.plot(frequency_array, ch9_adjresults_y, label='Channel 9')
+plt.plot(frequency_array, ch10_adjresults_y, label='Channel 10')
+plt.plot(frequency_array, ch11_adjresults_y, label='Channel 11')
+plt.plot(frequency_array, ch12_adjresults_y, label='Channel 12')
+plt.plot(frequency_array, ch13_adjresults_y, label='Channel 13')
+plt.plot(frequency_array, ch14_adjresults_y, label='Channel 14')
+plt.plot(frequency_array, ch15_adjresults_y, label='Channel 15')
+
+# Limits for y axis
+plt.ylim(-80, 0)  
+
+# Add labels and title
+plt.xlabel('Frequency (MHz)')
+plt.ylabel('Magnitude (dBm)')
+plt.title('Calibration Board Output Magnitude vs Frequency for Adjacent Loopback State (+15 dBm Input)')
+
+# # Add legend
+# plt.legend()
+plt.savefig('adjacent_loopback_by_channel.png')
+
+# Create a new plot with adjacent loopback data
+plt.figure() 
+plt.plot(frequency_array, ch0_combresults_y, label='Channel 0')
+plt.plot(frequency_array, ch1_combresults_y, label='Channel 1')
+plt.plot(frequency_array, ch2_combresults_y, label='Channel 2')
+plt.plot(frequency_array, ch3_combresults_y, label='Channel 3')
+plt.plot(frequency_array, ch4_combresults_y, label='Channel 4')
+plt.plot(frequency_array, ch5_combresults_y, label='Channel 5')
+plt.plot(frequency_array, ch6_combresults_y, label='Channel 6')
+plt.plot(frequency_array, ch7_combresults_y, label='Channel 7')
+plt.plot(frequency_array, ch8_combresults_y, label='Channel 8')
+plt.plot(frequency_array, ch9_combresults_y, label='Channel 9')
+plt.plot(frequency_array, ch10_combresults_y, label='Channel 10')
+plt.plot(frequency_array, ch11_combresults_y, label='Channel 11')
+plt.plot(frequency_array, ch12_combresults_y, label='Channel 12')
+plt.plot(frequency_array, ch13_combresults_y, label='Channel 13')
+plt.plot(frequency_array, ch14_combresults_y, label='Channel 14')
+plt.plot(frequency_array, ch15_combresults_y, label='Channel 15')
+
+# Limits for y axis
+plt.ylim(-80, 0)  
+
+# Add labels and title
+plt.xlabel('Frequency (MHz)')
+plt.ylabel('Magnitude (dBm)')
+plt.title('Calibration Board Output Magnitude vs Frequency for Combined Loopback State (+15 dBm Input)')
+
+# # Add legend
+# plt.legend()
+
+plt.savefig('combined_loopback_by_channel.png')
+# Show the plots
+plt.show()
 
