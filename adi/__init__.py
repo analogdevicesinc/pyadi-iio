@@ -91,6 +91,7 @@ from adi.daq2 import DAQ2
 from adi.daq3 import DAQ3
 from adi.fmc_4p_vna import fmc_4p_vna
 from adi.fmc_8p_vna import fmc_8p_vna
+from adi.fmc_4p_vna_cst2 import fmc_4p_vna_cst2
 from adi.fmc_vna import fmcvna
 from adi.fmcadc3 import fmcadc3
 from adi.fmcjesdadc1 import fmcjesdadc1
