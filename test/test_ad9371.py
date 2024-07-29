@@ -243,7 +243,7 @@ params_obs = dict(
         obs_gain_control_mode="manual",
         obs_hardwaregain=20,
         obs_temp_comp_gain=0,
-    )
+    ),
 )
 
 
@@ -513,7 +513,7 @@ def test_ad9371_dds_gain_check_vary_power(
         (1, params["change_rf_gain_0dB_manual"], 0.25, 24, 26.5),
         (0, params["change_temp_gain_up"], 0.25, 24, 26.5),
         (1, params["change_temp_gain_up"], 0.25, 14, 16.5),
-    ]
+    ],
 )
 def test_ad9371_dds_gain_check_vary_power_with_10dB_splitter(
     test_gain_check,
@@ -590,7 +590,7 @@ def test_ad9371_sfdr_with_10dB_splitter(
     "channel, param_set, sfdr_min",
     [
         (0, params_obs["obs_orx1_change_attenuation_10dB"], 30),
-        (0, params_obs["snf_orx1_change_attenuation_10dB"], 30)
+        (0, params_obs["snf_orx1_change_attenuation_10dB"], 30),
     ],
 )
 @pytest.mark.parametrize("use_obs", [True])
