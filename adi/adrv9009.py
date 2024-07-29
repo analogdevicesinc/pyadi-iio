@@ -38,7 +38,7 @@ class adrv9009(rx_tx, context_manager, sync_start):
         self._txdac = self._ctx.find_device("axi-adrv9009-tx-hpc")
         self._ctx.set_timeout(30000)  # Needed for loading profiles
         if jesdadi and jesd_monitor:
-            self._jesd = jesd if jesd else jesdadi(uri=uri)
+            self._jesd = jesd if jesd else jesdadi(address=uri)
         rx_tx.__init__(self)
         self.obs = obs(self._ctx, self._rxobs, self._obs_channel_names)
 
@@ -214,11 +214,11 @@ class adrv9009(rx_tx, context_manager, sync_start):
     @property
     def aux_obs_lo(self):
         """aux_obs_lo: Carrier frequency of ORx path"""
-        return self._get_iio_attr("altvoltage1", "AUX_OBS_RX_LO_frequency", True)
+        return self._get_iio_attr("altvoltage1", "frequency", True)
 
     @aux_obs_lo.setter
     def aux_obs_lo(self, value):
-        self._set_iio_attr("altvoltage1", "AUX_OBS_RX_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage1", "frequency", True, value)
 
     @property
     def obs_quadrature_tracking_en(self):
@@ -250,7 +250,6 @@ class adrv9009(rx_tx, context_manager, sync_start):
 
     @obs_hardwaregain.setter
     def obs_hardwaregain(self, value):
-        # if self.obs_gain_control_mode == "manual":
         self._set_iio_attr("voltage2", "hardwaregain", False, value)
 
     @property
