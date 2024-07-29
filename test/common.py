@@ -77,9 +77,7 @@ def pytest_runtest_setup(item):
             "Testing requiring observation disabled. Use --obs-enable flag to enable"
         )
     if obs and "no_obs_required" in marks:
-        pytest.skip(
-            "Testing requiring observation enabled. Skipping this test"
-        )
+        pytest.skip("Testing requiring observation enabled. Skipping this test")
 
     # Handle CMOS and LVDS tests
     cmos = item.config.getoption("--cmos")
