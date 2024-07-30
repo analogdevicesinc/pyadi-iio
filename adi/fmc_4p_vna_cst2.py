@@ -82,7 +82,7 @@ class fmc_4p_vna_cst2(adrf5720, ad9083, admv8818, genmux, adf4371,
 
     @property
     def active_port(self) -> str:
-        # assume the enabled LED designates the active port
+        """ Return the active port """
         return self.rfin_mux.select
 
 
@@ -91,12 +91,12 @@ class fmc_4p_vna_cst2(adrf5720, ad9083, admv8818, genmux, adf4371,
         """ Configure all dependencies to enable port """
         # disable all other ports and enable only active port
         for i in range(0, NUM_PORTS):
-            enabled_n = 1
+            enabled = 0
             cur_port = f"d{i+1}"
             if port == cur_port:
-                enabled_n = 0
+                enabled = 1
 
-            setattr(self.port_rfin_en, f"gpio_{cur_port}", enabled_n)
+            setattr(self.port_rfin_en, f"gpio_{cur_port}", enabled)
 
         self.rfin_mux.select = port
 
