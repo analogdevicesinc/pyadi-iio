@@ -54,8 +54,7 @@ class fmc_4p_vna_cst2(adrf5720, ad9083, admv8818, genmux, adf4371,
         self.adcmon = ad4696(uri, device_name="ad4696")
         self.rfin_attenuator    = adrf5720(uri, device_name="adrf5720-rfin")
         self.rfin2_attenuator   = adrf5720(uri, device_name="adrf5720-rfin2")
-        self.smix               = one_bit_adc_dac(uri, name="smix")
-        self.lmix               = one_bit_adc_dac(uri, name="lmix")
+        self.mixer              = one_bit_adc_dac(uri, name="mixer")
 
         self.frontend = []
         for i in range(0, NUM_PORTS):
