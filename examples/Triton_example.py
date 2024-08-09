@@ -57,7 +57,7 @@ def measure_and_adjust_phase_offset(chan0, chan1, phase_correction):
     return (sub_phases(phase_correction, [int(p * 1000)] * 4), s)
 
 
-dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=False)
+dev = adi.Triton("ip:10.44.3.50", calibration_board_attached=False)
 
 print(dev.rx_channel_nco_frequencies["axi-ad9084-rx-hpc"])
 print(dev.rx_main_nco_frequencies["axi-ad9084-rx-hpc"])
@@ -99,17 +99,23 @@ print("--Setting up chip")
 # dev.gpio_ctrl_rx_combined = 0
 
 # Zero attenuation
-dev.rx_dsa_gain = 0
+dev.rx_dsa0_gain = 0
+dev.rx_dsa1_gain = 0
+dev.rx_dsa2_gain = 0
+dev.rx_dsa3_gain = 0
+
+dev.hpf_ctrl = 7
+dev.lpf_ctrl = 12
 
 # Set NCOs
 dev.rx_channel_nco_frequencies = [0] * N_RX
 dev.tx_channel_nco_frequencies = [0] * N_TX
 
-dev.rx_main_nco_frequencies = [1000000000] * NM_RX
-dev.tx_main_nco_frequencies = [3000000000] * NM_TX
+dev.rx_main_nco_frequencies = [-2800000000] * NM_RX
+dev.tx_main_nco_frequencies = [10000000000] * NM_TX
 
 dev.rx_enabled_channels = RX_CHAN_EN
-dev.tx_enabled_channels = [1] * N_TX
+dev.tx_enabled_channels = [*range(N_TX)]
 dev.rx_nyquist_zone = ["even"] * NM_TX
 
 dev.rx_buffer_size = 2 ** 12
