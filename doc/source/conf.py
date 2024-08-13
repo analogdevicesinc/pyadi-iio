@@ -50,6 +50,8 @@ extensions = [
     "ext_pyadi_iio",
 ]
 
+needs_extensions = {"adi_doctools": "0.3.36"}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -62,6 +64,15 @@ exclude_patterns: List[str] = []
 coverage_show_missing_items = True
 coverage_ignore_classes = ["phy"]
 coverage_ignore_modules = ["test.dma_tests", "test.generics"]
+
+
+# -- External docs configuration ----------------------------------------------
+
+interref_repos = ["doctools"]
+
+# -- Custom extensions configuration ------------------------------------------
+
+hide_collapsible_content = True
 
 # -- Options for PDF output --------------------------------------------------
 if os.path.exists(os.path.join("_themes", "pdf_theme")):
