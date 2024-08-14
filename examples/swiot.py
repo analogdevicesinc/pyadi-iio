@@ -14,10 +14,10 @@ dev_uri = "ip:169.254.97.40"
 				       current_in_ext_hart, current_in_loop_hart
 
 """
-channel_config = ["voltage_out", "voltage_out", "voltage_out", "resistance"]
+channel_config = ["resistance", "voltage_out", "voltage_out", "resistance"]
 
 # Possible values: 0, 1
-channel_enable = [1, 1, 1, 1]
+channel_enable = [1, 0, 0, 0]
 
 # Possible values: "ad74413r", "max14906"
 channel_device = ["ad74413r", "ad74413r", "ad74413r", "ad74413r"]
@@ -57,16 +57,18 @@ print("AD74413R output (DAC) channels:", ad74413r._tx_channel_names)
 print("ADT75 temperature reading:", adt75() * 62.5)
 
 # Set the sampling rate for the resistance channel to 4800 for faster update 
-ad74413r.channel["resistance3"].sampling_frequency = 4800
+ad74413r.channel["resistance0"].sampling_frequency = 4800
 
-voltage_dac_scale = ad74413r.channel["voltage0"].scale
-voltage_dac_offset = ad74413r.channel["voltage0"].offset
+# voltage_dac_scale = ad74413r.channel["voltage0"].scale
+# voltage_dac_offset = ad74413r.channel["voltage0"].offset
 
 while True:
 	# Get the potentiometer's resistance value in Ohms
-	resistance = ad74413r.channel["resistance3"].processed / 1000
-	red_channel_val = (resistance / 11000) * AD74413R_DAC_MAX_CODE
-	ad74413r.channel["voltage0"].raw = red_channel_val
+	resistance = ad74413r.channel["resistance0"].processed / 1000
+	print(resistance)
+
+	# red_channel_val = (resistance / 11000) * AD74413R_DAC_MAX_CODE
+	# ad74413r.channel["voltage0"].raw = red_channel_val
 
 # ad74413r.rx_output_type = "SI"
 
