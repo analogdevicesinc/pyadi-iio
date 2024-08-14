@@ -1,5 +1,6 @@
 import adi
 import numpy as np
+import time
 
 AD74413R_DAC_MAX_CODE = 8192
 
@@ -14,10 +15,10 @@ dev_uri = "ip:169.254.97.40"
 				       current_in_ext_hart, current_in_loop_hart
 
 """
-channel_config = ["resistance", "voltage_out", "voltage_out", "resistance"]
+channel_config = ["resistance", "current_out", "voltage_out", "resistance"]
 
 # Possible values: 0, 1
-channel_enable = [1, 0, 0, 0]
+channel_enable = [1, 1, 0, 0]
 
 # Possible values: "ad74413r", "max14906"
 channel_device = ["ad74413r", "ad74413r", "ad74413r", "ad74413r"]
@@ -59,36 +60,11 @@ print("ADT75 temperature reading:", adt75() * 62.5)
 # Set the sampling rate for the resistance channel to 4800 for faster update 
 ad74413r.channel["resistance0"].sampling_frequency = 4800
 
-# voltage_dac_scale = ad74413r.channel["voltage0"].scale
-# voltage_dac_offset = ad74413r.channel["voltage0"].offset
-
 while True:
 	# Get the potentiometer's resistance value in Ohms
 	resistance = ad74413r.channel["resistance0"].processed / 1000
 	print(resistance)
+	current_value = 1800 + resistance / 8.41
+	ad74413r.channel["current1"].raw = current_value
 
-	# red_channel_val = (resistance / 11000) * AD74413R_DAC_MAX_CODE
-	# ad74413r.channel["voltage0"].raw = red_channel_val
-
-# ad74413r.rx_output_type = "SI"
-
-# The channels from which to sample the data. Should be one of the ADC channels.
-# ad74413r.rx_enabled_channels = ["voltage4"]
-# The sample rate should be the same as what is set on the device (4800 is the default).
-
-# ad74413r.sample_rate = 4800
-
-# The number of data samples. This may be changed accordingly.
-# ad74413r.rx_buffer_size = 4800
-# data = ad74413r.rx()
-
-# for _ in range(60 * 24):
-# 	data = np.append(data, ad74413r.rx())
-
-# print(data)
-
-# ad74413r.rx_destroy_buffer()
-# plt.clf()
-# plt.plot(data)
-# plt.ylabel("mV")
-# plt.show(block=True)
+	time.sleep(0.1)
