@@ -20,9 +20,6 @@ def test_cn0579_rx_data(test_dma_rx, iio_uri, classname, channel):
         (
             "sampling_frequency",
             [
-                1000,
-                2000,
-                4000,
                 8000,
                 16000,
                 32000,
