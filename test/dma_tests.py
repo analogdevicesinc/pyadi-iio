@@ -595,10 +595,14 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
         RXFS = int(getattr(sdr, attr))
 
     A = 2 ** 15
-    fc = RXFS * 0.1
-    fc = int(fc / (RXFS / N)) * (RXFS / N)
+    if hasattr(sdr, "tx_sample_rate"):
+        FS = int(sdr.tx_sample_rate)
+    else:
+        FS = RXFS
+    fc = FS * 0.1
+    fc = int(fc / (FS / N)) * (FS / N)
 
-    ts = 1 / float(RXFS)
+    ts = 1 / float(FS)
     t = np.arange(0, N * ts, ts)
     if sdr._complex_data:
         i = np.cos(2 * np.pi * t * fc) * A * 0.5
@@ -692,10 +696,14 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     else:
         RXFS = int(sdr.rx_sample_rate)
 
-    fc = RXFS * 0.1
-    fc = int(fc / (RXFS / N)) * (RXFS / N)
+    if hasattr(sdr, "tx_sample_rate"):
+        FS = int(sdr.tx_sample_rate)
+    else:
+        FS = RXFS
 
-    ts = 1 / float(RXFS)
+    fc = FS * 0.1
+    fc = int(fc / (FS / N)) * (FS / N)
+    ts = 1 / float(FS)
     t = np.arange(0, N * ts, ts)
     i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * full_scale
     q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * full_scale
@@ -710,7 +718,7 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
         del sdr
         raise Exception(e)
     del sdr
-    val, amp, freqs = spec.sfdr(data, plot=False)
+    val, amp, freqs = spec.sfdr(data, fs=RXFS, plot=False)
     if do_html_log:
         pytest.data_log = {
             "html": gen_line_plot_html(

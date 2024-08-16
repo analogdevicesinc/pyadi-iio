@@ -160,6 +160,11 @@ def test_attribute_multiple_values(request):
 
 
 @pytest.fixture()
+def test_attribute_multiple_values_error(request):
+    yield attribute_multiple_values_error
+
+
+@pytest.fixture()
 def test_attribute_multiple_values_with_depends(request):
     yield attribute_multiple_values_with_depends
 

@@ -221,6 +221,44 @@ def attribute_multiple_values(
                 assert dev_interface(uri, classname, val, attr, tol, sleep=sleep)
 
 
+def attribute_multiple_values_error(
+    uri, classname, attr, values, tol, repeats=1, sleep=0, sub_channel=None
+):
+    """attribute_multiple_values_error: Write multiple class properties
+    in a loop where all values are pre-defined and expected to raise an error.
+    This is performed a defined number of times.
+
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+        values: type=list
+            A list of values to write and check as attributes
+        tol: type=integer
+            Allowable error of written value compared to read back value
+        repeats: type=integer
+            Number of times to repeatedly write values
+        sleep: type=integer
+            Seconds to sleep between writing to attribute and reading it back
+        sub_channel: type=string
+            Name of sub channel (nested class) to be tested
+    """
+    with pytest.raises(Exception) as e_info:
+        for _ in range(repeats):
+            for val in values:
+                if isinstance(val, str):
+                    tol = 0
+                if sub_channel:
+                    assert dev_interface_sub_channel(
+                        uri, classname, sub_channel, val, attr, tol, sleep=sleep
+                    )
+                else:
+                    assert dev_interface(uri, classname, val, attr, tol, sleep=sleep)
+
+
 def attribute_multiple_values_with_depends(
     uri, classname, attr, depends, values, tol, repeats=1
 ):

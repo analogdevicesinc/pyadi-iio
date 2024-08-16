@@ -36,7 +36,7 @@ def scale_field(param_set, iio_uri):
     "attr, val",
     [
         ("rx_nyquist_zone", ["even", "odd"]),
-        ("loopback_mode", [2, 1, 0]),
+        ("loopback_mode", [0]),
         (
             "rx_test_mode",
             [
@@ -63,6 +63,16 @@ def scale_field(param_set, iio_uri):
 )
 def test_ad9081_str_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
     test_attribute_multiple_values(iio_uri, classname, attr, val, 0)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("attr, val", [("loopback_mode", [2, 1])])
+def test_ad9081_str_attr_err(
+    test_attribute_multiple_values_error, iio_uri, classname, attr, val
+):
+    test_attribute_multiple_values_error(iio_uri, classname, attr, val, 0)
 
 
 #########################################
