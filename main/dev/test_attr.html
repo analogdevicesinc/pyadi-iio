@@ -104,6 +104,7 @@
 <li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values_available_readonly"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values_available_readonly()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values_device_channel"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values_device_channel()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values_error"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values_error()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_multiple_values_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_multiple_values_with_depends()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_readonly_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_readonly_with_depends()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_single_value"><code class="docutils literal notranslate"><span class="pre">attribute_single_value()</span></code></a></li>
@@ -431,6 +432,35 @@ This is performed a defined number of times.</p>
 <dt>device_name: type=string</dt><dd><p>Device name of target board/system</p>
 </dd>
 <dt>channel: type=string</dt><dd><p>Channel name of the attribute</p>
+</dd>
+<dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
+</dd>
+<dt>values: type=list</dt><dd><p>A list of values to write and check as attributes</p>
+</dd>
+<dt>tol: type=integer</dt><dd><p>Allowable error of written value compared to read back value</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of times to repeatedly write values</p>
+</dd>
+<dt>sleep: type=integer</dt><dd><p>Seconds to sleep between writing to attribute and reading it back</p>
+</dd>
+<dt>sub_channel: type=string</dt><dd><p>Name of sub channel (nested class) to be tested</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values_error">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_error" title="Permalink to this definition">#</a></dt>
+<dd><p>attribute_multiple_values_error: Write multiple class properties
+in a loop where all values are pre-defined and expected to raise an error.
+This is performed a defined number of times.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
 </dd>
 <dt>attr: type=string</dt><dd><p>Attribute name to be written. Must be property of classname</p>
 </dd>
