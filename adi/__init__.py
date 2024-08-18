@@ -127,5 +127,10 @@ try:
 except ImportError:
     pass
 
+try:
+    from adi.tools.adistream import run_adi_stream
+except ImportError:
+    pass
+
 __version__ = "0.0.17"
 name = "Analog Devices Hardware Interfaces"
