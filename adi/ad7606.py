@@ -128,12 +128,12 @@ class ad7606(rx, context_manager):
         """Converts raw value to SI"""
         _scale = self.channel[index].scale
 
-        ret = None
+        # ADC7606C-18 will return int32 samples from the driver
+        if isinstance(val, np.int32):
+            return val * _scale
 
         if isinstance(val, np.int16):
-            ret = val * _scale
+            return val * _scale
 
         if isinstance(val, np.ndarray):
-            ret = [x * _scale for x in val]
-
-        return ret
+            return [x * _scale for x in val]
