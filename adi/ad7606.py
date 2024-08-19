@@ -21,6 +21,8 @@ class ad7606(rx, context_manager):
 
     def __init__(self, uri="", device_name=""):
 
+        self._device_name = device_name
+
         context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = [
