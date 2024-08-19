@@ -55,6 +55,8 @@ class ad7606(rx, context_manager):
         self.channel = []
         for ch in self._ctrl.channels:
             name = ch._id
+            if name == "timestamp":
+                continue
             self._rx_channel_names.append(name)
             self.channel.append(self._channel(self, name))
 
