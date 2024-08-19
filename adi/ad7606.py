@@ -56,14 +56,28 @@ class ad7606(rx, context_manager):
         for ch in self._ctrl.channels:
             name = ch._id
             self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
+            self.channel.append(self._channel(self, name))
 
         rx.__init__(self)
 
     @property
+    def has_device_scale_available(self):
+        """Returns true if the 'scale_available' attribute is at device level.
+           For AD7606C-16 and AD7606C-18 in SW mode, this is available
+           at channel level.
+        """
+        if self._device_name not in ["ad7606c-16", "ad7606c-18"]:
+            return False
+        try:
+            _ = self._get_iio_dev_attr("scale_available")
+            return True
+        except KeyError:
+            return False
+
+    @property
     def scale_available(self):
         """Provides all available scale settings for the AD7606 channels"""
-        return self._get_iio_attr(self.channel[0].name, "scale_available", False)
+        return self._get_iio_dev_attr("scale_available")
 
     @property
     def oversampling_ratio(self):
@@ -82,9 +96,10 @@ class ad7606(rx, context_manager):
     class _channel(attribute):
         """AD7606 channel"""
 
-        def __init__(self, ctrl, channel_name):
+        def __init__(self, dev, channel_name):
             self.name = channel_name
-            self._ctrl = ctrl
+            self._dev = dev
+            self._ctrl = dev._ctrl
 
         @property
         def raw(self):
@@ -99,6 +114,15 @@ class ad7606(rx, context_manager):
         @scale.setter
         def scale(self, value):
             self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
+
+        @property
+        def scale_available(self):
+            """'scale_available' is available per channel on AD7606C-16 and AD7606C-18 in SW mode"""
+            # We can't detect SW mode, so we use a try block
+            try:
+                return self._get_iio_attr_str(self.name, "scale_available", False)
+            except KeyError:
+                return self._dev.scale_available
 
     def to_volts(self, index, val):
         """Converts raw value to SI"""
