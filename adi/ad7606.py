@@ -71,16 +71,16 @@ class ad7606(rx, context_manager):
     @property
     def oversampling_ratio(self):
         """AD7606 oversampling_ratio"""
-        return self._get_iio_attr(self.name, "oversampling_ratio", False)
+        return self._get_iio_dev_attr("oversampling_ratio")
 
     @oversampling_ratio.setter
     def oversampling_ratio(self, value):
-        self._get_iio_attr(self.name, "oversampling_ratio", False, value)
+        self._set_iio_dev_attr("oversampling_ratio", value)
 
     @property
     def oversampling_ratio_available(self):
         """AD7606 channel oversampling_ratio_available"""
-        return self._get_iio_attr(self.name, "oversampling_ratio_available", False)
+        return self._get_iio_dev_attr("oversampling_ratio_available")
 
     class _channel(attribute):
         """AD7606 channel"""
