@@ -64,11 +64,6 @@ class ad7606(rx, context_manager):
         return self._get_iio_attr(self.channel[0].name, "scale_available", False)
 
     @property
-    def range_available(self):
-        """Provides all available range settings for the AD7606 channels"""
-        return self._get_iio_attr(self.channel[0].name, "range_available", False)
-
-    @property
     def oversampling_ratio(self):
         """AD7606 oversampling_ratio"""
         return self._get_iio_dev_attr("oversampling_ratio")
@@ -102,15 +97,6 @@ class ad7606(rx, context_manager):
         @scale.setter
         def scale(self, value):
             self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
-
-        @property
-        def range(self):
-            """AD7606 channel range"""
-            return self._get_iio_attr(self.name, "range", False)
-
-        @range.setter
-        def range(self, value):
-            self._set_iio_attr(self.name, "range", False, str(Decimal(value).real))
 
     def to_volts(self, index, val):
         """Converts raw value to SI"""
