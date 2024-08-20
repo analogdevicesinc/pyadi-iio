@@ -707,3 +707,12 @@ class ad9081(rx_tx, context_manager, sync_start):
     def api_version(self):
         """api_version: API version"""
         return self._get_iio_debug_attr_str("api_version", self._rxadc)
+    
+    def ad9081_register_read(self, reg):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", reg, self._rxadc)
+        return self._get_iio_debug_attr_str("direct_reg_access", self._rxadc)
+
+    def ad9081_register_write(self, reg, value):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", f"{reg} {value}", self._rxadc)
