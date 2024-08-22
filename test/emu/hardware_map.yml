@@ -583,7 +583,7 @@ lm75:
       - filename: lm75.xml
       - data_devices:
           - hwmon0
-          
+
 ad405x:
  - ad4052
  - pyadi_iio_class_support:
@@ -610,3 +610,13 @@ ad4170:
      - filename: ad4170.xml
      - data_devices:
          - iio:device0
+
+ad738x:
+  - ad738x
+  - pyadi_iio_class_support:
+      - ad738x
+  - emulate:
+      - filename: ad7381.xml
+      - data_devices:
+          - iio:device0
+
