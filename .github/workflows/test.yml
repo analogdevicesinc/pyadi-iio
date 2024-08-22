@@ -141,6 +141,7 @@ jobs:
 
       - name: Build doc and release
         run: |
+          export ADOC_TARGET_DEPTH=1
           cd doc && make html
           cd ..
 
@@ -174,6 +175,7 @@ jobs:
         run: |
           export GIT_BRANCH=${{ github.head_ref }}
           export DEV_BUILD=1
+          export ADOC_TARGET_DEPTH=2
           cd doc && make html
           cd ..
 
