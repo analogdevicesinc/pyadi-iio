@@ -65,6 +65,8 @@ coverage_show_missing_items = True
 coverage_ignore_classes = ["phy"]
 coverage_ignore_modules = ["test.dma_tests", "test.generics"]
 
+# autodoc
+add_module_names = False
 
 # -- External docs configuration ----------------------------------------------
 
