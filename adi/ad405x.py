@@ -2,19 +2,34 @@
 #
 # SPDX short identifier: ADIBSD
 
-from decimal import Decimal
+from typing import List
 
 import numpy as np
-from adi.attribute import attribute
+from adi.common import rx_buffered_channel
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
+
+# def to_volts(self, index, val):
+#     """Converts raw value to SI"""
+#     _scale = self.channel[index].scale
+
+#     ret = None
+
+#     if isinstance(val, np.uint16):
+#         ret = val * _scale
+
+#     if isinstance(val, np.ndarray):
+#         ret = [x * _scale for x in val]
+
+#     return ret
 
 
 class ad405x(rx, context_manager):
     """ AD405x ADC """
 
     _complex_data = False
-    channels = []  # type: ignore
+    channels: List[rx_buffered_channel] = []  # type: ignore
+    """Component channels for individual ADC access"""
     _device_name = ""
 
     def __init__(self, uri="", device_name=""):
@@ -42,7 +57,7 @@ class ad405x(rx, context_manager):
         for ch in self._ctrl.channels:
             name = ch._id
             self._rx_channel_names.append(name)
-            self.channels.append(self._channel(self._ctrl, name))
+            self.channels.append(rx_buffered_channel(self._ctrl, name))
 
         rx.__init__(self)
 
@@ -132,47 +147,3 @@ class ad405x(rx, context_manager):
     def sampling_frequency(self, value):
         """Set sampling_frequency."""
         self._set_iio_dev_attr("sampling_frequency", value)
-
-    class _channel(attribute):
-        """AD405x channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            """AD405x channel raw value"""
-            return self._get_iio_attr(self.name, "raw", False)
-
-        @property
-        def offset(self):
-            """AD405x channel system calibration"""
-            return self._get_iio_attr_str(self.name, "offset", False)
-
-        @offset.setter
-        def offset(self, value):
-            self._set_iio_attr(self.name, "offset", False, str(Decimal(value).real))
-
-        @property
-        def scale(self):
-            """AD405x channel scale"""
-            return float(self._get_iio_attr_str(self.name, "scale", False))
-
-        @scale.setter
-        def scale(self, value):
-            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
-
-    def to_volts(self, index, val):
-        """Converts raw value to SI"""
-        _scale = self.channel[index].scale
-
-        ret = None
-
-        if isinstance(val, np.uint16):
-            ret = val * _scale
-
-        if isinstance(val, np.ndarray):
-            ret = [x * _scale for x in val]
-
-        return ret
