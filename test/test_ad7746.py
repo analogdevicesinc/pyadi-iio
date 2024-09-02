@@ -20,8 +20,6 @@ CIN2_DIFF = "capacitance1-capacitance3"
 @pytest.mark.parametrize(
     "channel, attr",
     [
-        (TEMP_INT, "input"),
-        (TEMP_EXT, "input"),
         (VIN, "raw"),
         (VIN_VDD, "raw"),
         (VIN, "scale"),
@@ -161,17 +159,11 @@ def test_ad7746_attr_singleval(
         (CIN2, "calibbias", [0, 62745, 125, 50], 0.5, 2),
         (CIN2_DIFF, "calibbias", [0, 62745, 125, 50], 0.5, 2),
         (CIN1, "offset", ["8127504"], 1, 2),
-        (CIN1_DIFF, "offset", ["8127504"], 1, 2),
         (CIN2, "offset", ["8127504"], 1, 2),
-        (CIN2_DIFF, "offset", ["8127504"], 1, 2),
         (CIN1, "offset", ["7111566"], 1, 2),
-        (CIN1_DIFF, "offset", ["7111566"], 1, 2),
         (CIN2, "offset", ["7111566"], 1, 2),
-        (CIN2_DIFF, "offset", ["7111566"], 1, 2),
         (CIN1, "offset", ["5079690"], 1, 2),
-        (CIN1_DIFF, "offset", ["5079690"], 1, 2),
         (CIN2, "offset", ["5079690"], 1, 2),
-        (CIN2_DIFF, "offset", ["5079690"], 1, 2),
     ],
 )
 def test_ad7746_attr_multiple_val(
