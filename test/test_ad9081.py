@@ -356,3 +356,26 @@ def test_ad9081_nco_loopback(
 
 
 #########################################
+@pytest.mark.iio_hardware("ad9081_full_bw")
+def test_full_bw_rx(iio_uri):
+    import adi
+
+    dev = adi.ad9081(uri=iio_uri)
+
+    assert not dev._rx_complex_data
+    assert dev._tx_complex_data
+
+    assert dev._rx_fine_ddc_channel_names == [
+        "voltage0",
+        "voltage1",
+        "voltage2",
+        "voltage3",
+    ]
+    assert dev._rx_coarse_ddc_channel_names == ["voltage0", "voltage2"]
+    assert dev._tx_fine_duc_channel_names == [
+        "voltage0",
+        "voltage1",
+        "voltage2",
+        "voltage3",
+    ]
+    assert dev._tx_coarse_duc_channel_names == ["voltage0", "voltage1"]
