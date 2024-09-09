@@ -34,7 +34,7 @@ class ad9172(tx, context_manager, sync_start):
             ):
                 self._tx_channel_names.append(chan.id)
 
-        self._tx_channel_names = _sortconv(self._tx_channel_names)
+        self._tx_channel_names = _sortconv(self._tx_channel_names, complex=True)
 
         tx.__init__(self)
 
