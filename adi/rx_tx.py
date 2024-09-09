@@ -21,6 +21,20 @@ else:
     from adi.compat import compat_libiio_v0_tx as ctx
 
 
+def are_channels_complex(channels: Union[List[str], List[iio.Channel]]) -> bool:
+    """Check if channels are complex or not
+
+    Args:
+        channels: List of channel names or iio.Channel objects
+    """
+    for channel in channels:
+        if isinstance(channel, iio.Channel):
+            channel = channel.id
+        if channel.endswith("_i") or channel.endswith("_q"):
+            return True
+    return False
+
+
 class phy(attribute):
     _ctrl: iio.Device = []
 
@@ -31,6 +45,8 @@ class phy(attribute):
 class rx_tx_common(attribute):
     """Common functions for RX and TX"""
 
+    _complex_data = False
+
     def _annotate(self, data, cnames: List[str], echans: List[int]):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
@@ -40,7 +56,8 @@ class rx_core(rx_tx_common, metaclass=ABCMeta):
 
     _rxadc: iio.Device = []
     _rx_channel_names: List[str] = []
-    _complex_data = False
+    # Set to True if complex data for RX only, overrides _complex_data
+    _rx_complex_data = None
     _rx_data_type = np.int16
     _rx_data_si_type = np.int16
     _rx_shift = 0
@@ -58,6 +75,16 @@ class rx_core(rx_tx_common, metaclass=ABCMeta):
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
+
+    @property
+    def _complex_data(self) -> bool:
+        """Data to/from device is quadrature (Complex).
+        When True ADC channel pairs are used together and the
+        rx method will generate complex data types.
+        """
+        if self._rx_complex_data is None:
+            return super()._complex_data
+        return self._rx_complex_data
 
     @property
     def rx_channel_names(self) -> List[str]:
@@ -271,7 +298,8 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
     _tx_buffer_size = 1024
     _txdac: iio.Device = []
     _tx_channel_names: List[str] = []
-    _complex_data = False
+    # Set to True if complex data for TX only, overrides _complex_data
+    _tx_complex_data = None
     _tx_data_type = None
     _txbuf = None
     _output_byte_filename = "out.bin"
@@ -293,6 +321,16 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
                 v = self._txdac.find_channel(m)
                 v.enabled = False
         self._txdac = []
+
+    @property
+    def _complex_data(self):
+        """Data to device is quadrature (Complex).
+        When True DAC channel pairs are used together and the
+        tx method will assume complex samples.
+        """
+        if self._tx_complex_data is None:
+            return super()._complex_data
+        return self._tx_complex_data
 
     @property
     def tx_cyclic_buffer(self):
