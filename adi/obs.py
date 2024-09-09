@@ -42,7 +42,7 @@ class obs(rx):
         self._ctx = ctx
         self._rxadc = obs_dev
         self._rx_channel_names = channel_names
-        self._complex_data = complex_data
+        self._rx_complex_data = complex_data
         rx.__init__(self)
 
     def __del__(self):
