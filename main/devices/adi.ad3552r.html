@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>adxrs290 &#8212; Analog Devices Hardware Python Interfaces 0.0.18 documentation</title>
+    <title>ad3552r &#8212; Analog Devices Hardware Python Interfaces 0.0.18 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=6d708bb3" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -16,8 +16,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="adi.cn0511 module" href="adi.cn0511.html" />
-    <link rel="prev" title="adxl355" href="adi.adxl355.html" />
+    <link rel="next" title="ad4020" href="adi.ad4020.html" />
+    <link rel="prev" title="ad2s1210" href="adi.ad2s1210.html" />
    
   
   <meta name="global_root" content="../../../">
@@ -98,14 +98,8 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adxrs290</a><ul>
-<li><a class="reference internal" href="#adi.adxrs290.adxrs290"><code class="docutils literal notranslate"><span class="pre">adxrs290</span></code></a><ul>
-<li><a class="reference internal" href="#adi.adxrs290.adxrs290.hpf_3db_frequency"><code class="docutils literal notranslate"><span class="pre">adxrs290.hpf_3db_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.adxrs290.adxrs290.hpf_3db_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxrs290.hpf_3db_frequency_available</span></code></a></li>
-<li><a class="reference internal" href="#adi.adxrs290.adxrs290.lpf_3db_frequency"><code class="docutils literal notranslate"><span class="pre">adxrs290.lpf_3db_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.adxrs290.adxrs290.lpf_3db_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxrs290.lpf_3db_frequency_available</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">ad3552r</a><ul>
+<li><a class="reference internal" href="#adi.ad3552r.ad3552r"><code class="docutils literal notranslate"><span class="pre">ad3552r</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -161,7 +155,7 @@ Content on this topic
 <li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ad3552r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
@@ -246,7 +240,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl313.html">adxl313</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
@@ -297,47 +291,40 @@ Content on this topic
         <div class="bodywrapper" id="top-anchor">
           <div class="body" role="main">
             
-  <section id="module-adi.adxrs290">
-<span id="adxrs290"></span><h1>adxrs290<a class="headerlink" href="#module-adi.adxrs290" title="Permalink to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="adi.adxrs290.adxrs290">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxrs290.</span></span><span class="sig-name descname"><span class="pre">adxrs290</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxrs290.adxrs290" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
-<p>ADI ADXRS290 Gyroscope</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adxrs290.adxrs290.hpf_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hpf_3db_frequency</span></span><a class="headerlink" href="#adi.adxrs290.adxrs290.hpf_3db_frequency" title="Permalink to this definition">#</a></dt>
-<dd><p>ADXRS290 high pass filter 3dB frequency</p>
+  <section id="ad3552r">
+<h1>ad3552r<a class="headerlink" href="#ad3552r" title="Permalink to this heading">#</a></h1>
+<p>The device class in this module supports multiple parts, as follows:</p>
+<p><strong>ad3552r:</strong> ad3542r, ad3552r</p>
+<p>By default, the device_name parameter in the class constructor is the
+same as the class name (e.g. “ad3552r” for the ad3552r). To use the class
+with another supported model, the name must be given when instantiating
+the object. For example, if working with an ad3552r with a URI of
+“10.2.5.222”, use the ad3552r class, but specify the device_name.</p>
+<p>The number of individual channels is based on the device variant.</p>
+<span class="target" id="module-adi.ad3552r"></span><dl class="py class">
+<dt class="sig sig-object py" id="adi.ad3552r.ad3552r">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad3552r.</span></span><span class="sig-name descname"><span class="pre">ad3552r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad3552r.ad3552r" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD3552R DAC</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adxrs290.adxrs290.hpf_3db_frequency_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hpf_3db_frequency_available</span></span><a class="headerlink" href="#adi.adxrs290.adxrs290.hpf_3db_frequency_available" title="Permalink to this definition">#</a></dt>
-<dd><p>Provides all available high pass filter 3dB frequency settings for the ADXRS290 channels</p>
-</dd></dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dev</span> <span class="o">=</span> <span class="n">ad3552r</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;ad3552r&quot;</span><span class="p">)</span>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adxrs290.adxrs290.lpf_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lpf_3db_frequency</span></span><a class="headerlink" href="#adi.adxrs290.adxrs290.lpf_3db_frequency" title="Permalink to this definition">#</a></dt>
-<dd><p>ADXRS290 low pass filter 3dB frequency</p>
-</dd></dl>
+<span class="n">dev</span><span class="o">.</span><span class="n">channel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">dev</span><span class="o">.</span><span class="n">channel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="mi">30</span>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adxrs290.adxrs290.lpf_3db_frequency_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lpf_3db_frequency_available</span></span><a class="headerlink" href="#adi.adxrs290.adxrs290.lpf_3db_frequency_available" title="Permalink to this definition">#</a></dt>
-<dd><p>Provides all available low pass filter 3dB frequency settings for the ADXRS290 channels</p>
-</dd></dl>
-
-</dd></dl>
-
+<span class="n">data</span> <span class="o">=</span> <span class="n">dev</span><span class="o">.</span><span class="n">channel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 
 
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.adxl355.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adxl355</a>
-    <a href="adi.cn0511.html" title="Next document (Alt+Shift+RightArrow)" class="next">adi.cn0511 module</a>
+    <a href="adi.ad2s1210.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad2s1210</a>
+    <a href="adi.ad4020.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad4020</a>
               </div>
           
         </div>
