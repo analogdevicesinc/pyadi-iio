@@ -266,7 +266,7 @@ def test_ad9371_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", range(2))
 def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -275,7 +275,7 @@ def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 #########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -314,7 +314,7 @@ def test_ad9371_dds_loopback(
 
 ########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -353,7 +353,7 @@ def test_ad9371_dds_loopback_with_10dB_splitter(
 
 ########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "channel, param_set",
@@ -387,7 +387,7 @@ def test_ad9371_dds_loopback_for_obs(
 
 #########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -423,7 +423,7 @@ def test_ad9371_two_tone_loopback(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -459,7 +459,7 @@ def test_ad9371_two_tone_loopback_with_10dB_splitter(
 
 #########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -496,7 +496,7 @@ def test_ad9371_dds_gain_check_vary_power(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "channel, param_set, dds_scale, min_rssi, max_rssi",
@@ -532,7 +532,7 @@ def test_ad9371_dds_gain_check_vary_power_with_10dB_splitter(
 
 #########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -557,7 +557,7 @@ def test_ad9371_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -584,7 +584,7 @@ def test_ad9371_sfdr_with_10dB_splitter(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "channel, param_set, sfdr_min",
@@ -601,7 +601,7 @@ def test_ad9371_sfdr_for_obs(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
