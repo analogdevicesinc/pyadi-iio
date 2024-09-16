@@ -382,7 +382,7 @@ def test_adrv9009_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 ########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -414,7 +414,7 @@ def test_adrv9009_dds_loopback(
 
 ########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -447,7 +447,7 @@ def test_adrv9009_dds_loopback_with_10dB_splitter(
 
 ########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "channel, param_set, peak_min",
@@ -480,7 +480,7 @@ def test_adrv9009_dds_loopback_for_obs(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -516,7 +516,7 @@ def test_adrv9009_two_tone_loopback(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -552,7 +552,7 @@ def test_adrv9009_two_tone_loopback_with_10dB_splitter(
 
 #########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -574,7 +574,7 @@ def test_adrv9009_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_m
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -598,7 +598,7 @@ def test_adrv9009_sfdr_with_10dB_splitter(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
@@ -624,7 +624,7 @@ def test_adrv9009_sfdr_for_obs(
 
 #########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -658,7 +658,7 @@ def test_adrv9009_dds_gain_check_agc(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -688,7 +688,7 @@ def test_adrv9009_dds_gain_check_agc_with_10db_splitter(
 
 #########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -752,7 +752,7 @@ def test_adrv9009_dds_gain_check_vary_power(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -814,7 +814,7 @@ def test_adrv9009_dds_gain_check_vary_power_with_10dB_splitter(
 
 #########################################
 @pytest.mark.no_obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -855,7 +855,7 @@ def test_adrv9009_iq_loopback(test_iq_loopback, iio_uri, classname, channel, par
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
@@ -869,7 +869,7 @@ def test_adrv9009_profile_write(
 
 #########################################
 @pytest.mark.skipif(skip_jesd, reason="JESD module not importable")
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 def test_adrv9009_jesd(iio_uri):
     import adi
 
