@@ -662,6 +662,18 @@ ad4170:
      - data_devices:
          - iio:device0
 
+ad7625:
+  - ad7625
+  - ad7626
+  - ad7960
+  - ad7961
+  - pyadi_iio_class_support:
+      - ad7625
+  - emulate:
+      - filename: ad7625.xml
+      - data_devices:
+          - iio:device1
+
 ad738x:
   - ad738x
   - pyadi_iio_class_support:
