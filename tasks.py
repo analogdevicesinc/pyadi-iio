@@ -181,6 +181,7 @@ def checkparts(c):
         "ad777x",
         "ad579x",
         "adaq42xx",
+        "ad9213",
     ]
     for c in dir(mod):
         if (
@@ -244,6 +245,7 @@ def checkemulation(c):
         "ad9152",
         "ad9162",
         "ad9166",
+        "ad9213",
         "ad9250",
         "ad936x",
         "ad937x",
