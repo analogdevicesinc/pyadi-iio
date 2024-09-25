@@ -14,5 +14,3 @@ class ad9213(rx_def, context_manager):
     _control_device_name = "axi-ad9213-rx-hpc"
     _rx_data_device_name = "axi-ad9213-rx-hpc"
     _device_name = ""
-
-
