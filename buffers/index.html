@@ -5,14 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Buffers &#8212; Analog Devices Hardware Python Interfaces 0.0.17 documentation</title>
+    <title>Buffers &#8212; Analog Devices Hardware Python Interfaces 0.0.18 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=a3ba2641" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=990931db" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=1b90c193"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=f38a6251"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=61e1751a"></script>
+    <script defer="" src="../_static/app.umd.js?v=c93eadd1"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -78,10 +78,11 @@
 
   <div class="repotoc-tree overlay">
     <root>
-  <a href="../../documentation/eval/index.html">Evaluation Boards</a>
-  <a href="../../documentation/university/index.html">University Program</a>
+  <a href="../../documentation/index.html">System Level</a>
   <a href="../../hdl/index.html">HDL</a>
+  <a href="../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
+  <a href="../../libiio/index.html">libiio</a>
   <a href="../../no-OS/index.html">no-OS</a>
   <a href="../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
   <a href="../../PrecisionToolbox/index.html">Precision Toolbox</a>
@@ -103,6 +104,7 @@
 <li><a class="reference internal" href="#annotated-buffers">Annotated Buffers</a></li>
 <li><a class="reference internal" href="#buffer-units">Buffer Units</a></li>
 <li><a class="reference internal" href="#module-adi.rx_tx">Members</a><ul>
+<li><a class="reference internal" href="#adi.rx_tx.are_channels_complex"><code class="docutils literal notranslate"><span class="pre">are_channels_complex()</span></code></a></li>
 <li><a class="reference internal" href="#adi.rx_tx.rx"><code class="docutils literal notranslate"><span class="pre">rx</span></code></a></li>
 <li><a class="reference internal" href="#adi.rx_tx.rx_core"><code class="docutils literal notranslate"><span class="pre">rx_core</span></code></a><ul>
 <li><a class="reference internal" href="#adi.rx_tx.rx_core.rx"><code class="docutils literal notranslate"><span class="pre">rx_core.rx()</span></code></a></li>
@@ -155,10 +157,11 @@ Content on this topic
 </label>
 <div class="repotoc-tree">
   <root>
-  <a href="../../documentation/eval/index.html">Evaluation Boards</a>
-  <a href="../../documentation/university/index.html">University Program</a>
+  <a href="../../documentation/index.html">System Level</a>
   <a href="../../hdl/index.html">HDL</a>
+  <a href="../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
+  <a href="../../libiio/index.html">libiio</a>
   <a href="../../no-OS/index.html">no-OS</a>
   <a href="../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
   <a href="../../PrecisionToolbox/index.html">Precision Toolbox</a>
@@ -187,6 +190,7 @@ Content on this topic
 <li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r.html">ad3552r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
@@ -206,6 +210,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad717x.html">ad717x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad719x.html">ad719x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7291.html">ad7291</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad738x.html">ad738x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7689.html">ad7689</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7746.html">ad7746</a></li>
@@ -224,6 +229,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9162.html">adi.ad9162 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9166.html">adi.ad9166 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9213.html">ad9213</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9250.html">adi.ad9250 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9265.html">adi.ad9265 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad936x.html">ad936x</a></li>
@@ -413,6 +419,16 @@ array<span class="o">([</span><span class="w">     </span><span class="m">49151<
 </section>
 <section id="module-adi.rx_tx">
 <span id="members"></span><h2>Members<a class="headerlink" href="#module-adi.rx_tx" title="Permalink to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="adi.rx_tx.are_channels_complex">
+<span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">are_channels_complex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Channel</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#adi.rx_tx.are_channels_complex" title="Permalink to this definition">#</a></dt>
+<dd><p>Check if channels are complex or not</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>channels: List of channel names or iio.Channel objects</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.rx_tx.rx">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.rx_tx.</span></span><span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx_buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.rx_tx.rx" title="Permalink to this definition">#</a></dt>
