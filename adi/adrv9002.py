@@ -120,8 +120,12 @@ class adrv9002(rx_tx, context_manager):
             attr_encode = "stream_config".encode("ascii")
             iio._d_write_attr(self._ctrl._device, attr_encode, data)
 
-    # we cannot really get the profile. The driver will just throw EPERM
-    profile = property(None, write_profile)
+    @property
+    def profile(self):
+        profile_data = self._get_iio_dev_attr_str("profile_config")
+        return dict(x.split(": ") for x in profile_data.split("\n"))
+
+    # we cannot really get the stream. The driver will just throw EPERM
     stream = property(None, write_stream)
 
     @property
@@ -719,3 +723,8 @@ class adrv9002(rx_tx, context_manager):
     @tx1_lo.setter
     def tx1_lo(self, value):
         self._set_iio_attr("altvoltage3", "frequency", True, value)
+
+    @property
+    def api_version(self):
+        """api_version: Get the version of the API"""
+        return self._get_iio_debug_attr_str("api_version")
