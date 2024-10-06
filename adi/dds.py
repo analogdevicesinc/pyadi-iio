@@ -16,11 +16,34 @@ class dds(attribute):
 
     def __update_dds(self, attr, value):
         split_cores_indx = 0
+        altvoltage_channels = []
+        for chan in self._txdac.channels:
+            if hasattr(chan, "id") and chan.id.startswith("altvoltage"):
+                altvoltage_channels.append(chan.id)
+        # Sort channels by name. Names are in the format altvoltageX
+        altvoltage_channels.sort(key=lambda x: int(x[10:]))
+        if len(value) > len(altvoltage_channels):
+            raise Exception(
+                f"Number of values ({len(value)}) exceeds number of DDS channels ({len(altvoltage_channels)})"
+            )
+
+        if not self._split_cores:
+            for i, chan_name in enumerate(altvoltage_channels):
+                if i >= len(value):
+                    return
+                chan = self._txdac.find_channel(chan_name, True)
+                if attr == "raw":
+                    chan.attrs[attr].value = str(int(value[i]))
+                else:
+                    chan.attrs[attr].value = str(value[i])
+            return
+        # old implementation since it handles split cores
         for indx in range(len(self._txdac.channels)):
-            chan = self._txdac.find_channel("altvoltage" + str(indx), True)
+            chan = self._txdac.find_channel(f"altvoltage{str(indx)}", True)
+            # Special FMComms5 case
             if not chan and self._split_cores:
                 chan = self._txdac_chip_b.find_channel(
-                    "altvoltage" + str(split_cores_indx), True
+                    f"altvoltage{str(split_cores_indx)}", True
                 )
                 split_cores_indx = split_cores_indx + 1
             if not chan:
@@ -36,6 +59,21 @@ class dds(attribute):
     def _read_dds(self, attr):
         values = []
         split_cores_indx = 0
+
+        altvoltage_channels = []
+        for chan in self._txdac.channels:
+            if hasattr(chan, "id") and chan.id.startswith("altvoltage"):
+                altvoltage_channels.append(chan.id)
+        # Sort channels by name. Names are in the format altvoltageX
+        altvoltage_channels.sort(key=lambda x: int(x[10:]))
+
+        if not self._split_cores:
+            for chan_name in altvoltage_channels:
+                chan = self._txdac.find_channel(chan_name, True)
+                values.append(chan.attrs[attr].value)
+            return values
+
+        # old implementation since it handles split cores
         for indx in range(len(self._txdac.channels)):
             chan = self._txdac.find_channel("altvoltage" + str(indx), True)
             if not chan and self._split_cores:
@@ -142,6 +180,8 @@ class dds(attribute):
                     + "_F1",
                     True,
                 )
+            if not chan:
+                Exception(f"Cannot find channel {channel}")
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(90000)
             chan.attrs["scale"].value = str(scale)
@@ -157,6 +197,8 @@ class dds(attribute):
                     + "_F1",
                     True,
                 )
+            if not chan:
+                Exception(f"Cannot find channel {channel}")
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale)
