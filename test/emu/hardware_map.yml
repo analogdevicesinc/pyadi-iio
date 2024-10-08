@@ -474,6 +474,15 @@ ad6676:
       - data_devices:
           - iio:device1
 
+ad7091r:
+  - ad7091r
+  - pyadi_iio_class_support:
+      - ad7091r
+  - emulate:
+      - filename: ad7091r.xml
+      - data_devices:
+          - iio:device0
+
 ad7768:
   - ad7768
   - pyadi_iio_class_support:
