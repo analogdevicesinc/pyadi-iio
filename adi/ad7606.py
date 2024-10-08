@@ -20,6 +20,8 @@ class ad7606(rx, context_manager):
 
     def __init__(self, uri="", device_name=""):
 
+        self._device_name = device_name
+
         context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = [
@@ -52,41 +54,53 @@ class ad7606(rx, context_manager):
         self.channel = []
         for ch in self._ctrl.channels:
             name = ch._id
+            if (name == "timestamp"):
+                continue
             self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
+            self.channel.append(self._channel(self, name))
 
         rx.__init__(self)
 
     @property
-    def scale_available(self):
-        """Provides all available scale settings for the AD7606 channels"""
-        return self._get_iio_attr(self.channel[0].name, "scale_available", False)
+    def has_device_scale_available(self):
+        """Returns true if the 'scale_available' attribute is at device level.
+           For AD7606C-16 and AD7606C-18 in SW mode, this is available
+           at channel level.
+        """
+        if self._device_name not in ["ad7606c-16", "ad7606c-18"]:
+            return False
+        try:
+            _ = self._get_iio_dev_attr("scale_available")
+            return True
+        except Exception:
+            return False
 
     @property
-    def range_available(self):
-        """Provides all available range settings for the AD7606 channels"""
-        return self._get_iio_attr(self.channel[0].name, "range_available", False)
+    def scale_available(self):
+        """Provides all available scale settings for the AD7606 channels"""
+        return self._get_iio_dev_attr("scale_available")
 
     @property
     def oversampling_ratio(self):
         """AD7606 oversampling_ratio"""
-        return self._get_iio_attr(self.name, "oversampling_ratio", False)
+        return self._get_iio_dev_attr("oversampling_ratio")
 
     @oversampling_ratio.setter
     def oversampling_ratio(self, value):
-        self._get_iio_attr(self.name, "oversampling_ratio", False, value)
+        self._set_iio_dev_attr("oversampling_ratio", value)
 
     @property
     def oversampling_ratio_available(self):
         """AD7606 channel oversampling_ratio_available"""
-        return self._get_iio_attr(self.name, "oversampling_ratio_available", False)
+        return self._get_iio_dev_attr("oversampling_ratio_available")
 
     class _channel(attribute):
         """AD7606 channel"""
 
-        def __init__(self, ctrl, channel_name):
+        def __init__(self, dev, channel_name):
             self.name = channel_name
-            self._ctrl = ctrl
+            self._dev = dev
+            self._ctrl = dev._ctrl
 
         @property
         def raw(self):
@@ -103,24 +117,30 @@ class ad7606(rx, context_manager):
             self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
 
         @property
-        def range(self):
-            """AD7606 channel range"""
-            return self._get_iio_attr(self.name, "range", False)
-
-        @range.setter
-        def range(self, value):
-            self._set_iio_attr(self.name, "range", False, str(Decimal(value).real))
+        def scale_available(self):
+            """'scale_available' is available per channel on AD7606C-16 and AD7606C-18 in SW mode"""
+            # We can't detect SW mode, so we use a try block
+            try:
+                return self._get_iio_attr_str(self.name, "scale_available", False)
+            except Exception:
+                return self._dev.scale_available
 
     def to_volts(self, index, val):
         """Converts raw value to SI"""
         _scale = self.channel[index].scale
 
-        ret = None
+        if isinstance(val, int):
+            return val * _scale
+
+        if isinstance(val, list):
+            return [x * _scale for x in val]
+
+        # ADC7606C-18 will return int32 samples from the driver
+        if isinstance(val, np.int32):
+            return val * _scale
 
         if isinstance(val, np.int16):
-            ret = val * _scale
+            return val * _scale
 
         if isinstance(val, np.ndarray):
-            ret = [x * _scale for x in val]
-
-        return ret
+            return [x * _scale for x in val]
