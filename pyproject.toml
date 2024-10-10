@@ -49,7 +49,7 @@ jesd = [
 [project.urls]
 homepage = "https://analogdevicesinc.github.io/pyadi-iio/"
 documentation = "https://analogdevicesinc.github.io/pyadi-iio/"
-repository = "https://github/analogdevicesinc/pyadi-iio"
+repository = "https://github.com/analogdevicesinc/pyadi-iio"
 
 [tool.isort]
 multi_line_output=3
