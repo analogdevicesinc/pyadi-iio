@@ -31,7 +31,7 @@ class ad9083(sync_start, rx, context_manager):
                 self._rx_channel_names.append(ch._id)
 
         for name in self._rx_channel_names:
-            if "_i" or "_q" in name:
+            if any(ext in name for ext in ["_i", "_q"]):
                 self._complex_data = True
 
         rx.__init__(self)
