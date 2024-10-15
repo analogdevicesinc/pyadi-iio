@@ -11,7 +11,7 @@ class ad9467(rx, context_manager):
     """ AD9467 High-Speed ADC """
 
     _complex_data = False
-    _rx_channel_names = ["voltage0", "voltage1"]
+    _rx_channel_names = ["voltage0"]
     _device_name = ""
 
     def __init__(self, uri=""):
