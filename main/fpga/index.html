@@ -7,14 +7,20 @@
 
     <title>FPGA Features &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=765fa3cc" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=3e3e1b4d" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script defer="" src="../_static/app.umd.js?v=c93eadd1"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -453,8 +459,8 @@ the index of the individual converters.</p>
 <h2>DMA Synchronization<a class="headerlink" href="#dma-synchronization" title="Permalink to this heading">#</a></h2>
 <p>In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general testing.</p>
 <p>This works by leveraging special control signals inside the HDL design to trigger receive captures from transmitted buffers. These are controlled through the <strong>sync_start</strong> class, which provide explicit control over when data is transmitted or released from the DMA in the FPGA fabric. This transmit or trigger will in turn allow data into the receive DMA at this moment in time. The exact methods and their sequence are described in the flowchart below.</p>
-<div class="mermaid">
-            flowchart LR
+<pre  class="mermaid">
+        flowchart LR
     A[ARM DMA\n-set rx_sync_start to arm\n-set tx_sync_start to arm] --&gt; B[Reset Buffers\n-tx_destroy_buffer\n-rx_destroy_buffer]
     B --&gt; C[Initialize RX buffer\n-_rx_init_channel]
     C --&gt; D[Fill TX DMA\n-Call tx method]
@@ -462,7 +468,7 @@ the index of the individual converters.</p>
     E --&gt; F[Collect RX Buffer\n-Call rx method]
     F --&gt; A
 
-        </div><p>A full example that leverages this control is <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/ad9081_sync_start_example.py">ad9081_sync_start_example.py</a>.</p>
+    </pre><p>A full example that leverages this control is <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/ad9081_sync_start_example.py">ad9081_sync_start_example.py</a>.</p>
 </section>
 <section id="module-adi.sync_start">
 <span id="sync-start-methods"></span><h2>Sync_Start Methods<a class="headerlink" href="#module-adi.sync_start" title="Permalink to this heading">#</a></h2>
