@@ -56,7 +56,7 @@ class tx_two(tx):
         self._ctx = ctx
         self._txdac = obs_dev
         self._tx_channel_names = channel_names
-        self._complex_data = complex_data
+        self._tx_complex_data = complex_data
         tx.__init__(self)
 
     def __del__(self):
