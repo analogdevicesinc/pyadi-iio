@@ -73,6 +73,7 @@ from adi.adis16480 import (
     adis16547,
 )
 from adi.adis16507 import adis16507
+from adi.adis16550 import adis16550
 from adi.adl5240 import adl5240
 from adi.adl5960 import adl5960
 from adi.admv8818 import admv8818
