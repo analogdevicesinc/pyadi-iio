@@ -127,6 +127,7 @@ from adi.tdd import tdd
 from adi.tddn import tddn
 
 try:
+    from adi.sshfs import sshfs
     from adi.jesd import jesd
 except ImportError:
     pass
