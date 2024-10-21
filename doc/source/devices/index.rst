@@ -79,6 +79,7 @@ Supported Devices
    adi.adis16507
    adi.adis16545
    adi.adis16547
+   adi.adis16550
    adi.adl5240
    adi.adl5960
    adi.admv8818

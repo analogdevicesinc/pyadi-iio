@@ -584,6 +584,15 @@ adis16480:
   - pyadi_iio_class_support:
       - adis16480
 
+adis16550:
+  - adis16550
+  - emulate:
+      - filename: adis16550.xml
+      - data_devices:
+        - iio:device0
+  - pyadi_iio_class_support:
+      - adis16550
+
 ad7124-8:
   - ad7124
   - pyadi_iio_class_support:
