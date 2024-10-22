@@ -49,8 +49,9 @@ jobs:
           bash ./.github/scripts/install_pydeps.sh
           sudo apt install -y python3-tk
 
-      - name: Test
+      - name: Test without optional dependencies
         run: |
+                pip uninstall -y paramiko
                 pytest -vs --cov=adi --scan-verbose --emu --junitxml="results.xml" -k 'not prod'
 
       - name: Report coverage
@@ -64,12 +65,6 @@ jobs:
         if: always()
         with:
           files: results.xml
-
-      - name: Test without optional dependencies
-        run: |
-                pip uninstall -y paramiko
-                pytest -vs --scan-verbose --emu --junitxml="results.xml" -k 'not prod'
-
 
   Lint:
     runs-on: ubuntu-latest
