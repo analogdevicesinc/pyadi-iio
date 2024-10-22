@@ -52,7 +52,7 @@ jobs:
       - name: Test without optional dependencies
         run: |
                 pip uninstall -y paramiko
-                pytest -vs --scan-verbose --emu --junitxml="results.xml" -k 'not prod'
+                pytest -vs --cov=adi --scan-verbose --emu --junitxml="results.xml" -k 'not prod'
 
       - name: Report coverage
         if: (github.event_name != 'pull_request') && (matrix.python-version == 3.6)
