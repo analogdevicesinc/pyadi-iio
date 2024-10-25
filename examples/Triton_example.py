@@ -5,6 +5,8 @@
 import time
 from datetime import datetime
 
+from tenacity import sleep
+
 import adi
 import matplotlib.pyplot as plt
 import numpy as np
@@ -57,7 +59,8 @@ def measure_and_adjust_phase_offset(chan0, chan1, phase_correction):
     return (sub_phases(phase_correction, [int(p * 1000)] * 4), s)
 
 
-dev = adi.Triton("ip:10.44.3.50", calibration_board_attached=False)
+dev = adi.Triton("ip:10.44.3.64", calibration_board_attached=False)
+
 
 print(dev.rx_channel_nco_frequencies["axi-ad9084-rx-hpc"])
 print(dev.rx_main_nco_frequencies["axi-ad9084-rx-hpc"])
@@ -100,9 +103,9 @@ print("--Setting up chip")
 
 # Zero attenuation
 dev.rx_dsa0_gain = 0
-dev.rx_dsa1_gain = 0
+dev.rx_dsa1_gain = -1
 dev.rx_dsa2_gain = 0
-dev.rx_dsa3_gain = 0
+dev.rx_dsa3_gain = -1
 
 dev.hpf_ctrl = 7
 dev.lpf_ctrl = 12
@@ -124,7 +127,113 @@ dev.tx_cyclic_buffer = True
 fs = int(dev.tx_sample_rate["axi-ad9084-rx-hpc"])
 
 # Set single DDS tone for TX on one transmitter
-dev.dds_single_tone(fs / 50, 0.9, channel=0)
+dev.dds_single_tone(fs / 50, 0.5, channel=0)
+
+
+# dev.adf4030.apollo_sysref_0_autoalign_enable     dev.adf4030.apollo_sysref_3_autoalign_iteration  dev.adf4030.j46_j47_ufl_autoalign_iteration
+# dev.adf4030.apollo_sysref_0_autoalign_iteration  dev.adf4030.apollo_sysref_3_autoalign_threshold  dev.adf4030.j46_j47_ufl_autoalign_threshold
+# dev.adf4030.apollo_sysref_0_autoalign_threshold  dev.adf4030.apollo_sysref_3_frequency            dev.adf4030.j46_j47_ufl_frequency
+# dev.adf4030.apollo_sysref_0_frequency            dev.adf4030.apollo_sysref_3_output_enable        dev.adf4030.j46_j47_ufl_output_enable
+# dev.adf4030.apollo_sysref_0_output_enable        dev.adf4030.apollo_sysref_3_phase                dev.adf4030.j46_j47_ufl_phase
+# dev.adf4030.apollo_sysref_0_phase                dev.adf4030.apollo_sysref_3_reference_channel    dev.adf4030.j46_j47_ufl_reference_channel
+# dev.adf4030.apollo_sysref_0_reference_channel    dev.adf4030.ctx                                  dev.adf4030.ltc6952_out_8_autoalign_enable
+# dev.adf4030.apollo_sysref_1_autoalign_enable     dev.adf4030.fpga_sysref_0_autoalign_enable       dev.adf4030.ltc6952_out_8_autoalign_iteration
+# dev.adf4030.apollo_sysref_1_autoalign_iteration  dev.adf4030.fpga_sysref_0_autoalign_iteration    dev.adf4030.ltc6952_out_8_autoalign_threshold
+# dev.adf4030.apollo_sysref_1_autoalign_threshold  dev.adf4030.fpga_sysref_0_autoalign_threshold    dev.adf4030.ltc6952_out_8_frequency
+# dev.adf4030.apollo_sysref_1_frequency            dev.adf4030.fpga_sysref_0_frequency              dev.adf4030.ltc6952_out_8_output_enable
+# dev.adf4030.apollo_sysref_1_output_enable        dev.adf4030.fpga_sysref_0_output_enable          dev.adf4030.ltc6952_out_8_phase
+# dev.adf4030.apollo_sysref_1_phase                dev.adf4030.fpga_sysref_0_phase                  dev.adf4030.ltc6952_out_8_reference_channel
+# dev.adf4030.apollo_sysref_1_reference_channel    dev.adf4030.fpga_sysref_0_reference_channel      dev.adf4030.ltc6953_out_6_autoalign_enable
+# dev.adf4030.apollo_sysref_2_autoalign_enable     dev.adf4030.fpga_sysref_1_autoalign_enable       dev.adf4030.ltc6953_out_6_autoalign_iteration
+# dev.adf4030.apollo_sysref_2_autoalign_iteration  dev.adf4030.fpga_sysref_1_autoalign_iteration    dev.adf4030.ltc6953_out_6_autoalign_threshold
+# dev.adf4030.apollo_sysref_2_autoalign_threshold  dev.adf4030.fpga_sysref_1_autoalign_threshold    dev.adf4030.ltc6953_out_6_frequency
+# dev.adf4030.apollo_sysref_2_frequency            dev.adf4030.fpga_sysref_1_frequency              dev.adf4030.ltc6953_out_6_output_enable
+# dev.adf4030.apollo_sysref_2_output_enable        dev.adf4030.fpga_sysref_1_output_enable          dev.adf4030.ltc6953_out_6_phase
+# dev.adf4030.apollo_sysref_2_phase                dev.adf4030.fpga_sysref_1_phase                  dev.adf4030.ltc6953_out_6_reference_channel
+# dev.adf4030.apollo_sysref_2_reference_channel    dev.adf4030.fpga_sysref_1_reference_channel      dev.adf4030.status
+# dev.adf4030.apollo_sysref_3_autoalign_enable     dev.adf4030.j46_j47_ufl_autoalign_enable         dev.adf4030.uri
+
+
+# mcs_bg_tacking_cal_run
+# mcs_cal_run
+# mcs_dt0_measurement
+# mcs_dt1_measurement
+# mcs_dt1_restore
+# mcs_fg_tacking_cal_run
+# mcs_init
+# mcs_tracking_init
+
+dev._ctx.set_timeout(10000)
+
+
+for i in range(4):
+    setattr(dev.adf4030, f"apollo_sysref_{i}_output_enable", 1)
+    setattr(dev.adf4030, f"apollo_sysref_{i}_autoalign_enable", 1)
+
+    dev._ctrls[i].attrs['mcs_init'].value='y'
+
+    dev._ctrls[i].attrs['mcs_dt0_measurement'].value='y'
+    apollo_delta_t0 = int(dev._ctrls[i].attrs['mcs_dt0_measurement'].value)
+    adf4030_delta_t0 = int(getattr(dev.adf4030, f"apollo_sysref_{i}_phase"))
+
+    setattr(dev.adf4030, f"apollo_sysref_{i}_output_enable", 0)
+
+    dev._ctrls[i].attrs['mcs_dt1_measurement'].value='y'
+    apollo_delta_t1 = int(dev._ctrls[i].attrs['mcs_dt1_measurement'].value)
+    adf4030_delta_t1 = int(getattr(dev.adf4030, f"apollo_sysref_{i}_phase"))
+
+    dev._ctrls[i].attrs['mcs_dt1_restore'].value='y'
+
+    bsync_out_period_fs = (1e15 / int(getattr(dev.adf4030, f"apollo_sysref_{i}_frequency")));
+    calc_delay = (adf4030_delta_t0 - adf4030_delta_t1) - (apollo_delta_t1 - apollo_delta_t0);
+    round_trip_delay = ((calc_delay + bsync_out_period_fs) % bsync_out_period_fs);
+    path_delay = (round_trip_delay / 2);
+
+    print("Results: Apollo%d" % i);
+    print("%-16s: %12d fs  %12.3f ps  %12.6f ns." % ("apollo_delta_t0", apollo_delta_t0, (apollo_delta_t0 / 1e3), (apollo_delta_t0 / 1e6)));
+    print("%-16s: %12d fs  %12.3f ps  %12.6f ns." % ("adf4030_delta_t0", adf4030_delta_t0, (adf4030_delta_t0 / 1e3), (adf4030_delta_t0 / 1e6)));
+    print("%-16s: %12d fs  %12.3f ps  %12.6f ns." % ("apollo_delta_t1", apollo_delta_t1, (apollo_delta_t1 / 1e3), (apollo_delta_t1 / 1e6)));
+    print("%-16s: %12d fs  %12.3f ps  %12.6f ns." % ("adf4030_delta_t1", adf4030_delta_t1, (adf4030_delta_t1 / 1e3), (adf4030_delta_t1 / 1e6)));
+    print("%-16s: %12d fs  %12.3f ps  %12.6f ns." % ("calc_delay", calc_delay, (calc_delay / 1e3), (calc_delay / 1e6)));
+    print("%-16s: %12d fs  %12.3f ps  %12.6f ns." % ("round_trip_delay", round_trip_delay, (round_trip_delay / 1e3), (round_trip_delay / 1e6)));
+    print("%-16s: %12d fs  %12.3f ps  %12.6f ns." % ("path_delay", path_delay, (path_delay / 1e3), (path_delay / 1e6)));
+    print("")
+
+    setattr(dev.adf4030, f"apollo_sysref_{i}_output_enable", 1)
+    setattr(dev.adf4030, f"apollo_sysref_{i}_phase", -1 * path_delay)
+    setattr(dev.adf4030, f"apollo_sysref_{i}_autoalign_enable", 1)
+
+    adf4030_phase = int(getattr(dev.adf4030, f"apollo_sysref_{i}_phase"))
+
+    print("%-16s: %12d fs  %12.3f ps  %12.6f ns." % ("adf4030_phase", adf4030_phase, (adf4030_phase / 1e3), (adf4030_phase / 1e6)));
+
+    dev._ctrls[i].attrs['mcs_cal_run'].value='y'
+    print("MCS Calibration Status: " + dev._ctrls[i].attrs['mcs_cal_run'].value)
+
+    dev._ctrls[i].attrs['mcs_tracking_init'].value='y'
+
+    dev.adf4382[i].channels[0].attrs['en_auto_align'].value = '1'
+    dev.adf4382[i].channels[0].attrs['phase'].value = '-250'
+
+    dev._ctrls[i].attrs['mcs_fg_tacking_cal_run'].value='y'
+    dev._ctrls[i].attrs['mcs_bg_tacking_cal_run'].value='y'
+
+    print("MCS Init Calibration Status:\n" + dev._ctrls[i].attrs['mcs_init_cal_status'].value)
+
+    coarse_current = int(dev.adf4382[i].debug_attrs['coarse_current'].value)
+    fine_current = int(dev.adf4382[i].debug_attrs['fine_current'].value)
+    bleed_pol = int(dev.adf4382[i].debug_attrs['bleed_pol'].value)
+
+    if bleed_pol == 1:
+        sign = 'Neg'
+    else:
+        sign = 'Pos'
+
+    print ("\nADF4382_" + str(i) + " Bleed Current Sign: " + sign + " Coarse: " + str(coarse_current) + " Fine: " + str(fine_current) + "\n")
+    print("MCS Tracking Calibration Status:\n" + dev._ctrls[i].attrs['mcs_tracking_status'].value)
+
+sleep(1)
+
 
 phases_a = []
 phases_b = []
