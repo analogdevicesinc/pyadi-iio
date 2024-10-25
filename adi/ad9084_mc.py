@@ -5,6 +5,7 @@
 from typing import Dict, List
 
 from adi.ad9084 import ad9084
+from adi.adf4030 import adf4030
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.gen_mux import genmux
@@ -112,6 +113,7 @@ class ad9084_mc(ad9084):
         self._tx_fine_duc_channel_names: List[str] = []
         self._dds_channel_names: List[str] = []
         self._rx_channel_names: List[str] = []
+        self.adf4382: List[object] = []
         
         context_manager.__init__(self, uri, self._device_name)
 
@@ -332,8 +334,15 @@ class Triton(ad9084_mc):
         ad9084_mc.__init__(self, uri=uri, phy_dev_name="axi-ad9084-rx-hpc")
         one_bit_adc_dac.__init__(self, uri)
 
+        self.adf4030 = adf4030(uri)
+
         self._clock_chip_c = self._ctx.find_device("ltc6953_c")
         self._clock_chip_f = self._ctx.find_device("ltc6953_f")
+
+        self.adf4382.append(self._ctx.find_device("adf4382_0"))
+        self.adf4382.append(self._ctx.find_device("adf4382_1"))
+        self.adf4382.append(self._ctx.find_device("adf4382_2"))
+        self.adf4382.append(self._ctx.find_device("adf4382_3"))
 
         self._rx_dsa0 = self._ctx.find_device("dsa0")
         self._rx_dsa1 = self._ctx.find_device("dsa1")
