@@ -426,6 +426,79 @@ class ad9084(rx_tx, context_manager, sync_start):
     def jesd204_fsm_ctrl(self, value):
         self._set_iio_dev_attr("jesd204_fsm_ctrl", value, self._rxadc)
 
+
+    @property
+    def mcs_bg_tacking_cal_run(self):
+        """mcs_bg_tacking_cal_run: Background tracking calibration run"""
+        return self._get_iio_dev_attr("mcs_bg_tacking_cal_run", self._rxadc)
+
+    @mcs_bg_tacking_cal_run.setter
+    def mcs_bg_tacking_cal_run(self, value):
+        self._set_iio_dev_attr("mcs_bg_tacking_cal_run", value, self._rxadc)
+
+    @property
+    def mcs_cal_run(self):
+        """mcs_cal_run: Calibration run"""
+        return self._get_iio_dev_attr("mcs_cal_run", self._rxadc)
+
+    @mcs_cal_run.setter
+    def mcs_cal_run(self, value):
+        self._set_iio_dev_attr("mcs_cal_run", value, self._rxadc)
+
+    @property
+    def mcs_dt0_measurement(self):
+        """mcs_dt0_measurement: DT0 measurement"""
+        return self._get_iio_dev_attr("mcs_dt0_measurement", self._rxadc)
+
+    @mcs_dt0_measurement.setter
+    def mcs_dt0_measurement(self, value):
+        self._set_iio_dev_attr("mcs_dt0_measurement", value, self._rxadc)
+
+    @property
+    def mcs_dt1_measurement(self):
+        """mcs_dt1_measurement: DT1 measurement"""
+        return self._get_iio_dev_attr("mcs_dt1_measurement", self._rxadc)
+
+    @mcs_dt1_measurement.setter
+    def mcs_dt1_measurement(self, value):
+        self._set_iio_dev_attr("mcs_dt1_measurement", value, self._rxadc)
+
+    @property
+    def mcs_dt1_restore(self):
+        """mcs_dt1_restore: DT1 restore"""
+        return self._get_iio_dev_attr("mcs_dt1_restore", self._rxadc)
+
+    @mcs_dt1_restore.setter
+    def mcs_dt1_restore(self, value):
+        self._set_iio_dev_attr("mcs_dt1_restore", value, self._rxadc)
+
+    @property
+    def mcs_fg_tacking_cal_run(self):
+        """mcs_fg_tacking_cal_run: Foreground tracking calibration run"""
+        return self._get_iio_dev_attr("mcs_fg_tacking_cal_run", self._rxadc)
+
+    @mcs_fg_tacking_cal_run.setter
+    def mcs_fg_tacking_cal_run(self, value):
+        self._set_iio_dev_attr("mcs_fg_tacking_cal_run", value, self._rxadc)
+
+    @property
+    def mcs_init(self):
+        """mcs_init: Initialization"""
+        return self._get_iio_dev_attr("mcs_init", self._rxadc)
+
+    @mcs_init.setter
+    def mcs_init(self, value):
+        self._set_iio_dev_attr("mcs_init", value, self._rxadc)
+
+    @property
+    def mcs_tracking_init(self):
+        """mcs_tracking_init: Tracking initialization"""
+        return self._get_iio_dev_attr("mcs_tracking_init", self._rxadc)
+
+    @mcs_tracking_init.setter
+    def mcs_tracking_init(self, value):
+        self._set_iio_dev_attr("mcs_tracking_init", value, self._rxadc)
+
     @property
     def jesd204_fsm_resume(self):
         """jesd204_fsm_resume: jesd204-fsm resume"""
