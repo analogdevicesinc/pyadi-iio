@@ -134,6 +134,9 @@
 <li><a class="reference internal" href="#adi.adis16550.deltavelocity_y_conv"><code class="docutils literal notranslate"><span class="pre">adis16550.deltavelocity_y_conv</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.deltavelocity_z_conv"><code class="docutils literal notranslate"><span class="pre">adis16550.deltavelocity_z_conv</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.disable_trigger"><code class="docutils literal notranslate"><span class="pre">adis16550.disable_trigger</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16550.firmware_date"><code class="docutils literal notranslate"><span class="pre">adis16550.firmware_date</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16550.firmware_revision"><code class="docutils literal notranslate"><span class="pre">adis16550.firmware_revision</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16550.flash_count"><code class="docutils literal notranslate"><span class="pre">adis16550.flash_count</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.get_accel_x"><code class="docutils literal notranslate"><span class="pre">adis16550.get_accel_x()</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.get_accel_y"><code class="docutils literal notranslate"><span class="pre">adis16550.get_accel_y()</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.get_accel_z"><code class="docutils literal notranslate"><span class="pre">adis16550.get_accel_z()</span></code></a></li>
@@ -147,6 +150,7 @@
 <li><a class="reference internal" href="#adi.adis16550.get_deltavelocity_y"><code class="docutils literal notranslate"><span class="pre">adis16550.get_deltavelocity_y()</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.get_deltavelocity_z"><code class="docutils literal notranslate"><span class="pre">adis16550.get_deltavelocity_z()</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.get_temp"><code class="docutils literal notranslate"><span class="pre">adis16550.get_temp()</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16550.product_id"><code class="docutils literal notranslate"><span class="pre">adis16550.product_id</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.rx"><code class="docutils literal notranslate"><span class="pre">adis16550.rx()</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.rx_annotated"><code class="docutils literal notranslate"><span class="pre">adis16550.rx_annotated</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">adis16550.rx_buffer_size</span></code></a></li>
@@ -155,6 +159,7 @@
 <li><a class="reference internal" href="#adi.adis16550.rx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">adis16550.rx_enabled_channels</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.rx_output_type"><code class="docutils literal notranslate"><span class="pre">adis16550.rx_output_type</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.sample_rate"><code class="docutils literal notranslate"><span class="pre">adis16550.sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16550.serial_number"><code class="docutils literal notranslate"><span class="pre">adis16550.serial_number</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16550.temp_conv"><code class="docutils literal notranslate"><span class="pre">adis16550.temp_conv</span></code></a></li>
 </ul>
 </li>
@@ -555,6 +560,24 @@ Content on this topic
 <span class="sig-name descname"><span class="pre">disable_trigger</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#adi.adis16550.disable_trigger" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16550.firmware_date">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">firmware_date</span></span><a class="headerlink" href="#adi.adis16550.firmware_date" title="Permalink to this definition">#</a></dt>
+<dd><p>firmware_date: the factory configuration date</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16550.firmware_revision">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">firmware_revision</span></span><a class="headerlink" href="#adi.adis16550.firmware_revision" title="Permalink to this definition">#</a></dt>
+<dd><p>firmware_revision: the firmware revision for the internal firmware</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16550.flash_count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flash_count</span></span><a class="headerlink" href="#adi.adis16550.flash_count" title="Permalink to this definition">#</a></dt>
+<dd><p>flash_counter: flash memory write count</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16550.get_accel_x">
 <span class="sig-name descname"><span class="pre">get_accel_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16550.get_accel_x" title="Permalink to this definition">#</a></dt>
@@ -633,6 +656,12 @@ Content on this topic
 <dd><p>Value returned in millidegrees Celsius.</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16550.product_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">product_id</span></span><a class="headerlink" href="#adi.adis16550.product_id" title="Permalink to this definition">#</a></dt>
+<dd><p>product_id: the numerical portion of the device number</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16550.rx">
 <span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16550.rx" title="Permalink to this definition">#</a></dt>
@@ -689,6 +718,12 @@ translated to channel numbers.</p>
 <dt class="sig sig-object py" id="adi.adis16550.sample_rate">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.adis16550.sample_rate" title="Permalink to this definition">#</a></dt>
 <dd><p>sample_rate: Sample rate in samples per second</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adis16550.serial_number">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">serial_number</span></span><a class="headerlink" href="#adi.adis16550.serial_number" title="Permalink to this definition">#</a></dt>
+<dd><p>serial_number: lot specific serial number</p>
 </dd></dl>
 
 <dl class="py property">
