@@ -8,6 +8,8 @@ from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
 from adi.sync_start import sync_start
 
+from .fftsniffer import fftsniffer
+
 
 def _map_to_dict(paths, ch):
     if ch.attrs["label"].value == "buffer_only":
@@ -88,6 +90,10 @@ class ad9084(rx_tx, context_manager, sync_start):
         # Devices with buffers
         self._rxadc = self._ctx.find_device("axi-ad9084-rx-hpc")
         self._txdac = self._ctx.find_device("axi-ad9084-tx-hpc")
+        self._fftsniffer_a = self._ctx.find_device("ad9088-fft-sniffer-A")
+        self._fftsniffer_b = self._ctx.find_device("ad9088-fft-sniffer-B")
+        self.fftsniffer_a = fftsniffer(self._fftsniffer_a)
+        self.fftsniffer_b = fftsniffer(self._fftsniffer_b)
 
         # Get DDC and DUC mappings
         paths = {}
