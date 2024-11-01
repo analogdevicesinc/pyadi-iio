@@ -341,6 +341,14 @@ adxl345:
       - filename: adxl345.xml
       - data_devices:
           - iio:device0
+adxl380:
+  - adxl380
+  - pyadi_iio_class_support:
+      - adxl380
+  - emulate:
+      - filename: adxl382.xml
+      - data_devices:
+          - iio:device0
 ad7746:
   - ad7746
   - pyadi_iio_class_support:
