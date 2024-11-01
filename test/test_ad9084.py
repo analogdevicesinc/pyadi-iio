@@ -304,3 +304,28 @@ def test_ad9084_nco_loopback(
 
 
 #########################################
+@pytest.mark.iio_hardware("adsy1100")
+def test_split_rx_buffers(iio_uri):
+    import adi
+
+    dev = adi.ad9084(uri=iio_uri)
+    dev.rx_buffer_size = 2 ** 10
+
+    d = dev.rx()
+    d1 = dev.rx1()
+    d2 = dev.rx2()
+
+    assert d is not None
+    assert d1 is not None
+    assert d2 is not None
+
+
+#########################################
+@pytest.mark.iio_hardware("adsy1100")
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("channel", [0, 1])
+@pytest.mark.parametrize("use_tx2", [False, True])
+def test_ad9084_tx_data_split_buffers(
+    test_dma_tx, iio_uri, classname, channel, use_tx2
+):
+    test_dma_tx(iio_uri, classname, channel, use_tx2)
