@@ -4,7 +4,9 @@
 
 from typing import Dict, List
 
+from adi.adrv9002 import rx1, rx2, tx1, tx2
 from adi.context_manager import context_manager
+from adi.obs import obs, remap, tx_two
 from adi.rx_tx import rx_tx
 from adi.sync_start import sync_start
 
@@ -59,19 +61,39 @@ class ad9084(rx_tx, context_manager, sync_start):
 
     _complex_data = True
     _rx_channel_names: List[str] = []
+    _rx2_channel_names: List[str] = []
     _tx_channel_names: List[str] = []
+    _tx2_channel_names: List[str] = []
     _tx_control_channel_names: List[str] = []
     _rx_coarse_ddc_channel_names: List[str] = []
     _tx_coarse_duc_channel_names: List[str] = []
     _rx_fine_ddc_channel_names: List[str] = []
     _tx_fine_duc_channel_names: List[str] = []
     _dds_channel_names: List[str] = []
+    _dds2_channel_names: List[str] = []
     _device_name = ""
 
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
-    def __init__(self, uri=""):
+    def __init__(
+        self,
+        uri="",
+        rx1_device_name="axi-ad9084-rx-hpc",
+        rx2_device_name="axi-ad9084b-rx-b",
+        tx1_device_name="axi-ad9084-tx-hpc",
+        tx2_device_name="axi-ad9084-tx-b",
+    ):
+        """Create a new instance of the AD9084 MxFE
 
+        rx1_device_name is used as the name for the control device and RX1/TX1 data device
+
+        Args:
+            uri: URI of device
+            rx1_device_name: Name of RX1 device driver. Default is 'axi-ad9084-rx-hpc'
+            rx2_device_name: Name of RX2 device driver. Default is 'axi-ad9084b-rx-b'
+            tx1_device_name: Name of TX1 device driver. Default is 'axi-ad9084-tx-hpc'
+            tx2_device_name: Name of TX2 device driver. Default is 'axi-ad9084-tx-b'
+        """
         # Reset default channel lists
         self._rx_channel_names = []
         self._tx_channel_names = []
@@ -84,10 +106,19 @@ class ad9084(rx_tx, context_manager, sync_start):
 
         context_manager.__init__(self, uri, self._device_name)
         # Default device for attribute writes
-        self._ctrl = self._ctx.find_device("axi-ad9084-rx-hpc")
+        self._ctrl = self._ctx.find_device(rx1_device_name)
         # Devices with buffers
-        self._rxadc = self._ctx.find_device("axi-ad9084-rx-hpc")
-        self._txdac = self._ctx.find_device("axi-ad9084-tx-hpc")
+        self._rxadc = self._ctx.find_device(rx1_device_name)
+        self._txdac = self._ctx.find_device(tx1_device_name)
+        self._rxadc2 = self._ctx.find_device(rx2_device_name)
+        self._txdac2 = self._ctx.find_device(tx2_device_name)
+        # Checks
+        for dev, name in zip(
+            [self._rxadc, self._txdac, self._rxadc2, self._txdac2],
+            [rx1_device_name, tx1_device_name, rx2_device_name, tx2_device_name],
+        ):
+            if dev is None:
+                raise Exception(f"No device found with name {name}")
 
         # Get DDC and DUC mappings
         paths = {}
@@ -101,16 +132,27 @@ class ad9084(rx_tx, context_manager, sync_start):
         for ch in self._rxadc.channels:
             if ch.scan_element and not ch.output:
                 self._rx_channel_names.append(ch._id)
+        for ch in self._rxadc2.channels:
+            if ch.scan_element and not ch.output:
+                self._rx2_channel_names.append(ch._id)
         for ch in self._txdac.channels:
             if ch.scan_element:
                 self._tx_channel_names.append(ch._id)
             else:
                 self._dds_channel_names.append(ch._id)
+        for ch in self._txdac2.channels:
+            if ch.scan_element:
+                self._tx2_channel_names.append(ch._id)
+            else:
+                self._dds2_channel_names.append(ch._id)
 
         # Sort channel names
         self._rx_channel_names = _sortconv(self._rx_channel_names)
+        self._rx2_channel_names = _sortconv(self._rx2_channel_names)
         self._tx_channel_names = _sortconv(self._tx_channel_names)
+        self._tx2_channel_names = _sortconv(self._tx2_channel_names)
         self._dds_channel_names = _sortconv(self._dds_channel_names, dds=True)
+        self._dds2_channel_names = _sortconv(self._dds2_channel_names, dds=True)
 
         # Map unique attributes to channel properties
         self._rx_fine_ddc_channel_names = []
@@ -131,6 +173,18 @@ class ad9084(rx_tx, context_manager, sync_start):
                     else:
                         self._tx_coarse_duc_channel_names.append(channels[0])
                         self._tx_fine_duc_channel_names += channels
+
+        # Setup second DMA path
+        self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
+        setattr(ad9084, "rx1", rx1)
+        setattr(ad9084, "rx2", rx2)
+        remap(self._rx2, "rx_", "rx2_", type(self))
+
+        self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
+        setattr(ad9084, "tx1", tx1)
+        setattr(ad9084, "tx2", tx2)
+        remap(self._tx2, "tx_", "tx2_", type(self))
+        remap(self._tx2, "dds_", "dds2_", type(self))
 
         rx_tx.__init__(self)
         sync_start.__init__(self)
