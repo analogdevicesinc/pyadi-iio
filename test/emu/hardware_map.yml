@@ -272,6 +272,20 @@ packrf:
   - cf-ad9361-lpc,4
   - pyadi_iio_class_support:
       - ad9361
+adsy1100:
+    - axi-ad9084-rx-hpc
+    - axi-ad9084-tx-hpc
+    - axi-ad9084b-rx-b
+    - axi-ad9084-tx-b
+    - pyadi_iio_class_support:
+        - ad9084
+    - emulate:
+        - filename: adsy1100.xml
+        - data_devices:
+            - iio:device4
+            - iio:device5
+            - iio:device6
+            - iio:device7
 
 # Generics
 ad9361:
