@@ -3,7 +3,8 @@ from os.path import dirname, join, realpath
 
 import pytest
 
-hardware = ["ad9084", "ad9084_tdd"]
+# hardware = ["ad9084", "ad9084_tdd"] # older builds
+hardware = ["adsy1100"]
 classname = "adi.ad9084"
 
 
@@ -96,7 +97,7 @@ def test_ad9084_rx_data(test_dma_rx, iio_uri, classname, channel):
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize("channel", [0, 1])
 def test_ad9084_tx_data(test_dma_tx, iio_uri, classname, channel):
     test_dma_tx(iio_uri, classname, channel)
 
@@ -104,7 +105,7 @@ def test_ad9084_tx_data(test_dma_tx, iio_uri, classname, channel):
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
     "param_set",
     [
@@ -134,7 +135,7 @@ def test_ad9084_cyclic_buffers(
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1, 2, 3])
+@pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
     "param_set",
     [
