@@ -96,6 +96,7 @@ Supported Devices
    adi.adxl313
    adi.adxl345
    adi.adxl355
+   adi.adxl380
    adi.adxrs290
    adi.cn0511
    adi.cn0532
