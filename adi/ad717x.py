@@ -26,6 +26,7 @@ class ad717x(rx, context_manager):
         compatible_parts = [
             "ad4111",
             "ad4112",
+            "ad4113",
             "ad4114",
             "ad4115",
             "ad4116",
