@@ -1,3 +1,4 @@
+import inspect
 import random
 import test.rf.spec as spec
 import time
@@ -25,6 +26,51 @@ try:
     disable_prod_tests = False
 except ImportError:
     disable_prod_tests = True
+
+
+def pytest_runtest_makereport(item, call):
+    """pytest_runtest_makereport:
+    This pytest hook is used to create a custom test report using
+    the xml property tag to add custom properties
+    """
+
+    if call.when == "call" and call.excinfo is not None:
+        # Extract error type and message
+        exception_type_and_message_formatted = call.excinfo.exconly() or "N/A"
+        item.user_properties.append(
+            ("exception_type_and_message", exception_type_and_message_formatted)
+        )
+
+        for fixture in item.fixturenames:
+            if "test_" in fixture:  # Get fixtures in conftest.py
+                fixture_defs = item.session._fixturemanager._arg2fixturedefs.get(
+                    fixture, []
+                )
+                if fixture_defs:
+                    # Get the fixture definition
+                    for fix_func in fixture_defs:
+                        fixture_func = fix_func.func
+                        # Check if the fixture is a generator (yielding)
+                        if inspect.isgeneratorfunction(fixture_func):
+                            request_fixture = item.funcargs.get("request")
+                            if request_fixture:
+                                # Get the generator
+                                generator = fixture_func(request_fixture)
+                                # Get the yielded function (test function)
+                                yielded_function = next(generator)
+                                # Get docstring of the yielded function (test function)
+                                yielded_docstring = yielded_function.__doc__ or "N/A"
+                                # Add the docstring of the yielded function (test function) as property in pytest xml report
+                                item.user_properties.append(
+                                    ("test_description", yielded_docstring)
+                                )
+
+
+def pytest_make_parametrize_id(val, argname):
+    """pytest_make_parametrize_id:
+        This pytest hook is used to return the test parameters as name=parameter value in the test report
+        """
+    return f"{argname}={val}"
 
 
 #########################################
