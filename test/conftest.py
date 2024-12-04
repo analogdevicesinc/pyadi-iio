@@ -58,11 +58,19 @@ def pytest_runtest_makereport(item, call):
                                 generator = fixture_func(request_fixture)
                                 # Get the yielded function (test function)
                                 yielded_function = next(generator)
-                                # Get docstring of the yielded function (test function)
-                                yielded_docstring = yielded_function.__doc__ or "N/A"
-                                # Add the docstring of the yielded function (test function) as property in pytest xml report
+                                # Get the yielded function name
+                                yielded_function_name = (
+                                    yielded_function.__name__ or "N/A"
+                                )
+                                # Get the test function module
+                                yielded_module = yielded_function.__module__ or "N/A"
+
+                                # Add test function name and module as property in pytest xml report
                                 item.user_properties.append(
-                                    ("test_description", yielded_docstring)
+                                    ("test_name_function", yielded_function_name)
+                                )
+                                item.user_properties.append(
+                                    ("test_function_module", yielded_module)
                                 )
 
 
