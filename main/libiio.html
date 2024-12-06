@@ -7,12 +7,12 @@
 
     <title>libiio Direct Access &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="_static/style.min.css?v=95305861" />
+    <link rel="stylesheet" type="text/css" href="_static/style.min.css?v=ab97267f" />
     <link rel="stylesheet" type="text/css" href="_static/css/style.css?v=632a43e7" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=57f2e648"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="_static/app.umd.js?v=c93eadd1"></script>
+    <script defer="" src="_static/app.umd.js?v=689b8755"></script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -94,7 +94,7 @@
     <div class="localtoc">
       <div class="tocwrapper">
         <div>
-          <div class="localtoc-header">On this page</div>
+          <div class="localtoc-header"></div>
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -299,10 +299,10 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="libiio-direct-access">
-<h1>libiio Direct Access<a class="headerlink" href="#libiio-direct-access" title="Permalink to this heading">#</a></h1>
+<h1>libiio Direct Access<a class="headerlink" href="#libiio-direct-access" title="Permalink to this heading"></a></h1>
 <p><strong>pyadi-iio</strong> is built on-top of <strong>libiio</strong>, specifically its python bindings <a class="reference external" href="https://pypi.org/project/pylibiio/">pylibiio</a>. However, <strong>pyadi-iio</strong> tries to limit or shape the top-level access of certain properties of drivers exposed by <em>libiio</em> and its structure so users do not have to understand how <strong>libiio</strong> works. This is great until you need access to something not directly exposed by one of <strong>pyadi-iio</strong>’s classes. Fortunately, there is an easy way to directly access the <a class="reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html">libiio python API</a> when necessary.</p>
 <section id="libiio-entry-points">
-<h2>libiio Entry Points<a class="headerlink" href="#libiio-entry-points" title="Permalink to this heading">#</a></h2>
+<h2>libiio Entry Points<a class="headerlink" href="#libiio-entry-points" title="Permalink to this heading"></a></h2>
 <p>The main object interface to <strong>libiio</strong> is through the <strong>ctx</strong> property, which is available in every device-specific class. The context is used internally by <strong>ctx</strong> to do all <strong>libiio</strong> specific operations. Here is an example of using the <strong>ctx</strong> property with <strong>pyadi-iio</strong> and <strong>libiio</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 <span class="kn">import</span> <span class="nn">iio</span>
@@ -325,7 +325,7 @@ cf-ad9361-lpc<span class="w"> </span><span class="p">|</span><span class="w"> </
 <p>Please refer to the <a class="reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html">libiio python API</a> for documentation on using <strong>libiio</strong> directly.</p>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
 <p>Here is an example of setting the enable state machine on Pluto through the <strong>libiio</strong> API through <strong>pyadi-iio</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 
@@ -400,7 +400,7 @@ adi,txmon-1-front-end-gain<span class="w"> </span>adi,txmon-1-front-end-gain
 </div>
 </section>
 <section id="libiio-v1-x-support">
-<h2>libiio v1.X support<a class="headerlink" href="#libiio-v1-x-support" title="Permalink to this heading">#</a></h2>
+<h2>libiio v1.X support<a class="headerlink" href="#libiio-v1-x-support" title="Permalink to this heading"></a></h2>
 <p><strong>pyadi-iio</strong> supports <strong>libiio</strong> v1.X and v0.X. However, the <strong>libiio</strong> python bindings are not available on PyPI for v1.X and they are currently unstable. If you require stable operation, please use <strong>libiio</strong> v0.X. Its also possible that not all ecosystem features are available yet for v1.X. Please report any issues you find with v1.X.</p>
 </section>
 </section>

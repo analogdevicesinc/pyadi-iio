@@ -7,12 +7,12 @@
 
     <title>adi.ad6676 module &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=95305861" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=ab97267f" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=c93eadd1"></script>
+    <script defer="" src="../_static/app.umd.js?v=689b8755"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -94,7 +94,7 @@
     <div class="localtoc">
       <div class="tocwrapper">
         <div>
-          <div class="localtoc-header">On this page</div>
+          <div class="localtoc-header"></div>
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -311,15 +311,15 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="module-adi.ad6676">
-<span id="adi-ad6676-module"></span><h1>adi.ad6676 module<a class="headerlink" href="#module-adi.ad6676" title="Permalink to this heading">#</a></h1>
+<span id="adi-ad6676-module"></span><h1>adi.ad6676 module<a class="headerlink" href="#module-adi.ad6676" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad6676.</span></span><span class="sig-name descname"><span class="pre">ad6676</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad6676.ad6676" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad6676.</span></span><span class="sig-name descname"><span class="pre">ad6676</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad6676.ad6676" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
 <p>AD6676 Wideband IF Receiver Subsystem</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.adc_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adc_frequency</span></span><a class="headerlink" href="#adi.ad6676.ad6676.adc_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adc_frequency</span></span><a class="headerlink" href="#adi.ad6676.ad6676.adc_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>adc_frequency: The clock frequency of the ADC. Maximizing the clock frequency is helpful
 when the IF or bandwidth are high. A lower clock frequency reduces power consumption and is
 appropriate for low IFs and narrow bandwidths.</p>
@@ -329,7 +329,7 @@ Range using internal synthesizer [2.925,3.2] GHz in Hz</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.bandwidth">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bandwidth</span></span><a class="headerlink" href="#adi.ad6676.ad6676.bandwidth" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bandwidth</span></span><a class="headerlink" href="#adi.ad6676.ad6676.bandwidth" title="Permalink to this definition"></a></dt>
 <dd><p>bandwidth: The bandwidth of the ADC. Since the AD6676 uses delta-sigma technology,
 the available bandwidth is a relatively small fraction of the ADC clock rate and
 the AD6676 achieves the lowest noise and distortion when the bandwidth is small.</p>
@@ -338,7 +338,7 @@ the AD6676 achieves the lowest noise and distortion when the bandwidth is small.
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.bw_margin_high">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bw_margin_high</span></span><a class="headerlink" href="#adi.ad6676.ad6676.bw_margin_high" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bw_margin_high</span></span><a class="headerlink" href="#adi.ad6676.ad6676.bw_margin_high" title="Permalink to this definition"></a></dt>
 <dd><p>bw_margin_high: High/upper bandwidth margins for the noise-shaping profile of the ADC.
 Typical values are 5 MHz, but the user may want to increase these margins in wideband operation
 in order to optimize the noise profile of the ADC.
@@ -347,7 +347,7 @@ Typical range [0,30] MHz in MHz</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.bw_margin_if">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bw_margin_if</span></span><a class="headerlink" href="#adi.ad6676.ad6676.bw_margin_if" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bw_margin_if</span></span><a class="headerlink" href="#adi.ad6676.ad6676.bw_margin_if" title="Permalink to this definition"></a></dt>
 <dd><p>bw_margin_if: Displacement of the resonance frequency (F1Shift) of the first resonator within
 the ADC from band-center. Typically 0 is appropriate, but in the widest bandwidth modes
 positive shifts can be used to reduce the noise density near the upper edge of the passband.
@@ -356,7 +356,7 @@ Typical range [-30,30] MHz in MHz</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.bw_margin_low">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bw_margin_low</span></span><a class="headerlink" href="#adi.ad6676.ad6676.bw_margin_low" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bw_margin_low</span></span><a class="headerlink" href="#adi.ad6676.ad6676.bw_margin_low" title="Permalink to this definition"></a></dt>
 <dd><p>bw_margin_low: Lower bandwidth margins for the noise-shaping profile of the ADC.
 Typical values are 5 MHz, but the user may want to increase these margins in wideband operation
 in order to optimize the noise profile of the ADC.
@@ -365,7 +365,7 @@ Typical range [0,30] MHz in MHz</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.hardwaregain">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hardwaregain</span></span><a class="headerlink" href="#adi.ad6676.ad6676.hardwaregain" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hardwaregain</span></span><a class="headerlink" href="#adi.ad6676.ad6676.hardwaregain" title="Permalink to this definition"></a></dt>
 <dd><p>hardwaregain: The AD6676 contains a 50-ohm input attenuator programmable in 1-dB steps.
 Use this device attribute to set the attenuator’s attenuation.
 The dynamic range of the system increases somewhat with moderate attenuation settings of 6-12 dB,
@@ -376,7 +376,7 @@ The nomenclature used here is gain instead of attenuation, so all values are exp
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.intermediate_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intermediate_frequency</span></span><a class="headerlink" href="#adi.ad6676.ad6676.intermediate_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intermediate_frequency</span></span><a class="headerlink" href="#adi.ad6676.ad6676.intermediate_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>intermediate_frequency: The IF (intermediate frequency) to which the ADC is tuned.
 The AD6676 supports IFs from 70 to 450 MHz provided the external inductors are chosen appropriately.
 Since the AD6676-EBZ by default includes a pair of 19-nH inductors soldered to the evaluation board,
@@ -385,7 +385,7 @@ the IF range allowed is less than the full range supported by the AD6676.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.sampling_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad6676.ad6676.sampling_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad6676.ad6676.sampling_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>sampling_frequency: The complex (I/Q) data rate in SPS.
 The AD6676 supports decimation factors (DFs) of 12, 16, 24 and 32.
 The complex (I/Q) data rate at the JESD204B outputs is FADC / DF.</p>
@@ -393,7 +393,7 @@ The complex (I/Q) data rate at the JESD204B outputs is FADC / DF.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.scale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad6676.ad6676.scale" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad6676.ad6676.scale" title="Permalink to this definition"></a></dt>
 <dd><p>scale: One of the convenient features of the AD6676 is that the full-scale of its ADC is
 relatively small and adjustable over a 12-dB range [1.00 .. 0.25]
 The dynamic range of the ADC is highest at the maximum full-scale setting but the noise
@@ -404,7 +404,7 @@ Likewise writing a value of 0.25 to this device attribute lowers the PIN_0dBFS b
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.shuffler_control">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shuffler_control</span></span><a class="headerlink" href="#adi.ad6676.ad6676.shuffler_control" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shuffler_control</span></span><a class="headerlink" href="#adi.ad6676.ad6676.shuffler_control" title="Permalink to this definition"></a></dt>
 <dd><p>shuffler_control: The AD6676 includes dynamic reordering of the comparators within the ADC in order to
 break up the spurious tones and distortion products associated with a fixed ordering.
 The Shuffle Control device attribute allows the user to experiment with different shuffling rates.
@@ -420,7 +420,7 @@ Available values: disable fadc fadc/2 fadc/3 fadc/4</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.shuffler_thresh">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shuffler_thresh</span></span><a class="headerlink" href="#adi.ad6676.ad6676.shuffler_thresh" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shuffler_thresh</span></span><a class="headerlink" href="#adi.ad6676.ad6676.shuffler_thresh" title="Permalink to this definition"></a></dt>
 <dd><p>shuffler_thresh: In order to obtain the spur-reduction benefits of shuffling at large signal levels while
 retaining the low noise of not shuffling when the signal is small, the AD6676 supports
 dynamic shuffle control via the Shuffle Threshold attribute.
@@ -431,7 +431,7 @@ The supported range is from 0..8</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad6676.ad6676.test_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode</span></span><a class="headerlink" href="#adi.ad6676.ad6676.test_mode" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode</span></span><a class="headerlink" href="#adi.ad6676.ad6676.test_mode" title="Permalink to this definition"></a></dt>
 <dd><p>test_mode: Select Test Mode. Options are:
 off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
 </dd></dl>

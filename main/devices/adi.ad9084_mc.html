@@ -7,12 +7,12 @@
 
     <title>ad9084_mc &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=95305861" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=ab97267f" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=c93eadd1"></script>
+    <script defer="" src="../_static/app.umd.js?v=689b8755"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -94,7 +94,7 @@
     <div class="localtoc">
       <div class="tocwrapper">
         <div>
-          <div class="localtoc-header">On this page</div>
+          <div class="localtoc-header"></div>
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -301,7 +301,7 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="ad9084-mc">
-<h1>ad9084_mc<a class="headerlink" href="#ad9084-mc" title="Permalink to this heading">#</a></h1>
+<h1>ad9084_mc<a class="headerlink" href="#ad9084-mc" title="Permalink to this heading"></a></h1>
 <p>The multi-chip python interface for ad9084 is scalable to any number of ad9084s within a single libIIO context. It will automatically determine the correct main driver, manage the CDDC/FDDC/CDUC/FDUC arrangement uniquely for each chip, and DMA/DDS IP. However, the interface a bit unique with <strong>pyadi-iio</strong> since it is almost identical to the single ad9084 class but it exposes properties in a slightly different way.</p>
 <p>When using <strong>adi.ad9084</strong>, properties are generally simple types like strings, ints, floats, or lists of these types. For example, when reading back the <strong>rx_channel_nco_frequencies</strong> you would observe something like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>import<span class="w"> </span>adi
@@ -339,7 +339,7 @@ Content on this topic
 </div>
 <span class="target" id="module-adi.ad9084_mc"></span><dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9084_mc.Triton">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084_mc.</span></span><span class="sig-name descname"><span class="pre">Triton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_board_attached</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084_mc.Triton" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084_mc.</span></span><span class="sig-name descname"><span class="pre">Triton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_board_attached</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084_mc.Triton" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.ad9084_mc.ad9084_mc" title="adi.ad9084_mc.ad9084_mc"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9084_mc</span></code></a></p>
 <p>Quad ad9084 Mixed-Signal Front End (MxFE) Development System</p>
 <dl class="simple">
@@ -351,7 +351,7 @@ Content on this topic
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084_mc.Triton.rx_dsa_gain">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa_gain</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.rx_dsa_gain" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa_gain</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.rx_dsa_gain" title="Permalink to this definition"></a></dt>
 <dd><p>rx_dsa_gain: Receiver digital step attenuator gain</p>
 </dd></dl>
 
@@ -359,7 +359,7 @@ Content on this topic
 
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9084_mc.ad9084_mc">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084_mc.</span></span><span class="sig-name descname"><span class="pre">ad9084_mc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phy_dev_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084_mc.ad9084_mc" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084_mc.</span></span><span class="sig-name descname"><span class="pre">ad9084_mc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phy_dev_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084_mc.ad9084_mc" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="adi.ad9084.html#adi.ad9084.ad9084" title="adi.ad9084.ad9084"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9084</span></code></a></p>
 <p>ad9084 Mixed-Signal Front End (MxFE) Multi-Chip Interface</p>
 <blockquote>

@@ -7,12 +7,12 @@
 
     <title>FPGA Features &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=95305861" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=ab97267f" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=c93eadd1"></script>
+    <script defer="" src="../_static/app.umd.js?v=689b8755"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -102,7 +102,7 @@ window.addEventListener("load", () => mermaid.run());
     <div class="localtoc">
       <div class="tocwrapper">
         <div>
-          <div class="localtoc-header">On this page</div>
+          <div class="localtoc-header"></div>
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -329,9 +329,9 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="fpga-features">
-<h1>FPGA Features<a class="headerlink" href="#fpga-features" title="Permalink to this heading">#</a></h1>
+<h1>FPGA Features<a class="headerlink" href="#fpga-features" title="Permalink to this heading"></a></h1>
 <section id="direct-digital-synthesizers">
-<h2>Direct Digital Synthesizers<a class="headerlink" href="#direct-digital-synthesizers" title="Permalink to this heading">#</a></h2>
+<h2>Direct Digital Synthesizers<a class="headerlink" href="#direct-digital-synthesizers" title="Permalink to this heading"></a></h2>
 <p>For FPGA based systems ADI reference designs include direct digital synthesizers (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.</p>
 <p>For the most basic or easiest configuration options use the methods <strong>dds_single_tone</strong> and <strong>dds_dual_tone</strong> which generate a one tone or two tones respectively on a specific channel.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
@@ -360,15 +360,15 @@ Content on this topic
 </div>
 </section>
 <section id="module-adi.dds">
-<span id="dds-methods"></span><h2>DDS Methods<a class="headerlink" href="#module-adi.dds" title="Permalink to this heading">#</a></h2>
+<span id="dds-methods"></span><h2>DDS Methods<a class="headerlink" href="#module-adi.dds" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.dds.dds">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.dds.</span></span><span class="sig-name descname"><span class="pre">dds</span></span><a class="headerlink" href="#adi.dds.dds" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.dds.</span></span><span class="sig-name descname"><span class="pre">dds</span></span><a class="headerlink" href="#adi.dds.dds" title="Permalink to this definition"></a></dt>
 <dd><p>DDS Signal generators: Each reference design contains two DDSs per channel.
 this allows for two complex tones to be generated per complex channel.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_dual_tone">
-<span class="sig-name descname"><span class="pre">dds_dual_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dds_dual_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Permalink to this definition"></a></dt>
 <dd><p>Generate two tones simultaneously using the DDSs
 For complex data devices this will create two complex
 or single sided tones spectrally using four DDSs.
@@ -399,33 +399,33 @@ the index of the individual converters.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_enabled">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_enabled</span></span><a class="headerlink" href="#adi.dds.dds.dds_enabled" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_enabled</span></span><a class="headerlink" href="#adi.dds.dds.dds_enabled" title="Permalink to this definition"></a></dt>
 <dd><p>DDS generator enable state</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_frequencies">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_frequencies</span></span><a class="headerlink" href="#adi.dds.dds.dds_frequencies" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_frequencies</span></span><a class="headerlink" href="#adi.dds.dds.dds_frequencies" title="Permalink to this definition"></a></dt>
 <dd><p>Frequencies of DDSs in Hz</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_phases">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_phases</span></span><a class="headerlink" href="#adi.dds.dds.dds_phases" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_phases</span></span><a class="headerlink" href="#adi.dds.dds.dds_phases" title="Permalink to this definition"></a></dt>
 <dd><p>Phases of DDS signal generators.
 Range in millidegrees [0,360000]</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_scales">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_scales</span></span><a class="headerlink" href="#adi.dds.dds.dds_scales" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_scales</span></span><a class="headerlink" href="#adi.dds.dds.dds_scales" title="Permalink to this definition"></a></dt>
 <dd><p>Scale of DDS signal generators
 Ranges [0,1]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_single_tone">
-<span class="sig-name descname"><span class="pre">dds_single_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dds_single_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a single tone using the DDSs
 For complex data devices this will create a complex
 or single sided tone spectrally using two DDSs.
@@ -450,7 +450,7 @@ the index of the individual converters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.dds.dds.disable_dds">
-<span class="sig-name descname"><span class="pre">disable_dds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.disable_dds" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">disable_dds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.disable_dds" title="Permalink to this definition"></a></dt>
 <dd><p>Disable all DDS channels and set all output sources to zero.</p>
 </dd></dl>
 
@@ -458,7 +458,7 @@ the index of the individual converters.</p>
 
 </section>
 <section id="dma-synchronization">
-<h2>DMA Synchronization<a class="headerlink" href="#dma-synchronization" title="Permalink to this heading">#</a></h2>
+<h2>DMA Synchronization<a class="headerlink" href="#dma-synchronization" title="Permalink to this heading"></a></h2>
 <p>In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general testing.</p>
 <p>This works by leveraging special control signals inside the HDL design to trigger receive captures from transmitted buffers. These are controlled through the <strong>sync_start</strong> class, which provide explicit control over when data is transmitted or released from the DMA in the FPGA fabric. This transmit or trigger will in turn allow data into the receive DMA at this moment in time. The exact methods and their sequence are described in the flowchart below.</p>
 <pre  class="mermaid">
@@ -473,15 +473,15 @@ the index of the individual converters.</p>
     </pre><p>A full example that leverages this control is <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/ad9081_sync_start_example.py">ad9081_sync_start_example.py</a>.</p>
 </section>
 <section id="module-adi.sync_start">
-<span id="sync-start-methods"></span><h2>Sync_Start Methods<a class="headerlink" href="#module-adi.sync_start" title="Permalink to this heading">#</a></h2>
+<span id="sync-start-methods"></span><h2>Sync_Start Methods<a class="headerlink" href="#module-adi.sync_start" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.sync_start.</span></span><span class="sig-name descname"><span class="pre">sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.sync_start.</span></span><span class="sig-name descname"><span class="pre">sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start" title="Permalink to this definition"></a></dt>
 <dd><p>Synchronization Control: This class allows for synchronous transfers
 between transmit and receive data movement or captures.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start.rx_sync_start">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start.rx_sync_start" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start.rx_sync_start" title="Permalink to this definition"></a></dt>
 <dd><p>rx_sync_start: Issue a synchronisation request</p>
 <dl class="simple">
 <dt>Possible values are:</dt><dd><ul class="simple">
@@ -504,13 +504,13 @@ This key self clears.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start.rx_sync_start_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.rx_sync_start_available" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.rx_sync_start_available" title="Permalink to this definition"></a></dt>
 <dd><p>rx_sync_start_available: Returns a list of possible keys used for rx_sync_start</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start.tx_sync_start">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start" title="Permalink to this definition"></a></dt>
 <dd><p>tx_sync_start: Issue a synchronisation request</p>
 <dl class="simple">
 <dt>Possible values are:</dt><dd><ul class="simple">
@@ -533,7 +533,7 @@ This key self clears.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start.tx_sync_start_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start_available" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start_available" title="Permalink to this definition"></a></dt>
 <dd><p>tx_sync_start_available: Returns a list of possible keys used for tx_sync_start</p>
 </dd></dl>
 
