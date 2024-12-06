@@ -94,7 +94,7 @@ gain_cal_limits = (
 phase_cal_limits = [90.0, 90.0, 90.0, 120.0, 90.0, 90.0, 90.0]
 
 # Set up RF / IF / LO frequencies
-rx_lo = 2.2e9
+rx_lo = 1.9e9
 SignalFreq = 10.2e9
 
 use_tx = True  # Use on board TX w/ cabled antenna, NOT external HB100
@@ -232,7 +232,7 @@ while attempts < max_attempts and not success:
                 -88
             )  # this is a negative number between 0 and -88
             my_sdr.tx_hardwaregain_chan1 = int(-3)
-            my_sdr.tx_lo = int(2.2e9)
+            my_sdr.tx_lo = int(rx_lo)
         else:
             # To disable rx, set attenuation to a high value and set frequency far from rx.
             my_sdr.tx_hardwaregain_chan0 = int(
