@@ -373,6 +373,14 @@ adxl355:
       - filename: adxl355.xml
       - data_devices:
           - iio:device0
+ad3530r:
+  - ad3530r
+  - pyadi_iio_class_support:
+      - ad353xr
+  - emulate:
+      - filename: ad353xr.xml
+      - data_devices:
+          - iio:device0
 ad3552r:
   - ad3552r
   - pyadi_iio_class_support:
