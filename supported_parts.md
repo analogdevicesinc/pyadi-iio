@@ -11,6 +11,7 @@
 
 ### Currently supported hardware
 - AD2S1210
+- AD353XR
 - AD3552r (AD3542r)
 - AD4000 (AD4004, AD4008)
 - AD4001 (AD4005)
