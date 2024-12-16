@@ -31,34 +31,50 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import argparse
+
 import numpy as np
-from adi.ad7091r import ad7091rx
+from adi.ad7091rx import ad7091rx
 
-# Set up AD7091r8
-ad7091r8_dev = ad7091rx(uri="serial:COM46,230400,8n1", device_name="ad7091r-8")
 
-# Get ADC channel 0 raw value and print it
-raw = ad7091r8_dev.channel[0].raw
-print(f"Raw value read from channel0 is {raw}")
+def main():
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="AD7091R Example Script")
+    parser.add_argument(
+        "--uri",
+        type=str,
+        help="The URI for the AD7091R device",
+        default="serial:COM7,230400,8n1",
+    )
+    parser.add_argument(
+        "--device_name",
+        type=str,
+        choices=["ad7091r-2", "ad7091r-4", "ad7091r-8"],
+        help="The device name (Supported devices are ad7091r-2, ad7091r-4, ad7091r-8)",
+        default="ad7091r-8",
+    )
 
-# Set threshold falling and rising values for channel 0
-ad7091r8_dev.channel[0].thresh_rising_value = 0x10F
-print(
-    f"Channel 0 threshold rising value set to {ad7091r8_dev.channel[0].thresh_rising_value}"
-)
+    # Parse arguments
+    args = parser.parse_args()
 
-ad7091r8_dev.channel[0].thresh_falling_value = 0x0F
-print(
-    f"Channel 0 threshold falling value set to {ad7091r8_dev.channel[0].thresh_falling_value}"
-)
+    # Set up AD7091R device
+    ad7091r_dev = ad7091rx(uri=args.uri, device_name=args.device_name)
 
-# Capture a buffer of 100 samples from channel 0 and display them
-chn = 0
-ad7091r8_dev._rx_data_type = np.int32
-ad7091r8_dev.rx_output_type = "raw"
-ad7091r8_dev.rx_enabled_channels = [chn]
-ad7091r8_dev.rx_buffer_size = 100
+    # Get ADC channel 0 raw value and print it
+    raw = ad7091r_dev.channel[0].raw
+    print(f"Raw value read from channel0 is {raw}")
 
-data = ad7091r8_dev.rx()
+    # Capture a buffer of 100 samples from channel 0 and display them
+    chn = 0
+    ad7091r_dev._rx_data_type = np.int32
+    ad7091r_dev.rx_output_type = "raw"
+    ad7091r_dev.rx_enabled_channels = [chn]
+    ad7091r_dev.rx_buffer_size = 100
 
-print(data)
+    data = ad7091r_dev.rx()
+
+    print(data)
+
+
+if __name__ == "__main__":
+    main()

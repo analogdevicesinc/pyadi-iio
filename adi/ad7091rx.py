@@ -79,6 +79,7 @@ class ad7091rx(rx, context_manager):
             name = ch._id
             self._rx_channel_names.append(name)
             self.channel.append(self._channel(self._ctrl, name))
+            setattr(self, name, self._channel(self._ctrl, name))
 
         rx.__init__(self)
 
@@ -95,61 +96,12 @@ class ad7091rx(rx, context_manager):
             return self._get_iio_attr(self.name, "raw", False)
 
         @property
-        def offset(self):
-            """AD7091r channel offset value"""
-            return self._get_iio_attr_str(self.name, "offset", False)
-
-        @offset.setter
-        def offset(self, value):
-            self._set_iio_attr(self.name, "offset", False, str(Decimal(value).real))
-
-        @property
         def scale(self):
             """AD7091r channel scale"""
             return float(self._get_iio_attr_str(self.name, "scale", False))
 
-        @scale.setter
-        def scale(self, value):
-            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
-
-        @property
-        def thresh_falling_value(self):
-            """Get channel threshold falling value"""
-            return self._get_iio_attr(self.name, "thresh_falling_value", False)
-
-        @thresh_falling_value.setter
-        def thresh_falling_value(self, value):
-            """Set channel threshold falling value"""
-            self._set_iio_attr(
-                self.name, "thresh_falling_value", False, str(Decimal(value))
-            )
-
-        @property
-        def thresh_rising_value(self):
-            """Get channel threshold rising value"""
-            return self._get_iio_attr(self.name, "thresh_rising_value", False)
-
-        @thresh_rising_value.setter
-        def thresh_rising_value(self, value):
-            """Set channel threshold rising value"""
-            self._set_iio_attr(
-                self.name, "thresh_rising_value", False, str(Decimal(value))
-            )
-
-        @property
-        def thresh_either_hysteresis(self):
-            """Get channel threshold either hysteresis value"""
-            return self._get_iio_attr(self.name, "thresh_either_hysteresis", False)
-
-        @thresh_either_hysteresis.setter
-        def thresh_either_hysteresis(self, value):
-            """Set channel threshold either hysteresis value"""
-            self._set_iio_attr(
-                self.name, "thresh_either_hysteresis", False, str(Decimal(value))
-            )
-
-    def to_volts(self, index, val):
-        """Converts raw value to SI"""
+    def to_mvolts(self, index, val):
+        """Converts raw value to mV"""
         _scale = self.channel[index].scale
 
         ret = None
