@@ -148,12 +148,6 @@ class adrv9002(rx_tx, context_manager):
         """
         return self._tx_dma_mode
 
-    def mcs(self, value):
-        """Trigger Multi-chip Sync stage"""
-        self._set_iio_dev_attr("multi_chip_sync", value)
-
-    mcs = property(None, mcs)
-
     @property
     def temperature(self):
         """temperature: Get temperature of the device"""
