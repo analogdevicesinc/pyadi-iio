@@ -98,7 +98,15 @@ class adrv9002(rx_tx, context_manager):
             iio._d_write_attr(self._ctrl._device, attr_encode, data)
         with open(profile, "r") as file:
             data = file.read()
-        self._set_iio_dev_attr_str("profile_config", data)
+        for t in range(3):
+            try:
+                self._set_iio_dev_attr_str("profile_config", data)
+                break
+            except Exception as e:
+                print("#" + str(t) + "profile load failed")
+                if t == 2:
+                    raise Exception("Failed to load profile")
+                print(e)
 
     def write_profile(self, value):
         """Load a new profile on the device
@@ -107,7 +115,15 @@ class adrv9002(rx_tx, context_manager):
         """
         with open(value, "r") as file:
             data = file.read()
-        self._set_iio_dev_attr_str("profile_config", data)
+        for t in range(3):
+            try:
+                self._set_iio_dev_attr_str("profile_config", data)
+                break
+            except Exception as e:
+                print("#" + str(t) + "profile load failed")
+                if t == 2:
+                    raise Exception("Failed to load profile")
+                print(e)
 
     def write_stream(self, value):
         """Load a new stream on the device
