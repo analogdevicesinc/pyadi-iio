@@ -3,6 +3,20 @@ import numpy as np
 from time import sleep
 import logging
 import sys
+import matplotlib.pyplot as plt
+#import code
+#code.interact(local=locals())
+from threading import Thread
+
+class ReturnableThread(Thread):
+    # This class is a subclass of Thread that allows the thread to return a value.
+    def __init__(self, target):
+        Thread.__init__(self)
+        self.target = target
+        self.result = None
+
+    def run(self) -> None:
+        self.result = self.target()
 
 # Set up logging to only show adrv9002_multi logs
 logging.basicConfig(level=logging.INFO)
@@ -11,7 +25,6 @@ logger.setLevel(logging.DEBUG)
 logger = logging.getLogger("paramiko")
 logger.setLevel(logging.CRITICAL)
 
-INTERNAL_MCS = 0
 LOOPBACK_TEST = 1
 CALIBRATE = 1
 REBOOT = False
@@ -23,6 +36,11 @@ set_dds_upto_dev = (
 synchrona_ip = "10.48.65.214"
 device_ips = ["10.48.65.158", "10.48.65.239", "10.48.65.235", "10.48.65.240"]
 device_ips = [f"ip:{ip}" for ip in device_ips]
+
+if (len(device_ips) == 1):
+    internal_mcs=True
+else:
+    internal_mcs=False
 
 sdrs = adi.adrv9002_multi(
     primary_uri=device_ips[0],
@@ -42,51 +60,44 @@ if REBOOT:
 ################################################################################
 # 1 Prepare MCS
 
-## Sync request
-## sync config
-# 0- internal(1) or external(0) MCS pulses
-# 1- internal(1) or external(0) mcs req
-# 2- manual mcs requst flag(must be toggled)
-# 3- mcs requests drives mcs(1) or capture(0)
-v = 0xb if INTERNAL_MCS == 1 else 0x9
-o, e = sdrs._run(f'busybox devmem 0x84A0500c 32 {v}')
-print(f"0x84A0500c: {o}")
-print(f'Errors: {e}')
-
 # ADRV9002 stuff
 print("Loading profiles")
 sdrs.write_profile("MCS_30_72_pin_en.json")
 
-sdrs.rx_ensm_mode_chan0 = 'calibrated'
-sdrs.rx_ensm_mode_chan1 = 'calibrated'
-sdrs.tx_ensm_mode_chan0 = 'calibrated'
-sdrs.tx_ensm_mode_chan1 = 'calibrated'
-
-sleep(2)
-
-# ARM MCS
-sdrs.primary.ctx.set_timeout(30000)
-for sdr in sdrs.secondaries:
-    sdr._ctx.set_timeout(30000)
-sdrs.mcs = 1
-
-print("Waiting for 6 pulses")
-sleep(0.1)
-
-
-################################################################################
-# 2 Issue sync pulse
-
-# MCS request
-if INTERNAL_MCS == 1:
-    out, e = sdrs.primary_ssh._run("busybox devmem 0x84A0500c 32")
-    print(f"0x84A0500c: {out}")
-    out = int(out, 16)
-    print("toggle internal mcs request flag")
-    sdrs.primary_ssh._run(f"busybox devmem 0x84A0500c 32 {out | 0x4}")
-    sleep(0.1)
-    sdrs.primary_ssh._run(f"busybox devmem 0x84A0500c 32 {out | 0xfb}")
+# For one system, the MCS sync is done automatically by the kernel driver
+# after a profile is loaded.
+# The "one system only" info is defined in the devicetree, loaded at boot.
+if internal_mcs:
+        print ("MSC not required")
 else:
+
+
+    sdrs.primary.ctx.set_timeout(30000)
+    for sdr in sdrs.secondaries:
+        sdr._ctx.set_timeout(30000)
+
+    # The linux driver exposes the "multi_chip_sync" attribute, which is a bit
+    # more special. To know that the MCS was done successfully, one has to wait
+    # for the multi_chip_sync attribute setting process to end successfully.
+    # The attribute setting of multi_chip_sync only ends after MCS procedure is
+    # completed or timeout occurs.
+    # For the MCS sync to end, the adrv9002 needs to receive the 6 MCS pulse train.
+    # In other words, we need to configure(put in MCS state) each adrv9002
+    # in a separate thread, send the 6 MCS pulse train and wait for all started
+    # threads that have put the adrv9002 devices in MCS state to end in success.
+
+    mcs_threads = {}
+    for dev in sdrs._devices:
+        mcs_threads[dev.uri] = ReturnableThread(target=lambda: dev._set_iio_dev_attr('multi_chip_sync', '1'))
+        mcs_threads[dev.uri].start()
+
+    sleep(1)
+    print("Waiting for 6 pulses")
+
+    ############################################################################
+    # 2 Issue sync pulse
+
+    # MCS request
     for t in range(6):
         try:
             print("Requesting sysref")
@@ -98,18 +109,16 @@ else:
             print(e)
             sleep(0.1)
 
+    # Wait for mcs done
+    for dev in sdrs._devices:
+        while mcs_threads[dev.uri].is_alive():
+            print ("Waiting for MCS done on" + dev.uri)
+            sleep(0.5)
 temp = sdrs.temperature
 print(f"Temperatures: {temp}")
 
 
 ################################################################################
-# 3 MCS Post
-
-print("Enabling RF channels")
-sdrs.rx_ensm_mode_chan0 = 'rf_enabled'
-sdrs.rx_ensm_mode_chan1 = 'rf_enabled'
-sdrs.tx_ensm_mode_chan0 = 'rf_enabled'
-sdrs.tx_ensm_mode_chan1 = 'rf_enabled'
 
 print("Configure DDSs")
 tone_freq = 500e3
