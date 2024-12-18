@@ -25,8 +25,6 @@ logger.setLevel(logging.DEBUG)
 logger = logging.getLogger("paramiko")
 logger.setLevel(logging.CRITICAL)
 
-LOOPBACK_TEST = 1
-CALIBRATE = 1
 REBOOT = False
 
 set_dds_upto_dev = (
@@ -114,11 +112,21 @@ else:
         while mcs_threads[dev.uri].is_alive():
             print ("Waiting for MCS done on" + dev.uri)
             sleep(0.5)
-temp = sdrs.temperature
-print(f"Temperatures: {temp}")
-
 
 ################################################################################
+# 3 Prepare data transfer sync
+
+print("ARM rx DMA and DDS cores")
+
+print("Mute DAC data sources")
+for dev in [sdrs.primary] + sdrs.secondaries:
+    for chan in range(4):
+        dev._txdac.reg_write(0x80000418 + chan*0x40, 0x3)
+
+print("ARM RX/TX transfer paths")
+for dev in [sdrs.primary] + sdrs.secondaries:
+    dev._rxadc.reg_write(0x80000048, 0x2)
+    dev._txdac.reg_write(0x80000044, 0x2)
 
 print("Configure DDSs")
 tone_freq = 500e3
@@ -127,68 +135,57 @@ sdrs.primary.dds_single_tone(tone_freq, tone_scale)
 for dev in sdrs.secondaries:
     dev.dds_single_tone(tone_freq, tone_scale)
 
-print("ARM rx DMA and DDS cores")
-
-print("Set MCS request as trigger source")
-# mcs req as trig source
-# 0- internal(1) or external(0) MCS pulses
-# 1- internal(1) or external(0) mcs req
-# 2- manual mcs requst flag(must be toggled)
-# 3- mcs requests drives mcs(1) or trigger transfer(0)
-for dev in [sdrs.primary_ssh] + sdrs.secondaries_ssh:
-    val, e = dev._run("busybox devmem 0x84A0500c 32")
-    print(f"0x84A0500c: {val}")
-    val = int(val, 16)
-    dev._run(f"busybox devmem 0x84A0500c 32 {val & 0xf7}")
-
-print("Mute DAC data sources")
-for dev in [sdrs.primary] + sdrs.secondaries:
-    for chan in range(4):
-        dev._txdac.reg_write(0x80000418 + chan*0x40, 0x3)
-    dev._ctrl.debug_attrs['tx0_ssi_test_mode_loopback_en'] = '0'
-    dev._ctrl.debug_attrs['tx1_ssi_test_mode_loopback_en'] = '0'
-    if LOOPBACK_TEST == 1:
-        dev._ctrl.debug_attrs['tx0_ssi_test_mode'] = '1'
-        dev._ctrl.debug_attrs['tx1_ssi_test_mode'] = '1'
-
-print("ARM DMA")
-for dev in [sdrs.primary] + sdrs.secondaries:
-    dev._rxadc.reg_write(0x80000048, 0x2)
-    dev._txdac.reg_write(0x80000044, 0x2)
-
-print("Enable DAC data sources")
+print("Set DDS as DAC data source")
 for dev in [sdrs.primary] + sdrs.secondaries:
     for chan in range(4):
         dev._txdac.reg_write(0x80000418 + chan*0x40, 0x0)
 
-print("Capture data")
+print("Enable Rx channels and define buffer size")
 for dev in [sdrs.primary] + sdrs.secondaries:
     dev.rx_enabled_channels = [0, 1]
-    dev.rx_buffer_size = 2**16
+    dev.rx_buffer_size = 2**10
 
+# create a buffer for data capture (after RX channel is armed)
 data = {}
+captureThread = {}
 for dev in [sdrs.primary] + sdrs.secondaries:
-    data[dev.uri] = dev.rx()
+    # Start a new thread
+    captureThread[dev.uri] = ReturnableThread(target=lambda: dev.rx())
+    captureThread[dev.uri].start()
 
 sleep(1)
 
 print("Issue Sync pulse")
 sdrs.sync.sysref_request = 1
 
+print("Capture data")
+# Wait for the threads to finish
+for dev in [sdrs.primary] + sdrs.secondaries:
+    while captureThread[dev.uri].result is None:
+        sleep(0.1)
+    # in data is stored all RF data captured from all systems
+    data[dev.uri] = captureThread[dev.uri].result
+
 # Plot data and save to figure
-import matplotlib.pyplot as plt
 plt.figure()
 
-# Plot add devices and channels
+# 2RX2TX MIMO moden
+n_ch = 2;
+
+x=[]
+for i in range(0,2**10):
+    x.append(i)
+jupiter_n=0
 for dev in data:
-    iq_data = data[dev]
-    real = iq_data.real
-    imag = iq_data.imag
-    plt.plot(real, label=f"{dev} real")
-    # plt.plot(imag, label=f"{dev} imag")
+    # data[ip] contains the data channels I0, Q0, I1, and Q1
+    iq0iq1_data = data[dev]
+    for i in range(n_ch):
+        real_datai = iq0iq1_data[i].imag
+        real_dataq = iq0iq1_data[i].real
+        plt.plot(x, real_datai, label=f"{dev} real Q{i}")
+    jupiter_n=jupiter_n+1
 
 plt.legend()
 # Save to file
 plt.savefig("sync.png")
-
-
+plt.show()
