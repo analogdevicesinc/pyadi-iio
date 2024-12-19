@@ -24,6 +24,7 @@ Supported Devices
    adi.ad5754r
    adi.ad5940
    adi.ad6676
+   adi.ad7091rx
    adi.ad7124
    adi.ad7134
    adi.ad717x
