@@ -222,7 +222,7 @@ class adrv9009(rx_tx, context_manager, sync_start):
 
     @property
     def obs_quadrature_tracking_en(self):
-        """Enable Quadrature tracking calibration for ORX"""
+        """Enable Quadrature tracking calibration for ORX1"""
         return self._get_iio_attr("voltage2", "quadrature_tracking_en", False)
 
     @obs_quadrature_tracking_en.setter
