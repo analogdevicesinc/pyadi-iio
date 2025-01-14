@@ -230,6 +230,15 @@ class adrv9009(rx_tx, context_manager, sync_start):
         self._set_iio_attr("voltage2", "quadrature_tracking_en", False, value)
 
     @property
+    def obs_quadrature_tracking_en_chan2(self):
+        """Enable Quadrature tracking calibration for ORX2"""
+        return self._get_iio_attr("voltage3", "quadrature_tracking_en", False)
+
+    @obs_quadrature_tracking_en_chan2.setter
+    def obs_quadrature_tracking_en_chan2(self, value):
+        self._set_iio_attr("voltage3", "quadrature_tracking_en", False, value)    
+
+    @property
     def obs_rf_port_select(self):
         """obs_rf_port_select: Observation path source for ORX. Options are:
 
