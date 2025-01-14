@@ -214,11 +214,11 @@ class adrv9009(rx_tx, context_manager, sync_start):
     @property
     def aux_obs_lo(self):
         """aux_obs_lo: Carrier frequency of ORx path"""
-        return self._get_iio_attr("altvoltage1", "AUX_OBS_RX_LO_frequency", True)
+        return self._get_iio_attr("altvoltage1", "frequency", True)
 
     @aux_obs_lo.setter
     def aux_obs_lo(self, value):
-        self._set_iio_attr("altvoltage1", "AUX_OBS_RX_LO_frequency", True, value)
+        self._set_iio_attr("altvoltage1", "frequency", True, value)
 
     @property
     def obs_quadrature_tracking_en(self):
