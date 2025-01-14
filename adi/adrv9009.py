@@ -203,13 +203,23 @@ class adrv9009(rx_tx, context_manager, sync_start):
 
     @property
     def obs_powerdown_en(self):
-        """obs_powerdown_en: Enables/disables the ORX signal paths
+        """obs_powerdown_en: Enables/disables the ORX1 signal paths
         while in the ENSM radio_on state"""
         return self._get_iio_attr("voltage2", "powerdown", False)
 
     @obs_powerdown_en.setter
     def obs_powerdown_en(self, value):
         self._set_iio_attr("voltage2", "powerdown", False, value)
+
+    @property
+    def obs_powerdown_en_chan2(self):
+        """obs_powerdown_en_chan2: Enables/disables the ORX2 signal paths
+        while in the ENSM radio_on state"""
+        return self._get_iio_attr("voltage3", "powerdown", False)
+
+    @obs_powerdown_en_chan2.setter
+    def obs_powerdown_en_chan2(self, value):
+        self._set_iio_attr("voltage3", "powerdown", False, value)
 
     @property
     def aux_obs_lo(self):
