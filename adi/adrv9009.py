@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2024 Analog Devices, Inc.
+# Copyright (C) 2019-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -246,7 +246,7 @@ class adrv9009(rx_tx, context_manager, sync_start):
 
     @obs_quadrature_tracking_en_chan2.setter
     def obs_quadrature_tracking_en_chan2(self, value):
-        self._set_iio_attr("voltage3", "quadrature_tracking_en", False, value)    
+        self._set_iio_attr("voltage3", "quadrature_tracking_en", False, value)
 
     @property
     def obs_rf_port_select(self):
@@ -278,7 +278,7 @@ class adrv9009(rx_tx, context_manager, sync_start):
 
     @obs_hardwaregain_chan2.setter
     def obs_hardwaregain_chan2(self, value):
-        self._set_iio_attr("voltage3", "hardwaregain", False, value)        
+        self._set_iio_attr("voltage3", "hardwaregain", False, value)
 
     @property
     def tx_quadrature_tracking_en_chan0(self):
@@ -320,6 +320,11 @@ class adrv9009(rx_tx, context_manager, sync_start):
     def rx_rf_bandwidth(self):
         """rx_rf_bandwidth: Bandwidth of front-end analog filter of RX path"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", False)
+
+    @property
+    def orx_rf_bandwidth(self):
+        """orx_rf_bandwidth: Bandwidth of front-end analog filter of ORX path"""
+        return self._get_iio_attr("voltage2", "rf_bandwidth", False)
 
     @property
     def tx_rf_bandwidth(self):
