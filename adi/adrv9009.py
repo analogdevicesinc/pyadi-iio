@@ -269,8 +269,16 @@ class adrv9009(rx_tx, context_manager, sync_start):
 
     @obs_hardwaregain.setter
     def obs_hardwaregain(self, value):
-        # if self.obs_gain_control_mode == "manual":
         self._set_iio_attr("voltage2", "hardwaregain", False, value)
+
+    @property
+    def obs_hardwaregain_chan2(self):
+        """obs_hardwaregain_chan2: Gain applied to Obs/Sniffer receive path ORX2."""
+        return self._get_iio_attr("voltage3", "hardwaregain", False)
+
+    @obs_hardwaregain_chan2.setter
+    def obs_hardwaregain_chan2(self, value):
+        self._set_iio_attr("voltage3", "hardwaregain", False, value)        
 
     @property
     def tx_quadrature_tracking_en_chan0(self):
