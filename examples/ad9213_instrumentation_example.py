@@ -26,39 +26,41 @@ ltc2664_dev      = adi.ltc2664(uri=my_uri)
 
 # Control the GPIO's
 
+gpio_controller.gpio_ad4080_sync_n  = 1
 gpio_controller.gpio_ad4080_sync_n  = 0
+
 gpio_controller.gpio_ltc2664_clr    = 1
 gpio_controller.gpio_ltc2664_ldac   = 0
 gpio_controller.gpio_ltc2664_tgp    = 0
-
-gpio_controller.gpio_ada4945_disable  = 1
-gpio_controller.gpio_adg5419_ctrl     = 1
-gpio_controller.gpio_hmc7044_sync_req = 0
 
 gpio_controller.gpio_adrf5203_ctrl0 = 1
 gpio_controller.gpio_adrf5203_ctrl1 = 0
 gpio_controller.gpio_adrf5203_ctrl2 = 0
 
-# Configure the AD9213 device
-
-ad9213_transport.rx_buffer_size = 8192
 ad9213_phy.ad9213_register_write(0x1617,0x01)
 ad9213_phy.ad9213_register_write(0x1601,0x01)
-
-# Configure the AD4080 device
-
-ad4080_dev.rx_buffer_size = 8192
-ad4080_dev.lvds_sync = "enable"
-print(ad4080_dev.lvds_sync)
 
 # Configure the LTC2664 device
 
 ltc2664_dev.voltage0.raw = 32768
-
 ltc2664_dev.voltage1.raw = 49152
-print(f"ltc2664_dev.voltage1 is {ltc2664_dev.voltage1.volt}")
 ltc2664_dev.voltage2.raw = 36045
-print(f"ltc2664_dev.voltage2 is {ltc2664_dev.voltage2.volt}")
+
+gpio_controller.gpio_ada4945_disable  = 1
+gpio_controller.gpio_adg5419_ctrl     = 1
+
+gpio_controller.gpio_hmc7044_sync_req = 0
+
+ad4080_dev.lvds_sync = "enable"
+
+# Configure the AD9213 device
+
+ad9213_transport.rx_buffer_size = 8192
+
+# Configure the AD4080 device
+
+ad4080_dev.rx_buffer_size = 256
+
 # rx data
 
 data_ad9213 = ad9213_transport.rx()
