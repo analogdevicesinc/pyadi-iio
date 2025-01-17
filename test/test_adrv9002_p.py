@@ -9,14 +9,14 @@ from numpy import floor
 hardware = "adrv9002"
 classname = "adi.adrv9002"
 profile_path = dirname(realpath(__file__)) + "/adrv9002_profiles/"
-nco_test_profile = profile_path + "lte_10_lvds_nco_api_68_13_7.json"
-nco_test_stream = profile_path + "lte_10_lvds_nco_api_68_13_7.stream"
-lte_20_lvds_profile = profile_path + "lte_20_lvds_api_68_13_7.json"
-lte_20_lvds_stream = profile_path + "lte_20_lvds_api_68_13_7.stream"
-lte_40_lvds_profile = profile_path + "lte_40_lvds_api_68_13_7.json"
-lte_40_lvds_stream = profile_path + "lte_40_lvds_api_68_13_7.stream"
-lte_5_cmos_profile = profile_path + "lte_5_cmos_api_68_13_7.json"
-lte_5_cmos_stream = profile_path + "lte_5_cmos_api_68_13_7.stream"
+nco_test_profile = profile_path + "lte_10_lvds_nco_api_68_14_10.json"
+nco_test_stream = profile_path + "lte_10_lvds_nco_api_68_14_10.stream"
+lte_20_lvds_profile = profile_path + "lte_20_lvds_api_68_14_10.json"
+lte_20_lvds_stream = profile_path + "lte_20_lvds_api_68_14_10.stream"
+lte_40_lvds_profile = profile_path + "lte_40_lvds_api_68_14_10.json"
+lte_40_lvds_stream = profile_path + "lte_40_lvds_api_68_14_10.stream"
+lte_5_cmos_profile = profile_path + "lte_5_cmos_api_68_14_10.json"
+lte_5_cmos_stream = profile_path + "lte_5_cmos_api_68_14_10.stream"
 
 
 def random_values_in_range(start, stop, step, to_generate=1):
