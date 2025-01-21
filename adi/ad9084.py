@@ -7,6 +7,7 @@ from typing import Dict, List
 from adi.context_manager import context_manager
 from adi.rx_tx import rx_tx
 from adi.sync_start import sync_start
+from adi.jesd import jesd_eye_scan
 
 
 def _map_to_dict(paths, ch):
@@ -73,13 +74,16 @@ class ad9084(rx_tx, context_manager, sync_start):
 
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
-    def __init__(self, uri=""):
+    def __init__(self, uri="", device="axi-ad9084-rx-hpc", username="root", password="analog", disable_jesd_control=True):
         context_manager.__init__(self, uri, self._device_name)
         # Default device for attribute writes
-        self._ctrl = self._ctx.find_device("axi-ad9084-rx-hpc")
+        self._ctrl = self._ctx.find_device(device)
         # Devices with buffers
         self._rxadc = self._ctx.find_device("axi-ad9084-rx-hpc")
         self._txdac = self._ctx.find_device("axi-ad9084-tx-hpc")
+
+        if not disable_jesd_control and jesd_eye_scan:
+            self._jesd = jesd_eye_scan(self, uri, username=username, password=password)
 
         # Get DDC and DUC mappings
         paths = {}

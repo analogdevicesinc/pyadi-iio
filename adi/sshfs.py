@@ -51,3 +51,8 @@ class sshfs:
     def gettext(self, path, *kargs, **kwargs):
         stdout, _ = self._run(f"cat {path}")
         return stdout
+
+    def echo_to_fd(self, data, path):
+        if not self.isfile(path):
+            raise FileNotFoundError(f"No such file: {path}")
+        self._run(f"echo '{data}' > {path}")
