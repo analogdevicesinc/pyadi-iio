@@ -12,6 +12,7 @@ from adi.gen_mux import genmux
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.rx_tx import rx_tx
 from adi.sync_start import sync_start
+from adi.jesd import jesd_eye_scan
 
 
 def _map_to_dict(paths, ch, dev_name):
@@ -102,7 +103,7 @@ class ad9084_mc(ad9084):
 
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
-    def __init__(self, uri="", phy_dev_name=""):
+    def __init__(self, uri="", phy_dev_name="", username="root", password="analog", disable_jesd_control=True):
 
         # Reset class variables
         self._tx_channel_names: List[str] = []
@@ -133,6 +134,9 @@ class ad9084_mc(ad9084):
         # Find device with buffers
         self._txdac = _find_dev_with_buffers(self._ctx, True, "axi-ad9084")
         self._rxadc = _find_dev_with_buffers(self._ctx, False, "axi-ad9084")
+
+        if not disable_jesd_control and jesd_eye_scan:
+            self._jesd = jesd_eye_scan(self, uri, username=username, password=password)
 
         # Get DDC and DUC mappings
         # Labels span all devices so they must all be processed
@@ -330,7 +334,7 @@ class Triton(ad9084_mc):
             Optional parameter for the URI of IIO context with QuadMxFE.
     """
 
-    def __init__(self, uri="", calibration_board_attached=False):
+    def __init__(self, uri="", calibration_board_attached=False, username="root", password="analog", disable_jesd_control=True):
         ad9084_mc.__init__(self, uri=uri, phy_dev_name="axi-ad9084-rx-hpc")
         one_bit_adc_dac.__init__(self, uri)
 
@@ -355,6 +359,9 @@ class Triton(ad9084_mc):
         if calibration_board_attached:
             self._ad5592r = self._ctx.find_device("ad5592r")
             self._cb_gpio = self._ctx.find_device("one-bit-adc-dac")
+
+        if not disable_jesd_control and jesd_eye_scan:
+            self._jesd = jesd_eye_scan(self._ctrl, uri, username=username, password=password)
 
     @property
     def rx_dsa0_gain(self):
