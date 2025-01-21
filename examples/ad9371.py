@@ -2,6 +2,7 @@
 #
 # SPDX short identifier: ADIBSD
 
+import sys
 import time
 
 import adi
@@ -9,8 +10,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 
+# Optionally pass URI as command line argument,
+# else use default context manager search
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
+print("uri: " + str(my_uri))
+
 # Create radio
-sdr = adi.ad9371()
+sdr = adi.ad9371(uri=my_uri)
 
 # Configure properties
 sdr.rx_enabled_channels = [0, 1]
@@ -48,6 +54,7 @@ sdr.tx([iq, iq2])
 
 # Collect data
 fsr = int(sdr.rx_sample_rate)
+print(fsr)
 for r in range(20):
     x = sdr.rx()
     f, Pxx_den = signal.periodogram(x[0], fsr)

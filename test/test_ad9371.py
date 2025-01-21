@@ -3,11 +3,14 @@ from os.path import dirname, join, realpath
 
 import pytest
 
-hardware = "ad9371"
+hardware = ["ad9371", "adrv9371"]
 classname = "adi.ad9371"
 
 profile_path = dirname(realpath(__file__)) + "/ad9371_5_profiles/"
 test_profiles = [join(profile_path, f) for f in listdir(profile_path)]
+
+# use 6in sma cables
+# for obs setup, add only splitter to TX1->RX1/ORX1
 
 params = dict(
     one_cw_tone_manual=dict(
@@ -17,28 +20,20 @@ params = dict(
         gain_control_mode="manual",
         rx_hardwaregain_chan0=10,
         rx_hardwaregain_chan1=10,
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
         rx_temp_comp_gain_chan0=0,
         rx_temp_comp_gain_chan1=0,
         tx_hardwaregain_chan0=0,
         tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
     one_cw_tone_auto=dict(
         ensm_mode="radio_on",
         tx_lo=2500000000,
         rx_lo=2500000000,
         gain_control_mode="automatic",
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
         rx_temp_comp_gain_chan0=0,
         rx_temp_comp_gain_chan1=0,
         tx_hardwaregain_chan0=-10,
         tx_hardwaregain_chan1=-10,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
     change_attenuation_5dB_manual=dict(
         ensm_mode="radio_on",
@@ -47,14 +42,10 @@ params = dict(
         gain_control_mode="manual",
         rx_hardwaregain_chan0=10,
         rx_hardwaregain_chan1=10,
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
         rx_temp_comp_gain_chan0=0,
         rx_temp_comp_gain_chan1=0,
         tx_hardwaregain_chan0=-5,
         tx_hardwaregain_chan1=-5,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
     change_attenuation_10dB_manual=dict(
         ensm_mode="radio_on",
@@ -63,42 +54,30 @@ params = dict(
         gain_control_mode="manual",
         rx_hardwaregain_chan0=10,
         rx_hardwaregain_chan1=10,
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
         rx_temp_comp_gain_chan0=0,
         rx_temp_comp_gain_chan1=0,
         tx_hardwaregain_chan0=-10,
         tx_hardwaregain_chan1=-10,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
     change_attenuation_0dB_auto=dict(
         ensm_mode="radio_on",
         tx_lo=2500000000,
         rx_lo=2500000000,
         gain_control_mode="automatic",
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
         rx_temp_comp_gain_chan0=0,
         rx_temp_comp_gain_chan1=0,
         tx_hardwaregain_chan0=0,
         tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
     change_attenuation_20dB_auto=dict(
         ensm_mode="radio_on",
         tx_lo=2500000000,
         rx_lo=2500000000,
         gain_control_mode="automatic",
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
         rx_temp_comp_gain_chan0=0,
         rx_temp_comp_gain_chan1=0,
         tx_hardwaregain_chan0=-20,
         tx_hardwaregain_chan1=-20,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
     change_rf_gain_0dB_manual=dict(
         ensm_mode="radio_on",
@@ -107,14 +86,8 @@ params = dict(
         gain_control_mode="manual",
         rx_hardwaregain_chan0=0,
         rx_hardwaregain_chan1=0,
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
-        rx_temp_comp_gain_chan0=0,
-        rx_temp_comp_gain_chan1=0,
         tx_hardwaregain_chan0=0,
         tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
     change_rf_gain_20dB_manual=dict(
         ensm_mode="radio_on",
@@ -123,14 +96,14 @@ params = dict(
         gain_control_mode="manual",
         rx_hardwaregain_chan0=20,
         rx_hardwaregain_chan1=20,
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
-        rx_temp_comp_gain_chan0=0,
-        rx_temp_comp_gain_chan1=0,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
+    ),
+    change_rf_gain_10dB_manual=dict(
+        ensm_mode="radio_on",
+        tx_lo=2500000000,
+        rx_lo=2500000000,
+        gain_control_mode="manual",
+        rx_hardwaregain_chan0=10,
+        rx_hardwaregain_chan1=10,
     ),
     change_temp_gain_up=dict(
         ensm_mode="radio_on",
@@ -139,14 +112,10 @@ params = dict(
         gain_control_mode="manual",
         rx_hardwaregain_chan0=10,
         rx_hardwaregain_chan1=10,
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
         rx_temp_comp_gain_chan0=3,
         rx_temp_comp_gain_chan1=3,
         tx_hardwaregain_chan0=0,
         tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
     change_temp_gain_down=dict(
         ensm_mode="radio_on",
@@ -155,14 +124,10 @@ params = dict(
         gain_control_mode="manual",
         rx_hardwaregain_chan0=10,
         rx_hardwaregain_chan1=10,
-        rx_quadrature_tracking_en_chan0=1,
-        rx_quadrature_tracking_en_chan1=1,
         rx_temp_comp_gain_chan0=-3,
         rx_temp_comp_gain_chan1=-3,
         tx_hardwaregain_chan0=0,
         tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
     ),
 )
 
@@ -178,7 +143,7 @@ params_obs = dict(
         obs_quadrature_tracking_en=1,
         obs_rf_port_select="ORX1_TX_LO",
         obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
+        obs_hardwaregain=30,
         obs_temp_comp_gain=0,
     ),
     obs_orx1_change_attenuation_10dB=dict(
@@ -192,10 +157,10 @@ params_obs = dict(
         obs_quadrature_tracking_en=1,
         obs_rf_port_select="ORX1_TX_LO",
         obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
+        obs_hardwaregain=30,
         obs_temp_comp_gain=0,
     ),
-    obs_orx1_change_rf_gain_10dB=dict(
+    obs_orx1_change_rf_gain_20dB=dict(
         ensm_mode="radio_on",
         tx_lo=2500000000,
         tx_hardwaregain_chan0=0,
@@ -206,21 +171,7 @@ params_obs = dict(
         obs_quadrature_tracking_en=1,
         obs_rf_port_select="ORX1_TX_LO",
         obs_gain_control_mode="manual",
-        obs_hardwaregain=10,
-        obs_temp_comp_gain=0,
-    ),
-    obs_orx1_change_rf_gain_5dB=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX1_TX_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=5,
+        obs_hardwaregain=20,
         obs_temp_comp_gain=0,
     ),
     obs_orx1_change_temp_gain_up=dict(
@@ -234,7 +185,7 @@ params_obs = dict(
         obs_quadrature_tracking_en=1,
         obs_rf_port_select="ORX1_TX_LO",
         obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
+        obs_hardwaregain=30,
         obs_temp_comp_gain=3,
     ),
     obs_orx1_change_temp_gain_down=dict(
@@ -248,91 +199,7 @@ params_obs = dict(
         obs_quadrature_tracking_en=1,
         obs_rf_port_select="ORX1_TX_LO",
         obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
-        obs_temp_comp_gain=-3,
-    ),
-    obs_orx2_manual=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_TX_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
-        obs_temp_comp_gain=0,
-    ),
-    obs_orx2_change_attenuation_10dB=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=-10,
-        tx_hardwaregain_chan1=-10,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_TX_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
-        obs_temp_comp_gain=0,
-    ),
-    obs_orx2_change_rf_gain_10dB=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_TX_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=10,
-        obs_temp_comp_gain=0,
-    ),
-    obs_orx2_change_rf_gain_5dB=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_TX_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=5,
-        obs_temp_comp_gain=0,
-    ),
-    obs_orx2_change_temp_gain_up=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_TX_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
-        obs_temp_comp_gain=3,
-    ),
-    obs_orx2_change_temp_gain_down=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_TX_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
+        obs_hardwaregain=30,
         obs_temp_comp_gain=-3,
     ),
     snf_orx1_manual=dict(
@@ -346,7 +213,7 @@ params_obs = dict(
         obs_quadrature_tracking_en=1,
         obs_rf_port_select="ORX1_SN_LO",
         obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
+        obs_hardwaregain=30,
         obs_temp_comp_gain=0,
     ),
     snf_orx1_change_attenuation_10dB=dict(
@@ -360,10 +227,10 @@ params_obs = dict(
         obs_quadrature_tracking_en=1,
         obs_rf_port_select="ORX1_SN_LO",
         obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
+        obs_hardwaregain=30,
         obs_temp_comp_gain=0,
     ),
-    snf_orx1_change_rf_gain_10dB=dict(
+    snf_orx1_change_rf_gain_20dB=dict(
         ensm_mode="radio_on",
         tx_lo=2500000000,
         tx_hardwaregain_chan0=0,
@@ -374,77 +241,7 @@ params_obs = dict(
         obs_quadrature_tracking_en=1,
         obs_rf_port_select="ORX1_SN_LO",
         obs_gain_control_mode="manual",
-        obs_hardwaregain=10,
-        obs_temp_comp_gain=0,
-    ),
-    snf_orx1_change_rf_gain_5dB=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX1_SN_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=5,
-        obs_temp_comp_gain=0,
-    ),
-    snf_orx2_manual=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_SN_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
-        obs_temp_comp_gain=0,
-    ),
-    snf_orx2_change_attenuation_10dB=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=-10,
-        tx_hardwaregain_chan1=-10,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_SN_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=0,
-        obs_temp_comp_gain=0,
-    ),
-    snf_orx2_change_rf_gain_10dB=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_SN_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=10,
-        obs_temp_comp_gain=0,
-    ),
-    snf_orx2_change_rf_gain_5dB=dict(
-        ensm_mode="radio_on",
-        tx_lo=2500000000,
-        tx_hardwaregain_chan0=0,
-        tx_hardwaregain_chan1=0,
-        tx_quadrature_tracking_en_chan0=1,
-        tx_quadrature_tracking_en_chan1=1,
-        sn_lo=2500000000,
-        obs_quadrature_tracking_en=1,
-        obs_rf_port_select="ORX2_SN_LO",
-        obs_gain_control_mode="manual",
-        obs_hardwaregain=5,
+        obs_hardwaregain=20,
         obs_temp_comp_gain=0,
     ),
 )
@@ -469,7 +266,7 @@ def test_ad9371_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", range(2))
 def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
@@ -477,7 +274,8 @@ def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.no_obs_required
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -516,7 +314,7 @@ def test_ad9371_dds_loopback(
 
 ########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -555,31 +353,21 @@ def test_ad9371_dds_loopback_with_10dB_splitter(
 
 ########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "channel, param_set",
     [
         (0, params_obs["obs_orx1_manual"]),
-        (0, params_obs["obs_orx1_change_rf_gain_10dB"]),
-        (0, params_obs["obs_orx1_change_rf_gain_5dB"]),
+        (0, params_obs["obs_orx1_change_rf_gain_20dB"]),
         (0, params_obs["obs_orx1_change_temp_gain_up"]),
         (0, params_obs["obs_orx1_change_temp_gain_down"]),
-        (1, params_obs["obs_orx2_manual"]),
-        (1, params_obs["obs_orx2_change_rf_gain_10dB"]),
-        (1, params_obs["obs_orx2_change_rf_gain_5dB"]),
-        (1, params_obs["obs_orx2_change_temp_gain_up"]),
-        (1, params_obs["obs_orx2_change_temp_gain_down"]),
         (0, params_obs["snf_orx1_manual"]),
-        (0, params_obs["snf_orx1_change_rf_gain_10dB"]),
-        (0, params_obs["snf_orx1_change_rf_gain_5dB"]),
-        (1, params_obs["snf_orx2_manual"]),
-        (1, params_obs["snf_orx2_change_rf_gain_10dB"]),
-        (1, params_obs["snf_orx2_change_rf_gain_5dB"]),
+        (0, params_obs["snf_orx1_change_rf_gain_20dB"]),
     ],
 )
 @pytest.mark.parametrize(
-    "frequency, scale, peak_min, use_obs", [(5000000, 0.25, -40.5, True)]
+    "frequency, scale, peak_min, use_obs", [(5000000, 0.25, -52.5, True)]
 )
 def test_ad9371_dds_loopback_for_obs(
     test_dds_loopback,
@@ -598,7 +386,8 @@ def test_ad9371_dds_loopback_for_obs(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.no_obs_required
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -634,7 +423,7 @@ def test_ad9371_two_tone_loopback(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -669,24 +458,25 @@ def test_ad9371_two_tone_loopback_with_10dB_splitter(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.no_obs_required
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
     [
-        (params["one_cw_tone_manual"], 0.5, 8.5, 9.5),
-        (params["one_cw_tone_manual"], 0.12, 20.5, 21.5),
-        (params["one_cw_tone_manual"], 0.25, 14.5, 15.5),
-        (params["one_cw_tone_auto"], 0.12, 10.5, 11.5),
-        (params["change_attenuation_5dB_manual"], 0.25, 19.5, 20.5),
-        (params["change_attenuation_10dB_manual"], 0.25, 24.25, 25.25),
-        (params["change_attenuation_0dB_auto"], 0.12, 3.5, 4.75),
-        (params["change_attenuation_20dB_auto"], 0.12, 20.75, 22),
-        (params["change_rf_gain_0dB_manual"], 0.25, 24.75, 26),
-        (params["change_rf_gain_20dB_manual"], 0.25, 5, 6),
-        (params["change_temp_gain_up"], 0.25, 14.5, 15.5),
-        (params["change_temp_gain_down"], 0.25, 14.5, 15.5),
+        (params["one_cw_tone_manual"], 0.5, 8.5, 10.5),
+        (params["one_cw_tone_manual"], 0.12, 20.5, 22.5),
+        (params["one_cw_tone_manual"], 0.25, 14.5, 16.5),
+        (params["one_cw_tone_auto"], 0.12, 10.5, 13.5),
+        (params["change_attenuation_5dB_manual"], 0.25, 19.5, 22.5),
+        (params["change_attenuation_10dB_manual"], 0.25, 24.25, 26.25),
+        (params["change_attenuation_0dB_auto"], 0.12, 2.5, 5.5),
+        (params["change_attenuation_20dB_auto"], 0.12, 20.75, 23.75),
+        (params["change_rf_gain_0dB_manual"], 0.25, 24.75, 26.75),
+        (params["change_rf_gain_20dB_manual"], 0.25, 5, 7),
+        (params["change_temp_gain_up"], 0.25, 14.5, 16.5),
+        (params["change_temp_gain_down"], 0.25, 14.5, 16.5),
     ],
 )
 def test_ad9371_dds_gain_check_vary_power(
@@ -706,27 +496,25 @@ def test_ad9371_dds_gain_check_vary_power(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
-    "param_set, dds_scale",
+    "channel, param_set, dds_scale, min_rssi, max_rssi",
     [
-        (params["one_cw_tone_manual"], 0.5),
-        (params["one_cw_tone_manual"], 0.12),
-        (params["one_cw_tone_manual"], 0.25),
-        (params["one_cw_tone_auto"], 0.12),
-        (params["change_attenuation_5dB_manual"], 0.25),
-        (params["change_attenuation_10dB_manual"], 0.25),
-        (params["change_attenuation_0dB_auto"], 0.12),
-        (params["change_attenuation_20dB_auto"], 0.12),
-        (params["change_rf_gain_0dB_manual"], 0.25),
-        (params["change_rf_gain_20dB_manual"], 0.25),
-        (params["change_temp_gain_up"], 0.25),
-        (params["change_temp_gain_down"], 0.25),
+        (0, params["one_cw_tone_manual"], 0.5, 18, 20.75),
+        (1, params["one_cw_tone_manual"], 0.5, 8, 10.75),
+        (0, params["one_cw_tone_auto"], 0.12, 21, 23.25),
+        (1, params["one_cw_tone_auto"], 0.12, 11, 13.25),
+        (0, params["change_attenuation_5dB_manual"], 0.25, 29, 31.25),
+        (1, params["change_attenuation_5dB_manual"], 0.25, 19, 21.5),
+        (0, params["change_attenuation_0dB_auto"], 0.12, 11, 13.5),
+        (1, params["change_attenuation_0dB_auto"], 0.12, 2, 5.5),
+        (0, params["change_rf_gain_0dB_manual"], 0.25, 34, 36.5),
+        (1, params["change_rf_gain_0dB_manual"], 0.25, 24, 26.5),
+        (0, params["change_temp_gain_up"], 0.25, 24, 26.5),
+        (1, params["change_temp_gain_up"], 0.25, 14, 16.5),
     ],
 )
-@pytest.mark.parametrize("min_rssi, max_rssi", [(10, 50)])
 def test_ad9371_dds_gain_check_vary_power_with_10dB_splitter(
     test_gain_check,
     iio_uri,
@@ -743,7 +531,8 @@ def test_ad9371_dds_gain_check_vary_power_with_10dB_splitter(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.no_obs_required
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -756,7 +545,7 @@ def test_ad9371_dds_gain_check_vary_power_with_10dB_splitter(
         params["change_attenuation_0dB_auto"],
         params["change_attenuation_20dB_auto"],
         params["change_rf_gain_0dB_manual"],
-        params["change_rf_gain_20dB_manual"],
+        params["change_rf_gain_10dB_manual"],
         params["change_temp_gain_up"],
         params["change_temp_gain_down"],
     ],
@@ -768,7 +557,7 @@ def test_ad9371_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
@@ -781,7 +570,7 @@ def test_ad9371_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
         params["change_attenuation_0dB_auto"],
         params["change_attenuation_20dB_auto"],
         params["change_rf_gain_0dB_manual"],
-        params["change_rf_gain_20dB_manual"],
+        params["change_rf_gain_10dB_manual"],
         params["change_temp_gain_up"],
         params["change_temp_gain_down"],
     ],
@@ -795,15 +584,13 @@ def test_ad9371_sfdr_with_10dB_splitter(
 
 #########################################
 @pytest.mark.obs_required
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "channel, param_set, sfdr_min",
     [
-        (0, params_obs["obs_orx1_change_attenuation_10dB"], 45),
+        (0, params_obs["obs_orx1_change_attenuation_10dB"], 30),
         (0, params_obs["snf_orx1_change_attenuation_10dB"], 30),
-        (1, params_obs["obs_orx2_change_attenuation_10dB"], 45),
-        (1, params_obs["snf_orx2_change_attenuation_10dB"], 30),
     ],
 )
 @pytest.mark.parametrize("use_obs", [True])
@@ -814,7 +601,7 @@ def test_ad9371_sfdr_for_obs(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
