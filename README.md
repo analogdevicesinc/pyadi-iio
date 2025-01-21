@@ -17,8 +17,8 @@
 <img src="https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077" alt="Codacy Badge">
 </a>
 
-<a href="https://www.python.org/download/releases/3.7.0/">
-<img src="https://img.shields.io/badge/python-3.7+-blue.svg" alt="Python Version">
+<a href="https://www.python.org/download/releases/3.8.0/">
+<img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python Version">
 </a>
 </p>
 
