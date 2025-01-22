@@ -8,11 +8,12 @@ import csv
 import os
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io as sio
 from scipy import signal
+
+import adi
 
 
 def measure_phase_and_delay(chan0, chan1, window=None):

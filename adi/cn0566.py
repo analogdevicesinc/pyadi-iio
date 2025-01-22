@@ -5,8 +5,9 @@
 import pickle
 from time import sleep
 
-import adi
 import numpy as np
+
+import adi
 from adi.adar1000 import adar1000_array
 from adi.adf4159 import adf4159
 

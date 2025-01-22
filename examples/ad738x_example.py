@@ -3,8 +3,9 @@
 # SPDX short identifier: ADIBSD
 import sys
 
-import adi
 import numpy as np
+
+import adi
 
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))

@@ -55,8 +55,6 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
-from adi import ad9361
-from adi.cn0566 import CN0566
 from phaser_functions import (
     calculate_plot,
     channel_calibration,
@@ -65,6 +63,9 @@ from phaser_functions import (
     phase_calibration,
 )
 from scipy import signal
+
+from adi import ad9361
+from adi.cn0566 import CN0566
 
 start = time.time()
 

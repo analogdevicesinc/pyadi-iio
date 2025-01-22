@@ -8,9 +8,10 @@ from test.common import (
     pytest_configure,
 )
 
-import adi
 import numpy as np
 import pytest
+
+import adi
 
 
 def floor_step_size(quantity, step_size):

@@ -2,10 +2,11 @@
 #
 # SPDX short identifier: ADIBSD
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Set up AD7124
 adis16460 = adi.adis16460()

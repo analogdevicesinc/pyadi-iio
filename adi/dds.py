@@ -3,6 +3,7 @@
 # SPDX short identifier: ADIBSD
 
 import numpy as np
+
 from adi.attribute import attribute
 
 

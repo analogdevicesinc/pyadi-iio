@@ -4,6 +4,7 @@
 # Author: Ivan Gil Mercano <ivangil.mercano@analog.com>
 
 import numpy as np
+
 from adi.ad5940 import ad5940
 from adi.adg2128 import adg2128
 from adi.context_manager import context_manager

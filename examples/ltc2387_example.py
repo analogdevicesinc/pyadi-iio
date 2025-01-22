@@ -5,10 +5,11 @@
 
 import sys
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 device_name = "ltc2387"
 vref = 4.096

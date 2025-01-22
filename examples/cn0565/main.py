@@ -8,7 +8,6 @@ import os.path
 import sys
 from types import MethodType
 
-import adi
 import realtimeEITUI
 import serial
 import serial.tools.list_ports
@@ -17,6 +16,8 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from PyQt5 import QtCore, QtGui, QtWidgets
+
+import adi
 
 __tool_name__ = "Real Time Electrical Impedance Tomography"
 __banner__ = "Analog Devices"

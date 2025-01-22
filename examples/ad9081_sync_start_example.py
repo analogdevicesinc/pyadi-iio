@@ -4,11 +4,12 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy import signal
+
+import adi
 
 dev = adi.ad9081("ip:analog.local")
 

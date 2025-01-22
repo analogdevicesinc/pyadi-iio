@@ -49,10 +49,11 @@ from time import sleep
 
 import matplotlib.pyplot as plt
 import numpy as np
-from adi import ad9361
-from adi.cn0566 import CN0566
 from phaser_functions import save_hb100_cal, spec_est
 from scipy import signal
+
+from adi import ad9361
+from adi.cn0566 import CN0566
 
 # First try to connect to a locally connected CN0566. On success, connect,
 # on failure, connect to remote CN0566

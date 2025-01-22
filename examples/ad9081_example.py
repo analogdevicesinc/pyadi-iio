@@ -4,9 +4,10 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 from scipy import signal
+
+import adi
 
 dev = adi.ad9081("ip:analog.local")
 

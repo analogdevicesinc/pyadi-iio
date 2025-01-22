@@ -1,8 +1,9 @@
 import random
 from test.attr_tests import floor_step_size
 
-import adi
 import pytest
+
+import adi
 from adi.cn0540 import cn0540
 
 hardware = "cn0540"

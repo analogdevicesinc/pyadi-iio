@@ -1,5 +1,6 @@
-import adi
 import pytest
+
+import adi
 
 hardware = ["adrv9009-dual", "fmcomms8", "zu11eg"]
 classname = "adi.adrv9009_zu11eg"
