@@ -4,10 +4,11 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 
 def measure_phase(chan0, chan1):

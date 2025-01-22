@@ -2,11 +2,12 @@ import heapq
 import test.rf.spec as spec
 import time
 
-import adi
 import numpy as np
 import pytest
 from numpy.fft import fft, fftfreq, fftshift
 from scipy import signal
+
+import adi
 
 try:
     from .plot_logger import gen_line_plot_html

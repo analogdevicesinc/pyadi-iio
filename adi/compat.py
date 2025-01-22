@@ -6,7 +6,6 @@
 from typing import List, Union
 
 import iio
-
 import numpy as np
 
 

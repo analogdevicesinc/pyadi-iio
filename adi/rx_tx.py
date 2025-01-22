@@ -6,9 +6,9 @@ from abc import ABCMeta, abstractmethod
 from typing import List, Union
 
 import iio
+import numpy as np
 
 import adi.compat as cl
-import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.dds import dds

@@ -1,7 +1,7 @@
 import iio
+import pytest
 
 import adi
-import pytest
 
 hardware = "adis16550"
 classname = "adi.adis16550"

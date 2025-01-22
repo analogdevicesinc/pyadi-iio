@@ -1,8 +1,9 @@
 import sys
 import time
 
-import adi
 import numpy as np
+
+import adi
 
 print("-----------------------------------------------------------------------")
 print("| EVAL-CN0556-EBZ: Programmable High Current Source/Sink Power Supply |")

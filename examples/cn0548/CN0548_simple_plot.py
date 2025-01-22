@@ -40,10 +40,11 @@ import turtle
 from datetime import datetime
 from typing import List
 
-import adi
 import click
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
+
+import adi
 
 unit = 24
 x_init = -4 * unit

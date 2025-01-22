@@ -5,10 +5,11 @@
 import sys
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Optionally pass URI as command line argument,
 # else use default context manager search

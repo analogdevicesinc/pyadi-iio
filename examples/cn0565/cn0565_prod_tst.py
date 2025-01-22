@@ -8,9 +8,10 @@ import time
 from datetime import datetime
 from pprint import pprint
 
-import adi
 import openpyxl
 import pandas as pd
+
+import adi
 
 # Electrode Names Dictionary
 electrode_name = [

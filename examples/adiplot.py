@@ -6,7 +6,6 @@ import time
 from queue import Full, Queue
 from random import randint
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 import pyqtgraph as pg
@@ -14,6 +13,8 @@ from PyQt5 import QtCore, QtWidgets
 from pyqtgraph import GraphicsLayoutWidget, PlotWidget, plot
 from scipy import signal
 from scipy.fftpack import fft
+
+import adi
 
 try:
     import genalyzer

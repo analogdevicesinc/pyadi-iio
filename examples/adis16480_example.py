@@ -3,8 +3,9 @@
 # SPDX short identifier: ADIBSD
 import sys
 
-import adi
 import matplotlib.pyplot as plt
+
+import adi
 
 # Set up ADIS16480
 my_dev_name = sys.argv[1]

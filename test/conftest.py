@@ -16,9 +16,10 @@ from test.generics import iio_attribute_single_value
 from test.globals import *
 from test.html import pytest_html_report_title, pytest_runtest_makereport
 
-import adi
 import numpy as np
 import pytest
+
+import adi
 
 try:
     from test.scpi import dcxo_calibrate

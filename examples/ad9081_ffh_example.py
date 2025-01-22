@@ -9,13 +9,14 @@
 import sys
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy import signal
+
+import adi
 from adi.gen_mux import genmux
 from adi.one_bit_adc_dac import one_bit_adc_dac
-from scipy import signal
 
 
 def measure_phase_and_delay(chan0, chan1, window=None):

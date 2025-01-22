@@ -4,9 +4,10 @@
 
 import sys
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
+
+import adi
 
 url = "ip:analog-2.local" if len(sys.argv) == 1 else sys.argv[1]
 

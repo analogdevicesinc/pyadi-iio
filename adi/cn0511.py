@@ -2,6 +2,7 @@
 #
 # SPDX short identifier: ADIBSD
 import numpy as np
+
 from adi.ad9166 import ad9166 as ad9166_adi  # pyadi-iio library
 from adi.context_manager import context_manager
 

@@ -5,10 +5,11 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 import sin_params as sp
+
+import adi
 
 device_name = "ad4630-24"
 fs = 2000000  # Sampling Frequency

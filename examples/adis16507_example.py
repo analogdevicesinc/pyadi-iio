@@ -2,9 +2,10 @@
 #
 # SPDX short identifier: ADIBSD
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
+
+import adi
 
 # Set up ADIS16507
 imu = adi.adis16507(uri="ip:analog")

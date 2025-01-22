@@ -44,7 +44,6 @@ import warnings
 from tkinter import *
 from tkinter import ttk
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from ADAR_pyadi_functions import *  # import the ADAR1000 functions (These all start with ADAR_xxxx)
@@ -53,6 +52,8 @@ from matplotlib.widgets import Cursor
 from phaser_functions import load_hb100_cal
 from scipy import signal
 from SDR_functions import *  # import the SDR functions (These all start with SDR_xxxx)
+
+import adi
 
 try:
     import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)

@@ -2,10 +2,11 @@
 #
 # SPDX short identifier: ADIBSD
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Set up AD7689
 ad7689 = adi.ad7689(uri="ip:analog")
