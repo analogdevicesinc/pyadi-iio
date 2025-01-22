@@ -7,7 +7,7 @@
 
     <title>Connectivity &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=ab97267f" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=a9555194" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
@@ -297,7 +297,7 @@ Content on this topic
 <h1>Connectivity<a class="headerlink" href="#connectivity" title="Permalink to this heading"></a></h1>
 <p>Since pyadi-iio is built on top of libiio, it can use the different <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio">backends</a> which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it to the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
-<span class="kn">import</span> <span class="nn">adi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="c1"># Create a device interface</span>
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
@@ -307,7 +307,7 @@ Content on this topic
 </div>
 <p>Devices that are connected over USB or are on a system with IIO devices like a ZC706 or Zedboard, should be able to automatically connect without defining a URI like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
-<span class="kn">import</span> <span class="nn">adi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="c1"># Create a device interface</span>
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
@@ -317,7 +317,7 @@ Content on this topic
 </div>
 <p>Whoever if you have multiple USB device connected an want to pick one specifically, the set the USB URI similar to IP:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
-<span class="kn">import</span> <span class="nn">adi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="c1"># Create a device interface</span>
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;usb:1.24.5&quot;</span><span class="p">)</span>
@@ -345,7 +345,7 @@ Content on this topic
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2024, Analog Devices, Inc
+      &#169;2019-2025, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

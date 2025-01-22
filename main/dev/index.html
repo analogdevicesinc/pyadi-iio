@@ -7,7 +7,7 @@
 
     <title>Developers &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=ab97267f" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=a9555194" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
@@ -479,12 +479,12 @@ pipenv<span class="w"> </span>shell
 <h2>Emulation<a class="headerlink" href="#emulation" title="Permalink to this heading"></a></h2>
 <p>By leveraging <a class="reference external" href="https://github.com/analogdevicesinc/iio-emu">iio-emu</a>, hardware or contexts can be emulated for testing without physical devices. However, currently this emulation does not validate attribute rates, states of drivers, or equivalent data sources. This feature should be used to test a library itself rather than hardware drivers.</p>
 <p><strong>pyadi-iio</strong> uses <em>iio-emu</em> through <em>pytest-libiio</em>, which handles loading the correct context files based on the fixtures used for each test. Essentially, when <em>pytest</em> is run, based on the fixture below, <em>pytest-libiio</em> will spawn the correct context with <em>iio-emu</em> and pass the URI of that context to the test.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
-<span class="kn">import</span> <span class="nn">iio</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">iio</span>
 
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">iio_hardware</span><span class="p">(</span><span class="s2">&quot;pluto&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># Set True disables test during emulation</span>
-<span class="k">def</span> <span class="nf">test_libiio_device</span><span class="p">(</span><span class="n">iio_uri</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_libiio_device</span><span class="p">(</span><span class="n">iio_uri</span><span class="p">):</span>
     <span class="n">ctx</span> <span class="o">=</span> <span class="n">iio</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">iio_uri</span><span class="p">)</span>
     <span class="o">...</span>
 </pre></div>
@@ -510,7 +510,7 @@ pipenv<span class="w"> </span>shell
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2024, Analog Devices, Inc
+      &#169;2019-2025, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

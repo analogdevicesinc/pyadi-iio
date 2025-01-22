@@ -7,7 +7,7 @@
 
     <title>libiio Direct Access &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="_static/style.min.css?v=ab97267f" />
+    <link rel="stylesheet" type="text/css" href="_static/style.min.css?v=a9555194" />
     <link rel="stylesheet" type="text/css" href="_static/css/style.css?v=632a43e7" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=57f2e648"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
@@ -304,8 +304,8 @@ Content on this topic
 <section id="libiio-entry-points">
 <h2>libiio Entry Points<a class="headerlink" href="#libiio-entry-points" title="Permalink to this heading"></a></h2>
 <p>The main object interface to <strong>libiio</strong> is through the <strong>ctx</strong> property, which is available in every device-specific class. The context is used internally by <strong>ctx</strong> to do all <strong>libiio</strong> specific operations. Here is an example of using the <strong>ctx</strong> property with <strong>pyadi-iio</strong> and <strong>libiio</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
-<span class="kn">import</span> <span class="nn">iio</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">iio</span>
 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="s2">&quot;ip:pluto.local&quot;</span><span class="p">)</span>
 <span class="n">ctx</span> <span class="o">=</span> <span class="n">iio</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="s2">&quot;ip:pluto.local&quot;</span><span class="p">)</span>
@@ -327,7 +327,7 @@ cf-ad9361-lpc<span class="w"> </span><span class="p">|</span><span class="w"> </
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
 <p>Here is an example of setting the enable state machine on Pluto through the <strong>libiio</strong> API through <strong>pyadi-iio</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
 
@@ -349,7 +349,7 @@ alert
 </pre></div>
 </div>
 <p>Here we can print all <strong>libiio</strong> debug attributes:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
 
@@ -380,7 +380,7 @@ adi,txmon-1-front-end-gain<span class="w"> </span>adi,txmon-1-front-end-gain
 </pre></div>
 </div>
 <p>On some devices it is possible to access registers. This must be done through the Device classes of the context:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
 
@@ -422,7 +422,7 @@ adi,txmon-1-front-end-gain<span class="w"> </span>adi,txmon-1-front-end-gain
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2024, Analog Devices, Inc
+      &#169;2019-2025, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

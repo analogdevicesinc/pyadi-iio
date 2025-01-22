@@ -7,7 +7,7 @@
 
     <title>Buffers &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=ab97267f" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=a9555194" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
@@ -345,7 +345,7 @@ Content on this topic
 <section id="cyclic-mode">
 <h2>Cyclic Mode<a class="headerlink" href="#cyclic-mode" title="Permalink to this heading"></a></h2>
 <p>In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to in real-time. To complement these use cases it is possible to create transmit buffer which repeats, which we call <strong>cyclic buffers</strong>. Cyclic buffers are identical or normal or non-cyclic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
 <span class="c1"># Create a complex sinusoid</span>
@@ -367,7 +367,7 @@ Content on this topic
 <section id="annotated-buffers">
 <h2>Annotated Buffers<a class="headerlink" href="#annotated-buffers" title="Permalink to this heading"></a></h2>
 <p>By default buffers appear as an array or a list of arrays. This can be confusing if all your channels do not produce similar data. For example, for IMUs like ADI16495 certain channels are for acceleration data and others are for angular velocity. To label this data the <em>rx_annotated</em> property can be used. When setting it to True the output of the <strong>rx</strong> method will be a dictionary with keys as channel names. Here an example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="n">dev</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">adis16495</span><span class="p">()</span>
 <span class="n">dev</span><span class="o">.</span><span class="n">rx_enabled_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
@@ -397,7 +397,7 @@ array<span class="o">([</span><span class="w">     </span><span class="m">49151<
 <section id="buffer-units">
 <h2>Buffer Units<a class="headerlink" href="#buffer-units" title="Permalink to this heading"></a></h2>
 <p>For certain devices it is possible to convert types to scientific units, such as volts, degrees, or meters per second among others. This is controlled by setting the property <strong>rx_output_type</strong> to either <em>raw</em> or <em>SI</em>. If set to <em>SI</em>, returned data from the <strong>rx</strong> method will be in scientific units (assuming its supported by the driver). Below is an example using an IMU:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="n">dev</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">adis16495</span><span class="p">()</span>
 <span class="n">dev</span><span class="o">.</span><span class="n">rx_annotated</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Make channel names appear in data</span>
@@ -584,7 +584,7 @@ translated to channel numbers.</p>
 <section id="buffer-examples">
 <h2>Buffer Examples<a class="headerlink" href="#buffer-examples" title="Permalink to this heading"></a></h2>
 <p>Collect data from one channel</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
 <span class="c1"># Get complex data back</span>
@@ -593,7 +593,7 @@ translated to channel numbers.</p>
 </pre></div>
 </div>
 <p>Collect data from two channels</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
 <span class="c1"># Get both complex channel back</span>
@@ -604,8 +604,8 @@ translated to channel numbers.</p>
 </pre></div>
 </div>
 <p>Send data on two channels</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Create radio</span>
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9371</span><span class="p">()</span>
@@ -647,7 +647,7 @@ translated to channel numbers.</p>
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2024, Analog Devices, Inc
+      &#169;2019-2025, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>
