@@ -13,6 +13,8 @@ Each device class in this module supports multiple parts, as follows:
 
 **ad4003:** ad4003, ad4007, ad4011
 
+**adaq4003:** adaq4001, adaq4003
+
 By default, the device_name parameter in the class constructor is the
 same as the class name (e.g. "ad4001" for the ad4001). To use the class
 with another supported model, the name must be given when instantiating
