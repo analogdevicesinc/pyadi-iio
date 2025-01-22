@@ -12,13 +12,13 @@ classifiers = [
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Libraries :: Python Modules"]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 authors = [
     {name = "Travis Collins", email="travis.collins@analog.com"},
 ]
@@ -57,6 +57,7 @@ include_trailing_comma="True"
 force_grid_wrap=0
 use_parentheses="True"
 line_length=88
+profile="black"
 
 [tool.mypy]
 ignore_missing_imports="true"

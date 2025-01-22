@@ -1,12 +1,13 @@
-# Copyright (C) 2023-2024 Analog Devices, Inc.
+# Copyright (C) 2023-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
 import pickle
 from time import sleep
 
-import adi
 import numpy as np
+
+import adi
 from adi.adar1000 import adar1000_array
 from adi.adf4159 import adf4159
 

@@ -1,11 +1,11 @@
-# Copyright (C) 2022-2024 Analog Devices, Inc.
+# Copyright (C) 2022-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
 """JESD Shim import to handle JESD as optional dependency"""
 
 try:
-    from .sshfs import sshfs
     from .jesd_internal import jesd
+    from .sshfs import sshfs
 except ImportError:
     jesd = None

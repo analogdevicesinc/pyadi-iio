@@ -1,7 +1,8 @@
-# Copyright (C) 2019-2024 Analog Devices, Inc.
+# Copyright (C) 2019-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 import numpy as np
+
 from adi.ad9166 import ad9166 as ad9166_adi  # pyadi-iio library
 from adi.context_manager import context_manager
 

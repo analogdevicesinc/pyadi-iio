@@ -31,9 +31,10 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
+
+import adi
 
 device = adi.ad405x("serial:COM13,230400", "ad4052")
 

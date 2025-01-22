@@ -8,10 +8,11 @@ import argparse
 import os
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Find the location of this script since the profile folder is relative to it
 loc = os.path.dirname(os.path.realpath(__file__))
@@ -19,8 +20,9 @@ loc = os.path.dirname(os.path.realpath(__file__))
 try:
     # Try using libadrv9002 to load profiles
     # Available at: https://analogdevicesinc.github.io/libadrv9002-iio/
-    import adrv9002 as libadrv9002
     import copy
+
+    import adrv9002 as libadrv9002
 
     use_prebuilt_profiles = False
 except ImportError:

@@ -3,10 +3,10 @@ import time
 from test.globals import *
 
 import iio
-
-import adi
 import numpy as np
 import pytest
+
+import adi
 
 
 def pytest_configure(config):

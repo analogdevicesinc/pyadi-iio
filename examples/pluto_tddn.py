@@ -2,9 +2,10 @@
 #
 # SPDX short identifier: ADIBSD
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
+
+import adi
 
 plt.close("all")
 

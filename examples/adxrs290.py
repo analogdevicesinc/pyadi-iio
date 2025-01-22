@@ -4,10 +4,11 @@
 
 from typing import List
 
-import adi
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
+
+import adi
 
 # Set enable_plot to True if you want to plot in real-time
 enable_plot = True

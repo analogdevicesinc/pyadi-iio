@@ -4,10 +4,10 @@ on: [push, pull_request]
 
 jobs:
   Test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: [3.8, 3.9, "3.10", "3.11"]
         libiio: ['main', 'v0.25']
 
     steps:
@@ -28,11 +28,11 @@ jobs:
         run: pytest -v --cov=adi
 
   Test-Emulated-HW:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: [3.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -67,11 +67,11 @@ jobs:
           files: results.xml
 
   Lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: [3.8, 3.9, "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v2
@@ -94,7 +94,7 @@ jobs:
           exit $ec
 
   Doc:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v2
@@ -116,7 +116,7 @@ jobs:
           cd ..
 
   DeployMainDoc:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [Test,Lint,Doc]
     if: github.ref == 'refs/heads/main'
 
@@ -148,7 +148,7 @@ jobs:
           destination_dir: main
 
   DeployDevelopmentDoc:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [Test,Lint,Doc]
     # Only run on pull requests to main and non-forks
     if: github.event_name == 'pull_request' && github.base_ref == 'main' && ! github.event.pull_request.head.repo.fork
@@ -188,7 +188,7 @@ jobs:
             Generated documentation for this PR is available at [Link](https://analogdevicesinc.github.io/pyadi-iio/prs/${{ github.head_ref }}/index.html)
 
   Deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [Test,Lint,Doc]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
 

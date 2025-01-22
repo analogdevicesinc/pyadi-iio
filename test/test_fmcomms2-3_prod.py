@@ -1,8 +1,8 @@
 import iio
-
-import adi
 import numpy as np
 import pytest
+
+import adi
 
 from .conftest import disable_prod_tests
 

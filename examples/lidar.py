@@ -20,12 +20,12 @@ import tkinter as tk
 from tkinter import filedialog, ttk
 
 import iio
-
 import matplotlib.pyplot as plt
 import numpy as np
-from adi.fmclidar1 import fmclidar1
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from scipy.signal import firwin
+
+from adi.fmclidar1 import fmclidar1
 
 lidar = None  # Lidar context
 snapshot_path = ""  # If set to non-empty, save the rx samples to that path

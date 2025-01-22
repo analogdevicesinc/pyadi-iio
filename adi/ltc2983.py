@@ -1,4 +1,4 @@
-# Copyright (C) 2023-2024 Analog Devices, Inc.
+# Copyright (C) 2023-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 import numbers
@@ -6,6 +6,7 @@ from collections import OrderedDict
 from collections.abc import Iterable
 
 import numpy as np
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
