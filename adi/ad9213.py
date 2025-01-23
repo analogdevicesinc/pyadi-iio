@@ -19,6 +19,7 @@ class ad9213(rx, context_manager):
         context_manager.__init__(self, uri, self._device_name)
         self._device_name = device_name
         self._rxadc = self._ctx.find_device(self._device_name)
+        self._clock_chip_fmc = self._ctx.find_device("hmc7044")
         rx.__init__(self)
 
     @property
@@ -31,8 +32,8 @@ class ad9213(rx, context_manager):
     @test_mode.setter
     def test_mode(self, value):
         self._set_iio_attr("voltage0", "test_mode", False, value, self._rxadc)
-    
-     
+
+
     def ad9213_register_read(self, reg):
         """Direct Register Access via debugfs"""
         self._set_iio_debug_attr_str("direct_reg_access", reg, self._rxadc)
