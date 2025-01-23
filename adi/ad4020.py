@@ -54,7 +54,7 @@ class ad4000(ad4020):
         "ad4008",
     ]
 
-    _rx_data_type = np.int16
+    _rx_data_type = np.uint16
 
     def __init__(self, uri="ip:analog.local", device_name="ad4000"):
         super().__init__(uri, device_name)
@@ -79,7 +79,7 @@ class ad4002(ad4020):
         "ad4010",
     ]
 
-    _rx_data_type = np.int32
+    _rx_data_type = np.uint32
 
     def __init__(self, uri="ip:analog.local", device_name="ad4002"):
         super().__init__(uri, device_name)
