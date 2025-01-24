@@ -1,4 +1,4 @@
-# Copyright (C) 2023-2024 Analog Devices, Inc.
+# Copyright (C) 2023-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -159,13 +159,61 @@ class adf4382(attribute, context_manager):
         self._set_iio_dev_attr("reference_frequency", value, self._ctrl)
 
     @property
-    def sync_en(self):
-        return self._get_iio_dev_attr("sync_en", self._ctrl)
+    def sw_sync_en(self):
+        return self._get_iio_dev_attr("sw_sync_en", self._ctrl)
 
-    @sync_en.setter
-    def sync_en(self, value):
-        self._set_iio_dev_attr("sync_en", value, self._ctrl)
-        
+    @sw_sync_en.setter
+    def sw_sync_en(self, value):
+        self._set_iio_dev_attr("sw_sync_en", value, self._ctrl)
+
+    @property
+    def ezsync_setup(self):
+        return self._get_iio_dev_attr("ezsync_setup", self._ctrl)
+
+    @ezsync_setup.setter
+    def ezsync_setup(self, value):
+        self._set_iio_dev_attr("ezsync_setup", value, self._ctrl)
+
+    @property
+    def timed_sync_setup(self):
+        return self._get_iio_dev_attr("timed_sync_setup", self._ctrl)
+
+    @timed_sync_setup.setter
+    def timed_sync_setup(self, value):
+        self._set_iio_dev_attr("timed_sync_setup", value, self._ctrl)
+
+    @property
+    def fastcal_en(self):
+        return self._get_iio_dev_attr("fastcal_en", self._ctrl)
+
+    @fastcal_en.setter
+    def fastcal_en(self, value):
+        self._set_iio_dev_attr("fastcal_en", value, self._ctrl)
+
+    @property
+    def fastcal_lut_en(self):
+        return self._get_iio_dev_attr("fastcal_lut_en", self._ctrl)
+
+    @fastcal_lut_en.setter
+    def fastcal_lut_en(self, value):
+        self._set_iio_dev_attr("fastcal_lut_en", value, self._ctrl)
+
+    @property
+    def change_frequency(self):
+        return self._get_iio_dev_attr("change_frequency", self._ctrl)
+
+    @change_frequency.setter
+    def change_frequency(self, value):
+        self._set_iio_dev_attr("change_frequency", value, self._ctrl)
+
+    @property
+    def start_calibration(self):
+        return self._get_iio_dev_attr("start_calibration", self._ctrl)
+
+    @start_calibration.setter
+    def start_calibration(self, value):
+        self._set_iio_dev_attr("start_calibration", value, self._ctrl)
+
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""
         self._set_iio_debug_attr_str("direct_reg_access", reg, self._ctrl)
