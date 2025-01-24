@@ -1,9 +1,10 @@
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 sdr = adi.adrv9002(uri="ip:192.168.86.58")
 sdr.digital_gain_control_mode_chan0 = "Gain_Compensation_manual_control"

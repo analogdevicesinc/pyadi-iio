@@ -31,17 +31,33 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import adi
+from adi.ad5754r import *
 
 # Set up AD5754R
-ad578x_dev = adi.ad5754r(uri="serial:COM46,230400,8n1n")
-ad578x.int_ref_powerup = "powerup"
+ad5754r_dev = ad5754r(uri="serial:COM4,230400,8n1n")
+ad5754r_dev.int_ref_powerup = "powerup"
 
 # Configure channel 0
 chn_num = 0
 ad5754r_chan = ad5754r_dev.channel[chn_num]
 ad5754r_chan.powerup = "powerup"
 
+# Update dac output for channel 0 instantaneously using the 'raw' attribute
+ad5754r_chan.raw = 1600
+
+# Update dac output for channel 0 using software LDAC operation
+ad5754r_chan.dac_register = 500
+ad5754r_dev.sw_ldac_trigger = "Trigger"
+
+# Update dac output of channel 0 using hardware LDAC operation
+ad5754r_chan.dac_register = 1000
+ad5754r_dev.hw_ldac_trigger = "Trigger"
+
+# Clear all DAC outputs to the midscale code
+ad5754r_dev.clear_setting = "midscale_code"
+ad5754r_dev.all_chns_clear = "Clear"
+
+# Determine output voltage using scale and offset
 raw = int(ad5754r_chan.raw)
 scale = float(ad5754r_chan.scale)
 offset = int(ad5754r_chan.offset)

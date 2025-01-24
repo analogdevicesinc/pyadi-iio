@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2023 Analog Devices, Inc.
+# Copyright (C) 2019-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -25,6 +25,7 @@ class ad9172(tx, context_manager, sync_start):
         if not self._txdac:
             raise RuntimeError("Could not find axi-ad9172-hpc")
 
+        self._tx_channel_names = []
         for chan in self._txdac.channels:
             if (
                 hasattr(chan, "scan_element")
@@ -33,7 +34,7 @@ class ad9172(tx, context_manager, sync_start):
             ):
                 self._tx_channel_names.append(chan.id)
 
-        self._tx_channel_names = _sortconv(self._tx_channel_names)
+        self._tx_channel_names = _sortconv(self._tx_channel_names, complex=True)
 
         tx.__init__(self)
 

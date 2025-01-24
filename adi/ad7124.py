@@ -1,10 +1,11 @@
-# Copyright (C) 2019-2023 Analog Devices, Inc.
+# Copyright (C) 2019-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
 from decimal import Decimal
 
 import numpy as np
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
@@ -36,31 +37,15 @@ class ad7124(rx, context_manager):
                 else:
                     index += 1
 
-        # dynamically get channels and sorting them after the index of the first voltage channel
-        self._ctrl.channels.sort(key=lambda x: int(x.id[7 : x.id.find("-")]))
+        self._rx_channel_names = [chan.id for chan in self._ctrl.channels]
+        if "-" in self._rx_channel_names[0]:
+            self._rx_channel_names.sort(key=lambda x: int(x[7:].split("-")[0]))
+        else:
+            self._rx_channel_names.sort(key=lambda x: int(x[7:]))
 
-        for ch in self._ctrl.channels:
-            name = ch._id
-            self._rx_channel_names.append(name)
+        for name in self._rx_channel_names:
             self.channel.append(self._channel(self._ctrl, name))
         rx.__init__(self)
-
-    def rx(self):
-        sig = super().rx()
-
-        if (
-            self._rx_unbuffered_data
-            or self._complex_data
-            or self.rx_output_type == "raw"
-        ):
-            return sig
-        else:
-            mv_sig = []
-
-            for signal in sig:
-                mv_sig.append(signal / 1000)
-
-            return mv_sig
 
     @property
     def sample_rate(self):

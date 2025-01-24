@@ -4,37 +4,20 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 
+import adi
+
 # Create radio
-rx = adi.ad9467(uri="ip:analog")
-tx = adi.Pluto()
+dev = adi.ad9467(uri="ip:analog")
+fs = int(250e6)  # May need to adjust based on device
 
-# Configure tx properties
-tx.tx_lo = 2000000000
-tx.tx_cyclic_buffer = True
-tx.tx_hardwaregain_chan0 = -30
-tx.gain_control_mode_chan0 = "slow_attack"
-
-# Create a sinewave waveform
-fs = int(tx.sample_rate)
-N = 1024
-fc = int(3000000 / (fs / N)) * (fs / N)
-ts = 1 / float(fs)
-t = np.arange(0, N * ts, ts)
-i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-q = np.sin(2 * np.pi * t * fc) * 2 ** 14
-iq = i + 1j * q
-
-# Send data
-tx.tx(iq)
 
 # Collect data
 for r in range(20):
-    x = rx.rx()
+    x = dev.rx()
     f, Pxx_den = signal.periodogram(x, fs)
     plt.clf()
     plt.semilogy(f, Pxx_den)

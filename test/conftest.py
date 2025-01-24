@@ -1,3 +1,4 @@
+import inspect
 import random
 import test.rf.spec as spec
 import time
@@ -15,9 +16,10 @@ from test.generics import iio_attribute_single_value
 from test.globals import *
 from test.html import pytest_html_report_title, pytest_runtest_makereport
 
-import adi
 import numpy as np
 import pytest
+
+import adi
 
 try:
     from test.scpi import dcxo_calibrate
@@ -25,6 +27,59 @@ try:
     disable_prod_tests = False
 except ImportError:
     disable_prod_tests = True
+
+
+def pytest_runtest_makereport(item, call):
+    """pytest_runtest_makereport:
+    This pytest hook is used to create a custom test report using
+    the xml property tag to add custom properties
+    """
+
+    if call.when == "call" and call.excinfo is not None:
+        # Extract error type and message
+        exception_type_and_message_formatted = call.excinfo.exconly() or "N/A"
+        item.user_properties.append(
+            ("exception_type_and_message", exception_type_and_message_formatted)
+        )
+
+        for fixture in item.fixturenames:
+            if "test_" in fixture:  # Get fixtures in conftest.py
+                fixture_defs = item.session._fixturemanager._arg2fixturedefs.get(
+                    fixture, []
+                )
+                if fixture_defs:
+                    # Get the fixture definition
+                    for fix_func in fixture_defs:
+                        fixture_func = fix_func.func
+                        # Check if the fixture is a generator (yielding)
+                        if inspect.isgeneratorfunction(fixture_func):
+                            request_fixture = item.funcargs.get("request")
+                            if request_fixture:
+                                # Get the generator
+                                generator = fixture_func(request_fixture)
+                                # Get the yielded function (test function)
+                                yielded_function = next(generator)
+                                # Get the yielded function name
+                                yielded_function_name = (
+                                    yielded_function.__name__ or "N/A"
+                                )
+                                # Get the test function module
+                                yielded_module = yielded_function.__module__ or "N/A"
+
+                                # Add test function name and module as property in pytest xml report
+                                item.user_properties.append(
+                                    ("test_name_function", yielded_function_name)
+                                )
+                                item.user_properties.append(
+                                    ("test_function_module", yielded_module)
+                                )
+
+
+def pytest_make_parametrize_id(val, argname):
+    """pytest_make_parametrize_id:
+        This pytest hook is used to return the test parameters as name=parameter value in the test report
+        """
+    return f"{argname}={val}"
 
 
 #########################################
@@ -155,13 +210,23 @@ if not disable_prod_tests:
 
 
 @pytest.fixture()
-def test_attribute_multipe_values(request):
-    yield attribute_multipe_values
+def test_attribute_multiple_values(request):
+    yield attribute_multiple_values
 
 
 @pytest.fixture()
-def test_attribute_multipe_values_with_depends(request):
-    yield attribute_multipe_values_with_depends
+def test_attribute_multiple_values_error(request):
+    yield attribute_multiple_values_error
+
+
+@pytest.fixture()
+def test_attribute_multiple_values_with_depends(request):
+    yield attribute_multiple_values_with_depends
+
+
+@pytest.fixture()
+def test_attribute_readonly_with_depends(request):
+    yield attribute_readonly_with_depends
 
 
 @pytest.fixture()
@@ -172,6 +237,11 @@ def test_attribute_write_only_str_with_depends(request):
 @pytest.fixture
 def test_attribute_write_only_str(request):
     yield attribute_write_only_str
+
+
+@pytest.fixture
+def test_attribute_check_range_readonly_with_depends(request):
+    yield attribute_check_range_readonly_with_depends
 
 
 @pytest.fixture()
@@ -192,3 +262,43 @@ def test_verify_overflow(request):
 @pytest.fixture()
 def test_verify_underflow(request):
     yield verify_underflow
+
+
+@pytest.fixture
+def test_attribute_single_value_device_name_channel_readonly(request):
+    yield attribute_single_value_device_name_channel_readonly
+
+
+@pytest.fixture
+def test_attribute_write_only_str_device_channel(request):
+    yield attribute_write_only_str_device_channel
+
+
+@pytest.fixture
+def test_attribute_single_value_range_channel(request):
+    yield attribute_single_value_range_channel
+
+
+@pytest.fixture
+def test_attribute_multiple_values_device_channel(request):
+    yield attribute_multiple_values_device_channel
+
+
+@pytest.fixture
+def test_attribute_multiple_values_available_readonly(request):
+    yield attribute_multiple_values_available_readonly
+
+
+@pytest.fixture
+def test_attribute_single_value_channel_readonly(request):
+    yield attribute_single_value_channel_readonly
+
+
+@pytest.fixture()
+def test_attribute_check_range_singleval_with_depends(request):
+    yield attribute_check_range_singleval_with_depends
+
+
+@pytest.fixture()
+def test_attribute_single_value_boolean_readonly(request):
+    yield attribute_single_value_boolean_readonly

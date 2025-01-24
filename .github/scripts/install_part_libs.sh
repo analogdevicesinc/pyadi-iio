@@ -1,7 +1,23 @@
 #!/bin/bash
-git clone -b 'master' --single-branch --depth 1 https://github.com/analogdevicesinc/libad9361-iio.git
+
+# Set LIBIIO_BRANCH if not set
+if [ -z "$LIBIIO_BRANCH" ]; then
+    LIBIIO_BRANCH="v0.25"
+fi
+
+if [ "$LIBIIO_BRANCH" = "main" ]; then
+    exit 0
+fi
+
+
+
+git clone -b 'main' --single-branch --depth 1 https://github.com/analogdevicesinc/libad9361-iio.git
 cd libad9361-iio
-cmake -DPYTHON_BINDINGS=ON .
+if [ "$LIBIIO_BRANCH" = "main" ]; then
+    cmake -DPYTHON_BINDINGS=ON -DLIBIIO_INCLUDEDIR=/usr/include/iio .
+else
+    cmake -DPYTHON_BINDINGS=ON .
+fi
 make
 cd bindings/python
 pip install .
@@ -11,9 +27,13 @@ sudo ldconfig
 cd ..
 rm -rf libad9361-iio
 
-git clone -b 'master' --single-branch --depth 1 https://github.com/analogdevicesinc/libad9166-iio.git
+git clone -b 'main' --single-branch --depth 1 https://github.com/analogdevicesinc/libad9166-iio.git
 cd libad9166-iio
-cmake -DPYTHON_BINDINGS=ON .
+if [ "$LIBIIO_BRANCH" = "main" ]; then
+    cmake -DPYTHON_BINDINGS=ON -DLIBIIO_INCLUDEDIR=/usr/include/iio .
+else
+    cmake -DPYTHON_BINDINGS=ON .
+fi
 make
 cd bindings/python
 pip install .

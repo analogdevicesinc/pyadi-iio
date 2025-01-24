@@ -7,6 +7,16 @@ hardware = ["ad9081", "ad9081_tdd"]
 classname = "adi.ad9081"
 
 
+def is_channel(channel, iio_uri):
+    import adi
+
+    dev = adi.ad9081(uri=iio_uri)
+    channels = list(
+        set([int("".join(filter(str.isdigit, s))) for s in dev._tx_channel_names])
+    )
+    return channel in channels
+
+
 def scale_field(param_set, iio_uri):
     # Scale fields to match number of channels
     import adi
@@ -26,7 +36,7 @@ def scale_field(param_set, iio_uri):
     "attr, val",
     [
         ("rx_nyquist_zone", ["even", "odd"]),
-        ("loopback_mode", [2, 1, 0]),
+        ("loopback_mode", [0]),
         (
             "rx_test_mode",
             [
@@ -51,8 +61,18 @@ def scale_field(param_set, iio_uri):
         ),
     ],
 )
-def test_ad9081_str_attr(test_attribute_multipe_values, iio_uri, classname, attr, val):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+def test_ad9081_str_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0)
+
+
+#########################################
+@pytest.mark.iio_hardware(hardware, True)
+@pytest.mark.parametrize("classname", [(classname)])
+@pytest.mark.parametrize("attr, val", [("loopback_mode", [2, 1])])
+def test_ad9081_str_attr_err(
+    test_attribute_multiple_values_error, iio_uri, classname, attr, val
+):
+    test_attribute_multiple_values_error(iio_uri, classname, attr, val, 0)
 
 
 #########################################
@@ -97,6 +117,8 @@ def test_ad9081_attr(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 def test_ad9081_rx_data(test_dma_rx, iio_uri, classname, channel):
+    if not is_channel(channel, iio_uri):
+        pytest.skip("Skipping test: Channel " + str(channel) + "not available.")
     test_dma_rx(iio_uri, classname, channel)
 
 
@@ -105,6 +127,8 @@ def test_ad9081_rx_data(test_dma_rx, iio_uri, classname, channel):
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3])
 def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
+    if not is_channel(channel, iio_uri):
+        pytest.skip("Skipping test: Channel " + str(channel) + "not available.")
     test_dma_tx(iio_uri, classname, channel)
 
 
@@ -135,6 +159,8 @@ def test_ad9081_tx_data(test_dma_tx, iio_uri, classname, channel):
 def test_ad9081_cyclic_buffers(
     test_cyclic_buffer, iio_uri, classname, channel, param_set
 ):
+    if not is_channel(channel, iio_uri):
+        pytest.skip("Skipping test: Channel " + str(channel) + "not available.")
     param_set = scale_field(param_set, iio_uri)
     test_cyclic_buffer(iio_uri, classname, channel, param_set)
 
@@ -164,6 +190,8 @@ def test_ad9081_cyclic_buffers(
 def test_ad9081_cyclic_buffers_exception(
     test_cyclic_buffer_exception, iio_uri, classname, channel, param_set
 ):
+    if not is_channel(channel, iio_uri):
+        pytest.skip("Skipping test: Channel " + str(channel) + "not available.")
     param_set = scale_field(param_set, iio_uri)
     test_cyclic_buffer_exception(iio_uri, classname, channel, param_set)
 
@@ -328,3 +356,26 @@ def test_ad9081_nco_loopback(
 
 
 #########################################
+@pytest.mark.iio_hardware("ad9081_full_bw")
+def test_full_bw_rx(iio_uri):
+    import adi
+
+    dev = adi.ad9081(uri=iio_uri)
+
+    assert not dev._rx_complex_data
+    assert dev._tx_complex_data
+
+    assert dev._rx_fine_ddc_channel_names == [
+        "voltage0",
+        "voltage1",
+        "voltage2",
+        "voltage3",
+    ]
+    assert dev._rx_coarse_ddc_channel_names == ["voltage0", "voltage2"]
+    assert dev._tx_fine_duc_channel_names == [
+        "voltage0",
+        "voltage1",
+        "voltage2",
+        "voltage3",
+    ]
+    assert dev._tx_coarse_duc_channel_names == ["voltage0", "voltage1"]

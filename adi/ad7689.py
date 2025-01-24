@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2023 Analog Devices, Inc.
+# Copyright (C) 2021-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -6,6 +6,7 @@
 from decimal import Decimal
 
 import numpy as np
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
@@ -44,6 +45,8 @@ class ad7689(rx, context_manager):
                 self._rxadc = device
                 break
 
+        self._rx_channel_names = []
+        self.channel = []
         for ch in self._ctrl.channels:
             name = ch._id
             self._rx_channel_names.append(name)

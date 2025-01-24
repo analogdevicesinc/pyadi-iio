@@ -5,24 +5,31 @@ Supported Devices
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
    adi.QuadMxFE_multi
+   adi.ad2s1210
+   adi.ad3552r
    adi.ad4020
+   adi.ad405x
    adi.ad4110
    adi.ad4130
+   adi.ad4170
    adi.ad4630
    adi.ad469x
    adi.ad5592r
    adi.ad5627
    adi.ad5686
+   adi.ad579x
    adi.ad5754r
    adi.ad5940
    adi.ad6676
    adi.ad7124
+   adi.ad7134
    adi.ad717x
    adi.ad719x
    adi.ad7291
+   adi.ad738x
    adi.ad7606
    adi.ad7689
    adi.ad7746
@@ -41,10 +48,11 @@ Supported Devices
    adi.ad9162
    adi.ad9166
    adi.ad9172
+   adi.ad9213
    adi.ad9250
    adi.ad9265
    adi.ad936x
-   adi.ad9371
+   adi.ad937x
    adi.ad9434
    adi.ad9467
    adi.ad9625
@@ -60,10 +68,19 @@ Supported Devices
    adi.adf4382
    adi.adf5610
    adi.adg2128
+   adi.adis16375
    adi.adis16460
    adi.adis16475
+   adi.adis16480
+   adi.adis16485
+   adi.adis16488
+   adi.adis16490
    adi.adis16495
+   adi.adis16497
    adi.adis16507
+   adi.adis16545
+   adi.adis16547
+   adi.adis16550
    adi.adl5240
    adi.adl5960
    adi.admv8818
@@ -80,11 +97,14 @@ Supported Devices
    adi.adxl313
    adi.adxl345
    adi.adxl355
+   adi.adxl380
    adi.adxrs290
    adi.cn0511
    adi.cn0532
    adi.cn0540
    adi.cn0554
+   adi.cn0556
+   adi.cn0565
    adi.cn0566
    adi.cn0575
    adi.cn0579
@@ -102,7 +122,9 @@ Supported Devices
    adi.ltc2314_14
    adi.ltc2387
    adi.ltc2499
+   adi.ltc2664
    adi.ltc2688
+   adi.ltc2672
    adi.ltc2983
    adi.max11205
    adi.max14001
@@ -112,6 +134,7 @@ Supported Devices
 
    adi.one_bit_adc_dac
    adi.tdd
+   adi.tddn
 
 -----
 

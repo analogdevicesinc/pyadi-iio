@@ -33,8 +33,9 @@
 
 import sys  # Only needed to read in command line arguments, if any
 
-import adi  # This is the main pyadi-iio module, contains everything
 import matplotlib.pyplot as plt  # Matplotlib is a very common Python plotting routine.
+
+import adi  # This is the main pyadi-iio module, contains everything
 
 # Optionally pass URI as command line argument, else use analog.local
 # (URI stands for "Uniform Resource Identifier")

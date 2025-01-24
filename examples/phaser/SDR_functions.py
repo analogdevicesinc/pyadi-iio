@@ -5,8 +5,9 @@ import pickle
 import sys
 import time
 
-import adi
 import numpy as np
+
+import adi
 
 
 # MWT: Add uri argument...

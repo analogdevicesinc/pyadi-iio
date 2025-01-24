@@ -15,7 +15,23 @@ def update_devs():
     devices_all = devices + [mfile] if os.path.exists(mfile) else devices
 
     # Remove device docs before updating
+
+    # Autodoc won't generate these pages
+    classes_not_modules = [
+        "adi.adis16375.rst",
+        "adi.adis16480.rst",
+        "adi.adis16485.rst",
+        "adi.adis16488.rst",
+        "adi.adis16490.rst",
+        "adi.adis16495.rst",
+        "adi.adis16497.rst",
+        "adi.adis16545.rst",
+        "adi.adis16547.rst",
+    ]
+
     for dev in devices_all:
+        if os.path.basename(dev) in classes_not_modules:
+            continue
         print("Removing {}".format(dev))
         os.remove(dev)
 
@@ -27,6 +43,8 @@ def update_devs():
 
     # Remove adi. and modules strings
     for dev in devices:
+        if os.path.basename(dev) in classes_not_modules:
+            continue
         with open(dev, "r") as f:
             txt = f.read()
             txt = txt.replace("adi.", "")
@@ -46,6 +64,7 @@ def update_devs():
         "jesd_internal",
         "sync_start",
         "dsp",
+        "compat",
     ]
     adi_rst_path = os.path.join(root, "source", "devices", "adi.rst")
     with open(adi_rst_path, "r") as f:

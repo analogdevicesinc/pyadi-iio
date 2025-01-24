@@ -1,16 +1,23 @@
-# Copyright (C) 2019-2023 Analog Devices, Inc.
+# Copyright (C) 2019-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
+from adi.ad2s1210 import ad2s1210
+from adi.ad405x import ad405x
 from adi.ad469x import ad469x
+from adi.ad579x import ad579x
 from adi.ad717x import ad717x
 from adi.ad719x import ad719x
+from adi.ad738x import ad738x
 from adi.ad777x import ad777x
 from adi.ad936x import Pluto, ad9361, ad9363, ad9364
-from adi.ad4020 import ad4020
+from adi.ad937x import ad9371, ad9375
+from adi.ad3552r import ad3552r
+from adi.ad4020 import ad4000, ad4001, ad4002, ad4003, ad4020
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
-from adi.ad4630 import ad4630
+from adi.ad4170 import ad4170
+from adi.ad4630 import ad4630, adaq42xx
 from adi.ad4858 import ad4858
 from adi.ad5592r import ad5592r
 from adi.ad5686 import ad5686
@@ -18,6 +25,7 @@ from adi.ad5754r import ad5754r
 from adi.ad5940 import ad5940
 from adi.ad6676 import ad6676
 from adi.ad7124 import ad7124
+from adi.ad7134 import ad7134
 from adi.ad7291 import ad7291
 from adi.ad7606 import ad7606
 from adi.ad7689 import ad7689
@@ -36,9 +44,9 @@ from adi.ad9152 import ad9152
 from adi.ad9162 import ad9162
 from adi.ad9166 import ad9166
 from adi.ad9172 import ad9172
+from adi.ad9213 import ad9213
 from adi.ad9250 import ad9250
 from adi.ad9265 import ad9265
-from adi.ad9371 import ad9371
 from adi.ad9434 import ad9434
 from adi.ad9467 import ad9467
 from adi.ad9625 import ad9625
@@ -54,8 +62,19 @@ from adi.adf5610 import adf5610
 from adi.adg2128 import adg2128
 from adi.adis16460 import adis16460
 from adi.adis16475 import adis16475
-from adi.adis16495 import adis16495
+from adi.adis16480 import (
+    adis16375,
+    adis16480,
+    adis16485,
+    adis16488,
+    adis16490,
+    adis16495,
+    adis16497,
+    adis16545,
+    adis16547,
+)
 from adi.adis16507 import adis16507
+from adi.adis16550 import adis16550
 from adi.adl5240 import adl5240
 from adi.adl5960 import adl5960
 from adi.admv8818 import admv8818
@@ -72,10 +91,13 @@ from adi.adt7420 import adt7420
 from adi.adxl313 import adxl313
 from adi.adxl345 import adxl345
 from adi.adxl355 import adxl355
+from adi.adxl380 import adxl380
 from adi.adxrs290 import adxrs290
 from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.cn0554 import cn0554
+from adi.cn0556 import cn0556
+from adi.cn0565 import cn0565
 from adi.cn0566 import CN0566
 from adi.cn0575 import cn0575
 from adi.cn0579 import cn0579
@@ -92,6 +114,8 @@ from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2387 import ltc2387
 from adi.ltc2499 import ltc2499
+from adi.ltc2664 import ltc2664
+from adi.ltc2672 import ltc2672
 from adi.ltc2688 import ltc2688
 from adi.ltc2983 import ltc2983
 from adi.max9611 import max9611
@@ -102,11 +126,12 @@ from adi.max31865 import max31865
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.tdd import tdd
+from adi.tddn import tddn
 
 try:
     from adi.jesd import jesd
 except ImportError:
     pass
 
-__version__ = "0.0.17"
+__version__ = "0.0.19"
 name = "Analog Devices Hardware Interfaces"

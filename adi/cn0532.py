@@ -1,4 +1,4 @@
-# Copyright (C) 2020-2023 Analog Devices, Inc.
+# Copyright (C) 2020-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -34,7 +34,7 @@ class cn0532(cn0540):
             if int(dac_voltage) > 2 ** 16 - 1:
                 print(
                     "Warning: DAC voltage at upper limit, "
-                    + f"calibration may not converge (Error: {e-(2**16-1)} codes).\n"
+                    + f"calibration may not converge (Error: {e - (2**16 - 1)} codes).\n"
                     + "Make sure sensor is connected."
                 )
                 dac_voltage = 2 ** 16 - 1

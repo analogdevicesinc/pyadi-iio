@@ -1,4 +1,4 @@
-# Copyright (C) 2020-2023 Analog Devices, Inc.
+# Copyright (C) 2020-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -47,6 +47,8 @@ class ad5754r(tx, context_manager):
             raise Exception("Error in selecting matching device")
 
         self.output_bits = []
+        self.channel = []
+        self._tx_channel_names = []
         for ch in self._ctrl.channels:
             name = ch.id
             self.output_bits.append(ch.data_format.bits)
@@ -128,6 +130,121 @@ class ad5754r(tx, context_manager):
         """Set sampling frequency"""
         self._set_iio_dev_attr_str("sampling_frequency", value)
 
+    @property
+    def clamp_enable(self):
+        """Get clamp_en setting"""
+        return self._get_iio_dev_attr_str("clamp_enable")
+
+    @property
+    def clamp_enable_available(self):
+        """Get list of all clamp_en settings"""
+        return self._get_iio_dev_attr_str("clamp_enable_available")
+
+    @clamp_enable.setter
+    def clamp_enable(self, value):
+        """Set clamp_en"""
+        if value in self.clamp_enable_available:
+            self._set_iio_dev_attr_str("clamp_enable", value)
+        else:
+            raise ValueError(
+                "Error: clamp_en setting not supported \nUse one of: "
+                + str(self.clamp_enable_available)
+            )
+
+    @property
+    def tsd_enable(self):
+        """Get tsd_en setting"""
+        return self._get_iio_dev_attr_str("tsd_enable")
+
+    @property
+    def tsd_enable_available(self):
+        """Get list of all tsd_en settings"""
+        return self._get_iio_dev_attr_str("tsd_enable_available")
+
+    @tsd_enable.setter
+    def tsd_enable(self, value):
+        """Set tsd_en"""
+        if value in self.tsd_enable_available:
+            self._set_iio_dev_attr_str("tsd_enable", value)
+        else:
+            raise ValueError(
+                "Error: tsd_en setting not supported \nUse one of: "
+                + str(self.tsd_enable_available)
+            )
+
+    @property
+    def oc_tsd(self):
+        """Get oc_tsd status"""
+        return self._get_iio_dev_attr_str("oc_tsd")
+
+    @property
+    def oc_tsd_available(self):
+        """Get list of all possible oc_tsd status"""
+        return self._get_iio_dev_attr_str("oc_tsd_available")
+
+    @property
+    def all_chns_clear(self):
+        """Get current all_chns_clear setting"""
+        return self._get_iio_dev_attr_str("all_chns_clear")
+
+    @property
+    def all_chns_clear_available(self):
+        """Get list of all all_chns_clear settings"""
+        return self._get_iio_dev_attr_str("all_chns_clear_available")
+
+    @all_chns_clear.setter
+    def all_chns_clear(self, value):
+        """Clear all channels"""
+        if value in self.all_chns_clear_available:
+            self._set_iio_dev_attr_str("all_chns_clear", value)
+        else:
+            raise ValueError(
+                "Error: all_chns_clear setting not supported \nUse one of: "
+                + str(self.all_chns_clear_available)
+            )
+
+    @property
+    def sw_ldac_trigger(self):
+        """Get sw_ldac_trigger setting"""
+        return self._get_iio_dev_attr_str("all_chns_clear")
+
+    @property
+    def sw_ldac_trigger_available(self):
+        """Get list of all sw_ldac_trigger settings"""
+        return self._get_iio_dev_attr_str("sw_ldac_trigger_available")
+
+    @sw_ldac_trigger.setter
+    def sw_ldac_trigger(self, value):
+        """Trigger software LDAC"""
+        if value in self.sw_ldac_trigger_available:
+            self._set_iio_dev_attr_str("sw_ldac_trigger", value)
+        else:
+            raise ValueError(
+                "Error: sw_ldac_trigger setting not supported \nUse one of: "
+                + str(self.sw_ldac_trigger_available)
+            )
+
+    @property
+    def hw_ldac_trigger(self):
+        """Get hw_ldac_trigger setting"""
+        return self._get_iio_dev_attr_str("hw_ldac_trigger")
+
+    @property
+    def hw_ldac_trigger_available(self):
+        """Get list of all hw_ldac_trigger settings"""
+        return self._get_iio_dev_attr_str("hw_ldac_trigger_available")
+
+    @hw_ldac_trigger.setter
+    def hw_ldac_trigger(self, value):
+        """Trigger hardware LDAC"""
+        if value in self.hw_ldac_trigger_available:
+            self._set_iio_dev_attr_str("hw_ldac_trigger", value)
+        else:
+            raise ValueError(
+                "Error: hw_ldac_trigger setting not supported \nUse one of: "
+                + str(self.hw_ldac_trigger_available)
+            )
+
     class _channel(attribute):
         """AD5754R channel"""
 
@@ -207,3 +324,15 @@ class ad5754r(tx, context_manager):
                     "Error: range setting not supported \nUse one of: "
                     + str(self.range_available)
                 )
+
+        @property
+        def dac_register(self):
+            """Get dac_register value"""
+            return self._get_iio_attr_str(self.name, "dac_register", True)
+
+        @dac_register.setter
+        def dac_register(self, value):
+            """Set dac_register value"""
+            self._set_iio_attr(
+                self.name, "dac_register", True, str(Decimal(value).real)
+            )

@@ -2,8 +2,9 @@
 #
 # SPDX short identifier: ADIBSD
 
-import adi
 import numpy as np
+
+import adi
 
 ad719x_dev = adi.ad719x("ip:analog")
 

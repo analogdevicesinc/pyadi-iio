@@ -1,7 +1,6 @@
-sphinx>=2.0
-sphinx-rtd-theme
+sphinx>=5.0
 myst-parser
-furo
-sphinx-favicon
+https://github.com/analogdevicesinc/doctools/releases/download/latest/adi-doctools.tar.gz
 sphinxcontrib-mermaid
+sphinx-simplepdf
 pillow

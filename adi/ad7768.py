@@ -1,8 +1,9 @@
-# Copyright (C) 2020-2023 Analog Devices, Inc.
+# Copyright (C) 2020-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
 import numpy as np
+
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 
@@ -35,6 +36,7 @@ class ad7768(rx, context_manager):
         if not self._rxadc:
             raise Exception("Error in selecting matching device")
 
+        self._rx_channel_names = []
         for ch in self._rxadc.channels:
             name = ch._id
             self._rx_channel_names.append(name)

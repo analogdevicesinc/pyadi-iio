@@ -2,10 +2,11 @@
 #
 # SPDX short identifier: ADIBSD
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 
 def gen_tone(fc, fs, N):

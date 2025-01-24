@@ -1,9 +1,11 @@
-# Copyright (C) 2022-2023 Analog Devices, Inc.
+# Copyright (C) 2022-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
+from decimal import Decimal
 
 import numpy as np
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
@@ -25,8 +27,9 @@ class ad4630(rx, context_manager, attribute):
 
     """ AD4630 is low power 24-bit precision SAR ADC """
 
+    _compatible_parts = ["ad4630-24", "ad4030-24", "ad4630-16"]
     _complex_data = False
-    _data_type = "voltage"
+    _data_type = np.uint32
     _device_name = ""
     _rx_channel_names = []
 
@@ -36,14 +39,12 @@ class ad4630(rx, context_manager, attribute):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad4630-24", "ad4030-24", "ad4630-16"]
-
-        if device_name not in compatible_parts:
+        if device_name not in self._compatible_parts:
             raise Exception(
                 "Not a compatible device: "
                 + str(device_name)
                 + ". Please select from "
-                + str(compatible_parts)
+                + str(self.self._compatible_parts)
             )
         else:
             self._ctrl = self._ctx.find_device(device_name)
@@ -54,23 +55,16 @@ class ad4630(rx, context_manager, attribute):
         for ch in self._ctrl.channels:
             self.output_bits.append(ch.data_format.bits)
             self._rx_channel_names.append(ch.id)
-            if "differential" in ch.name:
-                _channels.append((ch.id, self._diff_channel(self._ctrl, ch.id)))
-                if "0" in ch.name:
-                    self.chan0 = self._diff_channel(self._ctrl, ch.name)
-                if "1" in ch.name:
-                    self.chan1 = self._diff_channel(self._ctrl, ch.name)
+            _channels.append((ch.id, self._channel(self._ctrl, ch.id)))
+            if "0" in ch.id:
+                self.chan0 = self._channel(self._ctrl, ch.id)
+            if "1" in ch.id:
+                self.chan1 = self._channel(self._ctrl, ch.id)
 
         rx.__init__(self)
 
     def rx(self):
-
-        if not self._rx__rxbuf:
-            self._rx_init_channels()
-        self._rx__rxbuf.refill()
-        buff = np.frombuffer(self._rx__rxbuf.read(), dtype=np.uint32)
-
-        data = [buff[0::2], buff[1::2]]
+        data = self._rx_buffered_data()
         temp = []
         if self._num_rx_channels != 2:
             for ch in range(0, self._num_rx_channels):
@@ -108,45 +102,13 @@ class ad4630(rx, context_manager, attribute):
 
     @property
     def sample_rate(self):
-        """Get/Set the sampling frequency."""
+        """Get the sampling frequency."""
         return self._get_iio_dev_attr("sampling_frequency")
 
     @sample_rate.setter
     def sample_rate(self, rate):
-        """Get/Set the sampling frequency."""
-        if str(rate) in str(self.sample_rate_avail):
-            self._set_iio_dev_attr("sampling_frequency", str(rate))
-        else:
-            raise ValueError(
-                "Error: Sample rate not supported \nUse one of: "
-                + str(self.sample_rate_avail)
-            )
-
-    @property
-    def sample_rate_avail(self):
-        """Get list of all the sampling frequency available."""
-        return self._get_iio_dev_attr("sampling_frequency_available")
-
-    @property
-    def operating_mode_avail(self):
-        """Get list of all the operating mode available."""
-        return self._get_iio_dev_attr_str("operating_mode_available")
-
-    @property
-    def operating_mode(self):
-        """Get/Set the operating mode."""
-        return self._get_iio_dev_attr_str("operating_mode")
-
-    @operating_mode.setter
-    def operating_mode(self, mode):
-        """Get/Set the operating mode."""
-        if mode in self.operating_mode_avail:
-            self._set_iio_dev_attr_str("operating_mode", mode)
-        else:
-            raise ValueError(
-                "Error: Operating mode not supported \nUse one of: "
-                + str(self.operating_mode_avail)
-            )
+        """Set the sampling frequency."""
+        self._set_iio_dev_attr("sampling_frequency", str(rate))
 
     @property
     def sample_averaging_avail(self):
@@ -155,12 +117,12 @@ class ad4630(rx, context_manager, attribute):
 
     @property
     def sample_averaging(self):
-        """Get/Set the sample averaging. Only available in 30bit averaged mode."""
+        """Get the sample averaging. Only available in 30bit averaged mode."""
         return self._get_iio_dev_attr_str("sample_averaging")
 
     @sample_averaging.setter
     def sample_averaging(self, n_sample):
-        """Get/Set the sample averaging. Only available in 30bit averaged mode."""
+        """Set the sample averaging. Only available in 30bit averaged mode."""
         if str(self.sample_averaging) != "OFF":
             if str(n_sample) in str(self.sample_averaging_avail):
                 self._set_iio_dev_attr("sample_averaging", str(n_sample))
@@ -172,7 +134,7 @@ class ad4630(rx, context_manager, attribute):
         else:
             raise Exception("Sample Averaging only available in 30bit averaged mode.")
 
-    class _diff_channel(attribute):
+    class _channel(attribute):
         """AD4x30 differential channel."""
 
         def __init__(self, ctrl, channel_name):
@@ -180,21 +142,50 @@ class ad4630(rx, context_manager, attribute):
             self._ctrl = ctrl
 
         @property
-        def hw_gain(self):
-            """Get/Set the hardwaregain of differential channel."""
-            return self._get_iio_attr(self.name, "hardwaregain", False)
+        def calibbias(self):
+            """Get calibration bias/offset value."""
+            return self._get_iio_attr(self.name, "calibbias", False, self._ctrl)
 
-        @hw_gain.setter
-        def hw_gain(self, gain):
-            """Get/Set the hardwaregain of differential channel."""
-            self._set_iio_attr(self.name, "hardwaregain", False, int(gain))
+        @calibbias.setter
+        def calibbias(self, calibbias):
+            """Set calibration bias/offset value."""
+            self._set_iio_attr(
+                self.name, "calibbias", False, int(calibbias), self._ctrl
+            )
 
         @property
-        def offset(self):
-            """Get/Set the offset of differential channel."""
-            return self._get_iio_attr(self.name, "offset", False, self._ctrl)
+        def calibscale(self):
+            """Get calibration scale value."""
+            return self._get_iio_attr(self.name, "calibscale", False, self._ctrl)
 
-        @offset.setter
-        def offset(self, offset):
-            """Get/Set the offset of differential channel."""
-            self._set_iio_attr(self.name, "offset", False, int(offset), self._ctrl)
+        @calibscale.setter
+        def calibscale(self, calibscale):
+            """Set calibration scale value."""
+            self._set_iio_attr(self.name, "calibscale", False, calibscale, self._ctrl)
+
+
+class adaq42xx(ad4630):
+
+    """ ADAQ4224 is a 24-bit precision SAR ADC data acquisition module """
+
+    _compatible_parts = ["adaq4224", "adaq4216", "adaq4220"]
+
+    def __init__(self, uri="", device_name="adaq4224"):
+        super().__init__(uri, device_name)
+
+    class _channel(ad4630._channel):
+        """ADAQ42xx differential channel."""
+
+        @property
+        def scale_available(self):
+            """Provides all available scale(gain) settings for the ADAQ42xx channel"""
+            return self._get_iio_attr(self.name, "scale_available", False)
+
+        @property
+        def scale(self):
+            """ADAQ42xx channel scale"""
+            return float(self._get_iio_attr_str(self.name, "scale", False))
+
+        @scale.setter
+        def scale(self, value):
+            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))

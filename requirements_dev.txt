@@ -5,13 +5,14 @@ pre-commit
 isort
 pytest>=4.6
 scapy
-scipy
+scipy<=1.12.0
 pytest-cov
 coveralls
-pytest-libiio==0.0.13
+pytest-libiio>=0.0.20
 bump2version
-pytest-html
+pytest-html==3.2.0
 plotly-express
 pyvisa
 matplotlib
 pytoml
+pytest-xdist

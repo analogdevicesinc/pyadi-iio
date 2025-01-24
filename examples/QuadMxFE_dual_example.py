@@ -5,10 +5,11 @@
 import time
 from datetime import datetime
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 
 def measure_phase_and_delay(chan0, chan1, window=None):
@@ -149,7 +150,7 @@ for dev in multi.secondaries + [multi.primary]:
     dev.tx_main_nco_frequencies = [3000000000] * NM_TX
 
     dev.rx_enabled_channels = RX_CHAN_EN
-    dev.tx_enabled_channels = [1] * N_TX
+    dev.tx_enabled_channels = [*range(N_TX)]
     dev.rx_nyquist_zone = ["even"] * NM_TX
 
     dev.rx_buffer_size = 2 ** 12

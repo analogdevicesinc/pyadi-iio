@@ -9,14 +9,14 @@ from numpy import floor
 hardware = "adrv9002"
 classname = "adi.adrv9002"
 profile_path = dirname(realpath(__file__)) + "/adrv9002_profiles/"
-nco_test_profile = profile_path + "lte_10_lvds_nco_api_68_0_6.json"
-nco_test_stream = profile_path + "lte_10_lvds_nco_api_68_0_6.stream"
-lte_20_lvds_profile = profile_path + "lte_20_lvds_api_68_0_6.json"
-lte_20_lvds_stream = profile_path + "lte_20_lvds_api_68_0_6.stream"
-lte_40_lvds_profile = profile_path + "lte_40_lvds_api_68_0_6.json"
-lte_40_lvds_stream = profile_path + "lte_40_lvds_api_68_0_6.stream"
-lte_5_cmos_profile = profile_path + "lte_5_cmos_api_68_0_6.json"
-lte_5_cmos_stream = profile_path + "lte_5_cmos_api_68_0_6.stream"
+nco_test_profile = profile_path + "lte_10_lvds_nco_api_68_14_10.json"
+nco_test_stream = profile_path + "lte_10_lvds_nco_api_68_14_10.stream"
+lte_20_lvds_profile = profile_path + "lte_20_lvds_api_68_14_10.json"
+lte_20_lvds_stream = profile_path + "lte_20_lvds_api_68_14_10.stream"
+lte_40_lvds_profile = profile_path + "lte_40_lvds_api_68_14_10.json"
+lte_40_lvds_stream = profile_path + "lte_40_lvds_api_68_14_10.stream"
+lte_5_cmos_profile = profile_path + "lte_5_cmos_api_68_14_10.json"
+lte_5_cmos_stream = profile_path + "lte_5_cmos_api_68_14_10.stream"
 
 
 def random_values_in_range(start, stop, step, to_generate=1):
@@ -94,9 +94,9 @@ def test_adrv9002_float_attr(
     ],
 )
 def test_adrv9002_hardware_gain(
-    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
+    test_attribute_multiple_values_with_depends, iio_uri, classname, attr, depends, val
 ):
-    test_attribute_multipe_values_with_depends(
+    test_attribute_multiple_values_with_depends(
         iio_uri, classname, attr, depends, val, 0
     )
 
@@ -138,9 +138,9 @@ def test_adrv9002_hardware_gain(
     ],
 )
 def test_adrv9002_boolean_attr(
-    test_attribute_multipe_values, iio_uri, classname, attr, val
+    test_attribute_multiple_values, iio_uri, classname, attr, val
 ):
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0)
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0)
 
 
 #########################################
@@ -166,10 +166,10 @@ def test_adrv9002_boolean_attr(
     ],
 )
 def test_adrv9002_str_attr(
-    test_attribute_multipe_values, iio_uri, classname, attr, val
+    test_attribute_multiple_values, iio_uri, classname, attr, val
 ):
     sleep = 3 if "ensm_mode" in attr else 0
-    test_attribute_multipe_values(iio_uri, classname, attr, val, 0, sleep=sleep)
+    test_attribute_multiple_values(iio_uri, classname, attr, val, 0, sleep=sleep)
 
 
 #########################################
@@ -198,7 +198,7 @@ def test_adrv9002_str_attr(
     ],
 )
 def test_adrv9002_interface_gain_narrowband(
-    test_attribute_multipe_values_with_depends, iio_uri, classname, attr, depends, val
+    test_attribute_multiple_values_with_depends, iio_uri, classname, attr, depends, val
 ):
     from adi.adrv9002 import adrv9002
 
@@ -214,7 +214,7 @@ def test_adrv9002_interface_gain_narrowband(
                 "Baseband RX2 Sample Rate should be less than 1MHz to run this test."
             )
 
-    test_attribute_multipe_values_with_depends(
+    test_attribute_multiple_values_with_depends(
         iio_uri, classname, attr, depends, val, 0
     )
 
@@ -223,7 +223,7 @@ def test_adrv9002_interface_gain_narrowband(
 @pytest.mark.lvds_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr", ["profile"])
+@pytest.mark.parametrize("attr", ["write_profile"])
 @pytest.mark.parametrize(
     "profile_file, depends",
     [
@@ -248,7 +248,7 @@ def test_adrv9002_profile_write(
 @pytest.mark.lvds_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr", ["profile"])
+@pytest.mark.parametrize("attr", ["write_profile"])
 @pytest.mark.parametrize(
     "profile_file, depends", [(nco_test_profile, {"write_stream": nco_test_stream})]
 )
@@ -269,7 +269,7 @@ def test_adrv9002_nco_write_profile(
 @pytest.mark.cmos_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("attr", ["profile"])
+@pytest.mark.parametrize("attr", ["write_profile"])
 @pytest.mark.parametrize(
     "profile_file, depends", [(lte_5_cmos_profile, {"write_stream": lte_5_cmos_stream})]
 )

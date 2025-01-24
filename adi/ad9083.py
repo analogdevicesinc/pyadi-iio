@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2023 Analog Devices, Inc.
+# Copyright (C) 2021-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -25,12 +25,13 @@ class ad9083(sync_start, rx, context_manager):
         if not self._rxadc:
             raise Exception("Cannot find device axi-ad9083-rx-hpc")
 
+        self._rx_channel_names = []
         for ch in self._rxadc.channels:
             if ch.scan_element and not ch.output:
                 self._rx_channel_names.append(ch._id)
 
         for name in self._rx_channel_names:
-            if "_i" or "_q" in name:
+            if any(ext in name for ext in ["_i", "_q"]):
                 self._complex_data = True
 
         rx.__init__(self)

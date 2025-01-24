@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Analog Devices, Inc.
+# Copyright (C) 2023-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -14,7 +14,7 @@ from adi.sync_start import sync_start
 
 
 def _map_to_dict(paths, ch, dev_name):
-    if "label" in ch.attrs and "buffer_only" in ch.attrs["label"].value:
+    if "->" not in ch.attrs["label"].value:
         return paths, False
     side, fddc, cddc, adc = ch.attrs["label"].value.replace(":", "->").split("->")
     if dev_name not in paths.keys():
@@ -99,14 +99,20 @@ class ad9084_mc(ad9084):
     _dds_channel_names: List[str] = []
     _device_name = ""
 
-    _rx_attr_only_channel_names: List[str] = []
-    _tx_attr_only_channel_names: List[str] = []
-
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
     def __init__(self, uri="", phy_dev_name=""):
 
+        # Reset class variables
+        self._tx_channel_names: List[str] = []
+        self._tx_control_channel_names: List[str] = []
+        self._rx_coarse_ddc_channel_names: List[str] = []
+        self._tx_coarse_duc_channel_names: List[str] = []
+        self._rx_fine_ddc_channel_names: List[str] = []
+        self._tx_fine_duc_channel_names: List[str] = []
+        self._dds_channel_names: List[str] = []
         self._rx_channel_names: List[str] = []
+
         context_manager.__init__(self, uri, self._device_name)
 
         if not phy_dev_name:

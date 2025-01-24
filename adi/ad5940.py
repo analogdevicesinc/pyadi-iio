@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2023 Analog Devices, Inc.
+# Copyright (C) 2021-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -33,6 +33,7 @@ class ad5940(rx, context_manager):
                 break
         # dynamically get channels
         _channels = []
+        self._rx_channel_names = []
         for ch in self._ctrl.channels:
             self._rx_channel_names.append(ch.id)
             if ch.name == "bia":

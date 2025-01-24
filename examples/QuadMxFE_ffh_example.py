@@ -5,12 +5,13 @@
 import time
 from datetime import datetime
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import signal
+
+import adi
 from adi.gen_mux import genmux
 from adi.one_bit_adc_dac import one_bit_adc_dac
-from scipy import signal
 
 
 def measure_phase_and_delay(chan0, chan1, window=None):
@@ -138,7 +139,7 @@ for i in range(N_NCOS):
 
 dev._rxadc.set_kernel_buffers_count(1)
 dev.rx_enabled_channels = RX_CHAN_EN
-dev.tx_enabled_channels = [1] * N_TX
+dev.tx_enabled_channels = [*range(N_TX)]
 dev.rx_nyquist_zone = ["even"] * NM_TX
 
 dev.rx_buffer_size = 2 ** 12

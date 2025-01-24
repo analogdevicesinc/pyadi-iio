@@ -3,10 +3,10 @@ import time
 from test.globals import *
 
 import iio
-
-import adi
 import numpy as np
 import pytest
+
+import adi
 
 
 def pytest_configure(config):
@@ -25,7 +25,9 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "obs_required: mark tests that require observation data paths"
     )
-    config.addinivalue_line("markers", "no_os_test: mark tests that run on No-OS")
+    config.addinivalue_line(
+        "markers", "no_obs_required: mark tests that require observation data paths"
+    )
     config.addinivalue_line("markers", "lvds_test: mark tests for LVDS")
     config.addinivalue_line("markers", "cmos_test: mark tests for CMOS")
 
@@ -77,12 +79,8 @@ def pytest_runtest_setup(item):
         pytest.skip(
             "Testing requiring observation disabled. Use --obs-enable flag to enable"
         )
-
-    # Handle No-OS devices
-    no_os = item.config.getoption("--no-os")
-    marks = [mark.name for mark in item.iter_markers()]
-    if not no_os and "no_os_test" in marks:
-        pytest.skip("No-OS tests disabled. Use --no-os flag to enable")
+    if obs and "no_obs_required" in marks:
+        pytest.skip("Testing requiring observation enabled. Skipping this test")
 
     # Handle CMOS and LVDS tests
     cmos = item.config.getoption("--cmos")
@@ -107,7 +105,9 @@ def pytest_generate_tests(metafunc):
 
 
 #################################################
-def dev_interface(uri, classname, val, attr, tol, sub_channel=None, sleep=0):
+def dev_interface(
+    uri, classname, val, attr, tol, sub_channel=None, sleep=0, readonly=False
+):
     sdr = eval(classname + "(uri='" + uri + "')")
     # Check hardware
     if not hasattr(sdr, attr):
@@ -124,10 +124,16 @@ def dev_interface(uri, classname, val, attr, tol, sub_channel=None, sleep=0):
         time.sleep(sleep)
     rval = getattr(sdr, attr)
 
-    del sdr
-
     if not isinstance(rval, str) and not is_list:
         rval = float(rval)
+        for _ in range(5):
+            setattr(sdr, attr, val)
+            time.sleep(0.3)
+            rval = float(getattr(sdr, attr))
+            if rval == val:
+                break
+
+    del sdr
 
     if is_list and isinstance(rval[0], str):
         return val == rval
@@ -148,7 +154,7 @@ def dev_interface(uri, classname, val, attr, tol, sub_channel=None, sleep=0):
 
 
 def dev_interface_sub_channel(
-    uri, classname, sub_channel, val, attr, tol, readonly=False
+    uri, classname, sub_channel, val, attr, tol, readonly=False, sleep=0,
 ):
     sdr = eval(classname + "(uri='" + uri + "')")
     # Check hardware
@@ -165,6 +171,8 @@ def dev_interface_sub_channel(
 
     if readonly is False:
         setattr(getattr(sdr, sub_channel), attr, val)
+        if sleep > 0:
+            time.sleep(sleep)
     rval = getattr(getattr(sdr, sub_channel), attr)
 
     del sdr
@@ -183,3 +191,80 @@ def dev_interface_sub_channel(
             print(f"Got: {str(rval)}")
         return abs_val <= tol
     return val == str(rval)
+
+
+def dev_interface_device_name_channel(
+    uri,
+    classname,
+    device_name,
+    channel,
+    val,
+    attr,
+    tol,
+    sub_channel=None,
+    sleep=0.3,
+    readonly=False,
+):
+    """dev_interface_device_name_channel:
+    Includes device name and channel in the source to be evaluated
+    """
+
+    sdr = eval(
+        classname
+        + "(uri='"
+        + uri
+        + "', device_name='"
+        + device_name
+        + "').channel['"
+        + channel
+        + "']"
+    )
+    # Check hardware
+    if not hasattr(sdr, attr):
+        raise AttributeError(attr + " not defined in " + classname)
+
+    rval = getattr(sdr, attr)
+    is_list = isinstance(rval, list)
+    if is_list:
+        l = len(rval)
+        val = [val] * l
+
+    setattr(sdr, attr, val)
+    if sleep > 0:
+        time.sleep(sleep)
+    rval = getattr(sdr, attr)
+
+    if not isinstance(rval, str) and not is_list:
+        rval = float(rval)
+        for _ in range(5):
+            setattr(sdr, attr, val)
+            time.sleep(0.3)
+            rval = float(getattr(sdr, attr))
+            if rval == val:
+                break
+    else:
+        for _ in range(2):
+            setattr(sdr, attr, val)
+            time.sleep(0.3)
+            rval = str(getattr(sdr, attr))
+            if rval == val:
+                break
+
+    del sdr
+
+    if is_list and isinstance(rval[0], str):
+        return val == rval
+
+    if not isinstance(val, str):
+        abs_val = np.max(abs(np.array(val) - np.array(rval)))
+        if abs_val > tol:
+            print(f"Failed to set1: {attr}")
+            print(f"Set: {str(val)}")
+            print(f"Got: {str(rval)}")
+        return abs_val <= tol
+    else:
+        if val != str(rval):
+            print(f"Failed to set: {attr}")
+            print(f"Set: {val}")
+            print(f"Got: {rval}")
+        return val == str(rval)

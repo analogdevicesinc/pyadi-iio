@@ -1,6 +1,7 @@
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
+
+import adi
 
 uri = "ip:analog"
 captures = 100

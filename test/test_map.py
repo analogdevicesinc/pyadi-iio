@@ -91,6 +91,10 @@ def get_test_map():
         "zynq-zc706-adv7511-adrv9375",
         "zynqmp-zcu102-rev10-adrv9375",
     ]
+    test_map["adrv9375"] = [
+        "zynq-zc706-adv7511-adrv9375",
+        "zynqmp-zcu102-rev10-adrv9375",
+    ]
     test_map["adrv9009"] = [
         "socfpga_arria10_socdk_adrv9009",
         "zynqmp-zcu102-rev10-adrv9008-1",
@@ -99,6 +103,7 @@ def get_test_map():
         "zynq-zc706-adv7511-adrv9009",
         "zynq-zc706-adv7511-adrv9008-1",
         "zynq-zc706-adv7511-adrv9008-2",
+        "zynqmp_adrv9009_zu11eg_revb_adrv2crr_fmc_revb",
     ]
     test_map["zu11eg"] = [
         "zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb",
@@ -166,7 +171,7 @@ def get_test_map():
         "socfpga-arria10-socdk-ad9081-np12",
         "versal-vck190-reva-ad9081",
         "zynq-zc706-adv7511-ad9081",
-        "zynq-zc706-adv7511-ad9081-np12"
+        "zynq-zc706-adv7511-ad9081-np12",
         "zynqmp-zcu102-rev10-ad9081-204b-txmode9-rxmode4",
         "zynqmp-zcu102-rev10-ad9081-204c-txmode0-rxmode1",
         "zynqmp-zcu102-rev10-ad9081-m8-l4",

@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023 Analog Devices, Inc.
+# Copyright (C) 2022-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -7,31 +7,32 @@ from adi.context_manager import context_manager
 
 
 class ad5592r(context_manager):
-    """AD5592R and AD5593R SPI / I2C interface,
-       8-channel, 12-bit Confiburable ADC/DAC, digital GPIO"""
+    """AD5592R and AD5593R SPI / I2C interface, 8-channel, 12-bit Confiburable ADC/DAC, digital GPIO
+
+    Analog I/O pins are configured in the device tree and can be ADC, DAC, or both. Channel attributes are as follows, where X corresponds to device channel number:
+        voltageX_adc.raw:              Raw 12-bit ADC code. read only for ADC channels\n
+        voltageX_adc.scale:            ADC scale, millivolts per lsb\n
+        voltageX_adc.scale_available:  Available scales, corresponding to Vref*1, Vref*2\n
+        voltageX():                    Returns ADC reading in millivolts (read only)\n
+        voltageX_dac.raw:              Raw 12-bit DAC code. read/write for DAC channels\n
+        voltageX_dac.scale:            ADC scale, millivolts per lsb\n
+        voltageX_dac.scale_available:  Available scales (corresponding to 1X/2X gain)\n
+        voltageX(1234.5):              Sets/Returns ADC reading in millivolts\n
+        temp.raw:                      Temperature raw value\n
+        temp.scale:                    Temperature scale value\n
+        temp.offset                    Temperature offset value\n
+        temp():                        Returns temperature in degrees Celsius\n
+    """
 
     _device_name = ""
 
     def __repr__(self):
         retstr = f"""
-ad5592r(uri="{self.uri}") object "{self._device_name}"
-Analog I/O pins are configured in the device tree and can be ADC, DAC, or both.
-Channel attributes are as follows, where X corresponds to device channel number:
+ad5592r(uri="{self.uri}, device_name={self._device_name})"
 
-voltageX_adc.raw:              Raw 12-bit ADC code. read only for ADC channels
-voltageX_adc.scale:            ADC scale, millivolts per lsb
-voltageX_adc.scale_available:  Available scales, corresponding to Vref*1, Vref*2
-voltageX():                    Returns ADC reading in millivolts (read only)
-voltageX_dac.raw:              Raw 12-bit DAC code. read/write for DAC channels
-voltageX_dac.scale:            ADC scale, millivolts per lsb
-voltageX_dac.scale_available:  Available scales (corresponding to 1X/2X gain)
-voltageX(1234.5):              Sets/Returns ADC reading in millivolts
-temp.raw:                      Temperature raw value
-temp.scale:                    Temperature scale value
-temp.offset                    Temperature offset value
-temp():                        Returns temperature in degrees Celsius
-
+{self.__doc__}
 """
+
         return retstr
 
     def __init__(self, uri="", device_name=""):
@@ -62,18 +63,18 @@ temp():                        Returns temperature in degrees Celsius
             name = ch._id
             output = ch._output
             if name == "temp":
-                setattr(self, name, self._channel_temp(self._ctrl, name, output))
+                setattr(self, name, self.channel_temp(self._ctrl, name, output))
             else:
                 if output is True:
                     setattr(
-                        self, name + "_dac", self._channel_dac(self._ctrl, name, output)
+                        self, name + "_dac", self.channel_dac(self._ctrl, name, output)
                     )
                 else:
                     setattr(
-                        self, name + "_adc", self._channel_adc(self._ctrl, name, output)
+                        self, name + "_adc", self.channel_adc(self._ctrl, name, output)
                     )
 
-    class _channel_adc(attribute):
+    class channel_adc(attribute):
         """AD5592R Input Voltage Channels"""
 
         # AD559XR ADC channel
@@ -117,7 +118,7 @@ temp():                        Returns temperature in degrees Celsius
                 self.raw = int(float(mV) / float(self.scale))
             return self.raw * self.scale
 
-    class _channel_dac(_channel_adc):
+    class channel_dac(channel_adc):
         """AD5592R Output Voltage Channels
         (Add setter to raw property)"""
 
@@ -134,7 +135,7 @@ temp():                        Returns temperature in degrees Celsius
         def raw(self, value):
             self._set_iio_attr(self.name, "raw", self._output, value)
 
-    class _channel_temp(attribute):
+    class channel_temp(attribute):
         """AD5592R Temperature Channel"""
 
         # AD559XR voltage channel

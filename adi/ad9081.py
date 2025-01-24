@@ -1,11 +1,11 @@
-# Copyright (C) 2020-2023 Analog Devices, Inc.
+# Copyright (C) 2020-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
 from typing import Dict, List
 
 from adi.context_manager import context_manager
-from adi.rx_tx import rx_tx
+from adi.rx_tx import are_channels_complex, rx_tx
 from adi.sync_start import sync_start
 
 
@@ -22,9 +22,13 @@ def _map_to_dict(paths, ch):
     return paths
 
 
-def _sortconv(chans_names, noq=False, dds=False):
+def _sortconv(chans_names, noq=False, dds=False, complex=False):
     tmpI = filter(lambda k: "_i" in k, chans_names)
     tmpQ = filter(lambda k: "_q" in k, chans_names)
+
+    assert not (
+        dds and complex
+    ), "DDS channels cannot have complex names (voltageX_i, voltageX_q)"
 
     def ignoreadc(w):
         return int(w[len("voltage") : w.find("_")])
@@ -32,9 +36,16 @@ def _sortconv(chans_names, noq=False, dds=False):
     def ignorealt(w):
         return int(w[len("altvoltage") :])
 
+    def ignorevoltage(w):
+        return int(w[len("voltage") :])
+
     chans_names_out = []
     if dds:
         filt = ignorealt
+        tmpI = chans_names
+        noq = True
+    elif not complex:
+        filt = ignorevoltage
         tmpI = chans_names
         noq = True
     else:
@@ -64,12 +75,19 @@ class ad9081(rx_tx, context_manager, sync_start):
     _dds_channel_names: List[str] = []
     _device_name = ""
 
-    _rx_attr_only_channel_names: List[str] = []
-    _tx_attr_only_channel_names: List[str] = []
-
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
     def __init__(self, uri=""):
+
+        # Reset default channel names
+        self._rx_channel_names = []
+        self._tx_channel_names = []
+        self._tx_control_channel_names = []
+        self._rx_coarse_ddc_channel_names = []
+        self._tx_coarse_duc_channel_names = []
+        self._rx_fine_ddc_channel_names = []
+        self._tx_fine_duc_channel_names = []
+        self._dds_channel_names = []
 
         context_manager.__init__(self, uri, self._device_name)
         # Default device for attribute writes
@@ -77,6 +95,12 @@ class ad9081(rx_tx, context_manager, sync_start):
         # Devices with buffers
         self._rxadc = self._ctx.find_device("axi-ad9081-rx-hpc")
         self._txdac = self._ctx.find_device("axi-ad9081-tx-hpc")
+
+        # Update Complex data flags
+        if self._rx_complex_data is None:
+            self._rx_complex_data = are_channels_complex(self._rxadc.channels)
+        if self._tx_complex_data is None:
+            self._tx_complex_data = are_channels_complex(self._txdac.channels)
 
         # Get DDC and DUC mappings
         paths = {}
@@ -97,8 +121,12 @@ class ad9081(rx_tx, context_manager, sync_start):
                 self._dds_channel_names.append(ch._id)
 
         # Sort channel names
-        self._rx_channel_names = _sortconv(self._rx_channel_names)
-        self._tx_channel_names = _sortconv(self._tx_channel_names)
+        self._rx_channel_names = _sortconv(
+            self._rx_channel_names, complex=self._rx_complex_data
+        )
+        self._tx_channel_names = _sortconv(
+            self._tx_channel_names, complex=self._tx_complex_data
+        )
         self._dds_channel_names = _sortconv(self._dds_channel_names, dds=True)
 
         # Map unique attributes to channel properties
@@ -111,7 +139,9 @@ class ad9081(rx_tx, context_manager, sync_start):
                 channels = []
                 for fdc in paths[converter][cdc]:
                     channels += paths[converter][cdc][fdc]["channels"]
-                channels = [name for name in channels if "_i" in name]
+                channels = [
+                    name for name in channels if "_q" not in name and "voltage" in name
+                ]
                 if "ADC" in converter:
                     self._rx_coarse_ddc_channel_names.append(channels[0])
                     self._rx_fine_ddc_channel_names += channels
@@ -131,13 +161,13 @@ class ad9081(rx_tx, context_manager, sync_start):
         # This is overridden by subclasses
         return self._set_iio_attr(channel_name, attr, output, value)
 
-    def _get_iio_attr_single(self, channel_name, attr, output):
+    def _get_iio_attr_single(self, channel_name, attr, output, _ctrl=None):
         # This is overridden by subclasses
-        return self._get_iio_attr(channel_name, attr, output)
+        return self._get_iio_attr(channel_name, attr, output, _ctrl)
 
-    def _set_iio_attr_single(self, channel_name, attr, output, value):
+    def _set_iio_attr_single(self, channel_name, attr, output, value, _ctrl=None):
         # This is overridden by subclasses
-        return self._set_iio_attr(channel_name, attr, output, value)
+        return self._set_iio_attr(channel_name, attr, output, value, _ctrl)
 
     def _get_iio_dev_attr_single(self, attr):
         # This is overridden by subclasses
@@ -229,12 +259,14 @@ class ad9081(rx_tx, context_manager, sync_start):
     @property
     def rx_test_mode(self):
         """rx_test_mode: NCO Test Mode"""
-        return self._get_iio_attr_str_single("voltage0_i", "test_mode", False)
+        return self._get_iio_attr_str_single(
+            self._rx_coarse_ddc_channel_names[0], "test_mode", False
+        )
 
     @rx_test_mode.setter
     def rx_test_mode(self, value):
         self._set_iio_attr_single(
-            "voltage0_i", "test_mode", False, value,
+            self._rx_coarse_ddc_channel_names[0], "test_mode", False, value,
         )
 
     @property
@@ -610,22 +642,33 @@ class ad9081(rx_tx, context_manager, sync_start):
     @property
     def rx_sample_rate(self):
         """rx_sampling_frequency: Sample rate after decimation"""
-        return self._get_iio_attr_single("voltage0_i", "sampling_frequency", False)
+        return self._get_iio_attr_single(
+            self._rx_coarse_ddc_channel_names[0], "sampling_frequency", False
+        )
 
     @property
     def adc_frequency(self):
         """adc_frequency: ADC frequency in Hz"""
-        return self._get_iio_attr_single("voltage0_i", "adc_frequency", False)
+        return self._get_iio_attr_single(
+            self._rx_coarse_ddc_channel_names[0], "adc_frequency", False
+        )
 
     @property
     def tx_sample_rate(self):
         """tx_sampling_frequency: Sample rate before interpolation"""
-        return self._get_iio_attr_single("voltage0_i", "sampling_frequency", True)
+        return self._get_iio_attr_single(
+            self._tx_coarse_duc_channel_names[0],
+            "sampling_frequency",
+            True,
+            self._txdac,
+        )
 
     @property
     def dac_frequency(self):
         """dac_frequency: DAC frequency in Hz"""
-        return self._get_iio_attr_single("voltage0_i", "dac_frequency", True)
+        return self._get_iio_attr_single(
+            self._tx_coarse_duc_channel_names[0], "dac_frequency", True
+        )
 
     @property
     def jesd204_fsm_ctrl(self):

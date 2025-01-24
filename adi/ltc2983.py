@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Analog Devices, Inc.
+# Copyright (C) 2023-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 import numbers
@@ -6,6 +6,7 @@ from collections import OrderedDict
 from collections.abc import Iterable
 
 import numpy as np
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
@@ -27,6 +28,7 @@ class ltc2983(rx, context_manager):
 
         # dynamically get channels
         _channels = []
+        self._rx_channel_names = []
         for ch in self._ctrl.channels:
             self._rx_channel_names.append(ch.id)
             _channels.append((ch.id, self._channel(self._ctrl, ch.id)))

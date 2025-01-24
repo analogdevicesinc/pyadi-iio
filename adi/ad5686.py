@@ -1,8 +1,9 @@
-# Copyright (C) 2019-2023 Analog Devices, Inc.
+# Copyright (C) 2019-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
 import numpy as np
+
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
@@ -61,6 +62,7 @@ class ad5686(context_manager, attribute):
                 else:
                     index += 1
 
+        self.channel = []
         for ch in self._ctrl.channels:
             name = ch.id
             self.channel.append(self._channel(self._ctrl, name))

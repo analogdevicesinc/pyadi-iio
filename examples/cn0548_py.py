@@ -43,8 +43,8 @@ import adi
 try:
 
     import tkinter as tk
-    from tkinter import filedialog
     import tkinter.scrolledtext as tkscrolled
+    from tkinter import filedialog
 
 except ImportError:
     print("Please install tkinter")
