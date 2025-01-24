@@ -8,16 +8,32 @@ classname = "adi.ad4002"
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, val",
+    "attr, val, tol, repeats, sleep, sub_channel",
     [
         (
             "sampling_frequency",
             [10000, 50000, 100000, 200000, 500000, 1000000, 2000000],
+            1,
+            1,
+            0,
+            "_channel",
         ),
     ],
 )
-def test_ad4002_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
-    test_attribute_multiple_values(iio_uri, classname, attr, val, 1)
+def test_ad4002_attr(
+    test_attribute_multiple_values,
+    iio_uri,
+    classname,
+    attr,
+    val,
+    tol,
+    repeats,
+    sleep,
+    sub_channel,
+):
+    test_attribute_multiple_values(
+        iio_uri, classname, attr, val, 1, repeats, sleep, sub_channel
+    )
 
 
 #########################################
