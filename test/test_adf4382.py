@@ -77,8 +77,8 @@ def test_adf4382_attrs_no_os(
     [
         ("reference_doubler_en", 0),
         ("reference_doubler_en", 1),
-        ("sync_en", 0),
-        ("sync_en", 1),
+        ("sw_sync_en", 0),
+        ("sw_sync_en", 1),
     ],
 )
 def test_adf4382_attrs_bool_no_os(
