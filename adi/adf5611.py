@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2024 Analog Devices, Inc.
+# Copyright (C) 2021-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -33,7 +33,7 @@ class adf5611(attribute, context_manager):
         "3.000000",
         "3.200000",
     )
-    
+
     _rfoutdiv_divider_options = (
         "1",
         "2",
@@ -65,8 +65,10 @@ class adf5611(attribute, context_manager):
     @rfout_frequency.setter
     def rfout_frequency(self, value):
         """Get/Set the rfout frequency in Hz"""
-        self._set_iio_attr("altvoltage0", "rfout_frequency", True, int(value), self._ctrl)
-    
+        self._set_iio_attr(
+            "altvoltage0", "rfout_frequency", True, int(value), self._ctrl
+        )
+
     @property
     def altvolt0_rfout_power(self):
         return self._get_iio_attr("altvoltage0", "rfout_power", True, self._ctrl)
@@ -76,7 +78,7 @@ class adf5611(attribute, context_manager):
         self._set_iio_attr_int(
             "altvoltage0", "rfout_power", True, int(value), self._ctrl
         )
-    
+
     @property
     def reference_frequency(self):
         return self._get_iio_dev_attr("reference_frequency", self._ctrl)
@@ -84,7 +86,7 @@ class adf5611(attribute, context_manager):
     @reference_frequency.setter
     def reference_frequency(self, value):
         self._set_iio_dev_attr("reference_frequency", value, self._ctrl)
-    
+
     @property
     def reference_divider(self):
         return self._get_iio_dev_attr("reference_divider", self._ctrl)
@@ -92,7 +94,7 @@ class adf5611(attribute, context_manager):
     @reference_divider.setter
     def reference_divider(self, value):
         self._set_iio_dev_attr("reference_divider", value, self._ctrl)
-    
+
     @property
     def charge_pump_current(self):
         return self._get_iio_dev_attr("charge_pump_current", self._ctrl)
@@ -106,7 +108,7 @@ class adf5611(attribute, context_manager):
             )
 
         self._set_iio_dev_attr("charge_pump_current", value, self._ctrl)
-        
+
     @property
     def rfoutdiv_power(self):
         return self._get_iio_dev_attr("rfoutdiv_power", self._ctrl)
@@ -114,7 +116,7 @@ class adf5611(attribute, context_manager):
     @rfoutdiv_power.setter
     def rfoutdiv_power(self, value):
         self._set_iio_dev_attr("rfoutdiv_power", value, self._ctrl)
-        
+
     @property
     def rfoutdiv_divider(self):
         return self._get_iio_dev_attr("rfoutdiv_divider", self._ctrl)
@@ -128,7 +130,7 @@ class adf5611(attribute, context_manager):
             )
 
         self._set_iio_dev_attr("rfoutdiv_divider", value, self._ctrl)
-    
+
     @property
     def en_rfoutdiv(self):
         return self._get_iio_dev_attr("en_rfoutdiv", self._ctrl)
