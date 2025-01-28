@@ -123,7 +123,7 @@ class adf5611(attribute, context_manager):
 
     @rfoutdiv_divider.setter
     def rfoutdiv_divider(self, value):
-        # Check that the value is valid
+        # Check that the divider value is valid
         if value.lower().strip() not in self._rfoutdiv_divider_options:
             raise ValueError(
                 f"rfoutdiv_divider of \"{value}\" is invalid. Valid options: {', '.join(self._rfoutdiv_divider_options)}"
