@@ -45,11 +45,10 @@ class adf5611(attribute, context_manager):
         "128",
     )
 
-    def __init__(self, uri="", device_name=""):
+    def __init__(self, uri=""):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        self._device_name = device_name
         # Find the device
         self._ctrl = self._ctx.find_device(self._device_name)
 
@@ -123,7 +122,7 @@ class adf5611(attribute, context_manager):
 
     @rfoutdiv_divider.setter
     def rfoutdiv_divider(self, value):
-        # Check that the value is valid
+        # Check that the divider value is valid
         if value.lower().strip() not in self._rfoutdiv_divider_options:
             raise ValueError(
                 f"rfoutdiv_divider of \"{value}\" is invalid. Valid options: {', '.join(self._rfoutdiv_divider_options)}"
