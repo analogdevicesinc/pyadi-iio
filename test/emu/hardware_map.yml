@@ -156,6 +156,14 @@ ad9172:
       - filename: ad9172.xml
       - data_devices:
           - iio:device2
+adf5611:
+  - adf5611
+  - pyadi_iio_class_support:
+      - adf5611
+#   - emulate:
+#       - filename: ad9172.xml
+#       - data_devices:
+#           - iio:device2
 cn0511:
   - ad9166-amp
   - adf4372
