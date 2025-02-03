@@ -23,7 +23,7 @@ class ad4170(rx, context_manager):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad4170"]
+        compatible_parts = ["ad4170", "ad4190"]
 
         self._ctrl = None
 
