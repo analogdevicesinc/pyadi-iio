@@ -118,6 +118,7 @@ Supported Devices
    adi.fmcomms11
    adi.gen_mux
    adi.jesd
+   adi.hmcad15xx
    adi.lm75
    adi.ltc2314_14
    adi.ltc2387
