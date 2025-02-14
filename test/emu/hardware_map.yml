@@ -318,6 +318,28 @@ adrv9009-dual:
   - adrv9009-phy-b
   - pyadi_iio_class_support:
       - adrv9009_zu11eg
+adrv9008-1:
+  - adrv9009-phy
+  - axi-adrv9009-rx-hpc
+  - pyadi_iio_class_support:
+      - adrv9008_1
+  - emulate:
+      - filename: adrv9008-1.xml
+      - data_devices:
+          - iio:device3
+          - iio:device4
+adrv9008-2:
+  - adrv9009-phy
+  - axi-adrv9009-tx-hpc
+  - axi-adrv9009-rx-obs-hpc
+  - pyadi_iio_class_support: 
+      - adrv9008_2
+  - emulate:
+      - filename: adrv9008-2.xml
+      - data_devices:
+          - iio:device3
+          - iio:device4
+          - iio:device5
 adrv9371:
   - ad9371-phy
   - emulate:
