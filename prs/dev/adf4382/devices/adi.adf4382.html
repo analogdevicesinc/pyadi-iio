@@ -7,12 +7,12 @@
 
     <title>adf4382 &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=a9555194" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=9cb8e28d" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=689b8755"></script>
+    <script defer="" src="../_static/app.umd.js?v=8d0ced9f"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -20,8 +20,8 @@
     <link rel="prev" title="adf4371" href="adi.adf4371.html" />
    
   
-  <meta name="global_root" content="../../../../">
-  <meta name="repo" content="pyadi-iio">
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.19">
   
 
 
@@ -41,7 +41,6 @@
   }
 </style>
   </head><body>
-  <div class="banner"></div>
   <input type="checkbox" id="input-show-toc">
   <input type="checkbox" id="input-show-localtoc">
   <input type="checkbox" id="input-show-repotoc">
@@ -78,16 +77,7 @@
 
   <div class="repotoc-tree overlay">
     <root>
-  <a href="../../../../documentation/index.html">System Level</a>
-  <a href="../../../../hdl/index.html">HDL</a>
-  <a href="../../../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../../../libiio/index.html">libiio</a>
-  <a href="../../../../no-OS/index.html">no-OS</a>
-  <a href="../../../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../../../scopy/index.html">Scopy</a>
-  <a href="../../../../doctools/index.html">Doctools</a>
 </root>
 
   </div>
@@ -148,16 +138,7 @@ Content on this topic
 </label>
 <div class="repotoc-tree">
   <root>
-  <a href="../../../../documentation/index.html">System Level</a>
-  <a href="../../../../hdl/index.html">HDL</a>
-  <a href="../../../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../../../libiio/index.html">libiio</a>
-  <a href="../../../../no-OS/index.html">no-OS</a>
-  <a href="../../../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../../../scopy/index.html">Scopy</a>
-  <a href="../../../../doctools/index.html">Doctools</a>
 </root>
 
 </div>
@@ -182,6 +163,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
@@ -211,7 +193,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad9084.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9084.html">ad9084</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9084_mc.html">ad9084_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
@@ -338,87 +320,104 @@ Content on this topic
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt0_en">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt0_en" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the enable/disable state of channel 0</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt0_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_frequency</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt0_frequency" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the rfout frequency of channel 0</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt0_output_power">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_output_power</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt0_output_power" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the output power of channel 0</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt0_phase">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_phase</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt0_phase" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the phase adjustment of channel 0</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt1_en">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt1_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt1_en" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the enable/disable state of channel 1</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt1_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt1_frequency</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt1_frequency" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the rfout frequency of channel 1</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt1_output_power">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt1_output_power</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt1_output_power" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the output power of channel 1</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt1_phase">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt1_phase</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt1_phase" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the phase adjustment of channel 1</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.bleed_current">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bleed_current</span></span><a class="headerlink" href="#adi.adf4382.adf4382.bleed_current" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the bleed word value</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.change_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">change_frequency</span></span><a class="headerlink" href="#adi.adf4382.adf4382.change_frequency" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the change frequency without starting calibration</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.charge_pump_current">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">charge_pump_current</span></span><a class="headerlink" href="#adi.adf4382.adf4382.charge_pump_current" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the charge pump current in mA</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.ezsync_setup">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ezsync_setup</span></span><a class="headerlink" href="#adi.adf4382.adf4382.ezsync_setup" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the EZSync setup</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.fastcal_en">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fastcal_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.fastcal_en" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the enable state of fast calibration</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.fastcal_lut_en">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fastcal_lut_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.fastcal_lut_en" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the enable state of fast calibration Lookup Table usage</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.reference_divider">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_divider</span></span><a class="headerlink" href="#adi.adf4382.adf4382.reference_divider" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the reference divider</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.reference_doubler_en">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_doubler_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.reference_doubler_en" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the enable state of the reference doubler</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.reference_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_frequency</span></span><a class="headerlink" href="#adi.adf4382.adf4382.reference_frequency" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the reference frequency</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.reg_read">
@@ -435,17 +434,20 @@ Content on this topic
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.start_calibration">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_calibration</span></span><a class="headerlink" href="#adi.adf4382.adf4382.start_calibration" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the start calibration</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.sw_sync_en">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_sync_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.sw_sync_en" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the enable state of software synchronization</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4382.adf4382.timed_sync_setup">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">timed_sync_setup</span></span><a class="headerlink" href="#adi.adf4382.adf4382.timed_sync_setup" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get/Set the timed synchronization setup</p>
+</dd></dl>
 
 </dd></dl>
 

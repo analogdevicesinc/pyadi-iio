@@ -7,12 +7,12 @@
 
     <title>FPGA Features &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=a9555194" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=9cb8e28d" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=689b8755"></script>
+    <script defer="" src="../_static/app.umd.js?v=8d0ced9f"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -28,8 +28,8 @@ window.addEventListener("load", () => mermaid.run());
     <link rel="prev" title="Buffers" href="../buffers/index.html" />
    
   
-  <meta name="global_root" content="../../../../">
-  <meta name="repo" content="pyadi-iio">
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.19">
   
 
 
@@ -49,7 +49,6 @@ window.addEventListener("load", () => mermaid.run());
   }
 </style>
   </head><body>
-  <div class="banner"></div>
   <input type="checkbox" id="input-show-toc">
   <input type="checkbox" id="input-show-localtoc">
   <input type="checkbox" id="input-show-repotoc">
@@ -86,16 +85,7 @@ window.addEventListener("load", () => mermaid.run());
 
   <div class="repotoc-tree overlay">
     <root>
-  <a href="../../../../documentation/index.html">System Level</a>
-  <a href="../../../../hdl/index.html">HDL</a>
-  <a href="../../../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../../../libiio/index.html">libiio</a>
-  <a href="../../../../no-OS/index.html">no-OS</a>
-  <a href="../../../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../../../scopy/index.html">Scopy</a>
-  <a href="../../../../doctools/index.html">Doctools</a>
 </root>
 
   </div>
@@ -156,16 +146,7 @@ Content on this topic
 </label>
 <div class="repotoc-tree">
   <root>
-  <a href="../../../../documentation/index.html">System Level</a>
-  <a href="../../../../hdl/index.html">HDL</a>
-  <a href="../../../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../../../libiio/index.html">libiio</a>
-  <a href="../../../../no-OS/index.html">no-OS</a>
-  <a href="../../../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../../../scopy/index.html">Scopy</a>
-  <a href="../../../../doctools/index.html">Doctools</a>
 </root>
 
 </div>
@@ -190,6 +171,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
@@ -219,7 +201,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9083.html">ad9083</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9084</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084_mc.html">ad9084_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9136.html">ad9136</a></li>
