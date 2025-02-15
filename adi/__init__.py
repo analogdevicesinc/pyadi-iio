@@ -3,6 +3,7 @@
 # SPDX short identifier: ADIBSD
 
 from adi.ad2s1210 import ad2s1210
+from adi.ad353xr import ad353xr
 from adi.ad405x import ad405x
 from adi.ad469x import ad469x
 from adi.ad579x import ad579x
