@@ -94,6 +94,7 @@ pyadi-iio has a large set of parameterizable fixtures for testing different devi
    test_attr
    test_dma
    test_generics
+   test_jesd
 
 
 Set Up Isolated Environment
