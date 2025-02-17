@@ -16,3 +16,4 @@ pyvisa
 matplotlib
 pytoml
 pytest-xdist
+keyboard
