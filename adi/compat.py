@@ -59,7 +59,7 @@ class compat_libiio_v1_rx:
             # create format strings
             df = chan.data_format
             fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
-            data_channel_interleaved.append(np.frombuffer(bytearray_data, dtype=fmt))
+            data_channel_interleaved.append(np.frombuffer(bytearray_data, dtype=u32))
 
         return data_channel_interleaved
 
@@ -163,7 +163,7 @@ class compat_libiio_v0_rx:
             # create format strings
             df = chan.data_format
             fmt = ("i" if df.is_signed is True else "u") + str(df.length // 8)
-            data_channel_interleaved.append(np.frombuffer(bytearray_data, dtype=fmt))
+            data_channel_interleaved.append(np.frombuffer(bytearray_data, dtype=np.uint64))
 
         return data_channel_interleaved
 
