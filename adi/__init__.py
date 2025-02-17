@@ -25,6 +25,7 @@ from adi.ad7606 import ad7606
 from adi.ad7689 import ad7689
 from adi.ad7746 import ad7746
 from adi.ad7768 import ad7768, ad7768_4
+from adi.ad7768_1 import ad7768_1
 from adi.ad7799 import ad7799
 from adi.ad9081 import ad9081
 from adi.ad9081_mc import QuadMxFE, ad9081_mc
