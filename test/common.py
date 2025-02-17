@@ -30,6 +30,7 @@ def pytest_configure(config):
     )
     config.addinivalue_line("markers", "lvds_test: mark tests for LVDS")
     config.addinivalue_line("markers", "cmos_test: mark tests for CMOS")
+    config.addinivalue_line("markers", "jesd204: mark tests for JESD204")
 
 
 def pytest_collection_modifyitems(items):

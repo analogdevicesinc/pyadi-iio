@@ -334,3 +334,21 @@ def test_adrv9009_zu11eg_buffer_size(iio_uri, rx_buffer_size, rx_enabled_channel
     else:
         for chan in data:
             assert len(chan) == rx_buffer_size
+
+
+#########################################
+# JESD204 Tests
+@pytest.mark.jesd204
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+def test_adrv9009_zu11eg_verify_links(test_verify_links, iio_uri, classname):
+    test_verify_links(iio_uri, classname)
+
+
+@pytest.mark.jesd204
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize("classname", [(classname)])
+def test_adrv9009_zu11eg_verify_links_errors_stable(
+    test_verify_links_errors_stable, iio_uri, classname
+):
+    test_verify_links_errors_stable(iio_uri, classname)

@@ -15,6 +15,7 @@ from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
 from test.html import pytest_html_report_title, pytest_runtest_makereport
+from test.jesd_tests import *
 
 import numpy as np
 import pytest
@@ -302,3 +303,17 @@ def test_attribute_check_range_singleval_with_depends(request):
 @pytest.fixture()
 def test_attribute_single_value_boolean_readonly(request):
     yield attribute_single_value_boolean_readonly
+
+
+#########################################
+# JESD204 Fixtures
+
+
+@pytest.fixture()
+def test_verify_links(request):
+    yield verify_links
+
+
+@pytest.fixture()
+def test_verify_links_errors_stable(request):
+    yield verify_links_errors_stable
