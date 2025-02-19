@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import keyboard
 import commpy.utilities as util
 import komm
+import scipy.io
 
 def rcosdesign(beta, span, sps, N=None):
     """
@@ -41,10 +42,11 @@ sdr.tx0_lo = 2400000000
 sdr.tx1_lo = 2400000000
 sdr.tx_hardwaregain_chan0 = -10
 sdr.tx_hardwaregain_chan1 = -10
+sdr.tx_enabled_channels=[0]
 fs = int(sdr.rx0_sample_rate)
 
 print(fs)
-fc = 10000
+fc = 50000
 N = 1024
 ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)
@@ -56,22 +58,32 @@ sps = 8  # samples per symbol
 
 modulation_map = {
     "0": "EXIT",
-    "1": "BPSK",
-    "2": "QPSK",
+    "1": "16QAM",
+    "2": "64QAM",
     "3": "8PSK",
-    "4": "16QAM",
-    "5": "64QAM",
-    "6": "PAM4",
-    "7": "GFSK",
-    "8": "CPFSK",
-    "9": "ORIGINAL"
+    "5": "BPSK",
+    "6": "CPFSK",
+    "8": "GFSK",
+    "9": "PAM4",
+    "10": "QPSK",
+    "11": "ORIGINAL"
 }
 
 filterCoeffs = rcosdesign(0.35, 4, sps)
 M = 2
 
+
+mod_8spk  = scipy.io.loadmat('modulated_data/mod_8PSK.mat')
+mod_16qam = scipy.io.loadmat('modulated_data/mod_16QAM.mat')
+mod_64qam = scipy.io.loadmat('modulated_data/mod_64QAM.mat')
+mod_bspk  = scipy.io.loadmat('modulated_data/mod_BPSK.mat')
+mod_cpfsk = scipy.io.loadmat('modulated_data/mod_CPFSK.mat')
+mod_gfsk  = scipy.io.loadmat('modulated_data/mod_GFSK.mat')
+mod_pam4  = scipy.io.loadmat('modulated_data/mod_PAM4.mat')
+mod_qpsk  = scipy.io.loadmat('modulated_data/mod_QPSK.mat')
+
 while True:
-    modulation_number = input("Enter modulation type (1: BPSK, 2: QPSK, 3: 8PSK, 4: 16QAM, 5: 64QAM, 6: PAM4, 7:GFSK, 8: CPFSK, 9: ORIGINAL, 0:EXIT): ")
+    modulation_number = input("Enter modulation type (1: 16QAM, 2: 64QAM, 3: 8PSK, 5: BPSK, 6: CPFSK, 8: GFSK, 9: PAM4, 10: QPSK, 11: ORIGINAL 0:EXIT): ")
     sdr.tx_destroy_buffer()
     print(modulation_number)
     modulation_type = modulation_map.get(modulation_number, "BPSK")
@@ -79,53 +91,21 @@ while True:
 
     match modulation_type:
         case "BPSK":
-          modulator = komm.PSKModulation(2)
-          data = np.random.randint(0, M, spf * modulator.bits_per_symbol)
-          syms = modulator.modulate(data)
-          syms_upsampled = util.upsample(syms, sps)
-          iq = np.convolve(syms_upsampled, filterCoeffs,'same')
+            data = mod_bspk['rx']
         case "QPSK":
-          modulator = komm.PSKModulation(4, phase_offset=np.pi/4.0)
-          data = np.random.randint(0, M, spf * modulator.bits_per_symbol)
-          syms = modulator.modulate(data)
-          syms_upsampled = util.upsample(syms, sps)
-          iq = np.convolve(syms_upsampled, filterCoeffs, mode='same')
+            data = mod_qpsk['rx']
         case "8PSK":
-          modulator = komm.PSKModulation(8)
-          data = np.random.randint(0, M, spf * modulator.bits_per_symbol)
-          syms = modulator.modulate(data)
-          syms_upsampled = util.upsample(syms, sps)
-          iq = np.convolve(syms_upsampled, filterCoeffs, mode='same')
+            data = mod_8spk['rx']
         case "16QAM":
-          modulator = komm.QAModulation(16)
-          data = np.random.randint(0, M, spf * modulator.bits_per_symbol)
-          syms = modulator.modulate(data)
-          syms_upsampled = util.upsample(syms, sps)
-          iq = np.convolve(syms_upsampled, filterCoeffs, mode='same')
+            data = mod_16qam['rx']
         case "64QAM":
-             modulator = komm.QAModulation(64)
-             data = np.random.randint(0, M, spf * modulator.bits_per_symbol)
-             syms = modulator.modulate(data)
-             syms_upsampled = util.upsample(syms, sps)
-             iq = np.convolve(syms_upsampled, filterCoeffs, mode='same')
+            data = mod_64qam['rx']
         case "PAM4":
-             modulator = komm.PAModulation(4)
-             data = np.random.randint(0, M, spf * modulator.bits_per_symbol)
-             syms = modulator.modulate(data)
-             syms_upsampled = util.upsample(syms, sps)
-             iq = np.convolve(syms_upsampled, filterCoeffs, mode='same')
+            data = mod_pam4['rx']
         case "GFSK":
-             modulator = komm.QAModulation(64)
-             data = np.random.randint(0, M, spf * modulator.bits_per_symbol)
-             syms = modulator.modulate(data)
-             syms_upsampled = util.upsample(syms, sps)
-             iq = np.convolve(syms_upsampled, filterCoeffs, mode='same')
+            data = mod_gfsk['rx']
         case "CPFSK":
-             modulator = komm.QAModulation(64)
-             data = np.random.randint(0, M, spf * modulator.bits_per_symbol)
-             syms = modulator.modulate(data)
-             syms_upsampled = util.upsample(syms, sps)
-             iq = np.convolve(syms_upsampled, filterCoeffs, mode='same')
+            data = mod_cpfsk['rx']
         case "ORIGINAL":
             iq = i + 1j * q
         case "EXIT":
@@ -135,15 +115,18 @@ while True:
             sdr.tx_destroy_buffer()
             break
 
-    iq = iq[4 * sps + 1:]
-    maxVal = max(max(abs(np.real(iq))), max(abs(np.imag(iq))))
-    iq = iq * 0.8 / maxVal
-    iq_real = np.int16(np.real(iq) * 2**15)
-    iq_imag = np.int16(np.imag(iq) * 2**15)
+    data=data.flatten()
+    iq_real = np.int16(np.real(data) * 2**12-1)
+    iq_imag = np.int16(np.imag(data) * 2**12-1)
     iq = iq_real + 1j * iq_imag
     sdr.tx(iq)
-    plt.plot(np.real(syms), np.imag(syms), 'o')
-    plt.show()
+    # plt.figure()
+    # plt.subplot(2, 1, 1)
+    # plt.plot(data)
+    # plt.subplot(2, 1, 2)
+    # plt.plot(iq)
+    # plt.tight_layout()
+    # plt.show()
 
 
 
