@@ -19,6 +19,7 @@ class ad9213(rx, context_manager):
         context_manager.__init__(self, uri, self._device_name)
         self._device_name = device_name
         self._rxadc = self._ctx.find_device(self._device_name)
+        self._clock_chip_fmc = self._ctx.find_device("hmc7044")
         rx.__init__(self)
 
     @property
