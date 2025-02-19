@@ -5,23 +5,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Generic Tests &#8212; Analog Devices Hardware Python Interfaces 0.0.18 documentation</title>
+    <title>Generic Tests &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=990931db" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=9cb8e28d" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=f38a6251"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=c93eadd1"></script>
+    <script defer="" src="../_static/app.umd.js?v=8d0ced9f"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Supported Devices" href="../devices/index.html" />
+    <link rel="next" title="JESD204 Tests" href="test_jesd.html" />
     <link rel="prev" title="DMA Tests" href="test_dma.html" />
    
   
-  <meta name="global_root" content="../../">
-  <meta name="repo" content="pyadi-iio">
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.19">
   
 
 
@@ -41,7 +41,6 @@
   }
 </style>
   </head><body>
-  <div class="banner"></div>
   <input type="checkbox" id="input-show-toc">
   <input type="checkbox" id="input-show-localtoc">
   <input type="checkbox" id="input-show-repotoc">
@@ -78,23 +77,14 @@
 
   <div class="repotoc-tree overlay">
     <root>
-  <a href="../../documentation/index.html">System Level</a>
-  <a href="../../hdl/index.html">HDL</a>
-  <a href="../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../libiio/index.html">libiio</a>
-  <a href="../../no-OS/index.html">no-OS</a>
-  <a href="../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../scopy/index.html">Scopy</a>
-  <a href="../../doctools/index.html">Doctools</a>
 </root>
 
   </div>
     <div class="localtoc">
       <div class="tocwrapper">
         <div>
-          <div class="localtoc-header">On this page</div>
+          <div class="localtoc-header"></div>
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -125,16 +115,7 @@ Content on this topic
 </label>
 <div class="repotoc-tree">
   <root>
-  <a href="../../documentation/index.html">System Level</a>
-  <a href="../../hdl/index.html">HDL</a>
-  <a href="../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../libiio/index.html">libiio</a>
-  <a href="../../no-OS/index.html">no-OS</a>
-  <a href="../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../scopy/index.html">Scopy</a>
-  <a href="../../doctools/index.html">Doctools</a>
 </root>
 
 </div>
@@ -153,12 +134,14 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_jesd.html">JESD204 Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
@@ -188,7 +171,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9083.html">ad9083</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9084</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084_mc.html">ad9084_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9136.html">ad9136</a></li>
@@ -228,6 +211,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16507.html">adis16507</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16545.html">adis16545</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16547.html">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16550.html">adis16550</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5240.html">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.admv8818.html">admv8818</a></li>
@@ -244,6 +228,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl313.html">adxl313</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0532.html">cn0532</a></li>
@@ -296,11 +281,11 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="generic-tests">
-<h1>Generic Tests<a class="headerlink" href="#generic-tests" title="Permalink to this heading">#</a></h1>
+<h1>Generic Tests<a class="headerlink" href="#generic-tests" title="Permalink to this heading"></a></h1>
 <p>Functions used by test fixtures for evaluating drivers without pyadi-iio classes or not by using pyadi-iio classes.</p>
 <span class="target" id="module-test.generics"></span><dl class="py function">
 <dt class="sig sig-object py" id="test.generics.iio_attribute_single_value">
-<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chan_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_attribute_single_value" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chan_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_attribute_single_value" title="Permalink to this definition"></a></dt>
 <dd><p>iio_attribute_single_value: Test numeric attributes over ranges
 This is a generic test that does not use pyadi-iio classes
 but instead uses libiio directly.</p>
@@ -338,7 +323,7 @@ attribute under test</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.generics.iio_buffer_check">
-<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_buffer_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_fail</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_buffer_check" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_buffer_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_fail</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_buffer_check" title="Permalink to this definition"></a></dt>
 <dd><p>iio_buffer_check: Check receive buffers for repeative patterns of zeros.
 This function does not require an interfaces class in pyadi but will
 construct a generic interface on the fly.</p>
@@ -365,7 +350,7 @@ buffers</p>
               <div class="related">
                 &nbsp;
     <a href="test_dma.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">DMA Tests</a>
-    <a href="../devices/index.html" title="Next document (Alt+Shift+RightArrow)" class="next">Supported Devices</a>
+    <a href="test_jesd.html" title="Next document (Alt+Shift+RightArrow)" class="next">JESD204 Tests</a>
               </div>
           
         </div>
@@ -377,7 +362,7 @@ buffers</p>
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2024, Analog Devices, Inc
+      &#169;2019-2025, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

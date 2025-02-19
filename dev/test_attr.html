@@ -5,14 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Attribute Tests &#8212; Analog Devices Hardware Python Interfaces 0.0.18 documentation</title>
+    <title>Attribute Tests &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=990931db" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=9cb8e28d" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=f38a6251"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=c93eadd1"></script>
+    <script defer="" src="../_static/app.umd.js?v=8d0ced9f"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -20,8 +20,8 @@
     <link rel="prev" title="Developers" href="index.html" />
    
   
-  <meta name="global_root" content="../../">
-  <meta name="repo" content="pyadi-iio">
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.19">
   
 
 
@@ -41,7 +41,6 @@
   }
 </style>
   </head><body>
-  <div class="banner"></div>
   <input type="checkbox" id="input-show-toc">
   <input type="checkbox" id="input-show-localtoc">
   <input type="checkbox" id="input-show-repotoc">
@@ -78,23 +77,14 @@
 
   <div class="repotoc-tree overlay">
     <root>
-  <a href="../../documentation/index.html">System Level</a>
-  <a href="../../hdl/index.html">HDL</a>
-  <a href="../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../libiio/index.html">libiio</a>
-  <a href="../../no-OS/index.html">no-OS</a>
-  <a href="../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../scopy/index.html">Scopy</a>
-  <a href="../../doctools/index.html">Doctools</a>
 </root>
 
   </div>
     <div class="localtoc">
       <div class="tocwrapper">
         <div>
-          <div class="localtoc-header">On this page</div>
+          <div class="localtoc-header"></div>
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -144,16 +134,7 @@ Content on this topic
 </label>
 <div class="repotoc-tree">
   <root>
-  <a href="../../documentation/index.html">System Level</a>
-  <a href="../../hdl/index.html">HDL</a>
-  <a href="../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../libiio/index.html">libiio</a>
-  <a href="../../no-OS/index.html">no-OS</a>
-  <a href="../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../scopy/index.html">Scopy</a>
-  <a href="../../doctools/index.html">Doctools</a>
 </root>
 
 </div>
@@ -172,12 +153,14 @@ Content on this topic
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Attribute Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_jesd.html">JESD204 Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
@@ -207,7 +190,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9083.html">ad9083</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9084</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084_mc.html">ad9084_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9136.html">ad9136</a></li>
@@ -247,6 +230,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16507.html">adis16507</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16545.html">adis16545</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16547.html">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16550.html">adis16550</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5240.html">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.admv8818.html">admv8818</a></li>
@@ -263,6 +247,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl313.html">adxl313</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0532.html">cn0532</a></li>
@@ -315,11 +300,11 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="attribute-tests">
-<h1>Attribute Tests<a class="headerlink" href="#attribute-tests" title="Permalink to this heading">#</a></h1>
+<h1>Attribute Tests<a class="headerlink" href="#attribute-tests" title="Permalink to this heading"></a></h1>
 <p>Functions used by test fixtures for evaluating attributes and driver state.</p>
 <span class="target" id="module-test.attr_tests"></span><dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_check_range_readonly_with_depends">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_check_range_readonly_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_check_range_readonly_with_depends" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_check_range_readonly_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_check_range_readonly_with_depends" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_check_range_readonly_with_depends: Read only integer class
 property with dependent write properties</p>
 <dl class="simple">
@@ -344,7 +329,7 @@ are properties and values are values to be written</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_check_range_singleval_with_depends">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_check_range_singleval_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_check_range_singleval_with_depends" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_check_range_singleval_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_check_range_singleval_with_depends" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_check_range_singleval_with_depends:
 Write and read back integer class property with dependent write properties
 This is performed a defined number of times and the value written
@@ -379,7 +364,7 @@ are properties and values are values to be written</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_multiple_values: Write and read back multiple class properties
 in a loop where all values are pre-defined. This is performed a defined
 number of times.</p>
@@ -408,7 +393,7 @@ number of times.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values_available_readonly">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_available_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_available_readonly" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_available_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_available_readonly" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_multiple_values_available_readonly:
 Read only class property where the available attribute values are returned.</p>
 <dl class="simple">
@@ -426,7 +411,7 @@ Read only class property where the available attribute values are returned.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values_device_channel">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_device_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_device_channel" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_device_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_device_channel" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_multiple_values_device_channel: Write and read back multiple class properties
 in a loop where all values are pre-defined and device name and channel are specified.
 This is performed a defined number of times.</p>
@@ -459,7 +444,7 @@ This is performed a defined number of times.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values_error">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_error" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_error" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_multiple_values_error: Write multiple class properties
 in a loop where all values are pre-defined and expected to raise an error.
 This is performed a defined number of times.</p>
@@ -488,7 +473,7 @@ This is performed a defined number of times.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_multiple_values_with_depends">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_with_depends" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_multiple_values_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_multiple_values_with_depends" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_multiple_values_with_depends: Write and read back multiple class
 properties in a loop where all values are pre-defined, where a set of
 dependent attributes are written first. This is performed a defined
@@ -516,7 +501,7 @@ number of times.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_readonly_with_depends">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_readonly_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_readonly_with_depends" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_readonly_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_readonly_with_depends" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_readonly_with_depends: Read only class
 property with dependent write properties</p>
 <dl class="simple">
@@ -537,7 +522,7 @@ are properties and values are values to be written</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value:
 Write and read back integer class property
 This is performed a defined number of times and the value written
@@ -569,7 +554,7 @@ is randomly determined based in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_boolean">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_boolean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_boolean" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_boolean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_boolean" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value_boolean: Write and read back boolean class property</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -588,7 +573,7 @@ is randomly determined based in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_boolean_readonly">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_boolean_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_boolean_readonly" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_boolean_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_boolean_readonly" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value_boolean: Read boolean class property</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -605,7 +590,7 @@ is randomly determined based in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_channel_readonly">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_channel_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_channel_readonly" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_channel_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_channel_readonly" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value:
 Read only class property where the channel name is specified.</p>
 <dl class="simple">
@@ -625,7 +610,7 @@ Read only class property where the channel name is specified.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_device_name_channel_readonly">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_device_name_channel_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_device_name_channel_readonly" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_device_name_channel_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_device_name_channel_readonly" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value:
 Read only class property with device name and channel parameters</p>
 <dl class="simple">
@@ -647,7 +632,7 @@ Read only class property with device name and channel parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_pow2">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_pow2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_pow2" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_pow2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_pow2" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value_pow2: Write and read back integer class property
 where the integer is a power of 2. This is performed a defined
 number of times and the value written is randomly determined based
@@ -673,7 +658,7 @@ in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_range_channel">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_range_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_range_channel" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_range_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_range_channel" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value_range_channel:
 Write and read back integer class property
 This is performed a defined number of times and the value written
@@ -709,7 +694,7 @@ is randomly determined based in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_readonly">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_readonly" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_readonly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_readonly" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value:
 Write and read back integer class property
 This is performed a defined number of times and the value written
@@ -737,7 +722,7 @@ is randomly determined based in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_single_value_str">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_str" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_single_value_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_single_value_str" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_single_value_str: Write and read back string class property</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -758,7 +743,7 @@ is randomly determined based in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_write_only_str">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_write_only_str: Write only string class property</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -777,7 +762,7 @@ is randomly determined based in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_write_only_str_device_channel">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str_device_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str_device_channel" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str_device_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str_device_channel" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>attribute_write_only_str_device_channel: Write only string class property</dt><dd><p>with device name and channel parameters</p>
 </dd>
@@ -801,7 +786,7 @@ is randomly determined based in input parameters</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.attribute_write_only_str_with_depends">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str_with_depends" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_only_str_with_depends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depends</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_only_str_with_depends" title="Permalink to this definition"></a></dt>
 <dd><p>attribute_write_only_str_with_depends: Write only string class
 property with dependent write only properties</p>
 <dl class="simple">
@@ -824,7 +809,7 @@ are properties and values are values to be written</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.attr_tests.floor_step_size">
-<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">floor_step_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.floor_step_size" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">floor_step_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.floor_step_size" title="Permalink to this definition"></a></dt>
 <dd><p>Quantize to specific stepsize</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
@@ -856,7 +841,7 @@ are properties and values are values to be written</p>
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2024, Analog Devices, Inc
+      &#169;2019-2025, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

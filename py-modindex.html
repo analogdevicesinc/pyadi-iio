@@ -4,24 +4,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Python Module Index &#8212; Analog Devices Hardware Python Interfaces 0.0.18 documentation</title>
+    <title>Python Module Index &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="_static/style.min.css?v=990931db" />
+    <link rel="stylesheet" type="text/css" href="_static/app.min.css?v=9cb8e28d" />
     <link rel="stylesheet" type="text/css" href="_static/css/style.css?v=632a43e7" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=f38a6251"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=57f2e648"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="_static/app.umd.js?v=c93eadd1"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script defer="" src="_static/app.umd.js?v=8d0ced9f"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 
    
   
-  <meta name="global_root" content="./../">
-  <meta name="repo" content="pyadi-iio">
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.19">
   
 
 
@@ -43,7 +49,6 @@
 
 
   </head><body>
-  <div class="banner"></div>
   <input type="checkbox" id="input-show-toc">
   <input type="checkbox" id="input-show-localtoc">
   <input type="checkbox" id="input-show-repotoc">
@@ -80,23 +85,14 @@
 
   <div class="repotoc-tree overlay">
     <root>
-  <a href="./../documentation/index.html">System Level</a>
-  <a href="./../hdl/index.html">HDL</a>
-  <a href="./../testbenches/index.html">HDL Testbenches</a>
   <a href="./index.html" class="current">Hardware Python Interfaces</a>
-  <a href="./../libiio/index.html">libiio</a>
-  <a href="./../no-OS/index.html">no-OS</a>
-  <a href="./../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="./../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="./../scopy/index.html">Scopy</a>
-  <a href="./../doctools/index.html">Doctools</a>
 </root>
 
   </div>
     <div class="localtoc">
       <div class="tocwrapper">
         <div>
-          <div class="localtoc-header">On this page</div>
+          <div class="localtoc-header"></div>
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -120,16 +116,7 @@ Content on this topic
 </label>
 <div class="repotoc-tree">
   <root>
-  <a href="./../documentation/index.html">System Level</a>
-  <a href="./../hdl/index.html">HDL</a>
-  <a href="./../testbenches/index.html">HDL Testbenches</a>
   <a href="./index.html" class="current">Hardware Python Interfaces</a>
-  <a href="./../libiio/index.html">libiio</a>
-  <a href="./../no-OS/index.html">no-OS</a>
-  <a href="./../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="./../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="./../scopy/index.html">Scopy</a>
-  <a href="./../doctools/index.html">Doctools</a>
 </root>
 
 </div>
@@ -148,12 +135,14 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="dev/test_attr.html">Attribute Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dev/test_dma.html">DMA Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dev/test_generics.html">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev/test_jesd.html">JESD204 Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4110.html">ad4110</a></li>
@@ -183,7 +172,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9083.html">ad9083</a></li>
-<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9084.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9084.html">ad9084</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9084_mc.html">ad9084_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad9136.html">ad9136</a></li>
@@ -223,6 +212,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16507.html">adis16507</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16545.html">adis16545</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16547.html">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16550.html">adis16550</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adl5240.html">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.admv8818.html">admv8818</a></li>
@@ -239,6 +229,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl313.html">adxl313</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.cn0532.html">cn0532</a></li>
@@ -317,6 +308,11 @@ Content on this topic
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="devices/adi.ad3552r.html#module-adi.ad3552r"><code class="xref">adi.ad3552r</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="devices/adi.ad3552r_hs.html#module-adi.ad3552r_hs"><code class="xref">adi.ad3552r_hs</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -691,6 +687,11 @@ Content on this topic
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
+       <a href="devices/adi.adxl380.html#module-adi.adxl380"><code class="xref">adi.adxl380</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
        <a href="devices/adi.adxrs290.html#module-adi.adxrs290"><code class="xref">adi.adxrs290</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
@@ -912,6 +913,11 @@ Content on this topic
        <td>&#160;&#160;&#160;
        <a href="dev/test_generics.html#module-test.generics"><code class="xref">test.generics</code></a></td><td>
        <em></em></td></tr>
+     <tr class="cg-2">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="dev/test_jesd.html#module-test.jesd_tests"><code class="xref">test.jesd_tests</code></a></td><td>
+       <em></em></td></tr>
    </table>
 
 
@@ -931,7 +937,7 @@ Content on this topic
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2024, Analog Devices, Inc
+      &#169;2019-2025, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

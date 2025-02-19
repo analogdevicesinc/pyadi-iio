@@ -5,14 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>adis16480 &#8212; Analog Devices Hardware Python Interfaces 0.0.18 documentation</title>
+    <title>adis16480 &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.min.css?v=990931db" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=9cb8e28d" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=f38a6251"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=57f2e648"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=c93eadd1"></script>
+    <script defer="" src="../_static/app.umd.js?v=8d0ced9f"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -20,8 +20,8 @@
     <link rel="prev" title="adis16475" href="adi.adis16475.html" />
    
   
-  <meta name="global_root" content="../../">
-  <meta name="repo" content="pyadi-iio">
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.19">
   
 
 
@@ -41,7 +41,6 @@
   }
 </style>
   </head><body>
-  <div class="banner"></div>
   <input type="checkbox" id="input-show-toc">
   <input type="checkbox" id="input-show-localtoc">
   <input type="checkbox" id="input-show-repotoc">
@@ -78,23 +77,14 @@
 
   <div class="repotoc-tree overlay">
     <root>
-  <a href="../../documentation/index.html">System Level</a>
-  <a href="../../hdl/index.html">HDL</a>
-  <a href="../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../libiio/index.html">libiio</a>
-  <a href="../../no-OS/index.html">no-OS</a>
-  <a href="../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../scopy/index.html">Scopy</a>
-  <a href="../../doctools/index.html">Doctools</a>
 </root>
 
   </div>
     <div class="localtoc">
       <div class="tocwrapper">
         <div>
-          <div class="localtoc-header">On this page</div>
+          <div class="localtoc-header"></div>
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -202,16 +192,7 @@ Content on this topic
 </label>
 <div class="repotoc-tree">
   <root>
-  <a href="../../documentation/index.html">System Level</a>
-  <a href="../../hdl/index.html">HDL</a>
-  <a href="../../testbenches/index.html">HDL Testbenches</a>
   <a href="../index.html" class="current">Hardware Python Interfaces</a>
-  <a href="../../libiio/index.html">libiio</a>
-  <a href="../../no-OS/index.html">no-OS</a>
-  <a href="../../precision-converters-firmware/index.html">Precision Converters Firmware</a>
-  <a href="../../PrecisionToolbox/index.html">Precision Toolbox</a>
-  <a href="../../scopy/index.html">Scopy</a>
-  <a href="../../doctools/index.html">Doctools</a>
 </root>
 
 </div>
@@ -230,12 +211,14 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_jesd.html">JESD204 Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
@@ -265,7 +248,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081.html">ad9081</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9081_mc.html">ad9081_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9083.html">ad9083</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad9084.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9084.html">ad9084</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9084_mc.html">ad9084_mc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9094.html">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9136.html">ad9136</a></li>
@@ -305,6 +288,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16507.html">adis16507</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16545.html">adis16545</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16547.html">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adis16550.html">adis16550</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5240.html">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
@@ -321,6 +305,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl313.html">adxl313</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl345.html">adxl345</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
@@ -373,10 +358,10 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="adis16480">
-<h1>adis16480<a class="headerlink" href="#adis16480" title="Permalink to this heading">#</a></h1>
+<h1>adis16480<a class="headerlink" href="#adis16480" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adis16480">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.</span></span><span class="sig-name descname"><span class="pre">adis16480</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.</span></span><span class="sig-name descname"><span class="pre">adis16480</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">adis16XXX_with_mag</span></code></p>
 <p>ADIS16480 Ten Degrees of Freedom Inertial Sensor with Dynamic Orientation Outputs</p>
 <dl class="simple">
@@ -387,401 +372,401 @@ trigger_name: Name of the trigger in the IIO context. Default is adis16480-dev0<
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_x_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_x_calibbias</span></span><a class="headerlink" href="#adi.adis16480.accel_x_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_x_calibbias</span></span><a class="headerlink" href="#adi.adis16480.accel_x_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for accelerometer for the x-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_x_calibscale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_x_calibscale</span></span><a class="headerlink" href="#adi.adis16480.accel_x_calibscale" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_x_calibscale</span></span><a class="headerlink" href="#adi.adis16480.accel_x_calibscale" title="Permalink to this definition"></a></dt>
 <dd><p>Calibscale value for accelerometer for the x-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_x_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_x_conv</span></span><a class="headerlink" href="#adi.adis16480.accel_x_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_x_conv</span></span><a class="headerlink" href="#adi.adis16480.accel_x_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per squared second.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_x_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_x_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.accel_x_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_x_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.accel_x_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for accelerometer for the x-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_y_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_y_calibbias</span></span><a class="headerlink" href="#adi.adis16480.accel_y_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_y_calibbias</span></span><a class="headerlink" href="#adi.adis16480.accel_y_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for accelerometer for the y-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_y_calibscale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_y_calibscale</span></span><a class="headerlink" href="#adi.adis16480.accel_y_calibscale" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_y_calibscale</span></span><a class="headerlink" href="#adi.adis16480.accel_y_calibscale" title="Permalink to this definition"></a></dt>
 <dd><p>Calibcale value for accelerometer for the y-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_y_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_y_conv</span></span><a class="headerlink" href="#adi.adis16480.accel_y_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_y_conv</span></span><a class="headerlink" href="#adi.adis16480.accel_y_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per squared second.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_y_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_y_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.accel_y_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_y_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.accel_y_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for accelerometer for the y-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_z_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_z_calibbias</span></span><a class="headerlink" href="#adi.adis16480.accel_z_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_z_calibbias</span></span><a class="headerlink" href="#adi.adis16480.accel_z_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for accelerometer for the z-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_z_calibscale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_z_calibscale</span></span><a class="headerlink" href="#adi.adis16480.accel_z_calibscale" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_z_calibscale</span></span><a class="headerlink" href="#adi.adis16480.accel_z_calibscale" title="Permalink to this definition"></a></dt>
 <dd><p>Calibscale for accelerometer for the z-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_z_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_z_conv</span></span><a class="headerlink" href="#adi.adis16480.accel_z_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_z_conv</span></span><a class="headerlink" href="#adi.adis16480.accel_z_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per squared second.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.accel_z_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_z_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.accel_z_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accel_z_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.accel_z_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for accelerometer for the z-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_x_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_x_calibbias</span></span><a class="headerlink" href="#adi.adis16480.anglvel_x_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_x_calibbias</span></span><a class="headerlink" href="#adi.adis16480.anglvel_x_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for gyroscope for the x-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_x_calibscale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_x_calibscale</span></span><a class="headerlink" href="#adi.adis16480.anglvel_x_calibscale" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_x_calibscale</span></span><a class="headerlink" href="#adi.adis16480.anglvel_x_calibscale" title="Permalink to this definition"></a></dt>
 <dd><p>Calibscale value for gyroscope for the x-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_x_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_x_conv</span></span><a class="headerlink" href="#adi.adis16480.anglvel_x_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_x_conv</span></span><a class="headerlink" href="#adi.adis16480.anglvel_x_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians per second.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_x_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_x_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.anglvel_x_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_x_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.anglvel_x_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for gyroscope for the x-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_y_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_y_calibbias</span></span><a class="headerlink" href="#adi.adis16480.anglvel_y_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_y_calibbias</span></span><a class="headerlink" href="#adi.adis16480.anglvel_y_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for gyroscope for the y-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_y_calibscale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_y_calibscale</span></span><a class="headerlink" href="#adi.adis16480.anglvel_y_calibscale" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_y_calibscale</span></span><a class="headerlink" href="#adi.adis16480.anglvel_y_calibscale" title="Permalink to this definition"></a></dt>
 <dd><p>Calibscale value for gyroscope for the y-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_y_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_y_conv</span></span><a class="headerlink" href="#adi.adis16480.anglvel_y_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_y_conv</span></span><a class="headerlink" href="#adi.adis16480.anglvel_y_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians per second.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_y_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_y_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.anglvel_y_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_y_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.anglvel_y_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for gyroscope for the y-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_z_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_calibbias</span></span><a class="headerlink" href="#adi.adis16480.anglvel_z_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_calibbias</span></span><a class="headerlink" href="#adi.adis16480.anglvel_z_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for gyroscope for the z-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_z_calibscale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_calibscale</span></span><a class="headerlink" href="#adi.adis16480.anglvel_z_calibscale" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_calibscale</span></span><a class="headerlink" href="#adi.adis16480.anglvel_z_calibscale" title="Permalink to this definition"></a></dt>
 <dd><p>Calibscale value for gyroscope for the z-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_z_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_conv</span></span><a class="headerlink" href="#adi.adis16480.anglvel_z_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_conv</span></span><a class="headerlink" href="#adi.adis16480.anglvel_z_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians per second.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.anglvel_z_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.anglvel_z_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.anglvel_z_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for gyroscope for the z-axis.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adis16480.compatible_parts">
-<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['adis16480']</span></em><a class="headerlink" href="#adi.adis16480.compatible_parts" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['adis16480']</span></em><a class="headerlink" href="#adi.adis16480.compatible_parts" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.ctx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ctx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Context</span></em><a class="headerlink" href="#adi.adis16480.ctx" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ctx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Context</span></em><a class="headerlink" href="#adi.adis16480.ctx" title="Permalink to this definition"></a></dt>
 <dd><p>IIO Context</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.current_timestamp_clock">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_timestamp_clock</span></span><a class="headerlink" href="#adi.adis16480.current_timestamp_clock" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_timestamp_clock</span></span><a class="headerlink" href="#adi.adis16480.current_timestamp_clock" title="Permalink to this definition"></a></dt>
 <dd><p>current_timestamp_clock: Source clock for timestamps</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.deltaangl_x_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltaangl_x_conv</span></span><a class="headerlink" href="#adi.adis16480.deltaangl_x_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltaangl_x_conv</span></span><a class="headerlink" href="#adi.adis16480.deltaangl_x_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.deltaangl_y_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltaangl_y_conv</span></span><a class="headerlink" href="#adi.adis16480.deltaangl_y_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltaangl_y_conv</span></span><a class="headerlink" href="#adi.adis16480.deltaangl_y_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.deltaangl_z_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltaangl_z_conv</span></span><a class="headerlink" href="#adi.adis16480.deltaangl_z_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltaangl_z_conv</span></span><a class="headerlink" href="#adi.adis16480.deltaangl_z_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.deltavelocity_x_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltavelocity_x_conv</span></span><a class="headerlink" href="#adi.adis16480.deltavelocity_x_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltavelocity_x_conv</span></span><a class="headerlink" href="#adi.adis16480.deltavelocity_x_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per second.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.deltavelocity_y_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltavelocity_y_conv</span></span><a class="headerlink" href="#adi.adis16480.deltavelocity_y_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltavelocity_y_conv</span></span><a class="headerlink" href="#adi.adis16480.deltavelocity_y_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per second.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.deltavelocity_z_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltavelocity_z_conv</span></span><a class="headerlink" href="#adi.adis16480.deltavelocity_z_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deltavelocity_z_conv</span></span><a class="headerlink" href="#adi.adis16480.deltavelocity_z_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per second.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adis16480.disable_trigger">
-<span class="sig-name descname"><span class="pre">disable_trigger</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#adi.adis16480.disable_trigger" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">disable_trigger</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#adi.adis16480.disable_trigger" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.firmware_date">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">firmware_date</span></span><a class="headerlink" href="#adi.adis16480.firmware_date" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">firmware_date</span></span><a class="headerlink" href="#adi.adis16480.firmware_date" title="Permalink to this definition"></a></dt>
 <dd><p>firmware_date: the factory configuration date</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.firmware_revision">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">firmware_revision</span></span><a class="headerlink" href="#adi.adis16480.firmware_revision" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">firmware_revision</span></span><a class="headerlink" href="#adi.adis16480.firmware_revision" title="Permalink to this definition"></a></dt>
 <dd><p>firmware_revision: the firmware revision for the internal firmware</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.flash_count">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flash_count</span></span><a class="headerlink" href="#adi.adis16480.flash_count" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flash_count</span></span><a class="headerlink" href="#adi.adis16480.flash_count" title="Permalink to this definition"></a></dt>
 <dd><p>flash_counter: flash memory write count</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_accel_x">
-<span class="sig-name descname"><span class="pre">get_accel_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_accel_x" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_accel_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_accel_x" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per squared second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_accel_y">
-<span class="sig-name descname"><span class="pre">get_accel_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_accel_y" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_accel_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_accel_y" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per squared second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_accel_z">
-<span class="sig-name descname"><span class="pre">get_accel_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_accel_z" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_accel_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_accel_z" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per squared second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_anglvel_x">
-<span class="sig-name descname"><span class="pre">get_anglvel_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_anglvel_x" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_anglvel_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_anglvel_x" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians per second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_anglvel_y">
-<span class="sig-name descname"><span class="pre">get_anglvel_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_anglvel_y" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_anglvel_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_anglvel_y" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians per second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_anglvel_z">
-<span class="sig-name descname"><span class="pre">get_anglvel_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_anglvel_z" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_anglvel_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_anglvel_z" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians per second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_deltaangl_x">
-<span class="sig-name descname"><span class="pre">get_deltaangl_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltaangl_x" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_deltaangl_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltaangl_x" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_deltaangl_y">
-<span class="sig-name descname"><span class="pre">get_deltaangl_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltaangl_y" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_deltaangl_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltaangl_y" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_deltaangl_z">
-<span class="sig-name descname"><span class="pre">get_deltaangl_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltaangl_z" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_deltaangl_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltaangl_z" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_deltavelocity_x">
-<span class="sig-name descname"><span class="pre">get_deltavelocity_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltavelocity_x" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_deltavelocity_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltavelocity_x" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_deltavelocity_y">
-<span class="sig-name descname"><span class="pre">get_deltavelocity_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltavelocity_y" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_deltavelocity_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltavelocity_y" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_deltavelocity_z">
-<span class="sig-name descname"><span class="pre">get_deltavelocity_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltavelocity_z" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_deltavelocity_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_deltavelocity_z" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in meters per second.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_magn_x">
-<span class="sig-name descname"><span class="pre">get_magn_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_magn_x" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_magn_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_magn_x" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_magn_y">
-<span class="sig-name descname"><span class="pre">get_magn_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_magn_y" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_magn_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_magn_y" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_magn_z">
-<span class="sig-name descname"><span class="pre">get_magn_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_magn_z" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_magn_z</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_magn_z" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_pressure">
-<span class="sig-name descname"><span class="pre">get_pressure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_pressure" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_pressure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_pressure" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in kilo Pascal.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.get_temp">
-<span class="sig-name descname"><span class="pre">get_temp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_temp" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_temp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.get_temp" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in millidegrees Celsius.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_x_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_x_calibbias</span></span><a class="headerlink" href="#adi.adis16480.magn_x_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_x_calibbias</span></span><a class="headerlink" href="#adi.adis16480.magn_x_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for magnetometer for the x-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_x_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_x_conv</span></span><a class="headerlink" href="#adi.adis16480.magn_x_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_x_conv</span></span><a class="headerlink" href="#adi.adis16480.magn_x_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_x_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_x_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.magn_x_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_x_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.magn_x_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for magnetometer for the x-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_y_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_y_calibbias</span></span><a class="headerlink" href="#adi.adis16480.magn_y_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_y_calibbias</span></span><a class="headerlink" href="#adi.adis16480.magn_y_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for magnetometer for the y-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_y_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_y_conv</span></span><a class="headerlink" href="#adi.adis16480.magn_y_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_y_conv</span></span><a class="headerlink" href="#adi.adis16480.magn_y_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_y_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_y_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.magn_y_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_y_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.magn_y_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for magnetometer for the y-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_z_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_z_calibbias</span></span><a class="headerlink" href="#adi.adis16480.magn_z_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_z_calibbias</span></span><a class="headerlink" href="#adi.adis16480.magn_z_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for magnetometer for the z-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_z_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_z_conv</span></span><a class="headerlink" href="#adi.adis16480.magn_z_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_z_conv</span></span><a class="headerlink" href="#adi.adis16480.magn_z_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in radians.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.magn_z_filter_low_pass_3db_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_z_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.magn_z_filter_low_pass_3db_frequency" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">magn_z_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16480.magn_z_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for magnetometer for the z-axis.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.pressure_calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pressure_calibbias</span></span><a class="headerlink" href="#adi.adis16480.pressure_calibbias" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pressure_calibbias</span></span><a class="headerlink" href="#adi.adis16480.pressure_calibbias" title="Permalink to this definition"></a></dt>
 <dd><p>User calibration offset for pressure.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.pressure_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pressure_conv</span></span><a class="headerlink" href="#adi.adis16480.pressure_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pressure_conv</span></span><a class="headerlink" href="#adi.adis16480.pressure_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in kilo Pascal.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.product_id">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">product_id</span></span><a class="headerlink" href="#adi.adis16480.product_id" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">product_id</span></span><a class="headerlink" href="#adi.adis16480.product_id" title="Permalink to this definition"></a></dt>
 <dd><p>product_id: the numerical portion of the device number</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.rx" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.rx" title="Permalink to this definition"></a></dt>
 <dd><p>Receive data from hardware buffers for each channel index in
 rx_enabled_channels.</p>
 <dl class="simple">
@@ -794,31 +779,31 @@ Data will be complex when using a complex data device.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.rx_annotated">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_annotated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.adis16480.rx_annotated" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_annotated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.adis16480.rx_annotated" title="Permalink to this definition"></a></dt>
 <dd><p>rx_annotated: Set output data from rx() to be annotated</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.rx_buffer_size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.adis16480.rx_buffer_size" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.adis16480.rx_buffer_size" title="Permalink to this definition"></a></dt>
 <dd><p>rx_buffer_size: Size of receive buffer in samples</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.rx_channel_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.adis16480.rx_channel_names" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.adis16480.rx_channel_names" title="Permalink to this definition"></a></dt>
 <dd><p>rx_channel_names: List of RX channel names</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adis16480.rx_destroy_buffer">
-<span class="sig-name descname"><span class="pre">rx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.rx_destroy_buffer" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">rx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16480.rx_destroy_buffer" title="Permalink to this definition"></a></dt>
 <dd><p>rx_destroy_buffer: Clears RX buffer</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.rx_enabled_channels">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.adis16480.rx_enabled_channels" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.adis16480.rx_enabled_channels" title="Permalink to this definition"></a></dt>
 <dd><p>rx_enabled_channels: List of enabled channels (channel 1 is 0)</p>
 <p>Either a list of channel numbers or channel names can be used to set
 rx_enabled_channels. When channel names are used, they will be
@@ -827,25 +812,25 @@ translated to channel numbers.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.rx_output_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.adis16480.rx_output_type" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.adis16480.rx_output_type" title="Permalink to this definition"></a></dt>
 <dd><p>rx_output_type: Set output data type from rx()</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.adis16480.sample_rate" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.adis16480.sample_rate" title="Permalink to this definition"></a></dt>
 <dd><p>sample_rate: Sample rate in samples per second</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.serial_number">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">serial_number</span></span><a class="headerlink" href="#adi.adis16480.serial_number" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">serial_number</span></span><a class="headerlink" href="#adi.adis16480.serial_number" title="Permalink to this definition"></a></dt>
 <dd><p>serial_number: lot specific serial number</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adis16480.temp_conv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temp_conv</span></span><a class="headerlink" href="#adi.adis16480.temp_conv" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temp_conv</span></span><a class="headerlink" href="#adi.adis16480.temp_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Value returned in millidegrees Celsius.</p>
 </dd></dl>
 
@@ -870,7 +855,7 @@ translated to channel numbers.</p>
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2024, Analog Devices, Inc
+      &#169;2019-2025, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

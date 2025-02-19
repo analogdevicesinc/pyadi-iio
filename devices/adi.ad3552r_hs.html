@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>adi.max14001 module &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
+    <title>adi.ad3552r_hs module &#8212; Analog Devices Hardware Python Interfaces 0.0.19 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=9cb8e28d" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -16,8 +16,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="adi.max31855 module" href="adi.max31855.html" />
-    <link rel="prev" title="adi.max11205 module" href="adi.max11205.html" />
+    <link rel="next" title="ad4020" href="adi.ad4020.html" />
+    <link rel="prev" title="ad3552r" href="adi.ad3552r.html" />
    
   
   <meta name="repository" content="pyadi-iio">
@@ -89,10 +89,11 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adi.max14001 module</a><ul>
-<li><a class="reference internal" href="#adi.max14001.max14001"><code class="docutils literal notranslate"><span class="pre">max14001</span></code></a><ul>
-<li><a class="reference internal" href="#adi.max14001.max14001.channel"><code class="docutils literal notranslate"><span class="pre">max14001.channel</span></code></a></li>
-<li><a class="reference internal" href="#adi.max14001.max14001.to_volts"><code class="docutils literal notranslate"><span class="pre">max14001.to_volts()</span></code></a></li>
+<li><a class="reference internal" href="#">adi.ad3552r_hs module</a><ul>
+<li><a class="reference internal" href="#adi.ad3552r_hs.ad3552r_hs"><code class="docutils literal notranslate"><span class="pre">ad3552r_hs</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad3552r_hs.ad3552r_hs.input_source"><code class="docutils literal notranslate"><span class="pre">ad3552r_hs.input_source</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad3552r_hs.ad3552r_hs.output_range"><code class="docutils literal notranslate"><span class="pre">ad3552r_hs.output_range</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad3552r_hs.ad3552r_hs.stream_status"><code class="docutils literal notranslate"><span class="pre">ad3552r_hs.stream_status</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -144,7 +145,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r.html">ad3552r</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
@@ -261,7 +262,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2672.html">ltc2672</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2983.html">ltc2983</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max11205.html">adi.max11205 module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.max14001 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.max14001.html">adi.max14001 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31865.html">adi.max31865 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max9611.html">adi.max9611 module</a></li>
@@ -283,22 +284,29 @@ Content on this topic
         <div class="bodywrapper" id="top-anchor">
           <div class="body" role="main">
             
-  <section id="module-adi.max14001">
-<span id="adi-max14001-module"></span><h1>adi.max14001 module<a class="headerlink" href="#module-adi.max14001" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.ad3552r_hs">
+<span id="adi-ad3552r-hs-module"></span><h1>adi.ad3552r_hs module<a class="headerlink" href="#module-adi.ad3552r_hs" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.max14001.max14001">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max14001.</span></span><span class="sig-name descname"><span class="pre">max14001</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max14001.max14001" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>MAX14001 ADC</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.max14001.max14001.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.max14001.max14001.channel" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="adi.ad3552r_hs.ad3552r_hs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad3552r_hs.</span></span><span class="sig-name descname"><span class="pre">ad3552r_hs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad3552r_hs.ad3552r_hs" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD3552R_HS DAC</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad3552r_hs.ad3552r_hs.input_source">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_source</span></span><a class="headerlink" href="#adi.ad3552r_hs.ad3552r_hs.input_source" title="Permalink to this definition"></a></dt>
+<dd><p>Input source of the DAC</p>
+</dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.max14001.max14001.to_volts">
-<span class="sig-name descname"><span class="pre">to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max14001.max14001.to_volts" title="Permalink to this definition"></a></dt>
-<dd><p>Converts raw value to SI.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad3552r_hs.ad3552r_hs.output_range">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_range</span></span><a class="headerlink" href="#adi.ad3552r_hs.ad3552r_hs.output_range" title="Permalink to this definition"></a></dt>
+<dd><p>Stream status of the DAC</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad3552r_hs.ad3552r_hs.stream_status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stream_status</span></span><a class="headerlink" href="#adi.ad3552r_hs.ad3552r_hs.stream_status" title="Permalink to this definition"></a></dt>
+<dd><p>Stream status of the DAC</p>
 </dd></dl>
 
 </dd></dl>
@@ -309,8 +317,8 @@ Content on this topic
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.max11205.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adi.max11205 module</a>
-    <a href="adi.max31855.html" title="Next document (Alt+Shift+RightArrow)" class="next">adi.max31855 module</a>
+    <a href="adi.ad3552r.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad3552r</a>
+    <a href="adi.ad4020.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad4020</a>
               </div>
           
         </div>
