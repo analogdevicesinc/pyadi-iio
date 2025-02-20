@@ -4,9 +4,10 @@
 
 from adi.attribute import attribute
 from adi.context_manager import context_manager
+from adi.rx_tx import rx
 
 
-class ad5592r(context_manager):
+class ad5592r(rx, context_manager):
     """AD5592R and AD5593R SPI / I2C interface, 8-channel, 12-bit Confiburable ADC/DAC, digital GPIO
 
     Analog I/O pins are configured in the device tree and can be ADC, DAC, or both. Channel attributes are as follows, where X corresponds to device channel number:
@@ -25,6 +26,8 @@ class ad5592r(context_manager):
     """
 
     _device_name = ""
+    _complex_data = False
+    channel = []
 
     def __repr__(self):
         retstr = f"""
@@ -56,7 +59,14 @@ ad5592r(uri="{self.uri}, device_name={self._device_name})"
         for device in self._ctx.devices:
             if device.name in device_name:
                 self._ctrl = device
+                self._rxadc = device
+                buffers_avail = any([c.scan_element for c in self._rxadc.channels])
+                if not buffers_avail:
+                    delattr(self, "rx")
                 break
+
+        self.channel = []
+        self._rx_channel_names = []
 
         # Dynamically get channels after the index
         for ch in self._ctrl.channels:
@@ -70,9 +80,12 @@ ad5592r(uri="{self.uri}, device_name={self._device_name})"
                         self, name + "_dac", self.channel_dac(self._ctrl, name, output)
                     )
                 else:
+                    self._rx_channel_names.append(name)
+                    self.channel.append(self.channel_adc(self._ctrl, name, output))
                     setattr(
                         self, name + "_adc", self.channel_adc(self._ctrl, name, output)
                     )
+        rx.__init__(self)
 
     class channel_adc(attribute):
         """AD5592R Input Voltage Channels"""
