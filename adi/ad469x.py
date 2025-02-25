@@ -13,47 +13,35 @@ from adi.rx_tx import rx
 
 
 class ad469x(rx, context_manager):
-    """ AD469x ADC """
+    """ AD469x, 16-Bit, 16-Channel, Easy Drive Multiplexed SAR ADCs with sample
+    rates of 500 kSPS or 1 MSPS"""
 
-    _complex_data = False
-    channel = []  # type: ignore
+    _compatible_parts = ["ad4695", "ad4696", "ad4697", "ad4698"]
     _device_name = ""
+    channel = []
 
-    def __init__(self, uri="", device_name=""):
+    def __init__(self, uri="ip:analog.local", device_name="ad4696"):
         """Constructor for AD469x class."""
         context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = [
-            "ad4696",
-            "ad4697",
-            "ad4698",
-        ]
 
         self._ctrl = None
 
         if not device_name:
-            device_name = compatible_parts[0]
+            device_name = self._compatible_parts[0]
         else:
-            if device_name not in compatible_parts:
-                raise Exception(
-                    f"Not a compatible device: {device_name} . Supported device names are: {', '.join(compatible_parts)}"
-                )
+            if device_name not in self._compatible_parts:
+                raise Exception(f"Not a compatible device: {device_name}")
 
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._rxadc = device
-                break
-
-        if not self._ctrl:
-            raise Exception("Error in selecting matching device")
+        self._rxadc = self._ctrl = self._ctx.find_device(device_name)
 
         if not self._rxadc:
-            raise Exception("Error in selecting matching device")
+            raise Exception(f"Error in selecting matching device: {device_name}")
+
+        if not self._ctrl:
+            raise Exception(f"Error in selecting matching device: {device_name}")
 
         self._rx_channel_names = []
-        for ch in self._ctrl.channels:
+        for ch in self._rxadc.channels:
             name = ch._id
             self._rx_channel_names.append(name)
             self.channel.append(self._channel(self._ctrl, name))
@@ -67,6 +55,24 @@ class ad469x(rx, context_manager):
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
+
+        @property
+        def sampling_frequency(self):
+            """Get sampling frequency of the channel."""
+            return self._get_iio_attr(self.name, "sampling_frequency", False)
+
+        @sampling_frequency.setter
+        def sampling_frequency(self, rate):
+            """Set sampling frequency of the channel."""
+            self._set_iio_attr(
+                self.name, "sampling_frequency", value=rate, output=False
+            )
+
+        @property
+        def sampling_frequency_available(self):
+            """Get available sampling frequency values. This property only exists if
+            SPI offload is enabled for the driver."""
+            return self._get_iio_attr(self.name, "sampling_frequency_available", False)
 
         @property
         def raw(self):
