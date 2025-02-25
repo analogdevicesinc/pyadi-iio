@@ -453,6 +453,7 @@ adaq4224:
       - filename: adaq4224.xml
       - data_devices:
           - iio:device0
+
 ltc2387:
   - ltc2387
   - pyadi_iio_class_support:
