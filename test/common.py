@@ -106,32 +106,30 @@ def pytest_generate_tests(metafunc):
 def dev_interface(
     uri, classname, val, attr, tol, sub_channel=None, sleep=0, readonly=False
 ):
-    sdr = eval(classname + "(uri='" + uri + "')")
-    # Check hardware
-    if not hasattr(sdr, attr):
-        raise AttributeError(attr + " not defined in " + classname)
+    with eval(classname + "(uri='" + uri + "')") as sdr:
+        # Check hardware
+        if not hasattr(sdr, attr):
+            raise AttributeError(attr + " not defined in " + classname)
 
-    rval = getattr(sdr, attr)
-    is_list = isinstance(rval, list)
-    if is_list:
-        l = len(rval)
-        val = [val] * l
+        rval = getattr(sdr, attr)
+        is_list = isinstance(rval, list)
+        if is_list:
+            l = len(rval)
+            val = [val] * l
 
-    setattr(sdr, attr, val)
-    if sleep > 0:
-        time.sleep(sleep)
-    rval = getattr(sdr, attr)
+        setattr(sdr, attr, val)
+        if sleep > 0:
+            time.sleep(sleep)
+        rval = getattr(sdr, attr)
 
-    if not isinstance(rval, str) and not is_list:
-        rval = float(rval)
-        for _ in range(5):
-            setattr(sdr, attr, val)
-            time.sleep(0.3)
-            rval = float(getattr(sdr, attr))
-            if rval == val:
-                break
-
-    del sdr
+        if not isinstance(rval, str) and not is_list:
+            rval = float(rval)
+            for _ in range(5):
+                setattr(sdr, attr, val)
+                time.sleep(0.3)
+                rval = float(getattr(sdr, attr))
+                if rval == val:
+                    break
 
     if is_list and isinstance(rval[0], str):
         return val == rval
@@ -154,26 +152,24 @@ def dev_interface(
 def dev_interface_sub_channel(
     uri, classname, sub_channel, val, attr, tol, readonly=False, sleep=0,
 ):
-    sdr = eval(classname + "(uri='" + uri + "')")
-    # Check hardware
-    if not hasattr(sdr, sub_channel):
-        raise AttributeError(sub_channel + " not defined in " + classname)
-    if not hasattr(getattr(sdr, sub_channel), attr):
-        raise AttributeError(attr + " not defined in " + classname)
+    with eval(classname + "(uri='" + uri + "')") as sdr:
+        # Check hardware
+        if not hasattr(sdr, sub_channel):
+            raise AttributeError(sub_channel + " not defined in " + classname)
+        if not hasattr(getattr(sdr, sub_channel), attr):
+            raise AttributeError(attr + " not defined in " + classname)
 
-    rval = getattr(getattr(sdr, sub_channel), attr)
-    is_list = isinstance(rval, list)
-    if is_list:
-        l = len(rval)
-        val = [val] * l
+        rval = getattr(getattr(sdr, sub_channel), attr)
+        is_list = isinstance(rval, list)
+        if is_list:
+            l = len(rval)
+            val = [val] * l
 
-    if readonly is False:
-        setattr(getattr(sdr, sub_channel), attr, val)
-        if sleep > 0:
-            time.sleep(sleep)
-    rval = getattr(getattr(sdr, sub_channel), attr)
-
-    del sdr
+        if readonly is False:
+            setattr(getattr(sdr, sub_channel), attr, val)
+            if sleep > 0:
+                time.sleep(sleep)
+        rval = getattr(getattr(sdr, sub_channel), attr)
 
     if not isinstance(rval, str) and not is_list:
         rval = float(rval)
