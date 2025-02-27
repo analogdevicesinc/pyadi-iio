@@ -8,7 +8,7 @@ import komm
 import scipy.io
 
 sdr  = adi.adrv9002(uri="ip:10.48.65.203")
-# sdr.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+sdr.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
 sdr.tx0_port_en = "spi"
 sdr.tx1_port_en = "spi"
@@ -23,7 +23,7 @@ sdr.tx_hardwaregain_chan1 = -10
 
 
 sdr1 = adi.adrv9002(uri="ip:10.48.65.154")
-# sdr1.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+sdr1.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
 sdr1.tx0_port_en = "spi"
 sdr1.tx1_port_en = "spi"
@@ -57,50 +57,66 @@ modulation_map = {
     "8": "GFSK",
     "9": "PAM4",
     "10": "QPSK",
-    "11": "ORIGINAL"
+    "11": "ORIGINAL",
+    "12": "DISABLED"
 }
 
-mod_8spk  = scipy.io.loadmat('modulated_data/input_mod_8PSK.mat')
-mod_16qam = scipy.io.loadmat('modulated_data/input_mod_16QAM.mat')
-mod_64qam = scipy.io.loadmat('modulated_data/input_mod_64QAM.mat')
-mod_bspk  = scipy.io.loadmat('modulated_data/input_mod_BPSK.mat')
-mod_cpfsk = scipy.io.loadmat('modulated_data/input_mod_CPFSK.mat')
-mod_gfsk  = scipy.io.loadmat('modulated_data/input_mod_GFSK.mat')
-mod_pam4  = scipy.io.loadmat('modulated_data/input_mod_PAM4.mat')
-mod_qpsk  = scipy.io.loadmat('modulated_data/input_mod_QPSK.mat')
+mod_8spk  = scipy.io.loadmat('modulated_data/mod_8PSK.mat')
+mod_16qam = scipy.io.loadmat('modulated_data/mod_16QAM.mat')
+mod_64qam = scipy.io.loadmat('modulated_data/mod_64QAM.mat')
+mod_bspk  = scipy.io.loadmat('modulated_data/mod_BPSK.mat')
+mod_cpfsk = scipy.io.loadmat('modulated_data/mod_CPFSK.mat')
+mod_gfsk  = scipy.io.loadmat('modulated_data/mod_GFSK.mat')
+mod_pam4  = scipy.io.loadmat('modulated_data/mod_PAM4.mat')
+mod_qpsk  = scipy.io.loadmat('modulated_data/mod_QPSK.mat')
 
 while True:
 
-    modulation_number = input("Enter modulation type (1: 16QAM, 2: 64QAM, 3: 8PSK, 5: BPSK, 6: CPFSK, 8: GFSK, 9: PAM4, 10: QPSK, 11: ORIGINAL 0:EXIT): ")
-
+    modulation_number = input("Enter modulation type (1: 16QAM, 2: 64QAM, 3: 8PSK, 5: BPSK, 6: CPFSK, 8: GFSK, 9: PAM4, 10: QPSK, 11: ORIGINAL, 12: DISABLED, 0:EXIT): ")
+    sdr.tx0_en  = 1
+    sdr.tx1_en  = 1
+    sdr1.tx0_en = 1
+    sdr1.tx1_en = 1
     print(modulation_number)
     modulation_type = modulation_map.get(modulation_number, "BPSK")
     print(modulation_type)
 
     match modulation_type:
         case "BPSK":
-            data = mod_bspk['yc']
+            data = mod_bspk['rx']
         case "QPSK":
-            data = mod_qpsk['yc']
+            data = mod_qpsk['rx']
         case "8PSK":
-            data = mod_8spk['yc']
+            data = mod_8spk['rx']
         case "16QAM":
-            data = mod_16qam['yc']
+            data = mod_16qam['rx']
         case "64QAM":
-            data = mod_64qam['yc']
+            data = mod_64qam['rx']
         case "PAM4":
-            data = mod_pam4['yc']
+            data = mod_pam4['rx']
         case "GFSK":
-            data = mod_gfsk['yc']
+            data = mod_gfsk['rx']
         case "CPFSK":
-            data = mod_cpfsk['yc']
+            data = mod_cpfsk['rx']
         case "ORIGINAL":
             data = i + 1j * q
+        case "DISABLED":
+            data = i + 1j * q
+            sdr._tx2.tx_destroy_buffer()
+            sdr.tx_destroy_buffer()
+            sdr1._tx2.tx_destroy_buffer()
+            sdr1.tx_destroy_buffer()
+            sdr.tx0_en  = 0
+            sdr.tx1_en  = 0
+            sdr1.tx0_en = 0
+            sdr1.tx1_en = 0
+
+
         case "EXIT":
-            sdr.tx2_destroy_buffer()
+            sdr._tx2.tx_destroy_buffer()
             sdr.tx_destroy_buffer()
 
-            sdr1.tx2_destroy_buffer()
+            sdr1._tx2.tx_destroy_buffer()
             sdr1.tx_destroy_buffer()
 
             break
@@ -111,16 +127,15 @@ while True:
     iq = iq_real + 1j * iq_imag
 
     sdr1.tx_destroy_buffer()
-    sdr1.tx(iq)
-
-    sdr1.tx2_destroy_buffer()
-    sdr1.tx2(iq)
-
+    sdr1._tx2.tx_destroy_buffer()
 
     sdr.tx_destroy_buffer()
-    sdr.tx(iq)
+    sdr._tx2.tx_destroy_buffer()
 
-    sdr.tx2_destroy_buffer()
+    sdr1.tx(iq)
+    sdr1.tx2(iq)
+
+    sdr.tx(iq)
     sdr.tx2(iq)
 
 
