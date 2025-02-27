@@ -8,9 +8,8 @@ import komm
 import scipy.io
 
 sdr  = adi.adrv9002(uri="ip:10.48.65.203")
+# sdr.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
-
-sdr.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 sdr.tx0_port_en = "spi"
 sdr.tx1_port_en = "spi"
 sdr.tx_ensm_mode_chan0 = "rf_enabled"
@@ -24,7 +23,7 @@ sdr.tx_hardwaregain_chan1 = -10
 
 
 sdr1 = adi.adrv9002(uri="ip:10.48.65.154")
-sdr1.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+# sdr1.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
 sdr1.tx0_port_en = "spi"
 sdr1.tx1_port_en = "spi"
@@ -73,12 +72,7 @@ mod_qpsk  = scipy.io.loadmat('modulated_data/input_mod_QPSK.mat')
 while True:
 
     modulation_number = input("Enter modulation type (1: 16QAM, 2: 64QAM, 3: 8PSK, 5: BPSK, 6: CPFSK, 8: GFSK, 9: PAM4, 10: QPSK, 11: ORIGINAL 0:EXIT): ")
-    sdr.tx_destroy_buffer()
-    sdr.tx2_destroy_buffer()
-    sdr.tx2_destroy_buffer()
-    sdr1.tx_destroy_buffer()
-    sdr1.tx2_destroy_buffer()
-    sdr1.tx2_destroy_buffer()
+
     print(modulation_number)
     modulation_type = modulation_map.get(modulation_number, "BPSK")
     print(modulation_type)
@@ -103,11 +97,12 @@ while True:
         case "ORIGINAL":
             data = i + 1j * q
         case "EXIT":
-            sdr.tx_destroy_buffer()
             sdr.tx2_destroy_buffer()
+            sdr.tx_destroy_buffer()
 
-            sdr1.tx_destroy_buffer()
             sdr1.tx2_destroy_buffer()
+            sdr1.tx_destroy_buffer()
+
             break
 
     data=data.flatten()
@@ -115,10 +110,21 @@ while True:
     iq_imag = np.int16(np.imag(data) * 2**12-1)
     iq = iq_real + 1j * iq_imag
 
-    sdr.tx(iq)
-    time.sleep(0.5)
-    sdr.tx2(iq)
-    time.sleep(0.5)
+    sdr1.tx_destroy_buffer()
     sdr1.tx(iq)
-    time.sleep(0.5)
+
+    sdr1.tx2_destroy_buffer()
     sdr1.tx2(iq)
+
+
+    sdr.tx_destroy_buffer()
+    sdr.tx(iq)
+
+    sdr.tx2_destroy_buffer()
+    sdr.tx2(iq)
+
+
+
+
+
+
