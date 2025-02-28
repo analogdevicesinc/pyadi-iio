@@ -1,70 +1,219 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import random
 from dash import Dash, html, dcc, dash_table
 import dash
 import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 import plotly.express as px
-import numpy as np
 import pandas as pd
 import scipy.io
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.metrics import roc_curve, roc_auc_score
+import os
+import time
+import adi
+import scipy.io
 
 app = Dash(__name__)
 
 # Data
 labels = ['16QAM', '64QAM', '8PSK', 'BPSK', 'CPFSK', 'GFSK', 'PAM4', 'QPSK']
 modulation_map = {
-    "0": "16QAM",
-    "1": "64QAM",
-    "2": "8PSK",
+    "1": "16QAM",
+    "2": "64QAM",
     "3": "8PSK",
-    "4": "BPSK",
-    "5": "CPFSK",
-    "6": "8PSK",
-    "7": "GFSK",
-    "8": "PAM4",
-    "9": "QPSK"
+    "5": "BPSK",
+    "6": "CPFSK",
+    "8": "GFSK",
+    "9": "PAM4",
+    "10": "QPSK"
 }
 # Plot confusion matrix
 
-def update_modulated_data():
-    global modulated_data
-    global time
-    global df
-    mod_file = scipy.io.loadmat(f'modulated_data/mod_{modulation_map[str(truth)]}.mat')
-    modulated_data = mod_file['rx']
-    modulated_data_re =np.real(modulated_data.flatten())
-    time = np.arange(0, len(modulated_data))
+# def update_modulated_data():
+#     global modulated_data
+#     global time
+#     global df
+#     global shift
 
-    df = pd.DataFrame(dict(
-     x = time,
-     y = modulated_data_re
-    ))
+#     mod_file = scipy.io.loadmat(f'modulated_data/mod_{modulation_map[str(truth)]}.mat')
+#     modulated_data = mod_file['rx']
+#     modulated_data_re = np.real(modulated_data.flatten())
+#     time = np.arange(0, len(modulated_data))
+
+#     df = pd.DataFrame(dict(
+#      x = time,
+#      y = modulated_data_re
+#     ))
 
 # Plot the modulated data
 def plot_modulated_data():
-    fig = px.line(df, x="x", y="y", title=f"Modulated signal - Truth: {modulation_map[str(truth)]}", line_shape='linear')
-    fig.update_traces(line=dict(color='#009FBD'))
-    fig.update_layout(plot_bgcolor='white', xaxis=dict(showgrid=True, gridcolor='gray'), yaxis=dict(showgrid=True, gridcolor='gray'))
+
+    estimated_labels = [modulation_map[str(label)] for label in estimated_ch1_vector]
+    fig = px.histogram(
+        x=probability_ch1_vector, color=estimated_labels, nbins=50,
+        labels=dict(color='True Labels', x='Score')
+    )
     return fig
 
 confusion_matrix = np.zeros((len(labels), len(labels)))
 iteration=0
+last_timestamp = ""
+estimated_ch1 = 0
+estimated_ch2 = 0
+estimated_ch3 = 0
+estimated_ch4 = 0
+file_path = 'cnn_output.txt'
+truth = 0
+estimated_ch1_vector = []
+estimated_ch2_vector = []
+estimated_ch3_vector = []
+estimated_ch4_vector = []
+probability_ch1_vector = []
+probability_ch2_vector = []
+probability_ch3_vector = []
+probability_ch4_vector = []
+truth_vector = []
+
+def get_timestamp(file_name):
+    global last_timestamp
+    if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        with open(file_name, 'r') as file:
+            lines = file.readlines()
+            if lines:
+                timestamp = lines[0].strip()
+                if timestamp > last_timestamp:
+                    last_timestamp = timestamp
+                    return True
+    return False
+
+def get_cnn_data():
+    global truth
+    global estimated_ch1
+    global estimated_ch2
+    global estimated_ch3
+    global estimated_ch4
+
+    global probability_ch1
+    global probability_ch2
+    global probability_ch3
+    global probability_ch4
+
+    global estimated_ch1_vector
+    global estimated_ch2_vector
+    global estimated_ch3_vector
+    global estimated_ch4_vector
+
+    global probability_ch1_vector
+    global probability_ch2_vector
+    global probability_ch3_vector
+    global probability_ch4_vector
+    global truth_vector
+
+    mod_8spk  = scipy.io.loadmat('modulated_data/mod_8PSK.mat')
+    mod_16qam = scipy.io.loadmat('modulated_data/mod_16QAM.mat')
+    mod_64qam = scipy.io.loadmat('modulated_data/mod_64QAM.mat')
+    mod_bspk  = scipy.io.loadmat('modulated_data/mod_BPSK.mat')
+    mod_cpfsk = scipy.io.loadmat('modulated_data/mod_CPFSK.mat')
+    mod_gfsk  = scipy.io.loadmat('modulated_data/mod_GFSK.mat')
+    mod_pam4  = scipy.io.loadmat('modulated_data/mod_PAM4.mat')
+    mod_qpsk  = scipy.io.loadmat('modulated_data/mod_QPSK.mat')
+
+    truth = random.choice([1, 2, 3, 5, 6, 8,9,10])
+
+    modulation_type = modulation_map[str(truth)]
+    print(modulation_type)
+    match modulation_type:
+        case "BPSK":
+            data = mod_bspk['rx']
+        case "QPSK":
+            data = mod_qpsk['rx']
+        case "8PSK":
+            data = mod_8spk['rx']
+        case "16QAM":
+            data = mod_16qam['rx']
+        case "64QAM":
+            data = mod_64qam['rx']
+        case "PAM4":
+            data = mod_pam4['rx']
+        case "GFSK":
+            data = mod_gfsk['rx']
+        case "CPFSK":
+            data = mod_cpfsk['rx']
+
+    data=data.flatten()
+    iq_real = np.int16(np.real(data) * 2**12-1)
+    iq_imag = np.int16(np.imag(data) * 2**12-1)
+    iq = iq_real + 1j * iq_imag
+
+    sdr1.tx_destroy_buffer()
+    sdr1._tx2.tx_destroy_buffer()
+    sdr.tx_destroy_buffer()
+    sdr._tx2.tx_destroy_buffer()
+
+    sdr1.tx(iq)
+    sdr1.tx2(iq)
+    sdr.tx(iq)
+    sdr.tx2(iq)
+
+    if get_timestamp(file_path):
+
+
+        truth_vector.append(truth)
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            estimated_ch1 = int(lines[1].strip())
+            estimated_ch2 = int(lines[2].strip())
+            estimated_ch3 = int(lines[3].strip())
+            estimated_ch4 = int(lines[4].strip())
+            probability_ch1 = float(lines[5].strip())
+            probability_ch2 = float(lines[6].strip())
+            probability_ch3 = float(lines[7].strip())
+            probability_ch4 = float(lines[8].strip())
+
+        estimated_ch1_vector.append(estimated_ch1)
+        estimated_ch2_vector.append(estimated_ch2)
+        estimated_ch3_vector.append(estimated_ch3)
+        estimated_ch4_vector.append(estimated_ch4)
+
+        probability_ch1_vector.append(probability_ch1)
+        probability_ch2_vector.append(probability_ch2)
+        probability_ch3_vector.append(probability_ch3)
+        probability_ch4_vector.append(probability_ch4)
+
+        if len(estimated_ch1_vector) > 200:
+            truth_vector = []
+            estimated_ch1_vector = []
+            estimated_ch2_vector = []
+            estimated_ch3_vector = []
+            estimated_ch4_vector = []
+            probability_ch1_vector = []
+            probability_ch2_vector = []
+            probability_ch3_vector = []
+            probability_ch4_vector = []
 
 def update_confusion_matrix():
     global confusion_matrix
-    global truth
     global iteration
-    for _ in range(100):
-        truth = random.randint(0, len(labels)-1)
-        estimated = random.randint(0, len(labels)-1)
-        confusion_matrix[truth][estimated] += 1
+    cnn_matrix_asociation = {
+     1  : 0,
+     2  : 1,
+     3  : 2,
+     5  : 3,
+     6  : 4,
+     8  : 5,
+     9  : 6,
+     10 : 7
+    }
+
+    confusion_matrix[cnn_matrix_asociation.get(truth)][cnn_matrix_asociation.get(estimated_ch1)] += 1
+    confusion_matrix[cnn_matrix_asociation.get(truth)][cnn_matrix_asociation.get(estimated_ch2)] += 1
+    confusion_matrix[cnn_matrix_asociation.get(truth)][cnn_matrix_asociation.get(estimated_ch3)] += 1
+    confusion_matrix[cnn_matrix_asociation.get(truth)][cnn_matrix_asociation.get(estimated_ch4)] += 1
+
     iteration +=1
-    if iteration == 50:
+    if iteration == 200:
         confusion_matrix = np.zeros((len(labels), len(labels)))
         iteration=0
 
@@ -84,69 +233,78 @@ def plot_confusion_matrix():
 
 table_data = [{}]
 
+accuracy    = 0
+precision   = 0
+recall      = 0
+f1          = 0
+mse         = 0
+r2          = 0
+
 def update_table():
     global table_data
-    n= random.randint(0, 100)
-    y_true = [random.randint(1, 9) for _ in range(100)]
-    y_pred = [random.randint(1, 9) for _ in range(100)]
-    y_pred_proba = [random.randint(1, 9) for _ in range(100)]
+    global accuracy
+    global precision
+    global recall
+    global f1
+    global mse
+    global r2
+    y_true       = truth_vector
+    y_pred       = estimated_ch1_vector
+    y_pred_proba = probability_ch1_vector
 
     # Assuming y_true are the true labels and y_pred are the predicted labels
-    accuracy             = accuracy_score(y_true, y_pred)
-    precision            = precision_score(y_true, y_pred, average='weighted')
-    recall               = recall_score(y_true, y_pred, average='weighted')
-    f1                   = f1_score(y_true, y_pred, average='weighted')
-    mse                  = mean_squared_error(y_true, y_pred)
-    r2                   = r2_score(y_true, y_pred)
+    if(len(y_true) > 2):
+        accuracy             = accuracy_score(y_true, y_pred)
+        precision            = precision_score(y_true, y_pred, average='weighted', zero_division=1)
+        recall               = recall_score(y_true, y_pred, average='weighted', zero_division=1)
+        f1                   = f1_score(y_true, y_pred, average='weighted')
+        mse                  = mean_squared_error(y_true, y_pred)
+        r2                   = r2_score(y_true, y_pred)
 
     table_data = [
-        {'column-1': 'Value' ,
-         'column-2':  f' {accuracy}',
-         'column-3':  f' {precision}',
-         'column-4':  f' {recall}',
-         'column-5':  f' {f1}',
-         'column-6':  f' {mse}',
-         'column-7':  f' {r2}'
+        {'column-1':  f'{accuracy:.2f}',
+         'column-2':  f'{precision:.2f}',
+         'column-3':  f'{recall:.2f}',
+         'column-4':  f'{f1:.2f}',
+         'column-5':  f'{mse:.2f}',
+         'column-6':  f'{r2:.2f}'
          },
     ]
 
 app.layout = html.Div([
-    html.H1(" High-Performance Analog Meets AI ", style={'textAlign': 'center', 'backgroundColor': 'transparent'}),
+
+    html.H1(" High-Performance Analog Meets AI ", style={'textAlign': 'center', 'backgroundColor': '#00427a', 'color': 'white', 'fontSize': '36px'}),
+
     html.Div([
-        html.Div(dcc.Graph(id='confusion-matrix'), style={'width': '45%', 'display': 'inline-block', 'margin-left': '5%'}),
-        html.Div(dcc.Graph(id='modulated-data'), style={'width': '45%', 'display': 'inline-block', 'margin-right': '5%'})
-    ], style={'width': '90%', 'margin-left': '5%', 'margin-bottom': '0.1%', 'backgroundColor': 'transparent', 'border': '1px solid #B7BBC3'}),
+        html.Div(dcc.Graph(id='confusion-matrix'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '5%'}),
+        html.Div(dcc.Graph(id='modulated-data'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '10%'})
+    ], style={'width': '90%', 'margin-left': '5%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '10px', 'box-shadow': '2px 2px 5px rgba(0, 0, 0, 0.1)'}),
+
     html.Div(
-    dash_table.DataTable(
-        id='example-table',
-        columns=[
-            {'name': 'Parameter'   , 'id': 'column-1'},
-            {'name': 'Accuracy'    , 'id': 'column-2'},
-            {'name': 'Precision'   , 'id': 'column-3'},
-            {'name': 'Recall'      , 'id': 'column-4'},
-            {'name': 'F1 rate'     , 'id': 'column-5'},
-            {'name': 'MSE rate'    , 'id': 'column-6'},
-            {'name': 'R2 rate'     , 'id': 'column-7'}
-        ],
-        data=table_data,
-        style_table={'width': '90%', 'margin-left': '5%'},
-        style_cell={'textAlign': 'center'},
-        style_header={'backgroundColor': '#1E4056', 'color': 'white'},
-        style_data_conditional=[
-            {
-                'if': {'column_id': 'column-1'},
-                'backgroundColor': '#1E4056',
-                'color': 'white'
-            }
-        ]
-        )
+         dash_table.DataTable(
+              id='example-table',
+              columns=[
+                    {'name': 'Accuracy'    , 'id': 'column-1'},
+                    {'name': 'Precision'   , 'id': 'column-2'},
+                    {'name': 'Recall'      , 'id': 'column-3'},
+                    {'name': 'F1 rate'     , 'id': 'column-4'},
+                    {'name': 'MSE rate'    , 'id': 'column-5'},
+                    {'name': 'R2 rate'     , 'id': 'column-6'}
+              ],
+              data=table_data,
+              style_table={'width': '90%', 'margin-left': '5%','margin-top': '5%', 'border-radius': '50px', 'box-shadow': '4px 4px 10px rgba(0, 0, 0, 0.1)'},
+              style_cell={'textAlign': 'center', 'fontSize': '16px'},
+              style_header={'backgroundColor': '#1E4056', 'color': 'white'}
+         )
     ),
-    dcc.Interval(
-     id='interval-component',
-     interval=1*1000,  # in milliseconds
-     n_intervals=0
-    )
+
+     dcc.Interval(
+      id='interval-component',
+      interval=1*1000,  # in milliseconds
+      n_intervals=0
+     )
 ])
+
 @app.callback(
     [dash.dependencies.Output('confusion-matrix', 'figure'),
      dash.dependencies.Output('modulated-data', 'figure'),
@@ -154,10 +312,44 @@ app.layout = html.Div([
     [dash.dependencies.Input('interval-component', 'n_intervals')]
 )
 def update_graph_live(n):
+    get_cnn_data()
     update_confusion_matrix()
-    update_modulated_data()
+    # update_modulated_data()
     update_table()
     return plot_confusion_matrix(), plot_modulated_data(), table_data
 
+
+
+
 if __name__ == '__main__':
+
+    # Code to be executed just once
+    sdr  = adi.adrv9002(uri="ip:10.48.65.203")
+    sdr.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+
+    sdr.tx0_port_en = "spi"
+    sdr.tx1_port_en = "spi"
+    sdr.tx_ensm_mode_chan0 = "rf_enabled"
+    sdr.tx_ensm_mode_chan1 = "rf_enabled"
+    sdr.tx_cyclic_buffer = True
+    sdr.tx0_lo = 2400000000
+    sdr.tx1_lo = 2400000000
+    sdr.tx_hardwaregain_chan0 = -10
+    sdr.tx_hardwaregain_chan1 = -10
+
+
+    sdr1 = adi.adrv9002(uri="ip:10.48.65.154")
+    sdr1.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+
+    sdr1.tx0_port_en = "spi"
+    sdr1.tx1_port_en = "spi"
+    sdr1.tx_ensm_mode_chan0 = "rf_enabled"
+    sdr1.tx_ensm_mode_chan1 = "rf_enabled"
+    sdr1.tx_cyclic_buffer = True
+    sdr1.tx2_cyclic_buffer = True
+    sdr1.tx0_lo = 2400000000
+    sdr1.tx1_lo = 2400000000
+    sdr1.tx_hardwaregain_chan0 = -10
+    sdr1.tx_hardwaregain_chan1 = -10
+
     app.run_server(debug=True)
