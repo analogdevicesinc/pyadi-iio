@@ -18,3 +18,5 @@ pytoml
 pytest-xdist
 keyboard
 komm
+dash
+dash_bootstrap_components

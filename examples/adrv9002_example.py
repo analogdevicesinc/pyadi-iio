@@ -7,7 +7,7 @@ import commpy.utilities as util
 import komm
 import scipy.io
 
-sdr  = adi.adrv9002(uri="ip:10.48.65.203")
+sdr  = adi.adrv9002(uri="ip:10.48.65.222")
 sdr.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
 sdr.tx0_port_en = "spi"
@@ -37,7 +37,39 @@ sdr1.tx_hardwaregain_chan0 = -10
 sdr1.tx_hardwaregain_chan1 = -10
 
 
-fs = int(sdr1.tx0_sample_rate)
+sdr2 = adi.adrv9002(uri="ip:10.48.65.226")
+sdr2.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+
+sdr2.tx0_port_en = "spi"
+sdr2.tx1_port_en = "spi"
+sdr2.tx_ensm_mode_chan0 = "rf_enabled"
+sdr2.tx_ensm_mode_chan1 = "rf_enabled"
+sdr2.tx_cyclic_buffer = True
+sdr2.tx2_cyclic_buffer = True
+sdr2.tx0_lo = 2400000000
+sdr2.tx1_lo = 2400000000
+sdr2.tx_hardwaregain_chan0 = -10
+sdr2.tx_hardwaregain_chan1 = -10
+
+
+sdr3 = adi.adrv9002(uri="ip:10.48.65.203")
+sdr3.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+
+sdr3.tx0_port_en = "spi"
+sdr3.tx1_port_en = "spi"
+sdr3.tx_ensm_mode_chan0 = "rf_enabled"
+sdr3.tx_ensm_mode_chan1 = "rf_enabled"
+sdr3.tx_cyclic_buffer = True
+sdr3.tx2_cyclic_buffer = True
+sdr3.tx0_lo = 2400000000
+sdr3.tx1_lo = 2400000000
+sdr3.tx_hardwaregain_chan0 = -10
+sdr3.tx_hardwaregain_chan1 = -10
+
+
+
+
+fs = int(sdr.tx0_sample_rate)
 
 print(fs)
 fc = 50000
@@ -77,8 +109,12 @@ while True:
     sdr.tx1_en  = 1
     sdr1.tx0_en = 1
     sdr1.tx1_en = 1
+    sdr2.tx0_en = 1
+    sdr2.tx1_en = 1
+    sdr3.tx0_en = 1
+    sdr3.tx1_en = 1
     print(modulation_number)
-    modulation_type = modulation_map.get(modulation_number, "BPSK")
+    modulation_type = modulation_map.get(modulation_number, "DISABLED")
     print(modulation_type)
 
     match modulation_type:
@@ -104,13 +140,27 @@ while True:
             data = i + 1j * q
             sdr._tx2.tx_destroy_buffer()
             sdr.tx_destroy_buffer()
+
             sdr1._tx2.tx_destroy_buffer()
             sdr1.tx_destroy_buffer()
+
+            sdr2._tx2.tx_destroy_buffer()
+            sdr2.tx_destroy_buffer()
+
+            sdr3._tx2.tx_destroy_buffer()
+            sdr3.tx_destroy_buffer()
+
             sdr.tx0_en  = 0
             sdr.tx1_en  = 0
+
             sdr1.tx0_en = 0
             sdr1.tx1_en = 0
 
+            sdr2.tx0_en = 0
+            sdr2.tx1_en = 0
+
+            sdr3.tx0_en = 0
+            sdr3.tx1_en = 0
 
         case "EXIT":
             sdr._tx2.tx_destroy_buffer()
@@ -119,6 +169,12 @@ while True:
             sdr1._tx2.tx_destroy_buffer()
             sdr1.tx_destroy_buffer()
 
+            sdr2._tx2.tx_destroy_buffer()
+            sdr2.tx_destroy_buffer()
+
+            sdr3._tx2.tx_destroy_buffer()
+            sdr3.tx_destroy_buffer()
+
             break
 
     data=data.flatten()
@@ -126,17 +182,32 @@ while True:
     iq_imag = np.int16(np.imag(data) * 2**12-1)
     iq = iq_real + 1j * iq_imag
 
+    sdr.tx_destroy_buffer()
+    sdr._tx2.tx_destroy_buffer()
+
     sdr1.tx_destroy_buffer()
     sdr1._tx2.tx_destroy_buffer()
 
-    sdr.tx_destroy_buffer()
-    sdr._tx2.tx_destroy_buffer()
+    sdr2.tx_destroy_buffer()
+    sdr2._tx2.tx_destroy_buffer()
+
+    sdr3.tx_destroy_buffer()
+    sdr3._tx2.tx_destroy_buffer()
+
+    sdr.tx(iq)
+    sdr.tx2(iq)
 
     sdr1.tx(iq)
     sdr1.tx2(iq)
 
-    sdr.tx(iq)
-    sdr.tx2(iq)
+    sdr2.tx(iq)
+    sdr2.tx2(iq)
+
+    sdr3.tx(iq)
+    sdr3.tx2(iq)
+
+
+
 
 
 

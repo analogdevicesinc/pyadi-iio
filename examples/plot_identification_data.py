@@ -29,23 +29,6 @@ modulation_map = {
     "9": "PAM4",
     "10": "QPSK"
 }
-# Plot confusion matrix
-
-# def update_modulated_data():
-#     global modulated_data
-#     global time
-#     global df
-#     global shift
-
-#     mod_file = scipy.io.loadmat(f'modulated_data/mod_{modulation_map[str(truth)]}.mat')
-#     modulated_data = mod_file['rx']
-#     modulated_data_re = np.real(modulated_data.flatten())
-#     time = np.arange(0, len(modulated_data))
-
-#     df = pd.DataFrame(dict(
-#      x = time,
-#      y = modulated_data_re
-#     ))
 
 # Plot the modulated data
 def plot_modulated_data():
@@ -123,7 +106,6 @@ def get_cnn_data():
     truth = random.choice([1, 2, 3, 5, 6, 8,9,10])
 
     modulation_type = modulation_map[str(truth)]
-    print(modulation_type)
     match modulation_type:
         case "BPSK":
             data = mod_bspk['rx']
@@ -225,9 +207,35 @@ def plot_confusion_matrix():
         colorscale='Blues'
     ))
     fig.update_layout(
-        title='Confusion Matrix for the Modulation Identification',
+        title=dict(text='Confusion Matrix', x=0.5),
         xaxis=dict(title='Estimated Modulation'),
         yaxis=dict(title='True Modulation')
+    )
+    return fig
+
+waterfall_data = np.zeros((1024, 50))
+# Generate sample data
+def generate_waterfall_data():
+    # Parameters
+    global waterfall_data
+    num_samples = 1024
+    num_traces = 50
+    t = np.linspace(0, 1, num_samples)
+    data = np.sin(2 * np.pi * 50 * t) + 0.5 * np.random.randn(num_samples)
+    waterfall_data = [np.fft.fft(data + 0.5 * np.random.randn(num_samples)) for _ in range(num_traces)]
+    waterfall_data = np.abs(waterfall_data)
+    return np.abs(waterfall_data)
+
+def plot_waterfall_data():
+    # Create the waterfall plot
+    fig = go.Figure(data = go.Heatmap(
+        z=waterfall_data,
+        colorscale='Viridis'
+    ))
+
+    fig.update_layout(
+        xaxis=dict(title='Frequency Bin'),
+        yaxis=dict(title='Time Trace')
     )
     return fig
 
@@ -272,13 +280,15 @@ def update_table():
     ]
 
 app.layout = html.Div([
-
-    html.H1(" High-Performance Analog Meets AI ", style={'textAlign': 'center', 'backgroundColor': '#00427a', 'color': 'white', 'fontSize': '36px'}),
+    html.Div([
+        html.Img(src='/assets/ADI_logo.svg', style={'height': '45px', 'margin-right': '16px', 'vertical-align': 'middle'}),
+        html.H1('High-Performance Analog Meets AI', style={'display': 'inline-block', 'vertical-align': 'middle', 'fontSize': '46px'})
+    ], style={'width': '100%', 'text-align': 'left', 'padding': '5px', 'border-bottom': '1px solid #B7BBC3', 'backgroundColor': '#FFFFFF', 'font-family': 'Barlow', 'display': 'flex', 'align-items': 'center'}),
 
     html.Div([
         html.Div(dcc.Graph(id='confusion-matrix'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '5%'}),
         html.Div(dcc.Graph(id='modulated-data'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '10%'})
-    ], style={'width': '90%', 'margin-left': '5%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '10px', 'box-shadow': '2px 2px 5px rgba(0, 0, 0, 0.1)'}),
+    ], style={'width': '90%','height': '65%', 'margin-left': '5%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '10px', 'box-shadow': '2px 2px 5px rgba(0, 0, 0, 0.1)', 'font-family': 'Barlow', 'fontSize': '20px'}),
 
     html.Div(
          dash_table.DataTable(
@@ -292,34 +302,32 @@ app.layout = html.Div([
                     {'name': 'R2 rate'     , 'id': 'column-6'}
               ],
               data=table_data,
-              style_table={'width': '90%', 'margin-left': '5%','margin-top': '5%', 'border-radius': '50px', 'box-shadow': '4px 4px 10px rgba(0, 0, 0, 0.1)'},
-              style_cell={'textAlign': 'center', 'fontSize': '16px'},
-              style_header={'backgroundColor': '#1E4056', 'color': 'white'}
+              style_table={'width': '90%', 'margin-left': '5%','margin-top': '2%', 'border-radius': '50px', 'box-shadow': '4px 4px 10px rgba(0, 0, 0, 0.1)', 'font-family': 'Barlow'},
+              style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
+              style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '20px'}
          )
     ),
-
+    html.Div([dcc.Graph(id='waterfall-plot')] ,style={'width': '100%','heigh': '80%'}),
      dcc.Interval(
       id='interval-component',
       interval=1*1000,  # in milliseconds
       n_intervals=0
      )
-])
+], style={'font-family': 'Barlow'})
 
 @app.callback(
     [dash.dependencies.Output('confusion-matrix', 'figure'),
      dash.dependencies.Output('modulated-data', 'figure'),
+     dash.dependencies.Output('waterfall-plot', 'figure'),
      dash.dependencies.Output('example-table', 'data')],
     [dash.dependencies.Input('interval-component', 'n_intervals')]
 )
 def update_graph_live(n):
     get_cnn_data()
     update_confusion_matrix()
-    # update_modulated_data()
     update_table()
-    return plot_confusion_matrix(), plot_modulated_data(), table_data
-
-
-
+    generate_waterfall_data()
+    return plot_confusion_matrix(), plot_modulated_data(),plot_waterfall_data(), table_data
 
 if __name__ == '__main__':
 
