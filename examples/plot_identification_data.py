@@ -40,24 +40,56 @@ def plot_modulated_data():
     )
     return fig
 
+# Plot the modulated data
+def plot_modulated_data1():
+
+    estimated_labels1 = [modulation_map[str(label)] for label in estimated_ch5_vector]
+    fig = px.histogram(
+        x=probability_ch5_vector, color=estimated_labels1, nbins=50,
+        labels=dict(color='True Labels', x='Score')
+    )
+    return fig
+
 confusion_matrix = np.zeros((len(labels), len(labels)))
+confusion_matrix1 = np.zeros((len(labels), len(labels)))
 iteration=0
+
 last_timestamp = ""
+last_timestamp1 = ""
+
 estimated_ch1 = 0
 estimated_ch2 = 0
 estimated_ch3 = 0
 estimated_ch4 = 0
+estimated_ch5 = 0
+estimated_ch6 = 0
+estimated_ch7 = 0
+estimated_ch8 = 0
+
 file_path = 'cnn_output.txt'
+file_path1 = 'cnn_output1.txt'
+
 truth = 0
+truth1 = 0
 estimated_ch1_vector = []
 estimated_ch2_vector = []
 estimated_ch3_vector = []
 estimated_ch4_vector = []
+estimated_ch5_vector = []
+estimated_ch6_vector = []
+estimated_ch7_vector = []
+estimated_ch8_vector = []
+
 probability_ch1_vector = []
 probability_ch2_vector = []
 probability_ch3_vector = []
 probability_ch4_vector = []
+probability_ch5_vector = []
+probability_ch6_vector = []
+probability_ch7_vector = []
+probability_ch8_vector = []
 truth_vector = []
+truth_vector1 = []
 
 def get_timestamp(file_name):
     global last_timestamp
@@ -71,28 +103,60 @@ def get_timestamp(file_name):
                     return True
     return False
 
+def get_timestamp1(file_name):
+    global last_timestamp1
+    if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        with open(file_name, 'r') as file:
+            lines = file.readlines()
+            if lines:
+                timestamp = lines[0].strip()
+                if timestamp > last_timestamp1:
+                    last_timestamp1 = timestamp
+                    return True
+    return False
+
 def get_cnn_data():
     global truth
+    global truth1
+
     global estimated_ch1
     global estimated_ch2
     global estimated_ch3
     global estimated_ch4
+    global estimated_ch5
+    global estimated_ch6
+    global estimated_ch7
+    global estimated_ch8
 
     global probability_ch1
     global probability_ch2
     global probability_ch3
     global probability_ch4
+    global probability_ch5
+    global probability_ch6
+    global probability_ch7
+    global probability_ch8
 
     global estimated_ch1_vector
     global estimated_ch2_vector
     global estimated_ch3_vector
     global estimated_ch4_vector
+    global estimated_ch5_vector
+    global estimated_ch6_vector
+    global estimated_ch7_vector
+    global estimated_ch8_vector
 
     global probability_ch1_vector
     global probability_ch2_vector
     global probability_ch3_vector
     global probability_ch4_vector
+    global probability_ch5_vector
+    global probability_ch6_vector
+    global probability_ch7_vector
+    global probability_ch8_vector
+
     global truth_vector
+    global truth_vector1
 
     mod_8spk  = scipy.io.loadmat('modulated_data/mod_8PSK.mat')
     mod_16qam = scipy.io.loadmat('modulated_data/mod_16QAM.mat')
@@ -103,8 +167,8 @@ def get_cnn_data():
     mod_pam4  = scipy.io.loadmat('modulated_data/mod_PAM4.mat')
     mod_qpsk  = scipy.io.loadmat('modulated_data/mod_QPSK.mat')
 
-    truth = random.choice([1, 2, 3, 5, 6, 8,9,10])
-
+    truth  = random.choice([1, 2, 3, 5, 6, 8,9,10])
+    truth1 = truth
     modulation_type = modulation_map[str(truth)]
     match modulation_type:
         case "BPSK":
@@ -141,7 +205,6 @@ def get_cnn_data():
 
     if get_timestamp(file_path):
 
-
         truth_vector.append(truth)
         with open(file_path, 'r') as file:
             lines = file.readlines()
@@ -164,19 +227,51 @@ def get_cnn_data():
         probability_ch3_vector.append(probability_ch3)
         probability_ch4_vector.append(probability_ch4)
 
-        if len(estimated_ch1_vector) > 200:
-            truth_vector = []
-            estimated_ch1_vector = []
-            estimated_ch2_vector = []
-            estimated_ch3_vector = []
-            estimated_ch4_vector = []
-            probability_ch1_vector = []
-            probability_ch2_vector = []
-            probability_ch3_vector = []
-            probability_ch4_vector = []
+    if get_timestamp1(file_path1):
+        truth_vector1.append(truth1)
+        with open(file_path1, 'r') as file:
+            lines = file.readlines()
+            estimated_ch5 = int(lines[1].strip())
+            estimated_ch6 = int(lines[2].strip())
+            estimated_ch7 = int(lines[3].strip())
+            estimated_ch8 = int(lines[4].strip())
+            probability_ch5 = float(lines[5].strip())
+            probability_ch6 = float(lines[6].strip())
+            probability_ch7 = float(lines[7].strip())
+            probability_ch8 = float(lines[8].strip())
+
+        estimated_ch5_vector.append(estimated_ch5)
+        estimated_ch6_vector.append(estimated_ch6)
+        estimated_ch7_vector.append(estimated_ch7)
+        estimated_ch8_vector.append(estimated_ch8)
+
+        probability_ch5_vector.append(probability_ch5)
+        probability_ch6_vector.append(probability_ch6)
+        probability_ch7_vector.append(probability_ch7)
+        probability_ch8_vector.append(probability_ch8)
+
+    if len(estimated_ch1_vector) > 200:
+        truth_vector = []
+        estimated_ch1_vector = []
+        estimated_ch2_vector = []
+        estimated_ch3_vector = []
+        estimated_ch4_vector = []
+        estimated_ch5_vector = []
+        estimated_ch6_vector = []
+        estimated_ch7_vector = []
+        estimated_ch8_vector = []
+        probability_ch1_vector = []
+        probability_ch2_vector = []
+        probability_ch3_vector = []
+        probability_ch4_vector = []
+        probability_ch5_vector = []
+        probability_ch6_vector = []
+        probability_ch7_vector = []
+        probability_ch8_vector = []
 
 def update_confusion_matrix():
     global confusion_matrix
+    global confusion_matrix1
     global iteration
     cnn_matrix_asociation = {
      1  : 0,
@@ -194,9 +289,14 @@ def update_confusion_matrix():
     confusion_matrix[cnn_matrix_asociation.get(truth)][cnn_matrix_asociation.get(estimated_ch3)] += 1
     confusion_matrix[cnn_matrix_asociation.get(truth)][cnn_matrix_asociation.get(estimated_ch4)] += 1
 
+    confusion_matrix1[cnn_matrix_asociation.get(truth1)][cnn_matrix_asociation.get(estimated_ch5)] += 1
+    confusion_matrix1[cnn_matrix_asociation.get(truth1)][cnn_matrix_asociation.get(estimated_ch6)] += 1
+    confusion_matrix1[cnn_matrix_asociation.get(truth1)][cnn_matrix_asociation.get(estimated_ch7)] += 1
+    confusion_matrix1[cnn_matrix_asociation.get(truth1)][cnn_matrix_asociation.get(estimated_ch8)] += 1
     iteration +=1
     if iteration == 200:
         confusion_matrix = np.zeros((len(labels), len(labels)))
+        confusion_matrix1 = np.zeros((len(labels), len(labels)))
         iteration=0
 
 def plot_confusion_matrix():
@@ -213,33 +313,21 @@ def plot_confusion_matrix():
     )
     return fig
 
-waterfall_data = np.zeros((1024, 50))
-# Generate sample data
-def generate_waterfall_data():
-    # Parameters
-    global waterfall_data
-    num_samples = 1024
-    num_traces = 50
-    t = np.linspace(0, 1, num_samples)
-    data = np.sin(2 * np.pi * 50 * t) + 0.5 * np.random.randn(num_samples)
-    waterfall_data = [np.fft.fft(data + 0.5 * np.random.randn(num_samples)) for _ in range(num_traces)]
-    waterfall_data = np.abs(waterfall_data)
-    return np.abs(waterfall_data)
-
-def plot_waterfall_data():
-    # Create the waterfall plot
-    fig = go.Figure(data = go.Heatmap(
-        z=waterfall_data,
-        colorscale='Viridis'
+def plot_confusion_matrix1():
+    fig = go.Figure(data=go.Heatmap(
+        z=confusion_matrix1,
+        x=labels,
+        y=labels,
+        colorscale='Blues'
     ))
-
     fig.update_layout(
-        xaxis=dict(title='Frequency Bin'),
-        yaxis=dict(title='Time Trace')
+        title=dict(text='Confusion Matrix', x=0.5),
+        xaxis=dict(title='Estimated Modulation'),
+        yaxis=dict(title='True Modulation')
     )
     return fig
 
-table_data = [{}]
+table_data = pd.DataFrame(columns=['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'], dtype='float64').to_dict('records')
 
 accuracy    = 0
 precision   = 0
@@ -285,10 +373,13 @@ app.layout = html.Div([
         html.H1('High-Performance Analog Meets AI', style={'display': 'inline-block', 'vertical-align': 'middle', 'fontSize': '46px'})
     ], style={'width': '100%', 'text-align': 'left', 'padding': '5px', 'border-bottom': '1px solid #B7BBC3', 'backgroundColor': '#FFFFFF', 'font-family': 'Barlow', 'display': 'flex', 'align-items': 'center'}),
 
+
+
     html.Div([
+        html.H2('ADRV9009ZU11EG device 1', style={'text-align': 'center', 'margin-top': '20px', 'font-family': 'Barlow'}),
         html.Div(dcc.Graph(id='confusion-matrix'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '5%'}),
         html.Div(dcc.Graph(id='modulated-data'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '10%'})
-    ], style={'width': '90%','height': '65%', 'margin-left': '5%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '10px', 'box-shadow': '2px 2px 5px rgba(0, 0, 0, 0.1)', 'font-family': 'Barlow', 'fontSize': '20px'}),
+    ], style={'width': '90%','height': '65%', 'margin-left': '5%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'fontSize': '20px'}),
 
     html.Div(
          dash_table.DataTable(
@@ -302,12 +393,17 @@ app.layout = html.Div([
                     {'name': 'R2 rate'     , 'id': 'column-6'}
               ],
               data=table_data,
-              style_table={'width': '90%', 'margin-left': '5%','margin-top': '2%', 'border-radius': '50px', 'box-shadow': '4px 4px 10px rgba(0, 0, 0, 0.1)', 'font-family': 'Barlow'},
+              style_table={'width': '90%', 'margin-left': '5%','margin-top': '2%', 'border-radius': '50px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow'},
               style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
               style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '20px'}
          )
     ),
-    html.Div([dcc.Graph(id='waterfall-plot')] ,style={'width': '100%','heigh': '80%'}),
+    html.Div([
+        html.H2('ADRV9009ZU11EG device 2', style={'text-align': 'center', 'margin-top': '20px', 'font-family': 'Barlow'}),
+        html.Div(dcc.Graph(id='confusion-matrix1'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '5%'}),
+        html.Div(dcc.Graph(id='modulated-data1'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '10%'})
+    ], style={'width': '90%','height': '65%', 'margin-left': '5%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '10px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)' , 'font-family': 'Barlow', 'fontSize': '20px'}),
+
      dcc.Interval(
       id='interval-component',
       interval=1*1000,  # in milliseconds
@@ -318,16 +414,16 @@ app.layout = html.Div([
 @app.callback(
     [dash.dependencies.Output('confusion-matrix', 'figure'),
      dash.dependencies.Output('modulated-data', 'figure'),
-     dash.dependencies.Output('waterfall-plot', 'figure'),
-     dash.dependencies.Output('example-table', 'data')],
+     dash.dependencies.Output('example-table', 'data'),
+     dash.dependencies.Output('confusion-matrix1', 'figure'),
+     dash.dependencies.Output('modulated-data1', 'figure')],
     [dash.dependencies.Input('interval-component', 'n_intervals')]
 )
 def update_graph_live(n):
     get_cnn_data()
     update_confusion_matrix()
     update_table()
-    generate_waterfall_data()
-    return plot_confusion_matrix(), plot_modulated_data(),plot_waterfall_data(), table_data
+    return plot_confusion_matrix(), plot_modulated_data(), table_data, plot_confusion_matrix1(), plot_modulated_data1()
 
 if __name__ == '__main__':
 

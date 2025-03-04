@@ -20,3 +20,4 @@ keyboard
 komm
 dash
 dash_bootstrap_components
+scikit-learn
