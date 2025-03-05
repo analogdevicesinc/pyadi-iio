@@ -1,0 +1,19 @@
+vu11p:
+  # system-config:
+  #   - tftpserverip: 192.168.86.220
+  #   - tftpserverroot: /tftpboot
+  board-config:
+    - board-name: zu4eg-washington
+    - reference-boot-folder: zu4eg-washington
+    - iio_device_names: ["adf4382", "ltc6952"]
+    - monitoring-interface: uart
+  uart-config:
+    - address: /dev/ttyUSB0
+    - baudrate: 115200
+    - logfilename: zu4eg-ffsom.log
+  network-config:
+    - dutip: 192.168.2.1
+  # pdu-config:
+  #   - pduip: 192.168.0.1
+  #   - pdu_type: cyberpower
+  #   - outlet: 1
