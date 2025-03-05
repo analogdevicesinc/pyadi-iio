@@ -29,7 +29,7 @@ class sshfs:
                 self.address,
                 username=self.username,
                 password=self.password,
-                look_for_keys=False,
+                # look_for_keys=False,
                 allow_agent=False,
             )
 
