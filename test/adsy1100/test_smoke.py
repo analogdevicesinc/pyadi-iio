@@ -34,17 +34,6 @@ configs = [
         ],
     },
     {
-        "name": "18gsps",
-        "BOOT.BIN": "BOOT.BIN",
-        "Kernel": "Image",
-        "devicetree": "devicetree.dtb",
-        "selmap_overlay": "tfc_18gsps/vu11p.dtbo",
-        "selmap_bin": "vu11p.bin",
-        "extras": [
-            {"src": "tfc_18gsps/id00_uc07_tfc_18gsps.bin", "dst": "/lib/firmware/"}
-        ],
-    },
-    {
         "name": "20gsps",
         "BOOT.BIN": "BOOT.BIN",
         "Kernel": "Image",
