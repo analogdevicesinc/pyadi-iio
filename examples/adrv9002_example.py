@@ -22,7 +22,7 @@ sdr.tx_hardwaregain_chan0 = -10
 sdr.tx_hardwaregain_chan1 = -10
 
 
-sdr1 = adi.adrv9002(uri="ip:10.48.65.154")
+sdr1 = adi.adrv9002(uri="ip:10.48.65.187")
 sdr1.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
 sdr1.tx0_port_en = "spi"

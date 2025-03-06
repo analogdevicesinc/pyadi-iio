@@ -193,19 +193,28 @@ def get_cnn_data():
     iq_imag = np.int16(np.imag(data) * 2**12-1)
     iq = iq_real + 1j * iq_imag
 
-    sdr1.tx_destroy_buffer()
-    sdr1._tx2.tx_destroy_buffer()
     sdr.tx_destroy_buffer()
     sdr._tx2.tx_destroy_buffer()
-
-    sdr1.tx(iq)
-    sdr1.tx2(iq)
     sdr.tx(iq)
-    sdr.tx2(iq)
+    sdr._tx2.tx(iq)
 
+    sdr1.tx_destroy_buffer()
+    sdr1._tx2.tx_destroy_buffer()
+    sdr1.tx(iq)
+    sdr1._tx2.tx(iq)
+
+    sdr2.tx_destroy_buffer()
+    sdr2._tx2.tx_destroy_buffer()
+    sdr2.tx(iq)
+    sdr2._tx2.tx(iq)
+
+    sdr3.tx_destroy_buffer()
+    sdr3._tx2.tx_destroy_buffer()
+    sdr3.tx(iq)
+    sdr3._tx2.tx(iq)
+
+    time.sleep(0.1)
     if get_timestamp(file_path):
-
-        truth_vector.append(truth)
         with open(file_path, 'r') as file:
             lines = file.readlines()
             estimated_ch1 = int(lines[1].strip())
@@ -217,6 +226,7 @@ def get_cnn_data():
             probability_ch3 = float(lines[7].strip())
             probability_ch4 = float(lines[8].strip())
 
+        truth_vector.append(truth)
         estimated_ch1_vector.append(estimated_ch1)
         estimated_ch2_vector.append(estimated_ch2)
         estimated_ch3_vector.append(estimated_ch3)
@@ -228,7 +238,7 @@ def get_cnn_data():
         probability_ch4_vector.append(probability_ch4)
 
     if get_timestamp1(file_path1):
-        truth_vector1.append(truth1)
+
         with open(file_path1, 'r') as file:
             lines = file.readlines()
             estimated_ch5 = int(lines[1].strip())
@@ -239,7 +249,7 @@ def get_cnn_data():
             probability_ch6 = float(lines[6].strip())
             probability_ch7 = float(lines[7].strip())
             probability_ch8 = float(lines[8].strip())
-
+        truth_vector1.append(truth1)
         estimated_ch5_vector.append(estimated_ch5)
         estimated_ch6_vector.append(estimated_ch6)
         estimated_ch7_vector.append(estimated_ch7)
@@ -307,7 +317,6 @@ def plot_confusion_matrix():
         colorscale='Blues'
     ))
     fig.update_layout(
-        title=dict(text='Confusion Matrix', x=0.5),
         xaxis=dict(title='Estimated Modulation'),
         yaxis=dict(title='True Modulation')
     )
@@ -321,13 +330,14 @@ def plot_confusion_matrix1():
         colorscale='Blues'
     ))
     fig.update_layout(
-        title=dict(text='Confusion Matrix', x=0.5),
         xaxis=dict(title='Estimated Modulation'),
         yaxis=dict(title='True Modulation')
     )
     return fig
 
-table_data = pd.DataFrame(columns=['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'], dtype='float64').to_dict('records')
+table_data = pd.DataFrame(columns=['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'], dtype=np.float64).to_dict('records')
+truth_table_data = pd.DataFrame(columns=['column-1', 'column-2', 'column-3'], dtype=pd.StringDtype()).to_dict('records')
+truth_table_data1 = pd.DataFrame(columns=['column-1', 'column-2', 'column-3'], dtype=pd.StringDtype()).to_dict('records')
 
 accuracy    = 0
 precision   = 0
@@ -367,54 +377,102 @@ def update_table():
          },
     ]
 
+def update_truth_table():
+    global truth_table_data
+    global truth_table_data1
+
+    truth_table_data = [
+        {'column-1': 'Channel 1', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch1)]}'},
+        {'column-1': 'Channel 2', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch2)]}'},
+        {'column-1': 'Channel 3', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch3)]}'},
+        {'column-1': 'Channel 4', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch4)]}'},
+    ]
+
+    truth_table_data1 = [
+        {'column-1': 'Channel 1', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch5)]}'},
+        {'column-1': 'Channel 2', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch6)]}'},
+        {'column-1': 'Channel 3', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch7)]}'},
+        {'column-1': 'Channel 4', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch8)]}'},
+    ]
+
+
+
+
+
 app.layout = html.Div([
     html.Div([
         html.Img(src='/assets/ADI_logo.svg', style={'height': '45px', 'margin-right': '16px', 'vertical-align': 'middle'}),
         html.H1('High-Performance Analog Meets AI', style={'display': 'inline-block', 'vertical-align': 'middle', 'fontSize': '46px'})
-    ], style={'width': '100%', 'text-align': 'left', 'padding': '5px', 'border-bottom': '1px solid #B7BBC3', 'backgroundColor': '#FFFFFF', 'font-family': 'Barlow', 'display': 'flex', 'align-items': 'center'}),
-
-
+    ], style={'width': '100%', 'text-align': 'left', 'padding': '5px', 'border-bottom': '1px solid #B7BBC3', 'backgroundColor': '#FFFFFF', 'font-family': 'Barlow', 'align-items': 'center'}),
 
     html.Div([
-        html.H2('ADRV9009ZU11EG device 1', style={'text-align': 'center', 'margin-top': '20px', 'font-family': 'Barlow'}),
-        html.Div(dcc.Graph(id='confusion-matrix'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '5%'}),
-        html.Div(dcc.Graph(id='modulated-data'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '10%'})
-    ], style={'width': '90%','height': '65%', 'margin-left': '5%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'fontSize': '20px'}),
-
+        html.H2('ADRV9009ZU11EG device 1', style={'text-align': 'center', 'margin-top': '2%', 'font-family': 'Barlow','height': '10%'}),
+        html.Div([
+                dcc.Graph(id='confusion-matrix', style={'width': '40%','height': '100%' ,'display': 'inline-block'}),
+                dash_table.DataTable(
+                    id='truth-table',
+                    columns=[
+                        {'name': 'Channel', 'id': 'column-1'},
+                        {'name': 'Estimated', 'id': 'column-2'},
+                        {'name': 'Truth', 'id': 'column-3'},
+                    ],
+                    data=truth_table_data,
+                    style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
+                    style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '25px'},
+                    style_table={'width': '25%','height': '100%', 'display': 'inline-block','margin-top': '50%','vertical-align': 'middle'}
+                ),
+                dcc.Graph(id='modulated-data', style={'width': '40%','height': '100%' ,'display': 'inline-block'})
+                ], style={'display': 'flex', 'justify-content': 'space-between', 'width': '100%','height': '90%'})],
+             style={'width': '98%', 'height': '65%', 'margin-left': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'fontSize': '20px'}),
     html.Div(
-         dash_table.DataTable(
-              id='example-table',
-              columns=[
-                    {'name': 'Accuracy'    , 'id': 'column-1'},
-                    {'name': 'Precision'   , 'id': 'column-2'},
-                    {'name': 'Recall'      , 'id': 'column-3'},
-                    {'name': 'F1 rate'     , 'id': 'column-4'},
-                    {'name': 'MSE rate'    , 'id': 'column-5'},
-                    {'name': 'R2 rate'     , 'id': 'column-6'}
-              ],
-              data=table_data,
-              style_table={'width': '90%', 'margin-left': '5%','margin-top': '2%', 'border-radius': '50px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow'},
-              style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
-              style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '20px'}
-         )
+        dash_table.DataTable(
+            id='example-table',
+            columns=[
+                {'name': 'Accuracy', 'id': 'column-1'},
+                {'name': 'Precision', 'id': 'column-2'},
+                {'name': 'Recall', 'id': 'column-3'},
+                {'name': 'F1 rate', 'id': 'column-4'},
+                {'name': 'MSE rate', 'id': 'column-5'},
+                {'name': 'R2 rate', 'id': 'column-6'}
+            ],
+            data=table_data,
+            style_table={'width': '90%', 'margin-left': '5%', 'margin-top': '2%', 'border-radius': '50px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow'},
+            style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
+            style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '20px'}
+        )
     ),
     html.Div([
-        html.H2('ADRV9009ZU11EG device 2', style={'text-align': 'center', 'margin-top': '20px', 'font-family': 'Barlow'}),
-        html.Div(dcc.Graph(id='confusion-matrix1'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '5%'}),
-        html.Div(dcc.Graph(id='modulated-data1'), style={'width': '40%', 'display': 'inline-block', 'margin-left': '10%'})
-    ], style={'width': '90%','height': '65%', 'margin-left': '5%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '10px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)' , 'font-family': 'Barlow', 'fontSize': '20px'}),
-
-     dcc.Interval(
-      id='interval-component',
-      interval=1*1000,  # in milliseconds
-      n_intervals=0
-     )
+        html.H2('ADRV9009ZU11EG device 2', style={'text-align': 'center', 'margin-top': '2%', 'font-family': 'Barlow','height': '10%'}),
+        html.Div([
+                dcc.Graph(id='confusion-matrix1', style={'width': '40%','height': '100%' ,'display': 'inline-block'}),
+                dash_table.DataTable(
+                    id='truth-table1',
+                    columns=[
+                        {'name': 'Channel', 'id': 'column-1'},
+                        {'name': 'Estimated', 'id': 'column-2'},
+                        {'name': 'Truth', 'id': 'column-3'},
+                    ],
+                    data=truth_table_data1,
+                    style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
+                    style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '25px'},
+                    style_table={'width': '25%','height': '100%', 'display': 'inline-block','margin-top': '50%','vertical-align': 'middle'}
+                ),
+                dcc.Graph(id='modulated-data1', style={'width': '40%','height': '100%' ,'display': 'inline-block'})
+                ], style={'display': 'flex', 'justify-content': 'space-between', 'width': '100%','height': '90%'})],
+             style={'width': '98%', 'height': '65%', 'margin-left': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'fontSize': '20px'}),
+    dcc.Interval(
+        id='interval-component',
+        interval=1*1000,  # in milliseconds
+        n_intervals=0
+    )
 ], style={'font-family': 'Barlow'})
 
 @app.callback(
     [dash.dependencies.Output('confusion-matrix', 'figure'),
      dash.dependencies.Output('modulated-data', 'figure'),
      dash.dependencies.Output('example-table', 'data'),
+     dash.dependencies.Output('truth-table', 'data'),
+    dash.dependencies.Output('truth-table1', 'data'),
      dash.dependencies.Output('confusion-matrix1', 'figure'),
      dash.dependencies.Output('modulated-data1', 'figure')],
     [dash.dependencies.Input('interval-component', 'n_intervals')]
@@ -423,12 +481,13 @@ def update_graph_live(n):
     get_cnn_data()
     update_confusion_matrix()
     update_table()
-    return plot_confusion_matrix(), plot_modulated_data(), table_data, plot_confusion_matrix1(), plot_modulated_data1()
+    update_truth_table()
+    return plot_confusion_matrix(), plot_modulated_data(), table_data, truth_table_data , truth_table_data1, plot_confusion_matrix1(), plot_modulated_data1()
 
 if __name__ == '__main__':
 
     # Code to be executed just once
-    sdr  = adi.adrv9002(uri="ip:10.48.65.203")
+    sdr  = adi.adrv9002(uri="ip:10.48.65.222")
     sdr.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
     sdr.tx0_port_en = "spi"
@@ -442,7 +501,7 @@ if __name__ == '__main__':
     sdr.tx_hardwaregain_chan1 = -10
 
 
-    sdr1 = adi.adrv9002(uri="ip:10.48.65.154")
+    sdr1 = adi.adrv9002(uri="ip:10.48.65.187")
     sdr1.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
     sdr1.tx0_port_en = "spi"
@@ -455,5 +514,34 @@ if __name__ == '__main__':
     sdr1.tx1_lo = 2400000000
     sdr1.tx_hardwaregain_chan0 = -10
     sdr1.tx_hardwaregain_chan1 = -10
+
+    sdr2 = adi.adrv9002(uri="ip:10.48.65.226")
+    sdr2.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+
+    sdr2.tx0_port_en = "spi"
+    sdr2.tx1_port_en = "spi"
+    sdr2.tx_ensm_mode_chan0 = "rf_enabled"
+    sdr2.tx_ensm_mode_chan1 = "rf_enabled"
+    sdr2.tx_cyclic_buffer = True
+    sdr2.tx2_cyclic_buffer = True
+    sdr2.tx0_lo = 2400000000
+    sdr2.tx1_lo = 2400000000
+    sdr2.tx_hardwaregain_chan0 = -10
+    sdr2.tx_hardwaregain_chan1 = -10
+
+
+    sdr3 = adi.adrv9002(uri="ip:10.48.65.203")
+    sdr3.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
+
+    sdr3.tx0_port_en = "spi"
+    sdr3.tx1_port_en = "spi"
+    sdr3.tx_ensm_mode_chan0 = "rf_enabled"
+    sdr3.tx_ensm_mode_chan1 = "rf_enabled"
+    sdr3.tx_cyclic_buffer = True
+    sdr3.tx2_cyclic_buffer = True
+    sdr3.tx0_lo = 2400000000
+    sdr3.tx1_lo = 2400000000
+    sdr3.tx_hardwaregain_chan0 = -10
+    sdr3.tx_hardwaregain_chan1 = -10
 
     app.run_server(debug=True)
