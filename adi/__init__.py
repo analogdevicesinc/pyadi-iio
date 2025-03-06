@@ -20,6 +20,7 @@ from adi.ad4130 import ad4130
 from adi.ad4170 import ad4170
 from adi.ad4630 import ad4630, adaq42xx
 from adi.ad4858 import ad4858
+from adi.ad4880 import ad4880
 from adi.ad5592r import ad5592r
 from adi.ad5686 import ad5686
 from adi.ad5754r import ad5754r

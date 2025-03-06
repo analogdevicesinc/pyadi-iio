@@ -703,3 +703,11 @@ ad738x:
       - data_devices:
           - iio:device0
 
+ad4880:
+ - ad4880
+ - pyadi_iio_class_support:
+     - ad4880
+ - emulate:
+     - filename: ad4880.xml
+     - data_devices:
+         - iio:device6
