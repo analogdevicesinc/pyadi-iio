@@ -15,7 +15,7 @@ import time
 import adi
 import scipy.io
 
-app = Dash(__name__)
+app = Dash(__name__, update_title=None)
 
 # Data
 labels = ['16QAM', '64QAM', '8PSK', 'BPSK', 'CPFSK', 'GFSK', 'PAM4', 'QPSK']
@@ -66,8 +66,8 @@ estimated_ch6 = 0
 estimated_ch7 = 0
 estimated_ch8 = 0
 
-file_path = 'cnn_output.txt'
-file_path1 = 'cnn_output1.txt'
+file_path = '/home/analog/Workspace/holohub/build/matlab_classify_modulator/applications/matlab_classify_modulator/cpp/modulation_results.txt'
+file_path1 = '/home/analog/Workspace/holohub/build/matlab_classify_modulator/applications/matlab_classify_modulator/cpp/modulation_results1.txt'
 
 truth = 0
 truth1 = 0
@@ -213,7 +213,7 @@ def get_cnn_data():
     sdr3.tx(iq)
     sdr3._tx2.tx(iq)
 
-    time.sleep(0.1)
+    time.sleep(0.5)
     if get_timestamp(file_path):
         with open(file_path, 'r') as file:
             lines = file.readlines()
@@ -314,7 +314,9 @@ def plot_confusion_matrix():
         z=confusion_matrix,
         x=labels,
         y=labels,
-        colorscale='Blues'
+        colorscale='Blues',
+        linewidths=.5,
+        annot=True
     ))
     fig.update_layout(
         xaxis=dict(title='Estimated Modulation'),
@@ -327,7 +329,9 @@ def plot_confusion_matrix1():
         z=confusion_matrix1,
         x=labels,
         y=labels,
-        colorscale='Blues'
+        colorscale='Blues',
+        linewidths=.5,
+        annot=True
     ))
     fig.update_layout(
         xaxis=dict(title='Estimated Modulation'),
@@ -368,12 +372,12 @@ def update_table():
         r2                   = r2_score(y_true, y_pred)
 
     table_data = [
-        {'column-1':  f'{accuracy:.2f}',
-         'column-2':  f'{precision:.2f}',
-         'column-3':  f'{recall:.2f}',
-         'column-4':  f'{f1:.2f}',
-         'column-5':  f'{mse:.2f}',
-         'column-6':  f'{r2:.2f}'
+        {'column-1':  f'{accuracy:.4f}',
+         'column-2':  f'{precision:.4f}',
+         'column-3':  f'{recall:.4f}',
+         'column-4':  f'{f1:.4f}',
+         'column-5':  f'{mse:.4f}',
+         'column-6':  f'{r2:.4f}'
          },
     ]
 
@@ -382,22 +386,18 @@ def update_truth_table():
     global truth_table_data1
 
     truth_table_data = [
-        {'column-1': 'Channel 1', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch1)]}'},
-        {'column-1': 'Channel 2', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch2)]}'},
-        {'column-1': 'Channel 3', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch3)]}'},
-        {'column-1': 'Channel 4', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch4)]}'},
+        {'column-1': ' Channel 1 ', 'column-2': f' {modulation_map[str(truth)]}', 'column-3': f' {modulation_map[str(estimated_ch1)]}'},
+        {'column-1': ' Channel 2 ', 'column-2': f' {modulation_map[str(truth)]}', 'column-3': f' {modulation_map[str(estimated_ch2)]}'},
+        {'column-1': ' Channel 3 ', 'column-2': f' {modulation_map[str(truth)]}', 'column-3': f' {modulation_map[str(estimated_ch3)]}'},
+        {'column-1': ' Channel 4 ', 'column-2': f' {modulation_map[str(truth)]}', 'column-3': f' {modulation_map[str(estimated_ch4)]}'},
     ]
 
     truth_table_data1 = [
-        {'column-1': 'Channel 1', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch5)]}'},
-        {'column-1': 'Channel 2', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch6)]}'},
-        {'column-1': 'Channel 3', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch7)]}'},
-        {'column-1': 'Channel 4', 'column-2': f'{modulation_map[str(truth)]}', 'column-3': f'{modulation_map[str(estimated_ch8)]}'},
+        {'column-1': 'Channel 1', 'column-2': f'{modulation_map[str(truth1)]}', 'column-3': f'{modulation_map[str(estimated_ch5)]}'},
+        {'column-1': 'Channel 2', 'column-2': f'{modulation_map[str(truth1)]}', 'column-3': f'{modulation_map[str(estimated_ch6)]}'},
+        {'column-1': 'Channel 3', 'column-2': f'{modulation_map[str(truth1)]}', 'column-3': f'{modulation_map[str(estimated_ch7)]}'},
+        {'column-1': 'Channel 4', 'column-2': f'{modulation_map[str(truth1)]}', 'column-3': f'{modulation_map[str(estimated_ch8)]}'},
     ]
-
-
-
-
 
 app.layout = html.Div([
     html.Div([
@@ -406,63 +406,63 @@ app.layout = html.Div([
     ], style={'width': '100%', 'text-align': 'left', 'padding': '5px', 'border-bottom': '1px solid #B7BBC3', 'backgroundColor': '#FFFFFF', 'font-family': 'Barlow', 'align-items': 'center'}),
 
     html.Div([
-        html.H2('ADRV9009ZU11EG device 1', style={'text-align': 'center', 'margin-top': '2%', 'font-family': 'Barlow','height': '10%'}),
+        html.H2('First ADRV9009ZU11eg', style={'text-align': 'center', 'font-family': 'Barlow','padding': '25px'}),
         html.Div([
-                dcc.Graph(id='confusion-matrix', style={'width': '40%','height': '100%' ,'display': 'inline-block'}),
+                dcc.Graph(id='confusion-matrix', style={'width': '40%','height': '40%','display': 'inline-block'}),
                 dash_table.DataTable(
                     id='truth-table',
                     columns=[
-                        {'name': 'Channel', 'id': 'column-1'},
-                        {'name': 'Estimated', 'id': 'column-2'},
-                        {'name': 'Truth', 'id': 'column-3'},
+                        {'name': 'Channel'   , 'id': 'column-1'},
+                        {'name': 'Truth'     , 'id': 'column-2'},
+                        {'name': 'Estimated' , 'id': 'column-3'},
                     ],
                     data=truth_table_data,
-                    style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
-                    style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '25px'},
-                    style_table={'width': '25%','height': '100%', 'display': 'inline-block','margin-top': '50%','vertical-align': 'middle'}
+                    style_cell={'textAlign': 'center', 'fontSize': '15px', 'font-family': 'Barlow','padding': '10px'},
+                    style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '15px'},
+                    style_table={'width': '20%','height': '40%', 'display': 'inline-block','margin-top': '50%','vertical-align': 'middle'}
                 ),
-                dcc.Graph(id='modulated-data', style={'width': '40%','height': '100%' ,'display': 'inline-block'})
+                dcc.Graph(id='modulated-data', style={'width': '40%' ,'height': '40%','display': 'inline-block'})
                 ], style={'display': 'flex', 'justify-content': 'space-between', 'width': '100%','height': '90%'})],
-             style={'width': '98%', 'height': '65%', 'margin-left': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'fontSize': '20px'}),
+             style={'width': '98%', 'height': '55%', 'margin-left': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'fontSize': '20px'}),
     html.Div(
         dash_table.DataTable(
             id='example-table',
             columns=[
-                {'name': 'Accuracy', 'id': 'column-1'},
+                {'name': 'Accuracy' , 'id': 'column-1'},
                 {'name': 'Precision', 'id': 'column-2'},
-                {'name': 'Recall', 'id': 'column-3'},
-                {'name': 'F1 rate', 'id': 'column-4'},
-                {'name': 'MSE rate', 'id': 'column-5'},
-                {'name': 'R2 rate', 'id': 'column-6'}
+                {'name': 'Recall'   , 'id': 'column-3'},
+                {'name': 'F1 rate'  , 'id': 'column-4'},
+                {'name': 'MSE rate' , 'id': 'column-5'},
+                {'name': 'R2 rate'  , 'id': 'column-6'}
             ],
             data=table_data,
-            style_table={'width': '90%', 'margin-left': '5%', 'margin-top': '2%', 'border-radius': '50px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow'},
+            style_table={'width': '90%', 'margin-left': '5%', 'margin-top': '2%', 'margin-bottom': '2%', 'border-radius': '50px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow'},
             style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
-            style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '20px'}
+            style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '20px','font-family': 'Barlow'}
         )
     ),
     html.Div([
-        html.H2('ADRV9009ZU11EG device 2', style={'text-align': 'center', 'margin-top': '2%', 'font-family': 'Barlow','height': '10%'}),
+        html.H2('Second ADRV9009ZU11eg', style={'text-align': 'center', 'font-family': 'Barlow','padding': '25px'}),
         html.Div([
-                dcc.Graph(id='confusion-matrix1', style={'width': '40%','height': '100%' ,'display': 'inline-block'}),
+                dcc.Graph(id='confusion-matrix1', style={'width': '40%','height': '40%','display': 'inline-block'}),
                 dash_table.DataTable(
                     id='truth-table1',
                     columns=[
-                        {'name': 'Channel', 'id': 'column-1'},
-                        {'name': 'Estimated', 'id': 'column-2'},
-                        {'name': 'Truth', 'id': 'column-3'},
+                        {'name': 'Channel   '     , 'id': 'column-1'},
+                        {'name': 'Truth     '     , 'id': 'column-2'},
+                        {'name': 'Estimated '     , 'id': 'column-3'},
                     ],
                     data=truth_table_data1,
-                    style_cell={'textAlign': 'center', 'fontSize': '20px', 'font-family': 'Barlow'},
-                    style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '25px'},
-                    style_table={'width': '25%','height': '100%', 'display': 'inline-block','margin-top': '50%','vertical-align': 'middle'}
+                    style_cell={'textAlign': 'center', 'fontSize': '15px', 'font-family': 'Barlow','padding': '10px'},
+                    style_header={'backgroundColor': '#1E4056', 'color': 'white', 'font-family': 'Barlow', 'fontSize': '15px'},
+                    style_table={'width': '100%', 'height': '40%','display': 'inline-block','margin-top': '50%','vertical-align': 'middle','font-family': 'Barlow'}
                 ),
-                dcc.Graph(id='modulated-data1', style={'width': '40%','height': '100%' ,'display': 'inline-block'})
+                dcc.Graph(id='modulated-data1', style={'width': '40%','height': '40%','display': 'inline-block'})
                 ], style={'display': 'flex', 'justify-content': 'space-between', 'width': '100%','height': '90%'})],
-             style={'width': '98%', 'height': '65%', 'margin-left': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'fontSize': '20px'}),
+             style={'width': '98%', 'height': '55%', 'margin-left': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'fontSize': '20px'}),
     dcc.Interval(
         id='interval-component',
-        interval=1*1000,  # in milliseconds
+        interval=3*1000,  # in milliseconds
         n_intervals=0
     )
 ], style={'font-family': 'Barlow'})
@@ -495,6 +495,7 @@ if __name__ == '__main__':
     sdr.tx_ensm_mode_chan0 = "rf_enabled"
     sdr.tx_ensm_mode_chan1 = "rf_enabled"
     sdr.tx_cyclic_buffer = True
+    sdr.tx2_cyclic_buffer = True
     sdr.tx0_lo = 2400000000
     sdr.tx1_lo = 2400000000
     sdr.tx_hardwaregain_chan0 = -10
@@ -543,5 +544,21 @@ if __name__ == '__main__':
     sdr3.tx1_lo = 2400000000
     sdr3.tx_hardwaregain_chan0 = -10
     sdr3.tx_hardwaregain_chan1 = -10
+
+    sdr.tx0_en  = 1
+    sdr.tx1_en  = 1
+    sdr1.tx0_en = 1
+    sdr1.tx1_en = 1
+    sdr2.tx0_en = 1
+    sdr2.tx1_en = 1
+    sdr3.tx0_en = 1
+    sdr3.tx1_en = 1
+
+
+
+
+
+
+
 
     app.run_server(debug=True)
