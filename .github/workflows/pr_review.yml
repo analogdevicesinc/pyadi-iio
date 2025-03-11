@@ -1,0 +1,28 @@
+name: Check for reviewer
+
+on:
+  pull_request:
+    types: [ opened, reopened, ready_for_review ]
+
+jobs:
+  check_reviewer_set:
+    runs-on: ubuntu-latest
+
+    # Check if a reviewer has been set and add a comment if not
+    steps:
+    - name: Check For Reviewer
+      env: 
+        REVIEWERS: ${{ fromJSON(github.event.pull_request.requested_reviewers) }}
+      id: reviewer_check
+      run: |
+        echo "Reviewers: ${{ env.REVIEWERS }}"
+        if [ -z "${{ github.event.pull_request.requested_reviewers }}" ]; then
+          echo "No reviewer set. Adding a bot message on PR"
+        fi
+
+    - name: Add comment to PR
+      uses: mshick/add-pr-comment@v2
+      if: steps.reviewer_check.outputs.result == 'No reviewer set. Adding a bot message on PR'
+      with:
+        message: |
+          @${{ github.event.pull_request.user.login }} please [set a reviewer for this PR](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/requesting-a-pull-request-review) or it will not be looked at by a maintainer.
