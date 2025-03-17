@@ -791,3 +791,11 @@ ad7490:
       - filename: ad7490.xml
       - data_devices:
           - iio:device0
+ad9508:
+ - ad9508
+ - pyadi_iio_class_support:
+     - ad9508
+ - emulate:
+     - filename: ad9508.xml
+     - data_devices:
+         - iio:device3
