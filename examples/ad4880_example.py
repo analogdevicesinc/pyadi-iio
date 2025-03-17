@@ -37,7 +37,7 @@ from time import sleep
 import matplotlib.pyplot as plt
 import numpy as np
 
-from adi import ad4880
+from adi import ad4880, ad9508
 
 # Optionally pass URI as command line argument,
 # else use default ip:analog.local
@@ -45,10 +45,13 @@ my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
 
 my_adc = ad4880(uri=my_uri, device_name="ad4880")
+my_divider = ad9508(uri=my_uri, device_name="ad9508")
 
 my_adc.rx_enabled_channels = [0, 1]
 
 print("Sampling frequency: ", my_adc.sampling_frequency)
+
+print("frequency: ", my_divider.channel[0].frequency)
 # print("Test mode: ", my_adc.test_mode)
 print("Scale: ", my_adc.channel[0].scale)
 plt.clf()

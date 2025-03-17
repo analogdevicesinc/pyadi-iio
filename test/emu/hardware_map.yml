@@ -711,3 +711,12 @@ ad4880:
      - filename: ad4880.xml
      - data_devices:
          - iio:device6
+
+ad9508:
+ - ad9508
+ - pyadi_iio_class_support:
+     - ad9508
+ - emulate:
+     - filename: ad4880.xml
+     - data_devices:
+         - iio:device3

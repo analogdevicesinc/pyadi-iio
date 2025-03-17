@@ -57,6 +57,7 @@ Supported Devices
    adi.ad937x
    adi.ad9434
    adi.ad9467
+   adi.ad9508
    adi.ad9625
    adi.ad9680
    adi.ad4858
