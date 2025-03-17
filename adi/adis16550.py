@@ -34,7 +34,7 @@ class adis16550(rx, context_manager):
     def __init__(self, uri="", device_name=None, trigger_name=None):
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["adis16550", "adis16550w"]
+        compatible_parts = ["adis16550"]
 
         if not device_name:
             device_name = compatible_parts[0]
