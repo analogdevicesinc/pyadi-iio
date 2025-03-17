@@ -37,7 +37,7 @@ from time import sleep
 import matplotlib.pyplot as plt
 import numpy as np
 
-from adi import ad4880, ad9508
+from adi import ad4880, ad9508, adf4350, one_bit_adc_dac
 
 # Optionally pass URI as command line argument,
 # else use default ip:analog.local
@@ -45,13 +45,25 @@ my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
 
 my_adc = ad4880(uri=my_uri, device_name="ad4880")
+my_adc_b = ad4880(uri=my_uri, device_name="ad4880_chb")
 my_divider = ad9508(uri=my_uri, device_name="ad9508")
-
+my_one_bit_adc_dac = one_bit_adc_dac(uri=my_uri)
+my_pll = adf4350(uri=my_uri, device_name="/axi/spi@e0007000/adf4350@1")
+my_adc.rx_buffer_size = 2 ** 13
 my_adc.rx_enabled_channels = [0, 1]
+my_adc.channel[0].lvds_sync = "enable"
+my_adc_b.channel[0].lvds_sync = "enable"
 
-print("Sampling frequency: ", my_adc.sampling_frequency)
+print("ad4880 sampling frequency: ", my_adc.sampling_frequency)
 
-print("frequency: ", my_divider.channel[0].frequency)
+print("ad9508 channel 0 frequency: ", my_divider.channel[0].frequency)
+
+print("pll adf4350 frequency: ", my_pll.frequency_altvolt0)
+
+print("one bit adc dac sync n value", my_one_bit_adc_dac.gpio_sync_n)
+
+print("ad4880 reg read",  my_adc.reg_read(0x15))
+
 # print("Test mode: ", my_adc.test_mode)
 print("Scale: ", my_adc.channel[0].scale)
 plt.clf()
