@@ -107,6 +107,16 @@ class ad4020(rx, context_manager):
             """Provides all available scale(gain) settings for the ADC channel"""
             return self._get_iio_attr(self.name, "scale_available", False)
 
+        @property
+        def sampling_frequency(self):
+            """Get and set the sampling frequency."""
+            return self._get_iio_attr(self.name, "sampling_frequency", False)
+
+        @sampling_frequency.setter
+        def sampling_frequency(self, value):
+            """Set the sampling frequency."""
+            self._set_iio_attr(self.name, "sampling_frequency", False,  str(value))
+
         def __call__(self):
             """Convenience function, get voltages in IIO units (millivolts)"""
             return self.raw * self.scale
