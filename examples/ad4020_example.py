@@ -57,7 +57,7 @@ print("Sample Rate: ", my_adc.sampling_frequency)
 data = my_adc.rx()
 
 x = np.arange(0, len(data))
-voltage = data * my_adc.voltage0.scale
+voltage = data * getattr(my_adc, "voltage0-voltage1").scale
 dc = np.average(voltage)  # Extract DC component
 ac = voltage - dc  # Extract AC component
 
