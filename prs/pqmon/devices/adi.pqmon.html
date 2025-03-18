@@ -138,8 +138,12 @@
 <li><a class="reference internal" href="#adi.pqmon.pqmon.current_channel_phase.thd"><code class="docutils literal notranslate"><span class="pre">pqmon.current_channel_phase.thd</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#adi.pqmon.pqmon.dip_events"><code class="docutils literal notranslate"><span class="pre">pqmon.dip_events</span></code></a></li>
+<li><a class="reference internal" href="#adi.pqmon.pqmon.intrpt_events"><code class="docutils literal notranslate"><span class="pre">pqmon.intrpt_events</span></code></a></li>
 <li><a class="reference internal" href="#adi.pqmon.pqmon.read_events"><code class="docutils literal notranslate"><span class="pre">pqmon.read_events()</span></code></a></li>
+<li><a class="reference internal" href="#adi.pqmon.pqmon.rvc_events"><code class="docutils literal notranslate"><span class="pre">pqmon.rvc_events</span></code></a></li>
 <li><a class="reference internal" href="#adi.pqmon.pqmon.rx"><code class="docutils literal notranslate"><span class="pre">pqmon.rx()</span></code></a></li>
+<li><a class="reference internal" href="#adi.pqmon.pqmon.swell_events"><code class="docutils literal notranslate"><span class="pre">pqmon.swell_events</span></code></a></li>
 <li><a class="reference internal" href="#adi.pqmon.pqmon.voltage_channel"><code class="docutils literal notranslate"><span class="pre">pqmon.voltage_channel</span></code></a><ul>
 <li><a class="reference internal" href="#adi.pqmon.pqmon.voltage_channel.angle"><code class="docutils literal notranslate"><span class="pre">pqmon.voltage_channel.angle</span></code></a></li>
 <li><a class="reference internal" href="#adi.pqmon.pqmon.voltage_channel.deviation_over"><code class="docutils literal notranslate"><span class="pre">pqmon.voltage_channel.deviation_over</span></code></a></li>
@@ -352,7 +356,7 @@ Content on this topic
 <span id="adi-pqmon-module"></span><h1>adi.pqmon module<a class="headerlink" href="#module-adi.pqmon" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.pqmon.pqmon">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.pqmon.</span></span><span class="sig-name descname"><span class="pre">pqmon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.pqmon.pqmon" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.pqmon.</span></span><span class="sig-name descname"><span class="pre">pqmon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.pqmon.pqmon" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
 <p>The AD-PQMON-SL is a power quality monitoring solution based on the ADE9430,</p>
 <p>which is a high performance, polyphase energy and Class S power quality monitoring</p>
@@ -361,6 +365,15 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.pqmon.pqmon.config">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.pqmon.pqmon.config" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>The config class is used to configure the AD-PQMON-SL device power analysis
+parameters as required by the ADSW-PQ-CLS library</p>
+<p>This class also implements the process_data attribute which is used to enable
+power quality measurements (when set to true) or waveform measurements (when set
+to false)</p>
+<p>The single_shot_acquisition attribute is used to enable single shot acquisition
+(by default True). When this attribute is set to False, the device is set up for
+continuous acquisition and it will not reset the process_data attribute between
+acquisitions.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.pqmon.pqmon.config.current_scale">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_scale</span></span><a class="headerlink" href="#adi.pqmon.pqmon.config.current_scale" title="Permalink to this definition"></a></dt>
@@ -565,23 +578,37 @@ Content on this topic
 
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.pqmon.pqmon.dip_events">
+<span class="sig-name descname"><span class="pre">dip_events</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.pqmon.pqmon.dip_events" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.pqmon.pqmon.intrpt_events">
+<span class="sig-name descname"><span class="pre">intrpt_events</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.pqmon.pqmon.intrpt_events" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.pqmon.pqmon.read_events">
 <span class="sig-name descname"><span class="pre">read_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.pqmon.pqmon.read_events" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.pqmon.pqmon.rvc_events">
+<span class="sig-name descname"><span class="pre">rvc_events</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.pqmon.pqmon.rvc_events" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.pqmon.pqmon.rx">
 <span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.pqmon.pqmon.rx" title="Permalink to this definition"></a></dt>
-<dd><p>Receive data from hardware buffers for each channel index in
-rx_enabled_channels.</p>
-<dl class="simple">
-<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
-is enabled containing samples from a channel or set of channels.
-Data will be complex when using a complex data device.</p>
-</dd>
-</dl>
+<dd><p>The AD-PQMON-SL device only allows for buffers where all channels are
+enabled at the same time with buffer sizes of 256 samples.</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.pqmon.pqmon.swell_events">
+<span class="sig-name descname"><span class="pre">swell_events</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.pqmon.pqmon.swell_events" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.pqmon.pqmon.voltage_channel">
