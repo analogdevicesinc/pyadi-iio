@@ -52,7 +52,7 @@ else:
 
 my_adc.rx_buffer_size = 4096
 
-print("Sample Rate: ", my_adc.sampling_frequency)
+print("Sample Rate: ", getattr(my_adc, "voltage0-voltage1").sampling_frequency)
 
 data = my_adc.rx()
 
@@ -69,8 +69,9 @@ plt.xlabel("Data Point")
 plt.ylabel("Voltage (mV)")
 plt.show()
 
+samp_freq = getattr(my_adc, "voltage0-voltage1").sampling_frequency
 f, Pxx_spec = signal.periodogram(
-    ac, my_adc.sampling_frequency, window="flattop", scaling="spectrum"
+    ac, samp_freq, window="flattop", scaling="spectrum"
 )
 Pxx_abs = np.sqrt(Pxx_spec)
 
