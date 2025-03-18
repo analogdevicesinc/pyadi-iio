@@ -22,7 +22,7 @@ class ad4020(rx, context_manager):
     _device_name = ""
     _rx_data_type = np.int32
     _complex_data = False
-    _rx_channel_names = ["voltage0"]
+    _rx_channel_names = ["voltage0-voltage1"]
 
     def __init__(self, uri="", device_name="ad4020"):
         if not device_name:
