@@ -69,6 +69,8 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
         self.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6]
 
     class current_channel(attribute):
+        """ Current channel """
+
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
@@ -76,36 +78,47 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def rms(self):
+            """ RMS current value """
             return self._get_iio_attr(self.name, "rms", False)
 
         @property
         def angle(self):
+            """ Phase angle of current """
             return self._get_iio_attr(self.name, "angle", False)
 
         @property
         def scale(self):
+            """ Scale factor for current """
             return self._get_iio_attr(self.name, "scale", False)
 
         @property
         def raw(self):
+            """ Raw current value """
             return self._get_iio_attr(self.name, "raw", False)
 
     class current_channel_phase(current_channel):
+        """ Current channel for one of the three phases """
+
         @property
         def harmonics(self):
+            """ Harmonics of current """
             har = self._get_iio_attr(self.name, "harmonics", False)
             return [float(x) for x in har]
 
         @property
         def inter_harmonics(self):
+            """ Interharmonics of current """
             har = self._get_iio_attr(self.name, "inter_harmonics", False)
             return [float(x) for x in har]
 
         @property
         def thd(self):
+            """ Total Harmonic Distortion of current """
             return self._get_iio_attr(self.name, "thd", False)
 
     class voltage_channel(attribute):
+        """ Voltage channel """
+
         def __init__(self, ctrl, channel_name):
             self.name = channel_name
             self._ctrl = ctrl
@@ -113,63 +126,80 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def rms(self):
+            """ RMS voltage value """
             return self._get_iio_attr(self.name, "rms", False)
 
         @property
         def angle(self):
+            """ Phase angle of voltage """
             return self._get_iio_attr(self.name, "angle", False)
 
         @property
         def harmonics(self):
+            """ Harmonics of voltage """
             har = self._get_iio_attr(self.name, "harmonics", False)
             return [float(x) for x in har]
 
         @property
         def inter_harmonics(self):
+            """ Interharmonics of voltage """
             har = self._get_iio_attr(self.name, "inter_harmonics", False)
             return [float(x) for x in har]
 
         @property
         def scale(self):
+            """ Scale factor for voltage """
             return self._get_iio_attr(self.name, "scale", False)
 
         @property
         def thd(self):
+            """ Total Harmonic Distortion of voltage """
             return self._get_iio_attr(self.name, "thd", False)
 
         @property
         def raw(self):
+            """ Raw voltage value """
             return self._get_iio_attr(self.name, "raw", False)
 
         @property
         def deviation_under(self):
+            """ Under voltage deviation """
             return self._get_iio_attr(self.name, "deviation_under", False)
 
         @property
         def deviation_over(self):
+            """ Over voltage deviation """
             return self._get_iio_attr(self.name, "deviation_over", False)
 
         @property
         def pinst(self):
+            """ Instantaneous power """
             return self._get_iio_attr(self.name, "pinst", False)
 
         @property
         def pst(self):
+            """ Perceived short time flicker """
             return self._get_iio_attr(self.name, "pst", False)
 
         @property
         def plt(self):
+            """ Perceived long time flicker """
             return self._get_iio_attr(self.name, "plt", False)
 
         @property
         def magnitude1012(self):
+            """ Magnitude over 10-12 cycles"""
             return self._get_iio_attr(self.name, "magnitude1012", False)
 
         @property
         def max_magnitude(self):
+            """ Maximum magnitude """
             return self._get_iio_attr(self.name, "maxMagnitude", False)
 
     def read_events(self):
+        """ reads the events from the device and stores them in
+        the swell_events, dip_events, rvc_events and intrpt_events lists """
+
         dips_cnt = self._get_iio_attr("dips", "countEvent", True)
         swells_cnt = self._get_iio_attr("swells", "countEvent", True)
         rvc_cnt = self._get_iio_attr("rvc", "countEvent", True)
@@ -181,8 +211,6 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
         self.dip_events = []
 
         if dips_cnt != 0:
-            test = self._get_iio_attr("dips", "startTime", True)
-            print(test)
             start_time = [int(x) for x in self._get_iio_attr("dips", "startTime", True)]
             end_time = [int(x) for x in self._get_iio_attr("dips", "endTime", True)]
             duration = [
@@ -258,6 +286,8 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
             return (self.start_time, self.end_time, self.duration)
 
     class _swell_event(_event):
+        """ Voltage swell event """
+
         def __init__(self, start_time, end_time, duration, max_mag):
             super().__init__(start_time, end_time, duration)
             self.max_mag = max_mag
@@ -266,6 +296,8 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
             return (self.start_time, self.end_time, self.duration, self.max_mag)
 
     class _dip_event(_event):
+        """ Voltage dip event """
+
         def __init__(self, start_time, end_time, duration, min_mag):
             super().__init__(start_time, end_time, duration)
             self.min_mag = min_mag
@@ -274,6 +306,8 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
             return (self.start_time, self.end_time, self.duration, self.min_mag)
 
     class _rvc_event(_event):
+        """ Rapid voltage change event """
+
         def __init__(self, start_time, end_time, duration, delta_umax, delta_uss):
             super().__init__(start_time, end_time, duration)
             self.delta_umax = delta_umax
@@ -324,42 +358,57 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def u2(self):
+            """ Voltage unbalance U2 """
             return self._get_iio_dev_attr("u2")
 
         @property
         def u0(self):
+            """ Voltage unbalance U0 """
             return self._get_iio_dev_attr("u0")
 
         @property
+        def spos_voltage(self):
+            """ Positive sequence voltage """
+            return self._get_iio_dev_attr("spos_voltage")
+
+        @property
         def sneg_voltage(self):
+            """ Negative sequence voltage """
             return self._get_iio_dev_attr("sneg_voltage")
 
         @property
         def szro_voltage(self):
+            """ Zero sequence voltage """
             return self._get_iio_dev_attr("szro_voltage")
 
         @property
         def i2(self):
+            """ Current unbalance I2 """
             return self._get_iio_dev_attr("i2")
 
         @property
         def i0(self):
+            """ Current unbalance I0 """
             return self._get_iio_dev_attr("i0")
 
         @property
         def sneg_current(self):
+            """ Negative sequence current """
             return self._get_iio_dev_attr("sneg_current")
 
         @property
         def spos_current(self):
+            """ Positive sequence current """
             return self._get_iio_dev_attr("spos_current")
 
         @property
         def szro_current(self):
+            """ Zero sequence current """
             return self._get_iio_dev_attr("szro_current")
 
         @property
         def nominal_voltage(self):
+            """ Nominal voltage """
             return self._get_iio_dev_attr("nominal_voltage")
 
         @nominal_voltage.setter
@@ -368,6 +417,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def voltage_scale(self):
+            """ Voltage scale """
             return self._get_iio_dev_attr("voltage_scale")
 
         @voltage_scale.setter
@@ -376,6 +426,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def current_scale(self):
+            """ Current scale """
             return self._get_iio_dev_attr("current_scale")
 
         @current_scale.setter
@@ -384,6 +435,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def i_consel_en(self):
+            """ Current connection selection if i_consel enable => IB = −IA − IC"""
             return self._get_iio_dev_attr("i_consel_en")
 
         @i_consel_en.setter
@@ -392,6 +444,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def dip_threshold(self):
+            """ Voltage dip thershold"""
             return self._get_iio_dev_attr("dip_threshold")
 
         @dip_threshold.setter
@@ -400,6 +453,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def dip_hysteresis(self):
+            """ Voltage dip hysteresis """
             return self._get_iio_dev_attr("dip_hysteresis")
 
         @dip_hysteresis.setter
@@ -408,6 +462,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def swell_threshold(self):
+            """ Voltage swell threshold """
             return self._get_iio_dev_attr("swell_threshold")
 
         @swell_threshold.setter
@@ -416,6 +471,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def swell_hysteresis(self):
+            """ Voltage swell hysteresis """
             return self._get_iio_dev_attr("swell_hysteresis")
 
         @swell_hysteresis.setter
@@ -424,6 +480,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def intrp_hysteresis(self):
+            """ Interrupt hysteresis """
             return self._get_iio_dev_attr("intrp_hysteresis")
 
         @intrp_hysteresis.setter
@@ -432,6 +489,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def intrp_threshold(self):
+            """ Interrupt threshold """
             return self._get_iio_dev_attr("intrp_threshold")
 
         @intrp_threshold.setter
@@ -440,6 +498,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def rvc_threshold(self):
+            """ Rapid voltage change threshold """
             return self._get_iio_dev_attr("rvc_threshold")
 
         @rvc_threshold.setter
@@ -448,6 +507,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def rvc_hysteresis(self):
+            """ Rapid voltage change hysteresis """
             return self._get_iio_dev_attr("rvc_hysteresis")
 
         @rvc_hysteresis.setter
@@ -456,6 +516,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def msv_carrier_frequency(self):
+            """ Mains signal voltage carrier frequency """
             return self._get_iio_dev_attr("msv_carrier_frequency")
 
         @msv_carrier_frequency.setter
@@ -464,6 +525,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def msv_record_length(self):
+            """ Mains signal voltage record length """
             return self._get_iio_dev_attr("msv_record_length")
 
         @msv_record_length.setter
@@ -472,6 +534,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def msv_threshold(self):
+            """ Mains signal voltage threshold """
             return self._get_iio_dev_attr("msv_threshold")
 
         @msv_threshold.setter
@@ -480,10 +543,12 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def sampling_frequency(self):
+            """ Sampling frequency """
             return self._get_iio_dev_attr("sampling_frequency")
 
         @property
         def v_consel(self):
+            """ Voltage connection selection """
             return self._get_iio_dev_attr("v_consel")
 
         @v_consel.setter
@@ -494,6 +559,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def flicker_model(self):
+            """ Flicker model - can only be selected from flicker_model_available """
             return self._get_iio_dev_attr("flicker_model")
 
         @flicker_model.setter
@@ -504,6 +570,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def nominal_frequency(self):
+            """ Nominal frequency - can only be selected from nominal_frequency_available """
             return self._get_iio_dev_attr("nominal_frequency")
 
         @nominal_frequency.setter
@@ -516,10 +583,12 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def firmware_version(self):
+            """ Firmware version """
             return self._get_iio_dev_attr("fw_version")
 
         @property
         def process_data(self):
+            """ Process data - (true) enable power quality measurements or (false)waveform measurements """
             return self._get_iio_dev_attr("process_data")
 
         @process_data.setter
@@ -530,6 +599,7 @@ pqmon(uri="{self.uri}, device_name={self._device_name})"
 
         @property
         def single_shot_acquisition(self):
+            """ Single shot acquisition - (true) enable single shot acquisition or (false) continuous acquisition """
             return self._single_shot_acquisition
 
         @single_shot_acquisition.setter
