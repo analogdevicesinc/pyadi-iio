@@ -1,0 +1,4 @@
+[console_scripts]
+coveralls=coveralls.cli:main
+python-coveralls=coveralls.cli:main
+

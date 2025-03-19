@@ -10,13 +10,13 @@ import time
 
 # # Connect to Arduino Uno    
 ## Note: if first time installing pyfirmata, need to replace "getargspec" with "getfullargspec" in pyfirmata code
-# board = pyfirmata.Arduino("/dev/ttyACM0", baudrate=57600)
+board = pyfirmata.Arduino("/dev/ttyACM0", baudrate=57600)
 
 # # Establish VISA control of spectrum analyzer and signal generator
 rm = pyvisa.ResourceManager()
 x = rm.list_resources()
 HMCT2220 = rm.open_resource('ASRL/dev/ttyACM1::INSTR')
-FieldFox = rm.open_resource('TCPIP::192.168.100.23::INSTR')
+FieldFox = rm.open_resource('TCPIP::192.168.2.105::INSTR')
 
 ###################################
 ### Cal Board Control Functions ###
@@ -107,6 +107,7 @@ def _set_attenuation_level(attenuation, instr):
 def test_loopback(channel, cal_board_state, frequency):
 
     if (cal_board_state == "adjacent_loopback" and frequency == 8000):
+        time.sleep(1) # Buffer time of 1 second
         input('\n\nConnect signal generator into channel {} input and connect spectrum analyzer into channel {} output.  Press Enter when complete '.format(channel, channel))
         _set_adjacent_loopback()
 
@@ -115,7 +116,7 @@ def test_loopback(channel, cal_board_state, frequency):
 
     # Set up signal generator
     _set_frequency_MHz(frequency, HMCT2220)  # Set frequency of sig gen
-    _set_power_level_dBm(15, HMCT2220) # Set sig gen power level to 10 dBm
+    _set_power_level_dBm(10, HMCT2220) # Set sig gen power level to 10 dBm
     _set_output('ON', HMCT2220) # Set sig gen output on
 
     time.sleep(1) # Buffer time of 1 second
@@ -136,7 +137,7 @@ def test_loopback(channel, cal_board_state, frequency):
     if cal_board_state == "adjacent_loopback":
         assert int(float(peak_power)) > -20
     if cal_board_state == "combined_loopback":
-        assert int(float(peak_power)) > -65
+        assert int(float(peak_power)) > -55
 
 ###################################
 ### Tx Combined SMA Output Test ###

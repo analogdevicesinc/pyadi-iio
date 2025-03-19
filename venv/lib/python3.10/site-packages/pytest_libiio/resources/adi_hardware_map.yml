@@ -1,0 +1,205 @@
+# FMC and Eval
+fmcomms2:
+  - ad7291
+  - ad9361-phy
+  - cf-ad9361-lpc,4
+  - emulate:
+      - filename: fmcomms2-3.xml
+      - data_devices:
+          - iio:device1
+          - iio:device5
+          - iio:device6
+fmcomms4:
+  - ad7291
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+  - emulate:
+      - filename: fmcomms4.xml
+      - data_devices:
+          - iio:device1
+          - iio:device5
+fmcomms5:
+  - ad9361-phy
+  - ad9361-phy-b
+  - cf-ad9361-A,8
+  - cf-ad9361-B,4
+  - emulate:
+      - filename: fmcomms5.xml
+      - data_devices:
+          - iio:device1
+          - iio:device2
+          - iio:device4
+          - iio:device5
+fmcomms11:
+  - ad7291
+  - adl5240
+  - hmc1119
+  - axi-ad9162-hpc
+  - axi-ad9625-hpc
+  - emulate:
+      - filename: fmcomms11.xml
+      - data_devices:
+          - iio:device5
+          - iio:device6
+pluto:
+  - adm1177-iio
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+  - emulate:
+      - filename: pluto.xml
+      - data_devices:
+          - iio:device2
+          - iio:device3
+pluto_rev_c:
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+  - ctx_attr:
+      - hw_model: Analog Devices PlutoSDR Rev.C
+  - emulate:
+      - filename: pluto.xml
+      - data_devices:
+          - iio:device2
+          - iio:device3
+daq2:
+  - axi-ad9144-hpc,4
+  - axi-ad9680-hpc,2
+  - emulate:
+      - filename: daq2.xml
+      - data_devices:
+          - iio:device3
+          - iio:device4
+daq3:
+  - axi-ad9152-hpc,2
+  - axi-ad9680-hpc,2
+  - emulate:
+      - filename: daq3.xml
+      - data_devices:
+          - iio:device3
+          - iio:device4
+ad9081:
+  - axi-ad9081-tx-hpc
+  - axi-ad9081-rx-hpc
+  - emulate:
+      - filename: ad9081.xml
+      - data_devices:
+          - iio:device2
+          - iio:device3
+ad9081_tdd:
+  - axi-ad9081-tx-hpc
+  - axi-ad9081-rx-hpc
+  - axi-core-tdd
+  - hmc7044
+  - emulate:
+      - filename: ad9081_tdd.xml
+      - data_devices:
+          - iio:device3
+          - iio:device4
+ad9172:
+  - axi-ad9172-hpc,2
+  - hmc7044
+  - emulate:
+      - filename: ad9172.xml
+      - data_devices:
+          - iio:device2
+cn0511:
+  - ad9166-amp
+  - adf4372
+  - ad5693r
+  - ad9166
+  - emulate:
+      - filename: cn0511.xml
+      - data_devices:
+          - iio:device3
+cn0540:
+  - ad7768-1
+  - ltc2308
+  - ltc2606
+  - one-bit-adc-dac
+  - emulate:
+      - filename: cn0540.xml
+      - data_devices:
+          - iio:device0
+
+# SOMS
+adrv9361:
+  - ad7291
+  - ad9517-3
+  - ad9361-phy
+  - cf-ad9361-lpc,4
+  - emulate:
+      - filename: adrv9361-z7035.xml
+      - data_devices:
+          - iio:device1
+          - iio:device4
+adrv9364:
+  - ad7291-bob
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+  - emulate:
+      - filename: adrv9364-z7020.xml
+      - data_devices:
+          - iio:device2
+          - iio:device4
+packrf:
+  - ad7291-ccbox
+  - ad9361-phy
+  - cf-ad9361-lpc,4
+
+# Generics
+ad9361:
+  - ad9361-phy
+  - cf-ad9361-lpc,4
+ad9364:
+  - ad9361-phy
+  - cf-ad9361-lpc,2
+adrv9002:
+  - adrv9002-phy
+  - axi-adrv9002-rx-lpc
+  - axi-adrv9002-tx-lpc
+  - emulate:
+      - filename: adrv9002.xml
+      - data_devices:
+          - iio:device2
+          - iio:device4
+adrv9009:
+  - adrv9009-phy
+adrv9009-dual:
+  - adrv9009-phy
+  - adrv9009-phy-b
+adrv9371:
+  - ad9371-phy
+  - emulate:
+      - filename: ad9371.xml
+      - data_devices:
+          - iio:device4
+          - iio:device6
+adxl355:
+  - adxl355
+  - emulate:
+      - filename: adxl355.xml
+ad9434:
+  - axi-ad9434-core-lpc
+  - ad9517-4
+  - emulate:
+      - filename: ad9434.xml
+      - data_devices:
+          - iio:device2
+ad9265:
+  - axi-ad9265-core-lpc
+  - ad9517-4
+  - emulate:
+      - filename: ad9265.xml
+      - data_devices:
+          - iio:device2
+ad4020:
+  - ad4020
+  - emulate:
+      - filename: ad4020.xml
+      - data_devices:
+          - iio:device0
+ltc2387:
+  - ltc2387
+  - emulate:
+      - filename: ltc2387.xml
+      - data_devices:
+          - iio:device0
