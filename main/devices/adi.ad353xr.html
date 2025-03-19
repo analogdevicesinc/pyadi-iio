@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>jesd &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>ad353xr &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=3d3703ae" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -16,8 +16,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lm75" href="adi.lm75.html" />
-    <link rel="prev" title="gen_mux" href="adi.gen_mux.html" />
+    <link rel="next" title="ad3552r" href="adi.ad3552r.html" />
+    <link rel="prev" title="ad2s1210" href="adi.ad2s1210.html" />
    
   
   <meta name="repository" content="pyadi-iio">
@@ -89,7 +89,29 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">jesd</a></li>
+<li><a class="reference internal" href="#">ad353xr</a><ul>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr"><code class="docutils literal notranslate"><span class="pre">ad353xr</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.all_ch_input_registers"><code class="docutils literal notranslate"><span class="pre">ad353xr.all_ch_input_registers</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.all_ch_operating_mode"><code class="docutils literal notranslate"><span class="pre">ad353xr.all_ch_operating_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.all_ch_operating_mode_avail"><code class="docutils literal notranslate"><span class="pre">ad353xr.all_ch_operating_mode_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.all_ch_raw"><code class="docutils literal notranslate"><span class="pre">ad353xr.all_ch_raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.channel"><code class="docutils literal notranslate"><span class="pre">ad353xr.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.hw_ldac_trigger"><code class="docutils literal notranslate"><span class="pre">ad353xr.hw_ldac_trigger</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.hw_ldac_trigger_avail"><code class="docutils literal notranslate"><span class="pre">ad353xr.hw_ldac_trigger_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.mux_out_select"><code class="docutils literal notranslate"><span class="pre">ad353xr.mux_out_select</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.mux_out_select_avail"><code class="docutils literal notranslate"><span class="pre">ad353xr.mux_out_select_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.output_bits"><code class="docutils literal notranslate"><span class="pre">ad353xr.output_bits</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.range"><code class="docutils literal notranslate"><span class="pre">ad353xr.range</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.range_avail"><code class="docutils literal notranslate"><span class="pre">ad353xr.range_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.reference_select"><code class="docutils literal notranslate"><span class="pre">ad353xr.reference_select</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.reference_select_available"><code class="docutils literal notranslate"><span class="pre">ad353xr.reference_select_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad353xr.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.sw_ldac_trigger"><code class="docutils literal notranslate"><span class="pre">ad353xr.sw_ldac_trigger</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad353xr.ad353xr.sw_ldac_trigger_avail"><code class="docutils literal notranslate"><span class="pre">ad353xr.sw_ldac_trigger_avail</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </nav>
@@ -136,7 +158,7 @@ Content on this topic
 <li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad353xr.html">ad353xr</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ad353xr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r.html">ad3552r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
@@ -245,7 +267,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.gen_mux.html">gen_mux</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">lm75</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2387.html">ltc2387</a></li>
@@ -277,17 +299,124 @@ Content on this topic
         <div class="bodywrapper" id="top-anchor">
           <div class="body" role="main">
             
-  <section id="module-adi.jesd">
-<span id="jesd"></span><h1>jesd<a class="headerlink" href="#module-adi.jesd" title="Permalink to this heading"></a></h1>
-<p>JESD Shim import to handle JESD as optional dependency</p>
+  <section id="module-adi.ad353xr">
+<span id="ad353xr"></span><h1>ad353xr<a class="headerlink" href="#module-adi.ad353xr" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad353xr.</span></span><span class="sig-name descname"><span class="pre">ad353xr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad353xr.ad353xr" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD353xr DAC</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.all_ch_input_registers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_input_registers</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.all_ch_input_registers" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr all input registers config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.all_ch_operating_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_operating_mode</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.all_ch_operating_mode" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr all channels operating mode config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.all_ch_operating_mode_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_operating_mode_avail</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.all_ch_operating_mode_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr all channels operating mode available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.all_ch_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_raw</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.all_ch_raw" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr all dac registers config</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad353xr.ad353xr.channel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.hw_ldac_trigger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.hw_ldac_trigger" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr hardware ldac trigger config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.hw_ldac_trigger_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_trigger_avail</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.hw_ldac_trigger_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr hw_ldac_trigger available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.mux_out_select">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mux_out_select</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.mux_out_select" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr mux out select</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.mux_out_select_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mux_out_select_avail</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.mux_out_select_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr mux_out_select available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.output_bits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_bits</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.output_bits" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr channel-wise number of output bits list</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.range">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.range" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr range config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.range_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range_avail</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.range_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr range available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.reference_select">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_select</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.reference_select" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr reference voltage config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.reference_select_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_select_available</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.reference_select_available" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr reference voltage available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.sampling_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr sampling frequency config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.sw_ldac_trigger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.sw_ldac_trigger" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr software ldac trigger config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad353xr.ad353xr.sw_ldac_trigger_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ldac_trigger_avail</span></span><a class="headerlink" href="#adi.ad353xr.ad353xr.sw_ldac_trigger_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD353xr sw_ldac_trigger available</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.gen_mux.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">gen_mux</a>
-    <a href="adi.lm75.html" title="Next document (Alt+Shift+RightArrow)" class="next">lm75</a>
+    <a href="adi.ad2s1210.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad2s1210</a>
+    <a href="adi.ad3552r.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad3552r</a>
               </div>
           
         </div>
