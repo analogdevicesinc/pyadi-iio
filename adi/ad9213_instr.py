@@ -200,6 +200,7 @@ class ad9213_instr(object):
                 for dev in [self.primary] + self.secondaries:
                     dev.rx_destroy_buffer()
                 return
+
             except:  # noqa: E722
                 print("Re-initializing due to lock-up")
                 self.reinitialize()
@@ -230,8 +231,6 @@ class ad9213_instr(object):
 
         self.sysref_request()
 
-        for dev in [self.primary] + self.secondaries:
-            rx_data = dev.rx()
-            if len(rx_data) > 0:
-                data.append(rx_data)
-        return data
+        rx_data1 = self.primary.rx()
+        rx_data2 = self.secondaries[0].rx()
+        return rx_data1, rx_data2
