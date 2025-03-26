@@ -2,12 +2,18 @@ name: Linux Tests
 
 on: [push, pull_request]
 
+env:
+  # If we are on master or a release branch or sending a PR to master test all python versions
+  # Otherwise, only test the oldest version
+  PYTHON_VERSIONS: ${{ (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release') || github.event_name == 'pull_request' && github.base_ref == 'master') && '3.7, 3.8, 3.9, "3.10"' || '3.7' }}
+  OLDEST_PYTHON_VERSION: 3.7
+
 jobs:
   Test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: ${{ env.PYTHON_VERSIONS }}
 
     steps:
       - uses: actions/checkout@v2
@@ -30,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: ${{ env.PYTHON_VERSIONS }}
 
     steps:
       - uses: actions/checkout@v2
@@ -74,7 +80,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: ${{ env.PYTHON_VERSIONS }}
 
     steps:
       - uses: actions/checkout@v2
@@ -101,10 +107,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: ${{ env.OLDEST_PYTHON_VERSION }}
 
       - name: Install dependencies
         run: |
@@ -125,10 +131,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: ${{ env.OLDEST_PYTHON_VERSION }}
 
       - name: Install dependencies
         run: |
@@ -156,10 +162,10 @@ jobs:
     if: github.event_name == 'pull_request' && github.base_ref == 'master' && ! github.event.pull_request.head.repo.fork
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: ${{ env.OLDEST_PYTHON_VERSION }}
 
       - name: Install dependencies
         run: |
@@ -195,10 +201,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: ${{ env.OLDEST_PYTHON_VERSION }}
 
       - name: Install dependencies
         run: |
