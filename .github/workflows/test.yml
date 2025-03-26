@@ -5,47 +5,41 @@ on: [push, pull_request]
 jobs:
   Test:
     runs-on: ubuntu-latest
+
     strategy:
+      fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: ["3_7", "3_8", "3_9", "3_10", "3_11"]
+
+    container:
+      image: ghcr.io/sdgtt/dockerfiles/pyadi-iio-python-${{ matrix.python-version }}-ci
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GH_IMAGE_REPO_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_pydeps.sh
-          bash ./.github/scripts/install_part_libs.sh
-
       - name: Test
         run: pytest -v --cov=adi
 
   Test-Emulated-HW:
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: ["3_7", "3_8", "3_9", "3_10", "3_11"]
+
+    container:
+      image: ghcr.io/sdgtt/dockerfiles/pyadi-iio-python-${{ matrix.python-version }}-ci
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GH_IMAGE_REPO_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_part_libs.sh
-          bash ./.github/scripts/install_iioemu.sh
-          bash ./.github/scripts/install_pydeps.sh
-          sudo apt install -y python3-tk
 
       - name: Test
         run: |
@@ -71,26 +65,25 @@ jobs:
 
   Lint:
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: ["3_7", "3_8", "3_9", "3_10", "3_11"]
+
+    container:
+      image: ghcr.io/sdgtt/dockerfiles/pyadi-iio-python-${{ matrix.python-version }}-ci
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GH_IMAGE_REPO_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          bash ./.github/scripts/install_libiio.sh
-          bash ./.github/scripts/install_part_libs.sh
-          bash ./.github/scripts/install_pydeps.sh
 
       - name: Lint
         run: |
+          git config --global --add safe.directory `pwd`
           pre-commit run --all-files 2> /dev/null
           ec=$?
           git diff -U0 > log.txt && cat log.txt
