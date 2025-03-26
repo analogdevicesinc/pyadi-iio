@@ -16,7 +16,7 @@ print("uri: " + str(my_uri))
 dev = adi.ad3552r_hs(uri=my_uri, device_name="ad3552r")
 
 dev.tx_enabled_channels = [0, 1]
-dev.tx_cyclic_buffer = False
+dev.tx_cyclic_buffer = True
 
 dev._tx_data_type = np.uint16
 
