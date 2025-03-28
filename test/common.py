@@ -56,6 +56,9 @@ def pytest_addoption(parser):
         help="Run tests that use observation data paths",
     )
     parser.addoption(
+        "--no-os", action="store_true", help="Run tests for No-OS",
+    )
+    parser.addoption(
         "--lvds", action="store_true", help="Run tests for LVDS",
     )
     parser.addoption(
