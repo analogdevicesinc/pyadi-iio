@@ -31,8 +31,8 @@ set_dds_upto_dev = (
     10  # can be used to remove setting DDS to move faster through the testing process
 )
 
-synchrona_ip = "10.48.65.214"
-device_ips = ["10.48.65.158", "10.48.65.239", "10.48.65.235", "10.48.65.240"]
+synchrona_ip = "191.168.0.1"
+device_ips = [ "191.168.0.2", "191.168.0.3", "191.168.0.4", "191.168.0.5"]
 device_ips = [f"ip:{ip}" for ip in device_ips]
 
 if (len(device_ips) == 1):
@@ -45,7 +45,7 @@ sdrs = adi.adrv9002_multi(
     secondary_uris=device_ips[1:],
     sync_uri=f"ip:{synchrona_ip}",
     enable_ssh=True,
-    sshargs={"username": "root", "password": "analog1"},
+    sshargs={"username": "root", "password": "analog"},
 )
 
 # Reboot all systems
