@@ -16,12 +16,14 @@ print("uri: " + str(my_uri))
 dev = adi.ad3552r_hs(uri=my_uri, device_name="ad3552r")
 
 dev.tx_enabled_channels = [0, 1]
-dev.tx_cyclic_buffer = False
+dev.tx_cyclic_buffer = True
 
 dev._tx_data_type = np.uint16
 
-# signal generation
-fs = int(dev.channel[0].sample_rate)
+# ad3552r is dual channel, the effective sample rate is:
+# 1 / (1 / 33333333 + 1 / 33333333)) = 16666666
+# if both channels are enabled in a buffered write.
+fs = int(dev.channel[0].sample_rate) / 2
 # Signal frequency
 fc = 80000
 # Number of samples
