@@ -68,7 +68,7 @@ class max14906(rx, context_manager):
 		def current_limit(self, value):
 			if not self.output:
 				return 0
-			return self._get_iio_attr(self.name, "current_limit", self.output, value)
+			return self._set_iio_attr(self.name, "current_limit", self.output, value)
 
 		@property
 		def current_limit_available(self):
