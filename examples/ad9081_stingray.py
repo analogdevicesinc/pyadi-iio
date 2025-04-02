@@ -36,14 +36,15 @@ conv.rx_cyclic_buffer = False
 
 conv.tx_ddr_offload   = False
 
-frame_length_ms           = 1
-rx_time                   = 5
-generated_signal_time     = 0.90
+tddn.burst_count          = 20
+frame_length_ms           = 0.005
+rx_time                   = tddn.burst_count * frame_length_ms
+generated_signal_time     = 0.003
 blank_time                = 0
 use_tx_mxfe_en            = 0
 
 tx_time                   = generated_signal_time - blank_time
-capture_range             = 10
+capture_range             = 1
 
 N_tx                      = int((generated_signal_time * conv.tx_sample_rate) / 1000)
 N_rx                      = int((rx_time * conv.rx_sample_rate) / 1000)
@@ -52,7 +53,7 @@ conv.rx_buffer_size       = N_rx
 
 tddn.startup_delay_ms     = 0
 tddn.frame_length_ms      = frame_length_ms
-tddn.burst_count          = 0
+
 
 TX_OFFLOAD_SYNC = 0
 RX_OFFLOAD_SYNC = 1
@@ -107,7 +108,7 @@ print(f"RX Sampling_rate:          {conv.rx_sample_rate}")
 
 fs = int(conv.tx_sample_rate)
 A = 0.9 * 2**15  # -6 dBFS
-B = 1e4
+B = 1e6
 T = N_tx / fs
 t = np.linspace(0, T, N_tx, endpoint=False)
 tx_sig = A * np.sin(2 * math.pi * B * t)
@@ -121,12 +122,17 @@ tdd_amplitude = 1
 tdd_freq = 1/(tddn.frame_length_ms* 1e-3)
 tdd_frame_rate_plot = tdd_amplitude * np.sign(np.sin(2 * math.pi * tdd_freq * tdd_t))
 
-tddn.sync_soft  = 0
-tddn.sync_soft  = 1
+# tddn.sync_soft  = 0
+# tddn.sync_soft  = 1
 
 rx_sig = np.zeros((capture_range,conv.rx_buffer_size))
 
 for r in range(capture_range):
+    conv.rx_sync_start = "arm"
+    conv.rx_destroy_buffer()
+    conv._rx_init_channels()
+    tddn.sync_soft  = 0
+    tddn.sync_soft  = 1
     data  = conv.rx()
     rx_sig[r]=data[0].real
 
