@@ -18,7 +18,7 @@ class ad353xr(tx, context_manager):
         """Constructor for AD353xr class."""
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad3530r"]
+        compatible_parts = ["ad3530r", "ad3531r"]
 
         self._ctrl = None
 
