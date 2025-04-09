@@ -89,10 +89,10 @@ class ad9081_mc(ad9081):
     _rx_channel_names: List[str] = []
     _tx_channel_names: List[str] = []
     _tx_control_channel_names: List[str] = []
-    _rx_coarse_ddc_channel_names: List[str] = []
-    _tx_coarse_duc_channel_names: List[str] = []
-    _rx_fine_ddc_channel_names: List[str] = []
-    _tx_fine_duc_channel_names: List[str] = []
+    _rx_coarse_ddc_channel_names: Dict[str, str] = {}
+    _tx_coarse_duc_channel_names: Dict[str, str] = {}
+    _rx_fine_ddc_channel_names: Dict[str, str] = {}
+    _tx_fine_duc_channel_names: [str, str] = {}
     _dds_channel_names: List[str] = []
     _device_name = ""
 
@@ -104,10 +104,10 @@ class ad9081_mc(ad9081):
         self._rx_channel_names: List[str] = []
         self._tx_channel_names: List[str] = []
         self._tx_control_channel_names: List[str] = []
-        self._rx_coarse_ddc_channel_names: List[str] = []
-        self._tx_coarse_duc_channel_names: List[str] = []
-        self._rx_fine_ddc_channel_names: List[str] = []
-        self._tx_fine_duc_channel_names: List[str] = []
+        self._rx_coarse_ddc_channel_names: Dict[str, str] = {}
+        self._tx_coarse_duc_channel_names: Dict[str, str] = {}
+        self._rx_fine_ddc_channel_names: Dict[str, str] = {}
+        self._tx_fine_duc_channel_names: Dict[str, str] = {}
         self._dds_channel_names: List[str] = []
 
         context_manager.__init__(self, uri, self._device_name)
@@ -276,6 +276,9 @@ class ad9081_mc(ad9081):
     # Singleton function intercepts
     def _get_iio_attr_str_single(self, channel_name, attr, output):
         channel_names_dict = self._rx_coarse_ddc_channel_names
+        if isinstance(channel_name, dict):
+            _dev = next(iter(self._tx_coarse_duc_channel_names))
+            channel_name = channel_names_dict[_dev][0]
         return {
             dev: attribute._get_iio_attr_str(
                 self, channel_name, attr, output, self._ctx.find_device(dev)
@@ -283,8 +286,23 @@ class ad9081_mc(ad9081):
             for dev in channel_names_dict
         }
 
+    def _set_iio_attr_str_single(self, channel_name, attr, output, value):
+        channel_names_dict = self._rx_coarse_ddc_channel_names
+        if isinstance(channel_name, dict):
+            _dev = next(iter(self._tx_coarse_duc_channel_names))
+            channel_name = channel_names_dict[_dev][0]
+        return {
+            dev: attribute._set_iio_attr_str(
+                self, channel_name, attr, output, value, self._ctx.find_device(dev)
+            )
+            for dev in channel_names_dict
+        }
+
     def _get_iio_attr_single(self, channel_name, attr, output):
         channel_names_dict = self._rx_coarse_ddc_channel_names
+        if isinstance(channel_name, dict):
+            _dev = next(iter(self._tx_coarse_duc_channel_names))
+            channel_name = channel_names_dict[_dev][0]
         return {
             dev: attribute._get_iio_attr(
                 self, channel_name, attr, output, self._ctx.find_device(dev)
@@ -294,6 +312,9 @@ class ad9081_mc(ad9081):
 
     def _set_iio_attr_single(self, channel_name, attr, output, values):
         channel_names_dict = self._rx_coarse_ddc_channel_names
+        if isinstance(channel_name, dict):
+            _dev = next(iter(self._tx_coarse_duc_channel_names))
+            channel_name = channel_names_dict[_dev][0]
         values = self._map_inputs_to_dict_single(channel_names_dict, values)
         for dev in channel_names_dict:
             self._set_iio_attr(

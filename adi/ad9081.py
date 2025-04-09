@@ -155,18 +155,26 @@ class ad9081(rx_tx, context_manager, sync_start):
 
     def _get_iio_attr_str_single(self, channel_name, attr, output):
         # This is overridden by subclasses
+        if isinstance(channel_name, list):
+            channel_name = channel_name[0]
         return self._get_iio_attr_str(channel_name, attr, output)
 
     def _set_iio_attr_str_single(self, channel_name, attr, output, value):
         # This is overridden by subclasses
+        if isinstance(channel_name, list):
+            channel_name = channel_name[0]
         return self._set_iio_attr(channel_name, attr, output, value)
 
     def _get_iio_attr_single(self, channel_name, attr, output, _ctrl=None):
         # This is overridden by subclasses
+        if isinstance(channel_name, list):
+            channel_name = channel_name[0]
         return self._get_iio_attr(channel_name, attr, output, _ctrl)
 
     def _set_iio_attr_single(self, channel_name, attr, output, value, _ctrl=None):
         # This is overridden by subclasses
+        if isinstance(channel_name, list):
+            channel_name = channel_name[0]
         return self._set_iio_attr(channel_name, attr, output, value, _ctrl)
 
     def _get_iio_dev_attr_single(self, attr):
@@ -260,13 +268,13 @@ class ad9081(rx_tx, context_manager, sync_start):
     def rx_test_mode(self):
         """rx_test_mode: NCO Test Mode"""
         return self._get_iio_attr_str_single(
-            self._rx_coarse_ddc_channel_names[0], "test_mode", False
+            self._rx_coarse_ddc_channel_names, "test_mode", False
         )
 
     @rx_test_mode.setter
     def rx_test_mode(self, value):
         self._set_iio_attr_single(
-            self._rx_coarse_ddc_channel_names[0], "test_mode", False, value,
+            self._rx_coarse_ddc_channel_names, "test_mode", False, value,
         )
 
     @property
@@ -643,31 +651,28 @@ class ad9081(rx_tx, context_manager, sync_start):
     def rx_sample_rate(self):
         """rx_sampling_frequency: Sample rate after decimation"""
         return self._get_iio_attr_single(
-            self._rx_coarse_ddc_channel_names[0], "sampling_frequency", False
+            self._rx_coarse_ddc_channel_names, "sampling_frequency", False
         )
 
     @property
     def adc_frequency(self):
         """adc_frequency: ADC frequency in Hz"""
         return self._get_iio_attr_single(
-            self._rx_coarse_ddc_channel_names[0], "adc_frequency", False
+            self._rx_coarse_ddc_channel_names, "adc_frequency", False
         )
 
     @property
     def tx_sample_rate(self):
         """tx_sampling_frequency: Sample rate before interpolation"""
         return self._get_iio_attr_single(
-            self._tx_coarse_duc_channel_names[0],
-            "sampling_frequency",
-            True,
-            self._txdac,
+            self._tx_coarse_duc_channel_names, "sampling_frequency", True,
         )
 
     @property
     def dac_frequency(self):
         """dac_frequency: DAC frequency in Hz"""
         return self._get_iio_attr_single(
-            self._tx_coarse_duc_channel_names[0], "dac_frequency", True
+            self._tx_coarse_duc_channel_names, "dac_frequency", True
         )
 
     @property
