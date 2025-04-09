@@ -50,6 +50,16 @@ class ad4020(rx, context_manager):
         self.voltage0 = self.channel[0]
         rx.__init__(self)
 
+    @property
+    def sampling_frequency(self):
+        """Get and set the sampling frequency."""
+        return self.channel[0]._get_iio_attr(self.channel[0].name, "sampling_frequency", False)
+
+    @sampling_frequency.setter
+    def sampling_frequency(self, value):
+        """Set the sampling frequency."""
+        self.channel[0]._set_iio_attr(self.channel[0].name, "sampling_frequency", False, value)
+
     class _channel(attribute):
         """AD4020 channel"""
 
