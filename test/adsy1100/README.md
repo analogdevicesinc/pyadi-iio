@@ -9,5 +9,5 @@ Instrument configuration is done through the pybench_inst.yaml file. This file i
 ## Run pytest
 
 ```bash
-python -m pytest -vs test/adsy1100/test_smoke.py --configfile=test/adsy1100/pybench_inst.yaml  --html=testhtml/report.html --junitxml=testxml/report.xml
+python -m pytest -vs test/adsy1100/test_smoke.py --configfile=test/adsy1100/pybench_inst.yaml  --html=testhtml/report.html --junitxml=testxml/report.xml --skip-scan
 ```

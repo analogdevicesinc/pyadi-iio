@@ -18,7 +18,7 @@ from scipy import signal
 from scipy.signal import find_peaks
 
 
-def spec_est(x, fs, ref=2 ** 15, plot=False, useWindow=False):
+def spec_est(x, fs, ref=2 ** 15, plot=False, show_plot=False, useWindow=False):
 
     N = len(x)
 
@@ -54,7 +54,11 @@ def spec_est(x, fs, ref=2 ** 15, plot=False, useWindow=False):
         plt.margins(0.1, 0.1)
         plt.xlabel("Frequency [Hz]")
         plt.tight_layout()
-        plt.show()
+        if show_plot:
+            plt.show()
+        else:
+            return plt
+        
 
     return ampl, freqs
 

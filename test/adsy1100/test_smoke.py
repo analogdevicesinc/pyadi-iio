@@ -100,6 +100,9 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
 
     config = request.param
 
+    show_uart_log = False
+    skip_boot = False
+
     # Start UART
     neb_manager = nebula.manager(
         configfilename=config_file_zu4eg, board_name="zu4eg-washington"
@@ -107,100 +110,127 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
     neb_manager.monitor[0].log_filename = "zu4eg_uart.log"
     neb_manager.monitor[0]._read_until_stop()  # Flush
     neb_manager.monitor[0].start_log(logappend=True)
-    neb_manager.monitor[0].print_to_console = False
+    neb_manager.monitor[0].print_to_console = show_uart_log
     time.sleep(2)
 
-    # Power cycle to power down VU11P and Apollo
-    print("Power cycling")
-    power_supply.ch1.output_enabled = False
-    power_supply.ch2.output_enabled = False
-    time.sleep(5)
-    power_supply.ch1.output_enabled = True
-    power_supply.ch2.output_enabled = True
+    if not skip_boot:
 
-    # wait for linux to boot
-    # neb_manager.monitor[0].print_to_console = True
-    results = neb_manager.monitor[0]._read_until_done_multi(
-        done_strings=["Linux version", "root@analog"],
-        max_time=200,
-    )
-
-    neb_manager.network_check()
-
-    # Copy common files
-    for key in config:
-        if key != "name" and key != "extras":
-            neb_manager.net.copy_file_to_remote(
-                os.path.join(boot_files_folder, config[key]),
-                f"/boot/{config[key]}",
-            )
-        if key == "extras":
-            for extra in config[key]:
-                neb_manager.net.copy_file_to_remote(
-                    os.path.join(boot_files_folder, extra["src"]),
-                    extra["dst"],
-                )
-
-    # Reboot
-    neb_manager.net.reboot_board(bypass_sleep=True)
-
-    # Wait for Linux login
-    neb_manager.monitor[0].print_to_console = False
-    results = neb_manager.monitor[0]._read_until_done_multi(
-        done_strings=["Linux version", "root@analog"],
-        max_time=200,
-    )
-
-    # Check Ethernet
-    if len(results) == 0:
-        print("Kernel not started")
-        neb_manager.monitor[0].stop_log()
-        raise Exception("Kernel not started")
-    if len(results) == 2 and not results[1]:
-        neb_manager.monitor[0].stop_log()
-        raise Exception("Kernel failed to reach login state")
-
-    time.sleep(5)
-
-    # Make UART accessible for tests/fixtures
-    neb_manager.monitor[0].stop_log()
-    time.sleep(1)
-    neb_manager.monitor[0]._read_until_stop()  # Flush
-    # Flush to marker
-    do_flush(neb_manager.monitor[0])
-
-    neb_manager.network_check()
-
-    # Take power measurement
-    pre_measure = measure_power(power_supply)
-    record_property("pre_measure", pre_measure)
-
-    # Load selmap overlay
-    dtbo = config["selmap_overlay"]
-    bin = config["selmap_bin"]
-    cmd = f"cd /boot && chmod +x selmap_dtbo.sh && ./selmap_dtbo.sh -d {dtbo} -b {bin}"
-    neb_manager.net.run_ssh_command(cmd)
-    print("Waiting for selmap to boot")
-
-    # Wait for Apollo and JESD links
-    finished_str = "axi-jesd204-tx 880d0000.axi-jesd204-tx-b: AXI-JESD204-TX"
-    timeout = 60 * 4
-    now = time.time()
-    # Overlay output only appears in dmesg and not UART console
-    while True:
-        dmesg = neb_manager.net.run_ssh_command("dmesg", show_log=False)
-        dmesg = dmesg.stdout
-        if finished_str in dmesg:
-            break
-        print(f"Waiting for Apollo and JESD links {time.time() - now:.2f} of {timeout}")
+        # Power cycle to power down VU11P and Apollo
+        print("Power cycling")
+        power_supply.ch1.output_enabled = False
+        power_supply.ch2.output_enabled = False
         time.sleep(5)
-        if time.time() - now > timeout:
-            raise Exception("Timeout waiting for Apollo")
+        power_supply.ch1.output_enabled = True
+        power_supply.ch2.output_enabled = True
+
+        # wait for linux to boot
+        # neb_manager.monitor[0].print_to_console = True
+        results = neb_manager.monitor[0]._read_until_done_multi(
+            done_strings=["Linux version", "root@analog"],
+            max_time=200,
+        )
+
+        neb_manager.network_check()
+
+        # Copy common files
+        for key in config:
+            
+            if key != "name" and key != "extras":
+                contains_folder = config[key][1:].find("/") != -1
+                if contains_folder:
+                    folder = config[key][:-config[key][::-1].find("/")]
+                    print(f"Creating folder {folder}")
+                    neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
+
+                neb_manager.net.copy_file_to_remote(
+                    os.path.join(boot_files_folder, config[key]),
+                    f"/boot/{config[key]}",
+                )
+            if key == "extras":
+                for extra in config[key]:
+                    contains_folder = extra["dst"][1:].find("/") != -1
+                    if contains_folder:
+                        folder = extra["dst"][:-extra["dst"][::-1].find("/")]
+                        print(f"Creating folder {folder}")
+                        neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
+
+                    neb_manager.net.copy_file_to_remote(
+                        os.path.join(boot_files_folder, extra["src"]),
+                        extra["dst"],
+                    )
+
+        # Reboot
+        neb_manager.net.reboot_board(bypass_sleep=True)
+
+        # Wait for Linux login
+        neb_manager.monitor[0].print_to_console = False
+        results = neb_manager.monitor[0]._read_until_done_multi(
+            done_strings=["Linux version", "root@analog"],
+            max_time=200,
+        )
+
+        # Check Ethernet
+        if len(results) == 0:
+            print("Kernel not started")
+            neb_manager.monitor[0].stop_log()
+            raise Exception("Kernel not started")
+        if len(results) == 2 and not results[1]:
+            neb_manager.monitor[0].stop_log()
+            raise Exception("Kernel failed to reach login state")
+
+        time.sleep(5)
+
+        # Make UART accessible for tests/fixtures
+        neb_manager.monitor[0].stop_log()
+        time.sleep(1)
+        neb_manager.monitor[0]._read_until_stop()  # Flush
+        # Flush to marker
+        do_flush(neb_manager.monitor[0])
+
+        neb_manager.network_check()
+
+        # Take power measurement
+        pre_measure = measure_power(power_supply)
+        record_property("pre_measure", pre_measure)
+
+        # Load selmap overlay
+        dtbo = config["selmap_overlay"]
+        bin = config["selmap_bin"]
+        cmd = f"cd /boot && chmod +x selmap_dtbo.sh && ./selmap_dtbo.sh -d {dtbo} -b {bin}"
+
+        # Wait for Apollo and JESD links
+        finished_str = "axi-jesd204-tx 880d0000.axi-jesd204-tx-b: AXI-JESD204-TX"
+        neb_manager.monitor[0]._write_data(cmd)
+        print("Waiting for selmap to boot")
+        neb_manager.monitor[0].start_log(logappend=True)
+        neb_manager.monitor[0].print_to_console = show_uart_log
+        results = neb_manager.monitor[0]._read_until_done_multi(
+            done_strings=[finished_str],
+            max_time=200,
+        )
+        if len(results) == 0:
+            print("JESD not started")
+            neb_manager.monitor[0].stop_log()
+            raise Exception("JESD not started")
+
+
+        # Cleanup UART
+        neb_manager.monitor[0].stop_log()
+        time.sleep(1)
+        neb_manager.monitor[0]._read_until_stop()  # Flush
+        # Flush to marker
+        do_flush(neb_manager.monitor[0])
+
+        # Restart IIOD service
+        neb_manager.net.run_ssh_command("service iiod restart", show_log=False)
+
+
 
     # Done
     return request.param, neb_manager
 
 
+@pytest.mark.dependency()
 @pytest.mark.parametrize("nebula_boot_adsy1100_ethernet", configs, indirect=True)
 def test_boot(nebula_boot_adsy1100_ethernet, power_supply, record_property):
 
@@ -211,7 +241,7 @@ def test_boot(nebula_boot_adsy1100_ethernet, power_supply, record_property):
     record_property("post_measure", post_measure)
 
     # Check JESD204 links in data mode
-    jesd = adi.jesd(address=neb_manager.net.dutip, username="root", password="analog")
+    jesd = adi.jesd(address=neb_manager.net.dutip, username="root", password=neb_manager.net.dutpassword)
     links_details = jesd.get_all_link_statuses()
     links_top_level = jesd.get_all_statuses()
     drivers = links_top_level.keys()
@@ -239,3 +269,71 @@ def test_boot(nebula_boot_adsy1100_ethernet, power_supply, record_property):
     filename = f"test_boot_{params['name']}_dmesg.log"
     with open(filename, "w") as f:
         f.write(dmesg)
+
+    # Check RF
+    dev = adi.ad9084(uri=f"ip:{neb_manager.net.dutip}")
+    nco_freq = float(dev.rx_sample_rate) * 0.1
+    N = len(dev.rx_channel_nco_frequencies)
+    dev.rx_channel_nco_frequencies = [0] * N
+
+    N = len(dev.tx_channel_nco_frequencies)
+    dev.tx_channel_nco_frequencies = [0] * N
+
+    N = len(dev.rx_main_nco_frequencies)
+    dev.rx_main_nco_frequencies = [0] * N
+
+    N = len(dev.tx_main_nco_frequencies)
+    dev.tx_main_nco_frequencies = [0] * N
+
+    dev.rx_buffer_size = 2**12
+    dev.rx2_buffer_size = 2**12
+
+    for side in ['a','b']:
+        for chan in range(2):
+            print(f"Testing {params['name']} {side} {chan}")
+            if side == 'a':
+                dev.dds_single_tone(
+                    channel=chan,
+                    frequency=nco_freq,
+                    scale=0.8,
+                )
+            else:
+                dev.dds2_single_tone(
+                    channel=chan,
+                    frequency=nco_freq,
+                    scale=0.8,
+                )
+            time.sleep(3)
+
+            if side == 'a':
+                if chan == 1:
+                    dev.rx_enabled_channels = [0,1]
+                else:
+                    dev.rx_enabled_channels = [chan]
+
+                for _ in range(8):
+                    iq_data = dev.rx()
+            else:
+                if chan == 1:
+                    dev.rx2_enabled_channels = [0,1]
+                else:
+                    dev.rx2_enabled_channels = [chan]
+
+                for _ in range(8):
+                    iq_data = dev.rx2()
+
+            print(iq_data)
+            if isinstance(iq_data, list):
+                iq_data = iq_data[chan]
+
+            if len(iq_data) == 0:
+                print(f"No data received on {params['name']} {side} {chan}")
+                continue
+
+            # Create FFT plot and save
+            print("Creating FFT plot")
+            from test.rf.spec import spec_est
+            plt = spec_est(iq_data, fs=dev.rx_sample_rate, ref=2**15, plot=True, show_plot=False)
+            plt.savefig(f"test_boot_{params['name']}_{side}_{chan}_fft.png")
+            plt.close()
+            del plt
