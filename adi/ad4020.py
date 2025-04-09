@@ -47,6 +47,7 @@ class ad4020(rx, context_manager):
             self.channel.append(self._channel(self._ctrl, name))
             setattr(self, name, self._channel_adc(self._ctrl, name))
 
+        self.voltage0 = self.channel[0]
         rx.__init__(self)
 
     class _channel(attribute):
