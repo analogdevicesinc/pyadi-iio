@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>FPGA Features &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=0ea85bdb" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=7d492192"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script defer="" src="../_static/app.umd.js?v=25136f1d"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="libiio Direct Access" href="../libiio.html" />
+    <link rel="prev" title="Buffers" href="../buffers/index.html" />
+   
+  
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.20">
+  
+
+
+<style>
+  body {
+    
+  }
+
+  body.dark {
+    
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body:not(.light) {
+      
+    }
+  }
+</style>
+  </head><body>
+  <input type="checkbox" id="input-show-toc">
+  <input type="checkbox" id="input-show-localtoc">
+  <input type="checkbox" id="input-show-repotoc">
+
+  
+  <div class="search-area">
+    <form action="" method="get">
+      <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="search" placeholder="Search"/>
+      <button value="search" class="icon"></button>
+      <span id="search-progress"></span>
+    </form>
+  </div>
+  
+
+  <header>
+    <div id="left">
+      <label id="show-sidebar" class="icon" for="input-show-toc" title="Show/hide index"></label>
+    </div>
+    <div id="right">
+      <span>
+        <a id="logo-org" href="https://analog.com"></a>
+        <div class="vertical-divider"></div>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <a id="logo" href="../index.html">
+          <div>Hardware Python Interfaces</div>
+        </a>
+      </span>
+      <span class="reverse">
+        <label id="show-localtoc" class="icon" for="input-show-localtoc" title="Show/hide contents"></label>
+      </span>
+    </div>
+  </header>
+
+
+  <div class="repotoc-tree overlay">
+    <root>
+  <a href="../index.html" class="current">Hardware Python Interfaces</a>
+</root>
+
+  </div>
+    <div class="localtoc">
+      <div class="tocwrapper">
+        <div>
+          <div class="localtoc-header"></div>
+          <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
+        </div>
+        <nav>
+          <ul>
+<li><a class="reference internal" href="#">FPGA Features</a><ul>
+<li><a class="reference internal" href="#direct-digital-synthesizers">Direct Digital Synthesizers</a></li>
+<li><a class="reference internal" href="#module-adi.dds">DDS Methods</a><ul>
+<li><a class="reference internal" href="#adi.dds.dds"><code class="docutils literal notranslate"><span class="pre">dds</span></code></a><ul>
+<li><a class="reference internal" href="#adi.dds.dds.dds_dual_tone"><code class="docutils literal notranslate"><span class="pre">dds.dds_dual_tone()</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_enabled"><code class="docutils literal notranslate"><span class="pre">dds.dds_enabled</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_frequencies"><code class="docutils literal notranslate"><span class="pre">dds.dds_frequencies</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_phases"><code class="docutils literal notranslate"><span class="pre">dds.dds_phases</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_scales"><code class="docutils literal notranslate"><span class="pre">dds.dds_scales</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.dds_single_tone"><code class="docutils literal notranslate"><span class="pre">dds.dds_single_tone()</span></code></a></li>
+<li><a class="reference internal" href="#adi.dds.dds.disable_dds"><code class="docutils literal notranslate"><span class="pre">dds.disable_dds()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dma-synchronization">DMA Synchronization</a></li>
+<li><a class="reference internal" href="#module-adi.sync_start">Sync_Start Methods</a><ul>
+<li><a class="reference internal" href="#adi.sync_start.sync_start"><code class="docutils literal notranslate"><span class="pre">sync_start</span></code></a><ul>
+<li><a class="reference internal" href="#adi.sync_start.sync_start.rx_sync_start"><code class="docutils literal notranslate"><span class="pre">sync_start.rx_sync_start</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start.rx_sync_start_available"><code class="docutils literal notranslate"><span class="pre">sync_start.rx_sync_start_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start.tx_sync_start"><code class="docutils literal notranslate"><span class="pre">sync_start.tx_sync_start</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start.tx_sync_start_available"><code class="docutils literal notranslate"><span class="pre">sync_start.tx_sync_start_available</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </nav>
+      </div>
+    </div>
+
+  
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <a id="logo" href="../index.html">
+      <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
+      <img class="only-dark" src="../_static/logos/PyADI-IIO_Logo_w_300_cropped.png"/>
+    </a><input id="input-switch-toc" type="checkbox">
+<label id="show-repotoc" for="input-switch-toc">
+All content
+</label>
+<label id="show-toc" for="input-switch-toc">
+Content on this topic
+</label>
+<div class="repotoc-tree">
+  <root>
+  <a href="../index.html" class="current">Hardware Python Interfaces</a>
+</root>
+
+</div>
+<div class="toc-tree">
+  <html>
+  <body><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-1" id="toctree-collapse-1"/><div class="collapse"><a class="reference internal" href="../dev/index.html">Developers</a><label for="toctree-collapse-1"><div class="icon"></div></label></div><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_jesd.html">JESD204 Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad353xr.html">ad353xr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4130.html">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4170.html">ad4170</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4630.html">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad469x.html">ad469x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5592r.html">ad5592r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad579x.html">ad579x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5754r.html">ad5754r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5940.html">adi.ad5940 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad6676.html">adi.ad6676 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7091rx.html">ad7091rx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7134.html">ad7134</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad717x.html">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7291.html">ad7291</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad738x.html">ad738x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7689.html">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7746.html">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7768.html">ad7768</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad777x.html">ad777x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7799.html">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9083.html">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9084</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084_mc.html">ad9084_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9136.html">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9162.html">adi.ad9162 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9166.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9213.html">ad9213</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9250.html">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9265.html">adi.ad9265 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad937x.html">ad937x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9434.html">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9467.html">adi.ad9467 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9625.html">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4858.html">ad4858</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9739a.html">adi.ad9739a module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ada4961.html">adi.ada4961 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adaq8092.html">adaq8092</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4355.html">adi.adf4355 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16375.html">adis16375</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16475.html">adis16475</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16480.html">adis16480</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16485.html">adis16485</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16488.html">adis16488</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16490.html">adis16490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16497.html">adis16497</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16545.html">adis16545</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16547.html">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16550.html">adis16550</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5240.html">adi.adl5240 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5960.html">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.admv8818.html">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd410x.html">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrf5720.html">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adt7420.html">adi.adt7420 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl313.html">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl380.html">adxl380</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0511.html">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0554.html">cn0554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0556.html">cn0556</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0565.html">cn0565</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0566.html">adi.cn0566 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0575.html">cn0575</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0579.html">cn0579</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmc_vna.html">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcadc3.html">adi.fmcadc3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms11.html">adi.fmcomms11 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.lm75.html">lm75</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2387.html">ltc2387</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2499.html">adi.ltc2499 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2664.html">ltc2664</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2688.html">ltc2688</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2672.html">ltc2672</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max11205.html">adi.max11205 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max14001.html">adi.max14001 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31865.html">adi.max31865 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max9611.html">adi.max9611 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.tdd.html">tdd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.tddn.html">tddn</a></li>
+</ul>
+</li>
+</ul>
+</body>
+</html>
+
+</div>
+        </div>
+      </div>
+
+  <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper" id="top-anchor">
+          
+          <div class="body" role="main">
+            
+  <section id="fpga-features">
+<h1>FPGA Features<a class="headerlink" href="#fpga-features" title="Permalink to this heading"></a></h1>
+<section id="direct-digital-synthesizers">
+<h2>Direct Digital Synthesizers<a class="headerlink" href="#direct-digital-synthesizers" title="Permalink to this heading"></a></h2>
+<p>For FPGA based systems ADI reference designs include direct digital synthesizers (DDS) which can generate tones with arbitrary phase, frequency, and amplitude. For each individual DAC channel there are two DDSs which can have a unique phase, frequency, and phase. To configure the DDSs there are a number of methods and properties available depending on the complexity of the configuration.</p>
+<p>For the most basic or easiest configuration options use the methods <strong>dds_single_tone</strong> and <strong>dds_dual_tone</strong> which generate a one tone or two tones respectively on a specific channel.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
+<span class="c1"># Generate a single complex tone</span>
+<span class="n">dds_freq_hz</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">dds_scale</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="c1"># Enable all DDSs</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_single_tone</span><span class="p">(</span><span class="n">dds_freq_hz</span><span class="p">,</span> <span class="n">dds_scale</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To configure DDSs individually a list of scales can be passed to the properties <strong>dds_scales</strong>, <strong>dds_frequencies</strong>, and <strong>dds_phases</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">ad9361</span><span class="p">()</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">dds_scales</span><span class="p">)</span>
+<span class="c1"># Enable all DDSs</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_enabled</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="c1"># Set all DDSs to same frequency, scale, and phase</span>
+<span class="n">dds_freq_hz</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_phases</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_frequencies</span> <span class="o">=</span> <span class="p">[</span><span class="n">dds_freq_hz</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">dds_scales</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+</pre></div>
+</div>
+</section>
+<section id="module-adi.dds">
+<span id="dds-methods"></span><h2>DDS Methods<a class="headerlink" href="#module-adi.dds" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.dds.dds">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.dds.</span></span><span class="sig-name descname"><span class="pre">dds</span></span><a class="headerlink" href="#adi.dds.dds" title="Permalink to this definition"></a></dt>
+<dd><p>DDS Signal generators: Each reference design contains two DDSs per channel.
+this allows for two complex tones to be generated per complex channel.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_dual_tone">
+<span class="sig-name descname"><span class="pre">dds_dual_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Permalink to this definition"></a></dt>
+<dd><p>Generate two tones simultaneously using the DDSs
+For complex data devices this will create two complex
+or single sided tones spectrally using four DDSs.
+For non-complex devices the tone will use two DDSs.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>frequency1: type=integer</dt><dd><p>Frequency of first tone in hertz of the generated tone.
+This must be less than 1/2 the sample rate.</p>
+</dd>
+<dt>scale1: type=float</dt><dd><p>Scale of the first tone generated tone in range [0,1].
+At 1 the tone will be full-scale.</p>
+</dd>
+<dt>frequency2: type=integer</dt><dd><p>Frequency of second tone in hertz of the generated tone.
+This must be less than 1/2 the sample rate.</p>
+</dd>
+<dt>scale2: type=float</dt><dd><p>Scale of the second tone generated tone in range [0,1].
+At 1 the tone will be full-scale.</p>
+</dd>
+<dt>channel: type=integer</dt><dd><p>Channel index to generate tone from. This is zero based
+and for complex devices this index relates to the pair
+of related converters. For non-complex devices this is
+the index of the individual converters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_enabled</span></span><a class="headerlink" href="#adi.dds.dds.dds_enabled" title="Permalink to this definition"></a></dt>
+<dd><p>DDS generator enable state</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_frequencies">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_frequencies</span></span><a class="headerlink" href="#adi.dds.dds.dds_frequencies" title="Permalink to this definition"></a></dt>
+<dd><p>Frequencies of DDSs in Hz</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_phases">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_phases</span></span><a class="headerlink" href="#adi.dds.dds.dds_phases" title="Permalink to this definition"></a></dt>
+<dd><p>Phases of DDS signal generators.
+Range in millidegrees [0,360000]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_scales">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dds_scales</span></span><a class="headerlink" href="#adi.dds.dds.dds_scales" title="Permalink to this definition"></a></dt>
+<dd><p>Scale of DDS signal generators
+Ranges [0,1]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.dds.dds.dds_single_tone">
+<span class="sig-name descname"><span class="pre">dds_single_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a single tone using the DDSs
+For complex data devices this will create a complex
+or single sided tone spectrally using two DDSs.
+For non-complex devices the tone will use a single DDS.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>frequency: type=integer</dt><dd><p>Frequency in hertz of the generated tone. This must be
+less than 1/2 the sample rate.</p>
+</dd>
+<dt>scale: type=float</dt><dd><p>Scale of the generated tone in range [0,1]. At 1 the tone
+will be full-scale.</p>
+</dd>
+<dt>channel: type=integer</dt><dd><p>Channel index to generate tone from. This is zero based
+and for complex devices this index relates to the pair
+of related converters. For non-complex devices this is
+the index of the individual converters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.dds.dds.disable_dds">
+<span class="sig-name descname"><span class="pre">disable_dds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.disable_dds" title="Permalink to this definition"></a></dt>
+<dd><p>Disable all DDS channels and set all output sources to zero.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="dma-synchronization">
+<h2>DMA Synchronization<a class="headerlink" href="#dma-synchronization" title="Permalink to this heading"></a></h2>
+<p>In certain HDL reference designs it is possible to synchronize transfers between the transmit and receive data paths. This is useful for applications such as radar processing, communications, instrumentation, and general testing.</p>
+<p>This works by leveraging special control signals inside the HDL design to trigger receive captures from transmitted buffers. These are controlled through the <strong>sync_start</strong> class, which provide explicit control over when data is transmitted or released from the DMA in the FPGA fabric. This transmit or trigger will in turn allow data into the receive DMA at this moment in time. The exact methods and their sequence are described in the flowchart below.</p>
+<pre  class="mermaid">
+        flowchart LR
+    A[ARM DMA\n-set rx_sync_start to arm\n-set tx_sync_start to arm] --&gt; B[Reset Buffers\n-tx_destroy_buffer\n-rx_destroy_buffer]
+    B --&gt; C[Initialize RX buffer\n-_rx_init_channel]
+    C --&gt; D[Fill TX DMA\n-Call tx method]
+    D --&gt; E[Trigger TX DMA\n-set tx_sync_start to trigger_manual]
+    E --&gt; F[Collect RX Buffer\n-Call rx method]
+    F --&gt; A
+
+    </pre><p>A full example that leverages this control is <a class="reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/examples/ad9081_sync_start_example.py">ad9081_sync_start_example.py</a>.</p>
+</section>
+<section id="module-adi.sync_start">
+<span id="sync-start-methods"></span><h2>Sync_Start Methods<a class="headerlink" href="#module-adi.sync_start" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.sync_start.</span></span><span class="sig-name descname"><span class="pre">sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start" title="Permalink to this definition"></a></dt>
+<dd><p>Synchronization Control: This class allows for synchronous transfers
+between transmit and receive data movement or captures.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start.rx_sync_start">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start.rx_sync_start" title="Permalink to this definition"></a></dt>
+<dd><p>rx_sync_start: Issue a synchronisation request</p>
+<dl class="simple">
+<dt>Possible values are:</dt><dd><ul class="simple">
+<li><p><strong>arm</strong>: Writing this key will arm the trigger mechanism sensitive to an
+external sync signal. Once the external sync signal goes high
+it synchronizes channels within a ADC, and across multiple
+instances. This bit has an effect only the EXT_SYNC
+synthesis parameter is set.</p></li>
+<li><p><strong>disarm</strong>: Writing this key will disarm the trigger mechanism
+sensitive to an external sync signal. This bit has an
+effect only the EXT_SYNC synthesis parameter is set.</p></li>
+<li><p><strong>trigger_manual</strong>: Writing this key will issue an external sync event
+if it is hooked up inside the fabric. This key has an effect
+only the EXT_SYNC synthesis parameter is set.
+This key self clears.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start.rx_sync_start_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.rx_sync_start_available" title="Permalink to this definition"></a></dt>
+<dd><p>rx_sync_start_available: Returns a list of possible keys used for rx_sync_start</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start.tx_sync_start">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start" title="Permalink to this definition"></a></dt>
+<dd><p>tx_sync_start: Issue a synchronisation request</p>
+<dl class="simple">
+<dt>Possible values are:</dt><dd><ul class="simple">
+<li><p><strong>arm</strong>: Writing this key will arm the trigger mechanism sensitive to an
+external sync signal. Once the external sync signal goes high
+it synchronizes channels within a DAC, and across multiple
+instances. This bit has an effect only the EXT_SYNC
+synthesis parameter is set.</p></li>
+<li><p><strong>disarm</strong>: Writing this key will disarm the trigger mechanism
+sensitive to an external sync signal. This bit has an
+effect only the EXT_SYNC synthesis parameter is set.</p></li>
+<li><p><strong>trigger_manual</strong>: Writing this key will issue an external sync event
+if it is hooked up inside the fabric. This key has an effect
+only the EXT_SYNC synthesis parameter is set.
+This key self clears.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start.tx_sync_start_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start_available" title="Permalink to this definition"></a></dt>
+<dd><p>tx_sync_start_available: Returns a list of possible keys used for tx_sync_start</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+              <div class="related">
+                &nbsp;
+    <a href="../buffers/index.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">Buffers</a>
+    <a href="../libiio.html" title="Next document (Alt+Shift+RightArrow)" class="next">libiio Direct Access</a>
+              </div>
+          
+        </div>
+      </div>
+  </div>
+
+  <div id="vertical-border"></div>
+
+  <label id="cancel-area-show-toc" for="input-show-toc"></label>
+  <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
+    <footer>
+      &#169;2019-2025, Analog Devices, Inc
+      
+      |
+      Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+      &amp; <a href="https://github.com/analogdevicesinc/doctools">Doctools</a>
+      
+    </footer>
+  </body>
+</html>
