@@ -47,6 +47,17 @@ elif args.device == "ad4020" or args.device == "ad4021" or args.device == "ad402
     my_adc = adi.ad4020(uri=args.uri, device_name=args.device)
 elif args.device == "adaq4001" or args.device == "adaq4003":
     my_adc = adi.adaq4003(uri=args.uri, device_name=args.device)
+elif args.device == "ad7685" or args.device == "ad7686" or \
+     args.device == "ad7687" or args.device == "ad7688" or \
+     args.device == "ad7693" or args.device == "ad7942" or \
+     args.device == "ad7946" or args.device == "ad7980" or \
+     args.device == "ad7983" or args.device == "ad7988-1" or \
+     args.device == "ad7988-5":
+    my_adc = adi.ad7685(uri=args.uri, device_name=args.device)
+elif args.device == "ad7690" or args.device == "ad7691" or \
+     args.device == "ad7691" or args.device == "ad7982" or \
+     args.device == "ad7984" or args.device == "ad7691":
+    my_adc = adi.ad7690(uri=args.uri, device_name=args.device)
 else:
     print("Error: device: " + str(args.device) + " not supported.")
     quit()
