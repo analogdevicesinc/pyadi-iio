@@ -55,7 +55,7 @@ my_adc.rx_buffer_size = 4096
 
 print("Sample Rate: ", my_adc.sampling_frequency)
 
-data = my_adc.rx()
+data = my_adc.rx()[0]
 
 x = np.arange(0, len(data))
 voltage = data * my_adc.voltage0.scale
