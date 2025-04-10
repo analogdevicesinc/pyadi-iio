@@ -195,3 +195,40 @@ class adaq4003(ad4020):
 
     def __init__(self, uri="ip:analog.local", device_name="adaq4003"):
         super().__init__(uri, device_name)
+
+
+class ad7685(ad4020):
+    _compatible_parts = [
+        "ad7685",
+        "ad7686",
+        "ad7687",
+        "ad7688",
+        "ad7693",
+        "ad7942",
+        "ad7946",
+        "ad7980",
+        "ad7983",
+        "ad7988-1",
+        "ad7988-5",
+    ]
+
+    _rx_data_type = np.int16
+
+    def __init__(self, uri="ip:analog.local", device_name="ad7685"):
+        super().__init__(uri, device_name)
+
+
+class ad7690(ad4020):
+    _compatible_parts = [
+        "ad7690",
+        "ad7691",
+        "ad7691",
+        "ad7982",
+        "ad7984",
+        "ad7691",
+    ]
+
+    _rx_data_type = np.int32
+
+    def __init__(self, uri="ip:analog.local", device_name="ad7690"):
+        super().__init__(uri, device_name)
