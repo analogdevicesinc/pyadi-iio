@@ -13,3 +13,4 @@ jobs:
           reporter: github-pr-review
           # Change reporter level if you need.
           level: info
+          patterns: '**/*.md **/*.rst'
