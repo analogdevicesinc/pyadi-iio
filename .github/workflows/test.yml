@@ -74,7 +74,11 @@ jobs:
         python-version: [3.8, 3.9, "3.10", "3.11"]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: analogdevicesinc/doctools/depth@v1
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ env.FETCH_DEPTH }}
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -88,9 +92,10 @@ jobs:
 
       - name: Lint
         run: |
-          pre-commit run --all-files 2> /dev/null
+          git diff --name-only @~$(( $FETCH_DEPTH - 1 ))..@ | \
+             xargs pre-commit run --files 2> /dev/null
           ec=$?
-          git diff -U0 > log.txt && cat log.txt
+          git --no-pager diff -U0
           exit $ec
 
   Doc:
