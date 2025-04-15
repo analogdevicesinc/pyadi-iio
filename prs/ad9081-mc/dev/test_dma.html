@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DMA Tests &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=0ea85bdb" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=7d492192"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script defer="" src="../_static/app.umd.js?v=25136f1d"></script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generic Tests" href="test_generics.html" />
+    <link rel="prev" title="Attribute Tests" href="test_attr.html" />
+   
+  
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.20">
+  
+
+
+<style>
+  body {
+    
+  }
+
+  body.dark {
+    
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body:not(.light) {
+      
+    }
+  }
+</style>
+  </head><body>
+  <input type="checkbox" id="input-show-toc">
+  <input type="checkbox" id="input-show-localtoc">
+  <input type="checkbox" id="input-show-repotoc">
+
+  
+  <div class="search-area">
+    <form action="" method="get">
+      <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="search" placeholder="Search"/>
+      <button value="search" class="icon"></button>
+      <span id="search-progress"></span>
+    </form>
+  </div>
+  
+
+  <header>
+    <div id="left">
+      <label id="show-sidebar" class="icon" for="input-show-toc" title="Show/hide index"></label>
+    </div>
+    <div id="right">
+      <span>
+        <a id="logo-org" href="https://analog.com"></a>
+        <div class="vertical-divider"></div>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <a id="logo" href="../index.html">
+          <div>Hardware Python Interfaces</div>
+        </a>
+      </span>
+      <span class="reverse">
+        <label id="show-localtoc" class="icon" for="input-show-localtoc" title="Show/hide contents"></label>
+      </span>
+    </div>
+  </header>
+
+
+  <div class="repotoc-tree overlay">
+    <root>
+  <a href="../index.html" class="current">Hardware Python Interfaces</a>
+</root>
+
+  </div>
+    <div class="localtoc">
+      <div class="tocwrapper">
+        <div>
+          <div class="localtoc-header"></div>
+          <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
+        </div>
+        <nav>
+          <ul>
+<li><a class="reference internal" href="#">DMA Tests</a><ul>
+<li><a class="reference internal" href="#test.dma_tests.cw_loopback"><code class="docutils literal notranslate"><span class="pre">cw_loopback()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.cyclic_buffer"><code class="docutils literal notranslate"><span class="pre">cyclic_buffer()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.cyclic_buffer_exception"><code class="docutils literal notranslate"><span class="pre">cyclic_buffer_exception()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dds_loopback"><code class="docutils literal notranslate"><span class="pre">dds_loopback()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dds_two_tone"><code class="docutils literal notranslate"><span class="pre">dds_two_tone()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dma_dac_zeros"><code class="docutils literal notranslate"><span class="pre">dma_dac_zeros()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dma_loopback"><code class="docutils literal notranslate"><span class="pre">dma_loopback()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dma_rx"><code class="docutils literal notranslate"><span class="pre">dma_rx()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.dma_tx"><code class="docutils literal notranslate"><span class="pre">dma_tx()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.gain_check"><code class="docutils literal notranslate"><span class="pre">gain_check()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.hardwaregain"><code class="docutils literal notranslate"><span class="pre">hardwaregain()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.harmonic_vals"><code class="docutils literal notranslate"><span class="pre">harmonic_vals()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.nco_loopback"><code class="docutils literal notranslate"><span class="pre">nco_loopback()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.stress_context_creation"><code class="docutils literal notranslate"><span class="pre">stress_context_creation()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.stress_rx_buffer_creation"><code class="docutils literal notranslate"><span class="pre">stress_rx_buffer_creation()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.stress_rx_buffer_length"><code class="docutils literal notranslate"><span class="pre">stress_rx_buffer_length()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.stress_tx_buffer_creation"><code class="docutils literal notranslate"><span class="pre">stress_tx_buffer_creation()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.t_sfdr"><code class="docutils literal notranslate"><span class="pre">t_sfdr()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.verify_overflow"><code class="docutils literal notranslate"><span class="pre">verify_overflow()</span></code></a></li>
+<li><a class="reference internal" href="#test.dma_tests.verify_underflow"><code class="docutils literal notranslate"><span class="pre">verify_underflow()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </nav>
+      </div>
+    </div>
+
+  
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <a id="logo" href="../index.html">
+      <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
+      <img class="only-dark" src="../_static/logos/PyADI-IIO_Logo_w_300_cropped.png"/>
+    </a><input id="input-switch-toc" type="checkbox">
+<label id="show-repotoc" for="input-switch-toc">
+All content
+</label>
+<label id="show-toc" for="input-switch-toc">
+Content on this topic
+</label>
+<div class="repotoc-tree">
+  <root>
+  <a href="../index.html" class="current">Hardware Python Interfaces</a>
+</root>
+
+</div>
+<div class="toc-tree">
+  <html>
+  <body><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-1" id="toctree-collapse-1" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Developers</a><label for="toctree-collapse-1"><div class="icon"></div></label></div><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_jesd.html">JESD204 Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad353xr.html">ad353xr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4130.html">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4170.html">ad4170</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4630.html">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad469x.html">ad469x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5592r.html">ad5592r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad579x.html">ad579x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5754r.html">ad5754r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5940.html">adi.ad5940 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad6676.html">adi.ad6676 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7091rx.html">ad7091rx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7134.html">ad7134</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad717x.html">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7291.html">ad7291</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad738x.html">ad738x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7689.html">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7746.html">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7768.html">ad7768</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad777x.html">ad777x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7799.html">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9083.html">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9084</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084_mc.html">ad9084_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9136.html">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9162.html">adi.ad9162 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9166.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9213.html">ad9213</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9250.html">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9265.html">adi.ad9265 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad937x.html">ad937x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9434.html">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9467.html">adi.ad9467 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9625.html">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4858.html">ad4858</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9739a.html">adi.ad9739a module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ada4961.html">adi.ada4961 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adaq8092.html">adaq8092</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4355.html">adi.adf4355 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16375.html">adis16375</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16475.html">adis16475</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16480.html">adis16480</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16485.html">adis16485</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16488.html">adis16488</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16490.html">adis16490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16497.html">adis16497</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16545.html">adis16545</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16547.html">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16550.html">adis16550</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5240.html">adi.adl5240 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5960.html">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.admv8818.html">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd410x.html">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrf5720.html">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adt7420.html">adi.adt7420 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl313.html">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl380.html">adxl380</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0511.html">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0554.html">cn0554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0556.html">cn0556</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0565.html">cn0565</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0566.html">adi.cn0566 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0575.html">cn0575</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0579.html">cn0579</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmc_vna.html">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcadc3.html">adi.fmcadc3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms11.html">adi.fmcomms11 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.lm75.html">lm75</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2387.html">ltc2387</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2499.html">adi.ltc2499 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2664.html">ltc2664</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2688.html">ltc2688</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2672.html">ltc2672</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max11205.html">adi.max11205 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max14001.html">adi.max14001 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31865.html">adi.max31865 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max9611.html">adi.max9611 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.tdd.html">tdd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.tddn.html">tddn</a></li>
+</ul>
+</li>
+</ul>
+</body>
+</html>
+
+</div>
+        </div>
+      </div>
+
+  <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper" id="top-anchor">
+          <div class="body-header">
+    <nav class="breadcrumb">
+        <ol>
+          <li><a href="index.html">Developers</a></li>
+          </ol>
+    </nav>
+  </div>
+
+          <div class="body" role="main">
+            
+  <section id="dma-tests">
+<h1>DMA Tests<a class="headerlink" href="#dma-tests" title="Permalink to this heading"></a></h1>
+<p>Functions used by test fixtures for evaluating receive and transmit DMA/buffers</p>
+<span class="target" id="module-test.dma_tests"></span><dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.cw_loopback">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">cw_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cw_loopback" title="Permalink to this definition"></a></dt>
+<dd><p>cw_loopback: Test CW loopback with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. Sinuoidal data is passed to DMAs which is then
+estimated on the RX side. The receive tone must be within
+1% of its expected frequency at the max peak found</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>use_tx2: type=bool</dt><dd><p>Boolean if set will use tx2() as tx method</p>
+</dd>
+<dt>use_rx2: type=bool</dt><dd><p>Boolean if set will use rx2() as rx method</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.cyclic_buffer">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">cyclic_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer" title="Permalink to this definition"></a></dt>
+<dd><p>cyclic_buffer: Construct Cyclic TX buffers and verify
+no errors occur when pushed. This is performed twice
+without closing the context</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.cyclic_buffer_exception">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">cyclic_buffer_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.cyclic_buffer_exception" title="Permalink to this definition"></a></dt>
+<dd><p>cyclic_buffer_exception: Construct Cyclic TX buffers and verify
+errors occur when pushed. This is performed twice
+without closing the context and with resetting the TX buffers
+which should cause an exception</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.dds_loopback">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dds_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useWindow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dds_loopback" title="Permalink to this definition"></a></dt>
+<dd><p>dds_loopback: Test DDS loopback with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. TX FPGA DDSs are used to generate a sinusoid
+which is then estimated on the RX side. The receive tone must be within
+1% of its expected frequency with a specified peak</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>frequency: type=integer</dt><dd><p>Frequency in Hz of transmitted tone</p>
+</dd>
+<dt>scale: type=float</dt><dd><p>Scale of DDS tone. Range [0,1]</p>
+</dd>
+<dt>peak_min: type=float</dt><dd><p>Minimum acceptable value of maximum peak in dBFS of received tone</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.dds_two_tone">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dds_two_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dds_two_tone" title="Permalink to this definition"></a></dt>
+<dd><p>dds_two_tone: Test DDS loopback with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. TX FPGA DDSs are used to generate two sinusoids
+which are then estimated on the RX side. The receive tones must be within
+1% of its respective expected frequency with a specified peak.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>frequency1: type=integer</dt><dd><p>Frequency in Hz of the first transmitted tone</p>
+</dd>
+<dt>scale1: type=float</dt><dd><p>Scale of the first DDS tone. Range [0,1]</p>
+</dd>
+<dt>peak_min1: type=float</dt><dd><p>Minimum acceptable value of maximum peak in dBFS of the received
+first tone</p>
+</dd>
+<dt>frequency2: type=integer</dt><dd><p>Frequency in Hz of the second transmitted tone</p>
+</dd>
+<dt>scale2: type=float</dt><dd><p>Scale of the second DDS tone. Range [0,1]</p>
+</dd>
+<dt>peak_min2: type=float</dt><dd><p>Minimum acceptable value of maximum peak in dBFS of the received
+second tone</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.dma_dac_zeros">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_dac_zeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_dac_zeros" title="Permalink to this definition"></a></dt>
+<dd><p>dma_dac_zeros: Test DMA digital loopback with a zeros.
+This test requires a AD936x or similar device with internal loopback
+modes. The TX cores are put into zero source mode in cases when no
+output is desired</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.dma_loopback">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_loopback" title="Permalink to this definition"></a></dt>
+<dd><p>dma_loopback: Test DMA digital loopback with a triangle waveforms.
+This test requires a AD936x or similar device with internal loopback
+modes. A triangle wave is generated on I and Q or real1 and real2
+and multiple periods are compared for missing samples within a buffer
+and delay between buffers.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.dma_rx">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_rx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32768</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_rx" title="Permalink to this definition"></a></dt>
+<dd><p>dma_rx: Construct RX buffers and verify data is non-zero when pulled.
+Collected buffer is of size 2**15 and 10 buffers are checked</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through rx_enabled_channels</p>
+</dd>
+<dt>use_rx2: type=bool</dt><dd><p>If True, use rx2() instead of rx()</p>
+</dd>
+<dt>buffer_size: type=int</dt><dd><p>Size of RX buffer in samples. Defaults to 2**15</p>
+</dd>
+<dt>annotated: type=bool</dt><dd><p>If True, annotated output is provided (dict)</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+received</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.dma_tx">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">dma_tx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tx2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.dma_tx" title="Permalink to this definition"></a></dt>
+<dd><p>dma_tx: Construct TX buffers and verify no errors occur when pushed.
+Buffer is of size 2**15 and 10 buffers are pushed</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.gain_check">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">gain_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dds_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_rssi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rssi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.gain_check" title="Permalink to this definition"></a></dt>
+<dd><p>gain_check: Test DDS loopback with connected loopback cables and verify
+calculated RSSI. This is only applicable for devices with RSSI calculations
+onboard. This test also requires a devices with TX and RX onboard where the
+transmit signal can be recovered. TX FPGA DDSs are used to generate a
+sinusoid which is then received on the RX side. RSSI is captured during
+this reception. The generated tone is at 10% RX sample rate.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>dds_scale: type=float</dt><dd><p>Scale of DDS tone. Range [0,1]</p>
+</dd>
+<dt>min_rssi: type=float</dt><dd><p>Minimum acceptable value of RSSI attribute</p>
+</dd>
+<dt>max_rssi: type=float</dt><dd><p>Maximum acceptable value of RSSI attribute</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.hardwaregain">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">hardwaregain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dds_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardwaregain_low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardwaregain_high</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.hardwaregain" title="Permalink to this definition"></a></dt>
+<dd><p>hadwaregain: Test loopback with connected cables and verify
+calculated hardware gain, by measuring changes in the AGC. This is only applicable
+for devices with RSSI calculations onboard. This test also requires a devices
+with TX and RX onboard where the transmit signal can be recovered. TX FPGA
+DDSs are used to generate a sinusoid which is then received on the RX side.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>dds_scale: type=float</dt><dd><p>Scale of DDS tone. Range [0,1]</p>
+</dd>
+<dt>frequency:</dt><dd><p>Frequency in hertz of the generated tone. This must be
+less than 1/2 the sample rate.</p>
+</dd>
+<dt>hardwaregain_low: type=float</dt><dd><p>Minimum acceptable value of hardwaregain attribute</p>
+</dd>
+<dt>hardwaregain_high: type=float</dt><dd><p>Maximum acceptable value of hardwaregain attribute</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.harmonic_vals">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">harmonic_vals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.harmonic_vals" title="Permalink to this definition"></a></dt>
+<dd><p>harmonic_vals: Test first five harmonics and check to be within
+certain intervals. This test also requires a devices with TX and RX
+onboard where thetransmit signal can be recovered.Sinuoidal data is
+passed to DMAs, which is then estimated on the RX side.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>low: type=list</dt><dd><p>List of minimum values for certain harmonics</p>
+</dd>
+<dt>high: type=list</dt><dd><p>List of maximum values for certain harmonics</p>
+</dd>
+<dt>plot: type=boolean</dt><dd><p>Boolean, if set the values are also plotted</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.nco_loopback">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">nco_loopback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_min</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.nco_loopback" title="Permalink to this definition"></a></dt>
+<dd><p>nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. TX/DAC internal NCOs are used to generate a sinusoid
+which is then estimated on the RX side. The receive tone must be within
+1% of its expected frequency with a specified peak</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>frequency: type=integer</dt><dd><p>Frequency in Hz of transmitted tone</p>
+</dd>
+<dt>peak_min: type=float</dt><dd><p>Minimum acceptable value of maximum peak in dBFS of received tone</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.stress_context_creation">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_context_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_context_creation" title="Permalink to this definition"></a></dt>
+<dd><p>stress_context_creation: Repeatedly create and destroy a context</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of times to re-create contexts</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.stress_rx_buffer_creation">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_rx_buffer_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_creation" title="Permalink to this definition"></a></dt>
+<dd><p>stress_rx_buffer_creation: Repeatedly create and destroy buffers</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of times to re-create contexts</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.stress_rx_buffer_length">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_rx_buffer_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_sizes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_rx_buffer_length" title="Permalink to this definition"></a></dt>
+<dd><p>stress_rx_buffer_length: Repeatedly create and destroy buffers across different buffer sizes</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>buffer_sizes: type=list</dt><dd><p>List of buffer size to create and collect</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.stress_tx_buffer_creation">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">stress_tx_buffer_creation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.stress_tx_buffer_creation" title="Permalink to this definition"></a></dt>
+<dd><p>stress_tx_buffer_creation: Repeatedly create and destroy TX buffers</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>repeats: type=integer</dt><dd><p>Number of times to re-create buffers</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.t_sfdr">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">t_sfdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sfdr_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.t_sfdr" title="Permalink to this definition"></a></dt>
+<dd><p>t_sfdr: Test SFDR loopback of tone with connected loopback cables.
+This test requires a devices with TX and RX onboard where the transmit
+signal can be recovered. Sinuoidal data is passed to DMAs which is then
+estimated on the RX side. The peak and second peak are determined in
+the received signal to determine the sfdr.</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>param_set: type=dict</dt><dd><p>Dictionary of attribute and values to be set before tone is
+generated and received</p>
+</dd>
+<dt>sfdr_min: type=float</dt><dd><p>Minimum acceptable value of SFDR in dB</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.verify_overflow">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">verify_overflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.verify_overflow" title="Permalink to this definition"></a></dt>
+<dd><p>verify_overflow: Verify overflow flags occur as expected</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>buffer_size type=int</dt><dd><p>List of buffer size to create and collect</p>
+</dd>
+<dt>sample_rate=int</dt><dd><p>Value to set sample rate of device in samples per second</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.dma_tests.verify_underflow">
+<span class="sig-prename descclassname"><span class="pre">test.dma_tests.</span></span><span class="sig-name descname"><span class="pre">verify_underflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_rate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.dma_tests.verify_underflow" title="Permalink to this definition"></a></dt>
+<dd><p>verify_overflow: Verify overflow flags occur as expected</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context of target board/system</p>
+</dd>
+<dt>classname: type=string</dt><dd><p>Name of pyadi interface class which contain attribute</p>
+</dd>
+<dt>channel: type=list</dt><dd><p>List of integers or list of list of integers of channels to
+enable through tx_enabled_channels</p>
+</dd>
+<dt>buffer_size type=int</dt><dd><p>List of buffer size to create and collect</p>
+</dd>
+<dt>sample_rate=int</dt><dd><p>Value to set sample rate of device in samples per second</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+              <div class="related">
+                &nbsp;
+    <a href="test_attr.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">Attribute Tests</a>
+    <a href="test_generics.html" title="Next document (Alt+Shift+RightArrow)" class="next">Generic Tests</a>
+              </div>
+          
+        </div>
+      </div>
+  </div>
+
+  <div id="vertical-border"></div>
+
+  <label id="cancel-area-show-toc" for="input-show-toc"></label>
+  <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
+    <footer>
+      &#169;2019-2025, Analog Devices, Inc
+      
+      |
+      Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+      &amp; <a href="https://github.com/analogdevicesinc/doctools">Doctools</a>
+      
+    </footer>
+  </body>
+</html>
