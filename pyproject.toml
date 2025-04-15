@@ -62,6 +62,7 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+docstring-code-format = true
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]
