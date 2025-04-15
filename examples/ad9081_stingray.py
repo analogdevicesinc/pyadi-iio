@@ -27,8 +27,8 @@ conv.tx_channel_nco_frequencies = [0] * 4
 conv.rx_main_nco_frequencies = [100000000] * 4
 conv.tx_main_nco_frequencies = [100000000] * 4
 
-conv.rx_enabled_channels = [0,1]
-conv.tx_enabled_channels = [0,1]
+conv.rx_enabled_channels = [0, 1, 2, 3]
+conv.tx_enabled_channels = [0, 1, 2, 3]
 conv.rx_nyquist_zone     = ["odd"] * 4
 
 conv.tx_cyclic_buffer = True
@@ -36,15 +36,15 @@ conv.rx_cyclic_buffer = False
 
 conv.tx_ddr_offload   = False
 
-tddn.burst_count          = 20
+tddn.burst_count          = 10
 frame_length_ms           = 0.005
 rx_time                   = tddn.burst_count * frame_length_ms
-generated_signal_time     = 0.003
+generated_signal_time     = 0.005
 blank_time                = 0
 use_tx_mxfe_en            = 0
 
 tx_time                   = generated_signal_time - blank_time
-capture_range             = 1
+capture_range             = 10
 
 N_tx                      = int((generated_signal_time * conv.tx_sample_rate) / 1000)
 N_rx                      = int((rx_time * conv.rx_sample_rate) / 1000)
@@ -112,8 +112,9 @@ B = 1e6
 T = N_tx / fs
 t = np.linspace(0, T, N_tx, endpoint=False)
 tx_sig = A * np.sin(2 * math.pi * B * t)
-conv.tx([tx_sig,tx_sig])
 
+conv.tx_destroy_buffer()
+conv.tx([tx_sig,tx_sig,tx_sig,tx_sig])
 
 # Generate the TDD frame Rate
 T_tdd = conv.rx_buffer_size / fs
@@ -122,8 +123,6 @@ tdd_amplitude = 1
 tdd_freq = 1/(tddn.frame_length_ms* 1e-3)
 tdd_frame_rate_plot = tdd_amplitude * np.sign(np.sin(2 * math.pi * tdd_freq * tdd_t))
 
-# tddn.sync_soft  = 0
-# tddn.sync_soft  = 1
 
 rx_sig = np.zeros((capture_range,conv.rx_buffer_size))
 
