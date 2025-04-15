@@ -92,8 +92,12 @@ jobs:
 
       - name: Lint
         run: |
-          git diff --name-only @~$(( $FETCH_DEPTH - 1 ))..@ | \
-             xargs pre-commit run --files 2> /dev/null
+          if [[ "$FETCH_DEPTH_FALLBACK" ]]; then
+            pre-commit run --all-files 2> /dev/null
+          else
+            git diff --name-only @~$(( $FETCH_DEPTH - 1 ))..@ | \
+               xargs pre-commit run --files 2> /dev/null
+          fi
           ec=$?
           git --no-pager diff -U0
           exit $ec
