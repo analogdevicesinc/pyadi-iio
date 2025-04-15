@@ -439,27 +439,16 @@ def dds_two_tone(
             )
         }
 
-    # Define tolerance
-    tolerance1 = frequency1 * 0.01
-    tolerance2 = frequency2 * 0.01
-    
-    # Check frequency and peak values
-    if (abs(tone_freqs[indx1] - frequency1) <= tolerance1 and 
-        abs(tone_freqs[indx2] - frequency2) <= tolerance2):
-        
-        assert abs(tone_freqs[indx1] - frequency1) <= tolerance1
-        assert abs(tone_freqs[indx2] - frequency2) <= tolerance2
-        assert tone_peaks[indx1] > peak_min1
-        assert tone_peaks[indx2] > peak_min2
+    # Assertions
+    diff1 = abs(tone_freqs[indx1] - frequency1)
+    diff2 = abs(tone_freqs[indx2] - frequency2)
 
-    elif (abs(tone_freqs[indx1] - frequency2) <= tolerance2 and 
-        abs(tone_freqs[indx2] - frequency1) <= tolerance1):
-        
-        assert abs(tone_freqs[indx1] - frequency2) <= tolerance2
-        assert abs(tone_freqs[indx2] - frequency1) <= tolerance1
-        assert tone_peaks[indx1] > peak_min1
-        assert tone_peaks[indx2] > peak_min2
-
+    assert diff1 < (frequency1 * 0.01)
+    assert diff2 < (frequency2 * 0.01)
+    assert tone_peaks[indx1] > peak_min1
+    assert tone_peaks[indx2] > peak_min2
+ 
+ 
 def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     """nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
