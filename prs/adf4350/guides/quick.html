@@ -7,12 +7,12 @@
 
     <title>Quick Start &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=cad18f0a" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=0ea85bdb" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=7d492192"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=dcfbb431"></script>
+    <script defer="" src="../_static/app.umd.js?v=25136f1d"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -282,6 +282,7 @@ Content on this topic
   <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper" id="top-anchor">
+          
           <div class="body" role="main">
             
   <section id="quick-start">
@@ -313,12 +314,17 @@ For releases v0.19+ of libiio, when building from source the -DPYTHON_BINDINGS=O
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$PYTHONPATH</span>:/usr/lib/python<span class="o">{</span>PYTHON<span class="w"> </span>VERSION<span class="o">}</span>/site-packages
 </pre></div>
 </div>
+<p>Python packages under the exported path are also inherited by virtual environments.</p>
 </div>
 <section id="using-virtual-environments">
 <h2>Using Virtual Environments<a class="headerlink" href="#using-virtual-environments" title="Permalink to this heading"></a></h2>
 <p>It is recommended to use virtual environments when installing pyadi-iio. This will prevent any conflicts with other python packages that may be installed on your system. Newer versions of such Linux distributions, like Debian, do not allow the installation of global packages either. Therefore, if a package is not within their package managers you must your virtual environments. To create a virtual environment run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>/path/to/new/virtual/environment
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To inherit system packages, such as libiio python binding, either set <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> described earlier, or use <code class="docutils literal notranslate"><span class="pre">--system-site-packages</span></code> if <code class="docutils literal notranslate"><span class="pre">iio</span></code> is already on path.</p>
 </div>
 <p>To activate the virtual environment run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/path/to/new/virtual/environment/bin/activate
@@ -347,7 +353,7 @@ Collecting<span class="w"> </span>pyadi-iio
 </section>
 <section id="install-checks">
 <h2>Install Checks<a class="headerlink" href="#install-checks" title="Permalink to this heading"></a></h2>
-<p>For check for libiio with the following from a command prompt or terminal:</p>
+<p>Check for libiio with the following from a command prompt or terminal:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dave@hal:~$<span class="w"> </span>python3
 Python<span class="w"> </span><span class="m">3</span>.6.8<span class="w"> </span><span class="o">(</span>default,<span class="w"> </span>Jan<span class="w"> </span><span class="m">14</span><span class="w"> </span><span class="m">2019</span>,<span class="w"> </span><span class="m">11</span>:02:34<span class="o">)</span>
 <span class="o">[</span>GCC<span class="w"> </span><span class="m">8</span>.0.1<span class="w"> </span><span class="m">20180414</span><span class="w"> </span><span class="o">(</span>experimental<span class="o">)</span><span class="w"> </span><span class="o">[</span>trunk<span class="w"> </span>revision<span class="w"> </span><span class="m">259383</span><span class="o">]]</span><span class="w"> </span>on<span class="w"> </span>linux
@@ -369,6 +375,8 @@ Type<span class="w"> </span><span class="s2">&quot;help&quot;</span>,<span class
 <span class="s1">&#39;Analog Devices Hardware Interfaces&#39;</span>
 </pre></div>
 </div>
+<p>When using virtual environments, <code class="docutils literal notranslate"><span class="pre">iio</span></code> can be imported from outside but not from inside by default because virtual environments do not inherit system packages.
+Either install the python environment with <code class="docutils literal notranslate"><span class="pre">--system-site-packages</span></code> to inherit all system packages or set <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable to inherit from some paths.</p>
 </section>
 </section>
 

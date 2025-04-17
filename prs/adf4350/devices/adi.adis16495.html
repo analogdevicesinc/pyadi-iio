@@ -7,12 +7,12 @@
 
     <title>adis16495 &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=cad18f0a" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=0ea85bdb" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=7d492192"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="../_static/app.umd.js?v=dcfbb431"></script>
+    <script defer="" src="../_static/app.umd.js?v=25136f1d"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -115,6 +115,7 @@
 <li><a class="reference internal" href="#adi.adis16495.anglvel_z_calibscale"><code class="docutils literal notranslate"><span class="pre">adis16495.anglvel_z_calibscale</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16495.anglvel_z_conv"><code class="docutils literal notranslate"><span class="pre">adis16495.anglvel_z_conv</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16495.anglvel_z_filter_low_pass_3db_frequency"><code class="docutils literal notranslate"><span class="pre">adis16495.anglvel_z_filter_low_pass_3db_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adis16495.close"><code class="docutils literal notranslate"><span class="pre">adis16495.close()</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16495.compatible_parts"><code class="docutils literal notranslate"><span class="pre">adis16495.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16495.ctx"><code class="docutils literal notranslate"><span class="pre">adis16495.ctx</span></code></a></li>
 <li><a class="reference internal" href="#adi.adis16495.current_timestamp_clock"><code class="docutils literal notranslate"><span class="pre">adis16495.current_timestamp_clock</span></code></a></li>
@@ -343,6 +344,14 @@ Content on this topic
   <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper" id="top-anchor">
+          <div class="body-header">
+    <nav class="breadcrumb">
+        <ol>
+          <li><a href="index.html">Supported Devices</a></li>
+          </ol>
+    </nav>
+  </div>
+
           <div class="body" role="main">
             
   <section id="adis16495">
@@ -504,6 +513,12 @@ trigger_name: Name of the trigger in the IIO context. Default is adis16495-1-dev
 <dt class="sig sig-object py" id="adi.adis16495.anglvel_z_filter_low_pass_3db_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anglvel_z_filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adis16495.anglvel_z_filter_low_pass_3db_frequency" title="Permalink to this definition"></a></dt>
 <dd><p>Bandwidth for gyroscope for the z-axis.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adis16495.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.adis16495.close" title="Permalink to this definition"></a></dt>
+<dd><p>Close the IIO context</p>
 </dd></dl>
 
 <dl class="py attribute">
