@@ -17,27 +17,29 @@ class adt7420(attribute, context_manager):
         self._ctrl = self._ctx.find_device(self._device_name)
 
         if not self._ctrl:
-            raise Exception("ADT7420 device not found")
-    # STARTS HERE   
+            raise Exception("ADT7420 device not found")  
+      
         self.channel = []
         self._rx_channel_names = []
 
         for ch in self._ctrl.channels:
-            name = ch._id  # or ch._id depending on backend, usually it's just .id
+            name = ch._id
 
             self._rx_channel_names.append(name)
             self.channel.append(name)
 
             if name == "temp":
-                # no-OS driver
-                setattr(self, name, self.channel_temp_noos(self._ctrl, name))
+                # no-OS
+                setattr(self, name, self.channel_temp(self._ctrl, name))
+                self.temp = self.channel_temp(self._ctrl, "temp")
             elif name == "temp1":
-                # Linux driver
-                setattr(self, name, self.channel_temp_linux(self._ctrl, name))
+                # Linux
+                setattr(self, name, self.channel_temp1(self._ctrl, name))
+                self.temp = self.channel_temp1(self._ctrl, "temp1")
             else:
                 raise Exception(f"Unsupported: {name}")
 
-    class channel_temp_noos(attribute):
+    class channel_temp(attribute):
         """Channel for no-OS driver"""
 
         def __init__(self, ctrl, channel_name):
@@ -45,7 +47,7 @@ class adt7420(attribute, context_manager):
             self.name = channel_name
 
         @property
-        def temp(self):
+        def temp_val(self):
             """ Read temperature value """
             return self._get_iio_attr(self.name, "temp", False)
 
@@ -81,7 +83,7 @@ class adt7420(attribute, context_manager):
         def temp_hyst(self, value):
             return self._set_iio_attr(self.name, "temp_hyst", False, value)
 
-    class channel_temp_linux(attribute):
+    class channel_temp1(attribute):
         """Channel for Linux driver"""
 
         def __init__(self, ctrl, channel_name):
@@ -89,7 +91,7 @@ class adt7420(attribute, context_manager):
             self.name = channel_name
 
         @property
-        def temp(self):
+        def temp_val(self):
             return self._get_iio_attr(self.name, "input", False)
 
         @property
@@ -118,8 +120,8 @@ class adt7420(attribute, context_manager):
 
         @property
         def temp_hyst(self):
-            return self._get_iio_attr(self.name, "crit_hyst", False)
+            return self._get_iio_attr(self.name, "max_hyst", False)
 
         @temp_hyst.setter
         def temp_hyst(self, value):
-            return self._set_iio_attr(self.name, "crit_hyst", False, value)
+            return self._set_iio_attr(self.name, "max_hyst", False, value)
