@@ -1,127 +1,95 @@
 # Copyright (C) 2022-2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
-
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
 
 class adt7420(attribute, context_manager):
-
     _device_name = "adt7420"
 
     def __init__(self, uri=""):
-
         context_manager.__init__(self, uri, self._device_name)
-
         self._ctrl = self._ctx.find_device(self._device_name)
-
         if not self._ctrl:
-            raise Exception("ADT7420 device not found")  
-      
+            raise Exception("ADT7420 device not found")
+
         self.channel = []
         self._rx_channel_names = []
-
         for ch in self._ctrl.channels:
             name = ch._id
-
             self._rx_channel_names.append(name)
             self.channel.append(name)
-
             if name == "temp":
-                # no-OS
-                setattr(self, name, self.channel_temp(self._ctrl, name))
-                self.temp = self.channel_temp(self._ctrl, "temp")
+                # no-OS version
+                chan = self.channel_temp(self._ctrl, name, is_linux=False)
             elif name == "temp1":
-                # Linux
-                setattr(self, name, self.channel_temp1(self._ctrl, name))
-                self.temp = self.channel_temp1(self._ctrl, "temp1")
+                # Linux version
+                chan = self.channel_temp(self._ctrl, name, is_linux=True)
             else:
                 raise Exception(f"Unsupported: {name}")
 
+            setattr(self, name, chan)
+            self.temp = chan
+
     class channel_temp(attribute):
-        """Channel for no-OS driver"""
+        """ADT7420 Channel for no-OS"""
 
-        def __init__(self, ctrl, channel_name):
+        def __init__(self, ctrl, channel_name, is_linux):
             self._ctrl = ctrl
             self.name = channel_name
+            self.is_linux = is_linux
 
         @property
         def temp_val(self):
-            """ Read temperature value """
-            return self._get_iio_attr(self.name, "temp", False)
+            """ ADT7420 Channel Temperature Value """
+            pname = "input" if self.is_linux else "temp"
+            return self._get_iio_attr(self.name, pname, False)
 
         @property
         def temp_max(self):
-            return self._get_iio_attr(self.name, "temp_max", False)
+            """ ADT7420 Channel Max Temperature """
+            pname = "max" if self.is_linux else "temp_max"
+            return self._get_iio_attr(self.name, pname, False)
 
         @temp_max.setter
         def temp_max(self, value):
-            return self._set_iio_attr(self.name, "temp_max", False, value)
+            """ ADT7420 Channel Max Temperature """
+            pname = "max" if self.is_linux else "temp_max"
+            return self._set_iio_attr(self.name, pname, False, value)
 
         @property
         def temp_min(self):
-            return self._get_iio_attr(self.name, "temp_min", False)
+            """ ADT7420 Channel Min Temperature """
+            pname = "min" if self.is_linux else "temp_min"
+            return self._get_iio_attr(self.name, pname, False)
 
         @temp_min.setter
         def temp_min(self, value):
-            return self._set_iio_attr(self.name, "temp_min", False, value)
+            """ ADT7420 Channel Min Temperature """
+            pname = "min" if self.is_linux else "temp_min"
+            return self._set_iio_attr(self.name, pname, False, value)
 
         @property
         def temp_crit(self):
-            return self._get_iio_attr(self.name, "temp_crit", False)
+            """ ADT7420 Channel Critical Temperature """
+            pname = "crit" if self.is_linux else "temp_crit"
+            return self._get_iio_attr(self.name, pname, False)
 
         @temp_crit.setter
         def temp_crit(self, value):
-            return self._set_iio_attr(self.name, "temp_crit", False, value)
+            """ ADT7420 Channel Critical Temperature """
+            pname = "crit" if self.is_linux else "temp_crit"
+            return self._set_iio_attr(self.name, pname, False, value)
 
         @property
         def temp_hyst(self):
-            return self._get_iio_attr(self.name, "temp_hyst", False)
+            """ ADT7420 Channel Hysteresis Temperature """
+            pname = "max_hyst" if self.is_linux else "temp_hyst"
+            return self._get_iio_attr(self.name, pname, False)
 
         @temp_hyst.setter
         def temp_hyst(self, value):
-            return self._set_iio_attr(self.name, "temp_hyst", False, value)
-
-    class channel_temp1(attribute):
-        """Channel for Linux driver"""
-
-        def __init__(self, ctrl, channel_name):
-            self._ctrl = ctrl
-            self.name = channel_name
-
-        @property
-        def temp_val(self):
-            return self._get_iio_attr(self.name, "input", False)
-
-        @property
-        def temp_max(self):
-            return self._get_iio_attr(self.name, "max", False)
-
-        @temp_max.setter
-        def temp_max(self, value):
-            return self._set_iio_attr(self.name, "max", False, value)
-
-        @property
-        def temp_min(self):
-            return self._get_iio_attr(self.name, "min", False)
-
-        @temp_min.setter
-        def temp_min(self, value):
-            return self._set_iio_attr(self.name, "min", False, value)
-
-        @property
-        def temp_crit(self):
-            return self._get_iio_attr(self.name, "crit", False)
-
-        @temp_crit.setter
-        def temp_crit(self, value):
-            return self._set_iio_attr(self.name, "crit", False, value)
-
-        @property
-        def temp_hyst(self):
-            return self._get_iio_attr(self.name, "max_hyst", False)
-
-        @temp_hyst.setter
-        def temp_hyst(self, value):
-            return self._set_iio_attr(self.name, "max_hyst", False, value)
+            """ ADT7420 Channel Hysteresis Temperature """
+            pname = "max_hyst" if self.is_linux else "temp_hyst"
+            return self._set_iio_attr(self.name, pname, False, value)
