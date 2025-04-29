@@ -14,7 +14,7 @@ import numpy as np
 from scipy import signal
 from scipy.signal import resample, find_peaks
 
-my_uri = sys.argv[1] if len(sys.argv) >= 2 else "local:"
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:192.168.1.15"
 print("uri: " + str(my_uri))
 
 # Create contexts
@@ -44,8 +44,7 @@ multi.primary._clock_chip_fmc.reg_write(0x5A,0x1)
 CHIP_SCRATCH = ad4080_dev.ad4080_register_read(0xA)
 print("CHIP_SCRATCH phy is:", CHIP_SCRATCH)
 if CHIP_SCRATCH !="0xAB":
-    gpio_controller.gpio_ad4080_sync_n  = 1
-
+    gpio_controller.gpio_capture_synced_ctrl  = 1
     gpio_controller.gpio_ltc2664_clr    = 1
     gpio_controller.gpio_ltc2664_ldac   = 0
     gpio_controller.gpio_ltc2664_tgp    = 0
