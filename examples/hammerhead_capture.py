@@ -29,10 +29,11 @@ ad4080_dev.rx_buffer_size       = 2 ** 10
 
 # Control the GPIO's
 
+gpio_controller.gpio_capture_synced_ctrl  = 0
+
 CHIP_SCRATCH = ad4080_dev.ad4080_register_read(0xA)
 print("CHIP_SCRATCH phy is:", CHIP_SCRATCH)
 if CHIP_SCRATCH !="0xAB":
-    gpio_controller.gpio_capture_synced_ctrl  = 0
 
     gpio_controller.gpio_ltc2664_clr    = 1
     gpio_controller.gpio_ltc2664_ldac   = 0

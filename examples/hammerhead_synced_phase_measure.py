@@ -41,10 +41,11 @@ multi.primary._clock_chip_fmc.reg_write(0x5A,0x1)
 
 # Control the GPIO's
 
+gpio_controller.gpio_capture_synced_ctrl  = 1
+
 CHIP_SCRATCH = ad4080_dev.ad4080_register_read(0xA)
 print("CHIP_SCRATCH phy is:", CHIP_SCRATCH)
 if CHIP_SCRATCH !="0xAB":
-    gpio_controller.gpio_capture_synced_ctrl  = 1
     gpio_controller.gpio_ltc2664_clr    = 1
     gpio_controller.gpio_ltc2664_ldac   = 0
     gpio_controller.gpio_ltc2664_tgp    = 0
