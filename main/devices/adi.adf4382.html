@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>QuadMxFE_multi &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>adf4382 &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=0ea85bdb" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -16,8 +16,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ad2s1210" href="adi.ad2s1210.html" />
-    <link rel="prev" title="Supported Devices" href="index.html" />
+    <link rel="next" title="adf5610" href="adi.adf5610.html" />
+    <link rel="prev" title="adf4371" href="adi.adf4371.html" />
    
   
   <meta name="repository" content="pyadi-iio">
@@ -89,17 +89,30 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">QuadMxFE_multi</a><ul>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi</span></code></a><ul>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.hmc7044_cap_sel()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.hmc7044_car_output_delay()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.hmc7044_ext_output_delay()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.hmc7044_set_cap_sel()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.reinitialize()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.rx()</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.rx_buffer_size</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.secondaries"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.secondaries</span></code></a></li>
-<li><a class="reference internal" href="#adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request"><code class="docutils literal notranslate"><span class="pre">QuadMxFE_multi.sysref_request()</span></code></a></li>
+<li><a class="reference internal" href="#">adf4382</a><ul>
+<li><a class="reference internal" href="#adi.adf4382.adf4382"><code class="docutils literal notranslate"><span class="pre">adf4382</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.altvolt0_en"><code class="docutils literal notranslate"><span class="pre">adf4382.altvolt0_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.altvolt0_frequency"><code class="docutils literal notranslate"><span class="pre">adf4382.altvolt0_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.altvolt0_output_power"><code class="docutils literal notranslate"><span class="pre">adf4382.altvolt0_output_power</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.altvolt0_phase"><code class="docutils literal notranslate"><span class="pre">adf4382.altvolt0_phase</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.altvolt1_en"><code class="docutils literal notranslate"><span class="pre">adf4382.altvolt1_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.altvolt1_frequency"><code class="docutils literal notranslate"><span class="pre">adf4382.altvolt1_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.altvolt1_output_power"><code class="docutils literal notranslate"><span class="pre">adf4382.altvolt1_output_power</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.altvolt1_phase"><code class="docutils literal notranslate"><span class="pre">adf4382.altvolt1_phase</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.bleed_current"><code class="docutils literal notranslate"><span class="pre">adf4382.bleed_current</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.change_frequency"><code class="docutils literal notranslate"><span class="pre">adf4382.change_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.charge_pump_current"><code class="docutils literal notranslate"><span class="pre">adf4382.charge_pump_current</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.ezsync_setup"><code class="docutils literal notranslate"><span class="pre">adf4382.ezsync_setup</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.fastcal_en"><code class="docutils literal notranslate"><span class="pre">adf4382.fastcal_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.fastcal_lut_en"><code class="docutils literal notranslate"><span class="pre">adf4382.fastcal_lut_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.reference_divider"><code class="docutils literal notranslate"><span class="pre">adf4382.reference_divider</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.reference_doubler_en"><code class="docutils literal notranslate"><span class="pre">adf4382.reference_doubler_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.reference_frequency"><code class="docutils literal notranslate"><span class="pre">adf4382.reference_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.reg_read"><code class="docutils literal notranslate"><span class="pre">adf4382.reg_read()</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.reg_write"><code class="docutils literal notranslate"><span class="pre">adf4382.reg_write()</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.start_calibration"><code class="docutils literal notranslate"><span class="pre">adf4382.start_calibration</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.sw_sync_en"><code class="docutils literal notranslate"><span class="pre">adf4382.sw_sync_en</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4382.adf4382.timed_sync_setup"><code class="docutils literal notranslate"><span class="pre">adf4382.timed_sync_setup</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -148,7 +161,7 @@ Content on this topic
 </ul>
 </li>
 <li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad353xr.html">ad353xr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r.html">ad3552r</a></li>
@@ -209,7 +222,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4355.html">adi.adf4355 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4371.html">adf4371</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adf4382.html">adf4382</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adf4382</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf5610.html">adf5610</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adg2128.html">adi.adg2128 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16375.html">adis16375</a></li>
@@ -301,114 +314,150 @@ Content on this topic
 
           <div class="body" role="main">
             
-  <section id="module-adi.QuadMxFE_multi">
-<span id="quadmxfe-multi"></span><h1>QuadMxFE_multi<a class="headerlink" href="#module-adi.QuadMxFE_multi" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.adf4382">
+<span id="adf4382"></span><h1>adf4382<a class="headerlink" href="#module-adi.adf4382" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.QuadMxFE_multi.</span></span><span class="sig-name descname"><span class="pre">QuadMxFE_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_uris</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_jesd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_jesds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>ADQUADMXFExEBZ Multi-SOM Manager</p>
+<dt class="sig sig-object py" id="adi.adf4382.adf4382">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf4382.</span></span><span class="sig-name descname"><span class="pre">adf4382</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4382.adf4382" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>ADF4382 Microwave Wideband Synthesizer with Integrated VCO</p>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
-<dt>primary_uri: type=string</dt><dd><p>URI of primary ADQUADMXFExEBZ. Parent HMC7044 is connected
-to this SOM</p>
-</dd>
-<dt>secondary_uris: type=list[string]</dt><dd><p>URI(s) of secondary ADQUADMXFExEBZ(s).</p>
-</dd>
-<dt>primary_jesd: type=adi.jesd</dt><dd><p>JESD object associated with primary ADQUADMXFExEBZ</p>
-</dd>
-<dt>secondary_jesds: type=list[adi.jesd]</dt><dd><p>JESD object(s) associated with secondary ADQUADMXFExEBZ(s)</p>
+<dt>uri: type=string</dt><dd><p>URI of IIO context with ADF4382</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel">
-<span class="sig-name descname"><span class="pre">hmc7044_cap_sel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_cap_sel" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay">
-<span class="sig-name descname"><span class="pre">hmc7044_car_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_car_output_delay" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_car_output_delay:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>digital: type=int</dt><dd><p>Digital delay. Adjusts the phase of the divider signal
-by up to 17 half cycles of the VCO.</p>
-</dd>
-<dt>analog_ps: type=int</dt><dd><p>Analog delay. Adjusts the delay of the divider signal in
-increments of ~25 ps. Range is from 100ps to 700ps.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay">
-<span class="sig-name descname"><span class="pre">hmc7044_ext_output_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digital</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog_ps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_ext_output_delay:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>digital: type=int</dt><dd><p>Digital delay. Adjusts the phase of the divider signal
-by up to 17 half cycles of the VCO.</p>
-</dd>
-<dt>analog_ps: type=int</dt><dd><p>Analog delay. Adjusts the delay of the divider signal in
-increments of ~25 ps. Range is from 100ps to 700ps.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel">
-<span class="sig-name descname"><span class="pre">hmc7044_set_cap_sel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel" title="Permalink to this definition"></a></dt>
-<dd><p>hmc7044_set_cap_sel:</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>vals: type=list</dt><dd><p>Forces certain Capacitor bank selections.
-Typically the list returned form hmc7044_cap_sel</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize">
-<span class="sig-name descname"><span class="pre">reinitialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.reinitialize" title="Permalink to this definition"></a></dt>
-<dd><p>reinitialize: reinitialize all transceivers</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.rx">
-<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx" title="Permalink to this definition"></a></dt>
-<dd><p>Receive data from multiple hardware buffers for each channel index in
-rx_enabled_channels of each child object (primary,secondaries[indx]).</p>
-<dl class="simple">
-<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
-is enabled containing samples from a channel or set of channels.
-Data will be complex when using a complex data device.</p>
-</dd>
-</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt0_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt0_en" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the enable/disable state of channel 0</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.rx_buffer_size" title="Permalink to this definition"></a></dt>
-<dd><p>rx_buffer_size: Size of receive buffer in samples for each device</p>
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt0_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_frequency</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt0_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the rfout frequency of channel 0</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.secondaries">
-<span class="sig-name descname"><span class="pre">secondaries</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="adi.ad9081_mc.html#adi.ad9081_mc.QuadMxFE" title="adi.ad9081_mc.QuadMxFE"><span class="pre">QuadMxFE</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.secondaries" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt0_output_power">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_output_power</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt0_output_power" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the output power of channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt0_phase">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_phase</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt0_phase" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the phase adjustment of channel 0</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt1_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt1_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt1_en" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the enable/disable state of channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt1_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt1_frequency</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt1_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the rfout frequency of channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt1_output_power">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt1_output_power</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt1_output_power" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the output power of channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.altvolt1_phase">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt1_phase</span></span><a class="headerlink" href="#adi.adf4382.adf4382.altvolt1_phase" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the phase adjustment of channel 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.bleed_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bleed_current</span></span><a class="headerlink" href="#adi.adf4382.adf4382.bleed_current" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the bleed word value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.change_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">change_frequency</span></span><a class="headerlink" href="#adi.adf4382.adf4382.change_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the change frequency without starting calibration</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.charge_pump_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">charge_pump_current</span></span><a class="headerlink" href="#adi.adf4382.adf4382.charge_pump_current" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the charge pump current in mA</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.ezsync_setup">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ezsync_setup</span></span><a class="headerlink" href="#adi.adf4382.adf4382.ezsync_setup" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the EZSync setup</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.fastcal_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fastcal_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.fastcal_en" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the enable state of fast calibration</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.fastcal_lut_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fastcal_lut_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.fastcal_lut_en" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the enable state of fast calibration Lookup Table usage</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.reference_divider">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_divider</span></span><a class="headerlink" href="#adi.adf4382.adf4382.reference_divider" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the reference divider</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.reference_doubler_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_doubler_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.reference_doubler_en" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the enable state of the reference doubler</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.reference_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_frequency</span></span><a class="headerlink" href="#adi.adf4382.adf4382.reference_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the reference frequency</p>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request">
-<span class="sig-name descname"><span class="pre">sysref_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.QuadMxFE_multi.QuadMxFE_multi.sysref_request" title="Permalink to this definition"></a></dt>
-<dd><p>sysref_request: Sysref request for parent HMC7044</p>
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.reg_read">
+<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4382.adf4382.reg_read" title="Permalink to this definition"></a></dt>
+<dd><p>Direct Register Access via debugfs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.reg_write">
+<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4382.adf4382.reg_write" title="Permalink to this definition"></a></dt>
+<dd><p>Direct Register Access via debugfs</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.start_calibration">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_calibration</span></span><a class="headerlink" href="#adi.adf4382.adf4382.start_calibration" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the start calibration</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.sw_sync_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_sync_en</span></span><a class="headerlink" href="#adi.adf4382.adf4382.sw_sync_en" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the enable state of software synchronization</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4382.adf4382.timed_sync_setup">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">timed_sync_setup</span></span><a class="headerlink" href="#adi.adf4382.adf4382.timed_sync_setup" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the timed synchronization setup</p>
 </dd></dl>
 
 </dd></dl>
@@ -419,8 +468,8 @@ Data will be complex when using a complex data device.</p>
           </div>
               <div class="related">
                 &nbsp;
-    <a href="index.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">Supported Devices</a>
-    <a href="adi.ad2s1210.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad2s1210</a>
+    <a href="adi.adf4371.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adf4371</a>
+    <a href="adi.adf5610.html" title="Next document (Alt+Shift+RightArrow)" class="next">adf5610</a>
               </div>
           
         </div>
