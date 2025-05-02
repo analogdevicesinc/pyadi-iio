@@ -234,15 +234,15 @@ for profile_sub_folder in profile_sub_folders:
 # Remove any rows where 'failed_reason' is not None
 df = df[df["failed_reason"].isnull()]
 
-# Save the DataFrame to a CSV file
-output_csv_path = os.path.join(here, "ads1100_profiles_summary.csv")
-df.to_csv(output_csv_path, index=False)
-print(f"Summary CSV file created at: {output_csv_path}")
+# # Save the DataFrame to a CSV file
+# output_csv_path = os.path.join(here, "ads1100_profiles_summary.csv")
+# df.to_csv(output_csv_path, index=False)
+# print(f"Summary CSV file created at: {output_csv_path}")
 
-# Save the DataFrame to a Excel file
-output_excel_path = os.path.join(here, "ads1100_profiles_summary.xlsx")
-df.to_excel(output_excel_path, index=False)
-print(f"Summary Excel file created at: {output_excel_path}")
+# # Save the DataFrame to a Excel file
+# output_excel_path = os.path.join(here, "ads1100_profiles_summary.xlsx")
+# df.to_excel(output_excel_path, index=False)
+# print(f"Summary Excel file created at: {output_excel_path}")
 
 
 # # Count occurrences of each JESD mode
@@ -428,16 +428,16 @@ for index, row in df_filtered.iterrows():
 
 ################################################################################
 
-# Save the filtered DataFrame to a CSV file
-output_filtered_csv_path = os.path.join(here, "ads1100_profiles_filtered_summary.csv")
-df_filtered.to_csv(output_filtered_csv_path, index=False)
-print(f"Filtered summary CSV file created at: {output_filtered_csv_path}")
-# Save the filtered DataFrame to a Excel file
-output_filtered_excel_path = os.path.join(
-    here, "ads1100_profiles_filtered_summary.xlsx"
-)
-df_filtered.to_excel(output_filtered_excel_path, index=False)
-print(f"Filtered summary Excel file created at: {output_filtered_excel_path}")
+# # Save the filtered DataFrame to a CSV file
+# output_filtered_csv_path = os.path.join(here, "ads1100_profiles_filtered_summary.csv")
+# df_filtered.to_csv(output_filtered_csv_path, index=False)
+# print(f"Filtered summary CSV file created at: {output_filtered_csv_path}")
+# # Save the filtered DataFrame to a Excel file
+# output_filtered_excel_path = os.path.join(
+#     here, "ads1100_profiles_filtered_summary.xlsx"
+# )
+# df_filtered.to_excel(output_filtered_excel_path, index=False)
+# print(f"Filtered summary Excel file created at: {output_filtered_excel_path}")
 
 # Generate the simplified list of unique JESD mode pairs using the max lane rate for that pair
 unique_mode_pairs = (
@@ -515,16 +515,32 @@ if os.path.exists(target_folder):
     shutil.rmtree(target_folder)
 os.makedirs(target_folder)
 
-# Move the generated device tree files to the target folder
-shutil.move("dts_files", target_folder)
+# Move the generated device tree and bin files to the target folder
 os.makedirs(os.path.join(target_folder, "bin_files"), exist_ok=True)
+os.makedirs(os.path.join(target_folder, "dts_files"), exist_ok=True)
 # Copy the generated bin files to the target folder
 for index, row in df_filtered.iterrows():
     bin_file_path = row["bin_filename"]
     if os.path.exists(bin_file_path):
         shutil.copy(bin_file_path, os.path.join(target_folder, "bin_files"))
+        # Update the bin_filename in the DataFrame to point to the new location
+        df_filtered.at[index, "bin_filename"] = os.path.join(
+            target_folder, "bin_files", os.path.basename(bin_file_path)
+        )
     else:
         raise FileNotFoundError(f"Bin file does not exist: {bin_file_path}")
+    # Update path of dts_file in the DataFrame to point to the new location
+    dts_file_path = row["dts_file"]
+    if os.path.exists(dts_file_path):
+        target_filename = os.path.basename(dts_file_path).strip()
+        target_filename = target_filename.replace(" ", "")
+        shutil.move(dts_file_path, os.path.join(target_folder, "dts_files", target_filename))
+        # Update the dts_file in the DataFrame to point to the new location
+        df_filtered.at[index, "dts_file"] = os.path.join(
+            target_folder, "dts_files", target_filename
+        )
+    else:
+        raise FileNotFoundError(f"DTS file does not exist: {dts_file_path}")
 
 # Save the final DataFrame with hd_build_id to a CSV file in the target folder
 output_final_csv_path = os.path.join(
@@ -544,3 +560,52 @@ output_jenkinsfile_path = os.path.join(target_folder, "Jenkinsfile_part.groovy")
 with open(output_jenkinsfile_path, "w") as f:
     f.write(txt)
 print(f"Jenkinsfile part created at: {output_jenkinsfile_path}")
+
+############################################################################################
+# Build kernel and device trees
+import subprocess
+
+# Generate make command for buildings all the devicetrees
+make_cmd = ''
+for row in df_filtered.itertuples():
+    dts_file_location = os.path.join("adsy1100_configs", row.dts_file)
+    dts_file_location = os.path.abspath(dts_file_location)
+    target_folder = os.path.join(here, "linux", "arch", "arm64", "boot", "dts", "xilinx")
+    make_cmd += f"cp {dts_file_location} {target_folder}\n"
+    dts_filename = os.path.basename(dts_file_location)
+    make_cmd += f"make xilinx/{dts_filename.replace('.dts', '.dtb')}\n"
+    # Copy to adsy1100_configs/dtb_files
+    if not os.path.exists(os.path.join(here, "adsy1100_configs", "dtb_files")):
+        os.makedirs(os.path.join(here, "adsy1100_configs", "dtb_files"))
+    make_cmd += f"cp {target_folder}/{dts_filename.replace('.dts', '.dtb')} "
+    make_cmd += f"{os.path.join(here, 'adsy1100_configs', 'dtb_files')}\n"
+
+script = f'''
+#!/bin/bash
+set -xe
+
+#git clone git@ghe.com:adi-innersource/cse-linux-apollo.git linux
+cd linux
+#git checkout bitbucket/update-apollo-sdk48-0p4p58-b0-only-v6p1
+source /opt/Xilinx/Vivado/2023.2/settings64.sh
+export ARCH=arm64
+export CROSS_COMPILE=aarch64-linux-gnu-
+#make clean
+#make distclean
+make adi_zynqmp_adsy1100_b0_defconfig
+#make adi_zynqmp_adsy1100_defconfig
+make -j8
+cp arch/arm64/boot/Image ../adsy1100_configs/
+make xilinx/zynqmp-vpx-apollo.dtb
+cp arch/arm64/boot/dts/xilinx/zynqmp-vpx-apollo.dtb ../adsy1100_configs/
+#make xilinx/vu11p-vpx-apollo.dtbo
+
+'''
+script += make_cmd
+with open(os.path.join(here, "build_linux.sh"), "w") as f:
+    f.write(script)
+
+# Run the script
+subprocess.run(["chmod", "+x", os.path.join(here, "build_linux.sh")])
+subprocess.run(["bash", os.path.join(here, "build_linux.sh")])
+
