@@ -131,7 +131,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
                     neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
 
                 neb_manager.net.copy_file_to_remote(
-                    os.path.join(boot_files_folder, config[key]),
+                    os.path.join(config[key]),
                     f"/boot/{config[key]}",
                 )
             if key == "extras":
@@ -143,7 +143,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
                         neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
 
                     neb_manager.net.copy_file_to_remote(
-                        os.path.join(boot_files_folder, extra["src"]),
+                        os.path.join(extra["src"]),
                         extra["dst"],
                     )
 
