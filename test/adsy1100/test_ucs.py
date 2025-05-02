@@ -20,6 +20,10 @@ common_boot_files_folder = os.path.join(os.path.dirname(__file__), "bootfiles", 
 configs = []
 for index, row in dataset.iterrows():
     dtb_file = row["dts_file"].replace(".dts", ".dtb").replace("dts_", "dtb_")
+    here = os.path.dirname(__file__)
+    dtb_file = dtb_file.replace("/tmp/pyadi-adsy1100-test/test/adsy1100", here)
+    bin_filename = row["bin_filename"].replace("tmp/pyadi-adsy1100-test/test/adsy1100", here)
+
     configs.append({
         "name": row["id"],
         "BOOT.BIN": os.path.join(common_boot_files_folder, "BOOT.BIN"),
@@ -28,7 +32,7 @@ for index, row in dataset.iterrows():
         "selmap_overlay": dtb_file,
         "selmap_bin": os.path.join(os.path.dirname(__file__), "adsy1100_configs", "fpgabins", row["hdl_build_id"], "system_top.bin"),
         "extras": [
-            {"src": row["bin_filename"], "dst": "/lib/firmware/"}
+            {"src": bin_filename, "dst": "/lib/firmware/"}
         ],
     })
 
