@@ -35,7 +35,6 @@ for index, row in dataset.iterrows():
             {"src": bin_filename, "dst": "/lib/firmware/"}
         ],
     })
-    break # Remove this line to test all configurations
 
 # Check if the boot files are present
 for cfg in configs:
