@@ -6,6 +6,7 @@
 
 import os
 import sys
+import time
 import json
 import glob
 import pandas as pd
@@ -16,7 +17,11 @@ import pandas as pd
 max_mode_pairs = os.getenv("MAX_MODE_PAIRS", 10)
 # Set max lane rate
 max_allowed_common_lane_rate_Hz = os.getenv("MAX_ALLOWED_COMMON_LANE_RATE_HZ", 21.0e9)
-max_allowed_common_lane_rate_Hz = int(max_allowed_common_lane_rate_Hz)
+max_allowed_common_lane_rate_Hz = int(float(max_allowed_common_lane_rate_Hz))
+
+print(f"Max mode pairs: {max_mode_pairs}")
+print(f"Max allowed common lane rate (Hz): {max_allowed_common_lane_rate_Hz}")
+time.sleep(5)
 
 ################################################################################
 
