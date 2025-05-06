@@ -13,3 +13,4 @@ pyadi-jif[cplex] @ git+https://github.com/analogdevicesinc/pyadi-jif.git@tfcolli
 
 pandas
 openpyxl
+lexicon
