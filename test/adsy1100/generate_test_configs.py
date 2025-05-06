@@ -451,6 +451,7 @@ print(unique_mode_pairs)
 
 # Generate groovy Jenkinsfile structure to build variants in parallel
 IDs = []
+json_for_groovy = {"apollo_som_vu11p": {}, "apollo_som_zu4eg": {'ALL': ""}}
 txt = "def boardNames = [\n"
 txt += '    "apollo_som_vu11p": [\n'
 for row in unique_mode_pairs.itertuples():
@@ -472,6 +473,7 @@ for row in unique_mode_pairs.itertuples():
         board_id = f"ID_T{tx_mode}_R{rx_mode}_LR{int(common_lane_rate_Hz/1e6)}"
         txt += f'       "{board_id}": "{make_command}"' + ("" if is_last else ",\n")
         IDs.append(board_id)
+        json_for_groovy["apollo_som_vu11p"][board_id] = make_command
 
 txt += """
     ],
@@ -482,6 +484,9 @@ txt += """
 """
 
 print(txt)
+print(json_for_groovy)
+with open(os.path.join(here, "jesd_build_args.json"), "w") as f:
+    json.dump(json_for_groovy, f, indent=4)
 
 # Add IDs which config can use
 for index, row in df_filtered.iterrows():
@@ -584,14 +589,14 @@ script = f'''
 #!/bin/bash
 set -xe
 
-#git clone git@ghe.com:adi-innersource/cse-linux-apollo.git linux
+git clone git@github.com:adi-innersource/cse-linux-apollo.git linux
 cd linux
-#git checkout bitbucket/update-apollo-sdk48-0p4p58-b0-only-v6p1
+git checkout bitbucket/update-apollo-sdk48-0p4p58-b0-only-v6p1
 source /opt/Xilinx/Vivado/2023.2/settings64.sh
 export ARCH=arm64
 export CROSS_COMPILE=aarch64-linux-gnu-
-#make clean
-#make distclean
+make clean
+make distclean
 make adi_zynqmp_adsy1100_b0_defconfig
 #make adi_zynqmp_adsy1100_defconfig
 make -j8
@@ -606,6 +611,6 @@ with open(os.path.join(here, "build_linux.sh"), "w") as f:
     f.write(script)
 
 # Run the script
-subprocess.run(["chmod", "+x", os.path.join(here, "build_linux.sh")])
-subprocess.run(["bash", os.path.join(here, "build_linux.sh")])
+# subprocess.run(["chmod", "+x", os.path.join(here, "build_linux.sh")])
+# subprocess.run(["bash", os.path.join(here, "build_linux.sh")])
 

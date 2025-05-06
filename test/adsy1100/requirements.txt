@@ -10,3 +10,5 @@ pytest-dependency
 
 git+https://github.com/analogdevicesinc/pyadi-dt.git@tfcollins/adsy1100
 git+https://github.com/analogdevicesinc/pyadi-jif.git@tfcollins/ad9084[cplex]
+pandas
+openpyxl
