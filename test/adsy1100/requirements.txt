@@ -9,6 +9,7 @@ scipy<=1.12.0
 pytest-dependency
 
 git+https://github.com/analogdevicesinc/pyadi-dt.git@tfcollins/adsy1100
-git+https://github.com/analogdevicesinc/pyadi-jif.git@tfcollins/ad9084#egg=pyadi-jif[cplex]
+pyadi-jif[cplex] @ git+https://github.com/analogdevicesinc/pyadi-jif.git@tfcollins/ad9084
+
 pandas
 openpyxl
