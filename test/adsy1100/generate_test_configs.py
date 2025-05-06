@@ -12,8 +12,11 @@ import pandas as pd
 
 # Configs
 
-max_mode_pairs = 4  # Pick the most common pairs of JESD modes
-max_allowed_common_lane_rate_Hz = int(21.0e9)  # 21.0 GHz
+# Pick the most common pairs of JESD modes
+max_mode_pairs = os.getenv("MAX_MODE_PAIRS", 10)
+# Set max lane rate
+max_allowed_common_lane_rate_Hz = os.getenv("MAX_ALLOWED_COMMON_LANE_RATE_HZ", 21.0e9)
+max_allowed_common_lane_rate_Hz = int(max_allowed_common_lane_rate_Hz)
 
 ################################################################################
 
