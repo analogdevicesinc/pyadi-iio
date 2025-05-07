@@ -15,6 +15,7 @@ import pandas as pd
 
 # Pick the most common pairs of JESD modes
 max_mode_pairs = os.getenv("MAX_MODE_PAIRS", 10)
+max_mode_pairs = int(max_mode_pairs)
 # Set max lane rate
 max_allowed_common_lane_rate_Hz = os.getenv("MAX_ALLOWED_COMMON_LANE_RATE_HZ", 21.0e9)
 max_allowed_common_lane_rate_Hz = int(float(max_allowed_common_lane_rate_Hz))
