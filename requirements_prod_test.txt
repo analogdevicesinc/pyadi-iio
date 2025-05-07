@@ -1,8 +1,7 @@
-black
+ruff
 codespell
 flake8
 pre-commit
-isort
 pytest>=4.6
 scapy
 scipy
