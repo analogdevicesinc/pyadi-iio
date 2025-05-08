@@ -66,6 +66,7 @@ Supported Devices
    adi.adaq8092
    adi.adar1000
    adi.adf4159
+   adi.adf4350
    adi.adf4355
    adi.adf4371
    adi.adf4382
