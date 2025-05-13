@@ -620,6 +620,6 @@ with open(os.path.join(here, "build_linux.sh"), "w") as f:
     f.write(script)
 
 # Run the script
-# subprocess.run(["chmod", "+x", os.path.join(here, "build_linux.sh")])
-# subprocess.run(["bash", os.path.join(here, "build_linux.sh")])
+subprocess.run(["chmod", "+x", os.path.join(here, "build_linux.sh")])
+subprocess.run(["bash", os.path.join(here, "build_linux.sh")])
 
