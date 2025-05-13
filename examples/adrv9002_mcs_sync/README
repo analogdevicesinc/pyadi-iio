@@ -1,0 +1,81 @@
+ADRV9002 Multi Chip Sync examples
+
+Note: These examples currently work only on two Jupiters and one Synchrona.
+More details about setup can be found at this [link](https://wiki.analog.com/resources/eval/user-guides/jupiter_sdr/mcs).
+
+
+Antennas setup (default):
+Phased array antenna elements vs jupiter channels setup:
+Rx1_primary  Rx2_primary  Rx1_secondary  Rx2_secondary
+    Ch0          Ch1           Ch2            Ch3    -> rx_channels_used
+Ant_elem_0   Ant_elem_1    Ant_elem_2     Ant_elem_3
+    --------------- Polarization ------------------
+
+                        air
+       
+    ^^^^^^^^^^^^^^^ Polarization ^^^^^^^^^^^^^^^^^^
+                  Directional antenna
+                    Tx1_primary 
+
+Power splitter setup (uncomment settings for power splitter from jupiter_config.py):
+Rx1_primary     Rx2_primary     Rx1_secondary   Rx2_secondary
+    Ch0             Ch1             Ch2             Ch3    -> rx_channels_used
+Out1_splitter   Out2_splitter   Out3_splitter   Out4_splitter
+                        Splitter
+                      In1_splitter
+                       Tx1_primary  
+
+Multiple examples are presented in this module:
+All the examples can be run with or without a splitter.
+
+"jupiter_config.py"
+    - Configuration file with settings for Jupiter SDR.
+
+"jupiter_init_from_config.py"
+    - initialize Jupiters using the values contained in jupiter_config.py
+
+"jupiter_calibration_utils.py"
+    - Utility python methods that can be used to calibrate phase and gain at the application level, 
+    the phase and gain between channnels in other examples.
+
+"jupiter_sync_sine_example.py" -> run with "python3 jupiter_sync_sine_example.py" command
+    - Basic example where the received synchronized sinusoids are plotted along with the phase difference
+    between channels.
+    - Performs application level calibration once.
+    - Uses Multichip Sync (MCS) functionality of adrv9002 chips
+
+"jupiter_reload_profile_sync_sine_example.py" -> run with "python3 jupiter_reload_profile_sync_sine_example.py" command
+    - Basic example where the received synchronized sinusoids are plotted along with the phase difference
+    between channels.
+    - Performs application level calibration once.
+    - Uses Multichip Sync (MCS) functionality of adrv9002 chips
+    - Reloads profile after 20 Rx captures.
+
+"jupiter_doa_example.py" -> run with "python3 jupiter_doa_example.py" command
+    - Advanced phased array example.
+    - Performs calibration.
+
+"jupiter_doa_tracking_pyqt_example.py" -> run with "python3 jupiter_doa_tracking_pyqt_example.py" command
+    - Advanced phased array example.
+    - Performs calibration.
+    - Uses Multichip Sync (MCS) functionality of adrv9002 chips
+    - Requires extra depdencies:
+        - install PyQt5: python3 -m pip install pyqt5
+        - install pyqtgraph: python3 -m pip install pyqtgraph
+
+
+Good to know:
+    All these examples make use of the adi.adrv9002_multi object.
+    This is a structure designed for the management of a primary adrv9002 and one or more
+    secondary adrv9002. 
+    The corresponding devices can be accessed separately using adrv9002_multi.primary or adrv9002_multi.secondaries[deviceIndex]. All the corresponding adrv9002 attributes can be 
+    read or modified using separate device access.
+    However, if the same value is to be written for the same attribute of all devices, 
+    one can only call the attribute set/get on the adrv9002_multi object, and the 
+    underlying infrastructure will take care of setting the selected value on all devices.
+    This works for any attribute with 2 exceptions for now: RX and TX hardware gain attributes. For these two methods, the following are exposed:
+
+        sdrs.tx_hardwaregain_all_chan0 = val
+        sdrs.tx_hardwaregain_all_chan1 = val
+        sdrs.rx_hardwaregain_all_chan0 = val
+        sdrs.rx_hardwaregain_all_chan1 = val
