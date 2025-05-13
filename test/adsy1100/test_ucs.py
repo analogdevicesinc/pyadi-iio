@@ -11,6 +11,8 @@ from bench.rs import SMA100A
 
 import adi
 
+max_use_cases_to_test = 5
+
 # Import excel file
 dataset = os.path.join(os.path.dirname(__file__), "adsy1100_configs", "ads1100_profiles_final_summary.xlsx")
 dataset = pd.read_excel(dataset)
@@ -35,6 +37,10 @@ for index, row in dataset.iterrows():
             {"src": bin_filename, "dst": "/lib/firmware/"}
         ],
     })
+
+    if max_use_cases_to_test:
+        if len(configs) >= max_use_cases_to_test:
+            break
 
 # Check if the boot files are present
 for cfg in configs:
