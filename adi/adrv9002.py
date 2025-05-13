@@ -115,13 +115,13 @@ class adrv9002(rx_tx, context_manager):
         """
         with open(value, "r") as file:
             data = file.read()
-        for t in range(3):
+        for t in range(10):
             try:
                 self._set_iio_dev_attr_str("profile_config", data)
                 break
             except Exception as e:
                 print("#" + str(t) + "profile load failed")
-                if t == 2:
+                if t == 9:
                     raise Exception("Failed to load profile")
                 print(e)
 
