@@ -79,6 +79,8 @@ def power_supply(parse_instruments):
     powerSupply = E36233A(address)
     powerSupply.connect()
 
+    powerSupply.first_boot_powered = False
+
     return powerSupply
 
 
@@ -103,19 +105,21 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
     if not skip_boot:
 
         # Power cycle to power down VU11P and Apollo
-        print("Power cycling")
-        power_supply.ch1.output_enabled = False
-        power_supply.ch2.output_enabled = False
-        time.sleep(5)
-        power_supply.ch1.output_enabled = True
-        power_supply.ch2.output_enabled = True
+        if not power_supply.first_boot_powered:
+            power_supply.first_boot_powered = True
+            print("Power cycling for first boot")
+            power_supply.ch1.output_enabled = False
+            power_supply.ch2.output_enabled = False
+            time.sleep(5)
+            power_supply.ch1.output_enabled = True
+            power_supply.ch2.output_enabled = True
 
-        # wait for linux to boot
-        # neb_manager.monitor[0].print_to_console = True
-        results = neb_manager.monitor[0]._read_until_done_multi(
-            done_strings=["Linux version", "root@analog"],
-            max_time=200,
-        )
+            # wait for linux to boot
+            # neb_manager.monitor[0].print_to_console = True
+            results = neb_manager.monitor[0]._read_until_done_multi(
+                done_strings=["Linux version", "root@analog"],
+                max_time=200,
+            )
 
         neb_manager.network_check()
 
@@ -255,6 +259,7 @@ def test_boot(nebula_boot_adsy1100_ethernet, power_supply, record_property):
     filename = f"test_boot_{params['name']}_dmesg.log"
     with open(filename, "w") as f:
         f.write(dmesg)
+    record_property("dmesg_filename", filename)
 
     # Check RF
     dev = adi.ad9084(uri=f"ip:{neb_manager.net.dutip}")
@@ -320,6 +325,8 @@ def test_boot(nebula_boot_adsy1100_ethernet, power_supply, record_property):
             print("Creating FFT plot")
             from test.rf.spec import spec_est
             plt = spec_est(iq_data, fs=dev.rx_sample_rate, ref=2**15, plot=True, show_plot=False)
-            plt.savefig(f"test_boot_{params['name']}_{side}_{chan}_fft.png")
+            filename = f"test_boot_{params['name']}_{side}_{chan}_fft.png"
+            plt.savefig(filename)
+            record_property("fft_plot_filename", filename)
             plt.close()
             del plt
