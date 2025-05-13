@@ -182,6 +182,7 @@ def checkparts(c):
         "ad579x",
         "adaq42xx",
         "ad9213",
+        "adrv9002_multi",
     ]
     for c in dir(mod):
         if (
