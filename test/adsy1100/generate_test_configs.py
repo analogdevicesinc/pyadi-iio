@@ -598,7 +598,8 @@ script = f'''
 #!/bin/bash
 set -xe
 
-git clone git@github.com:adi-innersource/cse-linux-apollo.git linux
+#git clone git@github.com:adi-innersource/cse-linux-apollo.git linux
+git clone https://github.com/adi-innersource/cse-linux-apollo.git linux
 cd linux
 git checkout bitbucket/update-apollo-sdk48-0p4p58-b0-only-v6p1
 source /opt/Xilinx/Vivado/2023.2/settings64.sh
