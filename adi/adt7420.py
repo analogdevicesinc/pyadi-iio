@@ -17,8 +17,8 @@ class adt7420(attribute, context_manager):
         self._ctrl = self._ctx.find_device(self._device_name)
 
         if not self._ctrl:
-            raise Exception("ADT7420 device not found")  
-      
+            raise Exception("ADT7420 device not found")
+
         self.channel = []
         self._rx_channel_names = []
 
