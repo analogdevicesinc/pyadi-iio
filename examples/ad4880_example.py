@@ -62,7 +62,7 @@ print("pll adf4350 frequency: ", my_pll.frequency_altvolt0)
 
 print("one bit adc dac sync n value", my_one_bit_adc_dac.gpio_sync_n)
 
-print("ad4880 reg read",  my_adc.reg_read(0x15))
+print("ad4880 reg read", my_adc.reg_read(0x15))
 
 # print("Test mode: ", my_adc.test_mode)
 print("Scale: ", my_adc.channel[0].scale)

@@ -32,11 +32,11 @@
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import sys
+import time
 from time import sleep
 
 import matplotlib.pyplot as plt
 import numpy as np
-import time
 
 from adi import ad4080, ad9508, adf4350, one_bit_adc_dac
 
@@ -67,7 +67,7 @@ print("pll adf4350 frequency: ", my_pll.frequency_altvolt0)
 
 print("one bit adc dac sync n value", my_one_bit_adc_dac.gpio_sync_n)
 
-print("ad4080 reg read",  my_adc.reg_read(0x15))
+print("ad4080 reg read", my_adc.reg_read(0x15))
 
 print("Scale: ", my_adc.scale)
 
@@ -140,7 +140,7 @@ else:
     my_divider.channel[3] = adf4350_clk / 1
 
     my_adc.reg_write(0x16, 0x41)
-    
+
 my_one_bit_adc_dac.gpio_sync_n = 0
 
 # my_adc.filter_sel = "disabled"
