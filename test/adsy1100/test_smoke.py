@@ -100,7 +100,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
 
     config = request.param
 
-    show_uart_log = False
+    show_uart_log = True
     skip_boot = False
 
     # Start UART
