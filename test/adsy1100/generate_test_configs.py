@@ -401,7 +401,7 @@ def generate_dt_files(row, folder="dts_files"):
 
     print(f"Generating DT for profile: {row['profile_name']}")
     converter = {
-        "device_profile_name": row["profile_name"],
+        "device_profile_name": row["profile_name"].replace(".json", ".bin"),
         "device_clock_Hz": row["device_clock_Hz"],
         "core_clock_Hz": row["core_clock_Hz"],
         "common_lane_rate_Hz": row["common_lane_rate_Hz"],
