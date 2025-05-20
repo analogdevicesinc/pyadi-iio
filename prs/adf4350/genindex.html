@@ -6,12 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="_static/app.min.css?v=0ea85bdb" />
+    <link rel="stylesheet" type="text/css" href="_static/app.min.css?v=c218d0f6" />
     <link rel="stylesheet" type="text/css" href="_static/css/style.css?v=632a43e7" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=7d492192"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
-    <script defer="" src="_static/app.umd.js?v=25136f1d"></script>
+    <script defer="" src="_static/app.umd.js?v=8984ea49"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -54,8 +51,7 @@ window.addEventListener("load", () => mermaid.run());
   <div class="search-area">
     <form action="" method="get">
       <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="search" placeholder="Search"/>
-      <button value="search" class="icon"></button>
-      <span id="search-progress"></span>
+      <button class="icon"></button>
     </form>
   </div>
   
@@ -70,7 +66,7 @@ window.addEventListener("load", () => mermaid.run());
         <div class="vertical-divider"></div>
         <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
         <a id="logo" href="index.html">
-          <div>Hardware Python Interfaces</div>
+          <div>pyadi-iio</div>
         </a>
       </span>
       <span class="reverse">
@@ -82,7 +78,7 @@ window.addEventListener("load", () => mermaid.run());
 
   <div class="repotoc-tree overlay">
     <root>
-  <a href="./index.html" class="current">Hardware Python Interfaces</a>
+  <a href="./index.html" class="current">pyadi-iio</a>
 </root>
 
   </div>
@@ -113,7 +109,7 @@ Content on this topic
 </label>
 <div class="repotoc-tree">
   <root>
-  <a href="./index.html" class="current">Hardware Python Interfaces</a>
+  <a href="./index.html" class="current">pyadi-iio</a>
 </root>
 
 </div>
@@ -198,6 +194,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4350.html">adf4350</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4355.html">adi.adf4355 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.adf4382.html">adf4382</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adf5610.html">adf5610</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adg2128.html">adi.adg2128 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.adis16375.html">adis16375</a></li>
@@ -756,6 +753,8 @@ Content on this topic
 </li>
       <li><a href="devices/adi.adf4371.html#adi.adf4371.adf4371">adf4371 (class in adi.adf4371)</a>
 </li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382">adf4382 (class in adi.adf4382)</a>
+</li>
       <li><a href="devices/adi.adf5610.html#adi.adf5610.adf5610">adf5610 (class in adi.adf5610)</a>
 </li>
       <li><a href="devices/adi.adg2128.html#adi.adg2128.adg2128">adg2128 (class in adi.adg2128)</a>
@@ -1195,14 +1194,19 @@ Content on this topic
 </li>
       </ul></li>
       <li>
+    adi.adf4382
+
+      <ul>
+        <li><a href="devices/adi.adf4382.html#module-adi.adf4382">module</a>
+</li>
+      </ul></li>
+      <li>
     adi.adf5610
 
       <ul>
         <li><a href="devices/adi.adf5610.html#module-adi.adf5610">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adg2128
 
@@ -1210,6 +1214,8 @@ Content on this topic
         <li><a href="devices/adi.adg2128.html#module-adi.adg2128">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adis16507
 
@@ -1724,6 +1730,22 @@ Content on this topic
 </li>
       <li><a href="devices/adi.cn0565.html#adi.cn0565.cn0565.all_voltages">all_voltages (adi.cn0565.cn0565 property)</a>
 </li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.altvolt0_en">altvolt0_en (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.altvolt0_frequency">altvolt0_frequency (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.altvolt0_output_power">altvolt0_output_power (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.altvolt0_phase">altvolt0_phase (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.altvolt1_en">altvolt1_en (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.altvolt1_frequency">altvolt1_frequency (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.altvolt1_output_power">altvolt1_output_power (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.altvolt1_phase">altvolt1_phase (adi.adf4382.adf4382 property)</a>
+</li>
       <li><a href="devices/adi.cn0511.html#adi.cn0511.cn0511.amp_enable">amp_enable (adi.cn0511.cn0511 property)</a>
 </li>
       <li><a href="devices/adi.cn0511.html#adi.cn0511.cn0511.amplitude_cal">amplitude_cal (adi.cn0511.cn0511 property)</a>
@@ -2100,6 +2122,8 @@ Content on this topic
 </li>
       <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.bias_mem_enable">bias_mem_enable (adi.adar1000.adar1000 property)</a>
 </li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.bleed_current">bleed_current (adi.adf4382.adf4382 property)</a>
+</li>
       <li><a href="devices/adi.cn0511.html#adi.cn0511.cn0511.board_calibrated">board_calibrated (adi.cn0511.cn0511 property)</a>
 </li>
       <li><a href="devices/adi.cn0556.html#adi.cn0556.cn0556.boost_input_current">boost_input_current (adi.cn0556.cn0556 property)</a>
@@ -2226,6 +2250,8 @@ Content on this topic
 </li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.ccal">ccal (adi.cn0566.CN0566 attribute)</a>
 </li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.change_frequency">change_frequency (adi.adf4382.adf4382 property)</a>
+</li>
       <li><a href="devices/adi.ad353xr.html#adi.ad353xr.ad353xr.channel">channel (adi.ad353xr.ad353xr attribute)</a>
 
       <ul>
@@ -2324,10 +2350,12 @@ Content on this topic
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.channels">(adi.adar1000.adar1000 property)</a>
 </li>
       </ul></li>
-      <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.chip_id">chip_id (adi.adar1000.adar1000 property)</a>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.charge_pump_current">charge_pump_current (adi.adf4382.adf4382 property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.chip_id">chip_id (adi.adar1000.adar1000 property)</a>
+</li>
       <li><a href="devices/adi.ad9081.html#adi.ad9081.ad9081.chip_version">chip_version (adi.ad9081.ad9081 property)</a>
 
       <ul>
@@ -2784,12 +2812,18 @@ Content on this topic
 </li>
       <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.external_tr_polarity">external_tr_polarity (adi.adar1000.adar1000 property)</a>
 </li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.ezsync_setup">ezsync_setup (adi.adf4382.adf4382 property)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.fastcal_en">fastcal_en (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.fastcal_lut_en">fastcal_lut_en (adi.adf4382.adf4382 property)</a>
+</li>
       <li><a href="devices/adi.cn0556.html#adi.cn0556.cn0556.fault">fault (adi.cn0556.cn0556 property)</a>
 
       <ul>
@@ -3874,6 +3908,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adf4371.html#module-adi.adf4371">adi.adf4371</a>
 </li>
+        <li><a href="devices/adi.adf4382.html#module-adi.adf4382">adi.adf4382</a>
+</li>
         <li><a href="devices/adi.adf5610.html#module-adi.adf5610">adi.adf5610</a>
 </li>
         <li><a href="devices/adi.adg2128.html#module-adi.adg2128">adi.adg2128</a>
@@ -4295,6 +4331,12 @@ Content on this topic
 </li>
       <li><a href="devices/adi.cn0540.html#adi.cn0540.cn0540.red_led_enable">red_led_enable (adi.cn0540.cn0540 property)</a>
 </li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.reference_divider">reference_divider (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.reference_doubler_en">reference_doubler_en (adi.adf4382.adf4382 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.reference_frequency">reference_frequency (adi.adf4382.adf4382 property)</a>
+</li>
       <li><a href="devices/adi.ad353xr.html#adi.ad353xr.ad353xr.reference_select">reference_select (adi.ad353xr.ad353xr property)</a>
 </li>
       <li><a href="devices/adi.ad353xr.html#adi.ad353xr.ad353xr.reference_select_available">reference_select_available (adi.ad353xr.ad353xr property)</a>
@@ -4307,6 +4349,8 @@ Content on this topic
 
       <ul>
         <li><a href="devices/adi.adf4350.html#adi.adf4350.adf4350.reg_read">(adi.adf4350.adf4350 method)</a>
+</li>
+        <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.reg_read">(adi.adf4382.adf4382 method)</a>
 </li>
         <li><a href="devices/adi.adf5610.html#adi.adf5610.adf5610.reg_read">(adi.adf5610.adf5610 method)</a>
 </li>
@@ -4321,6 +4365,8 @@ Content on this topic
 
       <ul>
         <li><a href="devices/adi.adf4350.html#adi.adf4350.adf4350.reg_write">(adi.adf4350.adf4350 method)</a>
+</li>
+        <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.reg_write">(adi.adf4382.adf4382 method)</a>
 </li>
         <li><a href="devices/adi.adf5610.html#adi.adf5610.adf5610.reg_write">(adi.adf5610.adf5610 method)</a>
 </li>
@@ -4553,6 +4599,8 @@ Content on this topic
         <li><a href="devices/adi.ad9084.html#adi.ad9084.ad9084.rx_channel_nco_phases">(adi.ad9084.ad9084 property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="buffers/index.html#adi.rx_tx.rx_core">rx_core (class in adi.rx_tx)</a>
 </li>
       <li><a href="buffers/index.html#adi.rx_tx.rx_def">rx_def (class in adi.rx_tx)</a>
@@ -4585,8 +4633,6 @@ Content on this topic
         <li><a href="buffers/index.html#adi.rx_tx.rx_core.rx_destroy_buffer">(adi.rx_tx.rx_core method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.rx_dma_mode">rx_dma_mode (adi.adrv9002.adrv9002 property)</a>
 </li>
       <li><a href="devices/adi.tdd.html#adi.tdd.tdd.rx_dma_ms">rx_dma_ms (adi.tdd.tdd property)</a>
@@ -5107,6 +5153,8 @@ Content on this topic
 </li>
       <li><a href="devices/adi.ad937x.html#adi.ad937x.ad9371.sn_lo">sn_lo (adi.ad937x.ad9371 property)</a>
 </li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.start_calibration">start_calibration (adi.adf4382.adf4382 property)</a>
+</li>
       <li><a href="devices/adi.tddn.html#adi.tddn.tddn.startup_delay_ms">startup_delay_ms (adi.tddn.tddn property)</a>
 </li>
       <li><a href="devices/adi.tddn.html#adi.tddn.tddn.startup_delay_raw">startup_delay_raw (adi.tddn.tddn property)</a>
@@ -5142,6 +5190,8 @@ Content on this topic
       <li><a href="devices/adi.ad353xr.html#adi.ad353xr.ad353xr.sw_ldac_trigger_avail">sw_ldac_trigger_avail (adi.ad353xr.ad353xr property)</a>
 </li>
       <li><a href="devices/adi.ad5754r.html#adi.ad5754r.ad5754r.sw_ldac_trigger_available">sw_ldac_trigger_available (adi.ad5754r.ad5754r property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.sw_sync_en">sw_sync_en (adi.adf4382.adf4382 property)</a>
 </li>
       <li><a href="devices/adi.cn0565.html#adi.cn0565.cn0565.switch_sequence">switch_sequence (adi.cn0565.cn0565 property)</a>
 </li>
@@ -5268,6 +5318,8 @@ Content on this topic
       <li><a href="devices/adi.fmcjesdadc1.html#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1">test_mode_chan1 (adi.fmcjesdadc1.fmcjesdadc1 property)</a>
 </li>
       <li><a href="devices/adi.ad5627.html#adi.ad5627.ad5627.tiltvoltage">tiltvoltage (adi.ad5627.ad5627 property)</a>
+</li>
+      <li><a href="devices/adi.adf4382.html#adi.adf4382.adf4382.timed_sync_setup">timed_sync_setup (adi.adf4382.adf4382 property)</a>
 </li>
       <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355.to_degrees">to_degrees() (adi.adxl355.adxl355 method)</a>
 
@@ -5802,8 +5854,6 @@ Content on this topic
         </div>
       </div>
   </div>
-
-  <div id="vertical-border"></div>
 
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
