@@ -95,7 +95,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
 
     config = request.param
 
-    show_uart_log = True
+    show_uart_log = False
     skip_boot = False
 
     # Start UART
@@ -157,9 +157,8 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
                     )
 
         # Reboot
-        neb_manager.monitor[0]._read_until_stop()  # Flush
-        neb_manager.monitor[0].start_log(logappend=True)
-        neb_manager.net.reboot_board(bypass_sleep=True)
+        neb_manager.monitor[0]._write_data("reboot")
+        #neb_manager.net.reboot_board(bypass_sleep=True)
 
         # Wait for Linux login
         neb_manager.monitor[0].print_to_console = show_uart_log
