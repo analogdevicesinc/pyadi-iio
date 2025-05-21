@@ -198,7 +198,8 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
         cmd = f"cd /boot && chmod +x selmap_dtbo.sh && ./selmap_dtbo.sh -d {dtbo} -b {bin}"
 
         # Wait for Apollo and JESD links
-        finished_str = "axi-jesd204-tx 880d0000.axi-jesd204-tx-b: AXI-JESD204-TX"
+        # finished_str = "axi-jesd204-tx 880d0000.axi-jesd204-tx-b: AXI-JESD204-TX"
+        finished_str = "axi-jesd204-tx-b: AXI-JESD204-TX"
         neb_manager.monitor[0]._write_data(cmd)
         print("Waiting for selmap to boot")
         neb_manager.monitor[0].start_log(logappend=True)
