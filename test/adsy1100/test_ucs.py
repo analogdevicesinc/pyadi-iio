@@ -183,7 +183,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
         time.sleep(1)
         neb_manager.monitor[0]._read_until_stop()  # Flush
         # Flush to marker
-        do_flush(neb_manager.monitor[0])
+        #do_flush(neb_manager.monitor[0])
 
         neb_manager.network_check()
 
@@ -219,7 +219,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
         time.sleep(1)
         neb_manager.monitor[0]._read_until_stop()  # Flush
         # Flush to marker
-        do_flush(neb_manager.monitor[0])
+        #do_flush(neb_manager.monitor[0])
 
         # Restart IIOD service
         neb_manager.net.run_ssh_command("service iiod restart", show_log=False)
