@@ -12,6 +12,7 @@ from bench.rs import SMA100A
 import adi
 
 max_use_cases_to_test = False
+hostname = os.getenv("HOSTNAME", "b0adsy1100")
 
 dataset_filename = "ads1100_profiles_final_summary_parsed.xlsx"
 archive_dir = os.path.join(os.path.dirname(__file__), "archive", "test_boot_files")
@@ -126,7 +127,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
             # wait for linux to boot
             # neb_manager.monitor[0].print_to_console = True
             results = neb_manager.monitor[0]._read_until_done_multi(
-                done_strings=["Linux version", "root@analog"],
+                done_strings=["Linux version", f"root@{hostname}"],
                 max_time=200,
             )
 
@@ -166,7 +167,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
         # Wait for Linux login
         neb_manager.monitor[0].print_to_console = show_uart_log
         results = neb_manager.monitor[0]._read_until_done_multi(
-            done_strings=["Linux version", "root@analog"],
+            done_strings=["Linux version", f"root@{hostname}"],
             max_time=200,
         )
 
