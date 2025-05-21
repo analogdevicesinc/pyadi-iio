@@ -11,7 +11,7 @@ from bench.rs import SMA100A
 
 import adi
 
-max_use_cases_to_test = False
+max_use_cases_to_test = os.getenv("MAX_USE_CASES_TO_TEST", None)
 hostname = os.getenv("HOSTNAME", "b0adsy1100")
 
 dataset_filename = "ads1100_profiles_final_summary_parsed.xlsx"
