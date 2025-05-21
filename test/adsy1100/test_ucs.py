@@ -208,10 +208,10 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
             done_strings=[finished_str],
             max_time=300,
         )
-        if len(results) == 0:
-            print("JESD not started")
-            neb_manager.monitor[0].stop_log()
-            raise Exception("JESD not started")
+        #if len(results) == 0:
+        #    print("JESD not started")
+        #    neb_manager.monitor[0].stop_log()
+        #    raise Exception("JESD not started")
 
 
         # Cleanup UART

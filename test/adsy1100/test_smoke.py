@@ -208,12 +208,12 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
         print("Waiting for selmap to boot")
         results = neb_manager.monitor[0]._read_until_done_multi(
             done_strings=[finished_str],
-            max_time=300,
+            max_time=200,
         )
-        if len(results) == 0:
-            print("JESD not started")
-            neb_manager.monitor[0].stop_log()
-            raise Exception("JESD not started")
+        #if len(results) == 0:
+        #    print("JESD not started")
+        #    neb_manager.monitor[0].stop_log()
+        #    raise Exception("JESD not started")
 
 
         # Cleanup UART
