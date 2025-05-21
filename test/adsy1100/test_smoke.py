@@ -160,10 +160,12 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
                     )
 
         # Reboot
+        neb_manager.monitor[0].print_to_console = show_uart_log
+        neb_manager.monitor[0]._read_until_stop()  # Flush
+        neb_manager.monitor[0].start_log(logappend=True)
         neb_manager.net.reboot_board(bypass_sleep=True)
 
         # Wait for Linux login
-        neb_manager.monitor[0].print_to_console = show_uart_log
         results = neb_manager.monitor[0]._read_until_done_multi(
             done_strings=["Linux version", "root@analog"],
             max_time=200,
