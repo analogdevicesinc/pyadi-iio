@@ -198,11 +198,12 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
 
         # Wait for Apollo and JESD links
         # finished_str = "axi-jesd204-tx 880d0000.axi-jesd204-tx-b: AXI-JESD204-TX"
+        neb_manager.monitor[0].print_to_console = True
+        neb_manager.monitor[0].start_log(logappend=True)
+        #neb_manager.monitor[0].print_to_console = show_uart_log
         finished_str = "axi-jesd204-tx-b: AXI-JESD204-TX"
         neb_manager.monitor[0]._write_data(cmd)
         print("Waiting for selmap to boot")
-        neb_manager.monitor[0].start_log(logappend=True)
-        neb_manager.monitor[0].print_to_console = show_uart_log
         results = neb_manager.monitor[0]._read_until_done_multi(
             done_strings=[finished_str],
             max_time=300,
