@@ -384,7 +384,10 @@ def generate_jif_model(row):
 
     sys.converter._check_clock_relations()
 
-    cfg = sys.solve()
+    try:
+        cfg = sys.solve()
+    except:
+        return None
 
     del sys
 
@@ -427,6 +430,8 @@ def generate_dt_files(row, folder="dts_files"):
     )
 
     jif_profile = row["jif_model"]
+    if not jif_profile:
+        return None
     clock, fpga = som.map_clocks_to_board_layout(jif_profile)
 
     pprint(clock)
@@ -441,6 +446,16 @@ for index, row in df_filtered.iterrows():
     dt_file = generate_dt_files(row)
     print(f"Device tree file generated: {dt_file}")
     df_filtered.at[index, "dts_file"] = dt_file
+
+
+################################################################################
+# Remove rows where dts_file or jif_model are None
+df_filtered = df_filtered[
+    df_filtered["dts_file"] != None
+]
+df_filtered = df_filtered[
+    df_filtered["jif_model"] != None
+]
 
 
 ################################################################################
