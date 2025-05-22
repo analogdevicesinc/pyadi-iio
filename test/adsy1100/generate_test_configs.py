@@ -382,7 +382,8 @@ def generate_jif_model(row):
 
     del sys
 
-    # pprint(cfg)
+    from pprint import pprint
+    pprint(cfg)
 
     return cfg
 
