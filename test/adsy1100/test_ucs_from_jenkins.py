@@ -145,12 +145,15 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
                 filename = os.path.basename(config[key])
                 
                 if key not in boot_root_files:
+                    print("Not a boot root file. Placing in /boot/jenkins")
+                    print(f"Copying {key} to /boot/jenkins/{filename}")
                     neb_manager.net.run_ssh_command(f"mkdir -p /boot/jenkins/")
                     neb_manager.net.copy_file_to_remote(
                         os.path.join(config[key]),
                         f"/boot/jenkins/{filename}",
                     )
                 else:
+                    print(f"Copying {key} to /boot/{filename}")
                     neb_manager.net.copy_file_to_remote(
                         os.path.join(config[key]),
                         f"/boot/{filename}",
@@ -172,6 +175,8 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
                     #     folder = extra["dst"][:-extra["dst"][::-1].find("/")]
                     #     print(f"Creating folder {folder}")
                     #     neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
+
+                    print(f"Copying {extra['src']} to {extra['dst']}")
 
                     neb_manager.net.copy_file_to_remote(
                         os.path.join(extra["src"]),
@@ -215,7 +220,9 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
 
         # Load selmap overlay
         dtbo = config["selmap_overlay"]
+        dtbo = os.path.join("/boot/jenkins", os.path.basename(dtbo))
         bin = config["selmap_bin"]
+        bin = os.path.join("/boot/jenkins", os.path.basename(bin))
         cmd = f"cd /boot && chmod +x selmap_dtbo.sh && ./selmap_dtbo.sh -d {dtbo} -b {bin}"
 
         # Wait for Apollo and JESD links
