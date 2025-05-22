@@ -358,6 +358,8 @@ def generate_jif_model(row):
     sys.add_pll_inline("adf4382", vcxo, sys.converter)
     # sys.add_pll_sysref("adf4030", vcxo, sys.converter, sys.fpga)
 
+    sys.clock.vco_min = int(1e9) # Limited by ltc6948
+
     sys.clock.minimize_feedback_dividers = False
     M = row.jesd_settings["jrx"]["M"]
     L = row.jesd_settings["jrx"]["L"]
