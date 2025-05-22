@@ -343,7 +343,11 @@ def generate_jif_model(row):
 
     vcxo = int(125e6)
     cddc_dec = row.datapath["cddc_decimation"]
+    if cddc_dec == 0:
+        cddc_dec = 1
     fddc_dec = row.datapath["fddc_decimation"]
+    if fddc_dec == 0:
+        fddc_dec = 1
     converter_rate = int(row.device_clock_Hz)
 
     sys = adijif.system("ad9084_rx", "ltc6952", "xilinx", vcxo, solver="CPLEX")
