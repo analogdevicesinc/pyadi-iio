@@ -48,6 +48,7 @@ for index, row in dataset.iterrows():
         if len(configs) >= max_use_cases_to_test:
             break
 
+
 # Check if the boot files are present
 for cfg in configs:
     for key in cfg:
@@ -139,23 +140,38 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
         for key in config:
             
             if key != "name" and key != "extras":
-                contains_folder = config[key][1:].find("/") != -1
-                if contains_folder:
-                    folder = config[key][:-config[key][::-1].find("/")]
-                    print(f"Creating folder {folder}")
-                    neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
 
-                neb_manager.net.copy_file_to_remote(
-                    os.path.join(config[key]),
-                    f"/boot/{config[key]}",
-                )
+                boot_root_files = ['BOOT.BIN', 'devicetree.dtb', 'Image']
+                filename = os.path.basename(config[key])
+                
+                if key not in boot_root_files:
+                    neb_manager.net.run_ssh_command(f"mkdir -p /boot/jenkins/")
+                    neb_manager.net.copy_file_to_remote(
+                        os.path.join(config[key]),
+                        f"/boot/jenkins/{filename}",
+                    )
+                else:
+                    neb_manager.net.copy_file_to_remote(
+                        os.path.join(config[key]),
+                        f"/boot/{filename}",
+                    )
+                # contains_folder = config[key][1:].find("/") != -1
+                # if contains_folder:
+                #     folder = config[key][:-config[key][::-1].find("/")]
+                #     print(f"Creating folder {folder}")
+                #     neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
+
+                # neb_manager.net.copy_file_to_remote(
+                #     os.path.join(config[key]),
+                #     f"/boot/{config[key]}",
+                # )
             if key == "extras":
                 for extra in config[key]:
-                    contains_folder = extra["dst"][1:].find("/") != -1
-                    if contains_folder:
-                        folder = extra["dst"][:-extra["dst"][::-1].find("/")]
-                        print(f"Creating folder {folder}")
-                        neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
+                    # contains_folder = extra["dst"][1:].find("/") != -1
+                    # if contains_folder:
+                    #     folder = extra["dst"][:-extra["dst"][::-1].find("/")]
+                    #     print(f"Creating folder {folder}")
+                    #     neb_manager.net.run_ssh_command(f"mkdir -p /boot/{folder}")
 
                     neb_manager.net.copy_file_to_remote(
                         os.path.join(extra["src"]),
