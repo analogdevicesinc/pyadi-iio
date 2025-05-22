@@ -364,6 +364,10 @@ def generate_jif_model(row):
 
     sys.clock.vco_min = int(1e9) # Limited by ltc6948
 
+    sys.fpga.device_clock_and_ref_clock_relation = "ref_clock_2x_device_clock"
+    sys.fpga.ref_clock_constraint = "Unconstrained"
+
+
     sys.clock.minimize_feedback_dividers = False
     M = row.jesd_settings["jrx"]["M"]
     L = row.jesd_settings["jrx"]["L"]
