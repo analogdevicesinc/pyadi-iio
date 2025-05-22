@@ -335,15 +335,16 @@ print(df_filtered)
 ################################################################################
 # Generate DT files for each profile
 
-def generate_jif_model(df_filtered):
+def generate_jif_model(row):
+    print(row)
     import adijif
 
     # df_filtered
 
     vcxo = int(125e6)
-    cddc_dec = df_filtered.iloc[0]["datapath"]["cddc_decimation"]
-    fddc_dec = df_filtered.iloc[0]["datapath"]["fddc_decimation"]
-    converter_rate = int(df_filtered.iloc[0]["device_clock_Hz"])
+    cddc_dec = row["datapath"]["cddc_decimation"]
+    fddc_dec = row["datapath"]["fddc_decimation"]
+    converter_rate = int(row["device_clock_Hz"])
 
     sys = adijif.system("ad9084_rx", "ltc6952", "xilinx", vcxo, solver="CPLEX")
 
@@ -358,10 +359,10 @@ def generate_jif_model(df_filtered):
     # sys.add_pll_sysref("adf4030", vcxo, sys.converter, sys.fpga)
 
     sys.clock.minimize_feedback_dividers = False
-    M = df_filtered.iloc[0]["jesd_settings"]["jrx"]["M"]
-    L = df_filtered.iloc[0]["jesd_settings"]["jrx"]["L"]
-    S = df_filtered.iloc[0]["jesd_settings"]["jrx"]["S"]
-    Np = df_filtered.iloc[0]["jesd_settings"]["jrx"]["NP"]
+    M = row["jesd_settings"]["jrx"]["M"]
+    L = row["jesd_settings"]["jrx"]["L"]
+    S = row["jesd_settings"]["jrx"]["S"]
+    Np = row["jesd_settings"]["jrx"]["NP"]
 
     mode_rx = adijif.utils.get_jesd_mode_from_params(
         sys.converter, M=M, L=L, S=S, Np=Np, jesd_class="jesd204c"
@@ -389,7 +390,7 @@ def generate_jif_model(df_filtered):
 ###############################################
 for row in df_filtered.itertuples():
     print(f"Generating JIF model for profile: {row.profile_name}")
-    cfg = generate_jif_model(df_filtered)
+    cfg = generate_jif_model(row)
     # Add cfg to the DataFrame
     row_index = row.Index
     df_filtered.at[row_index, "jif_model"] = cfg
