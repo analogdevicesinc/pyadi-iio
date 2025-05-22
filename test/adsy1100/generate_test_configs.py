@@ -342,9 +342,9 @@ def generate_jif_model(row):
     # df_filtered
 
     vcxo = int(125e6)
-    cddc_dec = row["datapath"]["cddc_decimation"]
-    fddc_dec = row["datapath"]["fddc_decimation"]
-    converter_rate = int(row["device_clock_Hz"])
+    cddc_dec = row.datapath["cddc_decimation"]
+    fddc_dec = row.datapath["fddc_decimation"]
+    converter_rate = int(row.device_clock_Hz)
 
     sys = adijif.system("ad9084_rx", "ltc6952", "xilinx", vcxo, solver="CPLEX")
 
@@ -359,10 +359,10 @@ def generate_jif_model(row):
     # sys.add_pll_sysref("adf4030", vcxo, sys.converter, sys.fpga)
 
     sys.clock.minimize_feedback_dividers = False
-    M = row["jesd_settings"]["jrx"]["M"]
-    L = row["jesd_settings"]["jrx"]["L"]
-    S = row["jesd_settings"]["jrx"]["S"]
-    Np = row["jesd_settings"]["jrx"]["NP"]
+    M = row.jesd_settings["jrx"]["M"]
+    L = row.jesd_settings["jrx"]["L"]
+    S = row.jesd_settings["jrx"]["S"]
+    Np = row.jesd_settings["jrx"]["NP"]
 
     mode_rx = adijif.utils.get_jesd_mode_from_params(
         sys.converter, M=M, L=L, S=S, Np=Np, jesd_class="jesd204c"
