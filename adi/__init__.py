@@ -60,6 +60,7 @@ from adi.adar1000 import adar1000, adar1000_array
 from adi.adf4159 import adf4159
 from adi.adf4355 import adf4355
 from adi.adf4371 import adf4371
+from adi.adf4377 import adf4377
 from adi.adf4382 import adf4382
 from adi.adf5610 import adf5610
 from adi.adf5611 import adf5611

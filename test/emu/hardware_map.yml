@@ -502,7 +502,6 @@ adaq4224:
       - data_devices:
           - iio:device0
 
-
 # Frequency Synthesizers
 adf5611:
   - adf5611
@@ -512,6 +511,15 @@ adf5611:
       - filename: adf5611.xml
       - data_devices:
           - iio:device0
+adf4377:
+  - adf4377
+  - pyadi_iio_class_support:
+      - adf4377
+  - emulate:
+      - filename: adf4377.xml
+      - data_devices:
+          - iio:device0
+
 
 ltc2387:
   - ltc2387

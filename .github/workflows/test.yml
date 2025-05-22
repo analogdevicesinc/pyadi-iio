@@ -55,7 +55,7 @@ jobs:
                 pytest -vs --cov=adi --scan-verbose --emu --junitxml="results.xml" -k 'not prod'
 
       - name: Report coverage
-        if: (github.event_name != 'pull_request') && (matrix.python-version == 3.6)
+        if: (github.event_name != 'pull_request') && (matrix.python-version == 3.8)
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: coveralls
