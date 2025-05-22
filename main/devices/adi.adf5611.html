@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>daq2 &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>adf5611 &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=c218d0f6" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -13,8 +13,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="daq3" href="adi.daq3.html" />
-    <link rel="prev" title="cn0579" href="adi.cn0579.html" />
+    <link rel="next" title="adi.adg2128 module" href="adi.adg2128.html" />
+    <link rel="prev" title="adf5610" href="adi.adf5610.html" />
    
   
   <meta name="repository" content="pyadi-iio">
@@ -85,8 +85,20 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">daq2</a><ul>
-<li><a class="reference internal" href="#adi.daq2.DAQ2"><code class="docutils literal notranslate"><span class="pre">DAQ2</span></code></a></li>
+<li><a class="reference internal" href="#">adf5611</a><ul>
+<li><a class="reference internal" href="#adi.adf5611.adf5611"><code class="docutils literal notranslate"><span class="pre">adf5611</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.altvolt0_rfout_power"><code class="docutils literal notranslate"><span class="pre">adf5611.altvolt0_rfout_power</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.charge_pump_current"><code class="docutils literal notranslate"><span class="pre">adf5611.charge_pump_current</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.en_rfoutdiv"><code class="docutils literal notranslate"><span class="pre">adf5611.en_rfoutdiv</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.reference_divider"><code class="docutils literal notranslate"><span class="pre">adf5611.reference_divider</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.reference_frequency"><code class="docutils literal notranslate"><span class="pre">adf5611.reference_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.reg_read"><code class="docutils literal notranslate"><span class="pre">adf5611.reg_read()</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.reg_write"><code class="docutils literal notranslate"><span class="pre">adf5611.reg_write()</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.rfout_frequency"><code class="docutils literal notranslate"><span class="pre">adf5611.rfout_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.rfoutdiv_divider"><code class="docutils literal notranslate"><span class="pre">adf5611.rfoutdiv_divider</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf5611.adf5611.rfoutdiv_power"><code class="docutils literal notranslate"><span class="pre">adf5611.rfoutdiv_power</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -197,7 +209,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4382.html">adf4382</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4377.html">adf4377</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf5610.html">adf5610</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adf5611.html">adf5611</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adf5611</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adg2128.html">adi.adg2128 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16375.html">adis16375</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16460.html">adis16460</a></li>
@@ -239,7 +251,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0566.html">adi.cn0566 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0575.html">cn0575</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0579.html">cn0579</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.daq2.html">daq2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
@@ -288,13 +300,73 @@ Content on this topic
 
           <div class="body" role="main">
             
-  <section id="module-adi.daq2">
-<span id="daq2"></span><h1>daq2<a class="headerlink" href="#module-adi.daq2" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.adf5611">
+<span id="adf5611"></span><h1>adf5611<a class="headerlink" href="#module-adi.adf5611" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.daq2.DAQ2">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.daq2.</span></span><span class="sig-name descname"><span class="pre">DAQ2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.daq2.DAQ2" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad9144.html#adi.ad9144.ad9144" title="adi.ad9144.ad9144"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9144</span></code></a>, <a class="reference internal" href="adi.ad9680.html#adi.ad9680.ad9680" title="adi.ad9680.ad9680"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9680</span></code></a></p>
-<p>DAQ2 High-Speed Data Aquistion Device</p>
+<dt class="sig sig-object py" id="adi.adf5611.adf5611">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf5611.</span></span><span class="sig-name descname"><span class="pre">adf5611</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf5611.adf5611" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>ADF5611 Microwave Wideband Synthesizer with Integrated VCO</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>URI of IIO context with ADF5611</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.altvolt0_rfout_power">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">altvolt0_rfout_power</span></span><a class="headerlink" href="#adi.adf5611.adf5611.altvolt0_rfout_power" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.charge_pump_current">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">charge_pump_current</span></span><a class="headerlink" href="#adi.adf5611.adf5611.charge_pump_current" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.en_rfoutdiv">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">en_rfoutdiv</span></span><a class="headerlink" href="#adi.adf5611.adf5611.en_rfoutdiv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.reference_divider">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_divider</span></span><a class="headerlink" href="#adi.adf5611.adf5611.reference_divider" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.reference_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_frequency</span></span><a class="headerlink" href="#adi.adf5611.adf5611.reference_frequency" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.reg_read">
+<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf5611.adf5611.reg_read" title="Permalink to this definition"></a></dt>
+<dd><p>Direct Register Access via debugfs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.reg_write">
+<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf5611.adf5611.reg_write" title="Permalink to this definition"></a></dt>
+<dd><p>Direct Register Access via debugfs</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.rfout_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rfout_frequency</span></span><a class="headerlink" href="#adi.adf5611.adf5611.rfout_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get/Set the rfout frequency in Hz</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.rfoutdiv_divider">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rfoutdiv_divider</span></span><a class="headerlink" href="#adi.adf5611.adf5611.rfoutdiv_divider" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf5611.adf5611.rfoutdiv_power">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rfoutdiv_power</span></span><a class="headerlink" href="#adi.adf5611.adf5611.rfoutdiv_power" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -303,8 +375,8 @@ Content on this topic
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.cn0579.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">cn0579</a>
-    <a href="adi.daq3.html" title="Next document (Alt+Shift+RightArrow)" class="next">daq3</a>
+    <a href="adi.adf5610.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adf5610</a>
+    <a href="adi.adg2128.html" title="Next document (Alt+Shift+RightArrow)" class="next">adi.adg2128 module</a>
               </div>
           
         </div>
