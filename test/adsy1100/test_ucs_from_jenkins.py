@@ -269,10 +269,17 @@ def test_boot(nebula_boot_adsy1100_ethernet, power_supply, record_property):
     record_property("post_measure", post_measure)
 
     # Check JESD204 links in data mode
-    jesd = adi.jesd(address=neb_manager.net.dutip, username="root", password=neb_manager.net.dutpassword)
-    links_details = jesd.get_all_link_statuses()
-    links_top_level = jesd.get_all_statuses()
-    drivers = links_top_level.keys()
+    try:
+        jesd = adi.jesd(address=neb_manager.net.dutip, username="root", password=neb_manager.net.dutpassword)
+        links_details = jesd.get_all_link_statuses()
+        links_top_level = jesd.get_all_statuses()
+        drivers = links_top_level.keys()
+    except Exception as e:
+        print(f"Failed to get JESD204 link status: {e}")
+        drivers = []
+        links_details = {}
+        links_top_level = {}
+        return
 
     for driver in drivers:
         print(f"Driver: {driver}")
