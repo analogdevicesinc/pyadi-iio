@@ -142,8 +142,12 @@ def handle_jenkins_zip(filename):
         # Find the dtb file in the extracted directory
         dtb_file = find_file_in_extracted_dir(target_dir, dtb_file_name)
         if not dtb_file:
-            print(f"File '{dtb_file_name}' not found in the extracted directory.")
-            raise FileNotFoundError(f"File '{dtb_file_name}' not found in the extracted directory.")
+            print(f"ERROR: File '{dtb_file_name}' not found in the extracted directory.")
+            # raise FileNotFoundError(f"File '{dtb_file_name}' not found in the extracted directory.")
+            sheet1.at[row[0], 'dtb_file'] = None
+            sheet1.at[row[0], 'bin_file'] = None
+            continue
+        
         print(f"File '{dtb_file_name}' found at: {dtb_file}")
         # Move the file to the target directory
         target_path = os.path.join(target_dir_outputs, 'sw_side')
