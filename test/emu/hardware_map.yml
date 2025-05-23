@@ -747,4 +747,12 @@ ad738x:
       - filename: ad7381.xml
       - data_devices:
           - iio:device0
+pqmon:
+  - pqmon
+  - pyadi_iio_class_support:
+      - pqmon
+  - emulate:
+      - filename: pqmon.xml
+      - data_devices:
+          - iio:device0 
 
