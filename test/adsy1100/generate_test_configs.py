@@ -572,6 +572,9 @@ for index, row in df_filtered.iterrows():
         raise FileNotFoundError(f"Bin file does not exist: {bin_file_path}")
     # Update path of dts_file in the DataFrame to point to the new location
     dts_file_path = row["dts_file"]
+    if dts_file_path is None:
+        df_filtered.at[index, "dts_file"] = None
+        continue
     if os.path.exists(dts_file_path):
         target_filename = os.path.basename(dts_file_path).strip()
         target_filename = target_filename.replace(" ", "")
@@ -582,6 +585,12 @@ for index, row in df_filtered.iterrows():
         )
     else:
         raise FileNotFoundError(f"DTS file does not exist: {dts_file_path}")
+
+# Filter out the rows where dts_file is None
+rows_to_remove = df_filtered[df_filtered["dts_file"].isnull()].index
+df_filtered = df_filtered.drop(rows_to_remove)
+for index in rows_to_remove:
+    print(f"Removing row with index {index} because dts_file is None") 
 
 # Save the final DataFrame with hd_build_id to a CSV file in the target folder
 output_final_csv_path = os.path.join(
