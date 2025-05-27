@@ -1,22 +1,19 @@
-
 import pytest
-
 import numpy as np
 import pyvisa
-
 import pyfirmata
 import time
 
 
-# # Connect to Arduino Uno    
-## Note: if first time installing pyfirmata, need to replace "getargspec" with "getfullargspec" in pyfirmata code
-# board = pyfirmata.Arduino("/dev/ttyACM0", baudrate=57600)
-
 # # Establish VISA control of spectrum analyzer and signal generator
 rm = pyvisa.ResourceManager()
 x = rm.list_resources()
-HMCT2220 = rm.open_resource('ASRL/dev/ttyACM1::INSTR')
-FieldFox = rm.open_resource('TCPIP::192.168.100.23::INSTR')
+HMCT2220 = rm.open_resource('ASRL/dev/ttyACM0::INSTR')
+FieldFox = rm.open_resource('TCPIP::192.168.2.100::INSTR') # FieldFox VISA address
+
+# # Connect to Arduino Uno    
+## Note: if first time installing pyfirmata, need to replace "getargspec" with "getfullargspec" in pyfirmata code
+board = pyfirmata.Arduino("/dev/ttyACM2", baudrate=57600)
 
 ###################################
 ### Cal Board Control Functions ###
@@ -24,22 +21,22 @@ FieldFox = rm.open_resource('TCPIP::192.168.100.23::INSTR')
 
 def _set_adjacent_loopback():
 
-    board.digital[4].write(0)
-    board.digital[5].write(1)
+    # board.digital[4].write(0)
+    # board.digital[5].write(1)
     board.digital[6].write(0)
     board.digital[7].write(0)
     
 
 def _set_combined_loopback():
 
-    board.digital[4].write(1)
-    board.digital[5].write(1)
+    # board.digital[4].write(1)
+    # board.digital[5].write(1)
     board.digital[6].write(1)
     board.digital[7].write(0)
 
 def _set_SMA_inout():
-    board.digital[4].write(0)
-    board.digital[5].write(1)
+    # board.digital[4].write(0)
+    # board.digital[5].write(1)
     board.digital[6].write(1)
     board.digital[7].write(1)
 
@@ -95,6 +92,12 @@ def _get_peak_power_level(marker_number, instr):
 def _set_attenuation_level(attenuation, instr):
     instr.write('POW:ATT {}'.format(attenuation))
 
+def _set_marker1_topeak(instr):
+    instr.write('CALC:MARK1:MAX')
+
+
+
+
 ############################################
 ### Adjacent and Combined loopback tests ###
 ############################################
@@ -102,12 +105,14 @@ def _set_attenuation_level(attenuation, instr):
 @pytest.mark.parametrize("frequency", [8000, 9000, 10000, 11000, 12000], ids=lambda x: f"Frequency (MHz):{x}")
 @pytest.mark.parametrize("cal_board_state", ["adjacent_loopback", "combined_loopback"])
 @pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], ids=lambda x: f"channel:{x}")
-# @pytest.mark.parametrize("channel", [0])
 
-def test_loopback(channel, cal_board_state, frequency):
+def test_loopback_0(channel, cal_board_state, frequency):
 
     if (cal_board_state == "adjacent_loopback" and frequency == 8000):
         input('\n\nConnect signal generator into channel {} input and connect spectrum analyzer into channel {} output.  Press Enter when complete '.format(channel, channel))
+        _set_adjacent_loopback()
+
+    if (cal_board_state == "adjacent_loopback"):
         _set_adjacent_loopback()
 
     if cal_board_state == "combined_loopback":
@@ -128,6 +133,7 @@ def test_loopback(channel, cal_board_state, frequency):
     _set_res_bandwidth(1, FieldFox) # Sets resolution bandwidth to 1 MHz
     time.sleep(1) # Buffer time of 1 second
     _set_marker_to_peak(1, FieldFox) # Sets marker 1 to peak
+    # _set_marker1_topeak(FieldFox) # Changed for using PXA, change back to above line for Fieldfox
     peak_power = _get_peak_power_level(1, FieldFox) # Gets the power at marker 1
     print("\n\nPower level (dBm): {}".format(peak_power))
 
@@ -136,7 +142,7 @@ def test_loopback(channel, cal_board_state, frequency):
     if cal_board_state == "adjacent_loopback":
         assert int(float(peak_power)) > -20
     if cal_board_state == "combined_loopback":
-        assert int(float(peak_power)) > -65
+        assert int(float(peak_power)) > -60
 
 ###################################
 ### Tx Combined SMA Output Test ###
@@ -163,11 +169,12 @@ def test_tx_combined_out(frequency):
     _set_span_MHz(20000, FieldFox) # Set span to 20 GHz
     _set_res_bandwidth(1, FieldFox) # Sets resolution bandwidth to 1 MHz
     time.sleep(1) # Buffer time of 1 second
-    _set_marker_to_peak(1, FieldFox) # Sets marker 1 to peak
+    # _set_marker_to_peak(1, FieldFox) # Sets marker 1 to peak
+    _set_marker1_topeak(FieldFox) # Changed for using PXA, change back to above line for Fieldfox
     peak_power = _get_peak_power_level(1, FieldFox) # Gets the power at marker 1
     print("\n\nPower level (dBm): {}".format(peak_power))
 
-    assert int(float(peak_power)) > -40
+    assert int(float(peak_power)) > -30
 
 
 ##################################
@@ -197,8 +204,9 @@ def test_rx_combined_in(frequency):
     _set_span_MHz(20000, FieldFox) # Set span to 20 GHz
     _set_res_bandwidth(1, FieldFox) # Sets resolution bandwidth to 1 MHz
     time.sleep(1) # Buffer time of 1 second
-    _set_marker_to_peak(1, FieldFox) # Sets marker 1 to peak
+    # _set_marker_to_peak(1, FieldFox) # Sets marker 1 to peak
+    _set_marker1_topeak(FieldFox) # Changed for using PXA, change back to above line for Fieldfox
     peak_power = _get_peak_power_level(1, FieldFox) # Gets the power at marker 1
     print("\n\nPower level (dBm): {}".format(peak_power))
 
-    assert int(float(peak_power)) > -40
+    assert int(float(peak_power)) > -30

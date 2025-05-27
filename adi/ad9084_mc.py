@@ -343,11 +343,14 @@ class Triton(ad9084_mc):
         self._clock_chip_c = self._ctx.find_device("ltc6953_c")
         self._clock_chip_f = self._ctx.find_device("ltc6953_f")
 
+<<<<<<< HEAD
         self.adf4382.append(self._ctx.find_device("adf4382_0"))
         self.adf4382.append(self._ctx.find_device("adf4382_1"))
         self.adf4382.append(self._ctx.find_device("adf4382_2"))
         self.adf4382.append(self._ctx.find_device("adf4382_3"))
 
+=======
+>>>>>>> 13d6e88e0 (Triton ATP completed - added genalyzer for NSD tests (t_nsd in dma_tests.py), added create directory for specific serial numbers, added feature to save off FFTs.  Cleaned up repetitive code)
         self._rx_dsa0 = self._ctx.find_device("dsa0")
         self._rx_dsa1 = self._ctx.find_device("dsa1")
         self._rx_dsa2 = self._ctx.find_device("dsa2")
@@ -360,6 +363,7 @@ class Triton(ad9084_mc):
             self._ad5592r = self._ctx.find_device("ad5592r")
             self._cb_gpio = self._ctx.find_device("one-bit-adc-dac")
 
+<<<<<<< HEAD
         if not disable_jesd_control and jesd_eye_scan:
             self._jesd = jesd_eye_scan(self._ctrl, uri, username=username, password=password)
 
@@ -368,6 +372,13 @@ class Triton(ad9084_mc):
         """rx_dsa0_gain: Receiver digital step attenuator gain"""
         return self._get_iio_attr("voltage0", "hardwaregain", True, self._rx_dsa0)
 
+=======
+    @property
+    def rx_dsa0_gain(self):
+        """rx_dsa0_gain: Receiver digital step attenuator gain"""
+        return self._get_iio_attr("voltage0", "hardwaregain", True, self._rx_dsa0)
+
+>>>>>>> 13d6e88e0 (Triton ATP completed - added genalyzer for NSD tests (t_nsd in dma_tests.py), added create directory for specific serial numbers, added feature to save off FFTs.  Cleaned up repetitive code)
     @rx_dsa0_gain.setter
     def rx_dsa0_gain(self, value):
         self._set_iio_attr("voltage0", "hardwaregain", True, value, self._rx_dsa0)

@@ -13,7 +13,7 @@ from test.common import (
 from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
-from test.html import pytest_html_report_title, pytest_html_results_summary, pytest_runtest_makereport
+from test.html import pytest_runtest_makereport
 
 import adi
 import numpy as np
@@ -111,6 +111,9 @@ def test_dma_loopback(request):
 def test_sfdr(request):
     yield t_sfdr
 
+@pytest.fixture()
+def test_nsd(request):
+    yield t_nsd
 
 @pytest.fixture()
 def test_dds_loopback(request):

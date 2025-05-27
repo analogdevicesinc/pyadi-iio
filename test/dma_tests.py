@@ -1,12 +1,17 @@
 import heapq
 import test.rf.spec as spec
 import time
-
+import genalyzer as gn
 import adi
 import numpy as np
 import pytest
+from genalyzer import Window
 from numpy.fft import fft, fftfreq, fftshift
 from scipy import signal
+import os
+import matplotlib.pyplot as pl
+from matplotlib.patches import Rectangle as MPRect
+
 # from signal import signal, SIGPIPE, SIG_DFL
 
 
@@ -245,7 +250,8 @@ def dds_loopback(
     peak_min,
     use_obs=False,
     use_rx2=False,
-    tone_peak_values=None
+    tone_peak_values=None,
+    do_html_log=True
 ):
     """dds_loopback: Test DDS loopback with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
@@ -273,6 +279,8 @@ def dds_loopback(
 
     """
     
+    do_html_log=True
+
     if tone_peak_values is None:
         tone_peak_values = []
 
@@ -322,7 +330,8 @@ def dds_loopback(
     print(s)
 
     tone_peak_values.append(tone_peaks[indx])
-    
+
+
 
     if do_html_log:
         pytest.data_log = {
@@ -335,6 +344,7 @@ def dds_loopback(
             )
         }
 
+    # print("pytest.data_log:", pytest.data_log)
 
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
@@ -395,7 +405,7 @@ def dds_two_tone(
         setattr(sdr, p, param_set[p])
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
-    N = 2 ** 14
+    N = 2 ** 15
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
@@ -625,7 +635,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # print("Peak: @"+str(tone_freq) )
     # assert (fc * 0.01) > diff
 
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=False)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=True)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - fc)
     s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
@@ -646,7 +656,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
-def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9, sfdr_values=None):
+def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.8, sfdr_values=None):
     """t_sfdr: Test SFDR loopback of tone with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
     signal can be recovered. Sinuoidal data is passed to DMAs which is then
@@ -672,9 +682,68 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     if sfdr_values is None:
         sfdr_values = []
 
-    # from signal import signal, SIGPIPE, SIG_DFL
-    # signal(SIGPIPE, SIG_DFL)
+
     
+    # # See if we can tone using DMAs
+    # sdr = eval(classname + "(uri='" + uri + "')")
+    # # Set custom device parameters
+    # for p in param_set.keys():
+    #     setattr(sdr, p, param_set[p])
+    # time.sleep(5)  # Wait for QEC to kick in
+    # # Set common buffer settings
+    # N = 2 ** 14
+    # sdr.tx_cyclic_buffer = True
+    # sdr.tx_enabled_channels = [channel]
+    # sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
+
+    # if use_obs:
+    #     sdr.obs.rx_enabled_channels = [0]
+    #     sdr.obs.rx_buffer_size = N * 2 * len(sdr.obs.rx_enabled_channels)
+    # else:
+    #     sdr.rx_enabled_channels = [channel]
+    #     sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
+    # # Create a sinewave waveform
+    # if hasattr(sdr, "sample_rate"):
+    #     RXFS = int(sdr.sample_rate["axi-ad9084-rx-hpc"])
+    # else:
+    #     RXFS =int(sdr.rx_sample_rate["axi-ad9084-rx-hpc"])
+
+    # fc = RXFS * 0.01
+    # fc = int(fc / (RXFS / N)) * (RXFS / N)
+
+    # ts = 1 / float(RXFS)
+    # t = np.arange(0, N * ts, ts)
+    # i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * full_scale
+    # q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * full_scale
+    # iq = i + 1j * q
+    # # Pass through SDR
+    # try:
+    #     sdr.tx(iq)
+    #     time.sleep(3)
+    #     for _ in range(10):  # Wait for IQ correction to stabilize
+    #         data = sdr.obs.rx() if use_obs else sdr.rx()
+    # except Exception as e:
+    #     del sdr
+    #     raise Exception(e)
+    # del sdr
+    # val, amp, freqs = spec.sfdr(data, plot=False)
+    # sfdr_values.append(val)
+
+    # if do_html_log:
+    #     pytest.data_log = {
+    #         "html": gen_line_plot_html(
+    #             freqs,
+    #             amp,
+    #             "Frequency (Hz)",
+    #             "Amplitude (dBFS)",
+    #             "SDFR {} dBc ({})".format(val, classname),
+    #         )
+    #     }
+    # print("SFDR:", val, "dB")
+
+    # assert val > sfdr_min
+
     # See if we can tone using DMAs
     sdr = eval(classname + "(uri='" + uri + "')")
     # Set custom device parameters
@@ -708,6 +777,8 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * full_scale
     q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * full_scale
     iq = i + 1j * q
+
+    
     # Pass through SDR
     try:
         sdr.tx(iq)
@@ -719,23 +790,259 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
         raise Exception(e)
     del sdr
     val, amp, freqs = spec.sfdr(data, plot=False)
+
+##############################
+    time.sleep(3)
+   
+    # Signal Processing with genalyzer
+    #
+    code_fmt=gn.CodeFormat.TWOS_COMPLEMENT # integer data format
+    # qwfi = np.real(data)
+    # qwfq = np.imag(data)
+    qwfi = data.real.astype(np.int64)
+    qwfq = data.imag.astype(np.int64)
+    qres = 16 # 16 bit resolution
+    navg = 1 # number of averages for fft
+    nfft = 32768 # fft size
+    fft_cplx = gn.fft(qwfi, qwfq, qres, navg, nfft, 2, code_fmt)
+                             
+
+    fs = 12.8e9
+    fdata = 800e6
+    fshift = 0e6
+    freq = fc
+    #freq = gn.coherent(nfft, fdata, freq)
+    ssb_fund = 8
+    ssb_rest = 3
+    axis_type = 0
+    axis_fmt = 1
+    plot = False
+    #
+    # Fourier analysis configuration
+    #
+    key = "fa"
+    gn.mgr_remove(key)
+    gn.fa_create(key)
+    gn.fa_analysis_band(key, "fdata*0.0", "fdata*1.0")
+    # gn.fa_fixed_tone(key, "A", 1, freq, ssb_fund)
+    gn.fa_max_tone(key, 'A', gn.FaCompTag.SIGNAL, ssb_fund)
+    gn.fa_conv_offset(key, 0.0 != fshift)
+    gn.fa_hd(key, 3)
+    gn.fa_ssb(key, 0, ssb_rest)
+    gn.fa_ssb(key, 1, -1)
+    gn.fa_ssb(key, 2, -1)
+    gn.fa_ssb(key, 3, -1)
+    gn.fa_fdata(key, fdata)
+    gn.fa_fsample(key, fs)
+    gn.fa_fshift(key, fshift)
+    print(gn.fa_preview(key, True))
+    # fn = gn.mgr_save(key)
+    #
+    # Fourier analysis execution
+    #
+    results = gn.fft_analysis(key, fft_cplx, nfft, axis_type)
+    carrier = gn.fa_result_string(results, "carrierindex")
+    maxspur = gn.fa_result_string(results, "maxspurindex")
+ 
+    #
+    # Print results
+    #
+    for k in [
+        "nsd",
+        "fsnr",
+        "sfdr",
+        "dc:mag_dbfs",
+        "A:freq",
+        "A:ffinal",
+        "A:mag_dbfs",
+        "A:phase",
+        "-3A:mag_dbc",
+    ]:
+        print("{:20s}{:20.6f}".format(k, results[k]))
+    print("{:20s}{:20s}".format("Carrier", carrier))
+    print("{:20s}{:20s}".format("MaxSpur", maxspur))
+    print(sfdr_min)
+    sfdr = results["sfdr"]
+    print(sfdr)
     sfdr_values.append(val)
 
-    if do_html_log:
-        pytest.data_log = {
-            "html": gen_line_plot_html(
-                freqs,
-                amp,
-                "Frequency (Hz)",
-                "Amplitude (dBFS)",
-                "SDFR {} dBc ({})".format(val, classname),
-            )
-        }
-    print("SFDR:", val, "dB")
-
-    assert val > sfdr_min
+    assert sfdr > sfdr_min
 
     return sfdr_values
+
+
+
+def t_nsd(uri, serialnumber, classname, channel, param_set, nsd_min, frequency, full_scale=0.9, use_obs=False,
+    use_rx2=False):
+
+
+   # See if we can tone using DMAs
+    sdr = eval(classname + "(uri='" + uri + "')")
+    # Set custom device parameters
+    for p in param_set.keys():
+        setattr(sdr, p, param_set[p])
+    time.sleep(5)  # Wait for QEC to kick in
+    # Set common buffer settings
+    N = 2 ** 14
+    sdr.tx_cyclic_buffer = True
+    sdr.tx_enabled_channels = [channel]
+    sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
+
+    if use_obs:
+        sdr.obs.rx_enabled_channels = [0]
+        sdr.obs.rx_buffer_size = N * 2 * len(sdr.obs.rx_enabled_channels)
+    else:
+        sdr.rx_enabled_channels = [channel]
+        sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
+
+    # Create a sinewave waveform
+    if hasattr(sdr, "sample_rate"):
+        RXFS = int(sdr.sample_rate["axi-ad9084-rx-hpc"])
+    else:
+        RXFS =int(sdr.rx_sample_rate["axi-ad9084-rx-hpc"])
+
+    fc = RXFS * 0.1
+    fc = int(fc / (RXFS / N)) * (RXFS / N)
+
+    ts = 1 / float(RXFS)
+    t = np.arange(0, N * ts, ts)
+    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * full_scale
+    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * full_scale
+    iq = i + 1j * q
+
+    
+    # Pass through SDR
+    try:
+        sdr.tx(iq)
+        time.sleep(3)
+        for _ in range(10):  # Wait for IQ correction to stabilize
+            data = sdr.obs.rx() if use_obs else sdr.rx()
+    except Exception as e:
+        del sdr
+        raise Exception(e)
+    del sdr
+    val, amp, freqs = spec.sfdr(data, plot=False)
+
+##############################
+    time.sleep(3)
+   
+    # Signal Processing with genalyzer
+    #
+    code_fmt=gn.CodeFormat.TWOS_COMPLEMENT # integer data format
+    # qwfi = np.real(data)
+    # qwfq = np.imag(data)
+    qwfi = data.real.astype(np.int64)
+    qwfq = data.imag.astype(np.int64)
+    qres = 16 # 16 bit resolution
+    navg = 1 # number of averages for fft
+    nfft = 32768 # fft size
+    fft_cplx = gn.fft(qwfi, qwfq, qres, navg, nfft, 2, code_fmt)
+                             
+
+    fs = 12.8e9
+    fdata = 800e6
+    fshift = 0e6
+    freq = fc
+    #freq = gn.coherent(nfft, fdata, freq)
+    ssb_fund = 8
+    ssb_rest = 3
+    axis_type = 0
+    axis_fmt = 1
+    plot = False
+    #
+    # Fourier analysis configuration
+    #
+    key = "fa"
+    gn.mgr_remove(key)
+    gn.fa_create(key)
+    gn.fa_analysis_band(key, "fdata*0.0", "fdata*1.0")
+    # gn.fa_fixed_tone(key, "A", 1, freq, ssb_fund)
+    gn.fa_max_tone(key, 'A', gn.FaCompTag.SIGNAL, ssb_fund)
+    gn.fa_conv_offset(key, 0.0 != fshift)
+    gn.fa_hd(key, 3)
+    gn.fa_ssb(key, 0, ssb_rest)
+    gn.fa_ssb(key, 1, -1)
+    gn.fa_ssb(key, 2, -1)
+    gn.fa_ssb(key, 3, -1)
+    gn.fa_fdata(key, fdata)
+    gn.fa_fsample(key, fs)
+    gn.fa_fshift(key, fshift)
+    print(gn.fa_preview(key, True))
+    # fn = gn.mgr_save(key)
+    #
+    # Fourier analysis execution
+    #
+    results = gn.fft_analysis(key, fft_cplx, nfft, axis_type)
+    carrier = gn.fa_result_string(results, "carrierindex")
+    maxspur = gn.fa_result_string(results, "maxspurindex")
+ 
+    #
+    # Print results
+    #
+    for k in [
+        "nsd",
+        "fsnr",
+        "sfdr",
+        "dc:mag_dbfs",
+        "A:freq",
+        "A:ffinal",
+        "A:mag_dbfs",
+        "A:phase",
+        "-3A:mag_dbc",
+    ]:
+        print("{:20s}{:20.6f}".format(k, results[k]))
+    print("{:20s}{:20s}".format("Carrier", carrier))
+    print("{:20s}{:20s}".format("MaxSpur", maxspur))
+ 
+
+    #
+    # Plot
+    #
+    plot = True
+    import matplotlib.pyplot as pl
+    from matplotlib.patches import Rectangle as MPRect
+    if plot:
+        pl.close('all')
+        freq_axis = gn.freq_axis(nfft, axis_type, fdata, axis_fmt)
+        fft_db = gn.db(fft_cplx)
+        fft_db = gn.fftshift(fft_db)
+        fig = pl.figure(1)
+        fig.clf()
+        pl.plot(freq_axis, fft_db)
+        pl.grid(True)
+        pl.xlim(freq_axis[0], freq_axis[-1])
+        pl.ylim(-140.0, 5.0)
+        annots = gn.fa_annotations(results, axis_type, axis_fmt)
+        for x, y, label in annots["labels"]:
+            pl.annotate(label, xy=(x, y), ha="center", va="bottom")
+        for line in annots["lines"]:
+            pl.axline((line[0], line[1]), (line[2], line[3]), c="pink")
+        for box in annots["ab_boxes"]:
+            fig.axes[0].add_patch(
+                MPRect(
+                    (box[0], box[1]),
+                    box[2],
+                    box[3],
+                    ec="lightgray",
+                    fc="gainsboro",
+                    fill=True,
+                    hatch="x",))
+        # pl.show()
+        storeImage = True
+        if storeImage:
+            pl.savefig(f'testResults/SN{serialnumber}/FFT_channel{channel}_SN{serialnumber}.png')
+            print("\nSaved Image")
+
+
+    nsd = results["nsd"]
+
+    print(f"{nsd=}")
+
+    assert nsd < nsd_min
+
+
+
+
 
 
 def gain_check(uri, classname, channel, param_set, dds_scale, min_rssi, max_rssi):
