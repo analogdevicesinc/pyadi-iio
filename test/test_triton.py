@@ -121,7 +121,7 @@ def test_bootup():
     subprocess.run(command)
 
     results = subprocess.run(command)
-    time.sleep(250)  ## Wait for bootup
+    time.sleep(260)  ## Wait for bootup
     print(dir(results))
     print(results)
 
