@@ -8,12 +8,12 @@ import time
 # # Establish VISA control of spectrum analyzer and signal generator
 rm = pyvisa.ResourceManager()
 x = rm.list_resources()
-HMCT2220 = rm.open_resource('ASRL/dev/ttyACM0::INSTR')
-FieldFox = rm.open_resource('TCPIP::192.168.2.100::INSTR') # FieldFox VISA address
+HMCT2220 = rm.open_resource('ASRL/dev/ttyACM1::INSTR')
+FieldFox = rm.open_resource('TCPIP::192.168.2.105::INSTR') # FieldFox VISA address
 
 # # Connect to Arduino Uno    
 ## Note: if first time installing pyfirmata, need to replace "getargspec" with "getfullargspec" in pyfirmata code
-board = pyfirmata.Arduino("/dev/ttyACM2", baudrate=57600)
+board = pyfirmata.Arduino("/dev/ttyACM0", baudrate=57600)
 
 ###################################
 ### Cal Board Control Functions ###
