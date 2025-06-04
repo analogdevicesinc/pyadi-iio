@@ -45,6 +45,8 @@ def get_test_boot_files_from_archive():
         if dataset.empty:
             raise ValueError(f"No entries found for HDL build ID: {hdl_build_id}")
         print(f"Filtered dataset contains {len(dataset)} entries.")
+    else:
+        raise ValueError("HDL_BUILD_ID environment variable is not set. Please set it to the HDL build ID you want to test.")
 
     common_boot_files_folder = os.path.join(os.path.dirname(__file__), "..", "..", "bootfiles", "b0_main")
     bootbin = os.path.join(common_boot_files_folder, "BOOT.BIN")
