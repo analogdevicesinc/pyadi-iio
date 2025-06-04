@@ -107,7 +107,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
                 boot_root_files = ['BOOT.BIN', 'devicetree.dtb', 'Image']
                 filename = os.path.basename(config[key])
                 
-                if key not in boot_root_files:
+                if filename not in boot_root_files:
                     print("Not a boot root file. Placing in /boot/jenkins")
                     print(f"Copying {key} to /boot/jenkins/{filename}")
                     neb_manager.net.run_ssh_command(f"mkdir -p /boot/jenkins/")
