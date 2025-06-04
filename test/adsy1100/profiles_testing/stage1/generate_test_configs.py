@@ -679,7 +679,7 @@ make clean
 make distclean
 make adi_zynqmp_adsy1100_b0_defconfig
 #make adi_zynqmp_adsy1100_defconfig
-make -j8
+make -j
 cp arch/arm64/boot/Image ../adsy1100_configs/
 make xilinx/zynqmp-vpx-apollo.dtb
 cp arch/arm64/boot/dts/xilinx/zynqmp-vpx-apollo.dtb ../adsy1100_configs/
