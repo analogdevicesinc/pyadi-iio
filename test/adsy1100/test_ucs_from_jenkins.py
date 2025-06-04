@@ -4,66 +4,29 @@ import os
 
 import nebula
 
-import pandas as pd
-
 from bench.keysight import E36233A, N9040B
 from bench.rs import SMA100A
 
 import adi
 
-max_use_cases_to_test = os.getenv("MAX_USE_CASES_TO_TEST", None)
-if max_use_cases_to_test is not None:
-    max_use_cases_to_test = int(max_use_cases_to_test)
+from .profiles_testing.stage3.generate_pytest_tests import get_test_boot_files_from_archive
+
 hostname = os.getenv("HOSTNAME", "b0adsy1100")
-
-dataset_filename = "ads1100_profiles_final_summary_parsed.xlsx"
-archive_dir = os.path.join(os.path.dirname(__file__), "archive", "test_boot_files")
-dataset = os.path.join(archive_dir, dataset_filename)
-if not os.path.isfile(dataset):
-    raise FileNotFoundError(f"File {dataset} not found. Please run the script to extract the file.")
-
-dataset = pd.read_excel(dataset)
-
-common_boot_files_folder = os.path.join(os.path.dirname(__file__), "bootfiles", "b0_main")
-
-configs = []
-for index, row in dataset.iterrows():
-    dtb_file = row["dts_file"].replace(".dts", ".dtb").replace("dts_", "dtb_")
-    here = os.path.dirname(__file__)
-    dtb_file = dtb_file.replace("/tmp/pyadi-adsy1100-test/test/adsy1100", here)
-
-    configs.append({
-        "name": row["id"],
-        "BOOT.BIN": os.path.join(common_boot_files_folder, "BOOT.BIN"),
-        "Kernel": row["image_file"],
-        "devicetree": row["zynq_dtb_file"],
-        "selmap_overlay": row["dtb_file"],
-        "selmap_bin": row["vu11pbinfile"],
-        "extras": [
-            {"src": row["bin_file"], "dst": "/lib/firmware/"}
-        ],
-    })
-
-    if max_use_cases_to_test:
-        if len(configs) >= max_use_cases_to_test:
-            break
-
-
-# Check if the boot files are present
-for cfg in configs:
-    for key in cfg:
-        if key != "name" and key != "extras":
-            assert os.path.isfile(
-                os.path.join(cfg[key])
-            ), f"File {key} not found at {os.path.join(cfg[key])}"
-        if key == "extras":
-            for extra in cfg[key]:
-                assert os.path.isfile(
-                    os.path.join(extra["src"])
-                ), f"File {extra['src']} not found at {os.path.join(extra['src'])}"
-
 config_file_folder = os.path.dirname(__file__)
 config_file_zu4eg = os.path.join(config_file_folder, "nebula_zu4eg.yaml")
+configs = get_test_boot_files_from_archive()
+
+# @pytest.fixture
+# def nebula_boot_adsy1100_ethernet(request):
+
+#     config = request.param
+
+#     return config
+
+
+# @pytest.mark.parametrize("nebula_boot_adsy1100_ethernet", configs, indirect=True)
+# def test_boot(nebula_boot_adsy1100_ethernet):
+#     print(f"{nebula_boot_adsy1100_ethernet}")
 
 
 def measure_power(power_supply):
