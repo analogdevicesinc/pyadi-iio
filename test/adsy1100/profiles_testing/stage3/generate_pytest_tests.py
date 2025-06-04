@@ -52,6 +52,11 @@ def get_test_boot_files_from_archive():
     # Shared components
     image = os.path.join(target_archive_dir, "Image")
     zynq_dtb_file = os.path.join(target_archive_dir, "zynqmp-vpx-apollo.dtb")
+    if not os.path.isfile(zynq_dtb_file):
+        raise FileNotFoundError(f"Device tree file {zynq_dtb_file} not found. Please run the script to extract the file.")
+    # Copy and overwrite to system.dtb for compatibility
+    system_dtb = os.path.join(target_archive_dir, "system.dtb")
+    os.system(f'cp "{zynq_dtb_file}" "{system_dtb}"')
 
     # Build the test configurations
     configs = []
@@ -60,7 +65,7 @@ def get_test_boot_files_from_archive():
             "name": row["id"],
             "BOOT.BIN": bootbin,
             "Kernel": image,
-            "devicetree": zynq_dtb_file,
+            "devicetree": system_dtb,
             "selmap_overlay": os.path.join(target_archive_dir, row["dtb_file"]),
             "selmap_bin": target_bin_file,
             "extras": [
