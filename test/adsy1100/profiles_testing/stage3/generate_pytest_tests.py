@@ -25,6 +25,7 @@ def get_test_boot_files_from_archive():
         os.makedirs(target_archive_dir)
     with zipfile.ZipFile(target_archive, 'r') as zip_ref:
         zip_ref.extractall(target_archive_dir)
+    os.system(f'ls "{target_archive_dir}"')
 
     max_use_cases_to_test = os.getenv("MAX_USE_CASES_TO_TEST", None)
     if max_use_cases_to_test is not None:
