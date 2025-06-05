@@ -100,6 +100,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
                 done_strings=["Linux version", f"root@{hostname}"],
                 max_time=200,
             )
+            print("Results after power cycle:", results)
 
         neb_manager.network_check()
 
