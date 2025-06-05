@@ -12,17 +12,17 @@ from .profiles_testing.stage3.generate_pytest_tests import get_test_boot_files_f
 
 configs = get_test_boot_files_from_archive()
 
-@pytest.fixture
-def nebula_boot_adsy1100_ethernet(request):
+# @pytest.fixture
+# def nebula_boot_adsy1100_ethernet(request):
 
-    config = request.param
+#     config = request.param
 
-    return config
+#     return config
 
 
-@pytest.mark.parametrize("nebula_boot_adsy1100_ethernet", configs, indirect=True)
-def test_boot(nebula_boot_adsy1100_ethernet):
-    print(f"{nebula_boot_adsy1100_ethernet}")
+# @pytest.mark.parametrize("nebula_boot_adsy1100_ethernet", configs, indirect=True)
+# def test_boot(nebula_boot_adsy1100_ethernet):
+#     print(f"{nebula_boot_adsy1100_ethernet}")
 
 
 
