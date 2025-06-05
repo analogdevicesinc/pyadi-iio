@@ -694,8 +694,8 @@ export ARCH=arm64
 export CROSS_COMPILE=aarch64-linux-gnu-
 make clean
 make distclean
-make adi_zynqmp_adsy1100_b0_defconfig
-#make adi_zynqmp_adsy1100_defconfig
+#make adi_zynqmp_adsy1100_b0_defconfig
+make adi_zynqmp_adsy1100_defconfig
 make -j8
 cp arch/arm64/boot/Image ../adsy1100_configs/
 make xilinx/zynqmp-vpx-apollo.dtb
