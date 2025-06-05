@@ -82,7 +82,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
 
         # Power cycle to power down VU11P and Apollo
         if not power_supply.first_boot_powered:
-            power_supply.first_boot_powered = True
+            # power_supply.first_boot_powered = True
             print("Power cycling for first boot")
             power_supply.ch1.output_enabled = False
             power_supply.ch2.output_enabled = False
