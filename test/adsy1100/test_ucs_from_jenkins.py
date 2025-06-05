@@ -1,6 +1,7 @@
 import pytest
 import time
 import os
+import logging
 
 import nebula
 
@@ -8,6 +9,9 @@ from bench.keysight import E36233A, N9040B
 from bench.rs import SMA100A
 
 import adi
+
+# Disable Paramiko logging
+logging.getLogger("paramiko").setLevel(logging.WARNING)
 
 from .profiles_testing.stage3.generate_pytest_tests import get_test_boot_files_from_archive
 
