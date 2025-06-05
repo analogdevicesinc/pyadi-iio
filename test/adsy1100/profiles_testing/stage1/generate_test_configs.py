@@ -190,6 +190,21 @@ for profile_sub_folder in profile_sub_folders:
             "quick_mode_id"
         ]
 
+        if profile_data["jtx"][link_index]["common_link_cfg"]["ver"] == 0:
+            # JESD204B
+            print("Skipping JESD204B profile")
+            df_row["failed_reason"] = "JESD204B profile"
+            df = pd.concat([df, pd.DataFrame([df_row])], ignore_index=True)
+            print(f"Skipping {summary_file} because it is a JESD204B profile")
+            continue
+        if profile_data["jrx"][link_index]["common_link_cfg"]["ver"] == 0:
+            # JESD204B
+            print("Skipping JESD204B profile")
+            df_row["failed_reason"] = "JESD204B profile"
+            df = pd.concat([df, pd.DataFrame([df_row])], ignore_index=True)
+            print(f"Skipping {summary_file} because it is a JESD204B profile")
+            continue
+
         # "l_minus1": 7,
         #   "f_minus1": 0,
         #   "m_minus1": 3,
