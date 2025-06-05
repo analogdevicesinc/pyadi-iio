@@ -106,6 +106,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply, record_property):
 
         # Copy common files
         for key in config:
+            time.sleep(1)
             
             if key != "name" and key != "extras":
 

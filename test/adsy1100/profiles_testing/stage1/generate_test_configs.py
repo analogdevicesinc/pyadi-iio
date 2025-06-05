@@ -26,7 +26,9 @@ if kernel_clone not in ["HTTPS", "SSH", "GIT_GHE"]:
     print(f"Invalid KERNEL_CLONE option: {kernel_clone}. Must be one of 'HTTPS', 'SSH', or 'GIT_GHE'.")
     sys.exit(1)
 
-LINUX_BRANCH = os.getenv("LINUX_BRANCH", "bitbucket/update-apollo-sdk48-0p4p58-b0-only-v6p1")
+BRANCH = "update-apollo-sdk49-0p5p00-v6p6"
+# BRANCH = "bitbucket/update-apollo-sdk48-0p4p58-b0-only-v6p1"
+LINUX_BRANCH = os.getenv("LINUX_BRANCH", BRANCH)
 
 print(f"Max mode pairs: {max_mode_pairs}")
 print(f"Max allowed common lane rate (Hz): {max_allowed_common_lane_rate_Hz}")
