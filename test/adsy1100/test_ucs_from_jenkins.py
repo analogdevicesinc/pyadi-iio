@@ -2,22 +2,24 @@ import pytest
 import time
 import logging
 
-
 import adi
+
+DEBUG = False
 
 # Disable Paramiko logging
 logging.getLogger("paramiko").setLevel(logging.WARNING)
 
 from .profiles_testing.stage3.generate_pytest_tests import get_test_boot_files_from_archive
+from .helpers import nebula_boot_adsy1100_ethernet_func
 
 configs = get_test_boot_files_from_archive()
 
-# @pytest.fixture(scope="session", params=configs)
-# def nebula_boot_adsy1100_ethernet(request):
+@pytest.fixture(scope="module", params=configs)
+def nebula_boot_adsy1100_ethernet(request, power_supply, record_testsuite_property):
+    param, neb_manager = nebula_boot_adsy1100_ethernet_func(request, power_supply, record_testsuite_property)
 
-#     config = request.param
+    return param, neb_manager
 
-#     return config
 
 
 def test_jesd_links(nebula_boot_adsy1100_ethernet, record_property):
@@ -25,6 +27,7 @@ def test_jesd_links(nebula_boot_adsy1100_ethernet, record_property):
     params, neb_manager = nebula_boot_adsy1100_ethernet
 
     print(f"Testing JESD204 links on {params['name']}")
+    if DEBUG: return
 
     # Check JESD204 links in data mode
     try:
@@ -66,6 +69,7 @@ def test_rf(nebula_boot_adsy1100_ethernet, side, channel, record_property):
     params, neb_manager = nebula_boot_adsy1100_ethernet
 
     print(f"Testing RF channel {channel} side {side} on {params['name']}")
+    if DEBUG: return
 
     # Check RF
     dev = adi.ad9084(uri=f"ip:{neb_manager.net.dutip}")
@@ -146,6 +150,7 @@ def test_dmesg_errors(nebula_boot_adsy1100_ethernet, record_property):
     params, neb_manager = nebula_boot_adsy1100_ethernet
 
     print(f"Testing dmesg errors on {params['name']}")
+    if DEBUG: return
     
     # Get dmesg
     dmesg = neb_manager.net.run_ssh_command("dmesg", show_log=False)
