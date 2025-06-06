@@ -13,7 +13,7 @@ config_file_folder = os.path.dirname(__file__)
 config_file_zu4eg = os.path.join(config_file_folder, "nebula_zu4eg.yaml")
 
 hostname = os.getenv("HOSTNAME", "b0adsy1100")
-configs = get_test_boot_files_from_archive()
+# configs = get_test_boot_files_from_archive()
 
 def measure_power(power_supply):
     v1 = power_supply.ch1.voltage
