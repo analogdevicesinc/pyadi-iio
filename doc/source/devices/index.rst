@@ -138,6 +138,7 @@ Supported Devices
    adi.max9611
 
    adi.one_bit_adc_dac
+   adi.pqmon
    adi.tdd
    adi.tddn
 
