@@ -1,4 +1,26 @@
-# @pytest.fixture
+import os
+import time
+import nebula
+
+def measure_power(power_supply):
+    v1 = power_supply.ch1.voltage
+    c1 = power_supply.ch1.current_draw
+    v2 = power_supply.ch2.voltage
+    c2 = power_supply.ch2.current_draw
+
+    results = {"v1": v1, "c1": c1, "p1": v1 * c1, "v2": v2, "c2": c2, "p2": v2 * c2}
+    return results
+
+
+def do_flush(neb_uart):
+    # Flush to marker
+    neb_uart._write_data("uname")
+    found = neb_uart._read_until_done_multi(done_strings=["Linux"], max_time=10000)
+    if not found or not found[0]:
+        raise Exception("UART not working")
+
+
+
 def nebula_boot_adsy1100_ethernet_func(request, ps, rp):
 
     config = request.param
