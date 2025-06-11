@@ -80,6 +80,7 @@ from adi.adis16507 import adis16507
 from adi.adis16550 import adis16550
 from adi.adl5240 import adl5240
 from adi.adl5960 import adl5960
+from adi.admt4000 import admt4000
 from adi.admv8818 import admv8818
 from adi.adpd188 import adpd188
 from adi.adpd410x import adpd410x
