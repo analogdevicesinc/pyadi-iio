@@ -31,8 +31,8 @@ multi = adi.ad9213_instr(primary, [], primary_jesd, [])
 multi._dma_show_arming = False
 multi._jesd_show_status = True
 multi._jesd_fsm_show_status = True
-multi.primary.rx_buffer_size = 2 ** 17
-multi.secondaries[0].rx_buffer_size = 2 ** 17
+multi.primary.rx_buffer_size = 2 ** 15
+multi.secondaries[0].rx_buffer_size = 2 ** 15
 
 print(multi.primary.rx_buffer_size)
 print(multi.secondaries[0].rx_buffer_size)
@@ -75,11 +75,12 @@ else:
     print("AD4080 is already synced")
 
 plt.figure()
+capture_range = 100
+coarse_vector = np.zeros(capture_range)
+fine_vector   = np.zeros(capture_range)
 
-for i in range(1):
+for i in range(capture_range):
     data1, data2 = multi.rx()
-    print(data1.shape)
-    print(data2.shape)
     ad4080_interpolated = np.interp(
     np.arange(0, len(data2) * 320, 1),
     np.arange(0, len(data2) * 320, 320),
@@ -93,7 +94,7 @@ for i in range(1):
     cross_corr = np.correlate(data1, ad4080_interpolated, mode='full')
     #
     coarse_phase_shift = np.argmax(cross_corr) - (len(ad4080_interpolated) - 1)
-    print(f"Coarse phase shift: {coarse_phase_shift}")
+
     #
     # # Fine-tune the coarse phase shift
     fine_tuned_shift = coarse_phase_shift
@@ -105,7 +106,13 @@ for i in range(1):
                 max_corr_value = cross_corr[shift + len(ad4080_interpolated) - 1]
                 fine_tuned_shift = shift
     #
+
+    print(f"Coarse phase shift: {coarse_phase_shift}")
     print(f"Fine-tuned phase shift: {fine_tuned_shift}")
+
+    coarse_vector[i] = coarse_phase_shift
+    fine_vector[i]   = fine_tuned_shift
+
     plt.subplot(2, 1, 1)
     plt.plot(data1, label="AD9213")
     plt.plot(ad4080_interpolated, label="AD4080")
@@ -114,5 +121,12 @@ for i in range(1):
     multi.rx_destroy_buffer()
 
 plt.show()
+
+print("Coarse phase shift vector:", coarse_vector)
+
+print("Coarse phase shift vector.max:", coarse_vector.max())
+print("Coarse phase shift vector.min:", coarse_vector.min())
+print("Fine phase shift vector.max:", fine_vector.max())
+print("Fine phase shift vector.min:", fine_vector.min())
 
 multi.rx_destroy_buffer()

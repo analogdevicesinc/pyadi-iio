@@ -53,7 +53,7 @@ class ad9213_instr(object):
         self._jesd_show_status = False
         self._jesd_fsm_show_status = False
         self._rx_initialized = False
-        self.primary = ad9213(uri=primary_uri,device_name="axi-adrv9213-rx-hpc")
+        self.primary = ad9213(uri=primary_uri,device_name="ad9213")
         self.secondaries = []
         self.samples_primary = []
         self.samples_secondary = []

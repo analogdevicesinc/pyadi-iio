@@ -18,13 +18,12 @@ my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:192.168.1.15"
 print("uri: " + str(my_uri))
 
 # Create contexts
-ad9213_transport = adi.ad9213(uri=my_uri,device_name="axi-adrv9213-rx-hpc")
-ad9213_phy       = adi.ad9213(uri=my_uri,device_name="ad9213")
+ad9213 = adi.ad9213(uri=my_uri,device_name="ad9213")
 ad4080_dev       = adi.ad4080(uri=my_uri)
 gpio_controller  = adi.one_bit_adc_dac(uri=my_uri, name="one-bit-adc-dac")
 ltc2664_dev      = adi.ltc2664(uri=my_uri)
 
-ad9213_transport.rx_buffer_size = 2 ** 17
+ad9213.rx_buffer_size = 2 ** 17
 ad4080_dev.rx_buffer_size       = 2 ** 10
 
 # Control the GPIO's
@@ -43,8 +42,8 @@ if CHIP_SCRATCH !="0xAB":
     gpio_controller.gpio_adrf5203_ctrl1 = 0
     gpio_controller.gpio_adrf5203_ctrl2 = 0
 
-    ad9213_phy.ad9213_register_write(0x1617,0x01)
-    ad9213_phy.ad9213_register_write(0x1601,0x01)
+    ad9213.ad9213_register_write(0x1617,0x01)
+    ad9213.ad9213_register_write(0x1601,0x01)
 
     # Configure the LTC2664 device
 
@@ -65,7 +64,7 @@ else:
 
 plt.figure()
 
-data1 = ad9213_transport.rx()
+data1 = ad9213.rx()
 data2 = ad4080_dev.rx()
 
 plt.subplot(2, 1, 1)
@@ -75,5 +74,5 @@ plt.plot(data2, label="AD4080")
 
 plt.show()
 
-ad9213_transport.rx_destroy_buffer()
+ad9213.rx_destroy_buffer()
 ad4080_dev.rx_destroy_buffer()
