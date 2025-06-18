@@ -1,8 +1,9 @@
 import sys
 import time
 import numpy as np
-import adi
 from test.eeprom import read_fru_eeprom
+import adi
+#import eeprom
 import matplotlib.pyplot as plt
 
 # Optionally passs URI as command line argument,
@@ -104,7 +105,7 @@ t = np.arange(0, N * ts, ts)
 # Sine generation
 samples = np.sin(2 * np.pi * t * fc)
 # Amplitude (full_scale / 2)
-samples *= (2 ** 15) - 1
+samples *= (2 ** 14) - 1
 # Offset (full_scale / 2)
 samples += 2 ** 15
 # conversion to unsigned int and offset binary
@@ -129,8 +130,8 @@ print("input_source:dac1:", ad3552r_1.input_source)
 
 # DAC 1 has to be updated and started first and then DAC0 in order to have syncronized data between devices 
 
-ad3552r_1.tx([samples,samples])
-ad3552r_0.tx([samples,samples])
+ad3552r_1.tx([samples,-samples])
+ad3552r_0.tx([samples,-samples])
 
 # available options:"start_stream_synced", "start_stream", "stop_stream"
 

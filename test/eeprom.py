@@ -1,5 +1,5 @@
 from datetime import date, datetime
-import tk
+import tkinter as tk
 import paramiko
 import pytest
 
