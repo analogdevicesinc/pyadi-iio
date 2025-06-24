@@ -1,0 +1,32 @@
+{
+    "ab_center": "fdata*0",
+    "ab_width": "fdata*1",
+    "clk": [],
+    "clk_as_noise": false,
+    "dc_as_dist": false,
+    "en_conv_offset": false,
+    "en_fund_images": true,
+    "en_quad_errors": false,
+    "fdata": "250e6",
+    "fsample": "4e9",
+    "fshift": "-550e6",
+    "hd": 5,
+    "ilv": [],
+    "ilv_as_noise": false,
+    "imd": 3,
+    "ssb_dc": -1,
+    "ssb_def": 0,
+    "ssb_sig": -1,
+    "ssb_wo": -1,
+    "user_comps": [
+        {
+            "key": "A",
+            "ssb": 0,
+            "tag": "Signal",
+            "type": "MaxTone"
+        }
+    ],
+    "user_vars": {},
+    "version": "1.1.0",
+    "wo": 1
+}

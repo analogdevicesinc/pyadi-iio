@@ -1,0 +1,6 @@
+Channel 0 | On: 1 | Off: 1 | i_on: 0 | i_off: 0
+Channel 1 | On: 2 | Off: 0 | i_on: 0 | i_off: 0
+Channel 2 | On: 0 | Off: 0 | i_on: 0 | i_off: 0
+Channel 3 | On: 0 | Off: 0 | i_on: 0 | i_off: 0
+Channel 4 | On: 0 | Off: 0 | i_on: 0 | i_off: 0
+Channel 5 | On: 0 | Off: 0 | i_on: 0 | i_off: 0
