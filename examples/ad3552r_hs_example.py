@@ -15,6 +15,15 @@ print("uri: " + str(my_uri))
 # device connection
 dev = adi.ad3552r_hs(uri=my_uri, device_name="ad3552r")
 
+print("INTERFACE_CONFIG_A:", dev.reg_read(0x00))
+print("SCRATCH_PAD:", dev.reg_read(0x0A))
+print("SCRATCH_PAD write: 1")
+dev.reg_write(0x0A, 1)
+print("SCRATCH_PAD:", dev.reg_read(0x0A))
+print("SCRATCH_PAD write: 0")
+dev.reg_write(0x0A, 0)
+print("SCRATCH_PAD:", dev.reg_read(0x0A))
+
 dev.tx_enabled_channels = [0, 1]
 dev.tx_cyclic_buffer = True
 
