@@ -93,6 +93,15 @@ class ad3552r_hs(tx, context_manager):
     def output_range(self, value):
         self._set_iio_dev_attr_str("output_range", value, self._txdac)
 
+    def reg_read(self, reg):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", reg, self._txdac)
+        return self._get_iio_debug_attr_str("direct_reg_access", self._txdac)
+
+    def reg_write(self, reg, value):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", f"{reg} {value}", self._txdac)
+
     class _channel(attribute):
         """AD3552R_HS channel"""
 
