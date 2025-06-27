@@ -460,6 +460,21 @@ class ad9084(rx_tx, context_manager, sync_start):
         self._set_iio_debug_attr_str("pl_ddr_fifo_enable", str(value * 1), self._txdac)
 
     @property
+    def tx_b_ddr_offload(self):
+        """tx_b_ddr_offload: Enable DDR offload
+
+        When true the DMA will pass buffers into the BRAM FIFO for data repeating.
+        This is necessary when operating at high DAC sample rates. This can reduce
+        the maximum buffer size but data passed to DACs in cyclic mode will not
+        underflow due to memory bottlenecks.
+        """
+        return self._get_iio_debug_attr("pl_ddr_fifo_enable", self._txdac2)
+
+    @tx_b_ddr_offload.setter
+    def tx_b_ddr_offload(self, value):
+        self._set_iio_debug_attr_str("pl_ddr_fifo_enable", str(value * 1), self._txdac2)
+
+    @property
     def rx_sample_rate(self):
         """rx_sampling_frequency: Sample rate after decimation"""
         return self._get_iio_attr_single("voltage0_i", "sampling_frequency", False)
