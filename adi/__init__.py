@@ -131,6 +131,7 @@ from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.tdd import tdd
 from adi.tddn import tddn
+from adi.tmc5240 import tmc5240
 
 try:
     from adi.jesd import jesd
