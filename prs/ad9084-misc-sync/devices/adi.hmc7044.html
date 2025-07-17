@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta content="Bases: context_manager, attribute" name="description" />
 
-    <title>adi.hmc7044 module &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>hmc7044 &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=fc454092" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,6 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="jesd" href="adi.jesd.html" />
-    <link rel="prev" title="gen_mux" href="adi.gen_mux.html" />
    
   
   <meta name="repository" content="pyadi-iio">
@@ -89,7 +87,7 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adi.hmc7044 module</a><ul>
+<li><a class="reference internal" href="#">hmc7044</a><ul>
 <li><a class="reference internal" href="#adi.hmc7044.hmc7044"><code class="docutils literal notranslate"><span class="pre">hmc7044</span></code></a><ul>
 <li><a class="reference internal" href="#adi.hmc7044.hmc7044.mute_request"><code class="docutils literal notranslate"><span class="pre">hmc7044.mute_request</span></code></a></li>
 <li><a class="reference internal" href="#adi.hmc7044.hmc7044.reseed_request"><code class="docutils literal notranslate"><span class="pre">hmc7044.reseed_request</span></code></a></li>
@@ -130,7 +128,7 @@ Content on this topic
 </div>
 <div class="toc-tree">
   <html>
-  <body><ul class="current">
+  <body><ul>
 <li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
@@ -146,7 +144,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../dev/test_jesd.html">JESD204 Tests</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul class="current">
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
 <li class="toctree-l2"><a class="reference internal" href="adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad2s1210.html">ad2s1210</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad353xr.html">ad353xr</a></li>
@@ -205,7 +203,6 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ada4961.html">adi.ada4961 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adaq8092.html">adaq8092</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adf4030.html">adi.adf4030 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4355.html">adi.adf4355 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4371.html">adf4371</a></li>
@@ -245,7 +242,6 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
@@ -264,7 +260,6 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.gen_mux.html">gen_mux</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.hmc7044 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">lm75</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
@@ -295,29 +290,21 @@ Content on this topic
   <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper" id="top-anchor">
-          <div class="body-header">
-    <nav class="breadcrumb">
-        <ol>
-          <li><a href="index.html">Supported Devices</a></li>
-          </ol>
-    </nav>
-  </div>
-
+          
           <div class="body" role="main">
             
   <section id="module-adi.hmc7044">
-<span id="adi-hmc7044-module"></span><h1>adi.hmc7044 module<a class="headerlink" href="#module-adi.hmc7044" title="Permalink to this heading"></a></h1>
+<span id="hmc7044"></span><h1>hmc7044<a class="headerlink" href="#module-adi.hmc7044" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.hmc7044.hmc7044">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.hmc7044.</span></span><span class="sig-name descname"><span class="pre">hmc7044</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.hmc7044.hmc7044" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
 <p>hmc7044 IIO Device Interface
-This class provides a Python interface for interacting with the HMC7044
-device via the Industrial I/O (IIO) framework.
-It allows users to access and modify device and channel attributes, as well
-as perform device-specific operations.</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>mute_request (str): Get or set the mute request state of the device.
+This class provides a Python interface for interacting with the HMC7044 device via the Industrial I/O (IIO) framework.
+It allows users to access and modify device and channel attributes, as well as perform device-specific operations.
+Attributes:</p>
+<blockquote>
+<div><p>mute_request (str): Get or set the mute request state of the device.
 reseed_request (str): Get or set the reseed request state of the device.
 reset_dividers_request (str): Get or set the reset dividers request state of the device.
 sleep_request (str): Get or set the sleep request state of the device.
@@ -325,7 +312,8 @@ sync_pin_mode (str): Get or set the synchronization pin mode.
 sync_pin_mode_available (str): Get the available synchronization pin modes.
 sysref_request (str): Get or set the SYSREF request state of the device.
 status (str): Get the debug status of the device.</p>
-</dd>
+</div></blockquote>
+<dl class="simple">
 <dt>Channel Attributes (dynamically added per channel):</dt><dd><p>&lt;channel_label&gt;_frequency (int): Get or set the frequency for the specified channel.
 &lt;channel_label&gt;_label (str): Get or set the label for the specified channel.
 &lt;channel_label&gt;_phase (int): Get or set the phase for the specified channel.</p>
@@ -388,8 +376,8 @@ print(dev.altvoltage0_frequency)</p>
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.gen_mux.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">gen_mux</a>
-    <a href="adi.jesd.html" title="Next document (Alt+Shift+RightArrow)" class="next">jesd</a>
+    <div></div>
+    <div></div>
               </div>
           
         </div>
