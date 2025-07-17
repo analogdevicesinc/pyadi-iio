@@ -11,7 +11,10 @@ from scipy import signal
 
 import adi
 
-dev = adi.ad9084("ip:10.48.65.219")
+uri = "ip:10.48.65.219"
+dev = adi.ad9084(uri)
+aion_trig = adi.axi_aion_trig(uri)
+
 
 def measure_phase_and_delay(chan0, chan1, window=None):
     assert len(chan0) == len(chan1)
@@ -37,6 +40,7 @@ def measure_phase_and_delay(chan0, chan1, window=None):
         delays.append(sample_delay)
     return (np.mean(phases), np.mean(delays))
 
+
 def gen_tone(fc, fs, NN):
     N = NN / 8
     fc = int(fc / (fs / N)) * (fs / N)
@@ -48,6 +52,7 @@ def gen_tone(fc, fs, NN):
     # Xn = np.pad(Xn, int(NN - N))
     Xn = np.pad(Xn, (0, int(NN - N)), "constant")
     return Xn
+
 
 # Configure properties
 print("--Setting up chip")
@@ -96,8 +101,8 @@ dev.tx_ddr_offload = 0
 dev.tx_b_ddr_offload = 0
 
 if use_aion_trig:
-    aion = dev.ctx.find_device("axi_aion_trig")
-    aion.reg_write(0x10, 0x11) # Enable trig channel 2 on the axi_aion
+    aion_trig.trig1_en = 1
+    aion_trig.trig1_trigger_select_gpio_enable = 0
 
 print("CHIP Version:", dev.chip_version)
 print("API  Version:", dev.api_version)
@@ -151,10 +156,12 @@ for r in range(RUNS):
         dev.tx(iq1)
 
     if use_aion_trig:
-        aion.reg_write(0x18, 0x1) # Do a manual trig from axi_aion
+        aion_trig.trig1_trigger_now = 1
     else:
         if apollo_side_A:
-            dev.tx_sync_start = "trigger_manual" # Do an internal DAC TPL manual trigger
+            dev.tx_sync_start = (
+                "trigger_manual"  # Do an internal DAC TPL manual trigger
+            )
         else:
             dev.tx_b_sync_start = "trigger_manual"
 
