@@ -1,4 +1,4 @@
-hmc7044
+adi.hmc7044 module
 ==================
 
 .. automodule:: adi.hmc7044

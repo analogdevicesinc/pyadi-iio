@@ -1,4 +1,4 @@
-adf4030
+adi.adf4030 module
 ==================
 
 .. automodule:: adi.adf4030
