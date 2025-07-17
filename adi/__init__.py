@@ -99,6 +99,7 @@ from adi.adxl345 import adxl345
 from adi.adxl355 import adxl355
 from adi.adxl380 import adxl380
 from adi.adxrs290 import adxrs290
+from adi.axi_aion_trig import axi_aion_trig
 from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.cn0554 import cn0554
