@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager" name="description" />
+<meta content="Bases: context_manager, attribute" name="description" />
 
-    <title>ad7689 &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>adi.adf4030 module &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=fc454092" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ad7746" href="adi.ad7746.html" />
-    <link rel="prev" title="ad7606" href="adi.ad7606.html" />
+    <link rel="next" title="adf4159" href="adi.adf4159.html" />
+    <link rel="prev" title="adar1000" href="adi.adar1000.html" />
    
   
   <meta name="repository" content="pyadi-iio">
@@ -89,10 +89,9 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">ad7689</a><ul>
-<li><a class="reference internal" href="#adi.ad7689.ad7689"><code class="docutils literal notranslate"><span class="pre">ad7689</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad7689.ad7689.channel"><code class="docutils literal notranslate"><span class="pre">ad7689.channel</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad7689.ad7689.to_volts"><code class="docutils literal notranslate"><span class="pre">ad7689.to_volts()</span></code></a></li>
+<li><a class="reference internal" href="#">adi.adf4030 module</a><ul>
+<li><a class="reference internal" href="#adi.adf4030.adf4030"><code class="docutils literal notranslate"><span class="pre">adf4030</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adf4030.adf4030.in_temp0_input"><code class="docutils literal notranslate"><span class="pre">adf4030.in_temp0_input</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -168,7 +167,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7291.html">ad7291</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad738x.html">ad738x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7746.html">ad7746</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7768.html">ad7768</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad777x.html">ad777x</a></li>
@@ -199,7 +198,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ada4961.html">adi.ada4961 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adaq8092.html">adaq8092</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adf4030.html">adi.adf4030 module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.adf4030 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4355.html">adi.adf4355 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4371.html">adf4371</a></li>
@@ -299,23 +298,58 @@ Content on this topic
 
           <div class="body" role="main">
             
-  <section id="module-adi.ad7689">
-<span id="ad7689"></span><h1>ad7689<a class="headerlink" href="#module-adi.ad7689" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.adf4030">
+<span id="adi-adf4030-module"></span><h1>adi.adf4030 module<a class="headerlink" href="#module-adi.adf4030" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad7689.ad7689">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7689.</span></span><span class="sig-name descname"><span class="pre">ad7689</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7689.ad7689" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>AD7689 ADC</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad7689.ad7689.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad7689.ad7689.channel" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.adf4030.adf4030">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf4030.</span></span><span class="sig-name descname"><span class="pre">adf4030</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4030.adf4030" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>This class provides an interface to the ADF4030 device via the IIO framework.</p>
+<dl>
+<dt>Args:</dt><dd><p>uri (str, optional): URI of the IIO context. Defaults to “”.</p>
+</dd>
+<dt>Attributes:</dt><dd><p>_device_name (str): Name of the IIO device (“adf4030”).
+_ctrl: Reference to the IIO device controller.
+_attrs (list): List of supported channel attributes.</p>
+</dd>
+<dt>Properties:</dt><dd><p>in_temp0_input (float): Returns the temperature sensor input value.</p>
+</dd>
+<dt>Dynamic Channel Properties:</dt><dd><p>For each channel with an ID starting with “altvoltage”, the following
+properties are dynamically created (where &lt;name&gt; is the channel label
+or ID):</p>
+<blockquote>
+<div><p>&lt;name&gt;_duty_cycle (float): Duty cycle of the channel.
+&lt;name&gt;_frequency (float): Frequency of the channel.
+&lt;name&gt;_label (str): Label of the channel.
+&lt;name&gt;_output_enable (bool): Output enable status of the channel.
+&lt;name&gt;_phase (float): Phase of the channel.
+&lt;name&gt;_reference_channel (int): Reference channel index.
+&lt;name&gt;_autoalign_iteration (int): Auto-align iteration value.
+&lt;name&gt;_autoalign_threshold (float): Auto-align threshold value.
+&lt;name&gt;_autoalign_threshold_en (bool): Enable/disable auto-align threshold.
+&lt;name&gt;_background_serial_alignment_en (bool): Enable/disable background serial alignment.
+&lt;name&gt;_oversampling_ratio (int): Oversampling ratio.
+&lt;name&gt;_oversampling_ratio_available (list): List of available oversampling ratios.</p>
+</div></blockquote>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: If the ADF4030 device is not found in the IIO context.</p>
+</dd>
+<dt>Methods:</dt><dd><p>_make_channel_property(channel, attr): Creates a property for a given channel and attribute.
+_add_channel_properties(): Adds dynamic properties for each supported channel and attribute.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">adi.hmc7044</span><span class="w"> </span><span class="kn">import</span> <span class="n">adf4030</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dev</span> <span class="o">=</span> <span class="n">adf4030</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">in_temp0_input</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dev</span><span class="o">.</span><span class="n">altvoltage0_frequency</span> <span class="o">=</span> <span class="mi">10000000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">altvoltage0_frequency</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4030.adf4030.in_temp0_input">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">in_temp0_input</span></span><a class="headerlink" href="#adi.adf4030.adf4030.in_temp0_input" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ad7689.ad7689.to_volts">
-<span class="sig-name descname"><span class="pre">to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7689.ad7689.to_volts" title="Permalink to this definition"></a></dt>
-<dd><p>Converts raw value to SI</p>
-</dd></dl>
 
 </dd></dl>
 
@@ -325,8 +359,8 @@ Content on this topic
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.ad7606.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad7606</a>
-    <a href="adi.ad7746.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad7746</a>
+    <a href="adi.adar1000.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adar1000</a>
+    <a href="adi.adf4159.html" title="Next document (Alt+Shift+RightArrow)" class="next">adf4159</a>
               </div>
           
         </div>
