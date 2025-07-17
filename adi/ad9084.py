@@ -283,6 +283,22 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
         )
 
     @property
+    def rx_main_tb1_6db_digital_gain_en(self):
+        """main_tb1_6db_digital_gain_en: Receive path coarse DDC NCO phases"""
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_tb1_6db_digital_gain_en", False
+        )
+
+    @rx_main_tb1_6db_digital_gain_en.setter
+    def rx_main_tb1_6db_digital_gain_en(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_coarse_ddc_channel_names,
+            "main_tb1_6db_digital_gain_en",
+            False,
+            value,
+        )
+
+    @property
     def rx_test_mode(self):
         """rx_test_mode: NCO Test Mode"""
         return self._get_iio_attr_str_single("voltage0_i", "test_mode", False)
