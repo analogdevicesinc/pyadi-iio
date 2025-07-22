@@ -4,12 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Using buffers or transmitting and receiving data is done through interacting with two methods." name="description" />
 
     <title>Buffers &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=c218d0f6" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=33d8ff8e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script defer="" src="../_static/app.umd.js?v=8984ea49"></script>
+    <script async="async" src="../_static/app.umd.js?v=cd58f2cb"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -19,6 +20,9 @@
   
   <meta name="repository" content="pyadi-iio">
   <meta name="version" content="0.0.20">
+  
+    <meta name="page_source_suffix" content=".rst">
+  
   
 
 
@@ -57,7 +61,7 @@
     </div>
     <div id="right">
       <span>
-        <a id="logo-org" href="https://analog.com"></a>
+        <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
         <a id="logo" href="../index.html">
@@ -326,7 +330,7 @@ Content on this topic
 <ul class="simple">
 <li><p><strong>tx_enabled_channels</strong>: This is an array of integers and the number of elements in the array will determine the number of items in the list to be submitted to <strong>tx</strong>. Like for <strong>rx_enabled_channels</strong>, devices with complex data types these are the indexes of the complex channels, not the individual I or Q channels. When only a single channel is enabled the data can be passed to <strong>tx</strong> as just an array and not an array within a list.</p></li>
 </ul>
-<p><strong>rx_enabled_channels</strong> must have a length greater than zero but <strong>tx_enabled_channels</strong> can be set to None or an empty list. In this case when <strong>tx</strong> is called it must be called without inputs. This is a special case and will connect a zero source into the TX input stream within the FPGA for FPGA based devices. For background on how this internally works with FPGA based devices reference the generic <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-drivers/iio-dds/axi-dac-dds-hdl">DAC driver</a>.</p>
+<p><strong>rx_enabled_channels</strong> must have a length greater than zero but <strong>tx_enabled_channels</strong> can be set to None or an empty list. In this case when <strong>tx</strong> is called it must be called without inputs. This is a special case and will connect a zero source into the TX input stream within the FPGA for FPGA based devices. For background on how this internally works with FPGA based devices reference the generic <a class="icon link reference external" href="https://wiki.analog.com/resources/tools-software/linux-drivers/iio-dds/axi-dac-dds-hdl" target="_blank">DAC driver</a>.</p>
 <section id="cyclic-mode">
 <h2>Cyclic Mode<a class="headerlink" href="#cyclic-mode" title="Permalink to this heading"></a></h2>
 <p>In many cases, it can be useful to continuously transmit a signal over and over, even for just debugging and testing. This can be especially handy when the hardware you are using has very high transmit or receive rates, and therefore impossible to keep providing data to in real-time. To complement these use cases it is possible to create transmit buffer which repeats, which we call <strong>cyclic buffers</strong>. Cyclic buffers are identical or normal or non-cyclic buffers, except when they reach hardware they will continuously repeat or be transmitted. Here is a small example on how to create a cyclic buffer:</p>

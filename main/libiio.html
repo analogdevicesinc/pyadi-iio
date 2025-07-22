@@ -4,12 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="pyadi-iio is built on-top of libiio, specifically its python bindings pylibiio. However, pyadi-iio tries to limit or shape the top-level access of certain properties of drivers exposed by libiio and its structure so users do not have to understand how libiio works. This is great until you need access to something not directly exposed by one of pyadi-iio’s classes. Fortunately, there is an easy way to directly access the libiio python API when necessary." name="description" />
 
     <title>libiio Direct Access &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="_static/app.min.css?v=c218d0f6" />
+    <link rel="stylesheet" type="text/css" href="_static/app.min.css?v=33d8ff8e" />
     <link rel="stylesheet" type="text/css" href="_static/css/style.css?v=632a43e7" />
-    <script defer="" src="_static/app.umd.js?v=8984ea49"></script>
+    <script async="async" src="_static/app.umd.js?v=cd58f2cb"></script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -19,6 +20,9 @@
   
   <meta name="repository" content="pyadi-iio">
   <meta name="version" content="0.0.20">
+  
+    <meta name="page_source_suffix" content=".md">
+  
   
 
 
@@ -57,7 +61,7 @@
     </div>
     <div id="right">
       <span>
-        <a id="logo-org" href="https://analog.com"></a>
+        <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
         <a id="logo" href="index.html">
@@ -285,7 +289,7 @@ Content on this topic
             
   <section id="libiio-direct-access">
 <h1>libiio Direct Access<a class="headerlink" href="#libiio-direct-access" title="Permalink to this heading"></a></h1>
-<p><strong>pyadi-iio</strong> is built on-top of <strong>libiio</strong>, specifically its python bindings <a class="reference external" href="https://pypi.org/project/pylibiio/">pylibiio</a>. However, <strong>pyadi-iio</strong> tries to limit or shape the top-level access of certain properties of drivers exposed by <em>libiio</em> and its structure so users do not have to understand how <strong>libiio</strong> works. This is great until you need access to something not directly exposed by one of <strong>pyadi-iio</strong>’s classes. Fortunately, there is an easy way to directly access the <a class="reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html">libiio python API</a> when necessary.</p>
+<p><strong>pyadi-iio</strong> is built on-top of <strong>libiio</strong>, specifically its python bindings <a class="icon link reference external" href="https://pypi.org/project/pylibiio/" target="_blank">pylibiio</a>. However, <strong>pyadi-iio</strong> tries to limit or shape the top-level access of certain properties of drivers exposed by <em>libiio</em> and its structure so users do not have to understand how <strong>libiio</strong> works. This is great until you need access to something not directly exposed by one of <strong>pyadi-iio</strong>’s classes. Fortunately, there is an easy way to directly access the <a class="icon link reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html" target="_blank">libiio python API</a> when necessary.</p>
 <section id="libiio-entry-points">
 <h2>libiio Entry Points<a class="headerlink" href="#libiio-entry-points" title="Permalink to this heading"></a></h2>
 <p>The main object interface to <strong>libiio</strong> is through the <strong>ctx</strong> property, which is available in every device-specific class. The context is used internally by <strong>ctx</strong> to do all <strong>libiio</strong> specific operations. Here is an example of using the <strong>ctx</strong> property with <strong>pyadi-iio</strong> and <strong>libiio</strong>:</p>
@@ -307,7 +311,7 @@ cf-ad9361-lpc<span class="w"> </span><span class="p">|</span><span class="w"> </
 </pre></div>
 </div>
 <p>By convention device-specific classes will populate the main control driver as property <strong>_ctrl</strong>, the RX driver associated with data (DMA) as <strong>_rxadc</strong>, and the TX driver associated with data (DMA) and DDSs as <strong>_txdac</strong>. However, this is not always guaranteed depending on class implementation.</p>
-<p>Please refer to the <a class="reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html">libiio python API</a> for documentation on using <strong>libiio</strong> directly.</p>
+<p>Please refer to the <a class="icon link reference external" href="https://analogdevicesinc.github.io/libiio/v0.23/python/index.html" target="_blank">libiio python API</a> for documentation on using <strong>libiio</strong> directly.</p>
 </section>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>

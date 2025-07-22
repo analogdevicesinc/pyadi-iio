@@ -4,12 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Since pyadi-iio is built on top of libiio, it can use the different backends which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it to the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:" name="description" />
 
     <title>Connectivity &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=c218d0f6" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=33d8ff8e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script defer="" src="../_static/app.umd.js?v=8984ea49"></script>
+    <script async="async" src="../_static/app.umd.js?v=cd58f2cb"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -19,6 +20,9 @@
   
   <meta name="repository" content="pyadi-iio">
   <meta name="version" content="0.0.20">
+  
+    <meta name="page_source_suffix" content=".rst">
+  
   
 
 
@@ -57,7 +61,7 @@
     </div>
     <div id="right">
       <span>
-        <a id="logo-org" href="https://analog.com"></a>
+        <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
         <a id="logo" href="../index.html">
@@ -280,7 +284,7 @@ Content on this topic
             
   <section id="connectivity">
 <h1>Connectivity<a class="headerlink" href="#connectivity" title="Permalink to this heading"></a></h1>
-<p>Since pyadi-iio is built on top of libiio, it can use the different <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio">backends</a> which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it to the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:</p>
+<p>Since pyadi-iio is built on top of libiio, it can use the different <a class="icon link reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio" target="_blank">backends</a> which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it to the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
@@ -310,7 +314,7 @@ Content on this topic
 <span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you are not sure of the device URI you can utilize libiio command-line tools like <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_info">iio_info</a> and <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_attr">iio_attr</a>.</p>
+<p>If you are not sure of the device URI you can utilize libiio command-line tools like <a class="icon link reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_info" target="_blank">iio_info</a> and <a class="icon link reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_attr" target="_blank">iio_attr</a>.</p>
 </section>
 
 
