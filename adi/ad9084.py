@@ -8,7 +8,7 @@ from adi.adrv9002 import rx1, rx2, tx1, tx2
 from adi.context_manager import context_manager
 from adi.obs import obs, remap, tx_two
 from adi.rx_tx import rx_tx
-from adi.sync_start import sync_start
+from adi.sync_start import sync_start, sync_start_b
 
 
 def _map_to_dict(paths, ch):
@@ -56,7 +56,7 @@ def _sortconv(chans_names, noq=False, dds=False):
     return chans_names_out
 
 
-class ad9084(rx_tx, context_manager, sync_start):
+class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     """AD9084 Mixed-Signal Front End (MxFE)"""
 
     _complex_data = True
@@ -188,6 +188,7 @@ class ad9084(rx_tx, context_manager, sync_start):
 
         rx_tx.__init__(self)
         sync_start.__init__(self)
+        sync_start_b.__init__(self)
         self.rx_buffer_size = 2 ** 16
 
     def _get_iio_attr_str_single(self, channel_name, attr, output):
@@ -279,6 +280,22 @@ class ad9084(rx_tx, context_manager, sync_start):
     def rx_main_nco_phases(self, value):
         self._set_iio_attr_int_vec(
             self._rx_coarse_ddc_channel_names, "main_nco_phase", False, value,
+        )
+
+    @property
+    def rx_main_tb1_6db_digital_gain_en(self):
+        """main_tb1_6db_digital_gain_en: Receive path coarse DDC NCO phases"""
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_tb1_6db_digital_gain_en", False
+        )
+
+    @rx_main_tb1_6db_digital_gain_en.setter
+    def rx_main_tb1_6db_digital_gain_en(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_coarse_ddc_channel_names,
+            "main_tb1_6db_digital_gain_en",
+            False,
+            value,
         )
 
     @property
@@ -458,6 +475,21 @@ class ad9084(rx_tx, context_manager, sync_start):
     @tx_ddr_offload.setter
     def tx_ddr_offload(self, value):
         self._set_iio_debug_attr_str("pl_ddr_fifo_enable", str(value * 1), self._txdac)
+
+    @property
+    def tx_b_ddr_offload(self):
+        """tx_b_ddr_offload: Enable DDR offload
+
+        When true the DMA will pass buffers into the BRAM FIFO for data repeating.
+        This is necessary when operating at high DAC sample rates. This can reduce
+        the maximum buffer size but data passed to DACs in cyclic mode will not
+        underflow due to memory bottlenecks.
+        """
+        return self._get_iio_debug_attr("pl_ddr_fifo_enable", self._txdac2)
+
+    @tx_b_ddr_offload.setter
+    def tx_b_ddr_offload(self, value):
+        self._set_iio_debug_attr_str("pl_ddr_fifo_enable", str(value * 1), self._txdac2)
 
     @property
     def rx_sample_rate(self):
