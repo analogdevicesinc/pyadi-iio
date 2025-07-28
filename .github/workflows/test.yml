@@ -69,8 +69,8 @@ jobs:
       - name: Check coverage of new classes
         if: always() && (github.event_name == 'pull_request')
         run: |
-          export BASE_COMMIT=${{ github.event.before }}
-          export HEAD_COMMIT=${{ github.sha }}
+          export BASE_COMMIT=${{ github.event.pull_request.base.sha }}
+          export HEAD_COMMIT=${{ github.event.pull_request.head.sha }}
           python parse_new_class.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
