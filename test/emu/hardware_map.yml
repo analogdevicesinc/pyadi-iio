@@ -747,4 +747,30 @@ ad738x:
       - filename: ad7381.xml
       - data_devices:
           - iio:device0
+hmc7044:
+  - hmc7044
+  - pyadi_iio_class_support:
+      - hmc7044
+  - emulate:
+      - filename: ad9084-fmca-ebz.xml
+      - data_devices:
+          - iio:device1
+
+adf4030:
+  - adf4030
+  - pyadi_iio_class_support:
+      - adf4030
+  - emulate:
+      - filename: ad9084-fmca-ebz.xml
+      - data_devices:
+          - iio:device10
+
+axi_aion_trig:
+  - axi_aion_trig
+  - pyadi_iio_class_support:
+      - axi_aion_trig
+  - emulate:
+      - filename: ad9084-fmca-ebz.xml
+      - data_devices:
+          - iio:device11
 
