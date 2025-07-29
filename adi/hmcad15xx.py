@@ -29,9 +29,6 @@ class hmcad15xx(rx, context_manager):
 
         if not device_name:
             device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception(f"Not a compatible device: {device_name}")
 
         # Select the device matching device_name as working device
         for device in self._ctx.devices:
