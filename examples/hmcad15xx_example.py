@@ -14,11 +14,11 @@ import numpy as np
 from scipy import signal
 
 
-my_uri = sys.argv[1] if len(sys.argv) >= 2 else "local:"
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:192.168.2.1"
 print("uri: " + str(my_uri))
 
 
-hmcad15xx_dev = adi.hmcad15xx(uri=my_uri)
+hmcad15xx_dev = adi.hmcad15xx(uri=my_uri,device_name="axi_adc1_hmcad15xx")
 
 hmcad15xx_dev.rx_buffer_size = 65536
 hmcad15xx_dev.rx_enabled_channels = [0,1,2,3]
