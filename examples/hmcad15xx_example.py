@@ -18,9 +18,10 @@ my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:192.168.2.1"
 print("uri: " + str(my_uri))
 
 
-hmcad15xx_dev = adi.hmcad15xx(uri=my_uri,device_name="axi_adc1_hmcad15xx")
+hmcad15xx_dev = adi.hmcad15xx(uri=my_uri,device_name="axi_adc2_hmcad15xx")
+ssh = adi.sshfs(address=my_uri, username="root", password="analog")
 
-hmcad15xx_dev.rx_buffer_size = 65536
+hmcad15xx_dev.rx_buffer_size = 1024
 hmcad15xx_dev.rx_enabled_channels = [0,1,2,3]
 print("RX rx_enabled_channels: " + str(hmcad15xx_dev.rx_enabled_channels))
 
@@ -46,40 +47,30 @@ hmcad15xx_dev.channel[3].input_select = "IP4_IN4"
 print("Signal input 0X3A is:", hmcad15xx_dev.hmcad15xx_register_read(0x3A))
 print("Signal input 0X3B is:", hmcad15xx_dev.hmcad15xx_register_read(0x3B))
 
-# print("Writing 0xABCD to 0x26 custom pattern")
-# hmcad15xx_dev.hmcad15xx_register_write(0x26,0xABCD)
-# print("0x26 custom pattern is:", hmcad15xx_dev.hmcad15xx_register_read(0x26))
 
-# print("Test single custom pattern")
-
-# # write the desired custom pattern by setting the register 0x25 with value 0x10
-# # this signals that the tested value is user specified
-# custom_pattern = 0xAC5D
-# test_pattern = 0x40
-# print(f"Writting single custom pattern: {hex(custom_pattern)}")
-# hmcad15xx_dev.hmcad15xx_register_write(0x25, test_pattern)
-# # specify the custom value
-# hmcad15xx_dev.hmcad15xx_register_write(0x26, custom_pattern)
-
-# Change output mode from 2's complement
+test_pattern = 0x10
+custom_pattern = 0xAC5D
+hmcad15xx_dev.hmcad15xx_register_write(0x25, test_pattern)
+hmcad15xx_dev.hmcad15xx_register_write(0x26, custom_pattern)
 hmcad15xx_dev.hmcad15xx_register_write(0x46, 0x4)
-# Test deskew and sync patterns
-hmcad15xx_dev.hmcad15xx_register_write(0x45, 0x02)
+hmcad15xx_dev.hmcad15xx_register_write(0x42, 0x40)
+# specify the custom value
+
+ssh = adi.sshfs(address=my_uri, username="root", password="analog")
+base_addr_1   = 0x44A00800
+base_addr_2   = 0x44A60800
+lane = 0
+value = 1
+stdout, stderr = ssh._run(f"busybox devmem {base_addr_2 + 4*lane} {value}")
+print(stdout)
+stdout, stderr = ssh._run(f"busybox devmem {base_addr_2 + 4*lane} {value}")
+print(stdout)
 
 # rx data
 
 data = hmcad15xx_dev.rx()
 
-# test the speciefied pattern
-print(f"Read first value: {hex(data[0][0])}")
-print(f"Read second value: {hex(data[0][1])}")
-
 # read from register map
-ssh = adi.sshfs(address=my_uri, username="root", password="analog")
-base_addr   = 0x44A00000
-control_reg = 0x404
-stdout, stderr = ssh._run(f"busybox devmem {base_addr + control_reg} 16")
-print(stdout)
 
 # plot setup
 
