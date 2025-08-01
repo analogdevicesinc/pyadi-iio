@@ -186,6 +186,9 @@ def dev_interface_sub_channel(
             print(f"Failed to set: {attr}")
             print(f"Set: {str(val)}")
             print(f"Got: {str(rval)}")
+        else:
+            print(f"Set: {val}")
+            print(f"Got: {rval}")
         return abs_val <= tol
     return val == str(rval)
 
