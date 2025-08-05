@@ -254,6 +254,7 @@ def checkemulation(c):
         "ad9467",
         "ad9625",
         "ad9680",
+        "ada4355",
         "ada4961",
         "adaq8092",
         "adar1000",
