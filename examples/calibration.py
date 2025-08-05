@@ -384,18 +384,21 @@ def rx_gain(obj, adc, subarray, adc_map, element_map):
 
 def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_targ, dig_phase):
     """Calculate analog phase for each element in the subarray."""
-    analog_phase = np.zeros((4, 8))  # Initialize phase array
-    element_map = np.array([
-        [1, 5, 9, 13, 17, 21, 25, 29],
-        [2, 6, 10, 14, 18, 22, 26, 30],
-        [3, 7, 11, 15, 19, 23, 27, 31],
-        [4, 8, 12, 16, 20, 24, 28, 32]
-    ])
+    analog_phase = np.zeros((8, 8))  # Initialize phase array
+    element_map = np.array([[1, 9,  17, 25, 33, 41, 49, 57],
+                            [2, 10, 18, 26, 34, 42, 50, 58],
+                            [3, 11, 19, 27, 35, 43, 51, 59],
+                            [4, 12, 20, 28, 36, 44, 52, 60],
+ 
+                            [5, 13, 21, 29, 37, 45, 53, 61],
+                            [6, 14, 22, 30, 38, 46, 54, 62],
+                            [7, 15, 23, 31, 39, 47, 55, 63],
+                            [8, 16, 24, 32, 40, 48, 56, 64]]),
 
     # break out subarray 1 cal, vs subarrays 2,3,4 cal
     for ii in range(2): 
         for jj in range(subarray_targ.shape[1]):
-            dummy_array = np.zeros((4, 8))
+            dummy_array = np.zeros((8, 8))
 
             if ii == 0:
 

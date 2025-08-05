@@ -5,7 +5,9 @@ import json
 import os
 from scipy.signal import correlate
 import time
-
+from tabulate import tabulate
+import matplotlib.pyplot as pl
+import pprint
 ####################################################################################################
 #                       Functions used throughout the calibration process                          #
 ####################################################################################################
@@ -15,83 +17,109 @@ def enable_stingray_channel(obj, elements=None, man_input=False):
     Enables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
-        user_input = input("Enter a comma-separated list of channels to turn on (1-32): ")
-        elements = [int(x.strip()) for x in user_input.split(',') if 1 <= int(x) <= 32]
+        user_input = input("Enter a comma-separated list of channels to turn on (1-64): ")
+        elements = [int(x.strip()) for x in user_input.split(',') if 1 <= int(x) <= 64]
 
-    if man_input == False:
+    elif man_input is False and elements is None:
+        elements = elements=list(range(1,65))
+
+    else:
         elements = np.array(elements).flatten()
 
-    for device in obj.devices.values():
-        #print(device.mode)
-        if device.mode == "rx":
-            for channel in device.channels:
+    for i in range(10):
+        try:
+            for device in obj.devices.values():
+                # time.sleep(0.01)
+                if device.mode == "rx":
+                    for channel in device.channels:
 
-                str_channel = str(channel)
-                value = int(strip_to_last_two_digits(str_channel))
+                        str_channel = str(channel)
+                        value = int(strip_to_last_two_digits(str_channel))
 
-                # Check if the channel is in the list of elements to enable
-                # If it is, enable the channel
-                for elem in elements:
-                    if elem == value:
-                        channel.rx_enable = True
+                        # Check if the channel is in the list of elements to disable
+                        # If it is, disable the channel
+                        for elem in elements:
+                            if elem == value:
+                                # print("Turning on element:",elem)
+                                channel.rx_enable = True
 
-        elif device.mode == "tx":
-            for channel in device.channels:
+                if device.mode == "tx":
+                    for channel in device.channels:
 
-                str_channel = str(channel)
-                value = int(strip_to_last_two_digits(str_channel))
+                        str_channel = str(channel)
+                        value = int(strip_to_last_two_digits(str_channel))
 
-                # Check if the channel is in the list of elements to enable
-                # If it is, enable the channel
-                for elem in elements:
-                    if elem == value:
-                        channel.tx_enable = True
-        else:
-            raise ValueError('Mode of operation must be either "rx" or "tx"')
+                        # Check if the channel is in the list of elements to disable
+                        # If it is, disable the channel
+                        for elem in elements:
+                            if elem == value:
+                                channel.tx_enable = True
+                # else:
+                #     raise ValueError('Mode of operation must be either "rx" or "tx"')
+            break
+        except:
+            print("retrying")
+            time.sleep(2)
+    else:
+        raise ValueError('Mode of operation must be either "rx" or "tx"')
+    time.sleep(1)
  
 def disable_stingray_channel(obj, elements=None, man_input=False):
     """
     Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
-        user_input = input("Enter a comma-separated list of channels to turn off (1-32): ")
-        elements = [int(x.strip()) for x in user_input.split(',') if 1 <= int(x) <= 32]
+        user_input = input("Enter a comma-separated list of channels to turn off (1-64): ")
+        elements = [int(x.strip()) for x in user_input.split(',') if 1 <= int(x) <= 64]
+    
+    elif man_input is False and elements is None:
+        elements = elements=list(range(1,65))
 
-    if man_input == False:
+    else:
         elements = np.array(elements).flatten()
 
-    for device in obj.devices.values():
-        time.sleep(0.01)
-        if device.mode == "rx":
-            for channel in device.channels:
+    for i in range(10):
+        try:
+            for device in obj.devices.values():
+                time.sleep(0.01)
+                if device.mode == "rx":
+                    for channel in device.channels:
 
-                str_channel = str(channel)
-                value = int(strip_to_last_two_digits(str_channel))
+                        str_channel = str(channel)
+                        value = int(strip_to_last_two_digits(str_channel))
 
-                # Check if the channel is in the list of elements to disable
-                # If it is, disable the channel
-                for elem in elements:
-                    if elem == value:
-                        channel.rx_enable = False
+                        # Check if the channel is in the list of elements to disable
+                        # If it is, disable the channel
+                        for elem in elements:
+                            if elem == value:
+                                # print("Turning off element:",elem)
+                                channel.rx_enable = False
 
-        elif device.mode == "tx":
-            for channel in device.channels:
+                if device.mode == "tx":
+                    for channel in device.channels:
 
-                str_channel = str(channel)
-                value = int(strip_to_last_two_digits(str_channel))
+                        str_channel = str(channel)
+                        value = int(strip_to_last_two_digits(str_channel))
 
-                # Check if the channel is in the list of elements to disable
-                # If it is, disable the channel
-                for elem in elements:
-                    if elem == value:
-                        channel.tx_enable = False
-        else:
-            raise ValueError('Mode of operation must be either "rx" or "tx"')
+                        # Check if the channel is in the list of elements to disable
+                        # If it is, disable the channel
+                        for elem in elements:
+                            if elem == value:
+                                channel.tx_enable = False
+                # else:
+                #     raise ValueError('Mode of operation must be either "rx" or "tx"')
+            break
+        except:
+            print("retrying")
+            time.sleep(2)
+    else:
+        raise ValueError('Mode of operation must be either "rx" or "tx"')
         
 # Receive data on AD9081
 def data_capture(adc):
     adc.rx_destroy_buffer() # clear previous data
-    for i in range(2):
+    for i in range(10):
+        adc.rx_destroy_buffer() # clear previous data
         # First data buffer clears/discard, second data buffer is used
         data = adc.rx()
     return data
@@ -144,6 +172,13 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
                      50904.6416796854, 135350.366810770]
  
     # Calculate delta in dB
+    analog_mag_pre_cal = analog_mag_pre_cal.flatten() 
+    # for i in range(np.size(analog_mag_pre_cal)):
+    #     if analog_mag_pre_cal[i] < np.average(analog_mag_pre_cal) - 12:
+    #         print("Bad Value: ", analog_mag_pre_cal[i])
+    #         print("Index Number: ", i)
+    #         analog_mag_pre_cal[i] = np.average(analog_mag_pre_cal)
+
     mag_min = np.min(analog_mag_pre_cal)
     mag_cal_diff = analog_mag_pre_cal - mag_min
     print(mag_cal_diff)
@@ -152,21 +187,22 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     # Find correct gain code values based on which polynomial should be used
     # Adjust attenuators accordingly
     for i in range(np.size(analog_mag_pre_cal)):
+        mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten1, -1 * mag_cal_diff.flat[i]))
+        # if mag_cal_diff.flat[i] < 23:
+        #     mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten1, -1 * mag_cal_diff.flat[i]))
 
-        if mag_cal_diff.flat[i] < 23:
-            mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten1, -1 * mag_cal_diff.flat[i]))
-
-        elif mag_cal_diff.flat[i] == np.inf:
-            mag_cal_poly.flat[i] = 0
-            atten.flat[i] = 1
+        # elif mag_cal_diff.flat[i] == np.inf:
+        #     mag_cal_poly.flat[i] = 0
+        #     atten.flat[i] = 1
             
-        else:
-            mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten0, -1 * mag_cal_diff.flat[i]))
-            atten.flat[i] = 1
+        # else:
+        #     mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten0, -1 * mag_cal_diff.flat[i]))
+            # atten.flat[i] = 1
     # set min and max clipping to 0 and 127, respectively
     mag_cal_poly = np.clip(mag_cal_poly, 0, 127)
     gain_codes_cal = mag_cal_poly
- 
+
+    atten = np.zeros(np.shape(analog_mag_pre_cal))
     return gain_codes_cal, atten 
 
 def strip_to_last_two_digits(input_string):
@@ -183,25 +219,21 @@ def strip_to_last_two_digits(input_string):
 
 def create_dict(new_keys, array):
     """
-    Create a dictionary with new keys and values from array.
+    Convert a flattened array (1x64) into 8x8 and create a dictionary 
+    where each key from new_keys (8x8) maps to its corresponding 8-value row.
     """
     result_dict = {}
-    new_keys = new_keys.flatten()
-    array = array.flatten()
-    """new keys is (4,16)
-        array is (8,8)"""
-    for i in range(len(new_keys)):
-        result_dict[new_keys[i]] = array[i]
-    # for i in range(array.shape[0]):
-        
-    #     for j in range(array.shape[1]):
+    print(array)
+    print(new_keys)
+    # Reshape new_keys and array into 8x8
+    reshaped_keys = new_keys.reshape(8, 8)
+    reshaped_array = array.reshape(8, 8)
 
-    #         result_dict[new_keys[j][i]] = array[i][j]
-    #         if j > 7:
-    #             j = 0
-    #             i = i + 1
-    #             result_dict[new_keys[j][i]] = array[i][j]
-
+    # Map each key in reshaped_keys to the corresponding row in reshaped_array
+    for i in range(8):
+        for j in range(8):
+            result_dict[reshaped_keys[i][j]] = reshaped_array[i][j]
+    
     return result_dict
 
 def wrap_to_360(angle):
@@ -344,26 +376,25 @@ def phase_digital(obj, adc, adc_ref, subarray_ref):
 def rx_gain(obj, adc, subarray, adc_map, element_map):
     """
     Measures analog magnitude for Stingray to equalize amplitudes across all elements.
-    Returns calibrated gain codes and magnitude in dBFS pre-calibration in an 8x4 matrix mapped to the Stingray elements.
+    Returns calibrated gain codes and magnitude in dBFS pre-calibration in an 8x8 matrix mapped to the Stingray elements.
     """
-
+    
     # Capture ADC data with initial gain, attenuation, and phase settings
     data = rx_single_channel_data(obj, adc, subarray, adc_map)
 
     # Measure analog magnitude pre-calibration
     analog_mag_pre_cal = get_analog_mag(data)
-    print(analog_mag_pre_cal.shape)
     # Reshape the analog magnitude to match the subarray shape in column-major order
     # This is necessary to match the element_map mapping
-    analog_mag_pre_cal = np.reshape(analog_mag_pre_cal, np.shape(element_map), order = 'F')
-    print(analog_mag_pre_cal)
-    print(analog_mag_pre_cal.shape)
+    analog_mag_pre_cal0 = np.reshape(analog_mag_pre_cal, np.shape(element_map), order = 'F')
     # Calculate gain codes and attenuation values based on pre-calibration magnitude
     gain_codes_cal, atten_cal = gain_codes(obj, analog_mag_pre_cal, "rx")
     print(gain_codes_cal)
     # Create dictionary to assign gain codes and attenuation values to elements
     gain_dict = create_dict(element_map, gain_codes_cal)
+    print("gain_dict:", gain_dict)
     atten_dict = create_dict(element_map, atten_cal)
+    # print("atten_dict:", atten_dict)
 
     for element in obj.elements.values():
         """
@@ -386,7 +417,12 @@ def rx_gain(obj, adc, subarray, adc_map, element_map):
    
     # Measure analog magnitude post-calibration
     analog_mag_post_cal = get_analog_mag(data)
-    analog_mag_post_cal = np.reshape(analog_mag_post_cal, np.shape(subarray), order = 'F')
+    analog_mag_post_cal0 = np.reshape(analog_mag_post_cal, np.shape(element_map), order = 'F')
+
+    print("PreCal Data before Reshape:", analog_mag_pre_cal,)
+    print("PreCal Data after Reshape:",analog_mag_pre_cal0)
+    print("Postcal Data before Reshape:", analog_mag_post_cal,)
+    print("PostCal Data after Reshape:",analog_mag_post_cal0)
  
     return gain_codes_cal, atten_cal, analog_mag_pre_cal, analog_mag_post_cal
 
@@ -485,16 +521,19 @@ def rx_single_channel_data(obj, adc, array, adc_map):
         Captures single channel Rx data on a 1 channel per subarray basis.
         Returns raw ADC codes in a 64x4096 matrix.
         """
-        rx_data = np.zeros((64,4096), dtype = complex)  # Allocate memory
-        for a in range(np.size(array,1)):
+        disable_stingray_channel(obj,array)
 
+        rx_data = np.zeros((np.size(array),4096), dtype = complex)  # Allocate memory
+        for a in range(np.size(array,1)):
+            
             # Enable one reference channel per subarray
             enable_stingray_channel(obj, array[:,a])
-
+            time.sleep(1)
             # Pull data from ADC
             data = np.array(data_capture(adc))
             data = data[:, :np.size(rx_data,1)] # remove data past 4096th column for FFT
-
+            print(get_analog_mag(data))
+            print(array[:,a])
             # Initialize temporary array for ADC data
             # This is used to map the ADC data to the correct subarray
             new_data = np.zeros(np.shape(data), dtype = complex)
@@ -520,6 +559,7 @@ def get_analog_mag(data):
     Returns analog_mag which is a 1x32 row vector of magnitudes in dBFS.
     """
     analog_mag = np.zeros((1, np.size(data,0)))
+    
     print(" shape of analog mag")
     print(np.shape(analog_mag))
    
@@ -589,6 +629,157 @@ def fft(complex_data, combined_waveforms, tone_type):
    
     fft_complex = gn.fft(real_data, imag_data, qres, navg, nfft, window, code_fmt)
     fft_results = gn.fft_analysis(key, fft_complex, nfft, axis_type)
+    results = fft_results
+        #
+    # # Print results and plot
+    # # 
+    # fs = 64.44e6
+    # freq_axis = gn.freq_axis(nfft, axis_type, fs, axis_type)
+    # fft_db = gn.db(fft_complex)
+    # if gn.FreqAxisType.DC_CENTER == axis_type:
+    #     fft_db = gn.fftshift(fft_db)
+    
+    # annots = gn.fa_annotations(fft_results, axis_type, axis_type)
+    # print('annots["labels"]: ')
+    # labels_head = ('frequency (Hz)', 'magnitude (dBFs)', 'component label')
+    # labels_table = tabulate(annots["labels"], headers=labels_head, tablefmt="grid")
+    # print(labels_table, "\n")
+    
+    # print('annots["tone_boxes"]: ')
+    # c1 = [x[0] for x in annots["tone_boxes"]]
+    # c2 = [x[2] for x in annots["tone_boxes"]]
+    # tone_boxes_head = ('box left boundary (Hz)', 'width (Hz)')
+    # tone_boxes_table = tabulate(map(list, zip(*(c1, c2))), headers=tone_boxes_head, tablefmt="grid")
+    # print(tone_boxes_table, "\n")
+    
+    # print('+----------------+')
+    # print("results dictionary")
+    # print('+----------------+')
+    # pprint.pprint(fft_results)    
+    
+    # # plot
+    # toneDC_Hz = annots["labels"][0][0]
+    # toneDC_bin = toneDC_Hz/(fs/nfft)
+    # toneDC_mag = fft_db[int(toneDC_bin+0.5*nfft)]
+    # toneA_Hz = annots["labels"][1][0]
+    # toneA_bin = toneA_Hz/(fs/nfft)    
+    # toneA_mag = fft_db[int(toneA_bin+0.5*nfft)]
+    # toneA_im_Hz = annots["labels"][2][0]
+    # toneA_im_bin = toneA_im_Hz/(fs/nfft)
+    # toneA_im_mag = fft_db[int(toneA_im_bin+0.5*nfft)]
+    # tone2A_Hz = annots["labels"][3][0]
+    # tone2A_bin = tone2A_Hz/(fs/nfft)
+    # tone2A_mag = fft_db[int(tone2A_bin+0.5*nfft)]
+    # tone2A_im_Hz = annots["labels"][4][0]
+    # tone2A_im_bin = tone2A_im_Hz/(fs/nfft)
+    # tone2A_im_mag = fft_db[int(tone2A_im_bin+0.5*nfft)]
+    # tone3A_im_Hz = annots["labels"][5][0]
+    # tone3A_im_bin = tone3A_im_Hz/(fs/nfft)
+    # tone3A_im_mag = fft_db[int(tone3A_im_bin+0.5*nfft)]
+    # toneWO_Hz = annots["labels"][6][0]
+    # toneWO_bin = toneWO_Hz/(fs/nfft)
+    # toneWO_mag = fft_db[int(toneWO_bin+0.5*nfft)]
+    
+    # sfdr = results["sfdr"]
+    # nsd = results["nsd"]
+    # abn = results["abn"]
+    # snr = results["snr"]
+    # fsnr = results["fsnr"]
+    # sinad = results["sinad"]
+    # scale_MHz = 1e-6
+    # fig, ax = pl.subplots()
+    # fig.clf()
+    # pl.plot(freq_axis*scale_MHz, fft_db)
+    # pl.grid(True)
+    # pl.xlabel('frequency (MHz)')
+    # pl.ylabel('magnitude (dBFs)')
+    # pl.xlim(freq_axis[0]*scale_MHz, freq_axis[-1]*scale_MHz)
+    # pl.ylim(-140.0, 20.0)
+    # for x, y, label in annots["labels"]:
+    #     if label == 'dc':
+    #         pl.annotate(label+": ["+f"{toneDC_Hz:.2f}"+" ,"+f"{toneDC_mag:.2f}"+"]", 
+    #                     xy=(x*scale_MHz, toneDC_mag), 
+    #                     xytext=(x*scale_MHz, -10), 
+    #                     color = 'red',
+    #                     horizontalalignment="center",
+    #                     arrowprops=dict(arrowstyle='->',color='red',lw=1))
+    #     elif label == 'A':
+    #         pl.annotate(label+": ["+f"{toneA_Hz:.2f}"+" ,"+f"{toneA_mag:.2f}"+"]", 
+    #                     xy=(x*scale_MHz, toneA_mag), 
+    #                     xytext=(x*scale_MHz, 10), 
+    #                     color = 'black',
+    #                     horizontalalignment="center",
+    #                     arrowprops=dict(arrowstyle='->',color='black',lw=1))
+    #     elif label == '-A':
+    #         pl.annotate(label+": ["+f"{toneA_im_Hz:.2f}"+" ,"+f"{toneA_im_mag:.2f}"+"]", 
+    #                     xy=(x*scale_MHz, toneA_im_mag), 
+    #                     xytext=(x*scale_MHz, -20), 
+    #                     color = 'black',
+    #                     horizontalalignment="center",
+    #                     arrowprops=dict(arrowstyle='->',color='black',lw=1))            
+    #     elif label == '2A':
+    #         pl.annotate(label+": ["+f"{tone2A_Hz:.2f}"+" ,"+f"{tone2A_mag:.2f}"+"]", 
+    #                     xy=(x*scale_MHz, tone2A_mag), 
+    #                     xytext=(x*scale_MHz, -40), 
+    #                     color = 'green',
+    #                     horizontalalignment="center",
+    #                     arrowprops=dict(arrowstyle='->',color='green',lw=1))
+    #     elif label == '-2A':
+    #         pl.annotate(label+": ["+f"{tone2A_im_Hz:.2f}"+" ,"+f"{tone2A_im_mag:.2f}"+"]", 
+    #                     xy=(x*scale_MHz, tone2A_im_mag), 
+    #                     xytext=(x*scale_MHz, -40), 
+    #                     color = 'green',
+    #                     horizontalalignment="center",
+    #                     arrowprops=dict(arrowstyle='->',color='green',lw=1))
+    #     elif label == '-3A':
+    #         pl.annotate(label+": ["+f"{tone3A_im_Hz:.2f}"+" ,"+f"{tone3A_im_mag:.2f}"+"]", 
+    #                     xy=(x*scale_MHz, tone3A_im_mag), 
+    #                     xytext=(x*scale_MHz, -60), 
+    #                     color = 'magenta',
+    #                     horizontalalignment="center",
+    #                     arrowprops=dict(arrowstyle='->',color='magenta',lw=1))        
+    #     elif label == 'wo':
+    #         pl.annotate(label+": ["+f"{toneWO_Hz:.2f}"+" ,"+f"{toneWO_mag:.2f}"+"]", 
+    #                     xy=(x*scale_MHz, toneWO_mag), 
+    #                     xytext=(x*scale_MHz, -80), 
+    #                     color = 'magenta',
+    #                     horizontalalignment="center",
+    #                     arrowprops=dict(arrowstyle='->',color='magenta',lw=1))
+    #     else:
+    #         pl.annotate(label, xy=(x*scale_MHz, y), ha="center", va="bottom")
+    # pl.axhline(y = toneA_mag, color = 'k', linestyle = '-')
+    # pl.axhline(y = toneWO_mag, color = 'k', linestyle = '-')
+    # pl.annotate('', 
+    #             xy=(1.25,toneWO_mag), 
+    #             xytext=(1.25,toneA_mag),
+    #             arrowprops=dict(arrowstyle='<->',color='black',lw=1))
+    # pl.annotate('SFDR'+": "+f"{sfdr:.2f}"+' dB',
+    #             xy=(1.25, -40), 
+    #             xytext=(1.25, -40), 
+    #             verticalalignment="center",
+    #             rotation=270)
+    # pl.axhline(y = abn, color = 'r', linestyle = '-')
+    # pl.annotate('ABN'+": "+f"{abn:.2f}"+' dB',
+    #             xy=(0.5, -100), 
+    #             xytext=(0.5, -100), 
+    #             color = 'red',
+    #             ha="center")
+    # pl.axhline(y = nsd, color = 'r', linestyle = '-')
+    # pl.annotate('NSD'+": "+f"{nsd:.2f}"+' dB',
+    #             xy=(0.5, -120), 
+    #             xytext=(0.5, -120), 
+    #             color = 'red',
+    #             ha="center")
+    # textstr = '\n'.join((
+    #     'SNR'+": "+f"{snr:.2f}"+' dB',
+    #     'FSNR'+": "+f"{fsnr:.2f}"+' dB',
+    #     'SINAD'+": "+f"{sinad:.2f}"+' dB'))
+    # props = dict(boxstyle='round', facecolor='wheat', alpha=0)
+    # ax.text(0.5, 0.5, textstr, fontsize=14, bbox=props)
+    # pl.savefig('spectral_analysis_summary3.png')
+
+
+
  
     return fft_results
 

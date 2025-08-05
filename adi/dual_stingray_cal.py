@@ -172,6 +172,7 @@ else:
         # Enable the Tx path for each channel and set the external PA bias
         for channel in device.channels:
             channel.pa_bias_on = -1.1
+            
 if ARRAY_MODE == "rx":
     print("ARRAY_MODE =",ARRAY_MODE,"Setting all devices to rx mode")
     for element in sray.elements.values():
@@ -213,7 +214,7 @@ XUDLO.attrs["frequency"].value = "14580000000"
 XUDLO.attrs["powerdown"].value = "0"
  
  
- 
+
 # disable_stingray_channel(sray, elements=None, man_input=True)
  
  
@@ -375,4 +376,3 @@ plt.xlim([100,200])
 # Adjust layout and display
 plt.tight_layout()
 plt.show()
-enable_stingray_channel(sray, subarray)
