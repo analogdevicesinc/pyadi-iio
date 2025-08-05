@@ -9,7 +9,7 @@ import random
 parser = argparse.ArgumentParser(description="Wire Carnival Game using ADXL355")
 parser.add_argument (
     "-u",
-    default =["ip:10.117.116.91"], #Tto do:ipi
+    default =["ip:analog.local"], #Tto do:ipi
     help="-u (arg) URI of target device;s context, eg: 'ip:analog.local',\'ip:192.168.2.1',\'serial:COM4,115200,8n1n'",
     action="store",
     nargs="*",
