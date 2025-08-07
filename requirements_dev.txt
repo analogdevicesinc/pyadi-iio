@@ -8,7 +8,7 @@ scapy
 scipy<=1.12.0
 pytest-cov
 coveralls
-pytest-libiio>=0.0.20
+pytest-libiio>=0.0.22
 bump2version
 pytest-html==3.2.0
 plotly-express
