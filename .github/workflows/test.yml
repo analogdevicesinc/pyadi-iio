@@ -52,7 +52,7 @@ jobs:
       - name: Test without optional dependencies
         run: |
                 pip uninstall -y paramiko
-                pytest -vs --cov=adi --scan-verbose --emu --junitxml="results.xml" -k 'not prod' ----iio-coverage --iio-coverage-print-results --iio-coverage-folder=iio_coverage_results_test
+                pytest -vs --cov=adi --scan-verbose --emu --junitxml="results.xml" -k 'not prod' --iio-coverage --iio-coverage-print-results --iio-coverage-folder=iio_coverage_results_test
 
       - name: Publish or update IIO coverage Markdown report in PR comments
         if: github.event_name == 'pull_request'
