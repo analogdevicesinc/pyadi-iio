@@ -20,9 +20,9 @@ class ad9508(attribute, context_manager):
 
         if not device_name:
             device_name = compatible_part
-        else:
-            if device_name != compatible_part:
-                raise Exception(f"Not a compatible device: {device_name}")
+        # else:
+        #     if device_name != compatible_part:
+        #         raise Exception(f"Not a compatible device: {device_name}")
 
         # Select the device matching device_name as working device
         for device in self._ctx.devices:

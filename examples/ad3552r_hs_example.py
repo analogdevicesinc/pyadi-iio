@@ -13,6 +13,8 @@ my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 my_device = sys.argv[2] if len(sys.argv) >= 3 else "ad3552r"
 print("uri: " + str(my_uri))
 
+clock = adi.ad9508(uri=my_uri, device_name="ad9508_1")
+
 # device connection
 dev = adi.ad3552r_hs(uri=my_uri, device_name=my_device)
 
