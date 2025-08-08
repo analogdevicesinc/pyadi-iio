@@ -7,9 +7,9 @@ from decimal import Decimal
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.rx_tx import tx
+from adi.sync_start import sync_start
 
-
-class ad3552r_hs(tx, context_manager):
+class ad3552r_hs(tx, context_manager, sync_start):
     """AD3552R_HS DAC"""
 
     _complex_data = False
@@ -65,6 +65,7 @@ class ad3552r_hs(tx, context_manager):
                 setattr(self, name, self._channel(self._ctrl, name, output))
 
         tx.__init__(self)
+        sync_start.__init__(self)
 
     @property
     def input_source(self):
