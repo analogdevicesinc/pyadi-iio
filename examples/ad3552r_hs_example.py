@@ -10,7 +10,7 @@ import adi
 # else use default ip:analog.local
 
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
-my_device = sys.argv[2] if len(sys.argv) >= 2 else "ad3552r"
+my_device = sys.argv[2] if len(sys.argv) >= 3 else "ad3552r"
 print("uri: " + str(my_uri))
 
 # device connection
