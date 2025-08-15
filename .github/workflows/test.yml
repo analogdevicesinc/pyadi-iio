@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10", "3.11"]
+        python-version: [3.9, "3.10", "3.11"]
         libiio: ['main', 'v0.25']
 
     steps:
@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8]
+        python-version: [3.9]
 
     steps:
       - uses: actions/checkout@v2
@@ -52,10 +52,17 @@ jobs:
       - name: Test without optional dependencies
         run: |
                 pip uninstall -y paramiko
-                pytest -vs --cov=adi --scan-verbose --emu --junitxml="results.xml" -k 'not prod'
+                pytest -vs --cov=adi --scan-verbose --emu --junitxml="results.xml" -k 'not prod' --iio-coverage --iio-coverage-print-results --iio-coverage-folder=iio_coverage_results_test
+
+      - name: Publish or update IIO coverage Markdown report in PR comments
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: iio_coverage_results_test/iio_coverage_report.md
+          header: IIO Coverage Report
 
       - name: Report coverage
-        if: (github.event_name != 'pull_request') && (matrix.python-version == 3.8)
+        if: (github.event_name != 'pull_request') && (matrix.python-version == 3.9)
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: coveralls
@@ -71,7 +78,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8, 3.9, "3.10", "3.11"]
+        python-version: [3.9, "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v2
@@ -98,10 +105,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
@@ -122,10 +129,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
@@ -154,10 +161,10 @@ jobs:
     if: github.event_name == 'pull_request' && github.base_ref == 'main' && ! github.event.pull_request.head.repo.fork
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
@@ -194,10 +201,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
