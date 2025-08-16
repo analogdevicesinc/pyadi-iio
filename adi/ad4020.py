@@ -12,7 +12,7 @@ from adi.rx_tx import rx
 
 
 class ad4020(rx, context_manager):
-    """AD4020 device"""
+    """AD4000 series of differential SAR ADC devices"""
 
     _compatible_parts = [
         "ad4020",
@@ -39,11 +39,26 @@ class ad4020(rx, context_manager):
         self._rxadc = self._ctx.find_device(_device_name)
         self._ctrl = self._ctx.find_device(_device_name)
         self.channel = []
+
+        # Dynamically get channel after the index
         for ch in self._ctrl.channels:
             name = ch._id
             self._rx_channel_names.append(name)
             self.channel.append(self._channel(self._ctrl, name))
+            setattr(self, name, self._channel_adc(self._ctrl, name))
+
+        self.voltage0 = self.channel[0]
         rx.__init__(self)
+
+    @property
+    def sampling_frequency(self):
+        """Get and set the sampling frequency."""
+        return self.channel[0]._get_iio_attr(self.channel[0].name, "sampling_frequency", False)
+
+    @sampling_frequency.setter
+    def sampling_frequency(self, value):
+        """Set the sampling frequency."""
+        self.channel[0]._set_iio_attr(self.channel[0].name, "sampling_frequency", False, value)
 
     class _channel(attribute):
         """AD4020 channel"""
@@ -76,6 +91,45 @@ class ad4020(rx, context_manager):
             """Set the sampling frequency."""
             # self._set_iio_attr("sampling_frequency", str(value))
             self._set_iio_attr(self.name, "sampling_frequency", False, value)
+
+    class _channel_adc(attribute):
+        """AD4000 series differential input voltage channel"""
+
+        # AD4000 series ADC channel
+        def __init__(self, ctrl, channel_name):
+            self.name = channel_name
+            self._ctrl = ctrl
+
+        @property
+        def raw(self):
+            return self._get_iio_attr(self.name, "raw", False)
+
+        @property
+        def scale(self):
+            return float(self._get_iio_attr_str(self.name, "scale", False))
+
+        @scale.setter
+        def scale(self, value):
+            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
+
+        @property
+        def scale_available(self):
+            """Provides all available scale(gain) settings for the ADC channel"""
+            return self._get_iio_attr(self.name, "scale_available", False)
+
+        @property
+        def sampling_frequency(self):
+            """Get and set the sampling frequency."""
+            return self._get_iio_attr(self.name, "sampling_frequency", False)
+
+        @sampling_frequency.setter
+        def sampling_frequency(self, value):
+            """Set the sampling frequency."""
+            self._set_iio_attr(self.name, "sampling_frequency", False,  str(value))
+
+        def __call__(self):
+            """Convenience function, get voltages in IIO units (millivolts)"""
+            return self.raw * self.scale
 
 
 class ad4000(ad4020):
@@ -128,4 +182,53 @@ class ad4003(ad4020):
     _rx_data_type = np.int32
 
     def __init__(self, uri="ip:analog.local", device_name="ad4003"):
+        super().__init__(uri, device_name)
+
+
+class adaq4003(ad4020):
+    _compatible_parts = [
+        "adaq4001",
+        "adaq4003",
+    ]
+
+    _rx_data_type = np.int32
+
+    def __init__(self, uri="ip:analog.local", device_name="adaq4003"):
+        super().__init__(uri, device_name)
+
+
+class ad7685(ad4020):
+    _compatible_parts = [
+        "ad7685",
+        "ad7686",
+        "ad7687",
+        "ad7688",
+        "ad7693",
+        "ad7942",
+        "ad7946",
+        "ad7980",
+        "ad7983",
+        "ad7988-1",
+        "ad7988-5",
+    ]
+
+    _rx_data_type = np.int16
+
+    def __init__(self, uri="ip:analog.local", device_name="ad7685"):
+        super().__init__(uri, device_name)
+
+
+class ad7690(ad4020):
+    _compatible_parts = [
+        "ad7690",
+        "ad7691",
+        "ad7691",
+        "ad7982",
+        "ad7984",
+        "ad7691",
+    ]
+
+    _rx_data_type = np.int32
+
+    def __init__(self, uri="ip:analog.local", device_name="ad7690"):
         super().__init__(uri, device_name)
