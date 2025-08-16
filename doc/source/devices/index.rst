@@ -65,6 +65,7 @@ Supported Devices
    adi.ada4961
    adi.adaq8092
    adi.adar1000
+   adi.adf4030
    adi.adf4159
    adi.adf4355
    adi.adf4371
@@ -104,6 +105,7 @@ Supported Devices
    adi.adxl355
    adi.adxl380
    adi.adxrs290
+   adi.axi_aion_trig
    adi.cn0511
    adi.cn0532
    adi.cn0540
@@ -122,6 +124,7 @@ Supported Devices
    adi.fmcomms5
    adi.fmcomms11
    adi.gen_mux
+   adi.hmc7044
    adi.jesd
    adi.lm75
    adi.ltc2314_14
