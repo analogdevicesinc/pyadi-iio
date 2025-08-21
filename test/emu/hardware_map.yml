@@ -807,3 +807,11 @@ ada4355:
       - filename: ada4355.xml
       - data_devices:
           - iio:device2
+ad7405:
+  - adum7701
+  - pyadi_iio_class_support:
+      - ad7405
+  - emulate:
+      - filename: ad7405.xml
+      - data_devices:
+          - iio:device0
