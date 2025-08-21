@@ -17,6 +17,7 @@ import os
 import pandas as pd
 import mbx_functions as mbx
 from scipy.special import factorial
+from scipy.io import savemat
 
 
 
@@ -163,6 +164,36 @@ def cal_data(data, phaseCAL):
         data[i] = phase_delayer(data[i], phaseCAL[i])
     return data
 
+# def gain_codes(obj, analog_mag_pre_cal, mode):
+#     """
+#     Determines Rx/Tx analog VGA gain codes for Stingray.
+#     Returns calibrated gain codes and attenuation values.
+#     """
+#     analog_mag_pre_cal = analog_mag_pre_cal.flatten()
+#     mag_db = 20 * np.log10(np.maximum(analog_mag_pre_cal, 1e-12))
+
+#     target_db = np.mean(mag_db)
+#     mag_cal_diff_db = mag_db - target_db
+#     atten = np.zeros_like(mag_cal_diff_db)
+
+#     # Simplified polynomial fit or linear mapping
+#     def map_gain(diff_db):
+#         if abs(diff_db) < 12:
+#             return np.clip(np.floor(127 - diff_db / 0.45), 0, 127)
+#         else:
+#             atten_flag = 1
+#             return np.clip(np.floor(127 - (diff_db - 15) / 0.45), 0, 127), atten_flag
+
+#     gain_codes_cal = np.zeros_like(mag_cal_diff_db)
+#     for i, diff_db in enumerate(mag_cal_diff_db):
+#         if abs(diff_db) < 12:
+#             gain_codes_cal[i] = map_gain(diff_db)
+#         else:
+#             gain_codes_cal[i], atten[i] = map_gain(diff_db)
+
+#     return gain_codes_cal.astype(int), atten.astype(int)
+
+
 def gain_codes(obj, analog_mag_pre_cal, mode):
     """array.
     gainCodes  Determines Rx/Tx analog VGA gain codes for Stingray
@@ -197,11 +228,16 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     #         print("Index Number: ", i)
     #         analog_mag_pre_cal[i] = np.average(analog_mag_pre_cal)
 
-    mag_min = np.min(analog_mag_pre_cal)
-    mag_cal_diff = analog_mag_pre_cal - mag_min
-    print(mag_cal_diff)
+    # mag_min = np.min(analog_mag_pre_cal)
+    # mag_cal_diff = analog_mag_pre_cal - mag_min
+    # print(mag_cal_diff)
+
+    # Calculate the target magnitude as the median of the pre-calibration magnitudes
+    target_mag = np.median(analog_mag_pre_cal)
+    mag_cal_diff = analog_mag_pre_cal - target_mag
+    
     mag_cal_poly = np.zeros(np.shape(analog_mag_pre_cal))
-    print(mag_min)
+    # print(mag_min)
     # Find correct gain code values based on which polynomial should be used
     # Adjust attenuators accordingly
     for i in range(np.size(analog_mag_pre_cal)):
@@ -418,12 +454,69 @@ def get_gain_codes(obj,adc,subarray,adc_map):
 
             obj.latch_rx_settings() # Latch SPI settings to devices
 
-def rx_gain(obj, adc, subarray, adc_map, element_map,gain_codes_offset):
+# def rx_gain(obj, adc, subarray, adc_map, element_map, gain_codes_offset,
+#             vga_step_db=0.45, max_iter=5, spread_thresh=0.1):
+#     """
+#     Refined RX gain calibration using ADAR1000 resolution info.
+#     - vga_step_db: ~0.45 dB per VGA code step.
+#     - Uses VGA + optional ±15 dB attenuator.
+#     - Iterates until spread < spread_thresh or max_iter reached.
+#     """
+#     data = rx_single_channel_data(obj, adc, subarray, adc_map)
+#     analog_mag_pre = get_analog_mag(data)
+#     analog_mag_curr = analog_mag_pre.copy()
+
+#     gain_codes_cal, atten_cal = gain_codes(obj, analog_mag_pre, "rx")
+
+#     for iteration in range(max_iter):
+#         # Apply settings to hardware
+#         gain_dict = create_dict(element_map, gain_codes_cal)
+#         atten_dict = create_dict(element_map, atten_cal)
+#         for element in obj.elements.values():
+#             ch = int(strip_to_last_two_digits(str(element)))
+#             if ch in subarray:
+#                 element.rx_gain = gain_dict[ch]
+#                 element.rx_attenuator = atten_dict[ch]
+#         obj.latch_rx_settings()
+
+#         # Measure current magnitudes
+#         data = rx_single_channel_data(obj, adc, subarray, adc_map)
+#         analog_mag_curr = get_analog_mag(data)
+#         mag_db = 20 * np.log10(analog_mag_curr + 1e-12)
+
+#         # Smooth magnitude to reduce noise
+#         mag_db_smooth = np.convolve(mag_db, np.ones(3)/3, mode='same')
+
+#         target_db = np.mean(mag_db_smooth)
+#         residual = mag_db_smooth - target_db
+
+#         # VGA corrections
+#         vga_corrections = np.round(-residual / vga_step_db).astype(int)
+#         gain_codes_cal = np.clip(gain_codes_cal + vga_corrections, 0, 127)
+
+#         # Attenuator logic with hysteresis
+#         atten_corrections = np.zeros_like(residual)
+#         atten_corrections[residual > 8] = 1
+#         atten_corrections[residual < -8] = 0
+#         atten_cal = atten_corrections
+
+#         # Spread metric: 90% range
+#         spread = np.percentile(mag_db_smooth, 95) - np.percentile(mag_db_smooth, 5)
+#         print(f"Iter {iteration+1}: spread = {spread:.3f} dB")
+
+#         if spread < spread_thresh:
+#             break
+
+#     analog_mag_post = analog_mag_curr
+#     return gain_codes_cal, atten_cal, analog_mag_pre, analog_mag_post
+
+## Original cal to minimum ampltiude across 4 channels ##
+def rx_gain(obj, adc, subarray, adc_map, element_map):
     """
     Measures analog magnitude for Stingray to equalize amplitudes across all elements.
     Returns calibrated gain codes and magnitude in dBFS pre-calibration in an 8x8 matrix mapped to the Stingray elements.
     """
-
+    
     # Capture ADC data with initial gain, attenuation, and phase settings
     data = rx_single_channel_data(obj, adc, subarray, adc_map)
 
@@ -431,18 +524,15 @@ def rx_gain(obj, adc, subarray, adc_map, element_map,gain_codes_offset):
     analog_mag_pre_cal = get_analog_mag(data)
     # Reshape the analog magnitude to match the subarray shape in column-major order
     # This is necessary to match the element_map mapping
-    # analog_mag_pre_cal0 = np.reshape(analog_mag_pre_cal, np.shape(element_map), order = 'C')
+    analog_mag_pre_cal0 = np.reshape(analog_mag_pre_cal, np.shape(element_map), order = 'F')
     # Calculate gain codes and attenuation values based on pre-calibration magnitude
     gain_codes_cal, atten_cal = gain_codes(obj, analog_mag_pre_cal, "rx")
     print(gain_codes_cal)
-    
     # Create dictionary to assign gain codes and attenuation values to elements
     gain_dict = create_dict(element_map, gain_codes_cal)
     print("gain_dict:", gain_dict)
     atten_dict = create_dict(element_map, atten_cal)
     # print("atten_dict:", atten_dict)
-
-
 
     for element in obj.elements.values():
         """
@@ -451,25 +541,88 @@ def rx_gain(obj, adc, subarray, adc_map, element_map,gain_codes_offset):
         This is used to map the element to its corresponding gain and attenuation values
         in the dictionaries created above
         """
-
         str_channel = str(element)
+        
         value = int(strip_to_last_two_digits(str_channel))
-        if value in subarray:
-            value = int(strip_to_last_two_digits(str_channel))
 
-            element.rx_attenuator = atten_dict[value]
-            element.rx_gain = gain_dict[value]
+        element.rx_attenuator = atten_dict[value]
+        element.rx_gain = gain_dict[value]
 
-            obj.latch_rx_settings() # Latch SPI settings to devices
+        obj.latch_rx_settings() # Latch SPI settings to devices
    
     # Capture ADC data with calibrated gain codes and attenuation values
-    sray.latch_rx_settings() # Latch SPI settings to devices
     data = rx_single_channel_data(obj, adc, subarray, adc_map)
-
+   
     # Measure analog magnitude post-calibration
     analog_mag_post_cal = get_analog_mag(data)
+    analog_mag_post_cal0 = np.reshape(analog_mag_post_cal, np.shape(element_map), order = 'F')
+
+    print("PreCal Data before Reshape:", analog_mag_pre_cal,)
+    print("PreCal Data after Reshape:",analog_mag_pre_cal0)
+    print("Postcal Data before Reshape:", analog_mag_post_cal,)
+    print("PostCal Data after Reshape:",analog_mag_post_cal0)
  
     return gain_codes_cal, atten_cal, analog_mag_pre_cal, analog_mag_post_cal
+
+# def rx_gain(obj, adc, subarray, adc_map, element_map,gain_codes_offset):
+#     """
+#     Measures analog magnitude for Stingray to equalize amplitudes across all elements.
+#     Returns calibrated gain codes and magnitude in dBFS pre-calibration in an 8x8 matrix mapped to the Stingray elements.
+#     """
+
+#     # Capture ADC data with initial gain, attenuation, and phase settings
+#     data = rx_single_channel_data(obj, adc, subarray, adc_map)
+
+#     # Measure analog magnitude pre-calibration
+#     analog_mag_pre_cal = get_analog_mag(data)
+#     # Reshape the analog magnitude to match the subarray shape in column-major order
+#     # This is necessary to match the element_map mapping
+#     # analog_mag_pre_cal0 = np.reshape(analog_mag_pre_cal, np.shape(element_map), order = 'C')
+#     # Calculate gain codes and attenuation values based on pre-calibration magnitude
+
+
+    
+
+
+
+#     gain_codes_cal, atten_cal = gain_codes(obj, analog_mag_pre_cal, "rx")
+#     print(gain_codes_cal)
+    
+
+#     # Create dictionary to assign gain codes and attenuation values to elements
+#     gain_dict = create_dict(element_map, gain_codes_cal)
+#     print("gain_dict:", gain_dict)
+#     atten_dict = create_dict(element_map, atten_cal)
+#     # print("atten_dict:", atten_dict)
+
+
+
+#     for element in obj.elements.values():
+#         """
+#         Iterate through each element in the Stingray object
+#         Convert the element to a string and extract the last two digits
+#         This is used to map the element to its corresponding gain and attenuation values
+#         in the dictionaries created above
+#         """
+
+#         str_channel = str(element)
+#         value = int(strip_to_last_two_digits(str_channel))
+#         if value in subarray:
+#             value = int(strip_to_last_two_digits(str_channel))
+
+#             element.rx_attenuator = atten_dict[value]
+#             element.rx_gain = gain_dict[value]
+
+#             obj.latch_rx_settings() # Latch SPI settings to devices
+   
+#     # Capture ADC data with calibrated gain codes and attenuation values
+#     sray.latch_rx_settings() # Latch SPI settings to devices
+#     data = rx_single_channel_data(obj, adc, subarray, adc_map)
+
+#     # Measure analog magnitude post-calibration
+#     analog_mag_post_cal = get_analog_mag(data)
+ 
+#     return gain_codes_cal, atten_cal, analog_mag_pre_cal, analog_mag_post_cal
 
 def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_targ, dig_phase):
     """Calculate analog phase for each element in the subarray."""
@@ -571,7 +724,6 @@ def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_tar
     # Brute forcing 1x64 analog phase array
     #analog_phase_flatten = np.concatenate((analog_phase[0,0:4], analog_phase[3,0:4], analog_phase[0,4:8], analog_phase[3,4:8], analog_phase[0,8:12], analog_phase[3,8:12], analog_phase[0,12:16], analog_phase[3,12:16], analog_phase[1,0:4], analog_phase[2,0:4], analog_phase[1,4:8], analog_phase[2,4:8], analog_phase[1,8:12], analog_phase[2,8:12], analog_phase[1,12:16], analog_phase[2,12:16]))
     return analog_phase_flatten, analog_phase_dict
-
 
 def rx_single_channel_data(obj, adc, array, adc_map):
         """
@@ -740,61 +892,69 @@ def fft(complex_data, combined_waveforms, tone_type):
 
     return fft_results
 
-def taylor_window(N, nbar=4, sll=-30):
-    """
-    Generate Taylor window weights for beamforming
-    
-    Parameters:
-    N (int): Number of array elements (64 in this case)
-    nbar (int): Number of nearly constant level sidelobes (typically 4-8)
-    sll (float): Desired sidelobe level in dB (typically -30 to -40)
-    
-    Returns:
-    numpy.ndarray: Taylor window weights
-    """
-    # Convert sidelobe level from dB
-    A = np.abs(sll)/8.69
-    
-    # Compute sigma
-    sigma = np.pi * np.sqrt((A**2)/(nbar**2 + (A*np.cosh(np.pi))**2))
-    
-    # Initialize window
-    n = np.arange(N)
-    window = np.ones(N)
-    
-    # Compute Taylor weights
-    for m in range(1, nbar):
-        term = ((N-1)/2 - n)*2*np.pi/N
-        window *= np.cos(term*m)/(1 - (2*sigma*m)**2)
-    
-    # Normalize
-    window = window/np.max(np.abs(window))
-    
-    return window
+def quantize_phase(phase, bits=8):
+    """Quantize phase values to specified number of bits"""
+    levels = 2**bits
+    phase_max = 2*np.pi
+    step = phase_max/levels
+    return np.round(phase/step)*step
 
+def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10, elec_steer_angle=[0]):  # Electronic steering angles (az or el)
 
-def apply_taylor_taper(rx_data, sidelobe_level=-30):
-    """
-    Apply Taylor tapering to received data
-    
-    Parameters:
-    rx_data: numpy.ndarray of shape (64, samples) for 64 elements
-    sidelobe_level: desired sidelobe level in dB
-    
-    Returns:
-    numpy.ndarray: Tapered receive data
-    """
-    num_elements = rx_data.shape[0]
-    taper = taylor_window(num_elements, nbar=4, sll=sidelobe_level)
-    
-    # Reshape taper for broadcasting
-    taper = taper.reshape(-1, 1)
-    
-    # Apply taper to received data
-    tapered_data = rx_data * taper
-    
-    return tapered_data
+    # === Constants ===
+    from scipy.constants import c
+    lambda_op = c / (f_op_GHz * 1e9)      # Wavelength at 11 GHz
+    k = 2 * np.pi / lambda_op             # Wavenumber
+    d = 0.013635                            # Element spacing = 13.63 mm
+    elec_steer_angle = -elec_steer_angle  # Convert to negative for correct direction
+    # === Sweep settings
+    # Quantized phase settings
+    quantize_phased = quantize_phase(np.radians(theta_sweep), bits=8)
+    theta_sweep = np.degrees(quantize_phased)
 
+    mechanical_sweep = np.arange(theta_sweep[0], theta_sweep[1]+sweep_step, sweep_step)    # Mechanical sweep angles
+    # elec_steer_angles = np.arange(-20, 21, 10)      # Electronic steering angles (az or el)
+
+    # === Array size
+    M, N = 8, 8
+    x = (np.arange(N) - (N - 1) / 2) * d  # X-coordinates (azimuth direction)
+    y = (np.arange(M) - (M - 1) / 2) * d  # Y-coordinates (elevation direction)
+
+    # === Initialize storage
+    azim_results = []
+    elev_results = []
+
+    steer_rad = np.radians(elec_steer_angle)
+    # Electronic steering along X-axis (azimuth)
+    steering_weights = np.exp(1j * k * x * np.sin(steer_rad))
+    response = []
+    for mech_angle in mechanical_sweep:
+        mech_rad = np.radians(mech_angle)
+        incoming_phase = np.exp(1j * k * x * np.sin(mech_rad))
+        pattern = np.dot(steering_weights, incoming_phase)
+        response.append(np.abs(pattern))
+    response = 20 * np.log10(np.clip(np.array(response) / np.max(response), 1e-10, None))
+    azim_results.append(response)
+    #Force Column Vector
+    azim_results = np.array(azim_results).reshape(-1, 1)
+
+        # === Elevation Beampattern Simulation
+    steer_rad = np.radians(elec_steer_angle)
+    # Electronic steering along Y-axis (elevation)
+    steering_weights = np.exp(1j * k * y * np.sin(steer_rad))
+    response = []
+    for mech_angle in mechanical_sweep:
+        mech_rad = np.radians(mech_angle)
+        incoming_phase = np.exp(1j * k * y * np.sin(mech_rad))
+        pattern = np.dot(steering_weights, incoming_phase)
+        response.append(np.abs(pattern))
+    response = 20 * np.log10(np.clip(np.array(response) / np.max(response), 1e-10, None))
+    elev_results.append(response)
+    #Force Column Vector
+    elev_results = np.array(elev_results).reshape(-1, 1)
+    elec_steer_angle = -elec_steer_angle  # Convert back to positive for output
+    
+    return mechanical_sweep, elec_steer_angle, azim_results, elev_results,  # Return the mechanical sweep angles and the pattern for the boresight angle
 
 SELF_BIASED_LNAs = True
 ARRAY_MODE = "rx" # start rx cals first
@@ -873,13 +1033,6 @@ conv.rx_buffer_size = 2 ** 12
 conv.dds_phases = []
 
 
-# subarray = np.array([
-#     [1,2,9,10], # subarray 1
-#     [33,34,41,42], # subarray 2
-#     [37,38,45,46],  # subarray 3
-#     [5,6,13,14], # subarray 4
-#     ])
-
 subarray = np.array([
     [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28], # subarray 1
     [33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60], # subarray 2
@@ -893,10 +1046,10 @@ adc_ref      = 0  # ADC reference channel (indexed at 0)
 
 sray = adi.adar1000_array(
     uri = url,
-
+    
     chip_ids = ["adar1000_csb_0_1_2", "adar1000_csb_0_1_1", "adar1000_csb_0_2_2", "adar1000_csb_0_2_1",
                 "adar1000_csb_0_1_3", "adar1000_csb_0_1_4", "adar1000_csb_0_2_3", "adar1000_csb_0_2_4",
- 
+
                 "adar1000_csb_1_1_2", "adar1000_csb_1_1_1", "adar1000_csb_1_2_2", "adar1000_csb_1_2_1",
                 "adar1000_csb_1_1_3", "adar1000_csb_1_1_4", "adar1000_csb_1_2_3", "adar1000_csb_1_2_4"],
 
@@ -925,8 +1078,10 @@ sray = adi.adar1000_array(
         13: [8, 7, 15, 16],     15: [40, 39, 47, 48],
         14: [24, 23, 31, 32],   16: [56, 55, 63, 64],
     },
-    
 )
+
+delay_phases = np.arange(-180,181,1) # sweep phase from -180 to 180 in 1 degree steps.
+
 disable_stingray_channel(sray)
 sray.latch_rx_settings() 
 d = ~np.isin(subarray, subarray_ref)
@@ -941,7 +1096,7 @@ if ARRAY_MODE == "rx":
         element.rx_phase = 0 # Set all phases to 0
     sray.latch_rx_settings() # Latch SPI settings to devices
 
-sray.steer_rx(azimuth=0, elevation=0) # Broadside
+sray.steer_rx(azimuth=0, elevation=0) # Broadside # Broadside
 # Setup ADXUD1AEBZ and ADF4371
 ctx = conv._ctrl.ctx
 xud = ctx.find_device("xud_control")
@@ -957,7 +1112,8 @@ rxgainmode = xud.find_channel("voltage0", True)
 XUDLO = adf4371.find_channel("altvoltage2", True)
  
 # 0 for rx, 1 for tx
-txrx1.attrs["raw"].value = "0" # Subarray 4
+txrx1.attrs["raw"].value = "0" # Subarray 4print("Calibrating Phase... Please wait...")
+cal_ant = find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
 txrx2.attrs["raw"].value = "0" # Subarray 3
 txrx3.attrs["raw"].value = "0" # Subarray 1
 txrx4.attrs["raw"].value = "0" # Subarray 2
@@ -975,29 +1131,33 @@ XUDLO.attrs["powerdown"].value = "0"
 # #########################################################################
  
 # delay_times = np.arange(-time_max, time_max, time_max/200)    # time delay in ps
-delay_phases = np.arange(-180,181,1) # sweep phase from -180 to 180 in 1 degree steps.
+#delay_phases = np.arange(-180,181,1) # sweep phase from -180 to 180 in 1 degree steps.
  ############# Insert Phase Calibration here #############
 
-disable_stingray_channel(sray)
   
 # Enable subarray reference
 enable_stingray_channel(sray,subarray)
 
-# ## Take data capture
+# Take data capture
+
 no_cal_data = np.transpose(np.array(data_capture(conv)))
 
-#Gain cal
+# Gain cal
 disable_stingray_channel(sray)
-# gain_dict, atten_dict, mag_pre_cal, mag_post_cal = rx_gain(sray, conv, subarray, adc_map, sray.element_map,None)
+gain_dict, atten_dict, mag_pre_cal, mag_post_cal = rx_gain(sray, conv, subarray, adc_map, sray.element_map)
 
 # print("Gain Dict Size:", gain_dict.shape)
 # print("Mag precal: ", mag_pre_cal)
 # print("Mag postcal: ", mag_post_cal)
 
+
+
+# Phase cal
 print("Calibrating Phase... Please wait...")
 cal_ant = find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
-# Phase cal
 analog_phase, analog_phase_dict = phase_analog(sray, conv, adc_map, adc_ref, subarray_ref, subarray_targ, cal_ant)
+
+
 
 #print('peak delay array:',cal_ant)
 enable_stingray_channel(sray)
@@ -1008,8 +1168,11 @@ calibrated_data = np.array(calibrated_data).T
 disable_stingray_channel(sray)
 
 
+plt.ion()   # Turn on interactive mode
 fig, axs = plt.subplots(2,1) # Creates a 2x1 grid of subplots
 
+# Test
+enable_stingray_channel(sray)
 
 enable_stingray_channel(sray, subarray)
 #no_cal_data = np.transpose(np.array(data_capture(conv)))
@@ -1032,6 +1195,7 @@ axs[1].set_xlim([100,200])
 plt.tight_layout()
 plt.draw()
 plt.pause(0.001) 
+plt.show() 
 
 GIMBAL_H = mbx.H
 GIMBAL_V = mbx.V
@@ -1039,6 +1203,27 @@ GIMBAL_V = mbx.V
 maxsweepangle = 180
 sweepstep = 1
 gimbal_motor = GIMBAL_H
+
+
+steering_angle = 0 # degrees
+
+print("Before Steering Phase:")
+print(sray.all_rx_phases)
+
+sray.steer_rx(azimuth=steering_angle, elevation=0) # Steer to desired angle
+
+
+for element in sray.elements.values():
+    str_channel = str(element)
+    value = int(strip_to_last_two_digits(str_channel))
+
+    # Assign the calculated steered phase to the element
+    element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
+
+sray.latch_rx_settings()  # Latch SPI settings to devices
+
+print("After Steering Phase:")
+print(sray.all_rx_phases)
 
 gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)  # Define gimbal positions from -90 to 90 degrees
 mbx.move(gimbal_motor,-(maxsweepangle/2))
@@ -1053,7 +1238,7 @@ peak_mag = np.zeros(len(gimbal_positions))
 print(peak_mag.shape)
 for i in range(len(gimbal_positions)):
     mbx.move(gimbal_motor,sweepstep)
-    time.sleep(0.5)  # Allow time for the gimbal to move to the new position
+    time.sleep(0.3)  # Allow time for the gimbal to move to the new position
 
     steer_data = np.transpose(np.array(data_capture(conv)))
     # Apply Taylor tapering to the received data
@@ -1082,8 +1267,35 @@ norm_peak_mag = peak_mag - np.max(peak_mag)  # Normalize the peak magnitudes
 # Define the corresponding angles (assuming gimbal_positions is 0 to 80, map to -40 to 40)
 angles = np.linspace(-(maxsweepangle/2), (maxsweepangle/2), len(gimbal_positions))
 
-# Plot
-plt.figure()
+
+# Plot peak magnitude vs mechanical azimuth angle with cosine rolloff
+th = np.linspace(-90, 90, 1000)  # degrees
+th_rad = np.deg2rad(th)
+
+# cosTheta^1
+cosTh1p0 = 20 * np.log10(np.abs(np.cos(th_rad)**1.0)) + np.max(peak_mag)
+# cosTheta^1.2
+cosTh1p2 = 20 * np.log10(np.abs(np.cos(th_rad)**1.2)) + np.max(peak_mag)
+# cosTheta^1.5
+cosTh1p5 = 20 * np.log10(np.abs(np.cos(th_rad)**1.5)) + np.max(peak_mag)
+# cosTheta^1.7
+cosTh1p7 = 20 * np.log10(np.abs(np.cos(th_rad)**1.7)) + np.max(peak_mag)
+# cosTheta^2.0
+cosTh2p0 = 20 * np.log10(np.abs(np.cos(th_rad)**2.0)) + np.max(peak_mag)
+
+plt.figure(figsize=(10, 6))
+plt.plot(th, cosTh1p0, label='n=1.0')
+plt.plot(th, cosTh1p2, label='n=1.2')
+plt.plot(th, cosTh1p5, label='n=1.5')
+plt.plot(th, cosTh1p7, label='n=1.7')
+plt.plot(th, cosTh2p0, label='n=2.0')
+plt.title('Element Pattern Models (cos^n θ)')
+plt.xlabel('Angle (degrees)')
+plt.ylabel('Relative Power (dB)')
+plt.grid(True)
+plt.legend()
+plt.ylim(-50, 0)
+
 plt.plot(angles, peak_mag)
 plt.title("Peak FFT Magnitude vs Mechanical Azimuth Angle - Combined Data")
 plt.xlabel("Azimuth Angle (degrees)")
@@ -1093,127 +1305,17 @@ plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
 plt.draw()
 plt.pause(0.001) 
 
-# # Plot
-# # === Parameters ===
-# N = 64                      # Number of array elements
-# lattice_spacing_GHz = 10   # Lattice spacing (GHz equivalent)
-# f_op_GHz = 10              # Operating frequency (GHz)
-# theta_steer = 0            # Steering angle (degrees)
-# element_factor = 2         # Element pattern: cos^element_factor(theta)
- 
-# # === Derived spacing in wavelengths ===
-# d = f_op_GHz / lattice_spacing_GHz  # Element spacing in wavelengths (λ)
- 
-# # === Angle sweep ===
-# theta = np.arange(-(maxsweepangle/2), (maxsweepangle/2), sweepstep)     # Angle in degrees
-# theta_rad = np.radians(theta)
- 
-# # === Element pattern ===
-# element_pattern = np.cos(theta_rad)
-# element_pattern[element_pattern < 0] = 0  # Zero out backside
-# element_pattern = element_pattern ** element_factor
- 
-# # === Array factor computation ===
-# psi = 2 * np.pi * d * (np.cos(theta_rad) - np.cos(np.radians(theta_steer)))
-# af = np.abs(np.sum(np.exp(1j * np.outer(np.arange(N), psi)), axis=0)) / N
- 
-# # === Total pattern ===
-# total_pattern = af * element_pattern
- 
-# # === Normalize and convert to dB ===
-# total_pattern_db = 20 * np.log10(total_pattern / np.max(total_pattern))
-
-def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10):
-    # # Array parameters
-    # N = 64                  # Number of elements
-    # d = 0.5                 # Element spacing in wavelengths (typically λ/2)
-    # theta_steer = 0         # Boresight steering (0 degrees)
-    
-    # # Generate angle sweep
-    # theta = np.arange(theta_range[0], theta_range[1]+theta_step, theta_step)
-    # theta_rad = np.deg2rad(theta)
-    # theta_steer_rad = np.deg2rad(theta_steer)
-    
-    # # Element pattern (simple cosine model)
-    # element_pattern = np.cos(theta_rad)
-    # element_pattern[np.abs(theta_rad) > np.pi/2] = 0  # Zero out backside radiation
-    
-    # # Array factor calculation
-    # n = np.arange(N)
-    # psi = 2 * np.pi * d * (np.sin(theta_rad[:, np.newaxis]) - np.sin(theta_steer_rad))
-    # array_factor = np.sum(np.exp(1j * n * psi), axis=1) / N
-    
-    # # Total pattern
-    # total_pattern = np.abs(array_factor) * element_pattern
-    
-    # # Convert to dB with normalization
-    # pattern_db = 20 * np.log10(total_pattern / np.max(total_pattern))
-
-
-
-    # === Constants ===
-    # f_op_GHz = 10                        # Operating frequency
-    from scipy.constants import c
-    # c = 3e8                               # Speed of light (m/s)
-    lambda_op = c / (f_op_GHz * 1e9)      # Wavelength at 11 GHz
-    k = 2 * np.pi / lambda_op             # Wavenumber
-    d = 0.013635                            # Element spacing = 13.63 mm
-
-    # === Sweep settings
-    mechanical_sweep = np.arange(theta_sweep[0], theta_sweep[1]+sweep_step, sweep_step)    # Mechanical sweep angles
-    elec_steer_angles = np.arange(-20, 21, 10)      # Electronic steering angles (az or el)
-
-    # === Array size
-    M, N = 8, 8
-    x = (np.arange(N) - (N - 1) / 2) * d  # X-coordinates (azimuth direction)
-    y = (np.arange(M) - (M - 1) / 2) * d  # Y-coordinates (elevation direction)
-
-    # === Initialize storage
-    azim_results = []
-    elev_results = []
-
-    # === Azimuth Beampattern Simulation
-    for steer_angle in elec_steer_angles:
-        steer_rad = np.radians(steer_angle)
-        # Electronic steering along X-axis (azimuth)
-        steering_weights = np.exp(1j * k * x * np.sin(steer_rad))
-        response = []
-        for mech_angle in mechanical_sweep:
-            mech_rad = np.radians(mech_angle)
-            incoming_phase = np.exp(1j * k * x * np.sin(mech_rad))
-            pattern = np.dot(steering_weights, incoming_phase)
-            response.append(np.abs(pattern))
-        response = 20 * np.log10(np.clip(np.array(response) / np.max(response), 1e-10, None))
-        azim_results.append(response)
-
-    # === Elevation Beampattern Simulation
-    for steer_angle in elec_steer_angles:
-        steer_rad = np.radians(steer_angle)
-        # Electronic steering along Y-axis (elevation)
-        steering_weights = np.exp(1j * k * y * np.sin(steer_rad))
-        response = []
-        for mech_angle in mechanical_sweep:
-            mech_rad = np.radians(mech_angle)
-            incoming_phase = np.exp(1j * k * y * np.sin(mech_rad))
-            pattern = np.dot(steering_weights, incoming_phase)
-            response.append(np.abs(pattern))
-        response = 20 * np.log10(np.clip(np.array(response) / np.max(response), 1e-10, None))
-        elev_results.append(response)
-    
-    return mechanical_sweep, elec_steer_angles, azim_results, elev_results,  # Return the mechanical sweep angles and the pattern for the boresight angle
 
 # Calculate and plot
-mechanical_sweep, elec_steer_angles, azim_results, elev_results, = calc_array_pattern()
+mechanical_sweep, elec_steer_angle, azim_results, elev_results, = calc_array_pattern(elec_steer_angle=steering_angle)
 
 # === Plot Azimuth Cuts
 plt.figure(figsize=(10, 6))
-i = 2 #hardcoded for boresight angle of 0 degrees
-colors = plt.cm.viridis(np.linspace(0, 1, len(elec_steer_angles)))
-# for i, result in enumerate(azim_results):
-#     plt.plot(mechanical_sweep, result, label=f'Steer {elec_steer_angles[i]}°', color=colors[i])
-plt.plot(mechanical_sweep, azim_results[i], label=f'Steer {elec_steer_angles[i]}°', color=colors[i])
-plt.plot(angles, norm_peak_mag,linestyle='dotted', label='Measured Data', color='green')
-plt.title('Azimuth Cuts (X-Axis Steering, Mechanical Rotation in Azimuth)')
+# Plot theoretical results
+plt.plot(mechanical_sweep, azim_results, label=f'Theoretical Pattern',color='red')
+# Plot measured results
+plt.plot(angles, norm_peak_mag,linestyle='dotted', label='Measured Data', color='blue',markersize=9)
+plt.title(f'Azimuth Cuts (X-Axis Steering at {elec_steer_angle}°)')
 plt.xlabel('Mechanical Azimuth Angle (degrees)')
 plt.ylabel('Normalized Gain (dB)')
 plt.ylim(-60, 0)
@@ -1224,32 +1326,11 @@ plt.tight_layout()
 plt.draw()
 plt.pause(0.001) 
 
-# === Plot Elevation Cuts
-# plt.figure(figsize=(10, 6))
-# colors = plt.cm.plasma(np.linspace(0, 1, len(elec_steer_angles)))
-# for i, result in enumerate(elev_results):
-#     plt.plot(mechanical_sweep, result, label=f'Steer {elec_steer_angles[i]}°', color=colors[i])
-# plt.title('Elevation Cuts (Y-Axis Steering, Mechanical Rotation in Elevation)')
-# plt.xlabel('Mechanical Elevation Angle (degrees)')
-# plt.ylabel('Normalized Gain (dB)')
-# plt.ylim(-60, 0)
-# plt.grid(True)
-# plt.legend(title='Electronic Steer')
-# plt.tight_layout()
-# plt.show()
- 
-# === Plot ===
-# plt.figure()
-# plt.plot(angles, norm_peak_mag)
-# plt.plot(theta, pattern, 'k--')
-# plt.title("Peak FFT Magnitude Normalized vs Mechanical Azimuth Angle - Combined Data")
-# plt.xlabel("Azimuth Angle (degrees)")
-# plt.ylabel("Peak FFT Magnitude (dBi)")
-# plt.grid(True)
-# plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
-# plt.ylim([-60, 0])
-# plt.draw()
-# plt.pause(0.001) 
+""""
+# Plots For Each Beamformer Card ###
+#                                ###
+#                                ###
+
 
 fig, axs = plt.subplots(2,2) # Creates a 2x1 grid of subplots
 
@@ -1303,6 +1384,7 @@ plt.pause(0.001)
 
 #fig, axs = plt.subplots(1,1) # Creates a 2x1 grid of subplots
 
+# Phase alignment test after gimbal sweep
 
 ## Take data capture of each ADC post gimbal movement
 enable_stingray_channel(sray)
@@ -1324,5 +1406,24 @@ plt.grid(visible=True)
 plt.xlim([100,200])
 plt.draw()
 plt.pause(0.001) 
+"""
 
-plt.show()
+# Show plot
+
+plt.show(block=True) 
+
+# Create a dictionary with the data you want to export
+matlab_data = {
+    'mechanical_angles': angles,
+    'measured_pattern': norm_peak_mag,
+    'theoretical_pattern': azim_results.flatten(),
+    'steering_angle': steering_angle,
+    'cal_antenna': cal_ant,
+    'converter_0': converter_0,
+    'converter_1': converter_1,
+    'converter_2': converter_2,
+    'converter_3': converter_3
+}
+
+# Save to .mat file
+savemat('beamforming_data.mat', matlab_data)

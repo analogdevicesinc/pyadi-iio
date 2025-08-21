@@ -893,7 +893,7 @@ adc_ref      = 0  # ADC reference channel (indexed at 0)
 
 sray = adi.adar1000_array(
     uri = url,
-
+    
     chip_ids = ["adar1000_csb_0_1_2", "adar1000_csb_0_1_1", "adar1000_csb_0_2_2", "adar1000_csb_0_2_1",
                 "adar1000_csb_0_1_3", "adar1000_csb_0_1_4", "adar1000_csb_0_2_3", "adar1000_csb_0_2_4",
  
@@ -925,7 +925,7 @@ sray = adi.adar1000_array(
         13: [8, 7, 15, 16],     15: [40, 39, 47, 48],
         14: [24, 23, 31, 32],   16: [56, 55, 63, 64],
     },
-    
+
 )
 disable_stingray_channel(sray)
 sray.latch_rx_settings() 
@@ -941,7 +941,7 @@ if ARRAY_MODE == "rx":
         element.rx_phase = 0 # Set all phases to 0
     sray.latch_rx_settings() # Latch SPI settings to devices
 
-sray.steer_rx(azimuth=0, elevation=0) # Broadside
+sray.steer_rx(azimuth=0, elevation=0) # Broadside # Broadside
 # Setup ADXUD1AEBZ and ADF4371
 ctx = conv._ctrl.ctx
 xud = ctx.find_device("xud_control")
@@ -998,6 +998,22 @@ print("Calibrating Phase... Please wait...")
 cal_ant = find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
 # Phase cal
 analog_phase, analog_phase_dict = phase_analog(sray, conv, adc_map, adc_ref, subarray_ref, subarray_targ, cal_ant)
+
+print("Before Steering Phase:")
+print(sray.all_rx_phases)
+
+sray.steer_rx(azimuth=10, elevation=0) # Broadside
+print(sray.all_rx_phases)
+for element in sray.elements.values():
+    str_channel = str(element)
+    value = int(strip_to_last_two_digits(str_channel))
+
+    # Assign the calculated steered phase to the element
+    element.rx_phase = (analog_phase_dict[value] + element.rx_phase) % 360
+    sray.latch_rx_settings()  # Latch SPI settings to devices
+   
+print("After Steering Phase:")
+print(sray.all_rx_phases)
 
 #print('peak delay array:',cal_ant)
 enable_stingray_channel(sray)
@@ -1141,14 +1157,7 @@ def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10):
     # # Array factor calculation
     # n = np.arange(N)
     # psi = 2 * np.pi * d * (np.sin(theta_rad[:, np.newaxis]) - np.sin(theta_steer_rad))
-    # array_factor = np.sum(np.exp(1j * n * psi), axis=1) / N
-    
-    # # Total pattern
-    # total_pattern = np.abs(array_factor) * element_pattern
-    
-    # # Convert to dB with normalization
-    # pattern_db = 20 * np.log10(total_pattern / np.max(total_pattern))
-
+    # arrayadi/manta_ray_cal_64_element_electronic_steer.py
 
 
     # === Constants ===

@@ -167,7 +167,7 @@ MIN_VERSION                 = 41                        # Minimum version suppor
 MAX_VELOCITY                = 1023                      # Maximum velocity
 MIN_P_VERSION               = 11                        # Minimum version supported for P Motors (GIM04)
 MAX_P_VELOCITY              = 2920                      # GMI04 Base velocity
-H_PROFILE_VELOCITY          = 1023                      # rotation speed
+H_PROFILE_VELOCITY          = 1023                      # rotation speed 1023
 HP_PROFILE_VELOCITY         = 2920                      # rotation speed
 V_PROFILE_VELOCITY          = 1023                      # rotation speed
 P_PROFILE_VELOCITY          = 1023                      # rotation speed
@@ -1990,7 +1990,8 @@ def gotoZERO(accuracy="HIGH"):
     """ makes all motors go home """
     print("going to zero position")
     if gim_type == HV:
-        jump_angle(7.73, -6.33, 0, accuracy)
+        # jump_angle(7.51, -6.33, 0, accuracy)
+        jump_angle(-0.06, -0.53, 0, accuracy)
     elif gim_type == SPHERICAL:
         jump_angle_sph(0, [0, 0], accuracy)
     return

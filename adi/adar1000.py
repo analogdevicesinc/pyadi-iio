@@ -1333,7 +1333,8 @@ class adar1000_array(context_manager):
         self._chip_ids = chip_ids
         self._device_map = device_map
         self._element_map = element_map
-        self._element_spacing = 0.015
+        #self._element_spacing = 0.015 #Stingray
+        self._element_spacing = 0.013635 #Mantaray
         self._frequency = 10e9
         self._rx_azimuth = 0
         self._rx_azimuth_phi = 0
@@ -1614,9 +1615,9 @@ class adar1000_array(context_manager):
             row_phase = element.row * elevation_phi
 
             if rx_or_tx == "rx":
-                element.rx_phase = column_phase + row_phase
+                element.rx_phase = (column_phase + row_phase) % 360
             else:
-                element.tx_phase = column_phase + row_phase
+                element.tx_phase = (column_phase + row_phase) % 360
 
         # Latch in the new phases
         if rx_or_tx == "rx":
@@ -1676,14 +1677,15 @@ class adar1000_array(context_manager):
 
     def steer_rx(self, azimuth, elevation):
         """Steer the Rx array in a particular direction. This method assumes that the entire array is one analog beam.
-
+        
         parameters:
             azimuth: float
                 Desired beam angle in degrees for the horizontal direction.
             elevation: float
                 Desired beam angle in degrees for the vertical direction.
         """
-
+        if azimuth < 0:
+            azimuth = 360 - abs(azimuth)
         self._steer("rx", azimuth, elevation)
 
     def steer_tx(self, azimuth, elevation):
