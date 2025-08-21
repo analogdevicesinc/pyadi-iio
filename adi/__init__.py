@@ -32,6 +32,7 @@ from adi.ad7091rx import ad7091rx
 from adi.ad7124 import ad7124
 from adi.ad7134 import ad7134
 from adi.ad7291 import ad7291
+from adi.ad7405 import ad7405
 from adi.ad7490 import ad7490
 from adi.ad7606 import ad7606
 from adi.ad7689 import ad7689

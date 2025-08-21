@@ -521,9 +521,9 @@ adf4377:
           - iio:device0
 
 ltc2378-20:
-  - ltc2378-20
+  - ltc2378
   - pyadi_iio_class_support:
-      - ltc2378-20
+      - ltc2378
   - emulate:
       - filename: ltc2378.xml
       - data_devices:
@@ -814,5 +814,13 @@ ad5710r:
       - ad5710r
   - emulate:
       - filename: ad5710r.xml
+      - data_devices:
+          - iio:device0
+ad7405:
+  - adum7701
+  - pyadi_iio_class_support:
+      - ad7405
+  - emulate:
+      - filename: ad7405.xml
       - data_devices:
           - iio:device0
