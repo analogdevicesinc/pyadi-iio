@@ -748,3 +748,14 @@ ad738x:
       - data_devices:
           - iio:device0
 
+ad7405:
+  - ad7405
+  - adum7701
+  - adum7702
+  - adum7703
+  - pyadi_iio_class_support:
+      - ad7405
+  - emulate:
+      - filename: ad7405.xml
+      - data_devices:
+          - iio:device0
