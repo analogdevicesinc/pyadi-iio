@@ -6,7 +6,19 @@ config_file_folder = os.path.dirname(__file__)
 config_file_zu4eg = os.path.join(config_file_folder, "nebula_zu4eg.yaml")
 hostname = os.getenv("HOSTNAME", "b0adsy1100")
 
-
+def check_files_exist(configs, root_folder):
+    # Check if the boot files are present
+    for cfg in configs:
+        for key in cfg:
+            if key != "name" and key != "extras":
+                assert os.path.isfile(
+                    os.path.join(root_folder, cfg[key])
+                ), f"File {key} not found at {os.path.join(root_folder, cfg[key])}"
+            if key == "extras":
+                for extra in cfg[key]:
+                    assert os.path.isfile(
+                        os.path.join(root_folder, extra["src"])
+                    ), f"File {extra['src']} not found at {os.path.join(root_folder, extra['src'])}"
 
 def measure_power(power_supply):
     v1 = power_supply.ch1.voltage
