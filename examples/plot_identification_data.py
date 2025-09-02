@@ -57,17 +57,17 @@ iteration=0
 last_timestamp = ""
 last_timestamp1 = ""
 
-estimated_ch1 = 0
-estimated_ch2 = 0
-estimated_ch3 = 0
-estimated_ch4 = 0
-estimated_ch5 = 0
-estimated_ch6 = 0
-estimated_ch7 = 0
-estimated_ch8 = 0
+estimated_ch1 = 1
+estimated_ch2 = 1
+estimated_ch3 = 1
+estimated_ch4 = 1
+estimated_ch5 = 1
+estimated_ch6 = 1
+estimated_ch7 = 1
+estimated_ch8 = 1
 
-file_path = '/home/analog/Workspace/holohub/build/matlab_classify_modulator/applications/matlab_classify_modulator/cpp/modulation_results.txt'
-file_path1 = '/home/analog/Workspace/holohub/build/matlab_classify_modulator/applications/matlab_classify_modulator/cpp/modulation_results1.txt'
+file_path = '/home/analog/git/holohub/build/matlab_classify_modulator/modulation_results.txt'
+file_path1 = '/home/analog/git/holohub/build/matlab_classify_modulator/modulation_results1.txt'
 
 truth = 0
 truth1 = 0
@@ -214,9 +214,11 @@ def get_cnn_data():
     sdr3._tx2.tx(iq)
 
     time.sleep(0.5)
+    print(file_path)
     if get_timestamp(file_path):
         with open(file_path, 'r') as file:
             lines = file.readlines()
+            print(lines)
             estimated_ch1 = int(lines[1].strip())
             estimated_ch2 = int(lines[2].strip())
             estimated_ch3 = int(lines[3].strip())
@@ -241,6 +243,7 @@ def get_cnn_data():
 
         with open(file_path1, 'r') as file:
             lines = file.readlines()
+            print(lines)
             estimated_ch5 = int(lines[1].strip())
             estimated_ch6 = int(lines[2].strip())
             estimated_ch7 = int(lines[3].strip())
@@ -314,9 +317,7 @@ def plot_confusion_matrix():
         z=confusion_matrix,
         x=labels,
         y=labels,
-        colorscale='Blues',
-        linewidths=.5,
-        annot=True
+        colorscale='Blues'
     ))
     fig.update_layout(
         xaxis=dict(title='Estimated Modulation'),
@@ -329,9 +330,7 @@ def plot_confusion_matrix1():
         z=confusion_matrix1,
         x=labels,
         y=labels,
-        colorscale='Blues',
-        linewidths=.5,
-        annot=True
+        colorscale='Blues'
     ))
     fig.update_layout(
         xaxis=dict(title='Estimated Modulation'),
@@ -485,9 +484,8 @@ def update_graph_live(n):
     return plot_confusion_matrix(), plot_modulated_data(), table_data, truth_table_data , truth_table_data1, plot_confusion_matrix1(), plot_modulated_data1()
 
 if __name__ == '__main__':
-
     # Code to be executed just once
-    sdr  = adi.adrv9002(uri="ip:10.48.65.222")
+    sdr  = adi.adrv9002(uri="ip:192.168.0.15")
     sdr.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
     sdr.tx0_port_en = "spi"
@@ -500,9 +498,10 @@ if __name__ == '__main__':
     sdr.tx1_lo = 2400000000
     sdr.tx_hardwaregain_chan0 = -10
     sdr.tx_hardwaregain_chan1 = -10
+    print("setup 0")
 
 
-    sdr1 = adi.adrv9002(uri="ip:10.48.65.187")
+    sdr1 = adi.adrv9002(uri="ip:192.168.0.16")
     sdr1.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
     sdr1.tx0_port_en = "spi"
@@ -515,8 +514,9 @@ if __name__ == '__main__':
     sdr1.tx1_lo = 2400000000
     sdr1.tx_hardwaregain_chan0 = -10
     sdr1.tx_hardwaregain_chan1 = -10
+    print("setup 1")
 
-    sdr2 = adi.adrv9002(uri="ip:10.48.65.226")
+    sdr2 = adi.adrv9002(uri="ip:192.168.0.17")
     sdr2.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
     sdr2.tx0_port_en = "spi"
@@ -529,9 +529,10 @@ if __name__ == '__main__':
     sdr2.tx1_lo = 2400000000
     sdr2.tx_hardwaregain_chan0 = -10
     sdr2.tx_hardwaregain_chan1 = -10
+    print("setup 2")
 
 
-    sdr3 = adi.adrv9002(uri="ip:10.48.65.203")
+    sdr3 = adi.adrv9002(uri="ip:192.168.0.18")
     sdr3.write_stream_profile( "lte_40_lvds_api_68_14_10.stream" ,"lte_40_lvds_api_68_14_10.json")
 
     sdr3.tx0_port_en = "spi"
@@ -544,6 +545,7 @@ if __name__ == '__main__':
     sdr3.tx1_lo = 2400000000
     sdr3.tx_hardwaregain_chan0 = -10
     sdr3.tx_hardwaregain_chan1 = -10
+    print("setup 3")
 
     sdr.tx0_en  = 1
     sdr.tx1_en  = 1
@@ -554,11 +556,4 @@ if __name__ == '__main__':
     sdr3.tx0_en = 1
     sdr3.tx1_en = 1
 
-
-
-
-
-
-
-
-    app.run_server(debug=True)
+    app.run(debug=False)
