@@ -68,3 +68,7 @@ addopts = "--custom-hw-map=test/emu/hardware_map.yml --emu-xml-dir=test/emu/devi
 testpaths = [
     "test",
 ]
+markers = [
+    "no_os_test: Test that have No-OS specific targeted hardware",
+    "ad9081_loopback: Test with AD9081 in loopback mode with external hardware"
+]

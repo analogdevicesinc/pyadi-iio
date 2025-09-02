@@ -1,6 +1,8 @@
+import test.rf.spec as spec
 from os import listdir
 from os.path import dirname, join, realpath
 
+import numpy as np
 import pytest
 
 hardware = ["ad9081", "ad9081_tdd"]
@@ -379,3 +381,77 @@ def test_full_bw_rx(iio_uri):
         "voltage3",
     ]
     assert dev._tx_coarse_duc_channel_names == ["voltage0", "voltage1"]
+
+
+@pytest.mark.ad9081_loopback
+@pytest.mark.iio_hardware(hardware, True)
+def test_ad9081_adc_to_dac_loopback(iio_uri):
+    # This example assumes an input frequency of 401 MHz
+    # into ADC0. It will generate an output tone at 501 MHz
+    import adi
+
+    dev = adi.ad9081(uri=iio_uri)
+
+    dev.loopback_mode = 1  # ADC_JESD -> DAC_JESD
+
+    # Set all to zero but of size ref
+    ref = dev.rx_channel_nco_frequencies
+    dev.rx_channel_nco_frequencies = [0] * len(ref)
+    ref = dev.rx_main_nco_frequencies
+    dev.rx_main_nco_frequencies = [int(400e6)] * len(ref)
+
+    ref = dev.tx_channel_nco_frequencies
+    dev.tx_channel_nco_frequencies = [0] * len(ref)
+    ref = dev.tx_main_nco_frequencies
+    dev.tx_main_nco_frequencies = [int(500e6)] * len(ref)
+
+    # Setup ADALM-PLUTO as generator and receiver
+    pluto = adi.Pluto(uri="ip:192.168.2.1")
+    pluto.dds_single_tone(int(1e6), 0.75)
+    pluto.tx_lo = int(400e6)
+    pluto.rx_lo = int(500e6)
+    pluto.sample_rate = int(10e6)
+
+    import time
+
+    time.sleep(4)
+
+    # ADC data will still stream out JESD. Check
+    dev.rx_enabled_channels = [0]
+    dev.rx_buffer_size = 4096
+    for k in range(10):
+        data = dev.rx()
+    data = dev.rx()
+
+    RXFS = dev.rx_sample_rate
+    A = 2 ** 15
+    fc = 1e6
+
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=False)
+    indx = np.argmax(tone_peaks)
+    diff = np.abs(tone_freqs[indx] - fc)
+    s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
+    print(s)
+
+    assert diff < RXFS * 0.01
+    assert tone_peaks[indx] > -30
+
+    # Check Pluto
+    pluto.rx_enabled_channels = [0]
+    pluto.rx_buffer_size = 4096
+    for k in range(10):
+        data = pluto.rx()
+    data = pluto.rx()
+
+    RXFS = pluto.sample_rate
+    A = 2 ** 15
+    fc = 1e6
+
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=A, plot=False)
+    indx = np.argmax(tone_peaks)
+    diff = np.abs(tone_freqs[indx] - fc)
+    s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
+    print(s)
+
+    assert diff < RXFS * 0.01
+    assert tone_peaks[indx] > -30
