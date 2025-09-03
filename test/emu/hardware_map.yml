@@ -748,3 +748,11 @@ ad738x:
       - data_devices:
           - iio:device0
 
+ad7490:
+  - ad7490
+  - pyadi_iio_class_support:
+      - ad7490
+  - emulate:
+      - filename: ad7490.xml
+      - data_devices:
+          - iio:device0
