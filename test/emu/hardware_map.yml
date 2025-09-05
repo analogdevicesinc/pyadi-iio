@@ -520,6 +520,14 @@ adf4377:
       - data_devices:
           - iio:device0
 
+ltc2378:
+  - ltc2378
+  - pyadi_iio_class_support:
+      - ltc2378
+  - emulate:
+      - filename: ltc2378.xml
+      - data_devices:
+          - iio:device2
 
 ltc2387:
   - ltc2387
