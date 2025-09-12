@@ -37,21 +37,32 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import fft
 
+# Usage: python3 ad7984_example.py <uri> <plot_enable> <spi_type>
+# Examples:
+#   python3 ad7984_example.py ip:10.48.65.137 1 engine
+#   python3 ad7984_example.py ip:10.48.65.137 1 classic
+#   python3 ad7984_example.py local: 0 engine
 
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
-plot_en = sys.argv[2] if len(sys.argv) >= 3 else 0
+plot_en = int(sys.argv[2]) if len(sys.argv) >= 3 else 0
+spi_type = sys.argv[3] if len(sys.argv) >= 4 else "engine"
 
 # the device name can be: spi_clasic_ad7984 or spi_engine_ad7984
-
-my_device_name = "spi_engine_ad7984"
-
+if spi_type.lower() in ["classic", "clasic"]:
+    my_device_name = "spi_clasic_ad7984"
+elif spi_type.lower() == "engine":
+    my_device_name = "spi_engine_ad7984"
+else:
+    print(f"Invalid SPI type '{spi_type}'. Using 'engine' as default.")
+    print("Valid options: 'engine' or 'classic'")
+    my_device_name = "spi_engine_ad7984"
 my_ad7984 = adi.ad7689(uri=my_uri,device_name=my_device_name)
 my_ad7984.rx_enabled_channels = [0]
 
 if my_device_name == "spi_engine_ad7984":
     my_ad7984.rx_buffer_size = 42561
 else:
-    my_ad7984.rx_buffer_size = 8161
+    my_ad7984.rx_buffer_size = 1000
 
 data = my_ad7984.rx()
 data = np.delete(data,0)
@@ -72,9 +83,3 @@ if plot_en !=0 :
 
 my_ad7984.rx_destroy_buffer()
 print("The samples are in the pyadi-iio/samples_data_buffer.txt file!")
-
-
-
-
-
-
