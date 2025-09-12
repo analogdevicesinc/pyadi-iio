@@ -36,18 +36,16 @@ import adi
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import fft
-
-# Usage: python3 ad7984_example.py <uri> <plot_enable> <spi_type>
-# Examples:
-#   python3 ad7984_example.py ip:10.48.65.137 1 engine
-#   python3 ad7984_example.py ip:10.48.65.137 1 classic
-#   python3 ad7984_example.py local: 0 engine
+from scipy import signal
+from scipy.io import wavfile
 
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
-plot_en = int(sys.argv[2]) if len(sys.argv) >= 3 else 0
+plot_en = sys.argv[2] if len(sys.argv) >= 3 else 1
 spi_type = sys.argv[3] if len(sys.argv) >= 4 else "engine"
+input_type = sys.argv[4].lower() if len(sys.argv) >= 5 else "audio"  # "audio" or "sine"
 
 # the device name can be: spi_clasic_ad7984 or spi_engine_ad7984
+
 if spi_type.lower() in ["classic", "clasic"]:
     my_device_name = "spi_clasic_ad7984"
 elif spi_type.lower() == "engine":
@@ -56,29 +54,99 @@ else:
     print(f"Invalid SPI type '{spi_type}'. Using 'engine' as default.")
     print("Valid options: 'engine' or 'classic'")
     my_device_name = "spi_engine_ad7984"
+
 my_ad7984 = adi.ad7689(uri=my_uri,device_name=my_device_name)
+#output_wav = 'audio_reconstructed.wav'
 my_ad7984.rx_enabled_channels = [0]
 
+# Sample rates
 if my_device_name == "spi_engine_ad7984":
-    my_ad7984.rx_buffer_size = 42561
+    original_sample_rate = 1_333_000
 else:
-    my_ad7984.rx_buffer_size = 1000
+    original_sample_rate = 15_000
+    
+target_sample_rate = 44100        # Audio sample rate
 
-data = my_ad7984.rx()
-data = np.delete(data,0)
+if input_type == "sine":
+    # Sine test mode
+    if my_device_name == "spi_engine_ad7984":
+        my_ad7984.rx_buffer_size = 8161
+    else:
+        my_ad7984.rx_buffer_size = 400
+    data = my_ad7984.rx()
+    data = np.delete(data,0)
+    print(f"Captured {len(data)} samples (sine wave mode)")
+else:
+    if my_device_name == "spi_engine_ad7984":
+        my_ad7984.rx_buffer_size = 2**21 # 2.097.152 samples (1.57 seconds @ 1.333MSPS) 1 chunck 
+    else:
+        my_ad7984.rx_buffer_size = 2**12 # 4096 samples (0.273 seconds @ 15kSPS) 1 chunck
 
-print("Writing the captured samples into the samples_data_buffer.txt file!")
-with open('samples_data_buffer.txt', 'w') as f:
-    for samples in data:
-        f.write(str(samples))
-        f.write('\n')
-    f.close()
+if my_device_name == "spi_engine_ad7984":
+    num_chunks = 6  # Number of chunks to capture
+else:
+    num_chunks = 45  # Number of chunks to capture
 
-if plot_en !=0 :
-    t = np.arange(0, my_ad7984.rx_buffer_size-1, 1)
-    plt.suptitle("AD7984 Samples data")
+all_data = []
+for i in range(num_chunks):
+    chunk = my_ad7984.rx()
+    all_data.extend(chunk)
+    print(f"  -> Captured chunk {i+1}/{num_chunks}")
+#Capture samples
+data = np.array(all_data, dtype=float)
+    # Pre-Processing Remove DC offset (center the signal around 0)
+data = data - np.mean(data)
+
+#data = my_ad7984.rx()
+#wavfile.write(output_wav, 44100, data)
+
+# Resample from 1.333 MSPS to 44.1 kHz
+#original_sample_rate = 1_333_000  # ADC sample rate
+#target_sample_rate = 44100        # Audio sample rate
+if input_type == "audio":
+    # Resample to 44.1 kHz
+    
+    # Compute up/down factors
+    gcd = np.gcd(original_sample_rate, target_sample_rate)
+    up = target_sample_rate // gcd
+    down = original_sample_rate // gcd
+    print(f"Resampling: up = {up}, down = {down} (from {original_sample_rate} Hz to {target_sample_rate} Hz)")
+    resampled = signal.resample_poly(data, up, down)
+
+    # Normalize and convert to int16
+    if np.max(np.abs(resampled)) == 0:
+        print("Warning: Signal is all zeros after resampling.")
+        resampled = np.zeros_like(resampled)
+    else:
+        resampled = resampled / np.max(np.abs(resampled))
+
+    # Convert to 16-bit PCM format
+    int16_data = (resampled * 32767).astype(np.int16)
+
+    # Save to WAV file
+    if my_device_name == "spi_engine_ad7984":
+        output_wav = 'audio_reconstructed_engine.wav'
+        wavfile.write(output_wav, target_sample_rate, int16_data)
+        print(f"Audio written to '{output_wav}' at {target_sample_rate} Hz.")
+    else:
+        output_wav = 'audio_reconstructed_classic.wav'
+        wavfile.write(output_wav, target_sample_rate, int16_data)
+        print(f"Audio written to '{output_wav}' at {target_sample_rate} Hz.")
+else:
+    # === Save raw sample data (original, unresampled) ===
+    print("Writing original ADC samples to 'samples_data_buffer.txt'")
+    with open('samples_data_buffer.txt', 'w') as f:
+        for sample in data:
+            f.write(f"{sample}\n")
+
+if plot_en != 0:
+    t = np.arange(len(data)) / original_sample_rate
+    plt.figure()
     plt.plot(t, data)
-    plt.xlabel("Samples")
+    plt.title("Captured AD7984 Samples (Raw)")
+    plt.xlabel("Time [s]")
+    plt.ylabel("Amplitude")
+    plt.grid(True)
     plt.show()
 
 my_ad7984.rx_destroy_buffer()
