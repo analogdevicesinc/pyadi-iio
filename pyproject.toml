@@ -64,7 +64,12 @@ ignore_missing_imports="true"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "--custom-hw-map=test/emu/hardware_map.yml --emu-xml-dir=test/emu/devices"
 testpaths = [
     "test",
+]
+markers = [
+    "requirement(id): marks test as covering a specific requirement",
+    "issue(id): marks test as related to a specific issue/ticket",
+    "github_issue(number): marks test as related to a GitHub issue",
+    "jira(ticket): marks test as related to a JIRA ticket"
 ]
