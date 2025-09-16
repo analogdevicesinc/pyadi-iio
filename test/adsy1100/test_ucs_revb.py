@@ -94,10 +94,20 @@ def power_supply(parse_instruments):
     powerSupply = E36233A(address)
     powerSupply.connect()
 
-    # powerSupply.first_boot_powered = False
-    powerSupply.first_boot_powered = True
+    powerSupply.first_boot_powered = False
+    # powerSupply.first_boot_powered = True
 
-    return powerSupply
+    # Turn system off initially
+    power_supply.ch1.output_enabled = False
+    # power_supply.ch2.output_enabled = False
+    time.sleep(5)
+
+    yield powerSupply
+
+    print("Powering down supply")
+    time.sleep(5)
+    powerSupply.ch1.output_enabled = False
+    time.sleep(2)
 
 # @pytest.fixture
 @pytest.fixture(params=configs, scope="session")
@@ -113,7 +123,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
     neb_manager = nebula.manager(
         configfilename=config_file_zu4eg, board_name="zu4eg-washington"
     )
-    neb_manager.monitor[0].log_filename = "zu4eg_uart.log"
+    neb_manager.monitor[0].log_filename = os.path.join(log_folder, "zu4eg_uart.log")
     neb_manager.monitor[0]._read_until_stop()  # Flush
     neb_manager.monitor[0].start_log(logappend=True)
     neb_manager.monitor[0].print_to_console = show_uart_log
@@ -126,12 +136,9 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
 
         # Power cycle to power down VU11P and Apollo
         if not power_supply.first_boot_powered:
-            # power_supply.first_boot_powered = True
-            # print("Power cycling for first boot")
-            # power_supply.ch1.output_enabled = False
-            # # power_supply.ch2.output_enabled = False
-            # time.sleep(5)
-            # power_supply.ch1.output_enabled = True
+            power_supply.first_boot_powered = True
+            print("Power cycling for first boot")
+            power_supply.ch1.output_enabled = True
             # # power_supply.ch2.output_enabled = True
 
             # wait for linux to boot
