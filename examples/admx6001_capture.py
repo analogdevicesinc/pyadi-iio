@@ -41,6 +41,8 @@ if CHIP_SCRATCH !="0xAB":
     gpio_controller.gpio_adrf5203_ctrl1 = 0
     gpio_controller.gpio_adrf5203_ctrl2 = 0
 
+    gpio_controller.gpio_adl5580_en = 1
+
     ad9213_phy.ad9213_register_write(0x1617,0x01)
     ad9213_phy.ad9213_register_write(0x1601,0x01)
 
