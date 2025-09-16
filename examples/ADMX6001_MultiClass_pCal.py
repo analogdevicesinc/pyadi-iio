@@ -39,6 +39,9 @@ class Hammerhead_setup():
         setattr(self.gpio_controller, "gpio_adrf5203_ctrl1", 1) # low atten path -> SW0_ctrl = 1, SW1_ctrl = SW2_ctrl = 0
         setattr(self.gpio_controller, "gpio_adrf5203_ctrl2", 1)
 
+  	# Set up adl558_en
+        setattr(self.gpio_controller, "gpio_adl5580_en", 1)
+
         # Set up LTC2664
         self.ltc2664 = adi.ltc2664(uri)
         setattr(self.gpio_controller, "gpio_ltc2664_clr", 1)
