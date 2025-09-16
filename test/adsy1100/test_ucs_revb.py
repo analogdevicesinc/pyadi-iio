@@ -98,8 +98,8 @@ def power_supply(parse_instruments):
     # powerSupply.first_boot_powered = True
 
     # Turn system off initially
-    power_supply.ch1.output_enabled = False
-    # power_supply.ch2.output_enabled = False
+    powerSupply.ch1.output_enabled = False
+    # powerSupply.ch2.output_enabled = False
     time.sleep(5)
 
     yield powerSupply
