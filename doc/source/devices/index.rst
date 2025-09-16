@@ -14,6 +14,7 @@ Supported Devices
    adi.ad3552r_hs
    adi.ad4020
    adi.ad405x
+   adi.ad4080
    adi.ad4110
    adi.ad4130
    adi.ad4170
