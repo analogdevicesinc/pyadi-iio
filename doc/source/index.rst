@@ -17,52 +17,49 @@ Analog Devices Hardware Python Interfaces
  # Get data from transceiver
  data = sdr.rx()
 
-.. raw:: html
+.. image:: _static/logos/PyADI-IIO_Logo_w_600.png?://
+   :class: only-dark
+   :width: 700px
+   :alt: PyADI-IIO Logo
 
-    <center>
-    <div style="width:70%;">
-    <div id="indexlogo" class="only-light">
-    <img src="_static/logos/PyADI-IIO_Logo_600.png" alt="PyADI-IIO Logo" />
-    </div>
-    <div id="indexlogo" class="only-dark">
-    <img src="_static/logos/PyADI-IIO_Logo_w_600.png" alt="PyADI-IIO Logo" />
-    </div>
-    </div>
-    </center>
+.. image:: _static/logos/PyADI-IIO_Logo_600.png?://
+   :class: only-light
+   :width: 700px
+   :alt: PyADI-IIO Logo
 
-.. raw:: html
+.. flex::
+   :class: badges
 
-    <div align="center" id="badges">
-    <a href="https://github.com/analogdevicesinc/pyadi-iio/actions">
-    <img src="https://github.com/analogdevicesinc/pyadi-iio/actions/workflows/test.yml/badge.svg" alt="Build Status">
-    </a>
+   .. image:: https://github.com/analogdevicesinc/pyadi-iio/actions/workflows/test.yml/badge.svg
+      :target: https://github.com/analogdevicesinc/pyadi-iio/actions
+      :alt: Build Status
 
-    <a href="https://badge.fury.io/py/pyadi-iio">
-    <img src="https://badge.fury.io/py/pyadi-iio.svg" alt="PyPI version">
-    </a>
+   .. image:: https://badge.fury.io/py/pyadi-iio.svg
+      :target: https://badge.fury.io/py/pyadi-iio
+      :alt: PyPI version
 
-    <a href="https://www.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade">
-    <img src="https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077" alt="Codacy Badge">
-    </a>
+   .. image:: https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077
+      :target: https://www.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade
+      :alt: Codacy Badge
 
-    <a href="https://www.python.org/download/releases/3.6.0/">
-    <img src="https://img.shields.io/badge/python-3.6+-blue.svg" alt="Python Version">
-    </a>
-    </div>
+   .. image:: https://img.shields.io/pypi/pyversions/pyadi-iio
+      :target: https://www.python.org/downloads/
+      :alt: Python Version
 
-    <div align="center" id="badges">
-    <a href="http://analogdevicesinc.github.io/pyadi-iio/">
-    <img alt="GitHub Pages" src="https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg">
-    </a>
+.. flex::
+   :class: badges
 
-    <a href="https://ez.analog.com/sw-interface-tools/f/q-a">
-    <img alt="EngineerZone" src="https://img.shields.io/badge/Support-on%20EngineerZone-blue.svg">
-    </a>
+   .. image:: https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg
+      :target: http://analogdevicesinc.github.io/pyadi-iio/
+      :alt: GitHub Pages
 
-    <a href="https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio">
-    <img alt="Analog Wiki" src="https://img.shields.io/badge/Wiki-on%20wiki.analog.com-blue.svg">
-    </a>
-    </div>
+   .. image:: https://img.shields.io/badge/Support-on%20EngineerZone-blue.svg
+      :target: https://ez.analog.com/sw-interface-tools/f/q-a
+      :alt: EngineerZone Support
+
+   .. image:: https://img.shields.io/badge/Wiki-on%20wiki.analog.com-blue.svg
+      :target: https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio
+      :alt: Analog Wiki
 
 
 Requirements

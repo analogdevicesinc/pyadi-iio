@@ -23,7 +23,7 @@ jobs:
       - name: Check doc build
         run: |
           cd doc
-          make html SPHINXOPTS="-W"
+          make html SPHINXOPTS="-j auto -W"
           cd ..
 
       - name: Check doc coverage

@@ -17,6 +17,7 @@ class adxl355(rx, context_manager, attribute):
     _device_name = "adxl355"
     _rx_unbuffered_data = True
     _rx_data_si_type = float
+    _rx_data_type = np.int32
 
     def __init__(self, uri=""):
 
