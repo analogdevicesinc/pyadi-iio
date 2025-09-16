@@ -1,5 +1,5 @@
 powersupply:
-  address: "TCPIP0::192.168.10.30::inst0::INSTR"
+  address: "TCPIP0::10.48.65.164::inst0::INSTR"
   # address: "TCPIP::192.168.10.31::5025::SOCKET"
   type: E36233A
 # specan:

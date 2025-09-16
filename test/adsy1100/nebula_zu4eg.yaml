@@ -12,8 +12,9 @@ vu11p:
     - baudrate: 115200
     - logfilename: zu4eg-ffsom.log
   network-config:
-    - dutip: 192.168.2.1
+    - dutip: 10.48.65.193
+    - dutpassword: root
   # pdu-config:
-  #   - pduip: 192.168.0.1
+  #   - pduip: 10.48.65.164
   #   - pdu_type: cyberpower
   #   - outlet: 1
