@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: ad9166" name="description" />
+<meta content="Bases: rx, context_manager" name="description" />
 
-    <title>adi.cn0511 module &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>ad4080 &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=8d0b0339" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cn0532" href="adi.cn0532.html" />
-    <link rel="prev" title="adxrs290" href="adi.adxrs290.html" />
+    <link rel="next" title="ad4110" href="adi.ad4110.html" />
+    <link rel="prev" title="ad405x" href="adi.ad405x.html" />
    
   
   
@@ -91,13 +91,16 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adi.cn0511 module</a><ul>
-<li><a class="reference internal" href="#adi.cn0511.cn0511"><code class="docutils literal notranslate"><span class="pre">cn0511</span></code></a><ul>
-<li><a class="reference internal" href="#adi.cn0511.cn0511.amp_enable"><code class="docutils literal notranslate"><span class="pre">cn0511.amp_enable</span></code></a></li>
-<li><a class="reference internal" href="#adi.cn0511.cn0511.amplitude_cal"><code class="docutils literal notranslate"><span class="pre">cn0511.amplitude_cal</span></code></a></li>
-<li><a class="reference internal" href="#adi.cn0511.cn0511.board_calibrated"><code class="docutils literal notranslate"><span class="pre">cn0511.board_calibrated</span></code></a></li>
-<li><a class="reference internal" href="#adi.cn0511.cn0511.calibrated_output"><code class="docutils literal notranslate"><span class="pre">cn0511.calibrated_output</span></code></a></li>
-<li><a class="reference internal" href="#adi.cn0511.cn0511.trim_frequency_raw"><code class="docutils literal notranslate"><span class="pre">cn0511.trim_frequency_raw</span></code></a></li>
+<li><a class="reference internal" href="#">ad4080</a><ul>
+<li><a class="reference internal" href="#adi.ad4080.ad4080"><code class="docutils literal notranslate"><span class="pre">ad4080</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad4080.ad4080.channel"><code class="docutils literal notranslate"><span class="pre">ad4080.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.ad4080.filter_type"><code class="docutils literal notranslate"><span class="pre">ad4080.filter_type</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.ad4080.filter_type_available"><code class="docutils literal notranslate"><span class="pre">ad4080.filter_type_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.ad4080.oversampling_ratio"><code class="docutils literal notranslate"><span class="pre">ad4080.oversampling_ratio</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.ad4080.oversampling_ratio_available"><code class="docutils literal notranslate"><span class="pre">ad4080.oversampling_ratio_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.ad4080.reg_read"><code class="docutils literal notranslate"><span class="pre">ad4080.reg_read()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.ad4080.reg_write"><code class="docutils literal notranslate"><span class="pre">ad4080.reg_write()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.ad4080.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad4080.sampling_frequency</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -153,7 +156,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad405x.html">ad405x</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad4080.html">ad4080</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ad4080</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4130.html">ad4130</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4170.html">ad4170</a></li>
@@ -245,7 +248,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0554.html">cn0554</a></li>
@@ -298,46 +301,58 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.cn0511">
-<span id="adi-cn0511-module"></span><h1>adi.cn0511 module<a class="headerlink" href="#module-adi.cn0511" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.ad4080">
+<span id="ad4080"></span><h1>ad4080<a class="headerlink" href="#module-adi.ad4080" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.cn0511.cn0511">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0511.</span></span><span class="sig-name descname"><span class="pre">cn0511</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0511.cn0511" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad9166.html#adi.ad9166.ad9166" title="adi.ad9166.ad9166"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9166</span></code></a></p>
-<p>CN0511 Raspberry Pi Hat Signal Generator</p>
+<dt class="sig sig-object py" id="adi.ad4080.ad4080">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4080.</span></span><span class="sig-name descname"><span class="pre">ad4080</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ad4080'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.ad4080" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD4080 ADC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad4080.ad4080.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad4080.ad4080.channel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.cn0511.cn0511.amp_enable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">amp_enable</span></span><a class="headerlink" href="#adi.cn0511.cn0511.amp_enable" title="Permalink to this definition"></a></dt>
-<dd><p>amp_enable: Enable or Disable the CN0511 ad9166 amplifier</p>
+<dt class="sig sig-object py" id="adi.ad4080.ad4080.filter_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type</span></span><a class="headerlink" href="#adi.ad4080.ad4080.filter_type" title="Permalink to this definition"></a></dt>
+<dd><p>Get the filter type value</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.cn0511.cn0511.amplitude_cal">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">amplitude_cal</span></span><a class="headerlink" href="#adi.cn0511.cn0511.amplitude_cal" title="Permalink to this definition"></a></dt>
-<dd><p>amplitude_cal: CN0511 amplitude calibration</p>
-<dl class="simple">
-<dt>Options:</dt><dd><p>True: If you set this to true, the output is calibrated.
-False: Nothing happens.</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="adi.ad4080.ad4080.filter_type_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type_available</span></span><a class="headerlink" href="#adi.ad4080.ad4080.filter_type_available" title="Permalink to this definition"></a></dt>
+<dd><p>Get the filter type available values</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.cn0511.cn0511.board_calibrated">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">board_calibrated</span></span><a class="headerlink" href="#adi.cn0511.cn0511.board_calibrated" title="Permalink to this definition"></a></dt>
-<dd><p>board_calibrated: 1 if board was calibrated in production, 0 if board was not calibrated in production</p>
+<dt class="sig sig-object py" id="adi.ad4080.ad4080.oversampling_ratio">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio</span></span><a class="headerlink" href="#adi.ad4080.ad4080.oversampling_ratio" title="Permalink to this definition"></a></dt>
+<dd><p>Get the oversampling ratio value</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.cn0511.cn0511.calibrated_output">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calibrated_output</span></span><a class="headerlink" href="#adi.cn0511.cn0511.calibrated_output" title="Permalink to this definition"></a></dt>
-<dd><p>calibrated_output: [“desired_output_amplitude_in_dbm”, “desired_output_frequency_in_Hz”]]</p>
+<dt class="sig sig-object py" id="adi.ad4080.ad4080.oversampling_ratio_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio_available</span></span><a class="headerlink" href="#adi.ad4080.ad4080.oversampling_ratio_available" title="Permalink to this definition"></a></dt>
+<dd><p>Get the oversampling ratio available values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad4080.ad4080.reg_read">
+<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.ad4080.reg_read" title="Permalink to this definition"></a></dt>
+<dd><p>Direct Register Access via debugfs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad4080.ad4080.reg_write">
+<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.ad4080.reg_write" title="Permalink to this definition"></a></dt>
+<dd><p>Direct Register Access via debugfs</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.cn0511.cn0511.trim_frequency_raw">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trim_frequency_raw</span></span><a class="headerlink" href="#adi.cn0511.cn0511.trim_frequency_raw" title="Permalink to this definition"></a></dt>
-<dd><p>trim_frequency_raw: modify output frequency of cn0511 in small steps</p>
+<dt class="sig sig-object py" id="adi.ad4080.ad4080.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad4080.ad4080.sampling_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get Sampling frequency value</p>
 </dd></dl>
 
 </dd></dl>
@@ -348,8 +363,8 @@ False: Nothing happens.</p>
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.adxrs290.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adxrs290</a>
-    <a href="adi.cn0532.html" title="Next document (Alt+Shift+RightArrow)" class="next">cn0532</a>
+    <a href="adi.ad405x.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad405x</a>
+    <a href="adi.ad4110.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad4110</a>
               </div>
           
         </div>
