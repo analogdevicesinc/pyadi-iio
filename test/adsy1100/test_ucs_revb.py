@@ -60,12 +60,9 @@ configs = [
 check_files_exist(configs, boot_files_folder)
 
 
-
-
-config_file_folder = os.path.dirname(__file__)
-config_file_zu4eg = os.path.join(config_file_folder, "nebula_zu4eg.yaml")
-
-
+# config_file_folder = os.path.dirname(__file__)
+# config_file_zu4eg = os.path.join(config_file_folder, "nebula_zu4eg.yaml")
+config_file_zu4eg = "/ci/nebula_zu4eg.yaml"
 
 def measure_power(power_supply):
     v1 = power_supply.ch1.voltage
