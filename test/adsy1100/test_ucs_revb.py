@@ -1,6 +1,7 @@
 import pytest
 import time
 import os
+import logging
 
 import nebula
 
@@ -16,6 +17,10 @@ import matplotlib.pyplot as plt
 import test.rf.spec as spec
 
 from .helpers import check_files_exist
+
+# Adjust log levels
+logger = logging.getLogger(__name__)
+logging.getLogger("paramiko").setLevel(logging.WARNING)
 
 max_use_cases_to_test = 5
 device_hostname = "b0adsy1100"
@@ -101,7 +106,7 @@ def power_supply(parse_instruments):
 
     yield powerSupply
 
-    print("Powering down supply")
+    logger.info("Powering down supply")
     time.sleep(5)
     powerSupply.ch1.output_enabled = False
     time.sleep(2)
@@ -134,7 +139,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
         # Power cycle to power down VU11P and Apollo
         if not power_supply.first_boot_powered:
             power_supply.first_boot_powered = True
-            print("Power cycling for first boot")
+            logger.info("Power cycling for first boot")
             power_supply.ch1.output_enabled = True
             # # power_supply.ch2.output_enabled = True
 
@@ -149,7 +154,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
 
         assert boot_subfolder_on_target != ""
         assert boot_subfolder_on_target is not None
-        print(f"Creating test folder in boot: {boot_subfolder_on_target}")
+        logger.info(f"Creating test folder in boot: {boot_subfolder_on_target}")
         neb_manager.net.run_ssh_command(f"rm -rf /boot/{boot_subfolder_on_target} || true")
         neb_manager.net.run_ssh_command(f"mkdir -p /boot/{boot_subfolder_on_target}")
         
@@ -161,7 +166,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
                 contains_folder = config[key][1:].find("/") != -1
                 if contains_folder:
                     folder = config[key][:-config[key][::-1].find("/")]
-                    print(f"Creating folder {folder}")
+                    logger.info(f"Creating folder {folder}")
                     neb_manager.net.run_ssh_command(f"mkdir -p /boot/{boot_subfolder_on_target}/{folder}")
 
                 if key in ["BOOT.BIN", "Kernel", "devicetree"]:
@@ -182,7 +187,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
                     if contains_folder:
                         loc = extra["dst"].rfind('/')
                         folder = extra["dst"][:loc]
-                        print(f"Extras: Creating folder '{folder}'")
+                        logger.info(f"Extras: Creating folder '{folder}'")
                         assert folder != ""
                         neb_manager.net.run_ssh_command(f"mkdir -p '{folder}'")
 
@@ -205,7 +210,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
 
         # Check Ethernet
         if len(results) == 0:
-            print("Kernel not started")
+            logger.error("Kernel not started")
             neb_manager.monitor[0].stop_log()
             raise Exception("Kernel not started")
         if len(results) == 2 and not results[1]:
@@ -244,19 +249,19 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
         #neb_manager.monitor[0].print_to_console = show_uart_log
         finished_str = "axi-jesd204-tx-b: AXI-JESD204-TX"
         neb_manager.monitor[0]._write_data(cmd)
-        print("Waiting for selmap to boot")
+        logger.info("Waiting for selmap to boot")
         if monitor_for_jesd_done == "UART":
             results = neb_manager.monitor[0]._read_until_done_multi(
                 done_strings=[finished_str],
                 max_time=300,
             )
             if len(results) == 0:
-                print("JESD not started")
+                logger.error("JESD not started")
                 neb_manager.monitor[0].stop_log()
                 raise Exception("JESD not started")
         elif monitor_for_jesd_done == "NET":        
             if not neb_manager.net.monitor_dmesg(finished_str, max_timeout_seconds=300):
-                print("JESD not started")
+                logger.error("JESD not started")
                 neb_manager.monitor[0].stop_log()
                 raise Exception("JESD not started")
 
@@ -294,7 +299,7 @@ class TestOverBootFiles:
         record_property("dmesg_filename", filename)
         # save to caplog
         caplog.set_level("INFO")
-        caplog.info(dmesg)
+        logger.info(dmesg)
 
     @pytest.mark.requirement("WASHINGTON-R10")
     # @pytest.mark.parametrize("nebula_boot_adsy1100_ethernet", configs, indirect=True)
@@ -304,17 +309,17 @@ class TestOverBootFiles:
         # neb_manager.monitor[0]._attemp_login("root", "root")
         neb_manager.monitor[0]._write_data("uname -a")
         data = neb_manager.monitor[0]._read_for_time(period=5)
-        print(f"Data: {data}")
+        logger.info(f"Data: {data}")
         found = False
         caplog.set_level("INFO")
         for chunk in data:
             if isinstance(chunk, list):
                 for c in chunk:
-                    caplog.info(c)
+                    logger.info(c)
                     if "Linux" in c:
                         found = True
             else:
-                caplog.info(chunk)
+                logger.info(chunk)
                 if "Linux" in chunk:
                     found = True
         assert found, f"Did not get Linux uname response. Got: {data}"
@@ -327,17 +332,17 @@ class TestOverBootFiles:
         # Check 1G Ethernet
         neb_manager.monitor[0]._write_data("ip -4 addr")
         data = neb_manager.monitor[0]._read_for_time(period=5)
-        print(f"Data: {data}")
+        logger.info(f"Data: {data}")
         found = False
         caplog.set_level("INFO")
         for chunk in data:
             if isinstance(chunk, list):
                 for c in chunk:
-                    caplog.info(c)
+                    logger.info(c)
                     if "end0" in c and "state UP" in c:
                         found = True
             else:
-                caplog.info(chunk)
+                logger.info(chunk)
                 if "end0" in chunk and "state UP" in chunk:
                     found = True
         assert found, f"Did not find eth0 up. Got: {data}"
@@ -352,13 +357,13 @@ class TestOverBootFiles:
         params, neb_manager = nebula_boot_adsy1100_ethernet
 
         ip_addr = f"ip:{neb_manager.net.dutip}"
-        print(f"Connecting to {ip_addr}")
+        logger.info(f"Connecting to {ip_addr}")
 
         ctx = iio.Context(ip_addr)
         assert ctx is not None, "Failed to create IIO context"
 
         for dev in ctx.devices:
-            print(f"Device Name: {dev.name}")
+            logger.info(f"Device Name: {dev.name}")
         dev = ctx.find_device("ltc6952")
         assert dev is not None, "Failed to find ltc6952 device"
 
@@ -367,43 +372,40 @@ class TestOverBootFiles:
         del ctx
         # Keep lower 4 bits
         val = val & 0x0F
-        print(f"LTC6952 Address: {val:#04x}")
         caplog.set_level("INFO")
-        caplog.info(f"LTC6952 Address: {val:#04x}")
+        logger.info(f"LTC6952 Address: {val:#04x}")
         assert val == 0x2, f"Unexpected LTC6952 address: {val:#04x}"
 
     @pytest.mark.requirement(["WASHINGTON-R16","WASHINGTON-R25"])
     def test_spi_read_adf4382(self, nebula_boot_adsy1100_ethernet, caplog):
 
+        caplog.set_level("INFO")
+
         params, neb_manager = nebula_boot_adsy1100_ethernet
 
         ip_addr = f"ip:{neb_manager.net.dutip}"
-        print(f"Connecting to {ip_addr}")
+        logger.info(f"Connecting to {ip_addr}")
 
         ctx = iio.Context(ip_addr)
         assert ctx is not None, "Failed to create IIO context"
 
         for dev in ctx.devices:
-            print(f"Device Name: {dev.name}")
+            logger.info(f"Device Name: {dev.name}")
         dev = ctx.find_device("adf4382")
         assert dev is not None, "Failed to find adf4382 device"
 
         val = dev.reg_read(0x4)
-        print(f"ADF4382 Address 0x04: {val:#04x}")
+        logger.info(f"ADF4382 Address 0x04: {val:#04x}")
         assert val == 0x08, f"Unexpected ADF4382 address 0x04: {val:#04x}"
-        caplog.set_level("INFO")
-        caplog.info(f"ADF4382 Address 0x04: {val:#04x}")
 
         val = dev.reg_read(0x5)
-        print(f"ADF4382 Address 0x05: {val:#04x}")
-        caplog.info(f"ADF4382 Address 0x05: {val:#04x}")
+        logger.info(f"ADF4382 Address 0x05: {val:#04x}")
         assert val == 0x00, f"Unexpected ADF4382 address 0x05: {val:#04x}"
 
         # Scratch write then read
         dev.reg_write(0x0A, 0x55)
         val = dev.reg_read(0x0A)
-        print(f"ADF4382 Address 0x0A: {val:#04x}")
-        caplog.info(f"ADF4382 Address 0x0A: {val:#04x}")
+        logger.info(f"ADF4382 Address 0x0A: {val:#04x}")
         assert val == 0x55, f"Unexpected ADF4382 address 0x0A: {val:#04x}"
 
         del dev
@@ -423,35 +425,34 @@ class TestOverBootFiles:
         failed = False
         caplog.set_level("INFO")
         for driver in drivers:
-            print(f"Driver: {driver}")
+            logger.info(f"Driver: {driver}")
             for key in links_top_level[driver]:
-                print(f"{key}: {links_top_level[driver][key]}")
-                caplog.info(f"{driver} {key}: {links_top_level[driver][key]}")
+                logger.info(f"{key}: {links_top_level[driver][key]}")
+                logger.info(f"{driver} {key}: {links_top_level[driver][key]}")
                 record_property(f"{driver}_{key}", links_top_level[driver][key])
                 if key == "Link status":
                     val = links_top_level[driver][key]
                     if "DATA" not in val.upper():
-                        print(f"ERROR: Driver {driver} not in DATA state: {val}")
+                        logger.info(f"ERROR: Driver {driver} not in DATA state: {val}")
                         failed = True
                 if key == "Lane rate":
                     val = links_top_level[driver][key]
                     if "20625.000" not in val:
-                        print(f"ERROR: Driver {driver} lane rate is 20625.000")
+                        logger.info(f"ERROR: Driver {driver} lane rate is 20625.000")
                         failed = True
 
 
 
-            print("\n")
+            logger.info("\n")
 
             if driver not in links_details:
                 continue
 
             for key in links_details[driver]:
-                print(f"{key}: {links_details[driver][key]}")
-                caplog.info(f"{driver} {key}: {links_details[driver][key]}")
+                logger.info(f"{key}: {links_details[driver][key]}")
                 record_property(f"{driver}_{key}", links_details[driver][key])
 
-            print("--------------")
+            logger.info("--------------")
             
 
         del jesd
@@ -464,7 +465,7 @@ class TestOverBootFiles:
     def test_channel_mapping(self, channel, side, nebula_boot_adsy1100_ethernet, record_property):
         params, neb_manager = nebula_boot_adsy1100_ethernet
 
-        print(f"Testing side {side} channel {channel}")
+        logger.info(f"Testing side {side} channel {channel}")
         uri = f"ip:{neb_manager.net.dutip}"
 
         # Check channel mapping
@@ -472,8 +473,8 @@ class TestOverBootFiles:
         rx_channels = dev._rx_channel_names
         tx_channels = dev._tx_channel_names
 
-        print(f"RX Channels: {rx_channels}")
-        print(f"TX Channels: {tx_channels}")
+        logger.info(f"RX Channels: {rx_channels}")
+        logger.info(f"TX Channels: {tx_channels}")
 
         record_property("rx_channels", rx_channels)
         record_property("tx_channels", tx_channels)
@@ -502,7 +503,7 @@ class TestOverBootFiles:
         nco_freq = nco_freq + (side) * 100e6
         nco_freq = int(nco_freq)
         assert nco_freq < dev.rx_sample_rate / 2, "NCO frequency too high"
-        print(f"Setting NCO Frequency: {nco_freq}")
+        logger.info(f"Setting NCO Frequency: {nco_freq}")
         if side == 0:
             dev.rx_enabled_channels = [channel]
             dev.dds_single_tone(nco_freq, 0.8, channel=channel)
@@ -519,19 +520,19 @@ class TestOverBootFiles:
             for _ in range(10):
                 iq_data = dev.rx2()
 
-        print(iq_data)
+        logger.info(iq_data)
         assert not isinstance(iq_data, list), "Did not get IQ data"
-        print(f"IQ Data Shape: {iq_data.shape}")
+        logger.info(f"IQ Data Shape: {iq_data.shape}")
 
         # Create FFT plot and save
-        print("Creating FFT plot")
+        logger.info("Creating FFT plot")
         plt = spec.spec_est(iq_data, fs=dev.rx_sample_rate, ref=2**15, plot=True, show_plot=False)
         filename = f"test_boot_{side}_{channel}_fft.png"
         image_folder = "images"
         if not os.path.exists(image_folder):
             os.makedirs(image_folder)
         filename = os.path.join(image_folder, filename)
-        print(f"Saving FFT plot to: {filename}")
+        logger.info(f"Saving FFT plot to: {filename}")
         plt.savefig(filename)
         record_property("fft_plot_filename", filename)
         plt.close()
@@ -545,7 +546,7 @@ class TestOverBootFiles:
         diff = np.abs(tone_freqs[indx] - nco_freq)
         s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
         s += f" | Expected: {nco_freq} | Diff: {diff}"
-        print(s)
+        logger.info(s)
 
         del dev
 
