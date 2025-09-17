@@ -528,9 +528,6 @@ class TestOverBootFiles:
         logger.info("Creating FFT plot")
         plt = spec.spec_est(iq_data, fs=dev.rx_sample_rate, ref=2**15, plot=True, show_plot=False)
         filename = f"test_boot_{side}_{channel}_fft.png"
-        image_folder = "images"
-        if not os.path.exists(image_folder):
-            os.makedirs(image_folder)
         filename = os.path.join(image_folder, filename)
         logger.info(f"Saving FFT plot to: {filename}")
         plt.savefig(filename)
