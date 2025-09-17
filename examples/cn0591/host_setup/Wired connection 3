@@ -1,0 +1,17 @@
+[connection]
+id=Wired connection 3
+type=ethernet
+interface-name=eth2
+
+[ethernet]
+
+[ipv4]
+address1=192.168.97.31/32
+method=manual
+route1=192.168.97.40/32
+
+[ipv6]
+addr-gen-mode=default
+method=disabled
+
+[proxy]
