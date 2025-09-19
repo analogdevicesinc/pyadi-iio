@@ -506,10 +506,10 @@ class TestOverBootFiles:
         logger.info(f"Setting NCO Frequency: {nco_freq}")
         if side == 0:
             dev.rx_enabled_channels = [channel]
-            dev.dds_single_tone(nco_freq, 0.8, channel=channel)
+            dev.dds_single_tone(nco_freq, 0.99, channel=channel)
         else:
             dev.rx2_enabled_channels = [channel]
-            dev.dds2_single_tone(nco_freq, 0.8, channel=channel)
+            dev.dds2_single_tone(nco_freq, 0.99, channel=channel)
 
         time.sleep(3)
 
