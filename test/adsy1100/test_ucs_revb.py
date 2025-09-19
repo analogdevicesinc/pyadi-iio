@@ -205,7 +205,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
         results = neb_manager.monitor[0]._read_until_done_multi(
             #done_strings=["Linux version", f"root@{device_hostname}"],
             done_strings=["Linux version", f"Login"],
-            max_time=200,
+            max_time=60,
         )
 
         # Check Ethernet
