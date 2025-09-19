@@ -146,7 +146,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
             # wait for linux to boot
             # neb_manager.monitor[0].print_to_console = True
             results = neb_manager.monitor[0]._read_until_done_multi(
-                done_strings=["Linux version", f"root@{device_hostname}"],
+                done_strings=["Linux version", f"{device_hostname}"],
                 max_time=200,
             )
 
@@ -204,7 +204,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
         neb_manager.monitor[0].print_to_console = show_uart_log
         results = neb_manager.monitor[0]._read_until_done_multi(
             #done_strings=["Linux version", f"root@{device_hostname}"],
-            done_strings=["Linux version", f"Login"],
+            done_strings=["Linux version", f"ogin"],
             max_time=60,
         )
 
