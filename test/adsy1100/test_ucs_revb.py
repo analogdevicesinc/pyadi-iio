@@ -490,10 +490,10 @@ class TestOverBootFiles:
         dev.tx_channel_nco_frequencies = [int(100e6)] * N
 
         N = len(dev.rx_main_nco_frequencies)
-        dev.rx_main_nco_frequencies = [int(200e6)] * N
+        dev.rx_main_nco_frequencies = [int(2000e6)] * N
 
         N = len(dev.tx_main_nco_frequencies)
-        dev.tx_main_nco_frequencies = [int(200e6)] * N
+        dev.tx_main_nco_frequencies = [int(2000e6)] * N
 
         dev.rx_buffer_size = 2**15
         dev.rx2_buffer_size = 2**15
