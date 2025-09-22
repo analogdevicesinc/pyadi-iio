@@ -46,7 +46,7 @@ import os
 
 
 BAUDRATE                    = 57600                     # for windows and Linux set to 1000000 for MacOS change BAUDRATE to 57600 and set the motor baudrate accordingly
-DEVICENAME                  = "/dev/ttyUSB0" \
+DEVICENAME                  = "/dev/ttyUSB1" \
 ""                        # Check which port is being used on your controller
                                                             # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0" Mac: "/dev/tty.usbserial-*"
 MAN_STEP                    = 11.25                         # Initial step size used during manual alignment 128*(360/4096)

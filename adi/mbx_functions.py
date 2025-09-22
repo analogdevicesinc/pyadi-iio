@@ -146,17 +146,17 @@ T_MOVING_THRESHOLD          = 0                         # resolution for movemen
 Z_MOVING_THRESHOLD          = 0                         # resolution for movement detection
 GIM04_RAM_ADD_OFFSET        = 448                       # RAM address offset for P motor series
 
-H_POSITION_D_G              = 0                         # Horizontal D gain
-H_POSITION_I_G              = 3000                      # Horizontal I gain
-H_POSITION_P_G              = 1000                      # Horizontal P gain
+H_POSITION_D_G              = 50                         # Horizontal D gain
+H_POSITION_I_G              = 1000                      # Horizontal I gain
+H_POSITION_P_G              = 600                     # Horizontal P gain
 H_FF1_G                     = 0                         # Horizontal feed forward gain
 HP_POSITION_D_G             = 0                         # base_type 4 Horizontal D gain
 HP_POSITION_I_G             = 3000                      # base_type 4 Horizontal I gain
 HP_POSITION_P_G             = 3000                      # base_type 4 Horizontal P gain
 HP_FF1_G                    = 0                         # base_type 4 Horizontal feed forward gain
-V_POSITION_D_G              = 0                         # Vertical D gain
-V_POSITION_I_G              = 3000                      # Vertical I gain
-V_POSITION_P_G              = 1000                      # Vertical P gain
+V_POSITION_D_G              = 50                         # Vertical D gain
+V_POSITION_I_G              = 1000                      # Vertical I gain
+V_POSITION_P_G              = 600                      # Vertical P gain
 V_FF1_G                     = 0                         # Vertical feed forward gain
 P_POSITION_D_G              = 0                         # Polarization D gain
 P_POSITION_I_G              = 3000                      # Polarization I gain
@@ -169,8 +169,8 @@ MIN_P_VERSION               = 11                        # Minimum version suppor
 MAX_P_VELOCITY              = 2920                      # GMI04 Base velocity
 H_PROFILE_VELOCITY          = 1023                      # rotation speed 1023
 HP_PROFILE_VELOCITY         = 2920                      # rotation speed
-V_PROFILE_VELOCITY          = 1023                      # rotation speed
-P_PROFILE_VELOCITY          = 1023                      # rotation speed
+V_PROFILE_VELOCITY          = 200                      # rotation speed
+P_PROFILE_VELOCITY          = 200                      # rotation speed
 H0                          = 2048                      # center H position relative to H Offset defined
 HP0                         = 0                         # center H position relative to H Offset defined (P motor)
 V0                          = 2048                      # center V position relative to V Offset defined
@@ -198,7 +198,7 @@ P_RES                       = 607500.0                  # P series resolution fo
 X_VELOCITY_UNIT             = 0.229                     # X series velocity unit (0.229 rev/min)
 P_VELOCITY_UNIT             = 0.01                      # P series velocity unit (0.01 rev/min)
 MIN_VERSION_P               = 10
-V_ACCELERATION_LIMIT        = 10
+V_ACCELERATION_LIMIT        = 5
 HP_ACCELERATION_LIMIT       = 2500
 HV                          = 1                         # gim_type 1 is HV coordinate
 SPHERICAL                   = 5                         # gim_type 5 is spherical coordinate
@@ -209,8 +209,8 @@ POS_ACC_THRESH_V            = 1                         # positional accuracy th
 POS_ACC_THRESH_P            = 1                         # positional accuracy threshold for HIGH or VERY HIGH accuracy
 POS_ACC_THRESH_T            = 1                         # positional accuracy threshold for HIGH or VERY HIGH accuracy
 POS_ACC_THRESH_Z            = 1                         # positional accuracy threshold for HIGH or VERY HIGH accuracy
-OVERSHOOT_H_ANG             = 2                         # in VERY HIGH accuracy mode, overshoot in H direction by 2deg
-OVERSHOOT_V_ANG             = 2                         # in VERY HIGH accuracy mode, overshoot in V direction by 2deg
+OVERSHOOT_H_ANG             = 0                         # in VERY HIGH accuracy mode, overshoot in H direction by 2deg
+OVERSHOOT_V_ANG             = 0                         # in VERY HIGH accuracy mode, overshoot in V direction by 2deg
 OVERSHOOT_P_ANG             = 2                         # in VERY HIGH accuracy mode, overshoot in P direction by 2deg
 OVERSHOOT_T_ANG             = 2                         # in VERY HIGH accuracy mode, overshoot in T direction by 2deg
 OVERSHOOT_Z_ANG             = 2                         # in VERY HIGH accuracy mode, overshoot in Z direction by 2deg
@@ -1991,7 +1991,10 @@ def gotoZERO(accuracy="HIGH"):
     print("going to zero position")
     if gim_type == HV:
         # jump_angle(7.51, -6.33, 0, accuracy)
-        jump_angle(-0.06, -0.53, 0, accuracy)
+        # jump_angle(0.21, -34.98, 0, accuracy)
+        jump_angle(0.03, -1.67, 0, accuracy)
+        
+        
     elif gim_type == SPHERICAL:
         jump_angle_sph(0, [0, 0], accuracy)
     return

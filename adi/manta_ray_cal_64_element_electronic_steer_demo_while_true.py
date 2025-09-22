@@ -22,11 +22,10 @@ from scipy.io import savemat
 
 
 BAUDRATE                    = 57600                     # for windows and Linux set to 1000000 for MacOS change BAUDRATE to 57600 and set the motor baudrate accordingly
-DEVICENAME                  = "/dev/ttyUSB1"
+DEVICENAME                  = "/dev/ttyUSB0"
 
 mbx.connect(DEVICENAME, BAUDRATE)
 mbx.gotoZERO()
-
 # input("Press any key to continue...")
 
 # exit()
@@ -193,27 +192,19 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     # Calculate delta in dB
     # analog_mag_pre_cal = analog_mag_pre_cal.flatten() 
     analog_mag_pre_cal = analog_mag_pre_cal.flatten()
-    bad_val_thresh = np.average(analog_mag_pre_cal) - 3
-    for i in range(np.size(analog_mag_pre_cal)):
-        if analog_mag_pre_cal[i] < bad_val_thresh:
-            print("Bad Value: ", analog_mag_pre_cal[i])
-            print("Element Number: ", i)
-            print("Replacing with bad val threshold ", bad_val_thresh)
-            analog_mag_pre_cal[i] = bad_val_thresh
+    # for i in range(np.size(analog_mag_pre_cal)):
+    #     if analog_mag_pre_cal[i] < np.average(analog_mag_pre_cal) - 12:
+    #         print("Bad Value: ", analog_mag_pre_cal[i])
+    #         print("Index Number: ", i)
+    #         analog_mag_pre_cal[i] = np.average(analog_mag_pre_cal)
 
-
-    mag_min = np.min(analog_mag_pre_cal)
-    mag_cal_diff = np.zeros(np.shape(analog_mag_pre_cal))
-
-    for i in range(np.size(analog_mag_pre_cal)):
-        if (analog_mag_pre_cal[i] - mag_min <= 0.75):
-            mag_cal_diff[i] = 0
-        else:
-            mag_cal_diff[i] = analog_mag_pre_cal[i] - mag_min
+    # mag_min = np.min(analog_mag_pre_cal)
+    # mag_cal_diff = analog_mag_pre_cal - mag_min
+    # print(mag_cal_diff)
 
     # Calculate the target magnitude as the median of the pre-calibration magnitudes
-    # target_mag = np.mean(analog_mag_pre_cal)
-    # mag_cal_diff = analog_mag_pre_cal - target_mag
+    target_mag = np.mean(analog_mag_pre_cal)
+    mag_cal_diff = analog_mag_pre_cal - target_mag
     
     mag_cal_poly = np.zeros(np.shape(analog_mag_pre_cal))
     # print(mag_min)
@@ -222,7 +213,7 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     for i in range(np.size(analog_mag_pre_cal)):
         #mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten1, -1 * mag_cal_diff.flat[i]))
         #mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten1, mag_cal_diff.flat[i]))
-        mag_cal_poly.flat[i] = np.round(np.polyval(poly_atten1, -1 * mag_cal_diff[i]))
+        mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten1, -1 * mag_cal_diff[i]))
         # if mag_cal_diff.flat[i] < 23:
         #     mag_cal_poly.flat[i] = np.floor(np.polyval(poly_atten1, -1 * mag_cal_diff.flat[i]))
 
@@ -447,7 +438,7 @@ def rx_gain(obj, adc, subarray, adc_map, element_map):
     analog_mag_pre_cal = get_analog_mag(data)
     # Reshape the analog magnitude to match the subarray shape in column-major order
     # This is necessary to match the element_map mapping
-    # analog_mag_pre_cal0 = np.reshape(analog_mag_pre_cal, np.shape(element_map), order = 'F')
+    analog_mag_pre_cal0 = np.reshape(analog_mag_pre_cal, np.shape(element_map), order = 'F')
     # Calculate gain codes and attenuation values based on pre-calibration magnitude
     gain_codes_cal, atten_cal = gain_codes(obj, analog_mag_pre_cal, "rx")
     print(gain_codes_cal)
@@ -478,12 +469,12 @@ def rx_gain(obj, adc, subarray, adc_map, element_map):
    
     # Measure analog magnitude post-calibration
     analog_mag_post_cal = get_analog_mag(data)
-    # analog_mag_post_cal0 = np.reshape(analog_mag_post_cal, np.shape(element_map), order = 'F')
+    analog_mag_post_cal0 = np.reshape(analog_mag_post_cal, np.shape(element_map), order = 'F')
 
     print("PreCal Data before Reshape:", analog_mag_pre_cal,)
-    # print("PreCal Data after Reshape:",analog_mag_pre_cal0)
+    print("PreCal Data after Reshape:",analog_mag_pre_cal0)
     print("Postcal Data before Reshape:", analog_mag_post_cal,)
-    # print("PostCal Data after Reshape:",analog_mag_post_cal0)
+    print("PostCal Data after Reshape:",analog_mag_post_cal0)
  
     return gain_codes_cal, atten_cal, analog_mag_pre_cal, analog_mag_post_cal
 
@@ -903,15 +894,6 @@ subarray = np.array([
     [5, 6, 7, 8, 13, 14, 15, 16, 21, 22, 23, 24, 29, 30, 31, 32], # subarray 4
     ])
 
-# # testing mapping
-# subarray_1 = np.array([
-#     [1, 9, 17, 25, 2, 10, 18, 26, 3, 11, 19, 27, 4, 12, 20, 28], # subarray 1
-#     [33, 41, 49, 57, 34, 42, 50, 58, 35, 43, 51, 59, 36, 44, 52, 60], # subarray 2
-#     [37, 45, 53, 61, 38, 46, 54, 62, 39, 47, 55, 63, 40, 48, 56, 64], # subarray 3
-#     [5, 13, 21, 29, 6, 14, 22, 30, 7, 15, 23, 31, 8, 16, 24, 32], # subarray 4
-#     ])
-
-
 subarray_ref = np.array([1, 33, 37, 5])  
 adc_map      = np.array([0, 1, 2, 3])  # ADC map to subarray
 adc_ref      = 0  # ADC reference channel (indexed at 0)
@@ -993,8 +975,7 @@ PLLselect.attrs["raw"].value = "1"
 rxgainmode.attrs["raw"].value = "1"
 XUDLO.attrs["frequency"].value = "14480000000"
 XUDLO.attrs["powerdown"].value = "0"
-enable_stingray_channel(sray)
-exit()
+ 
 
  
 #########################################################################
@@ -1018,7 +999,7 @@ no_cal_data = np.transpose(np.array(data_capture(conv)))
 
 # Gain cal
 disable_stingray_channel(sray)
-gain_dict, atten_dict, mag_pre_cal, mag_post_cal = rx_gain(sray, conv, subarray, adc_map, sray.element_map)
+# gain_dict, atten_dict, mag_pre_cal, mag_post_cal = rx_gain(sray, conv, subarray, adc_map, sray.element_map)
 
 # print("Gain Dict Size:", gain_dict.shape)
 # print("Mag precal: ", mag_pre_cal)
@@ -1056,35 +1037,30 @@ axs[0].set_title('Without Calibration')
 axs[0].set_xlabel("Index")
 axs[0].set_ylabel("Value")
 axs[0].grid(visible=True)
-axs[0].set_xlim([100,600])
-axs[1].set_ylim([-28000,28000])
+axs[0].set_xlim([100,200])
 
 axs[1].plot(calibrated_data.real)
 axs[1].set_title('With Calibration')
 axs[1].set_xlabel("Index")
 axs[1].set_ylabel("Value")
 axs[1].grid(visible=True)
-axs[1].set_ylim([-28000,28000])
-axs[1].set_xlim([100,600])
+axs[1].set_xlim([100,200])
 
 # Adjust layout and display
 plt.tight_layout()
 plt.draw()
 plt.pause(0.001) 
 plt.show() 
-# input("Press Enter to exit...")
-# exit() 
 
 GIMBAL_H = mbx.H
 GIMBAL_V = mbx.V
 
-maxsweepangle = 120
+maxsweepangle = 180
 sweepstep = 1
-gimbal_motor = GIMBAL_V
-sig_gen_freq_GHz=11
+gimbal_motor = GIMBAL_H
 
 
-steering_angle = 0 # degrees
+steering_angle = 15 # degrees
 
 print("Before Steering Phase:")
 print(sray.all_rx_phases)
@@ -1117,7 +1093,7 @@ peak_mag = np.zeros(len(gimbal_positions))
 print(peak_mag.shape)
 for i in range(len(gimbal_positions)):
     mbx.move(gimbal_motor,sweepstep)
-    time.sleep(0.5)  # Allow time for the gimbal to move to the new position
+    time.sleep(0.3)  # Allow time for the gimbal to move to the new position
 
     steer_data = np.transpose(np.array(data_capture(conv)))
     # Apply Taylor tapering to the received data
@@ -1176,36 +1152,36 @@ plt.figure(figsize=(10, 6))
 # plt.ylim(-50, 0)
 
 
-# dBm_mag = peak_mag - 10.2
-# plt.plot(angles, dBm_mag)
-# plt.title("Peak FFT Magnitude vs Mechanical Azimuth Angle - Combined Data")
-# plt.xlabel("Azimuth Angle (degrees)")
-# plt.ylabel("Peak FFT Magnitude (dBm)")
-# plt.grid(True)
-# plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
-# plt.draw()
-# plt.pause(0.001) 
+dBm_mag = peak_mag - 10.2
+plt.plot(angles, dBm_mag)
+plt.title("Peak FFT Magnitude vs Mechanical Azimuth Angle - Combined Data")
+plt.xlabel("Azimuth Angle (degrees)")
+plt.ylabel("Peak FFT Magnitude (dBm)")
+plt.grid(True)
+plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
+plt.draw()
+plt.pause(0.001) 
 
 
 # Calculate and plot
-mechanical_sweep, elec_steer_angle, azim_results, elev_results, = calc_array_pattern(elec_steer_angle=steering_angle,f_op_GHz=sig_gen_freq_GHz)
+mechanical_sweep, elec_steer_angle, azim_results, elev_results, = calc_array_pattern(elec_steer_angle=steering_angle)
 
 # === Plot Azimuth Cuts
-# plt.figure(figsize=(10, 6))
-# # Plot theoretical results
-# plt.plot(mechanical_sweep, azim_results, label=f'Theoretical Pattern',color='red')
-# # Plot measured results
-# plt.plot(angles, norm_peak_mag,linestyle='dotted', label='Measured Data', color='blue',markersize=9)
-# plt.title(f'Azimuth Cuts (X-Axis Steering at {elec_steer_angle}°)')
-# plt.xlabel('Mechanical Azimuth Angle (degrees)')
-# plt.ylabel('Normalized Gain (dB)')
-# plt.ylim(-60, 0)
-# plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
-# plt.grid(True)
-# plt.legend(title='Electronic Steer')
-# plt.tight_layout()
-# plt.draw()
-# plt.pause(0.001) 
+plt.figure(figsize=(10, 6))
+# Plot theoretical results
+plt.plot(mechanical_sweep, azim_results, label=f'Theoretical Pattern',color='red')
+# Plot measured results
+plt.plot(angles, norm_peak_mag,linestyle='dotted', label='Measured Data', color='blue',markersize=9)
+plt.title(f'Azimuth Cuts (X-Axis Steering at {elec_steer_angle}°)')
+plt.xlabel('Mechanical Azimuth Angle (degrees)')
+plt.ylabel('Normalized Gain (dB)')
+plt.ylim(-60, 0)
+plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
+plt.grid(True)
+plt.legend(title='Electronic Steer')
+plt.tight_layout()
+plt.draw()
+plt.pause(0.001) 
 
 """"
 # Plots For Each Beamformer Card ###
@@ -1292,7 +1268,7 @@ plt.pause(0.001)
 # Show plot
 
 plt.show(block=True) 
-
+exit()
 
 # Create a dictionary with the data you want to export
 matlab_data = {
@@ -1313,24 +1289,22 @@ savemat('beamforming_data.mat', matlab_data)
 # Define steering angles to test
 steering_angles = [-60, -45, -30, -15, 0, 15, 30, 45, 60]
 
-# Initialize arrays for both azimuth and elevation
-peak_mags_az = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
-peak_mags_el = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
+# Initialize arrays to store data for each steering angle
+peak_mags = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
+norm_peak_mags = {}
 azim_results_all = {}
-elev_results_all = {}
 
-# === Azimuth Sweep ===
-print("Starting Azimuth Sweep...")
-gimbal_motor = GIMBAL_H
-mbx.gotoZERO()
+mbx.gotoZERO
 mbx.move(gimbal_motor,-(maxsweepangle/2))
 
-# Single mechanical sweep for azimuth
+# Single mechanical sweep
 for i in range(len(gimbal_positions)):
     mbx.move(gimbal_motor, sweepstep)
     time.sleep(0.3)
     
+    # For each mechanical position, test all steering angles
     for steering_angle in steering_angles:
+        # Steer the beam
         sray.steer_rx(azimuth=steering_angle, elevation=0)
         
         # Apply analog phase calibration
@@ -1340,110 +1314,74 @@ for i in range(len(gimbal_positions)):
             element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
         sray.latch_rx_settings()
 
+        # Capture and process data
         steer_data = np.transpose(np.array(data_capture(conv)))
         steer_data = np.array(steer_data).T
         steer_data = cal_data(steer_data, cal_ant)
         steer_data = np.array(steer_data).T
 
         combined_data = np.sum(steer_data, axis=1)
-        peak_mags_az[steering_angle][i] = get_analog_mag(combined_data)
+        peak_mags[steering_angle][i] = get_analog_mag(combined_data)
 
+# Return to zero
 mbx.gotoZERO()
 
-# === Elevation Sweep ===
-print("Starting Elevation Sweep...")
-gimbal_motor = GIMBAL_V
-mbx.gotoZERO()
-mbx.move(gimbal_motor,-(maxsweepangle/2))
+# Process and plot results for each steering angle
+plt.ioff()  # Turn off interactive mode for saving
+angles = np.linspace(-(maxsweepangle/2), (maxsweepangle/2), len(gimbal_positions))
 
-# Single mechanical sweep for elevation
-for i in range(len(gimbal_positions)):
-    mbx.move(gimbal_motor, sweepstep)
-    time.sleep(0.3)
-    
-    for steering_angle in steering_angles:
-        sray.steer_rx(azimuth=0, elevation=steering_angle)
-        
-        # Apply analog phase calibration
-        for element in sray.elements.values():
-            str_channel = str(element)
-            value = int(strip_to_last_two_digits(str_channel))
-            element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
-        sray.latch_rx_settings()
-
-        steer_data = np.transpose(np.array(data_capture(conv)))
-        steer_data = np.array(steer_data).T
-        steer_data = cal_data(steer_data, cal_ant)
-        steer_data = np.array(steer_data).T
-
-        combined_data = np.sum(steer_data, axis=1)
-        peak_mags_el[steering_angle][i] = get_analog_mag(combined_data)
-
-mbx.gotoZERO()
-
-# Save data to MATLAB file with both azimuth and elevation patterns
-matlab_data = {
-    'mechanical_angles': angles,
-    'steering_angles': steering_angles,
-    'cal_antenna': cal_ant,
-    # Azimuth patterns (convert to dBm)
-    'measured_patterns_az_neg60': peak_mags_az[-60] - 10.2,
-    'measured_patterns_az_neg45': peak_mags_az[-45] - 10.2,
-    'measured_patterns_az_neg30': peak_mags_az[-30] - 10.2,
-    'measured_patterns_az_neg15': peak_mags_az[-15] - 10.2,
-    'measured_patterns_az_0': peak_mags_az[0] - 10.2,
-    'measured_patterns_az_pos15': peak_mags_az[15] - 10.2,
-    'measured_patterns_az_pos30': peak_mags_az[30] - 10.2,
-    'measured_patterns_az_pos45': peak_mags_az[45] - 10.2,
-    'measured_patterns_az_pos60': peak_mags_az[60] - 10.2,
-    # Elevation patterns (convert to dBm)
-    'measured_patterns_el_neg60': peak_mags_el[-60] - 10.2,
-    'measured_patterns_el_neg45': peak_mags_el[-45] - 10.2,
-    'measured_patterns_el_neg30': peak_mags_el[-30] - 10.2,
-    'measured_patterns_el_neg15': peak_mags_el[-15] - 10.2,
-    'measured_patterns_el_0': peak_mags_el[0] - 10.2,
-    'measured_patterns_el_pos15': peak_mags_el[15] - 10.2,
-    'measured_patterns_el_pos30': peak_mags_el[30] - 10.2,
-    'measured_patterns_el_pos45': peak_mags_el[45] - 10.2,
-    'measured_patterns_el_pos60': peak_mags_el[60] - 10.2
-}
-
-# Save combined azimuth and elevation data
-savemat('/home/snuc/Desktop/beamforming_patterns_azel.mat', matlab_data)
-
-# Create plots for both azimuth and elevation patterns
-plt.ioff()  # Turn off interactive mode for batch saving
-
-# Plot and save azimuth patterns
 for steering_angle in steering_angles:
+    
+    # Convert to dBm
+    peak_mags[steering_angle] = peak_mags[steering_angle] - 10.2  # Convert to dBm assuming 10.2 dB system gain (Full Scale)
+    
+    # Calculate theoretical pattern
+    mechanical_sweep, _, azim_result, _ = calc_array_pattern(elec_steer_angle=steering_angle)
+    azim_results_all[steering_angle] = azim_result
+
+    # Create plot
     plt.figure(figsize=(10, 6))
-    plt.plot(angles, peak_mags_az[steering_angle] - 10.2,  # Convert to dBm
+    # plt.plot(mechanical_sweep, azim_results_all[steering_angle], 
+             # label='Theoretical Pattern', color='red')
+    plt.plot(angles, peak_mags[steering_angle],
              linestyle='dotted', label='Measured Data', 
              color='blue', markersize=9)
-    plt.title(f'Azimuth Pattern (Steering Angle: {steering_angle}°)')
+    
+    plt.title(f'Azimuth Cuts (X-Axis Steering at {steering_angle}°)')
     plt.xlabel('Mechanical Azimuth Angle (degrees)')
     plt.ylabel('Combined RF Input Power (dBm)')
     plt.ylim(-60, 0)
     plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
     plt.grid(True)
-    plt.legend()
+    plt.legend(title='Electronic Steer')
     plt.tight_layout()
-    plt.savefig(f'/home/snuc/Desktop/azimuth_pattern_{steering_angle}deg.png')
+    
+    # Save plot
+    plt.savefig(f'/home/snuc/Desktop/beam_pattern_{steering_angle}deg.png')
     plt.close()
 
-# Plot and save elevation patterns
-for steering_angle in steering_angles:
-    plt.figure(figsize=(10, 6))
-    plt.plot(angles, peak_mags_el[steering_angle] - 10.2,  # Convert to dBm
-             linestyle='dotted', label='Measured Data', 
-             color='red', markersize=9)
-    plt.title(f'Elevation Pattern (Steering Angle: {steering_angle}°)')
-    plt.xlabel('Mechanical Elevation Angle (degrees)')
-    plt.ylabel('Combined RF Input Power (dBm)')
-    plt.ylim(-60, 0)
-    plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(f'/home/snuc/Desktop/elevation_pattern_{steering_angle}deg.png')
-    plt.close()
+# Create individual pattern arrays for MATLAB
+measured_patterns = {}
+for angle in steering_angles:
+    # Create variable name that replaces negative sign with 'neg'
+    angle_str = f"measured_patterns_{'neg' if angle < 0 else 'pos'}{abs(angle)}"
+    measured_patterns[angle_str] = peak_mags[angle]
+
+# Save all data to MATLAB file
+matlab_data = {
+    'mechanical_angles': angles,
+    'steering_angles': steering_angles,
+    'theoretical_patterns': azim_results_all,
+    'cal_antenna': cal_ant,
+    # Add individual patterns with clear names
+    'measured_patterns_neg60': peak_mags[-60],
+    'measured_patterns_neg45': peak_mags[-45],
+    'measured_patterns_neg45': peak_mags[-30],
+    'measured_patterns_neg15': peak_mags[-15],
+    'measured_patterns_0': peak_mags[0],
+    'measured_patterns_pos20': peak_mags[15],
+    'measured_patterns_pos20': peak_mags[30],
+    'measured_patterns_pos40': peak_mags[45],
+    'measured_patterns_pos60': peak_mags[60]
+}
+savemat('/home/snuc/Desktop/beamforming_data_all_angles.mat', matlab_data)
