@@ -90,6 +90,8 @@ def nebula_boot_vcu118_ethernet(request):
     if results[0] and results[1]:
         print("Board booted")
     else:
+        neb_manager.power.power_down_board()
+        neb_manager.monitor[0].stop_log()
         raise RuntimeError("Board did not boot")
 
     # Get IP address
