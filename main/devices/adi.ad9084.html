@@ -111,9 +111,11 @@
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_channel_nco_phases"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_channel_nco_phases</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_main_nco_frequencies"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_main_nco_frequencies</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_main_nco_phases"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_main_nco_phases</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084.ad9084.rx_main_tb1_6db_digital_gain_en"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_main_tb1_6db_digital_gain_en</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_nyquist_zone"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_nyquist_zone</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_sample_rate"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_sample_rate</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_test_mode"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_test_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084.ad9084.tx_b_ddr_offload"><code class="docutils literal notranslate"><span class="pre">ad9084.tx_b_ddr_offload</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.tx_channel_nco_frequencies"><code class="docutils literal notranslate"><span class="pre">ad9084.tx_channel_nco_frequencies</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.tx_channel_nco_gain_scales"><code class="docutils literal notranslate"><span class="pre">ad9084.tx_channel_nco_gain_scales</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.tx_channel_nco_phases"><code class="docutils literal notranslate"><span class="pre">ad9084.tx_channel_nco_phases</span></code></a></li>
@@ -233,6 +235,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ada4961.html">adi.ada4961 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adaq8092.html">adaq8092</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.adf4030.html">adi.adf4030 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4355.html">adi.adf4355 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adf4371.html">adf4371</a></li>
@@ -272,6 +275,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
@@ -290,6 +294,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.hmc7044.html">adi.hmc7044 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">lm75</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
@@ -331,7 +336,7 @@ Content on this topic
 <span class="target" id="module-adi.ad9084"></span><dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084.</span></span><span class="sig-name descname"><span class="pre">ad9084</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rx1_device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axi-ad9084-rx-hpc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rx2_device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axi-ad9084b-rx-b'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx1_device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axi-ad9084-tx-hpc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx2_device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axi-ad9084-tx-b'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084.ad9084" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_tx" title="adi.rx_tx.rx_tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx_tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start" title="adi.sync_start.sync_start"><code class="xref py py-class docutils literal notranslate"><span class="pre">sync_start</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_tx" title="adi.rx_tx.rx_tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx_tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start" title="adi.sync_start.sync_start"><code class="xref py py-class docutils literal notranslate"><span class="pre">sync_start</span></code></a>, <a class="reference internal" href="../fpga/index.html#adi.sync_start.sync_start_b" title="adi.sync_start.sync_start_b"><code class="xref py py-class docutils literal notranslate"><span class="pre">sync_start_b</span></code></a></p>
 <p>AD9084 Mixed-Signal Front End (MxFE)</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.adc_frequency">
@@ -444,6 +449,12 @@ individual driver channel names</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_main_tb1_6db_digital_gain_en">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_main_tb1_6db_digital_gain_en</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_main_tb1_6db_digital_gain_en" title="Permalink to this definition"></a></dt>
+<dd><p>main_tb1_6db_digital_gain_en: Receive path coarse DDC NCO phases</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_nyquist_zone">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_nyquist_zone</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_nyquist_zone" title="Permalink to this definition"></a></dt>
 <dd><p>rx_nyquist_zone: ADC nyquist zone. Options are: odd, even</p>
@@ -459,6 +470,16 @@ individual driver channel names</p>
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_test_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_test_mode</span></span><a class="headerlink" href="#adi.ad9084.ad9084.rx_test_mode" title="Permalink to this definition"></a></dt>
 <dd><p>rx_test_mode: NCO Test Mode</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_b_ddr_offload">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_b_ddr_offload</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_b_ddr_offload" title="Permalink to this definition"></a></dt>
+<dd><p>tx_b_ddr_offload: Enable DDR offload</p>
+<p>When true the DMA will pass buffers into the BRAM FIFO for data repeating.
+This is necessary when operating at high DAC sample rates. This can reduce
+the maximum buffer size but data passed to DACs in cyclic mode will not
+underflow due to memory bottlenecks.</p>
 </dd></dl>
 
 <dl class="py property">

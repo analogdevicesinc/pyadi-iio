@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: ad9250" name="description" />
+<meta content="Bases: context_manager, attribute" name="description" />
 
-    <title>adi.fmcjesdadc1 module &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>adi.axi_aion_trig module &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=8d0b0339" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="fmclidar1" href="adi.fmclidar1.html" />
-    <link rel="prev" title="adi.fmcadc3 module" href="adi.fmcadc3.html" />
+    <link rel="next" title="adi.cn0511 module" href="adi.cn0511.html" />
+    <link rel="prev" title="adxrs290" href="adi.adxrs290.html" />
    
   
   
@@ -92,13 +92,8 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adi.fmcjesdadc1 module</a><ul>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1</span></code></a><ul>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.jesd204_statuses</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.test_mode_chan0</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.test_mode_chan1</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">adi.axi_aion_trig module</a><ul>
+<li><a class="reference internal" href="#adi.axi_aion_trig.axi_aion_trig"><code class="docutils literal notranslate"><span class="pre">axi_aion_trig</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -245,7 +240,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.axi_aion_trig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
@@ -259,7 +254,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
@@ -300,32 +295,84 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.fmcjesdadc1">
-<span id="adi-fmcjesdadc1-module"></span><h1>adi.fmcjesdadc1 module<a class="headerlink" href="#module-adi.fmcjesdadc1" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.axi_aion_trig">
+<span id="adi-axi-aion-trig-module"></span><h1>adi.axi_aion_trig module<a class="headerlink" href="#module-adi.axi_aion_trig" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.fmcjesdadc1.</span></span><span class="sig-name descname"><span class="pre">fmcjesdadc1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad9250.html#adi.ad9250.ad9250" title="adi.ad9250.ad9250"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9250</span></code></a></p>
-<p>FMCJESDADC1 Four-Channel High Speed Data Acquisition FMC Board</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_statuses</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode_chan0</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode_chan0: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode_chan1</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode_chan1: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
-</dd></dl>
-
+<dt class="sig sig-object py" id="adi.axi_aion_trig.axi_aion_trig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.axi_aion_trig.</span></span><span class="sig-name descname"><span class="pre">axi_aion_trig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.axi_aion_trig.axi_aion_trig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>axi_aion_trig IIO Device Interface</p>
+<p>This class provides an interface to the ‘axi_aion_trig’ IIO device, allowing
+control and monitoring of its voltage channels and associated attributes.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>uri<span class="classifier">str, optional</span></dt><dd><p>URI of the IIO context to connect to. Defaults to an empty string.</p>
+</dd>
+</dl>
+</section>
+<section id="attributes-per-voltage-channel">
+<h2>Attributes (per voltage channel)<a class="headerlink" href="#attributes-per-voltage-channel" title="Permalink to this heading"></a></h2>
+<p>For each voltage channel (e.g., voltage0, voltage1, …), the following
+properties are dynamically created:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>trig{N}_en<span class="classifier">bool</span></dt><dd><p>Enable or disable the trigger for channel N.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>trig{N}_phase<span class="classifier">int</span></dt><dd><p>Phase setting for channel N.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>trig{N}_status<span class="classifier">int</span></dt><dd><p>Status of the trigger for channel N.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>trig{N}_frequency<span class="classifier">int</span></dt><dd><p>Frequency setting for channel N.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>trig{N}_internal_bsync_enable<span class="classifier">bool</span></dt><dd><p>Enable or disable internal bsync for channel N.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>trig{N}_output_enable<span class="classifier">bool</span></dt><dd><p>Enable or disable output for channel N.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>trig{N}_trigger_now<span class="classifier">bool</span></dt><dd><p>Trigger an immediate event on channel N.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>trig{N}_trigger_select_gpio_enable<span class="classifier">bool</span></dt><dd><p>Enable or disable GPIO selection for trigger on channel N.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="raises">
+<h2>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>Exception</dt><dd><p>If the ‘axi_aion_trig’ device is not found in the IIO context.</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">trig</span> <span class="o">=</span> <span class="n">axi_aion_trig</span><span class="p">(</span><span class="s2">&quot;ip:192.168.1.100&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">trig</span><span class="o">.</span><span class="n">trig0_en</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">trig</span><span class="o">.</span><span class="n">trig0_status</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </dd></dl>
 
 </section>
@@ -334,8 +381,8 @@ off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.fmcadc3.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adi.fmcadc3 module</a>
-    <a href="adi.fmclidar1.html" title="Next document (Alt+Shift+RightArrow)" class="next">fmclidar1</a>
+    <a href="adi.adxrs290.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adxrs290</a>
+    <a href="adi.cn0511.html" title="Next document (Alt+Shift+RightArrow)" class="next">adi.cn0511 module</a>
               </div>
           
         </div>

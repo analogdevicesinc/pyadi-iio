@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: ad9250" name="description" />
+<meta content="Bases: context_manager, attribute" name="description" />
 
-    <title>adi.fmcjesdadc1 module &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>adi.hmc7044 module &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=8d0b0339" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="fmclidar1" href="adi.fmclidar1.html" />
-    <link rel="prev" title="adi.fmcadc3 module" href="adi.fmcadc3.html" />
+    <link rel="next" title="jesd" href="adi.jesd.html" />
+    <link rel="prev" title="gen_mux" href="adi.gen_mux.html" />
    
   
   
@@ -92,11 +92,16 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adi.fmcjesdadc1 module</a><ul>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1</span></code></a><ul>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.jesd204_statuses</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.test_mode_chan0</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.test_mode_chan1</span></code></a></li>
+<li><a class="reference internal" href="#">adi.hmc7044 module</a><ul>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044"><code class="docutils literal notranslate"><span class="pre">hmc7044</span></code></a><ul>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044.mute_request"><code class="docutils literal notranslate"><span class="pre">hmc7044.mute_request</span></code></a></li>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044.reseed_request"><code class="docutils literal notranslate"><span class="pre">hmc7044.reseed_request</span></code></a></li>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044.reset_dividers_request"><code class="docutils literal notranslate"><span class="pre">hmc7044.reset_dividers_request</span></code></a></li>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044.sleep_request"><code class="docutils literal notranslate"><span class="pre">hmc7044.sleep_request</span></code></a></li>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044.status"><code class="docutils literal notranslate"><span class="pre">hmc7044.status</span></code></a></li>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044.sync_pin_mode"><code class="docutils literal notranslate"><span class="pre">hmc7044.sync_pin_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044.sync_pin_mode_available"><code class="docutils literal notranslate"><span class="pre">hmc7044.sync_pin_mode_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.hmc7044.hmc7044.sysref_request"><code class="docutils literal notranslate"><span class="pre">hmc7044.sysref_request</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -259,12 +264,12 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.gen_mux.html">gen_mux</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.hmc7044.html">adi.hmc7044 module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.hmc7044 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">lm75</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
@@ -300,31 +305,80 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.fmcjesdadc1">
-<span id="adi-fmcjesdadc1-module"></span><h1>adi.fmcjesdadc1 module<a class="headerlink" href="#module-adi.fmcjesdadc1" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.hmc7044">
+<span id="adi-hmc7044-module"></span><h1>adi.hmc7044 module<a class="headerlink" href="#module-adi.hmc7044" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.fmcjesdadc1.</span></span><span class="sig-name descname"><span class="pre">fmcjesdadc1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad9250.html#adi.ad9250.ad9250" title="adi.ad9250.ad9250"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9250</span></code></a></p>
-<p>FMCJESDADC1 Four-Channel High Speed Data Acquisition FMC Board</p>
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.hmc7044.</span></span><span class="sig-name descname"><span class="pre">hmc7044</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.hmc7044.hmc7044" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>hmc7044 IIO Device Interface
+This class provides a Python interface for interacting with the HMC7044
+device via the Industrial I/O (IIO) framework.
+It allows users to access and modify device and channel attributes, as well
+as perform device-specific operations.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>mute_request (str): Get or set the mute request state of the device.
+reseed_request (str): Get or set the reseed request state of the device.
+reset_dividers_request (str): Get or set the reset dividers request state of the device.
+sleep_request (str): Get or set the sleep request state of the device.
+sync_pin_mode (str): Get or set the synchronization pin mode.
+sync_pin_mode_available (str): Get the available synchronization pin modes.
+sysref_request (str): Get or set the SYSREF request state of the device.
+status (str): Get the debug status of the device.</p>
+</dd>
+<dt>Channel Attributes (dynamically added per channel):</dt><dd><p>&lt;channel_label&gt;_frequency (int): Get or set the frequency for the specified channel.
+&lt;channel_label&gt;_label (str): Get or set the label for the specified channel.
+&lt;channel_label&gt;_phase (int): Get or set the phase for the specified channel.</p>
+</dd>
+<dt>Args:</dt><dd><p>uri (str, optional): URI of the IIO context. Defaults to “”.</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: If the HMC7044 device is not found in the IIO context.</p>
+</dd>
+<dt>Usage Example:</dt><dd><p>dev = hmc7044(“ip:192.168.2.1”)
+print(dev.status)
+dev.mute_request = “1”
+print(dev.altvoltage0_frequency)</p>
+</dd>
+</dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_statuses</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044.mute_request">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mute_request</span></span><a class="headerlink" href="#adi.hmc7044.hmc7044.mute_request" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode_chan0</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode_chan0: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
-</dd></dl>
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044.reseed_request">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reseed_request</span></span><a class="headerlink" href="#adi.hmc7044.hmc7044.reseed_request" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode_chan1</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode_chan1: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
-</dd></dl>
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044.reset_dividers_request">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset_dividers_request</span></span><a class="headerlink" href="#adi.hmc7044.hmc7044.reset_dividers_request" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044.sleep_request">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sleep_request</span></span><a class="headerlink" href="#adi.hmc7044.hmc7044.sleep_request" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044.status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status</span></span><a class="headerlink" href="#adi.hmc7044.hmc7044.status" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044.sync_pin_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_pin_mode</span></span><a class="headerlink" href="#adi.hmc7044.hmc7044.sync_pin_mode" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044.sync_pin_mode_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_pin_mode_available</span></span><a class="headerlink" href="#adi.hmc7044.hmc7044.sync_pin_mode_available" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.hmc7044.hmc7044.sysref_request">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sysref_request</span></span><a class="headerlink" href="#adi.hmc7044.hmc7044.sysref_request" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -334,8 +388,8 @@ off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.fmcadc3.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adi.fmcadc3 module</a>
-    <a href="adi.fmclidar1.html" title="Next document (Alt+Shift+RightArrow)" class="next">fmclidar1</a>
+    <a href="adi.gen_mux.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">gen_mux</a>
+    <a href="adi.jesd.html" title="Next document (Alt+Shift+RightArrow)" class="next">jesd</a>
               </div>
           
         </div>

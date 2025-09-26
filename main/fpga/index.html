@@ -124,6 +124,13 @@ window.addEventListener("load", () => mermaid.run());
 <li><a class="reference internal" href="#adi.sync_start.sync_start.tx_sync_start_available"><code class="docutils literal notranslate"><span class="pre">sync_start.tx_sync_start_available</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start_b"><code class="docutils literal notranslate"><span class="pre">sync_start_b</span></code></a><ul>
+<li><a class="reference internal" href="#adi.sync_start.sync_start_b.rx_b_sync_start"><code class="docutils literal notranslate"><span class="pre">sync_start_b.rx_b_sync_start</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start_b.rx_b_sync_start_available"><code class="docutils literal notranslate"><span class="pre">sync_start_b.rx_b_sync_start_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start_b.tx_b_sync_start"><code class="docutils literal notranslate"><span class="pre">sync_start_b.tx_b_sync_start</span></code></a></li>
+<li><a class="reference internal" href="#adi.sync_start.sync_start_b.tx_b_sync_start_available"><code class="docutils literal notranslate"><span class="pre">sync_start_b.tx_b_sync_start_available</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -232,6 +239,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ada4961.html">adi.ada4961 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adaq8092.html">adaq8092</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4030.html">adi.adf4030 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4355.html">adi.adf4355 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4371.html">adf4371</a></li>
@@ -271,6 +279,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl355.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0540.html">cn0540</a></li>
@@ -289,6 +298,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms11.html">adi.fmcomms11 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.hmc7044.html">adi.hmc7044 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.lm75.html">lm75</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2314_14.html">ltc2314_14</a></li>
@@ -530,6 +540,71 @@ This key self clears.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.sync_start.sync_start.tx_sync_start_available">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start.tx_sync_start_available" title="Permalink to this definition"></a></dt>
+<dd><p>tx_sync_start_available: Returns a list of possible keys used for tx_sync_start</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start_b">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.sync_start.</span></span><span class="sig-name descname"><span class="pre">sync_start_b</span></span><a class="headerlink" href="#adi.sync_start.sync_start_b" title="Permalink to this definition"></a></dt>
+<dd><p>Synchronization Control: This class allows for synchronous transfers
+between transmit and receive data movement or captures.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start_b.rx_b_sync_start">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_b_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start_b.rx_b_sync_start" title="Permalink to this definition"></a></dt>
+<dd><p>rx_b_sync_start: Issue a synchronisation request</p>
+<dl class="simple">
+<dt>Possible values are:</dt><dd><ul class="simple">
+<li><p><strong>arm</strong>: Writing this key will arm the trigger mechanism sensitive to an
+external sync signal. Once the external sync signal goes high
+it synchronizes channels within a ADC, and across multiple
+instances. This bit has an effect only the EXT_SYNC
+synthesis parameter is set.</p></li>
+<li><p><strong>disarm</strong>: Writing this key will disarm the trigger mechanism
+sensitive to an external sync signal. This bit has an
+effect only the EXT_SYNC synthesis parameter is set.</p></li>
+<li><p><strong>trigger_manual</strong>: Writing this key will issue an external sync event
+if it is hooked up inside the fabric. This key has an effect
+only the EXT_SYNC synthesis parameter is set.
+This key self clears.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start_b.rx_b_sync_start_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_b_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start_b.rx_b_sync_start_available" title="Permalink to this definition"></a></dt>
+<dd><p>rx_sync_start_available: Returns a list of possible keys used for rx_sync_start</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start_b.tx_b_sync_start">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_b_sync_start</span></span><a class="headerlink" href="#adi.sync_start.sync_start_b.tx_b_sync_start" title="Permalink to this definition"></a></dt>
+<dd><p>tx_b_sync_start: Issue a synchronisation request</p>
+<dl class="simple">
+<dt>Possible values are:</dt><dd><ul class="simple">
+<li><p><strong>arm</strong>: Writing this key will arm the trigger mechanism sensitive to an
+external sync signal. Once the external sync signal goes high
+it synchronizes channels within a DAC, and across multiple
+instances. This bit has an effect only the EXT_SYNC
+synthesis parameter is set.</p></li>
+<li><p><strong>disarm</strong>: Writing this key will disarm the trigger mechanism
+sensitive to an external sync signal. This bit has an
+effect only the EXT_SYNC synthesis parameter is set.</p></li>
+<li><p><strong>trigger_manual</strong>: Writing this key will issue an external sync event
+if it is hooked up inside the fabric. This key has an effect
+only the EXT_SYNC synthesis parameter is set.
+This key self clears.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.sync_start.sync_start_b.tx_b_sync_start_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_b_sync_start_available</span></span><a class="headerlink" href="#adi.sync_start.sync_start_b.tx_b_sync_start_available" title="Permalink to this definition"></a></dt>
 <dd><p>tx_sync_start_available: Returns a list of possible keys used for tx_sync_start</p>
 </dd></dl>
 
