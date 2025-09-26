@@ -112,13 +112,9 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
         self._txdac = self._ctx.find_device(tx1_device_name)
         self._rxadc2 = self._ctx.find_device(rx2_device_name)
         self._txdac2 = self._ctx.find_device(tx2_device_name)
-        # Checks
-        for dev, name in zip(
-            [self._rxadc, self._txdac, self._rxadc2, self._txdac2],
-            [rx1_device_name, tx1_device_name, rx2_device_name, tx2_device_name],
-        ):
-            if dev is None:
-                raise Exception(f"No device found with name {name}")
+        if self._rxadc is None or self._txdac is None:
+            raise Exception("No AD9084 device found")
+        single_link = self._rxadc2 is None or self._txdac2 is None
 
         # Get DDC and DUC mappings
         paths = {}
@@ -132,27 +128,29 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
         for ch in self._rxadc.channels:
             if ch.scan_element and not ch.output:
                 self._rx_channel_names.append(ch._id)
-        for ch in self._rxadc2.channels:
-            if ch.scan_element and not ch.output:
-                self._rx2_channel_names.append(ch._id)
         for ch in self._txdac.channels:
             if ch.scan_element:
                 self._tx_channel_names.append(ch._id)
             else:
                 self._dds_channel_names.append(ch._id)
-        for ch in self._txdac2.channels:
-            if ch.scan_element:
-                self._tx2_channel_names.append(ch._id)
-            else:
-                self._dds2_channel_names.append(ch._id)
+        if not single_link:
+            for ch in self._rxadc2.channels:
+                if ch.scan_element and not ch.output:
+                    self._rx2_channel_names.append(ch._id)
+            for ch in self._txdac2.channels:
+                if ch.scan_element:
+                    self._tx2_channel_names.append(ch._id)
+                else:
+                    self._dds2_channel_names.append(ch._id)
 
         # Sort channel names
         self._rx_channel_names = _sortconv(self._rx_channel_names)
-        self._rx2_channel_names = _sortconv(self._rx2_channel_names)
         self._tx_channel_names = _sortconv(self._tx_channel_names)
-        self._tx2_channel_names = _sortconv(self._tx2_channel_names)
         self._dds_channel_names = _sortconv(self._dds_channel_names, dds=True)
-        self._dds2_channel_names = _sortconv(self._dds2_channel_names, dds=True)
+        if not single_link:
+            self._rx2_channel_names = _sortconv(self._rx2_channel_names)
+            self._tx2_channel_names = _sortconv(self._tx2_channel_names)
+            self._dds2_channel_names = _sortconv(self._dds2_channel_names, dds=True)
 
         # Map unique attributes to channel properties
         self._rx_fine_ddc_channel_names = []
@@ -175,20 +173,23 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
                         self._tx_fine_duc_channel_names += channels
 
         # Setup second DMA path
-        self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
-        setattr(ad9084, "rx1", rx1)
-        setattr(ad9084, "rx2", rx2)
-        remap(self._rx2, "rx_", "rx2_", type(self))
+        if not single_link:
+            self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
+            setattr(ad9084, "rx1", rx1)
+            setattr(ad9084, "rx2", rx2)
+            remap(self._rx2, "rx_", "rx2_", type(self))
 
-        self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
-        setattr(ad9084, "tx1", tx1)
-        setattr(ad9084, "tx2", tx2)
-        remap(self._tx2, "tx_", "tx2_", type(self))
-        remap(self._tx2, "dds_", "dds2_", type(self))
+            self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
+            setattr(ad9084, "tx1", tx1)
+            setattr(ad9084, "tx2", tx2)
+            remap(self._tx2, "tx_", "tx2_", type(self))
+            remap(self._tx2, "dds_", "dds2_", type(self))
 
         rx_tx.__init__(self)
         sync_start.__init__(self)
-        sync_start_b.__init__(self)
+        if not single_link:
+            sync_start_b.__init__(self)
+
         self.rx_buffer_size = 2 ** 16
 
     def _get_iio_attr_str_single(self, channel_name, attr, output):
