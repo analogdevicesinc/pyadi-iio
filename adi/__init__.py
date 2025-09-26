@@ -59,6 +59,7 @@ from adi.ad9680 import ad9680
 from adi.ada4961 import ada4961
 from adi.adaq8092 import adaq8092
 from adi.adar1000 import adar1000, adar1000_array
+from adi.adf4030 import adf4030
 from adi.adf4159 import adf4159
 from adi.adf4355 import adf4355
 from adi.adf4371 import adf4371
@@ -100,6 +101,7 @@ from adi.adxl345 import adxl345
 from adi.adxl355 import adxl355
 from adi.adxl380 import adxl380
 from adi.adxrs290 import adxrs290
+from adi.axi_aion_trig import axi_aion_trig
 from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.cn0554 import cn0554
@@ -117,6 +119,7 @@ from adi.fmclidar1 import fmclidar1
 from adi.fmcomms5 import FMComms5
 from adi.fmcomms11 import FMComms11
 from adi.gen_mux import genmux
+from adi.hmc7044 import hmc7044
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2387 import ltc2387
