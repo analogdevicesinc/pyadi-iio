@@ -9,7 +9,7 @@ from adi.rx_tx import rx
 
 class ad4080(rx, context_manager):
 
-    """ AD4080 ADC """
+    """ AD4080/AD4081/AD4083/AD4084/AD4086/AD4087 ADC """
 
     _complex_data = False
     _device_name = ""
@@ -18,14 +18,16 @@ class ad4080(rx, context_manager):
     def __init__(self, uri="", device_name="ad4080"):
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_part = "ad4080"
+        compatible_parts = ["ad4080", "ad4081", "ad4083", "ad4084", "ad4086", "ad4087"]
         self._ctrl = None
 
         if not device_name:
-            device_name = compatible_part
+            device_name = "ad4080"
         else:
-            if device_name != compatible_part:
-                raise Exception(f"Not a compatible device: {device_name}")
+            if device_name not in compatible_parts:
+                raise Exception(
+                    f"Not a compatible device: {device_name}. Compatible devices: {compatible_parts}"
+                )
 
         # Select the device matching device_name as working device
         for device in self._ctx.devices:
@@ -36,7 +38,7 @@ class ad4080(rx, context_manager):
 
         # Raise an exception if the device isn't found
         if not self._ctrl:
-            raise Exception("AD4080 device not found")
+            raise Exception(f"{device_name} device not found")
 
         if not self._rxadc:
             raise Exception("Error in selecting matching device")
