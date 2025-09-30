@@ -84,7 +84,7 @@ def nebula_boot_vcu118_ethernet(request):
     neb_manager.monitor[0].print_to_console = show_uart_log
     results = neb_manager.monitor[0]._read_until_done_multi(
         # done_strings=["Linux version", f"root@{device_hostname}"],
-        done_strings=["Linux version", f"ogin"],
+        done_strings=["Linux version", f"Login"],
         max_time=180,
     )
     if results[0] and results[1]:
