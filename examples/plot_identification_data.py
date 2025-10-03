@@ -102,8 +102,8 @@ def plot_current_modulation():
             xaxis_title='In-phase (I)',
             yaxis_title='Quadrature (Q)',
             showlegend=True,
-            width=400,
-            height=400
+            width=500,
+            height=450
         )
 
         return fig
@@ -149,8 +149,8 @@ def plot_current_waveform():
 
         data = data.flatten()
 
-        # Take first 512 samples for time-domain plotting
-        plot_samples = min(512, len(data))
+        # Take first 256 samples for time-domain plotting
+        plot_samples = min(256, len(data))
         data_plot = data[:plot_samples]
 
         # Create time axis
@@ -179,24 +179,13 @@ def plot_current_waveform():
             hovertemplate='Sample: %{x}<br>Q: %{y:.3f}<extra></extra>'
         ))
 
-        # Plot magnitude
-        magnitude = np.abs(data_plot)
-        fig.add_trace(go.Scatter(
-            x=time_axis,
-            y=magnitude,
-            mode='lines',
-            name='Magnitude',
-            line=dict(color='green', width=1.5, dash='dash'),
-            hovertemplate='Sample: %{x}<br>Magnitude: %{y:.3f}<extra></extra>'
-        ))
-
         fig.update_layout(
             title=f'Time-Domain Waveform: {modulation_type}',
             xaxis_title='Sample Number',
             yaxis_title='Amplitude',
             showlegend=True,
-            width=400,
-            height=400,
+            width=500,
+            height=450,
             hovermode='x unified'
         )
 
@@ -570,10 +559,10 @@ app.layout = html.Div([
     html.Div([
         html.H2('Current Modulation Signal', style={'text-align': 'center', 'font-family': 'Barlow', 'padding': '15px'}),
         html.Div([
-            dcc.Graph(id='current-modulation-plot', style={'width': '50%', 'height': '400px', 'display': 'inline-block'}),
-            dcc.Graph(id='current-waveform-plot', style={'width': '50%', 'height': '400px', 'display': 'inline-block'})
+            dcc.Graph(id='current-modulation-plot', style={'width': '50%', 'height': '500px', 'display': 'inline-block'}),
+            dcc.Graph(id='current-waveform-plot', style={'width': '50%', 'height': '500px', 'display': 'inline-block'})
         ], style={'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center'})
-    ], style={'width': '98%', 'margin-left': '1%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'padding': '10px'}),
+    ], style={'width': '98%', 'height': '580px', 'margin-left': '1%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'padding': '20px'}),
 
     html.Div([
         html.H2('First ADRV9009ZU11eg', style={'text-align': 'center', 'font-family': 'Barlow','padding': '25px'}),
