@@ -222,6 +222,7 @@ file_path1 = '/home/analog/git/holohub/build/matlab_classify_modulator/modulatio
 
 truth = 0
 truth1 = 0
+selected_modulation = "random"  # Default to random mode
 estimated_ch1_vector = []
 estimated_ch2_vector = []
 estimated_ch3_vector = []
@@ -269,6 +270,7 @@ def get_timestamp1(file_name):
 def get_cnn_data():
     global truth
     global truth1
+    global selected_modulation
 
     global estimated_ch1
     global estimated_ch2
@@ -318,7 +320,11 @@ def get_cnn_data():
     mod_pam4  = scipy.io.loadmat('modulated_data/mod_PAM4.mat')
     mod_qpsk  = scipy.io.loadmat('modulated_data/mod_QPSK.mat')
 
-    truth  = random.choice([1, 2, 3, 5, 6, 8,9,10])
+    # Use selected modulation or random if "random" is selected
+    if selected_modulation == "random":
+        truth = random.choice([1, 2, 3, 5, 6, 8, 9, 10])
+    else:
+        truth = int(selected_modulation)
     truth1 = truth
     modulation_type = modulation_map[str(truth)]
     match modulation_type:
@@ -559,10 +565,29 @@ app.layout = html.Div([
     html.Div([
         html.H2('Current Modulation Signal', style={'text-align': 'center', 'font-family': 'Barlow', 'padding': '15px'}),
         html.Div([
+            html.Label('Select Modulation:', style={'font-family': 'Barlow', 'fontSize': '16px', 'margin-right': '10px'}),
+            dcc.Dropdown(
+                id='modulation-dropdown',
+                options=[
+                    {'label': 'Random (Auto-change)', 'value': 'random'},
+                    {'label': 'BPSK', 'value': '5'},
+                    {'label': 'QPSK', 'value': '10'},
+                    {'label': '8PSK', 'value': '3'},
+                    {'label': '16QAM', 'value': '1'},
+                    {'label': '64QAM', 'value': '2'},
+                    {'label': 'PAM4', 'value': '9'},
+                    {'label': 'GFSK', 'value': '8'},
+                    {'label': 'CPFSK', 'value': '6'}
+                ],
+                value='random',
+                style={'width': '200px', 'font-family': 'Barlow'}
+            )
+        ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'margin-bottom': '20px'}),
+        html.Div([
             dcc.Graph(id='current-modulation-plot', style={'width': '50%', 'height': '500px', 'display': 'inline-block'}),
             dcc.Graph(id='current-waveform-plot', style={'width': '50%', 'height': '500px', 'display': 'inline-block'})
         ], style={'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center'})
-    ], style={'width': '98%', 'height': '580px', 'margin-left': '1%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'padding': '20px'}),
+    ], style={'width': '98%', 'height': '640px', 'margin-left': '1%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'padding': '20px'}),
 
     html.Div([
         html.H2('First ADRV9009ZU11eg', style={'text-align': 'center', 'font-family': 'Barlow','padding': '25px'}),
@@ -625,6 +650,15 @@ app.layout = html.Div([
         n_intervals=0
     )
 ], style={'font-family': 'Barlow'})
+
+@app.callback(
+    dash.dependencies.Output('modulation-dropdown', 'value'),
+    [dash.dependencies.Input('modulation-dropdown', 'value')]
+)
+def update_selected_modulation(value):
+    global selected_modulation
+    selected_modulation = value
+    return value
 
 @app.callback(
     [dash.dependencies.Output('current-modulation-plot', 'figure'),
