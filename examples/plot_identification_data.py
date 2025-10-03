@@ -50,6 +50,74 @@ def plot_modulated_data1():
     )
     return fig
 
+# Plot the current modulation being transmitted
+def plot_current_modulation():
+    global truth
+
+    # Load the current modulation data
+    modulation_type = modulation_map[str(truth)]
+
+    try:
+        match modulation_type:
+            case "BPSK":
+                data = scipy.io.loadmat('modulated_data/mod_BPSK.mat')['rx']
+            case "QPSK":
+                data = scipy.io.loadmat('modulated_data/mod_QPSK.mat')['rx']
+            case "8PSK":
+                data = scipy.io.loadmat('modulated_data/mod_8PSK.mat')['rx']
+            case "16QAM":
+                data = scipy.io.loadmat('modulated_data/mod_16QAM.mat')['rx']
+            case "64QAM":
+                data = scipy.io.loadmat('modulated_data/mod_64QAM.mat')['rx']
+            case "PAM4":
+                data = scipy.io.loadmat('modulated_data/mod_PAM4.mat')['rx']
+            case "GFSK":
+                data = scipy.io.loadmat('modulated_data/mod_GFSK.mat')['rx']
+            case "CPFSK":
+                data = scipy.io.loadmat('modulated_data/mod_CPFSK.mat')['rx']
+            case _:
+                # Default fallback
+                data = scipy.io.loadmat('modulated_data/mod_QPSK.mat')['rx']
+
+        data = data.flatten()
+
+        # Take first 1024 samples for plotting
+        plot_samples = min(1024, len(data))
+        data_plot = data[:plot_samples]
+
+        # Create constellation plot
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatter(
+            x=np.real(data_plot),
+            y=np.imag(data_plot),
+            mode='markers',
+            marker=dict(size=3, opacity=0.6),
+            name=f'Current: {modulation_type}',
+            hovertemplate='I: %{x:.3f}<br>Q: %{y:.3f}<extra></extra>'
+        ))
+
+        fig.update_layout(
+            title=f'Current Modulation: {modulation_type}',
+            xaxis_title='In-phase (I)',
+            yaxis_title='Quadrature (Q)',
+            showlegend=True,
+            width=400,
+            height=400
+        )
+
+        return fig
+
+    except Exception as e:
+        # Return empty plot on error
+        fig = go.Figure()
+        fig.update_layout(
+            title='Current Modulation: Error Loading Data',
+            xaxis_title='In-phase (I)',
+            yaxis_title='Quadrature (Q)'
+        )
+        return fig
+
 confusion_matrix = np.zeros((len(labels), len(labels)))
 confusion_matrix1 = np.zeros((len(labels), len(labels)))
 iteration=0
@@ -404,6 +472,14 @@ app.layout = html.Div([
         html.H1('High-Performance Analog Meets AI', style={'display': 'inline-block', 'vertical-align': 'middle', 'fontSize': '46px'})
     ], style={'width': '100%', 'text-align': 'left', 'padding': '5px', 'border-bottom': '1px solid #B7BBC3', 'backgroundColor': '#FFFFFF', 'font-family': 'Barlow', 'align-items': 'center'}),
 
+    # Current Modulation Display Section
+    html.Div([
+        html.H2('Current Modulation Signal', style={'text-align': 'center', 'font-family': 'Barlow', 'padding': '15px'}),
+        html.Div([
+            dcc.Graph(id='current-modulation-plot', style={'width': '100%', 'height': '400px'})
+        ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'})
+    ], style={'width': '98%', 'margin-left': '1%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'padding': '10px'}),
+
     html.Div([
         html.H2('First ADRV9009ZU11eg', style={'text-align': 'center', 'font-family': 'Barlow','padding': '25px'}),
         html.Div([
@@ -467,7 +543,8 @@ app.layout = html.Div([
 ], style={'font-family': 'Barlow'})
 
 @app.callback(
-    [dash.dependencies.Output('confusion-matrix', 'figure'),
+    [dash.dependencies.Output('current-modulation-plot', 'figure'),
+     dash.dependencies.Output('confusion-matrix', 'figure'),
      dash.dependencies.Output('modulated-data', 'figure'),
      dash.dependencies.Output('example-table', 'data'),
      dash.dependencies.Output('truth-table', 'data'),
@@ -481,7 +558,7 @@ def update_graph_live(n):
     update_confusion_matrix()
     update_table()
     update_truth_table()
-    return plot_confusion_matrix(), plot_modulated_data(), table_data, truth_table_data , truth_table_data1, plot_confusion_matrix1(), plot_modulated_data1()
+    return plot_current_modulation(), plot_confusion_matrix(), plot_modulated_data(), table_data, truth_table_data , truth_table_data1, plot_confusion_matrix1(), plot_modulated_data1()
 
 if __name__ == '__main__':
     # Code to be executed just once
