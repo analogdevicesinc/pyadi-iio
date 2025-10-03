@@ -118,6 +118,100 @@ def plot_current_modulation():
         )
         return fig
 
+# Plot the time-domain waveform of current modulation
+def plot_current_waveform():
+    global truth
+
+    # Load the current modulation data
+    modulation_type = modulation_map[str(truth)]
+
+    try:
+        match modulation_type:
+            case "BPSK":
+                data = scipy.io.loadmat('modulated_data/mod_BPSK.mat')['rx']
+            case "QPSK":
+                data = scipy.io.loadmat('modulated_data/mod_QPSK.mat')['rx']
+            case "8PSK":
+                data = scipy.io.loadmat('modulated_data/mod_8PSK.mat')['rx']
+            case "16QAM":
+                data = scipy.io.loadmat('modulated_data/mod_16QAM.mat')['rx']
+            case "64QAM":
+                data = scipy.io.loadmat('modulated_data/mod_64QAM.mat')['rx']
+            case "PAM4":
+                data = scipy.io.loadmat('modulated_data/mod_PAM4.mat')['rx']
+            case "GFSK":
+                data = scipy.io.loadmat('modulated_data/mod_GFSK.mat')['rx']
+            case "CPFSK":
+                data = scipy.io.loadmat('modulated_data/mod_CPFSK.mat')['rx']
+            case _:
+                # Default fallback
+                data = scipy.io.loadmat('modulated_data/mod_QPSK.mat')['rx']
+
+        data = data.flatten()
+
+        # Take first 512 samples for time-domain plotting
+        plot_samples = min(512, len(data))
+        data_plot = data[:plot_samples]
+
+        # Create time axis
+        time_axis = np.arange(plot_samples)
+
+        # Create time-domain plot
+        fig = go.Figure()
+
+        # Plot I (real) component
+        fig.add_trace(go.Scatter(
+            x=time_axis,
+            y=np.real(data_plot),
+            mode='lines',
+            name='I (In-phase)',
+            line=dict(color='blue', width=1.5),
+            hovertemplate='Sample: %{x}<br>I: %{y:.3f}<extra></extra>'
+        ))
+
+        # Plot Q (imaginary) component
+        fig.add_trace(go.Scatter(
+            x=time_axis,
+            y=np.imag(data_plot),
+            mode='lines',
+            name='Q (Quadrature)',
+            line=dict(color='red', width=1.5),
+            hovertemplate='Sample: %{x}<br>Q: %{y:.3f}<extra></extra>'
+        ))
+
+        # Plot magnitude
+        magnitude = np.abs(data_plot)
+        fig.add_trace(go.Scatter(
+            x=time_axis,
+            y=magnitude,
+            mode='lines',
+            name='Magnitude',
+            line=dict(color='green', width=1.5, dash='dash'),
+            hovertemplate='Sample: %{x}<br>Magnitude: %{y:.3f}<extra></extra>'
+        ))
+
+        fig.update_layout(
+            title=f'Time-Domain Waveform: {modulation_type}',
+            xaxis_title='Sample Number',
+            yaxis_title='Amplitude',
+            showlegend=True,
+            width=400,
+            height=400,
+            hovermode='x unified'
+        )
+
+        return fig
+
+    except Exception as e:
+        # Return empty plot on error
+        fig = go.Figure()
+        fig.update_layout(
+            title='Time-Domain Waveform: Error Loading Data',
+            xaxis_title='Sample Number',
+            yaxis_title='Amplitude'
+        )
+        return fig
+
 confusion_matrix = np.zeros((len(labels), len(labels)))
 confusion_matrix1 = np.zeros((len(labels), len(labels)))
 iteration=0
@@ -476,8 +570,9 @@ app.layout = html.Div([
     html.Div([
         html.H2('Current Modulation Signal', style={'text-align': 'center', 'font-family': 'Barlow', 'padding': '15px'}),
         html.Div([
-            dcc.Graph(id='current-modulation-plot', style={'width': '100%', 'height': '400px'})
-        ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'})
+            dcc.Graph(id='current-modulation-plot', style={'width': '50%', 'height': '400px', 'display': 'inline-block'}),
+            dcc.Graph(id='current-waveform-plot', style={'width': '50%', 'height': '400px', 'display': 'inline-block'})
+        ], style={'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center'})
     ], style={'width': '98%', 'margin-left': '1%', 'margin-top': '1%', 'backgroundColor': 'transparent', 'border-radius': '20px', 'box-shadow': '10px 10px 20px rgba(0, 0, 0, 0.2)', 'font-family': 'Barlow', 'padding': '10px'}),
 
     html.Div([
@@ -544,6 +639,7 @@ app.layout = html.Div([
 
 @app.callback(
     [dash.dependencies.Output('current-modulation-plot', 'figure'),
+     dash.dependencies.Output('current-waveform-plot', 'figure'),
      dash.dependencies.Output('confusion-matrix', 'figure'),
      dash.dependencies.Output('modulated-data', 'figure'),
      dash.dependencies.Output('example-table', 'data'),
@@ -558,7 +654,7 @@ def update_graph_live(n):
     update_confusion_matrix()
     update_table()
     update_truth_table()
-    return plot_current_modulation(), plot_confusion_matrix(), plot_modulated_data(), table_data, truth_table_data , truth_table_data1, plot_confusion_matrix1(), plot_modulated_data1()
+    return plot_current_modulation(), plot_current_waveform(), plot_confusion_matrix(), plot_modulated_data(), table_data, truth_table_data , truth_table_data1, plot_confusion_matrix1(), plot_modulated_data1()
 
 if __name__ == '__main__':
     # Code to be executed just once
