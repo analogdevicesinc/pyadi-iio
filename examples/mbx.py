@@ -95,7 +95,7 @@ else:
         addr = data[1]                                      # addr is list of VISA addresses
     else:
         meas_mode = "NONE"
-        addr = ["SIMULATION"]jump_angle
+        addr = ["SIMULATION"]
 
 # initalize VISA instrument control or set to use SIMULATION mode
 inst = equip.inst_setup(meas_mode, addr)

@@ -3,7 +3,7 @@ import time
 import adi
 import matplotlib.pyplot as plt
 import numpy as np
-# from scipy import signal
+from scipy import signal
  
 #create radio
 TaliseSDR = adi.adrv9009_zu11eg(uri="ip:analog.local")
@@ -67,7 +67,7 @@ for r in range(20):
     plt.semilogy(f3, Pxx_den3)
     plt.semilogy(f4, Pxx_den4)
     plt.ylim([1e-7, 1e4])
-    signal.get_window(float, )
+    # signal.get_window(float, )
     plt.xlabel("frequency [Hz]")
     plt.ylabel("PSD [V**2/Hz]")
     plt.draw()
