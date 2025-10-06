@@ -27,7 +27,13 @@ class ad4630(rx, context_manager, attribute):
 
     """ AD4630 is low power 24-bit precision SAR ADC """
 
-    _compatible_parts = ["ad4630-24", "ad4030-24", "ad4630-16"]
+    _compatible_parts = [
+        "ad4030-24",
+        "ad4630-16",
+        "ad4630-24",
+        "ad4632-16",
+        "ad4632-24",
+    ]
     _complex_data = False
     _data_type = np.uint32
     _device_name = ""
