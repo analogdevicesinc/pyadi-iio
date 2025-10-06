@@ -12,7 +12,11 @@ import paramiko
 
 print(adi.__version__)
 
+<<<<<<< HEAD
 talise_ip = "192.168.0.1" # ADRV9009-zu11eg board ip address
+=======
+talise_ip = "10.48.65.215" # ADRV9009-zu11eg board ip address
+>>>>>>> origin/dev_talise_xband
 talise_uri = "ip:" + talise_ip
 
 # Create radio

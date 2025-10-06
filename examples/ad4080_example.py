@@ -31,64 +31,40 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import argparse
+import sys
 
-from adi.ad353xr import ad353xr
+import matplotlib.pyplot as plt
+import numpy as np
 
+from adi import ad4080
 
-def main():
-    # Set up argument parser
-    parser = argparse.ArgumentParser(description="AD353XR Example Script")
-    parser.add_argument(
-        "--uri",
-        type=str,
-        help="The URI for the AD353XR device",
-        default="serial:COM7,230400,8n1",
-    )
-    parser.add_argument(
-        "--device_name",
-        type=str,
-        choices=["ad3530r", "ad3531r"],
-        help="The device name (Supported devices are ad3530r, ad3531r)",
-        default="ad3530r",
-    )
+# Optionally pass URI as command line argument,
+# else use default ip:analog.local
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
+print("uri: " + str(my_uri))
 
-    # Parse arguments
-    args = parser.parse_args()
+my_adc = ad4080(uri=my_uri)
 
-    # Set up AD3530R
-    ad3530r_dev = ad353xr(uri=args.uri, device_name=args.device_name)
-    ad3530r_dev.all_ch_operating_mode = "normal_operation"
+print("Sampling frequency: ", my_adc.sampling_frequency)
+print("Filter type: ", my_adc.filter_type)
+print("Scale: ", my_adc.channel[0].scale)
+print("Oversampling ratio: ", my_adc.oversampling_ratio)
 
-    ad3530r_dev.reference_select = "internal_ref"
+plt.clf()
+# Collect data
+data = my_adc.rx()
 
-    # Configure channel 0
-    chn_num = 0
-    ad3530r_chan = ad3530r_dev.channel[chn_num]
+plt.plot(range(0, len(data)), data, label="channel0")
+plt.xlabel("Data Point")
+plt.ylabel("ADC counts")
+plt.legend(
+    bbox_to_anchor=(0.0, 1.02, 1.0, 0.102),
+    loc="lower left",
+    ncol=4,
+    mode="expand",
+    borderaxespad=0.0,
+)
 
-    # Update dac output for channel 0 instantaneously using the 'raw' attribute
-    ad3530r_chan.raw = 25000
+plt.show()
 
-    # Update dac output for channel 0 using software LDAC operation
-    ad3530r_chan.input_register = 5000
-    ad3530r_dev.sw_ldac_trigger = "ldac_trigger"
-
-    # Update dac output of channel 0 using hardware LDAC operation
-    ad3530r_chan.input_register = 40000
-    ad3530r_dev.hw_ldac_trigger = "ldac_trigger"
-
-    # Set mux value to "vout0" to monitor vout0 value on the mux_out pin
-    ad3530r_dev.mux_out_select = "VOUT0"
-
-    # Set 0 to 2Vref as output range
-    ad3530r_dev.range = "0_to_2VREF"
-
-    # Determine output voltage using scale and offset
-    raw = int(ad3530r_chan.raw)
-    scale = float(ad3530r_chan.scale)
-    offset = int(ad3530r_chan.offset)
-    print(f"Channel{chn_num} voltage in Volts: {(raw + offset) * scale/1000}")
-
-
-if __name__ == "__main__":
-    main()
+del my_adc
