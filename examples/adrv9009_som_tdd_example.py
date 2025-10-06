@@ -12,13 +12,14 @@ import paramiko
 
 print(adi.__version__)
 
-talise_ip = "10.48.65.100" # ADRV9009-zu11eg board ip address
+talise_ip = "10.48.65.215" # ADRV9009-zu11eg board ip address
 talise_uri = "ip:" + talise_ip
 
 # Create radio
 sdr  = adi.adrv9009_zu11eg(talise_uri)
 tddn = adi.tddn(talise_uri)
 
+# USER CONFIGURABLE PARAMETERS
 # Configure TX properties
 sdr.tx_enabled_channels = [0, 1]
 sdr.trx_lo = 2400000000
@@ -30,11 +31,16 @@ sdr.gain_control_mode_chan1 = "manual"
 sdr.gain_control_mode_chan0 = "slow_attack"
 sdr.gain_control_mode_chan1 = "slow_attack"
 
-frame_pulses_to_plot = 6
+# Number of frame pulses to plot in the pulse train
+# (will be used to calculate the RX buffer size)
+frame_pulses_to_plot = 5
 
+# Frame and pulse timing (in milliseconds)
 frame_length_ms = 0.04 # 40 us
+# sine data for 20 us pulse than 20 us of zero data
 tx_pulse_start_ms = 0.00001 # 10 ns
 tx_pulse_stop_ms = 0.02 # 20 us
+# END USER CONFIGURABLE PARAMETERS
 
 # Prepare TX data
 fs = int(sdr.tx_sample_rate)
@@ -127,11 +133,33 @@ for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN]:
 
 for chan in [TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
     tddn.channel[chan].on_raw   = 0
-    tddn.channel[chan].off_raw  = 1
+    tddn.channel[chan].off_raw  = 10 # 10 samples at 250 MHz = 40 ns pulse width
     tddn.channel[chan].polarity = 0
     tddn.channel[chan].enable   = 1
 
 tddn.enable = 1
+
+tdd_tx_offload_frame_length_ms = frame_length_ms
+tdd_tx_offload_pulse_start_ms = 0.00001 # 10 ns
+
+# off_raw is in samples, so convert to time for offset calculation
+off_raw_samples = tddn.channel[TDD_TX_OFFLOAD_SYNC].off_raw
+
+# Create pulse train for the entire RX buffer duration
+tdd_tx_offload_pulse_train = np.zeros(rx_buffer_samples)
+
+# Calculate samples per frame and pulse
+tdd_tx_offload_samples_per_frame = int(frame_length_ms * 1e-3 / rx_ts)
+tdd_tx_offload_pulse_start_offset = int(tdd_tx_offload_pulse_start_ms * 1e-3 / rx_ts)
+# Pulse stays high for off_raw_samples
+tdd_tx_offload_pulse_stop_offset = tdd_tx_offload_pulse_start_offset + off_raw_samples
+
+# Only plot as many pulses as requested
+for frame in range(frame_pulses_to_plot):
+    tdd_tx_offload_frame_start = frame * tdd_tx_offload_samples_per_frame
+    tdd_tx_offload_pulse_start = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_start_offset
+    tdd_tx_offload_pulse_stop = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_stop_offset
+    tdd_tx_offload_pulse_train[tdd_tx_offload_pulse_start:tdd_tx_offload_pulse_stop] = 1
 
 # Send TX data
 sdr.tx_destroy_buffer()
@@ -201,28 +229,36 @@ print(f"RX Buffer Size: {sdr.rx_buffer_size} samples")
 plt.figure(figsize=(15, 10))
 
 # Plot TX signal (time domain)
-plt.subplot(3, 1, 1)
+plt.subplot(4, 1, 1)
 plt.plot(t[:N] * 1e6, np.real(iq[:N]), 'b-')
 plt.xlabel('Time (μs)')
 plt.ylabel('Amplitude')
 plt.title('TX Signal - Time Domain')
 plt.grid(True)
 
+# Plot tdd_data_offload pulse train for multiple frames
+plt.subplot(4, 1, 2)
+plt.plot(rx_t * 1e6, tdd_tx_offload_pulse_train[:len(rx_t)], 'g-')
+plt.title(f"TDD Data Offload Sync Pulse - Time Domain")
+plt.xlabel("Time (μs)")
+plt.ylabel("Pulse")
+plt.grid(True)
+
 # Plot frame pulse train for multiple frames
-plt.subplot(3, 1, 2)
+plt.subplot(4, 1, 3)
 plt.plot(rx_t * 1e6, pulse_train[:len(rx_t)], 'r-')
-plt.title(f"Frame Pulse - Time Domain")
+plt.title(f"RX Data Frame Pulse - Time Domain")
 plt.xlabel("Time (μs)")
 plt.ylabel("Pulse")
 plt.grid(True)
 
 # Plot RX Channel 0 (time domain)
-plt.subplot(3, 1, 3)
+plt.subplot(4, 1, 4)
 for idx in range(capture_range):
     plt.plot(rx_t * 1e6, np.real(rx_ch0[idx]), label=f'Capture {idx}')
 plt.xlabel('Time (μs)')
 plt.ylabel('Amplitude')
-plt.title('RX Channel 0 - Time Domain (All Captures)')
+plt.title('Received data RX Channel 0 - Time Domain (All Captures)')
 plt.grid(True)
 plt.legend(loc="upper right")
 
