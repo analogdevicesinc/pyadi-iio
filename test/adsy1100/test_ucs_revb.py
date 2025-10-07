@@ -265,6 +265,9 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
                 neb_manager.monitor[0].stop_log()
                 raise Exception("JESD not started")
 
+        time.sleep(60)  # Wait for everything to settle
+        logger.info("JESD started")
+
         # Cleanup UART
         neb_manager.monitor[0].stop_log()
         time.sleep(1)
