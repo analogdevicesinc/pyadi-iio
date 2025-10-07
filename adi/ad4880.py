@@ -9,7 +9,7 @@ from adi.rx_tx import rx
 
 class ad4880(rx, context_manager):
 
-    """ AD4880 ADC """
+    """ AD4880/AD4881/AD4882/AD4883/AD4884/AD4885/AD4886/AD4887/AD4888 ADC """
 
     _complex_data = False
     channel = []  # type: ignore
@@ -20,14 +20,24 @@ class ad4880(rx, context_manager):
         """Initialize."""
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad4880", "ad4880_chb"]
+        compatible_parts = [
+            "ad4880", "ad4880_chb",
+            "ad4881", "ad4881_chb",
+            "ad4882", "ad4882_chb",
+            "ad4883", "ad4883_chb",
+            "ad4884", "ad4884_chb",
+            "ad4885", "ad4885_chb",
+            "ad4886", "ad4886_chb",
+            "ad4887", "ad4887_chb",
+            "ad4888", "ad4888_chb"
+        ]
         self._ctrl = None
 
         if not device_name:
             device_name = compatible_parts[0]
         else:
             if device_name not in compatible_parts:
-                raise Exception(f"Not a compatible device: {device_name}")
+                raise Exception(f"Not a compatible device: {device_name}. Supported devices: {', '.join(compatible_parts)}")
 
         # Select the device matching device_name as working device
         for device in self._ctx.devices:
@@ -37,10 +47,10 @@ class ad4880(rx, context_manager):
                 break
 
         if not self._ctrl:
-            raise Exception("Error in selecting matching device")
+            raise Exception(f"Error in selecting matching device: {device_name}")
 
         if not self._rxadc:
-            raise Exception("Error in selecting matching device")
+            raise Exception(f"Error in selecting matching device: {device_name}")
 
         self._rx_channel_names = []
         self.channel = []
