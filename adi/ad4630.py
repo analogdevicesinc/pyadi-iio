@@ -119,26 +119,25 @@ class ad4630(rx, context_manager, attribute):
     @property
     def sample_averaging_avail(self):
         """Get list of all the sample averaging values available. Only available in 30bit averaged mode."""
-        return self._get_iio_dev_attr("sample_averaging_available")
+        return self._get_iio_dev_attr("oversampling_ratio_available")
 
     @property
     def sample_averaging(self):
         """Get the sample averaging. Only available in 30bit averaged mode."""
-        return self._get_iio_dev_attr_str("sample_averaging")
+        return self._get_iio_dev_attr_str("oversampling_ratio")
 
     @sample_averaging.setter
     def sample_averaging(self, n_sample):
-        """Set the sample averaging. Only available in 30bit averaged mode."""
-        if str(self.sample_averaging) != "OFF":
-            if str(n_sample) in str(self.sample_averaging_avail):
-                self._set_iio_dev_attr("sample_averaging", str(n_sample))
-            else:
-                raise ValueError(
-                    "Error: Number of avg samples not supported \nUse one of: "
-                    + str(self.sample_averaging_avail)
-                )
+        """Set the sample averaging. The device driver will automatically set
+           the ADC into 30bit averaged mode."""
+
+        if str(n_sample) in str(self.sample_averaging_avail):
+            self._set_iio_dev_attr("oversampling_ratio", str(n_sample))
         else:
-            raise Exception("Sample Averaging only available in 30bit averaged mode.")
+            raise ValueError(
+                "Error: Number of avg samples not supported \nUse one of: "
+                + str(self.sample_averaging_avail)
+            )
 
     class _channel(attribute):
         """AD4x30 differential channel."""
