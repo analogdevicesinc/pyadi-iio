@@ -204,7 +204,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
         neb_manager.monitor[0].print_to_console = show_uart_log
         results = neb_manager.monitor[0]._read_until_done_multi(
             #done_strings=["Linux version", f"root@{device_hostname}"],
-            done_strings=["Linux version", f"ogin"],
+            done_strings=["Linux version", f"Login"],
             max_time=60,
         )
 
@@ -462,7 +462,7 @@ class TestOverBootFiles:
     @pytest.mark.requirement(["WASHINGTON-R16","WASHINGTON-R26"])
     @pytest.mark.parametrize("channel", [0 ,1])
     @pytest.mark.parametrize("side", [0, 1])
-    def test_channel_mapping(self, channel, side, nebula_boot_adsy1100_ethernet, record_property):
+    def test_channel_mapping(self, channel, side, nebula_boot_adsy1100_ethernet, record_property, gn_plot_manager):
         params, neb_manager = nebula_boot_adsy1100_ethernet
 
         logger.info(f"Testing side {side} channel {channel}")
@@ -523,6 +523,19 @@ class TestOverBootFiles:
         logger.info(iq_data)
         assert not isinstance(iq_data, list), "Did not get IQ data"
         logger.info(f"IQ Data Shape: {iq_data.shape}")
+
+        # Add plotly
+        import plotly.graph_objects as go
+        fig = go.Figure()
+        tone_peaks, tone_freqs = spec.spec_est(iq_data, fs=dev.rx_sample_rate, ref=2 ** 15)
+        fig.add_trace(go.Scatter(x=tone_freqs, y=tone_peaks, mode="lines"))
+        fig.update_layout(
+            title="FFT Analysis",
+            xaxis_title="Frequency (Hz)",
+            yaxis_title="Magnitude (dBFS)",
+            height=1000,
+        )
+        gn_plot_manager.add_plot(fig, "FFT Analysis")
 
         # Create FFT plot and save
         logger.info("Creating FFT plot")
