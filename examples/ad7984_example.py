@@ -33,6 +33,7 @@
 
 import sys
 import adi
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import fft
@@ -60,10 +61,10 @@ my_ad7984 = adi.ad7689(uri=my_uri,device_name=my_device_name)
 my_ad7984.rx_enabled_channels = [0]
 
 # Sample rates
-if my_device_name == "spi_engine_ad7984":
-    original_sample_rate = 1_333_000
-else:
-    original_sample_rate = 15_000
+#if my_device_name == "spi_engine_ad7984":
+#    original_sample_rate = 1_333_000
+#else:
+#    original_sample_rate = 15_000
     
 target_sample_rate = 44100        # Audio sample rate
 
@@ -85,17 +86,42 @@ else:
 if my_device_name == "spi_engine_ad7984":
     num_chunks = 6  # Number of chunks to capture
 else:
-    num_chunks = 45  # Number of chunks to capture
-
+    num_chunks = 30  # Number of chunks to capture
 all_data = []
-for i in range(num_chunks):
-    chunk = my_ad7984.rx()
-    all_data.extend(chunk)
-    print(f"  -> Captured chunk {i+1}/{num_chunks}")
+
+if my_device_name == "spi_engine_ad7984":
+    # For SPI Engine (known sample rate)
+    for i in range(num_chunks):
+        chunk = my_ad7984.rx()
+        all_data.extend(chunk)
+        print(f"  -> Captured chunk {i+1}/{num_chunks}")
+    elapsed_time = None  # Not needed for engine
+else:
+    # For SPI Classic — measure time
+    print("Starting SPI Classic data capture...")
+    start_time = time.perf_counter()
+    for i in range(num_chunks):
+        chunk = my_ad7984.rx()
+        all_data.extend(chunk)
+        print(f"  -> Captured chunk {i+1}/{num_chunks}")
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+    print(f"SPI Classic capture completed in {elapsed_time:.4f} seconds")
+
 #Capture samples
 data = np.array(all_data, dtype=float)
+
+if my_device_name == "spi_engine_ad7984":
+    original_sample_rate = 1_333_000  # known
+else:
+    if elapsed_time is not None:
+        original_sample_rate = int(len(all_data) / elapsed_time)
+        print(f"Measured sample rate for SPI Classic: {original_sample_rate} Hz")
+    else:
+        original_sample_rate = 15_000  # fallback, shouldn't happen
+
     # Pre-Processing Remove DC offset (center the signal around 0)
-data = data - np.mean(data)
+data = data - np.mean(data) # it removes any DC bias (non-zero average voltage), which can distort audio
 
 #data = my_ad7984.rx()
 #wavfile.write(output_wav, 44100, data)
@@ -116,7 +142,7 @@ if input_type == "audio":
     # Normalize and convert to int16
     if np.max(np.abs(resampled)) == 0:
         print("Warning: Signal is all zeros after resampling.")
-        resampled = np.zeros_like(resampled)
+        resampled = np.zeros_like(resampled) # This ensures that the audio uses the full volume range of the WAV file without clipping
     else:
         resampled = resampled / np.max(np.abs(resampled))
 
@@ -126,10 +152,16 @@ if input_type == "audio":
     # Save to WAV file
     if my_device_name == "spi_engine_ad7984":
         output_wav = 'audio_reconstructed_engine.wav'
+        print(f"Saving WAV file: {output_wav}")
+        print(f"Original sample rate: {original_sample_rate}")
+        print(f"Target sample rate: {target_sample_rate}")
         wavfile.write(output_wav, target_sample_rate, int16_data)
         print(f"Audio written to '{output_wav}' at {target_sample_rate} Hz.")
     else:
         output_wav = 'audio_reconstructed_classic.wav'
+        print(f"Saving WAV file: {output_wav}")
+        print(f"Original sample rate: {original_sample_rate}")
+        print(f"Target sample rate: {target_sample_rate}")
         wavfile.write(output_wav, target_sample_rate, int16_data)
         print(f"Audio written to '{output_wav}' at {target_sample_rate} Hz.")
 else:
