@@ -12,7 +12,11 @@ import paramiko
 
 print(adi.__version__)
 
+<<<<<<< HEAD
 talise_ip = "192.168.0.1" # ADRV9009-zu11eg board ip address
+=======
+talise_ip = "10.48.65.215" # ADRV9009-zu11eg board ip address
+>>>>>>> origin/dev_talise_xband
 talise_uri = "ip:" + talise_ip
 
 # Create radio
@@ -46,6 +50,7 @@ sdr.gain_control_mode_chan1_chip_b = "slow_attack"
 # (will be used to calculate the RX buffer size)
 frame_pulses_to_plot = 5
 
+<<<<<<< HEAD
 ## RX properties XX
 # Frame and pulse timing (in milliseconds)
 frame_length_ms = 0.1 # 100 us
@@ -61,6 +66,13 @@ pulse0_frame_length_ms = 0.1 # 100 us
 # sine data for 20 us pulse than 20 us of zero data
 pulse0_tx_pulse_start_ms = 0.00001 # 10 ns (time zero)
 pulse0_tx_pulse_stop_ms = 0.01 # 10 us
+=======
+# Frame and pulse timing (in milliseconds)
+frame_length_ms = 0.04 # 40 us
+# sine data for 20 us pulse than 20 us of zero data
+tx_pulse_start_ms = 0.00001 # 10 ns
+tx_pulse_stop_ms = 0.02 # 20 us
+>>>>>>> origin/dev_talise_xband
 # END USER CONFIGURABLE PARAMETERS
 
 # Prepare TX data
@@ -93,7 +105,11 @@ for n in range(pulse0_tx_start_sample, min(pulse0_tx_start_sample + pulse0_tx_pu
 
 pulse0_data = pulse0_i + 1j * pulse0_q
 
+<<<<<<< HEAD
 sdr.tx_destroy_buffer()
+=======
+data = i + 1j * q
+>>>>>>> origin/dev_talise_xband
 
 # scaling for 16-bit DAC
 # use most of the dynamic range but avoid clipping
@@ -246,6 +262,10 @@ pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
 
 
 
+# Configure TX data offload mode to cyclic
+sdr._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
+sdr.tx_cyclic_buffer = True
+
 # Configure RX parameters
 sdr.rx_enabled_channels = [0, 1, 2, 3]
 
@@ -283,6 +303,7 @@ TDD_RX_OFFLOAD_SYNC = 1
 TDD_ENABLE      = 2
 TDD_ADRV9009_RX_EN = 3
 TDD_ADRV9009_TX_EN = 4
+TDD_MANTARAY_EN = 5
 
 #Configure TDD engine
 tddn.enable = 0
@@ -291,7 +312,7 @@ tddn.enable = 0
 # tddn.startup_delay_ms     = 0
 tddn.frame_length_ms      = frame_length_ms
 
-for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN]:
+for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN,TDD_MANTARAY_EN]:
     tddn.channel[chan].on_ms   = 0
     tddn.channel[chan].off_ms  = 0
     tddn.channel[chan].polarity = 1
@@ -333,22 +354,6 @@ sdr.tx_destroy_buffer()
 sdr.tx([pulse0_iq, pulse1_iq, pulse2_iq, pulse3_iq])
 
 # Trigger TDD synchronization
-tddn.sync_soft  = 1
-
-# Force set the Data Offload Tx to run in cyclic mode
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect(talise_ip, username="root", password="analog")
-print(f"Run cmd: busybox devmem 0x9c460088 32 0x0")
-stdin, stdout, stderr = ssh.exec_command(f"busybox devmem 0x9c460088 32 0x0")
-stdout_str = stdout.read().decode()
-stderr_str = stderr.read().decode()
-print(stdout_str)
-print(stderr_str)
-stdout.close()
-stderr.close()
-ssh.close()
-
 tddn.sync_soft  = 1
 
 # Capture RX data
@@ -398,13 +403,19 @@ print(f"RX data captured - Ch0: {len(rx_ch0[-1])} samples, Ch1: {len(rx_ch1[-1])
 plt.figure(figsize=(15, 10))
 
 # Plot TX signal (time domain)
+<<<<<<< HEAD
 plt.subplot(6, 1, 1)
 plt.plot(t[:N] * 1e6, np.real(pulse0_iq[:N]), 'b-')
+=======
+plt.subplot(4, 1, 1)
+plt.plot(t[:N] * 1e6, np.real(iq[:N]), 'b-')
+>>>>>>> origin/dev_talise_xband
 plt.xlabel('Time (μs)')
 plt.ylabel('Amplitude')
 plt.title('DAC0 TX Signal - Time Domain')
 plt.grid(True)
 
+<<<<<<< HEAD
 # Plot TX signal (time domain)
 plt.subplot(6, 1, 2)
 plt.plot(t[:N] * 1e6, np.real(pulse1_iq[:N]), 'b-')
@@ -439,6 +450,18 @@ plt.grid(True)
 
 # Plot frame pulse train for multiple frames
 plt.subplot(6, 1, 5)
+=======
+# Plot tdd_data_offload pulse train for multiple frames
+plt.subplot(4, 1, 2)
+plt.plot(rx_t * 1e6, tdd_tx_offload_pulse_train[:len(rx_t)], 'g-')
+plt.title(f"TDD Data Offload Sync Pulse - Time Domain")
+plt.xlabel("Time (μs)")
+plt.ylabel("Pulse")
+plt.grid(True)
+
+# Plot frame pulse train for multiple frames
+plt.subplot(4, 1, 3)
+>>>>>>> origin/dev_talise_xband
 plt.plot(rx_t * 1e6, pulse_train[:len(rx_t)], 'r-')
 plt.title(f"RX Data Frame Pulse - Time Domain")
 plt.xlabel("Time (μs)")
@@ -446,7 +469,11 @@ plt.ylabel("Pulse")
 plt.grid(True)
 
 # Plot RX Channel 0 (time domain)
+<<<<<<< HEAD
 plt.subplot(6, 1, 6)
+=======
+plt.subplot(4, 1, 4)
+>>>>>>> origin/dev_talise_xband
 for idx in range(capture_range):
     plt.plot(rx_t * 1e6, np.real(rx_ch0[idx]), label=f'Capture {idx}')
     plt.plot(rx_t * 1e6, np.real(rx_ch1[idx]), label=f'Capture {idx}')
