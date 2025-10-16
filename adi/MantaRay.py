@@ -58,7 +58,9 @@ def enable_stingray_channel(obj, elements=None, man_input=False):
                         # If it is, disable the channel
                         for elem in elements:
                             if elem == value:
-                                channel.tx_enable = Trueflat
+                                channel.tx_enable = True
+                                channel.pa_bias_on = -2
+                
                 # else:
                 #     raise ValueError('Mode of operation must be either "rx" or "tx"')
             break
@@ -96,30 +98,47 @@ def disable_stingray_channel(obj, elements=None, man_input=False):
         try:
             for device in obj.devices.values():
                 time.sleep(0.01)
-                if device.mode == "rx":
-                    for channel in device.channels:
+                for channel in device.channels:
 
-                        str_channel = str(channel)
-                        value = int(strip_to_last_two_digits(str_channel))
+                    str_channel = str(channel)
+                    value = int(strip_to_last_two_digits(str_channel))
 
-                        # Check if the channel is in the list of elements to disable
-                        # If it is, disable the channel
-                        for elem in elements:
-                            if elem == value:
-                                # print("Turning off element:",elem)
-                                channel.rx_enable = False
+                    # Check if the channel is in the list of elements to disable
+                    # If it is, disable the channel
+                    for elem in elements:
+                        if elem == value:
+                            # print("Turning off element:",elem)
+                            channel.rx_enable = False
+                            channel.tx_enable = False
+                            channel.pa_bias_on = -4.5
 
-                if device.mode == "tx":
-                    for channel in device.channels:
+            
 
-                        str_channel = str(channel)
-                        value = int(strip_to_last_two_digits(str_channel))
+                #combine disable of TX and RX into one function
+                # if device.mode == "rx":
+                #     for channel in device.channels:
 
-                        # Check if the channel is in the list of elements to disable
-                        # If it is, disable the channel
-                        for elem in elements:
-                            if elem == value:
-                                channel.tx_enable = False
+                #         str_channel = str(channel)
+                #         value = int(strip_to_last_two_digits(str_channel))
+
+                #         # Check if the channel is in the list of elements to disable
+                #         # If it is, disable the channel
+                #         for elem in elements:
+                #             if elem == value:
+                #                 # print("Turning off element:",elem)
+                #                 channel.rx_enable = False
+
+                # if device.mode == "tx":
+                #     for channel in device.channels:
+
+                #         str_channel = str(channel)
+                #         value = int(strip_to_last_two_digits(str_channel))
+
+                #         # Check if the channel is in the list of elements to disable
+                #         # If it is, disable the channel
+                #         for elem in elements:
+                #             if elem == value:
+                #                 channel.tx_enable = False
                 # else:
                 #     raise ValueError('Mode of operation must be either "rx" or "tx"')
             break

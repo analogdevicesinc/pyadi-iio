@@ -3,6 +3,7 @@
 # SPDX short identifier: ADIBSD
 
 from math import pi, sin
+import time
 
 from adi.attribute import attribute
 from adi.context_manager import context_manager
@@ -1115,6 +1116,7 @@ class adar1000(attribute, context_manager):
 
         # Settings for each channel
         for channel in self.channels:
+            time.sleep(1)  # Small delay to ensure SPI writes are processed correctly
             # Default channel enable
             channel.rx_enable = False
             channel.tx_enable = False
@@ -1647,7 +1649,7 @@ class adar1000_array(context_manager):
 
         return az_phi, el_phi
 
-    def initialize_devices(self, pa_off=-2.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
+    def initialize_devices(self, pa_off=-4.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
         """Suggested initialization routine after powerup
 
         parameters:
@@ -1661,6 +1663,7 @@ class adar1000_array(context_manager):
                 Voltage to set the LNA_BIAS_ON values to during initialization
         """
         for device in self.devices.values():
+            time.sleep(0.35)
             device.initialize(
                 pa_off=pa_off, pa_on=pa_on, lna_off=lna_off, lna_on=lna_on
             )

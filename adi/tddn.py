@@ -18,8 +18,8 @@ class tddn(context_manager, attribute):
     def __init__(self, uri=""):
         """TDDN Controller"""
         context_manager.__init__(self, uri, self._device_name)
-        # self._ctrl = self._ctx.find_device("iio-axi-tdd-0")
-        self._ctrl = self._ctx.find_device("axi-core-tdd")
+        self._ctrl = self._ctx.find_device("iio-axi-tdd-0")
+        # self._ctrl = self._ctx.find_device("axi-core-tdd")
 
         for ch in self._ctrl.channels:
             name = ch._id
