@@ -39,6 +39,7 @@ import matplotlib.pyplot as plt
 from scipy import fft
 from scipy import signal
 from scipy.io import wavfile
+import sounddevice as sd
 
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
 plot_en = sys.argv[2] if len(sys.argv) >= 3 else 1
@@ -149,21 +150,27 @@ if input_type == "audio":
     # Convert to 16-bit PCM format
     int16_data = (resampled * 32767).astype(np.int16)
 
+    # Play audio directly
+    print(f"Playing audio at {target_sample_rate} Hz sample rate...")
+    sd.play(int16_data, samplerate=target_sample_rate)
+    sd.wait()  # Wait until playback finishes
+    print("Playback finished.")
+
     # Save to WAV file
-    if my_device_name == "spi_engine_ad7984":
-        output_wav = 'audio_reconstructed_engine.wav'
-        print(f"Saving WAV file: {output_wav}")
-        print(f"Original sample rate: {original_sample_rate}")
-        print(f"Target sample rate: {target_sample_rate}")
-        wavfile.write(output_wav, target_sample_rate, int16_data)
-        print(f"Audio written to '{output_wav}' at {target_sample_rate} Hz.")
-    else:
-        output_wav = 'audio_reconstructed_classic.wav'
-        print(f"Saving WAV file: {output_wav}")
-        print(f"Original sample rate: {original_sample_rate}")
-        print(f"Target sample rate: {target_sample_rate}")
-        wavfile.write(output_wav, target_sample_rate, int16_data)
-        print(f"Audio written to '{output_wav}' at {target_sample_rate} Hz.")
+#    if my_device_name == "spi_engine_ad7984":
+#        output_wav = 'audio_reconstructed_engine.wav'
+#        print(f"Saving WAV file: {output_wav}")
+#        print(f"Original sample rate: {original_sample_rate}")
+#        print(f"Target sample rate: {target_sample_rate}")
+#        wavfile.write(output_wav, target_sample_rate, int16_data)
+#        print(f"Audio written to '{output_wav}' at {target_sample_rate} Hz.")
+#    else:
+#        output_wav = 'audio_reconstructed_classic.wav'
+#        print(f"Saving WAV file: {output_wav}")
+#        print(f"Original sample rate: {original_sample_rate}")
+#        print(f"Target sample rate: {target_sample_rate}")
+#        wavfile.write(output_wav, target_sample_rate, int16_data)
+#        print(f"Audio written to '{output_wav}' at {target_sample_rate} Hz.")
 else:
     # === Save raw sample data (original, unresampled) ===
     print("Writing original ADC samples to 'samples_data_buffer.txt'")
