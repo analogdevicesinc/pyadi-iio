@@ -36,7 +36,7 @@ boot_files_folder = os.environ.get("AD9084_EBZ_BOOT_FOLDER", "revb_ref")
 boot_files_folder = os.path.join(os.path.dirname(__file__), boot_files_folder)
 boot_subfolder_on_target = "pytest"
 
-config_file_zu4eg = "/ci/nebula-vcu118.yaml"
+config_file_zu4eg = "/ci/nebula_ad9084_vcu118.yaml"
 
 BITSTREAM_FILE = os.environ.get("AD9084_EBZ_BITSTREAM_FILE", "system_top.bit")
 STRIP_FILE = os.environ.get("AD9084_EBZ_STRIP_FILE", "simpleImage.ad9084_vcu118.strip")
@@ -84,7 +84,7 @@ def nebula_boot_vcu118_ethernet(request):
     neb_manager.monitor[0].print_to_console = show_uart_log
     results = neb_manager.monitor[0]._read_until_done_multi(
         # done_strings=["Linux version", f"root@{device_hostname}"],
-        done_strings=["Linux version", f"Login"],
+        done_strings=["Linux version", f"login"],
         max_time=180,
     )
     if results[0] and results[1]:
