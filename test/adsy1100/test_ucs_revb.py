@@ -150,6 +150,8 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
                 max_time=200,
             )
 
+        ip_addr = neb_manager.monitor[0].get_ip_address()
+        neb_manager.net.dutip = ip_addr
         neb_manager.network_check()
 
         assert boot_subfolder_on_target != ""
@@ -231,6 +233,8 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
         # Flush to marker
         #do_flush(neb_manager.monitor[0])
 
+        ip_addr = neb_manager.monitor[0].get_ip_address()
+        neb_manager.net.dutip = ip_addr
         neb_manager.network_check()
 
         # Take power measurement
