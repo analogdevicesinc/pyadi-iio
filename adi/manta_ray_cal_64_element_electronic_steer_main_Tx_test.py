@@ -39,12 +39,12 @@ DEVICENAME                  = "/dev/ttyUSB1"
 
 mbx.connect(DEVICENAME, BAUDRATE)
 mbx.gotoZERO()
-
+exit()
 SELF_BIASED_LNAs = True
 ARRAY_MODE = "tx" # start rx cals first
 #print("Turn on RF Source...")
 #input('Press Enter to continue...')
-talise_ip = "192.168.0.1" # ADRV9009-zu11eg board ip address
+talise_ip = "192.168.1.1" # ADRV9009-zu11eg board ip address
 talise_uri = "ip:" + talise_ip
 
  

@@ -12,7 +12,7 @@ import paramiko
 
 print(adi.__version__)
 
-talise_ip = "192.168.0.1" # ADRV9009-zu11eg board ip address
+talise_ip = "192.168.1.1" # ADRV9009-zu11eg board ip address
 talise_uri = "ip:" + talise_ip
 
 # Create radio
@@ -49,7 +49,7 @@ frame_pulses_to_plot = 5
 ## RX properties XX
 # Frame and pulse timing (in milliseconds)
 frame_length_ms = 0.1 # 100 us
-# sine data for 20 us pulse than 20 us of zero data
+# sine data for 10 us pulse than 90 us of zero data
 tx_pulse_start_ms = 0.00001 # 10 ns
 tx_pulse_stop_ms = 0.100 # 100 us
 # END USER CONFIGURABLE PARAMETERS
@@ -60,7 +60,7 @@ tx_pulse_stop_ms = 0.100 # 100 us
 pulse0_frame_length_ms = 0.1 # 100 us
 # sine data for 20 us pulse than 20 us of zero data
 pulse0_tx_pulse_start_ms = 0.00001 # 10 ns (time zero)
-pulse0_tx_pulse_stop_ms = 0.01 # 10 us
+pulse0_tx_pulse_stop_ms = 0.010 # 10 us
 # END USER CONFIGURABLE PARAMETERS
 
 # Prepare TX data
@@ -107,8 +107,8 @@ pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
 # Frame and pulse timing (in milliseconds)
 pulse1_frame_length_ms = 0.100 # 40 us
 # sine data for 20 us pulse than 20 us of zero data
-pulse1_tx_pulse_start_ms = 0.00001 + 0.02 # 20 us
-pulse1_tx_pulse_stop_ms = 0.03 # 30 us
+pulse1_tx_pulse_start_ms = 0.00001 + 0.015 # 15 us
+pulse1_tx_pulse_stop_ms = 0.025 # 25 us
 # END USER CONFIGURABLE PARAMETERS
 
 # Prepare TX data
@@ -139,7 +139,7 @@ for n in range(pulse1_tx_start_sample, min(pulse1_tx_start_sample + pulse1_tx_pu
     pulse1_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
     pulse1_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
 
-pulse1_data = pulse1_i + 1j * pulse1_q
+pulse1_data = (pulse1_i + 1j * pulse1_q)
 
 sdr.tx_destroy_buffer()
 
@@ -154,8 +154,8 @@ pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
 # Frame and pulse timing (in milliseconds)
 pulse2_frame_length_ms = 0.100 # 40 us
 # sine data for 20 us pulse than 20 us of zero data
-pulse2_tx_pulse_start_ms = 0.00001 + 0.04 # 40 us
-pulse2_tx_pulse_stop_ms = 0.05 # 50 us
+pulse2_tx_pulse_start_ms = 0.00001 + 0.03 # 30 us
+pulse2_tx_pulse_stop_ms = 0.040 # 50 us
 # END USER CONFIGURABLE PARAMETERS
 
 # Prepare TX data
@@ -201,8 +201,8 @@ pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
 # Frame and pulse timing (in milliseconds)
 pulse3_frame_length_ms = 0.100 # 40 us
 #sine data for 20 us pulse than 20 us of zero data
-pulse3_tx_pulse_start_ms = 0.00001 + 0.06 # 60 us
-pulse3_tx_pulse_stop_ms = 0.07 # 70 us
+pulse3_tx_pulse_start_ms = 0.00001 + 0.045 # 45 us
+pulse3_tx_pulse_stop_ms = 0.055 # 55 us
 # END USER CONFIGURABLE PARAMETERS
 
 # Prepare TX data
@@ -332,10 +332,26 @@ for frame in range(frame_pulses_to_plot):
     tdd_tx_offload_pulse_stop = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_stop_offset
     tdd_tx_offload_pulse_train[tdd_tx_offload_pulse_start:tdd_tx_offload_pulse_stop] = 1
 
-# Send TX data
+# # Send TX data
 sdr.tx_destroy_buffer()
 # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
 sdr.tx([pulse0_iq, pulse1_iq, pulse2_iq, pulse3_iq])
+
+# # Send cal'd TX data
+# sdr.tx_destroy_buffer()
+# # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
+# sdr.tx([pulse0_iq, pulse1_iq*np.exp(1j*212.4*np.pi/180), pulse2_iq*np.exp(1j*272.76*np.pi/180), pulse3_iq*np.exp(1j*110.3*np.pi/180)])
+
+# Send cal'd TX data
+# sdr.tx_destroy_buffer()
+# # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
+# sdr.tx([pulse0_iq, np.zeros(N), np.zeros(N), np.zeros(N)])
+
+# # Send cal'd TX data
+# sdr.tx_destroy_buffer()
+# # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
+# sdr.tx([pulse0_iq, pulse0_iq*np.exp(1j*212.4*np.pi/180), pulse0_iq*np.exp(1j*272.8*np.pi/180), pulse0_iq*np.exp(1j*110.3*np.pi/180)])
+
 
 # Trigger TDD synchronization
 tddn.sync_soft  = 1
@@ -450,17 +466,17 @@ plt.legend(loc="upper right")
 plt.tight_layout()
 plt.show()
 
-tddn.enable = 0
+# tddn.enable = 0
 
-for chan in [TDD_TX_OFFLOAD_SYNC, TDD_RX_OFFLOAD_SYNC, TDD_ENABLE, TDD_ADRV9009_RX_EN, TDD_ADRV9009_TX_EN]:
-    tddn.channel[chan].on_ms = 0
-    tddn.channel[chan].off_ms = 0
-    tddn.channel[chan].polarity = 0
-    tddn.channel[chan].enable = 1
+# for chan in [TDD_TX_OFFLOAD_SYNC, TDD_RX_OFFLOAD_SYNC, TDD_ENABLE, TDD_ADRV9009_RX_EN, TDD_ADRV9009_TX_EN]:
+#     tddn.channel[chan].on_ms = 0
+#     tddn.channel[chan].off_ms = 0
+#     tddn.channel[chan].polarity = 0
+#     tddn.channel[chan].enable = 1
 
-tddn.enable = 1
-tddn.enable = 0
+# tddn.enable = 1
+# tddn.enable = 0
 
-sdr.tx_destroy_buffer()
-sdr.rx_destroy_buffer()
+# sdr.tx_destroy_buffer()
+# sdr.rx_destroy_buffer()
 

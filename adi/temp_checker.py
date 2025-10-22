@@ -4,7 +4,7 @@ import re
 import sys
 
 # ====== CONFIG ======
-HOST = "192.168.0.1"
+HOST = "192.168.1.1"
 PORT = 22
 USERNAME = "root"
 PASSWORD = "analog"
