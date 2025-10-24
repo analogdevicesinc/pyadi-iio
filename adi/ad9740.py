@@ -94,8 +94,8 @@ class ad9740(tx, context_manager):
             try:
                 return self._get_iio_attr(self.name, "sampling_frequency", True)
             except (KeyError, OSError):
-                # Attribute doesn't exist, return default (100 MHz from ADF4351)
-                return 100000000
+                # Attribute doesn't exist, return default (210 MHz from ADF4351)
+                return 210000000
 
         @sample_rate.setter
         def sample_rate(self, value):
@@ -153,12 +153,17 @@ class ad9740(tx, context_manager):
 
         @property
         def phase0(self):
-            """DDS Tone 0 phase in millidegrees"""
-            return int(self._get_iio_attr(self.name, "phase0", True))
+            """DDS Tone 0 phase in degrees"""
+            # Kernel returns phase in radians as a decimal string
+            radians = float(self._get_iio_attr_str(self.name, "phase0", True))
+            return radians * 180.0 / 3.14159265359  # Convert to degrees
 
         @phase0.setter
         def phase0(self, value):
-            self._set_iio_attr(self.name, "phase0", True, str(int(value)))
+            """Set phase in degrees"""
+            # Convert degrees to radians for kernel
+            radians = float(value) * 3.14159265359 / 180.0
+            self._set_iio_attr(self.name, "phase0", True, f"{radians:.5f}")
 
         # DDS Tone 1 controls
         @property
@@ -181,9 +186,14 @@ class ad9740(tx, context_manager):
 
         @property
         def phase1(self):
-            """DDS Tone 1 phase in millidegrees"""
-            return int(self._get_iio_attr(self.name, "phase1", True))
+            """DDS Tone 1 phase in degrees"""
+            # Kernel returns phase in radians as a decimal string
+            radians = float(self._get_iio_attr_str(self.name, "phase1", True))
+            return radians * 180.0 / 3.14159265359  # Convert to degrees
 
         @phase1.setter
         def phase1(self, value):
-            self._set_iio_attr(self.name, "phase1", True, str(int(value)))
+            """Set phase in degrees"""
+            # Convert degrees to radians for kernel
+            radians = float(value) * 3.14159265359 / 180.0
+            self._set_iio_attr(self.name, "phase1", True, f"{radians:.5f}")

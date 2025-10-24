@@ -20,7 +20,7 @@ dev.tx_cyclic_buffer = True  # Cyclic mode for continuous playback
 
 dev._tx_data_type = np.uint16
 
-# AD9740 sample rate (100 MHz from ADF4351)
+# AD9740 sample rate (210 MHz from ADF4351)
 # Note: The driver returns a default value since sampling_frequency
 # attribute is not currently exposed by the kernel driver
 fs = int(dev.channel[0].sample_rate)
@@ -28,7 +28,7 @@ print("Sample rate:", fs, "Hz")
 # Signal frequency
 fc = 100000  # 100 kHz sine wave (slower, easier to see)
 # Number of samples - use multiple periods for smoother waveform
-N = int(fs / fc) * 10  # 10 periods of the sine wave
+N = int(fs / fc) * 1  # 10 periods of the sine wave
 # Period
 ts = 1 / float(fs)
 # Time array
