@@ -13,7 +13,7 @@ my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
 
 # device connection
-dev = adi.ad9740(uri=my_uri, device_name="ad9740")
+dev = adi.ad9740(uri=my_uri, device_name="ad9744")
 
 dev.tx_enabled_channels = [0]
 dev.tx_cyclic_buffer = True  # Cyclic mode for continuous playback
@@ -73,7 +73,7 @@ else:
 plt.suptitle("AD9740 samples data")
 plt.plot(t, samples)
 plt.xlabel("Time (s)")
-plt.ylabel("DAC Code (0-1023)")
+plt.ylabel("DAC Code (0-16383)")
 plt.grid(True)
 
 print("\n" + "="*60)
