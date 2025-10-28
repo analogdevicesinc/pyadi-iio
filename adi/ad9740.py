@@ -10,7 +10,7 @@ from adi.rx_tx import tx
 
 
 class ad9740(tx, context_manager):
-    """AD9740/AD9744 14-bit, 210 MSPS DAC with DDS support"""
+    """AD9740/AD9742/AD9744/AD9748 10/12/14/8-bit, 210 MSPS DAC with DDS support"""
 
     _complex_data = False
     _device_name = "AD9740"
@@ -36,8 +36,10 @@ class ad9740(tx, context_manager):
         context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = [
-            "ad9740",
-            "ad9744",  # AD9744 is compatible with AD9740 (both 14-bit DACs)
+            "ad9740",  # 10-bit DAC
+            "ad9742",  # 12-bit DAC
+            "ad9744",  # 14-bit DAC
+            "ad9748",  # 8-bit DAC
         ]
 
         self._ctrl = None
