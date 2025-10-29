@@ -38,9 +38,9 @@ boot_subfolder_on_target = "pytest"
 configs = [
     {
         "name": "20gsps",
-        # "BOOT.BIN": "BOOT.BIN",
-        # "Kernel": "Image",
-        # "devicetree": "devicetree.dtb",
+        "BOOT.BIN": "BOOT.BIN",
+        "Kernel": "Image",
+        "devicetree": "devicetree.dtb",
         "selmap_overlay": "vu11p-ad9084-vpx.dtbo",
         "selmap_bin": "vu11p_204C_M4_L8_NP16.bin",
         "boot_script": "selmap_dtbo.sh",
