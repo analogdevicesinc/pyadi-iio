@@ -1,1 +1,2 @@
 git+https://github.com/sdgtt/nebula.git@tfcollins/microblaze-testing
+paramiko>=2.7.0,<3.0.0

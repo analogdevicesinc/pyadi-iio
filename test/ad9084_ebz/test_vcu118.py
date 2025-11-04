@@ -40,6 +40,7 @@ config_file_zu4eg = "/ci/nebula_ad9084_vcu118.yaml"
 
 BITSTREAM_FILE = os.environ.get("AD9084_EBZ_BITSTREAM_FILE", "system_top.bit")
 STRIP_FILE = os.environ.get("AD9084_EBZ_STRIP_FILE", "simpleImage.ad9084_vcu118.strip")
+BOOT_CYCLE_SAME_BIT = False
 
 configs = [
     {
@@ -48,6 +49,15 @@ configs = [
         "strip": os.path.join(boot_files_folder, STRIP_FILE),
     },
 ]
+
+if BOOT_CYCLE_SAME_BIT:
+    configs = []
+    for i in range(10):
+        configs.append({
+            "name": f"run_{i}",
+            "bitstream": os.path.join(boot_files_folder, BITSTREAM_FILE),
+            "strip": os.path.join(boot_files_folder, STRIP_FILE),
+        })
 
 # check_files_exist(configs, boot_files_folder)
 
@@ -58,6 +68,7 @@ def nebula_boot_vcu118_ethernet(request):
     config = request.param
 
     show_uart_log = True
+    power_cycle_board = True
     # skip_boot = False
     # monitor_for_jesd_done = "NET" # or "UART"
 
@@ -73,9 +84,10 @@ def nebula_boot_vcu118_ethernet(request):
     neb_manager.monitor[0]._read_until_stop()  # Flush
 
     # Power cycle
-    neb_manager.power.power_down_board()
-    time.sleep(2)
-    neb_manager.power.power_up_board()
+    if power_cycle_board:
+        neb_manager.power.power_down_board()
+        time.sleep(2)
+        neb_manager.power.power_up_board()
 
     # Flash and boot
     neb_manager.jtag.microblaze_boot_linux(config["bitstream"], config["strip"])
@@ -101,14 +113,16 @@ def nebula_boot_vcu118_ethernet(request):
     neb_manager.monitor[0].request_ip_dhcp_microblaze()
     ip_addr = neb_manager.monitor[0].get_ip_address_microblaze()
     neb_manager.net.dutip = ip_addr
-    # neb_manager.monitor[0]._write_data("ifconfig eth0 down && ifconfig eth0 up\n")
-    # neb_manager.monitor[0]._read_until_stop()  # Flush
-    # neb_manager.monitor[0]._write_data("ifconfig eth0\n")
     time.sleep(2)
     # eth0_info = neb_manager.monitor[0]._read_until_stop()
+
+    # Let UART go so tests can use it
+    neb_manager.monitor[0].stop_log()
+
     yield neb_manager, config
 
-    neb_manager.power.power_down_board()
+    if power_cycle_board:
+        neb_manager.power.power_down_board()
     neb_manager.monitor[0].stop_log()
 
 
@@ -117,10 +131,10 @@ class TestOverBootFiles:
 
         neb_manager, params = nebula_boot_vcu118_ethernet
 
-        print("HERE")
         dmesg = neb_manager.net.run_ssh_command("dmesg", show_log=False)
         dmesg = dmesg.stdout
         print(dmesg)
+
         filename = f"test_boot_{params['name']}_dmesg.log"
         filename = os.path.join(log_folder, filename)
         with open(filename, "w") as f:
@@ -134,6 +148,7 @@ class TestOverBootFiles:
         neb_manager, params = nebula_boot_vcu118_ethernet
 
         # neb_manager.monitor[0]._attemp_login("root", "root")
+        neb_manager.monitor[0]._read_until_stop()  # Flush
         neb_manager.monitor[0]._write_data("uname -a")
         data = neb_manager.monitor[0]._read_for_time(period=5)
         logger.info(f"Data: {data}")
@@ -181,6 +196,26 @@ class TestOverBootFiles:
         val = dev.reg_read(0x0A)
         logger.info(f"ADF4382 Address 0x0A: {val:#04x}")
         assert val == 0x55, f"Unexpected ADF4382 address 0x0A: {val:#04x}"
+
+        del dev
+        del ctx
+
+    def test_spi_read_hmc7044(self, nebula_boot_vcu118_ethernet, caplog):
+
+        caplog.set_level("INFO")
+
+        neb_manager, params = nebula_boot_vcu118_ethernet
+
+        ip_addr = f"ip:{neb_manager.net.dutip}"
+        logger.info(f"Connecting to {ip_addr}")
+
+        ctx = iio.Context(ip_addr)
+        assert ctx is not None, "Failed to create IIO context"
+
+        for dev in ctx.devices:
+            logger.info(f"Device Name: {dev.name}")
+        dev = ctx.find_device("hmc7044")
+        assert dev is not None, "Failed to find adf4382 device"
 
         del dev
         del ctx
