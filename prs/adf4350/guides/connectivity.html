@@ -4,12 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Since pyadi-iio is built on top of libiio, it can use the different backends which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it to the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:" name="description" />
 
     <title>Connectivity &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=c218d0f6" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script defer="" src="../_static/app.umd.js?v=8984ea49"></script>
+    <script async="async" src="../_static/app.umd.js?v=3a4867e9"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -17,8 +18,13 @@
     <link rel="prev" title="Examples" href="examples.html" />
    
   
+  
   <meta name="repository" content="pyadi-iio">
   <meta name="version" content="0.0.20">
+  
+    <meta name="page_source_suffix" content=".rst">
+  
+  
   
 
 
@@ -37,7 +43,10 @@
     }
   }
 </style>
-  </head><body>
+  </head>
+  
+    <body>
+  
   <input type="checkbox" id="input-show-toc">
   <input type="checkbox" id="input-show-localtoc">
   <input type="checkbox" id="input-show-repotoc">
@@ -57,9 +66,11 @@
     </div>
     <div id="right">
       <span>
-        <a id="logo-org" href="https://analog.com"></a>
+        <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
+        
         <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        
         <a id="logo" href="../index.html">
           <div>pyadi-iio</div>
         </a>
@@ -79,8 +90,7 @@
   </div>
     <div class="localtoc">
       <div class="tocwrapper">
-        <div>
-          <div class="localtoc-header"></div>
+        <div class="header localtoc-header">
           <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
         </div>
         <nav>
@@ -137,6 +147,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4080.html">ad4080</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4130.html">ad4130</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4170.html">ad4170</a></li>
@@ -156,6 +167,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad719x.html">ad719x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7291.html">ad7291</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad738x.html">ad738x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7490.html">ad7490</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7689.html">ad7689</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7746.html">ad7746</a></li>
@@ -188,12 +200,15 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ada4961.html">adi.ada4961 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adaq8092.html">adaq8092</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4030.html">adi.adf4030 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4159.html">adf4159</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4350.html">adf4350</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4355.html">adi.adf4355 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4371.html">adf4371</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4382.html">adf4382</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4377.html">adf4377</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf5611.html">adf5611</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adg2128.html">adi.adg2128 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16375.html">adis16375</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16460.html">adis16460</a></li>
@@ -226,6 +241,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl355.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0540.html">cn0540</a></li>
@@ -244,6 +260,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms11.html">adi.fmcomms11 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.hmc7044.html">adi.hmc7044 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.lm75.html">lm75</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2314_14.html">ltc2314_14</a></li>
@@ -274,12 +291,14 @@ Content on this topic
   <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper" id="top-anchor">
-          
+          <div class="body-header">
+  <nav class="breadcrumb empty"><ol></ol></nav>
+</div>
           <div class="body" role="main">
             
   <section id="connectivity">
 <h1>Connectivity<a class="headerlink" href="#connectivity" title="Permalink to this heading"></a></h1>
-<p>Since pyadi-iio is built on top of libiio, it can use the different <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio">backends</a> which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it to the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:</p>
+<p>Since pyadi-iio is built on top of libiio, it can use the different <a class="icon link reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio" target="_blank">backends</a> which allow device control and data transfer to and from devices remotely. These backends include serial, Ethernet, PCIe, USB, and of course locally connected devices can be controlled through the local backend. Connecting to a board remotely over a specific backend is done by defining a specific universal resource indicator (URI) and passing it to the class constructors for a specific device. Here is a simple example that uses the Ethernet backend with a target board with IP address 192.168.2.1:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
 
@@ -309,7 +328,7 @@ Content on this topic
 <span class="nb">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you are not sure of the device URI you can utilize libiio command-line tools like <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_info">iio_info</a> and <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_attr">iio_attr</a>.</p>
+<p>If you are not sure of the device URI you can utilize libiio command-line tools like <a class="icon link reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_info" target="_blank">iio_info</a> and <a class="icon link reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_attr" target="_blank">iio_attr</a>.</p>
 </section>
 
 
