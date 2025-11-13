@@ -122,6 +122,7 @@ from adi.gen_mux import genmux
 from adi.hmc7044 import hmc7044
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
+from adi.ltc2378 import ltc2378
 from adi.ltc2387 import ltc2387
 from adi.ltc2499 import ltc2499
 from adi.ltc2664 import ltc2664
