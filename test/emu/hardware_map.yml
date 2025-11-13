@@ -799,3 +799,11 @@ ad7490:
       - filename: ad7490.xml
       - data_devices:
           - iio:device0
+adf4350:
+ - adf4350
+ - pyadi_iio_class_support:
+     - adf4350
+ - emulate:
+     - filename: adf4350.xml
+     - data_devices:
+         - iio:device2
