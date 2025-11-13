@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="_static/app.min.css?v=8d0b0339" />
+    <link rel="stylesheet" type="text/css" href="_static/app.min.css?v=31a9e0ba" />
     <link rel="stylesheet" type="text/css" href="_static/css/style.css?v=632a43e7" />
-    <script async="async" src="_static/app.umd.js?v=2f9373fc"></script>
+    <script async="async" src="_static/app.umd.js?v=3a4867e9"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -45,7 +45,10 @@ window.addEventListener("load", () => mermaid.run());
     }
   }
 </style>
-  </head><body>
+  </head>
+  
+    <body>
+  
   <input type="checkbox" id="input-show-toc">
   <input type="checkbox" id="input-show-localtoc">
   <input type="checkbox" id="input-show-repotoc">
@@ -259,6 +262,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.lm75.html">lm75</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2378.html">ltc2378</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2387.html">ltc2387</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2499.html">adi.ltc2499 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ltc2664.html">ltc2664</a></li>
@@ -1248,8 +1252,6 @@ Content on this topic
         <li><a href="devices/adi.adf5610.html#module-adi.adf5610">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adf5611
 
@@ -1257,6 +1259,8 @@ Content on this topic
         <li><a href="devices/adi.adf5611.html#module-adi.adf5611">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adg2128
 
@@ -1563,6 +1567,13 @@ Content on this topic
 
       <ul>
         <li><a href="devices/adi.ltc2314_14.html#module-adi.ltc2314_14">module</a>
+</li>
+      </ul></li>
+      <li>
+    adi.ltc2378
+
+      <ul>
+        <li><a href="devices/adi.ltc2378.html#module-adi.ltc2378">module</a>
 </li>
       </ul></li>
       <li>
@@ -2379,6 +2390,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adrf5720.html#adi.adrf5720.adrf5720.channel">(adi.adrf5720.adrf5720 attribute)</a>
 </li>
+        <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378.channel">(adi.ltc2378.ltc2378 attribute)</a>
+</li>
         <li><a href="devices/adi.ltc2499.html#adi.ltc2499.ltc2499.channel">(adi.ltc2499.ltc2499 attribute)</a>
 </li>
         <li><a href="devices/adi.ltc2983.html#adi.ltc2983.ltc2983.channel">(adi.ltc2983.ltc2983 attribute)</a>
@@ -2424,6 +2437,8 @@ Content on this topic
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.channels">(adi.adar1000.adar1000 property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.adf4377.html#adi.adf4377.adf4377.charge_pump_current">charge_pump_current (adi.adf4377.adf4377 property)</a>
 
       <ul>
@@ -2432,8 +2447,6 @@ Content on this topic
         <li><a href="devices/adi.adf5611.html#adi.adf5611.adf5611.charge_pump_current">(adi.adf5611.adf5611 property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.chip_id">chip_id (adi.adar1000.adar1000 property)</a>
 </li>
       <li><a href="devices/adi.ad9081.html#adi.ad9081.ad9081.chip_version">chip_version (adi.ad9081.ad9081 property)</a>
@@ -3764,6 +3777,8 @@ Content on this topic
 </li>
       <li><a href="devices/adi.ltc2314_14.html#adi.ltc2314_14.ltc2314_14">ltc2314_14 (class in adi.ltc2314_14)</a>
 </li>
+      <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378">ltc2378 (class in adi.ltc2378)</a>
+</li>
       <li><a href="devices/adi.ltc2387.html#adi.ltc2387.ltc2387">ltc2387 (class in adi.ltc2387)</a>
 </li>
       <li><a href="devices/adi.ltc2499.html#adi.ltc2499.ltc2499">ltc2499 (class in adi.ltc2499)</a>
@@ -4095,6 +4110,8 @@ Content on this topic
         <li><a href="devices/adi.lm75.html#module-adi.lm75">adi.lm75</a>
 </li>
         <li><a href="devices/adi.ltc2314_14.html#module-adi.ltc2314_14">adi.ltc2314_14</a>
+</li>
+        <li><a href="devices/adi.ltc2378.html#module-adi.ltc2378">adi.ltc2378</a>
 </li>
         <li><a href="devices/adi.ltc2387.html#module-adi.ltc2387">adi.ltc2387</a>
 </li>
@@ -5168,6 +5185,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380.sampling_frequency">(adi.adxl380.adxl380 property)</a>
 </li>
+        <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378.sampling_frequency">(adi.ltc2378.ltc2378 property)</a>
+</li>
         <li><a href="devices/adi.ltc2387.html#adi.ltc2387.ltc2387.sampling_frequency">(adi.ltc2387.ltc2387 property)</a>
 </li>
       </ul></li>
@@ -5233,10 +5252,10 @@ Content on this topic
 </li>
       <li><a href="devices/adi.gen_mux.html#adi.gen_mux.genmux.select_available">select_available (adi.gen_mux.genmux property)</a>
 </li>
-      <li><a href="devices/adi.cn0565.html#adi.cn0565.cn0565.sense_distance">sense_distance (adi.cn0565.cn0565 property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/adi.cn0565.html#adi.cn0565.cn0565.sense_distance">sense_distance (adi.cn0565.cn0565 property)</a>
+</li>
       <li><a href="devices/adi.cn0540.html#adi.cn0540.cn0540.sensor_voltage">sensor_voltage (adi.cn0540.cn0540 property)</a>
 </li>
       <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.sequencer_enable">sequencer_enable (adi.adar1000.adar1000 property)</a>
