@@ -568,4 +568,109 @@ class TestOverBootFiles:
         del dev
 
         assert (nco_freq * 0.1) > diff
+        # assert tone_peaks[indx] > peak_min
+
+    @pytest.mark.xfail(reason="Rev A boards have poor power network for ADCs leading to high noise floor")
+    @pytest.mark.requirement(["WASHINGTON-R16","WASHINGTON-R26"])
+    @pytest.mark.parametrize("channel", [0 ,1])
+    @pytest.mark.parametrize("side", [0, 1])
+    def test_channel_noise(self, channel, side, nebula_boot_adsy1100_ethernet, record_property, gn_plot_manager):
+        params, neb_manager = nebula_boot_adsy1100_ethernet
+
+        logger.info(f"Testing side {side} channel {channel}")
+        uri = f"ip:{neb_manager.net.dutip}"
+
+        # Check channel mapping
+        dev = adi.ad9084(uri)
+        rx_channels = dev._rx_channel_names
+        tx_channels = dev._tx_channel_names
+
+        logger.info(f"RX Channels: {rx_channels}")
+        logger.info(f"TX Channels: {tx_channels}")
+
+        record_property("rx_channels", rx_channels)
+        record_property("tx_channels", tx_channels)
+
+        assert len(rx_channels) == 4, f"Unexpected number of RX channels: {len(rx_channels)}"
+        assert len(tx_channels) == 4, f"Unexpected number of TX channels: {len(tx_channels)}"
+
+        # Set all NCO frequencies to known values
+        N = len(dev.rx_channel_nco_frequencies)
+        dev.rx_channel_nco_frequencies = [int(100e6)] * N
+
+        N = len(dev.tx_channel_nco_frequencies)
+        dev.tx_channel_nco_frequencies = [int(100e6)] * N
+
+        N = len(dev.rx_main_nco_frequencies)
+        dev.rx_main_nco_frequencies = [int(2000e6)] * N
+
+        N = len(dev.tx_main_nco_frequencies)
+        dev.tx_main_nco_frequencies = [int(2000e6)] * N
+
+        dev.rx_buffer_size = 2**15
+        dev.rx2_buffer_size = 2**15
+
+        nco_freq = dev.rx_sample_rate / 4
+        nco_freq = nco_freq + (channel) * 10e6
+        nco_freq = nco_freq + (side) * 100e6
+        nco_freq = int(nco_freq)
+        assert nco_freq < dev.rx_sample_rate / 2, "NCO frequency too high"
+        logger.info(f"Setting NCO Frequency: {nco_freq}")
+        if side == 0:
+            dev.rx_enabled_channels = [channel]
+            dev.dds_single_tone(nco_freq, 0.99, channel=channel)
+        else:
+            dev.rx2_enabled_channels = [channel]
+            dev.dds2_single_tone(nco_freq, 0.99, channel=channel)
+
+        time.sleep(3)
+
+        if side == 0:
+            for _ in range(10):
+                iq_data = dev.rx()
+        else:
+            for _ in range(10):
+                iq_data = dev.rx2()
+
+        logger.info(iq_data)
+        assert not isinstance(iq_data, list), "Did not get IQ data"
+        logger.info(f"IQ Data Shape: {iq_data.shape}")
+
+        # Add plotly
+        import plotly.graph_objects as go
+        fig = go.Figure()
+        tone_peaks, tone_freqs = spec.spec_est(iq_data, fs=dev.rx_sample_rate, ref=2 ** 15)
+        fig.add_trace(go.Scatter(x=tone_freqs, y=tone_peaks, mode="lines"))
+        fig.update_layout(
+            title="FFT Analysis",
+            xaxis_title="Frequency (Hz)",
+            yaxis_title="Magnitude (dBFS)",
+            height=1000,
+        )
+        gn_plot_manager.add_plot(fig, "FFT Analysis")
+
+        # Create FFT plot and save
+        logger.info("Creating FFT plot")
+        plt = spec.spec_est(iq_data, fs=dev.rx_sample_rate, ref=2**15, plot=True, show_plot=False)
+        filename = f"test_boot_{side}_{channel}_fft.png"
+        filename = os.path.join(image_folder, filename)
+        logger.info(f"Saving FFT plot to: {filename}")
+        plt.savefig(filename)
+        record_property("fft_plot_filename", filename)
+        plt.close()
+        del plt    
+
+        # Check for tone
+        peak_min = -30
+        RXFS = dev.rx_sample_rate
+        tone_peaks, tone_freqs = spec.spec_est(iq_data, fs=RXFS, ref=2 ** 15)
+        indx = np.argmax(tone_peaks)
+        diff = np.abs(tone_freqs[indx] - nco_freq)
+        s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
+        s += f" | Expected: {nco_freq} | Diff: {diff}"
+        logger.info(s)
+
+        del dev
+
+        assert (nco_freq * 0.1) > diff
         assert tone_peaks[indx] > peak_min
