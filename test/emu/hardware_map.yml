@@ -493,6 +493,14 @@ ad4020:
       - filename: ad4020.xml
       - data_devices:
           - iio:device0
+adaq4216:
+  - adaq4216
+  - pyadi_iio_class_support:
+      - adaq42xx
+  - emulate:
+      - filename: adaq4216.xml
+      - data_devices:
+          - iio:device0
 adaq4224:
   - adaq4224
   - pyadi_iio_class_support:
