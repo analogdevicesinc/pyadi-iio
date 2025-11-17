@@ -115,10 +115,16 @@ class N9000A:
     def get_iq_spec_bandwidth(self):
         return float(self.query('SENS:SPEC:BAND?'))
 
+    def set_iq_spec_span(self, span_hz):
+        self.write(f':SENS:SPEC:FREQ:SPAN {span_hz}')
+    
+    def get_iq_spec_span(self):
+        return float(self.query(':SENS:SPEC:FREQ:SPAN?'))
+
     def fetch_iq_waveform(self):
         return self.query(':FETCH:WAV3?')
 
-    def fetch_iq_data(self):
+    def fetch_iq_data(self):                                #
         self.write(':FORMat:BORDer NORMal')
         self.write(':FORMat:DATA REAL,32')
         return self.query(':FETCH:WAV1?')
@@ -130,7 +136,7 @@ class N9000A:
         self.write('CONF:SPEC:NDEF')
         returned_string = self.query('READ:SPEC0?')
         data = np.array([float(x) for x in returned_string.split(',')])
-        in_phase = data[2::2]
+        in_phase = data[::2]
         quadrature = data[1::2]
         return in_phase + 1j * quadrature
 
@@ -140,11 +146,20 @@ class N9000A:
     def marker_on(self, marker: int = 1):
         self.write(f"CALC:MARK{marker}:MODE POS")
 
+    def turn_marker_on_to_freq(self, marker, freq_GHz):
+        self.write(f"CALC:MARKer{marker}:STATe ON")
+        self.write(f"CALC:MARK{marker}:X {freq_GHz}GHz")
+
     def marker_off(self, marker: int = 1):
         self.write(f"CALC:MARK{marker}:MODE OFF")
 
     def get_marker_power(self, marker: int = 1) -> float:
-        return float(self.query(f"CALC:MARK{marker}:Y?"))
+        self.set_initiate_continuous_sweep("OFF")
+        self.write('INIT')
+        self.operation_complete()
+        val = float(self.query(f"CALC:MARK{marker}:Y?"))
+        self.set_initiate_continuous_sweep("ON")
+        return float(val)
 
     def get_marker_freq(self, marker: int = 1) -> float:
         return float(self.query(f"CALC:MARK{marker}:X?"))
@@ -220,6 +235,9 @@ class N9000A:
     # -------------------------
     def set_peak_table(self, state: str):
         self.write(f'CALC:MARK:PEAK:TABL:STAT {state}')
+
+    def set_to_spec_an_mode(self):
+        self.write('INST:SEL SA')
 
     def set_peak_table_sort(self, sort: str):
         self.write(f'CALC:MARK:PEAK:SORT {sort}')
@@ -345,11 +363,19 @@ class N9000A:
     # -------------------------
     # Miscellaneous
     # -------------------------
-    def set_peak_table_display_line_value(self, value):
-        self.write(f'DISP:WIND1:TRAC:Y:DLIN1 {value}')
+    def bursttrig(self, slope, delay, rellevel, abslevel):
+        self.write(f':TRIG:SPEC:SEQ:SOUR RFB')
+        self.write(f':TRIG:SEQ:RFB:SLOP {slope}')
+        self.write(f'TRIG:SEQ:VID:DEL:STAT ON')
+        self.write(f':TRIG:SEQ:RFB:DEL {delay} us')
+        self.write(f':TRIG:SEQ:RFB:LEV:REL {rellevel} dB')
+        self.write(f':TRIG:SEQ:RFB:LEV:ABS {abslevel} dBm')
 
-    def set_peak_table_display_line_type(self, disp_line):
-        self.write(f'CALC:MARK:PEAK:TABL:READ {disp_line}')
+    # def set_peak_table_display_line_value(self, value):
+    #     self.write(f'DISP:WIND1:TRAC:Y:DLIN1 {value}')
+
+    # def set_peak_table_display_line_type(self, disp_line):
+    #     self.write(f'CALC:MARK:PEAK:TABL:READ {disp_line}')
 
     def set_continuous_peak_search(self, marker_num, state):
         self.write(f':CALC:MARK{marker_num}:CPS:STAT {state}')
@@ -458,16 +484,17 @@ class N9000A:
 
         return tone_pow
 
-if __name__ == "__main__":
-    rm = pyvisa.ResourceManager()
-    resource = "TCPIP0::192.168.0.77::inst0::INSTR"
-    sa = N9000A(rm, resource)
 
-    # Example: Get spectrum data
-    freqs, powers = sa.get_spectrum_data()
-    print("Frequencies:", freqs)
-    print("Powers:", powers)
+# if __name__ == "__main__":
+#     rm = pyvisa.ResourceManager()
+#     resource = "TCPIP0::A-N9000A-30136.local::hislip0::INSTR"
+#     sa = N9000A(rm, resource)
 
-    # Example: Get tone power
-    power = sa.get_tone_power(5.003e9, rbw_hz=30e3, span_hz=1e6)
-    print(f"Tone power at 5.003 GHz: {power:.2f} dBm")
+    # # Example: Get spectrum data
+    # freqs, powers = sa.get_spectrum_data()
+    # print("Frequencies:", freqs)
+    # print("Powers:", powers)
+
+    # # Example: Get tone power
+    # power = sa.get_tone_power(10e9, rbw_hz=30e3, span_hz=160e6)
+    # print(f"Tone power at 5.003 GHz: {power:.2f} dBm")

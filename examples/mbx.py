@@ -37,7 +37,7 @@ else:                                                       # but if we use MACo
             x = chr(13)     # enter
             print("enter")
         return x
-from mbx_functions import *
+from MantaRayTx_Cal.mbx_functions import *
 from mbx_plot import *
 import mbx_instrument as equipk
 import mbx_test_config as config

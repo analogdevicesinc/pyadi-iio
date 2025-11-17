@@ -335,7 +335,7 @@ for frame in range(frame_pulses_to_plot):
 # # Send TX data
 sdr.tx_destroy_buffer()
 # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
-sdr.tx([pulse0_iq, pulse1_iq, pulse2_iq, pulse3_iq])
+sdr.tx([pulse0_iq, pulse0_iq, pulse0_iq, pulse0_iq])
 
 # # Send cal'd TX data
 # sdr.tx_destroy_buffer()
@@ -474,9 +474,9 @@ plt.show()
 #     tddn.channel[chan].polarity = 0
 #     tddn.channel[chan].enable = 1
 
-# tddn.enable = 1
-# tddn.enable = 0
+tddn.enable = 1
+tddn.enable = 0
 
-# sdr.tx_destroy_buffer()
-# sdr.rx_destroy_buffer()
+sdr.tx_destroy_buffer()
+sdr.rx_destroy_buffer()
 

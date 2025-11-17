@@ -146,11 +146,20 @@ class N9000A:
     def marker_on(self, marker: int = 1):
         self.write(f"CALC:MARK{marker}:MODE POS")
 
+    def turn_marker_on_to_freq(self, marker, freq_GHz):
+        self.write(f"CALC:MARKer{marker}:STATe ON")
+        self.write(f"CALC:MARK{marker}:X {freq_GHz}GHz")
+
     def marker_off(self, marker: int = 1):
         self.write(f"CALC:MARK{marker}:MODE OFF")
 
     def get_marker_power(self, marker: int = 1) -> float:
-        return float(self.query(f"CALC:MARK{marker}:Y?"))
+        self.set_initiate_continuous_sweep("OFF")
+        self.write('INIT')
+        self.operation_complete()
+        val = float(self.query(f"CALC:MARK{marker}:Y?"))
+        self.set_initiate_continuous_sweep("ON")
+        return float(val)
 
     def get_marker_freq(self, marker: int = 1) -> float:
         return float(self.query(f"CALC:MARK{marker}:X?"))
@@ -226,6 +235,9 @@ class N9000A:
     # -------------------------
     def set_peak_table(self, state: str):
         self.write(f'CALC:MARK:PEAK:TABL:STAT {state}')
+
+    def set_to_spec_an_mode(self):
+        self.write('INST:SEL SA')
 
     def set_peak_table_sort(self, sort: str):
         self.write(f'CALC:MARK:PEAK:SORT {sort}')

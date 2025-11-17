@@ -8,8 +8,8 @@ HOST = "192.168.1.1"
 PORT = 22
 USERNAME = "root"
 PASSWORD = "analog"
-THRESHOLD = 70        # °C threshold for alert
-POLL_INTERVAL = 2.0      # seconds between checks
+THRESHOLD = 85        # °C threshold for alert
+POLL_INTERVAL = 0.25      # seconds between checks
 CMD = "iio_attr -c adar1000_csb* . | grep 'temp0'"  # remote command
 # =====================
 

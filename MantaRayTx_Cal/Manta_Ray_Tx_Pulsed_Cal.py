@@ -31,106 +31,137 @@ time.sleep(1)
 ssh.close()
 
 
-print("Turn on 4V, then -6V supplies")
-input("Press Enter to continue...")
+# print("Turn on 4V, then -6V supplies")
+# input("Press Enter to continue...")
 talise_ip = "192.168.1.1" # ADRV9009-zu11eg board ip address
 talise_uri = "ip:" + talise_ip
 
-print("Connecting to BFC Tile")
+# print("Connecting to BFC Tile")
+
 
 
 dev = adi.adar1000_array(
-    "ip:192.168.1.1", 
-    chip_ids= 	[	
-                    "adar1000_csb_0_1_1", "adar1000_csb_0_1_2", "adar1000_csb_0_1_3", "adar1000_csb_0_1_4",
-                    "adar1000_csb_1_1_1", "adar1000_csb_1_1_2", "adar1000_csb_1_1_3", "adar1000_csb_1_1_4",
-                    "adar1000_csb_0_2_1", "adar1000_csb_0_2_2", "adar1000_csb_0_2_3", "adar1000_csb_0_2_4",
-                    "adar1000_csb_1_2_1", "adar1000_csb_1_2_2", "adar1000_csb_1_2_3", "adar1000_csb_1_2_4"
-                ],
-    device_map=	[
-                    [2, 1], 
-                    [3, 4],
-                    [6, 5], 
-                    [7, 8],
-                    [10, 9],
-                    [11, 12],
-                    [14, 13],
-                    [15, 16],
-                ],
-    element_map=[
-                    [1, 2, 3, 4], 
-                    [5, 6, 7, 8], 
-                    [9, 10, 11, 12], 
-                    [13, 14, 15, 16],
-                    [17, 18, 19, 20], 
-                    [21, 22, 23, 24], 
-                    [25, 26, 27, 28], 
-                    [29, 30, 31, 32],
-                    [33, 34, 35, 36], 
-                    [37, 38, 39, 40], 
-                    [41, 42, 43, 44], 
-                    [45, 46, 47, 48],
-                    [49, 50, 51, 52], 
-                    [53, 54, 55, 56], 
-                    [57, 58, 59, 60], 
-                    [61, 62, 63, 64],
-                ],
-    device_element_map={
-                1: 	[4, 8, 7, 3],
-                2: 	[2, 6, 5, 1],
-                3: 	[13, 9, 10, 14],
-                4: 	[15, 11, 12, 16],
-                5: 	[20, 24, 23, 19],
-                6: 	[18, 22, 21, 17],
-                7: 	[29, 25, 26, 30],
-                8: 	[31, 27, 28, 32],
-                9: 	[36, 40, 39, 35],
-                10: 	[34, 38, 37, 33],
-                11: 	[45, 41, 42, 46],
-                12: 	[48, 44, 43, 47],
-                13: 	[52, 56, 55, 51],
-                14: 	[50, 54, 53, 49],
-                15: 	[61, 57, 58, 62],
-                16: 	[64, 60, 59, 63],
+    uri = talise_uri,
+    
+    chip_ids = ["adar1000_csb_0_1_2", "adar1000_csb_0_1_1", "adar1000_csb_0_2_2", "adar1000_csb_0_2_1",
+                "adar1000_csb_0_1_3", "adar1000_csb_0_1_4", "adar1000_csb_0_2_3", "adar1000_csb_0_2_4",
+
+                "adar1000_csb_1_1_2", "adar1000_csb_1_1_1", "adar1000_csb_1_2_2", "adar1000_csb_1_2_1",
+                "adar1000_csb_1_1_3", "adar1000_csb_1_1_4", "adar1000_csb_1_2_3", "adar1000_csb_1_2_4"],
+
+    
+    device_map = [[1, 5, 2, 6], [3, 7, 4, 8], [9, 13, 10, 14], [11, 15, 12, 16]],
+ 
+    element_map = np.array([[1, 9,  17, 25, 33, 41, 49, 57],
+                            [2, 10, 18, 26, 34, 42, 50, 58],
+                            [3, 11, 19, 27, 35, 43, 51, 59],
+                            [4, 12, 20, 28, 36, 44, 52, 60],
+                            
+                            [5, 13, 21, 29, 37, 45, 53, 61],
+                            [6, 14, 22, 30, 38, 46, 54, 62],
+                            [7, 15, 23, 31, 39, 47, 55, 63],
+                            [8, 16, 24, 32, 40, 48, 56, 64]]),
+    
+    device_element_map = {
+ 
+        1:  [9, 10, 2, 1],      3:  [41, 42, 34, 33],
+        2:  [25, 26, 18, 17],   4:  [57, 58, 50, 49],
+        5:  [4, 3, 11, 12]  ,   7:  [36, 35, 43, 44],
+        6:  [20, 19, 27, 28],   8:  [52, 51, 59, 60],
+ 
+        9:  [13, 14, 6, 5],     11: [45, 46, 38, 37],
+        10: [29, 30, 22, 21],   12: [61, 62, 54, 53],
+        13: [8, 7, 15, 16],     15: [40, 39, 47, 48],
+        14: [24, 23, 31, 32],   16: [56, 55, 63, 64],
     },
 )
+    
 
 
 for device in dev.devices.values():
     device.tr_source = "spi"
     
-print("Connected to BFC Tile")
+for device in dev.devices.values():
+    device.mode = "rx"
 
 mr.disable_stingray_channel(dev)
 
-print("Initializing BFC Tile")
-dev.initialize_devices(-4.6, -4.6, -4.6, -4.6)
-for device in dev.devices.values():
-    device.mode = "rx"
-    device.bias_dac_mode = "on"
-    for channel in device.channels:
-        # Default channel enable
-        channel.rx_enable = True
-print("Initialized BFC Tile")
+
+## Setup XUD1A ##
+
+# Setup ADXUD1AEBZ and ADF4371
+ctx = dev._ctrl.ctx
+xud = ctx.find_device("xud_control")
+
+ 
+# Find channel attribute for TX & RX
+txrx1 = xud.find_channel("voltage1", True)
+txrx2 = xud.find_channel("voltage2", True)
+txrx3 = xud.find_channel("voltage3", True)
+txrx4 = xud.find_channel("voltage4", True)
+PLLselect = xud.find_channel("voltage5", True)
+rxgainmode = xud.find_channel("voltage0", True)
+
+ 
+# 0 for rx, 1 for tx
+txrx1.attrs["raw"].value = "1" # Subarray 4
+txrx2.attrs["raw"].value = "1" # Subarray 3
+txrx3.attrs["raw"].value = "1" # Subarray 1
+txrx4.attrs["raw"].value = "1" # Subarray 2
+PLLselect.attrs["raw"].value = "1"
+rxgainmode.attrs["raw"].value = "0"
 
 
-print("Turn on 5.7V, current should be ~365mA")
-input("Press Enter to continue...")
+# print("Initializing BFC Tile")
+# dev.initialize_devices(-4.6, -4.6, -4.6, -4.6)
+# for i in range(16):
+#     print(f"{dev.elements[i+1].pa_bias_on=}")
+#     dev.elements[i+1].pa_bias_on = -4.6
+#     print(f"{dev.elements[i+1].pa_bias_on=}")
+#     time.sleep(0.1)
+    
+#     print(f"{dev.elements[i+1].pa_bias_off=}")
+#     dev.elements[i+1].pa_bias_off = -4.6
+#     print(f"{dev.elements[i+1].pa_bias_off=}")
+#     time.sleep(0.1)
+
+#     print(f"{device.lna_bias_off=}")
+#     device.lna_bias_off = -4.6
+#     print(f"{device.lna_bias_off=}")
+#     time.sleep(0.1)
+
+#     print(f"{device.lna_bias_on=}")
+#     device.lna_bias_off = -4.6
+#     print(f"{device.lna_bias_on=}")
+#     time.sleep(0.1)
+
+#     dev.latch_tx_settings()
+#     dev.latch_rx_settings
+
+    
+
+# for device in dev.devices.values():
+#     device.mode = "rx"
+#     device.bias_dac_mode = "on"
+#     for channel in device.channels:
+#         # Default channel enable
+#         channel.rx_enable = True
+#         channel.lna_bias_on = -4.6
+#         channel.lna_bias_off = -4.6
 
 
-print("Turn on 18V, current should be ~4mA")
-input("Press Enter to continue...")
 
 ## Set elements to turn on for Tx ##
-subarray_ref = np.array([7, 39, 55, 23])
+# subarray_ref = np.array([1, 33, 37, 5])
+subarray_ref = np.array([1, 5, 37, 33])
 
 
 for i in subarray_ref:
     time.sleep(0.25)
-    print("Setting element " + str(i) + " gain max")
-    dev.elements[i].tx_gain = 127
-    print("Setting element " + str(i) + " attenuator off")
-    dev.elements[i].tx_attenuator = False
+    # print("Setting element " + str(i) + " gain max")
+    # dev.elements[i].tx_gain = 127
+    # print("Setting element " + str(i) + " attenuator off")
+    # dev.elements[i].tx_attenuator = False
     print("Setting element " + str(i) + " phase 0")
     dev.elements[i].tx_phase = 0
     print("Setting element " + str(i) + " PA bias to -2.2")
@@ -184,8 +215,8 @@ for i in range(2):
     frame_pulses_to_plot = 5
 
     ## RX properties XX
-    # Frame and pulse timing (in milliseconds)
-    frame_length_ms = 0.1 # 100 us
+    # # Frame and pulse timing (in milliseconds)
+    # frame_length_ms = 0.1 # 100 us
     # sine data for 10 us pulse than 90 us of zero data
     tx_pulse_start_ms = 0.00001 # 10 ns
     tx_pulse_stop_ms = 0.100 # 100 us
@@ -193,8 +224,8 @@ for i in range(2):
 
     # Pulse parameters #
     # 4 pulses for 4 Tx channels, pulse0 on chan0, pulse1 on chan1, pulse 2 on cham2, pulse3 on chan3
-    PRI_ms = 0.1 #100 us pulse repitition interval
-    duty_cycle = 0.1 # 10% duty cycle
+    PRI_ms = 0.1 # 1ms pulse repitition interval
+    duty_cycle = 0.025 # 2.5% duty cycle
     pulse_spacing_ms = 0.002 # 2 us spacing between pulse start times
     pulse_start_buffer_ms = 0.00001 # 10 ns
     pulse0_start_ms = pulse_start_buffer_ms
@@ -383,34 +414,11 @@ for i in range(2):
     sdr.tx_destroy_buffer()
     # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
     sdr.tx([pulse0_iq, pulse1_iq, pulse2_iq, pulse3_iq])
+    sdr.tx_cyclic_buffer
+
 
     # Trigger TDD synchronization
     tddn.sync_soft  = 1
-
-    # # Capture RX data
-    # print("Capturing RX data...")
-
-    # capture_range = 1
-
-    # rx_ch0 = np.zeros((capture_range, sdr.rx_buffer_size), dtype=np.complex64)
-    # rx_ch1 = np.zeros((capture_range, sdr.rx_buffer_size), dtype=np.complex64)
-    # rx_ch2 = np.zeros((capture_range, sdr.rx_buffer_size), dtype=np.complex64)
-    # rx_ch3 = np.zeros((capture_range, sdr.rx_buffer_size), dtype=np.complex64)
-    # for capture in range(capture_range):
-    #     sdr.rx_destroy_buffer()
-    #     tddn.sync_soft  = 1
-
-    #     rx_data = sdr.rx()
-
-    #     # Extract I/Q data for both channels
-    #     rx_ch0[capture] = rx_data[0]
-    #     rx_ch1[capture] = rx_data[1]
-    #     rx_ch2[capture] = rx_data[2]
-    #     rx_ch3[capture] = rx_data[3]
-
-    #     time.sleep(1)  # Small delay between captures
-
-    # print(f"RX data captured - Ch0: {len(rx_ch0[-1])} samples, Ch1: {len(rx_ch1[-1])} samples")
 
 
 
@@ -480,8 +488,8 @@ SpecAn.set_iq_spec_span(SpecAn_IQ_BW)  #Set IQ bandwidth of instrument
 SpecAn.set_iq_spec_bandwidth(SpecAn_Res_BW)    #Set ResBW
 SpecAn.set_center_freq(SpecAn_Center_Freq)     #Set SpecAn center frequency
 SpecAn.set_iq_mode_bandwidth(SpecAn_Dig_IFBW)  #Set Digital IFBW
-SpecAn.bursttrig('POS', -5, 0, -45)    #Set trigger parameters for Spec An. First input is slope, second is delay (uS), third is relative level, last is absolute level
-SpecAn.trigger()
+# SpecAn.bursttrig('POS', -5, 0, -65)    #Set trigger parameters for Spec An. First input is slope, second is delay (uS), third is relative level, last is absolute level
+# SpecAn.trigger()
 SpecAn.wavexscale(0, 40000, 'LEFT', 'OFF')
 SpecAn.waveyscale(0, 80, 'CENT', 'OFF')
 
@@ -604,94 +612,94 @@ phaseValsAvg = np.mean(relativePhaseVals, axis=1)
 print('PhaseValsAvg:\n', phaseValsAvg)
 
 
+### Set DACs up for 
 
-a=1
-# sdr.tx_destroy_buffer()
-# # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
-# sdr.tx([pulse0_iq, pulse0_iq*np.exp(1j*phaseValsAvg[1]*np.pi/180), pulse0_iq*np.exp(1j*phaseValsAvg[2]*np.pi/180), pulse0_iq*np.exp(1j*phaseValsAvg[3]*np.pi/180)])
 
 
 # Send phase aligned pulses out of DAC
 sdr.tx_destroy_buffer()
 sdr.tx([pulse0_iq, pulse0_iq*np.exp(1j*phaseValsAvg[1]*np.pi/180), pulse0_iq*np.exp(1j*phaseValsAvg[2]*np.pi/180), pulse0_iq*np.exp(1j*phaseValsAvg[3]*np.pi/180)])
 
+a=1
+# ## Turn on PAs on Manta Ray ##
+# print("Setting PA_ON to 1")
+# ssh = paramiko.SSHClient()
+# ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+# ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
+# ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray0_control 'voltage0' 'raw' 1")
+# ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray1_control 'voltage0' 'raw' 1")
+# time.sleep(1)
+# ssh.close()
 
-## Turn on PAs on Manta Ray ##
-print("Setting PA_ON to 1")
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
-ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray0_control 'voltage0' 'raw' 1")
-ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray1_control 'voltage0' 'raw' 1")
-time.sleep(1)
-ssh.close()
-
-## Take Data from Spec An ##
-ComplexData = SpecAn.iq_complex_data()
-
-
-time.sleep(1)  #Wait for any remaining data to be sent
-
-## Turn off PAs from transmitting on Manta Ray ##
-print("Setting PA_ON to 0")
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
-ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray0_control 'voltage0' 'raw' 0")
-ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray1_control 'voltage0' 'raw' 0")
-time.sleep(1)
-ssh.close()
-
-phaseValsAll = np.zeros((NumChannels, numRuns))
-
-#Separate the I and Q components of the complex data
-I = np.real(ComplexData)
-Q = np.imag(ComplexData)
-
-#Plot the I and Q waveforms 
-plt.figure()
-plt.subplot(2, 1, 1)
-plt.plot(np.abs(I))
-plt.title('I Component')
-plt.subplot(2, 1, 2)
-plt.plot(np.abs(Q))
-plt.title('Q Component')
+# ## Take Data from Spec An ##
+# ComplexData = SpecAn.iq_complex_data()
 
 
-########### Post Processing Section ############
-#Find peaks above threshold
-RealPk, _ = find_peaks(np.abs(I), height = MinCodeVal)
-ImagPk, _ = find_peaks(np.abs(Q), height = MinCodeVal)
+# time.sleep(1)  #Wait for any remaining data to be sent
+
+# ## Turn off PAs from transmitting on Manta Ray ##
+# print("Setting PA_ON to 0")
+# ssh = paramiko.SSHClient()
+# ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+# ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
+# ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray0_control 'voltage0' 'raw' 0")
+# ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray1_control 'voltage0' 'raw' 0")
+# time.sleep(1)
+# ssh.close()
+
+# phaseValsAll = np.zeros((NumChannels, numRuns))
+
+# #Separate the I and Q components of the complex data
+# I = np.real(ComplexData)
+# Q = np.imag(ComplexData)
+
+# #Plot the I and Q waveforms 
+# plt.figure()
+# plt.subplot(2, 1, 1)
+# plt.plot(np.abs(I))
+# plt.title('I Component')
+# plt.subplot(2, 1, 2)
+# plt.plot(np.abs(Q))
+# plt.title('Q Component')
 
 
-ComplexData = np.roll(ComplexData, -700, axis=0)
-
-Period, InitialCross, FinalCross, NextCross, Midlev = pulseperiod(
-    (np.abs(ComplexData) > MinCodeVal).astype(float))
-channel0Start = int(np.ceil(InitialCross[0]))
-
-timeZeroAlignedFirstRx = np.roll(ComplexData, -channel0Start)
-timeZeroAligned = np.roll(ComplexData, -channel0Start, axis=0)
+# ########### Post Processing Section ############
+# #Find peaks above threshold
+# RealPk, _ = find_peaks(np.abs(I), height = MinCodeVal)
+# ImagPk, _ = find_peaks(np.abs(Q), height = MinCodeVal)
 
 
-# peakPowerFourElements = SpecAn.get_marker_power(marker=1)
-# print("Peak Power Four Elements (dBm): ", peakPowerFourElements)
+# ComplexData = np.roll(ComplexData, -700, axis=0)
 
-print(channel0Start)
+# Period, InitialCross, FinalCross, NextCross, Midlev = pulseperiod(
+#     (np.abs(ComplexData) > MinCodeVal).astype(float))
+# channel0Start = int(np.ceil(InitialCross[0]))
 
-plt.figure()
-plt.plot(np.abs(timeZeroAligned))
-plt.title('Zero Aligned Samples')
-plt.show()
+# timeZeroAlignedFirstRx = np.roll(ComplexData, -channel0Start)
+# timeZeroAligned = np.roll(ComplexData, -channel0Start, axis=0)
 
-# Now Determine the Phase Offsets for Each Tx Channel
-phaseVals = np.zeros((NumChannels, 1))
-relativePhaseVals = np.zeros((NumChannels, 1))
 
-phaseVals = np.zeros((NumChannels, 1))
-for i in range(NumChannels):
-    phaseVals[i, 0] = (np.angle(timeZeroAlignedFirstRx[62 + (i*149)]) * (180/np.pi))
-    relativePhaseVals[i, 0] = phaseVals[i, 0] - phaseVals[0, 0]
-    relativePhaseVals[i, 0] = np.mod(relativePhaseVals[i, 0], 360)
-print(relativePhaseVals)
-phaseValsAll[:, run] = relativePhaseVals[:, 0]
+# # peakPowerFourElements = SpecAn.get_marker_power(marker=1)
+# # print("Peak Power Four Elements (dBm): ", peakPowerFourElements)
+
+# print(channel0Start)
+
+# plt.figure()
+# plt.plot(np.abs(timeZeroAligned))
+# plt.title('Zero Aligned Samples')
+# plt.show(block=False)
+
+# plt.pause(5)
+# plt.close()
+
+# # Now Determine the Phase Offsets for Each Tx Channel
+# phaseVals = np.zeros((NumChannels, 1))
+# relativePhaseVals = np.zeros((NumChannels, 1))
+
+# phaseVals = np.zeros((NumChannels, 1))
+# for i in range(NumChannels):
+#     phaseVals[i, 0] = (np.angle(timeZeroAlignedFirstRx[62 + (i*149)]) * (180/np.pi))
+#     relativePhaseVals[i, 0] = phaseVals[i, 0] - phaseVals[0, 0]
+#     relativePhaseVals[i, 0] = np.mod(relativePhaseVals[i, 0], 360)
+# print(relativePhaseVals)
+# phaseValsAll[:, run] = relativePhaseVals[:, 0]

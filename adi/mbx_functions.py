@@ -1992,7 +1992,7 @@ def gotoZERO(accuracy="HIGH"):
     if gim_type == HV:
         # jump_angle(7.51, -6.33, 0, accuracy)
         # jump_angle(0.21, -34.98, 0, accuracy)
-        jump_angle(0.03, -1.67, 0, accuracy)
+        jump_angle(-0.15, 0.44, 0, accuracy)
         
         
     elif gim_type == SPHERICAL:

@@ -56,11 +56,24 @@ def enable_stingray_channel(obj, elements=None, man_input=False):
 
                         # Check if the channel is in the list of elements to disable
                         # If it is, disable the channel
+                        tries = 10
                         for elem in elements:
                             if elem == value:
                                 channel.tx_enable = True
-                                channel.pa_bias_on = -2
-                
+                                print(f"setting channel: {channel}")
+                                channel.pa_bias_on = -2.25
+                                if round(channel.pa_bias_on,1) != -2.25:
+                                    found = False
+                                    for _ in range(tries):
+                                        if round(channel.pa_bias_on,1) != -2.25:
+                                            pass
+                                        else:
+                                            found = True
+                                            break
+                                    if not found:
+                                        print(f"Not set properly: {channel.pa_bias_on=}")
+                                        print(f"Element number {channel}")
+                                        
                 # else:
                 #     raise ValueError('Mode of operation must be either "rx" or "tx"')
             break
@@ -79,6 +92,180 @@ def data_capture(adc):
     
     return data
 
+def disable_pa_bias_channel(obj, elements=None):
+    """
+    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    """
+
+    if elements is None:
+        elements = elements=list(range(1,65))
+
+    else:
+        elements = np.array(elements).flatten()
+
+    # --- optimized: build set for O(1) membership and iterate channels once ---
+    elements_set = set(int(x) for x in elements)
+
+    # perform operations per device, iterating channels only once
+    for device in obj.devices.values():
+        time.sleep(0.01)
+        # if device.mode == "tx":
+        gate_voltage_bias = -4.8
+        tol = 0.1 * abs(gate_voltage_bias)
+        tries = 3
+        for channel in device.channels:
+            str_channel = str(channel)
+            value = int(strip_to_last_two_digits(str_channel))
+            if value in elements_set:
+                # disable TX and set bias
+                channel.tx_enable = False
+                channel.pa_bias_on = gate_voltage_bias
+                obj.latch_tx_settings()
+                # verify setting within tolerance with short retries
+                for _ in range(tries):
+                    if abs(channel.pa_bias_on - gate_voltage_bias) <= tol:
+                        break
+                    time.sleep(0.05)
+                else:
+                    print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
+                    print(f"Element number {value}")
+    # for elem in elements:
+    #     tries = 15
+    #     for device in obj.devices.values():
+    #         time.sleep(0.01)
+
+    #         for channel in device.channels:
+
+    #             str_channel = str(channel)
+    #             value = int(strip_to_last_two_digits(str_channel))
+
+    #             # Check if the channel is in the list of elements to disable
+    #             # If it is, disable the channel
+
+    #             gate_voltage_bias = -4.8
+
+    #             if elem == value:
+    #                 channel.tx_enable = False
+    #                 channel.pa_bias_on = gate_voltage_bias
+    #                 obj.latch_tx_settings()
+    #                 # Accept the PA bias if within 10% of the target (relative tolerance)
+    #                 tol = 0.1 * abs(gate_voltage_bias)
+    #                 if abs(channel.pa_bias_on - gate_voltage_bias) > tol:
+    #                     found = False
+    #                     for _ in range(tries):
+    #                         # give the device a short moment and re-check
+    #                         time.sleep(0.05)
+    #                         if abs(channel.pa_bias_on - gate_voltage_bias) <= tol:
+    #                             found = True
+    #                             break
+    #                     if not found:
+    #                         print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
+    #                         print(f"Element number {channel}")
+     
+def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None):
+    """
+    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    """
+
+    if elements is None:
+        print("No elements Specified, please provide element indicies to enable PAs")
+        return
+
+    elif PA_Bias_Dict is not None:
+        elements = np.array(elements).flatten()
+        # --- optimized: build set for O(1) membership and iterate channels once ---
+        elements_set = set(int(x) for x in elements)
+
+        # perform operations per device, iterating channels only once
+        for device in obj.devices.values():
+            for channel in device.channels:
+                str_channel = str(channel)
+                value = int(strip_to_last_two_digits(str_channel))
+                tol = 0.1 * PA_Bias_Dict[value]
+                tries = 3
+                if value in elements_set:
+                    # disable TX and set bias
+                    channel.tx_enable = True
+                    channel.pa_bias_on = PA_Bias_Dict[value]
+                    obj.latch_tx_settings()
+                    # verify setting within tolerance with short retries
+                    for _ in range(tries):
+                        if abs(channel.pa_bias_on - PA_Bias_Dict[value]) <= tol:
+                            break
+                        time.sleep(0.05)
+                    else:
+                        print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
+                        print(f"Element number {value}")
+    else:
+        elements = np.array(elements).flatten()
+
+        # --- optimized: build set for O(1) membership and iterate channels once ---
+        elements_set = set(int(x) for x in elements)
+
+        # perform operations per device, iterating channels only once
+        for device in obj.devices.values():
+            gate_voltage_bias = -2
+            tol = 0.1 * abs(gate_voltage_bias)
+            tries = 3
+            for channel in device.channels:
+                str_channel = str(channel)
+                value = int(strip_to_last_two_digits(str_channel))
+                if value in elements_set:
+                    # disable TX and set bias
+                    channel.tx_enable = True
+                    channel.pa_bias_on = gate_voltage_bias
+                    obj.latch_tx_settings()
+                    # verify setting within tolerance with short retries
+                    for _ in range(tries):
+                        if abs(channel.pa_bias_on - gate_voltage_bias) <= tol:
+                            break
+                        time.sleep(0.05)
+                    else:
+                        print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
+                        print(f"Element number {value}")
+
+
+def manta_power_detector(obj, elements, man_input=False):
+    """
+    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    """
+    if elements is None and man_input:
+        user_input = input("Enter a comma-separated list of channels to turn off (1-64): ")
+        elements = [int(x.strip()) for x in user_input.split(',') if 1 <= int(x) <= 64]
+
+    elif man_input is False and elements is None:
+        print("No elements Specified, please provide element indicies to enable PAs")
+        return
+
+    else:
+        elements = np.array(elements).flatten()
+
+    for elem in elements:
+        tries = 10
+        for device in obj.devices.values():
+            time.sleep(0.01)
+            for channel in device.channels:
+
+                str_channel = str(channel)
+                value = int(strip_to_last_two_digits(str_channel))
+
+                # Check if the channel is in the list of elements to disable
+                # If it is, disable the channel
+
+                if elem == value:
+                    channel._detector_enable = True
+                    if channel._detector_enable != True:
+                        found = False
+                        for _ in range(tries):
+                            if channel._detector_enable != True:
+                                pass
+                            else:
+                                found = True
+                                break
+                        if not found:
+                            print(f"Not set properly: {channel._detector_enable=}")
+                            print(f"Element number {channel}")
+                    return(channel.detector_power)
 
 def disable_stingray_channel(obj, elements=None, man_input=False):
     """
@@ -98,21 +285,45 @@ def disable_stingray_channel(obj, elements=None, man_input=False):
         try:
             for device in obj.devices.values():
                 time.sleep(0.01)
-                for channel in device.channels:
+                if device.mode == "tx":
+                    for channel in device.channels:
 
-                    str_channel = str(channel)
-                    value = int(strip_to_last_two_digits(str_channel))
+                        str_channel = str(channel)
+                        value = int(strip_to_last_two_digits(str_channel))
 
-                    # Check if the channel is in the list of elements to disable
-                    # If it is, disable the channel
-                    for elem in elements:
-                        if elem == value:
-                            # print("Turning off element:",elem)
-                            channel.rx_enable = False
-                            channel.tx_enable = False
-                            channel.pa_bias_on = -4.5
+                        # Check if the channel is in the list of elements to disable
+                        # If it is, disable the channel
+                        tries = 3
+                        for elem in elements:
+                            if elem == value:
+                                channel.tx_enable = True
+                                channel.pa_bias_on = -4.6
+                                if round(channel.pa_bias_on,1) != -4.6:
+                                    found = False
+                                    for _ in range(tries):
+                                        if round(channel.pa_bias_on,1) != -4.6:
+                                            pass
+                                        else:
+                                            found = True
+                                            break
+                                    if not found:
+                                        print(f"Not set properly: {channel.pa_bias_on=}")
+                                        print(f"Element number {channel}")
 
-            
+                if device.mode == "rx":
+                    for channel in device.channels:
+                        str_channel = str(channel)
+                        value = int(strip_to_last_two_digits(str_channel))
+
+                        # Check if the channel is in the list of elements to disable
+                        # If it is, disable the channel
+                        for elem in elements:
+                            if elem == value:
+                                # print("Turning off element:",elem)
+                                channel.rx_enable = False
+                                break
+                else:
+                    raise ValueError('Mode of operation must be either "rx" or "tx"')
 
                 #combine disable of TX and RX into one function
                 # if device.mode == "rx":
@@ -199,7 +410,9 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     # analog_mag_pre_cal = analog_mag_pre_cal.flatten() 
     analog_mag_pre_cal = analog_mag_pre_cal.flatten()
     # bad_val_thresh = np.average(analog_mag_pre_cal) - 3
-    bad_val_thresh = np.average(analog_mag_pre_cal) - 2.5
+    # bad_val_thresh = np.average(analog_mag_pre_cal) - 2.5
+
+    bad_val_thresh = np.average(analog_mag_pre_cal) - 6
     for i in range(np.size(analog_mag_pre_cal)):
         if analog_mag_pre_cal[i] < bad_val_thresh:
             print("Bad Value: ", analog_mag_pre_cal[i])
@@ -376,6 +589,67 @@ def find_phase_delay_fixed_ref(obj, adc, subarray_ref, adc_ref, delay_phases):
     #return np.roll(cal_ant, -1)
     return cal_ant
 
+def find_phase_delay_fixed_ref_tx(obj, SpecAn, subarray_ref, adc_ref, delay_phases):
+    """
+    Measures calibrated phase offsets for Stingray reference channels in units of degrees using fixed reference.
+    """
+    import MantaRay as mr
+    import paramiko
+    import time
+
+    # Enable the Stingray reference channels and capture data
+    print("Setting PA_ON to 1")
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray0_control 'voltage0' 'raw' 0")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray1_control 'voltage0' 'raw' 0")
+    time.sleep(1)
+    ssh.close()
+
+    mr.enable_pa_bias_channel(obj, subarray_ref)
+    # enable_stingray_channel(obj,subarray_ref)
+    # data = np.array(data_capture(adc))
+    data = np.array(SpecAn.iq_complex_data())
+
+    # Create a list to store the calibration values for each antenna
+    # Initialize the first antenna's calibration value to 0
+    cal_ant = []
+    cal_ant.append(0)
+
+    # Apply a zero phase delay to the reference antenna
+    first_ant = phase_delayer(data[adc_ref], cal_ant[0])
+
+    for i in range(len(data)):
+        peak_sum = []
+        for phase_delay in delay_phases:
+
+            # Apply the phase delay second antennas
+            second_ant = phase_delayer(data[i], phase_delay)
+
+            # Calculate the delayed sum of the two antennas
+            delayed_sum = calc_dbfs(first_ant - second_ant)
+
+            # Find the maximum value
+            peak_sum.append(np.max(delayed_sum))
+        
+        # Find the minimum value in the peak sum and its index
+        null_val = np.min(peak_sum)
+        null_index = np.where(np.abs(peak_sum)==np.abs(null_val))
+
+        # Get the phase delay value that corresponds to the minimum peak sum
+        # and append it to the calibration values list
+        cal_value = delay_phases[null_index]
+        cal_ant.append(cal_value[0].item())
+
+    # Disable the Stingray reference channels
+    disable_stingray_channel(obj,subarray_ref)
+    cal_ant = cal_ant[1:]
+    # Roll the calibration values to align with the reference antenna
+    # This is done because data[adc_ref] corresponds to subarray 4
+    #return np.roll(cal_ant, -1)
+    return cal_ant
+
 def phase_digital(obj, adc, adc_ref, subarray_ref):
     """
     Measures calibrated phase offsets for AD9081 in units of milli-degrees.
@@ -477,6 +751,46 @@ def rx_gain(obj, adc, subarray, adc_map, element_map):
     # print("PostCal Data after Reshape:",analog_mag_post_cal0)
  
     return gain_codes_cal, atten_cal, analog_mag_pre_cal, analog_mag_post_cal
+# def tx_gain_cal(sray, subarray):
+#     """
+#     Normalize the TX gain and attenuation values across the Stingray array.
+#     """
+
+#     # Disable all channels
+#     disable_stingray_channel(sray, subarray)
+#     detect = []
+
+#     # Iterate through the Stingray array and enable each channel one by one, and capture the LTC voltage
+#     for m in range(4): 
+#         for n in range(8):
+
+#             # Turn each channel on and capture the LTC voltage
+#             enable_stingray_channel(sray, sray.element_map[m][n])
+#             detect.append(get_ltc_voltage(ltc))
+
+#             # Turn each channel off
+#             disable_stingray_channel(sray, sray.element_map[m][n])
+
+#     # Convert the list of detected values to a numpy array and reshape it to match the element map
+#     detect = np.array(detect)
+#     detect = np.reshape(detect, sray.element_map.shape)
+
+#     # Apply polynomial fit to the detected values for normalization
+#     tx_gain_cal, tx_atten_cals = gain_codes(sray, detect, "tx")
+
+#     # Create dictionary with new keys and values from array
+#     gain_dict = create_dict(sray.element_map, tx_gain_cal)
+#     atten_dict = create_dict(sray.element_map, tx_atten_cals)
+
+#     for element in sray.elements.values():
+
+#         str_channel = str(element)
+#         value = int(strip_to_last_two_digits(str_channel))
+
+#         element.tx_attenuator = atten_dict[value]
+#         element.tx_gain = gain_dict[value]
+
+#         sray.latch_tx_settings() # Latch SPI settings to devices
 
 def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_targ, dig_phase):
     """Calculate analog phase for each element in the subarray."""
@@ -532,6 +846,117 @@ def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_tar
                 row, col = ind2sub(dummy_array.shape, tmp_targ[:, jj] - 1)
 
             # Capture ADC data for the enabled channels
+            data = data_capture_cal(adc_obj, dig_phase)
+            data = np.array(data).T
+
+            # Extract the phase information from the captured data and convert to degrees
+            phase_compare = np.angle(data[100, :]) * 180 / np.pi
+
+            if ii == 0:
+                # When calibrating subarray 1, use the reference channel from subarray 2
+                # analog_phase[row, col] = wrap_to_360(phase_compare[adc_map[0]] - phase_compare[adc_map[1]])
+                analog_phase[0, jj+1] = wrap_to_360(phase_compare[adc_map[0]] - phase_compare[adc_map[1]])
+            else:
+                for n in range(1, len(adc_map)):
+                    # When calibrating subarrays 2, 3, and 4, use the reference channel from subarray 4
+                    # analog_phase[row, col] = wrap_to_360(phase_compare[adc_map[n]] - phase_compare[adc_ref])
+                    analog_phase[n, jj+1] = wrap_to_360(phase_compare[adc_map[n]] - phase_compare[adc_ref])
+
+            if ii == 0:
+                # Disable the target channel in subarray 1
+                disable_stingray_channel(sray_obj, tmp_targ[jj])
+            else:
+                # Disable the target channels in subarrays 2, 3, and 4
+                disable_stingray_channel(sray_obj, tmp_targ[:, jj])
+
+        # Disable the reference channel being used for calibration
+        disable_stingray_channel(sray_obj, tmp_array_ref)
+
+    # analog_phase_dummy = [analog_phase[0,0:3],analog_phase[3,0:3]]
+                      
+    analog_phase_flatten = np.concatenate((analog_phase[0,0:4], analog_phase[3,0:4], analog_phase[0,4:8], analog_phase[3,4:8], analog_phase[0,8:12], analog_phase[3,8:12], analog_phase[0,12:16], analog_phase[3,12:16], analog_phase[1,0:4], analog_phase[2,0:4], analog_phase[1,4:8], analog_phase[2,4:8], analog_phase[1,8:12], analog_phase[2,8:12], analog_phase[1,12:16], analog_phase[2,12:16]))
+    analog_phase_dict = create_dict(element_map,analog_phase_flatten)
+    
+
+    for element in sray_obj.elements.values():
+        str_channel = str(element)
+        value = int(strip_to_last_two_digits(str_channel))
+
+        # Assign the calculated phase to the element
+        element.rx_phase = analog_phase_dict[value]
+        sray_obj.latch_rx_settings()  # Latch SPI settings to devices
+
+    # Brute forcing 1x64 analog phase array
+    #analog_phase_flatten = np.concatenate((analog_phase[0,0:4], analog_phase[3,0:4], analog_phase[0,4:8], analog_phase[3,4:8], analog_phase[0,8:12], analog_phase[3,8:12], analog_phase[0,12:16], analog_phase[3,12:16], analog_phase[1,0:4], analog_phase[2,0:4], analog_phase[1,4:8], analog_phase[2,4:8], analog_phase[1,8:12], analog_phase[2,8:12], analog_phase[1,12:16], analog_phase[2,12:16]))
+    return analog_phase_flatten, analog_phase_dict
+
+def phase_analog_tx(mantaray_obj, SpecAn_obj, adc_map, adc_ref, subarray_ref, subarray_targ, dig_phase):
+    """Calculate analog phase for each element in the subarray."""
+
+    import MantaRay as mr
+
+    analog_phase = np.zeros((4, 16))  # Initialize phase array
+    element_map = np.array([
+        [1, 9,  17, 25, 33, 41, 49, 57],
+        [2, 10, 18, 26, 34, 42, 50, 58],
+        [3, 11, 19, 27, 35, 43, 51, 59],
+        [4, 12, 20, 28, 36, 44, 52, 60],
+ 
+        [5, 13, 21, 29, 37, 45, 53, 61],
+        [6, 14, 22, 30, 38, 46, 54, 62],
+        [7, 15, 23, 31, 39, 47, 55, 63],
+        [8, 16, 24, 32, 40, 48, 56, 64]
+        ])
+    # break out subarray 1 cal, vs subarrays 2,3,4 cal
+    for ii in range(2): 
+        for jj in range(subarray_targ.shape[1]):
+            dummy_array = np.zeros((4, 16))
+
+            if ii == 0:
+
+                # When calibrating subarray 1, use the reference channel from subarray 2
+                tmp_array_ref = subarray_ref[1]
+
+                # Assign the target channels from subarray 1 to tmp_targ
+                tmp_targ = subarray_targ[0, :]
+
+                # Enable the reference channel in subarray 2
+                mr.enable_pa_bias_channel(mantaray_obj, tmp_array_ref)
+                # enable_stingray_channel(sray_obj, tmp_array_ref)
+
+                # Iterate through subarray 1 and enable one channel at a time (excludes the reference channel)
+                mr.enable_pa_bias_channel(mantaray_obj, tmp_targ[jj])
+                # enable_stingray_channel(sray_obj, tmp_targ[jj])
+
+                # Grab row and column indices for specific channel in subarray 1
+                row, col = ind2sub(dummy_array.shape, tmp_targ[jj] - 1)
+
+            else:
+
+                # When calibrating subarrays 2, 3, and 4, use the reference channel from subarray 1
+                tmp_array_ref = subarray_ref[0]
+
+                # Assign the target channels from subarray 2, 3, and 4 to tmp_targ
+                tmp_targ = subarray_targ[1:4]
+
+                # Enable the reference channel in subarray 1
+                mr.enable_pa_bias_channel(mantaray_obj, tmp_array_ref)
+                # enable_stingray_channel(sray_obj, tmp_array_ref)
+
+                # Enable the target channels in subarray 2, 3, and 4
+                mr.enable_pa_bias_channel(mantaray_obj, tmp_targ[:, jj])
+                # enable_stingray_channel(sray_obj, tmp_targ[:, jj])
+
+                # Grab row and column indices for specfic channel in subarray 2, 3, and 4
+                row, col = ind2sub(dummy_array.shape, tmp_targ[:, jj] - 1)
+
+            # Capture SpecAn data for the enabled channels
+
+            for i in range(2):
+                ## Take Data from Spec An ##
+                data = SpecAn_obj.iq_complex_data()
+            data = cal_data(data, cal_values) # only do phase delay cals, no gain    
+            
             data = data_capture_cal(adc_obj, dig_phase)
             data = np.array(data).T
 
@@ -762,3 +1187,20 @@ def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10, elec_s
     elec_steer_angle = -elec_steer_angle  # Convert back to positive for output
     
     return mechanical_sweep, elec_steer_angle, azim_results, elev_results,  # Return the mechanical sweep angles and the pattern for the boresight angle
+
+
+def change_duty_cycle(talise_uri, PRI_ms, off_ms):
+
+    tddn = adi.tddn(talise_uri)
+    tddn.frame_length_ms      = PRI_ms
+    tddn.enable = 0
+    tddn.sync_soft  = 0
+    TDD_CHANNEL7     = 7  ## TR Pulse
+    for chan in [TDD_CHANNEL7]:
+        tddn.channel[chan].on_ms   = 0
+        tddn.channel[chan].off_ms  = off_ms  # for example off_ms = 0.005 would make a 5% duty cycle when the PRI_ms = 0.1
+        tddn.channel[chan].polarity = 0
+        tddn.channel[chan].enable   = 1
+    tddn.enable = 1
+    tddn.sync_soft  = 1
+    

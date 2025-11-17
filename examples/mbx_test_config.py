@@ -34,7 +34,7 @@
 # Author: Chinh Doan - Milliwave Silicon Solutions
 
 
-import mbx_functions as mbxf
+import MantaRayTx_Cal.mbx_functions as mbxf
 import numpy as np
 import sys
 import six

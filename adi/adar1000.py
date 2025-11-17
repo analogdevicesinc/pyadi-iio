@@ -1081,8 +1081,8 @@ class adar1000(attribute, context_manager):
 
         # Set the bias currents to nominal
         self.rx_lna_bias_current = 0x08
-        self.rx_vga_vm_bias_current = 0x55
-        self.tx_vga_vm_bias_current = 0x2D
+        self.rx_vga_vm_bias_current = 0x55      
+        self.tx_vga_vm_bias_current = 0x2D       
         self.tx_pa_bias_current = 0x06
 
         # Disable RAM control
@@ -1116,7 +1116,7 @@ class adar1000(attribute, context_manager):
 
         # Settings for each channel
         for channel in self.channels:
-            time.sleep(1)  # Small delay to ensure SPI writes are processed correctly
+            time.sleep(0.05)  # Small delay to ensure SPI writes are processed correctly
             # Default channel enable
             channel.rx_enable = False
             channel.tx_enable = False
@@ -1663,7 +1663,7 @@ class adar1000_array(context_manager):
                 Voltage to set the LNA_BIAS_ON values to during initialization
         """
         for device in self.devices.values():
-            time.sleep(0.35)
+            time.sleep(0.1)
             device.initialize(
                 pa_off=pa_off, pa_on=pa_on, lna_off=lna_off, lna_on=lna_on
             )
