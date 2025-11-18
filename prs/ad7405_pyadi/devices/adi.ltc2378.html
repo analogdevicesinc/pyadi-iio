@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta content="Bases: rx, context_manager" name="description" />
 
-    <title>adi.ad9434 module &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
+    <title>ltc2378 &#8212; Analog Devices Hardware Python Interfaces 0.0.20 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="adi.ad9467 module" href="adi.ad9467.html" />
-    <link rel="prev" title="ad937x" href="adi.ad937x.html" />
+    <link rel="next" title="ltc2387" href="adi.ltc2387.html" />
+    <link rel="prev" title="ltc2314_14" href="adi.ltc2314_14.html" />
    
   
   
@@ -95,9 +95,10 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adi.ad9434 module</a><ul>
-<li><a class="reference internal" href="#adi.ad9434.ad9434"><code class="docutils literal notranslate"><span class="pre">ad9434</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad9434.ad9434.test_mode"><code class="docutils literal notranslate"><span class="pre">ad9434.test_mode</span></code></a></li>
+<li><a class="reference internal" href="#">ltc2378</a><ul>
+<li><a class="reference internal" href="#adi.ltc2378.ltc2378"><code class="docutils literal notranslate"><span class="pre">ltc2378</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ltc2378.ltc2378.channel"><code class="docutils literal notranslate"><span class="pre">ltc2378.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ltc2378.ltc2378.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ltc2378.sampling_frequency</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -198,7 +199,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9265.html">adi.ad9265 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad936x.html">ad936x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad937x.html">ad937x</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad9434.html">adi.ad9434 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9467.html">adi.ad9467 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9625.html">adi.ad9625 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9680.html">ad9680</a></li>
@@ -271,7 +272,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">lm75</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2314_14.html">ltc2314_14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ltc2378.html">ltc2378</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ltc2378</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2387.html">ltc2387</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2499.html">adi.ltc2499 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ltc2664.html">ltc2664</a></li>
@@ -304,19 +305,22 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.ad9434">
-<span id="adi-ad9434-module"></span><h1>adi.ad9434 module<a class="headerlink" href="#module-adi.ad9434" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.ltc2378">
+<span id="ltc2378"></span><h1>ltc2378<a class="headerlink" href="#module-adi.ltc2378" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad9434.ad9434">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9434.</span></span><span class="sig-name descname"><span class="pre">ad9434</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9434.ad9434" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ltc2378.ltc2378">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ltc2378.</span></span><span class="sig-name descname"><span class="pre">ltc2378</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ltc2378'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ltc2378.ltc2378" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>AD9434 High-Speed ADC</p>
+<p>LTC2378 ADC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ltc2378.ltc2378.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ltc2378.ltc2378.channel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9434.ad9434.test_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode</span></span><a class="headerlink" href="#adi.ad9434.ad9434.test_mode" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard
-pn_long pn_short one_zero_toggle user</p>
+<dt class="sig sig-object py" id="adi.ltc2378.ltc2378.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ltc2378.ltc2378.sampling_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>Get sampling frequency</p>
 </dd></dl>
 
 </dd></dl>
@@ -327,8 +331,8 @@ pn_long pn_short one_zero_toggle user</p>
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.ad937x.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad937x</a>
-    <a href="adi.ad9467.html" title="Next document (Alt+Shift+RightArrow)" class="next">adi.ad9467 module</a>
+    <a href="adi.ltc2314_14.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ltc2314_14</a>
+    <a href="adi.ltc2387.html" title="Next document (Alt+Shift+RightArrow)" class="next">ltc2387</a>
               </div>
           
         </div>
