@@ -512,6 +512,30 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
         """dac_frequency: DAC frequency in Hz"""
         return self._get_iio_attr_single("voltage0_i", "dac_frequency", True)
 
+    def write_pfilt_config(self, value):
+        """Load a new PFILT configuration file
+        Input is path to PFILT configuration file. Please see
+        driver documentation about PFILT generation and limitations
+        """
+        with open(value, "r") as file:
+            data = file.read()
+        self._set_iio_dev_attr_str("pfir_config", data)
+
+    def write_cfir_config(self, value):
+        """Load a new CFIR configuration file
+        Input is path to CFIR configuration file. Please see
+        driver documentation about CFIR generation and limitations
+        """
+        with open(value, "r") as file:
+            data = file.read()
+        self._set_iio_dev_attr_str("cfir_config", data)
+
+    # we cannot really get the profile. The driver will just throw EPERM
+    pfilt_config = property(None, write_pfilt_config)
+
+    # we cannot really get the profile. The driver will just throw EPERM
+    pfilt_config = property(None, write_pfilt_config)
+
     @property
     def jesd204_fsm_ctrl(self):
         """jesd204_fsm_ctrl: jesd204-fsm control"""
