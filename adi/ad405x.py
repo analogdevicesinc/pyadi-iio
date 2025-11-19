@@ -22,7 +22,7 @@ class ad405x(rx, context_manager):
 
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad4052", "ad4050"]
+        compatible_parts = ["ad4052", "ad4050", "ad4062", "ad4060"]
 
         self._ctrl = None
 
