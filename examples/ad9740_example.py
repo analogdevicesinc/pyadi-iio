@@ -58,9 +58,9 @@ print(f"DAC resolution: {dac_bits} bits (range: 0-{max_val}, midpoint: {mid_val}
 fs = int(dev.channel[0].sample_rate)
 print("Sample rate:", fs, "Hz")
 # Signal frequency
-fc = 100000  # 100 kHz sine wave (slower, easier to see)
+fc = 65000  # 65 kHz sine wave
 # Number of samples - use multiple periods for smoother waveform
-N = int(fs / fc) * 1  # 10 periods of the sine wave
+N = int(fs / fc) * 10  # 10 periods of the sine wave
 # Period
 ts = 1 / float(fs)
 # Time array
