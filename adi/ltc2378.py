@@ -17,13 +17,32 @@ class ltc2378(rx, context_manager):
 
     _complex_data = False
     channel = []  # type: ignore
-    _device_name = "ltc2378"
+    _device_name = "ltc2378-20"
 
-    def __init__(self, uri="", device_name="ltc2378"):
+    def __init__(self, uri="", device_name="ltc2378-20"):
         context_manager.__init__(self, uri, self._device_name)
 
         compatible_parts = [
-            "ltc2378",
+            "ltc2338-18",
+            "ltc2364-16",
+            "ltc2364-18",
+            "ltc2367-16",
+            "ltc2367-18",
+            "ltc2368-16",
+            "ltc2368-18",
+            "ltc2369-18",
+            "ltc2370-16",
+            "ltc2376-16",
+            "ltc2376-18",
+            "ltc2376-20",
+            "ltc2377-16",
+            "ltc2377-18",
+            "ltc2377-20",
+            "ltc2378-16",
+            "ltc2378-18",
+            "ltc2378-20",
+            "ltc2379-18",
+            "ltc2380-16",
         ]
         self._ctrl = None
 
