@@ -42,7 +42,7 @@ import adi
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 print("uri: " + str(my_uri))
 
-ltc2378_dev = adi.ltc2378(uri=my_uri, device_name="ltc2378")
+ltc2378_dev = adi.ltc2378(uri=my_uri, device_name="ltc2378-20")
 
 ltc2378_dev.rx_buffer_size = 1024
 ltc2378_dev.rx_enabled_channels = [0]
