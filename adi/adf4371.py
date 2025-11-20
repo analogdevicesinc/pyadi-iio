@@ -31,6 +31,7 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from math import floor
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 
@@ -108,6 +109,19 @@ class adf4371(attribute, context_manager):
         self._set_iio_attr("altvoltage0", "frequency", True, value, self._ctrl)
 
     @property
+    def rf8_power(self):
+        """Get/Set the power of the 8GHz RF output"""
+        reg_val = self._ctrl.reg_read(0x25)
+        return reg_val & 0b11
+
+    @rf8_power.setter
+    def rf8_power(self, value):
+        """Get/Set the power of the 8GHz RF output"""
+        reg_val = self._ctrl.reg_read(0x25)
+        reg_val = (reg_val & ~0b11) | (value & 0b11)
+        self._ctrl.reg_write(0x25, reg_val)
+
+    @property
     def rfaux8_enable(self):
         """Get/Set the enable status of the Auxiliary 8GHz RF output"""
         return bool(
@@ -130,13 +144,26 @@ class adf4371(attribute, context_manager):
         self._set_iio_attr("altvoltage1", "frequency", True, value, self._ctrl)
 
     @property
+    def rfaux8_power(self):
+        """Get/Set the power of the Auxiliary 8GHz RF output"""
+        reg_val = self._ctrl.reg_read(0x72)
+        return (reg_val >> 4) & 0b11
+
+    @rfaux8_power.setter
+    def rfaux8_power(self, value):
+        """Get/Set the power of the Auxiliary 8GHz RF output"""
+        reg_val = self._ctrl.reg_read(0x72)
+        reg_val = (reg_val & ~(0b11 << 4)) | ((value & 0b11) << 4)
+        self._ctrl.reg_write(0x72, reg_val)
+
+    @property
     def rfaux8_vco_output_enable(self):
         """Get/Set the fundamental VCO output on the Auxiliary 8GHz RF output"""
         return bool(
             1 - int(self._get_iio_attr("altvoltage1", "vco_output_enable", True, self._ctrl))
         )
 
-    @rfaux8_enable.setter
+    @rfaux8_vco_output_enable.setter
     def rfaux8_vco_output_enable(self, value):
         """Get/Set the fundamental VCO output on the Auxiliary 8GHz RF output"""
         self._set_iio_attr("altvoltage1", "vco_output_enable", True, 1 - int(value), self._ctrl)
@@ -186,6 +213,55 @@ class adf4371(attribute, context_manager):
         self._set_iio_attr("altvoltage3", "frequency", True, value, self._ctrl)
 
     @property
+    def rf_div_sel(self):
+        """Get/Set the RF divider select (bits 6:4 of register 0x24)"""
+        reg_val = self._ctrl.reg_read(0x24)
+        return (reg_val >> 4) & 0b111
+
+    @rf_div_sel.setter
+    def rf_div_sel(self, value):
+        """Get/Set the RF divider select (bits 6:4 of register 0x24)"""
+        reg_val = self._ctrl.reg_read(0x24)
+        reg_val = (reg_val & ~(0b111 << 4)) | ((value & 0b111) << 4)
+        self._ctrl.reg_write(0x24, reg_val)
+
+    @property
     def temperature(self):
         """Get the temperature reading"""
         return self._get_iio_attr("temp0", "input", False)
+
+    def set_freq_int_mode(self, frequency):
+        """Put in INT mode. Calculate the N divider value (registers 0x10-0x11) for target frequency."""
+        reference_frequency = 125e6 # TODO: extract real value, so not hardcoded
+
+        # Put in integer mode
+        reg_val = self._ctrl.reg_read(0x2B)
+        reg_val = reg_val | (1 << 0)
+        self._ctrl.reg_write(0x2B, reg_val)
+
+        frac_regs = 0x1a
+        while frac_regs >= 0x14:
+            self._ctrl.reg_write(frac_regs, 0)
+            frac_regs -= 1
+
+        # Calculate PFD
+        r_counter = self._ctrl.reg_read(0x1F)
+        if r_counter == 0:
+            r_counter = 32
+
+        reg_val = self._ctrl.reg_read(0x22)
+        t = (reg_val >> 4) & 0b1
+        d = (reg_val >> 5) & 0b1
+
+        pfd_frequency = reference_frequency * (1 + d) / (r_counter * (1 + t))
+
+        # Calculate N divider from frequency: N = floor(freq / PFD)
+        n_value = floor(frequency / pfd_frequency)
+
+        if not (0 <= n_value <= 65535):
+            raise ValueError(f"Calculated N={n_value} is out of range (0-65535). "
+                             f"Target freq: {frequency}, PFD: {pfd_frequency}")
+
+        # Write 16-bit N value to registers 0x10 (LSB) and 0x11 (MSB)
+        self._ctrl.reg_write(0x11, (n_value >> 8) & 0xFF)
+        self._ctrl.reg_write(0x10, n_value & 0xFF)
