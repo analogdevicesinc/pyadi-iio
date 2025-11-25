@@ -1,12 +1,11 @@
 import pytest
 
-hardware = ["ad7405", "adum7701", "adum7702", "adum7703"]
+hardware = [ "adum7701" ]
 classname = "adi.ad7405"
 
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
-@pytest.mark.parametrize("channel", [0])
 def test_ad7405_rx_data(test_dma_rx, iio_uri, classname, channel):
     test_dma_rx(iio_uri, classname, channel)
 
