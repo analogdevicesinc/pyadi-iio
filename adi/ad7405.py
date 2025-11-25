@@ -18,6 +18,8 @@ class ad7405(rx, context_manager):
     _complex_data = False
     channel = []  # type: ignore
     _device_name = "adum7701"
+    _rx_data_type = np.uint16
+    _rx_channel_names = ["voltage0-voltage1"]
 
     def __init__(self, uri="", device_name="adum7701"):
         context_manager.__init__(self, uri, self._device_name)
@@ -50,12 +52,10 @@ class ad7405(rx, context_manager):
         if not self._rxadc:
             raise Exception("Error in selecting matching device")
 
-        self._rx_channel_names = []
+        # Build channel list - we use the channels from the device for properties
         self.channel = []
         for ch in self._ctrl.channels:
-            name = ch.id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
+            self.channel.append(self._channel(self._ctrl, ch.id))
 
         rx.__init__(self)
 
