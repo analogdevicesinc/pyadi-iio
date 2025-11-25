@@ -16,7 +16,7 @@ class ltc2672(context_manager, attribute):
         """Constructor for LTC2672 class"""
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ltc2672-16", "ltc2672-12"]
+        compatible_parts = ["ltc2672-16", "ltc2672-12", "ltc2662-16", "ltc2662-12"]
 
         self._ctrl = None
         self.channel = []
