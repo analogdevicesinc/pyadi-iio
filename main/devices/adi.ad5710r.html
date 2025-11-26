@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: attribute, context_manager" name="description" />
+<meta content="Bases: tx, context_manager" name="description" />
 
-    <title>gen_mux &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
+    <title>ad5710r &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="adi.hmc7044 module" href="adi.hmc7044.html" />
-    <link rel="prev" title="adi.fmcomms11 module" href="adi.fmcomms11.html" />
+    <link rel="next" title="ad579x" href="adi.ad579x.html" />
+    <link rel="prev" title="ad5686" href="adi.ad5686.html" />
    
   
   
@@ -95,10 +95,24 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">gen_mux</a><ul>
-<li><a class="reference internal" href="#adi.gen_mux.genmux"><code class="docutils literal notranslate"><span class="pre">genmux</span></code></a><ul>
-<li><a class="reference internal" href="#adi.gen_mux.genmux.select"><code class="docutils literal notranslate"><span class="pre">genmux.select</span></code></a></li>
-<li><a class="reference internal" href="#adi.gen_mux.genmux.select_available"><code class="docutils literal notranslate"><span class="pre">genmux.select_available</span></code></a></li>
+<li><a class="reference internal" href="#">ad5710r</a><ul>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r"><code class="docutils literal notranslate"><span class="pre">ad5710r</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.all_ch_input_registers"><code class="docutils literal notranslate"><span class="pre">ad5710r.all_ch_input_registers</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.all_ch_operating_mode"><code class="docutils literal notranslate"><span class="pre">ad5710r.all_ch_operating_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.all_ch_operating_mode_avail"><code class="docutils literal notranslate"><span class="pre">ad5710r.all_ch_operating_mode_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.all_ch_raw"><code class="docutils literal notranslate"><span class="pre">ad5710r.all_ch_raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.hw_ldac_trigger"><code class="docutils literal notranslate"><span class="pre">ad5710r.hw_ldac_trigger</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.hw_ldac_trigger_avail"><code class="docutils literal notranslate"><span class="pre">ad5710r.hw_ldac_trigger_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.mux_out_select"><code class="docutils literal notranslate"><span class="pre">ad5710r.mux_out_select</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.mux_out_select_avail"><code class="docutils literal notranslate"><span class="pre">ad5710r.mux_out_select_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.output_bits"><code class="docutils literal notranslate"><span class="pre">ad5710r.output_bits</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.range"><code class="docutils literal notranslate"><span class="pre">ad5710r.range</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.range_avail"><code class="docutils literal notranslate"><span class="pre">ad5710r.range_avail</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.reference_select"><code class="docutils literal notranslate"><span class="pre">ad5710r.reference_select</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.reference_select_available"><code class="docutils literal notranslate"><span class="pre">ad5710r.reference_select_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad5710r.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.sw_ldac_trigger"><code class="docutils literal notranslate"><span class="pre">ad5710r.sw_ldac_trigger</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.sw_ldac_trigger_avail"><code class="docutils literal notranslate"><span class="pre">ad5710r.sw_ldac_trigger_avail</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -163,7 +177,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5592r.html">ad5592r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad5710r.html">ad5710r</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ad5710r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad579x.html">ad579x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5754r.html">ad5754r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5940.html">adi.ad5940 module</a></li>
@@ -267,7 +281,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.gen_mux.html">gen_mux</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.hmc7044.html">adi.hmc7044 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.jesd.html">jesd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.lm75.html">lm75</a></li>
@@ -305,31 +319,107 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.gen_mux">
-<span id="gen-mux"></span><h1>gen_mux<a class="headerlink" href="#module-adi.gen_mux" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.ad5710r">
+<span id="ad5710r"></span><h1>ad5710r<a class="headerlink" href="#module-adi.ad5710r" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.gen_mux.genmux">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.gen_mux.</span></span><span class="sig-name descname"><span class="pre">genmux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.gen_mux.genmux" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
-<p>GEN-MUX Generic IIO Mux device
-Control MUX devices via IIO device attributes</p>
-<dl class="simple">
-<dt>parameters:</dt><dd><dl class="simple">
-<dt>uri: type=string</dt><dd><p>URI of IIO context with GEN-MUX</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5710r.</span></span><span class="sig-name descname"><span class="pre">ad5710r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5710r.ad5710r" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD5710r DAC</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.gen_mux.genmux.select">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">select</span></span><a class="headerlink" href="#adi.gen_mux.genmux.select" title="Permalink to this definition"></a></dt>
-<dd><p>Get/Set the MUX select</p>
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.all_ch_input_registers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_input_registers</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.all_ch_input_registers" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r all input registers config</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.gen_mux.genmux.select_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">select_available</span></span><a class="headerlink" href="#adi.gen_mux.genmux.select_available" title="Permalink to this definition"></a></dt>
-<dd><p>Get available MUX options</p>
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.all_ch_operating_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_operating_mode</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.all_ch_operating_mode" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r all channels operating mode config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.all_ch_operating_mode_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_operating_mode_avail</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.all_ch_operating_mode_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r all channels operating mode available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.all_ch_raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_raw</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.all_ch_raw" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r all dac registers config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.hw_ldac_trigger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.hw_ldac_trigger" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r hardware ldac trigger config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.hw_ldac_trigger_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_trigger_avail</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.hw_ldac_trigger_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r hw_ldac_trigger available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.mux_out_select">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mux_out_select</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.mux_out_select" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r mux out select</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.mux_out_select_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mux_out_select_avail</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.mux_out_select_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r mux_out_select available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.output_bits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_bits</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.output_bits" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r channel-wise number of output bits list</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.range">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.range" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r range config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.range_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range_avail</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.range_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r range available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.reference_select">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_select</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.reference_select" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r reference voltage config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.reference_select_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_select_available</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.reference_select_available" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r reference voltage available</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.sampling_frequency" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r sampling frequency config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.sw_ldac_trigger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.sw_ldac_trigger" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r software ldac trigger config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.sw_ldac_trigger_avail">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ldac_trigger_avail</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.sw_ldac_trigger_avail" title="Permalink to this definition"></a></dt>
+<dd><p>AD5710r sw_ldac_trigger available</p>
 </dd></dl>
 
 </dd></dl>
@@ -340,8 +430,8 @@ Control MUX devices via IIO device attributes</p>
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.fmcomms11.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adi.fmcomms11 module</a>
-    <a href="adi.hmc7044.html" title="Next document (Alt+Shift+RightArrow)" class="next">adi.hmc7044 module</a>
+    <a href="adi.ad5686.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad5686</a>
+    <a href="adi.ad579x.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad579x</a>
               </div>
           
         </div>
