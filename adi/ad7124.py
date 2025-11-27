@@ -15,7 +15,6 @@ class ad7124(rx, context_manager):
     """ AD7124 ADC """
 
     _complex_data = False
-    channel = []  # type: ignore
     _device_name = ""
 
     def __init__(self, uri="", device_index=0):
@@ -38,6 +37,7 @@ class ad7124(rx, context_manager):
                     index += 1
 
         self._rx_channel_names = [chan.id for chan in self._ctrl.channels]
+        self.channel = []
         if "-" in self._rx_channel_names[0]:
             self._rx_channel_names.sort(key=lambda x: int(x[7:].split("-")[0]))
         else:
