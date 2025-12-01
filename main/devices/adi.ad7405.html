@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: ad9250" name="description" />
+<meta content="Bases: rx, context_manager" name="description" />
 
-    <title>adi.fmcjesdadc1 module &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
+    <title>ad7405 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="fmclidar1" href="adi.fmclidar1.html" />
-    <link rel="prev" title="adi.fmcadc3 module" href="adi.fmcadc3.html" />
+    <link rel="next" title="ad7490" href="adi.ad7490.html" />
+    <link rel="prev" title="ad738x" href="adi.ad738x.html" />
    
   
   
@@ -95,11 +95,11 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adi.fmcjesdadc1 module</a><ul>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1</span></code></a><ul>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.jesd204_statuses</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.test_mode_chan0</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1"><code class="docutils literal notranslate"><span class="pre">fmcjesdadc1.test_mode_chan1</span></code></a></li>
+<li><a class="reference internal" href="#">ad7405</a><ul>
+<li><a class="reference internal" href="#adi.ad7405.ad7405"><code class="docutils literal notranslate"><span class="pre">ad7405</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad7405.ad7405.channel"><code class="docutils literal notranslate"><span class="pre">ad7405.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7405.ad7405.oversampling_ratio"><code class="docutils literal notranslate"><span class="pre">ad7405.oversampling_ratio</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7405.ad7405.oversampling_ratio_available"><code class="docutils literal notranslate"><span class="pre">ad7405.oversampling_ratio_available</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -176,7 +176,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad719x.html">ad719x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7291.html">ad7291</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad738x.html">ad738x</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad7405.html">ad7405</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ad7405</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7490.html">ad7490</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
@@ -265,7 +265,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.daq3.html">daq3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmc_vna.html">fmc_vna</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
@@ -307,30 +307,28 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.fmcjesdadc1">
-<span id="adi-fmcjesdadc1-module"></span><h1>adi.fmcjesdadc1 module<a class="headerlink" href="#module-adi.fmcjesdadc1" title="Permalink to this heading"></a></h1>
+  <section id="module-adi.ad7405">
+<span id="ad7405"></span><h1>ad7405<a class="headerlink" href="#module-adi.ad7405" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.fmcjesdadc1.</span></span><span class="sig-name descname"><span class="pre">fmcjesdadc1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'root'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'analog'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad9250.html#adi.ad9250.ad9250" title="adi.ad9250.ad9250"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9250</span></code></a></p>
-<p>FMCJESDADC1 Four-Channel High Speed Data Acquisition FMC Board</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jesd204_statuses</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.jesd204_statuses" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad7405.ad7405">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7405.</span></span><span class="sig-name descname"><span class="pre">ad7405</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adum7701'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7405.ad7405" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>AD7405 ADC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad7405.ad7405.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad7405.ad7405.channel" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode_chan0</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan0" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode_chan0: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
+<dt class="sig sig-object py" id="adi.ad7405.ad7405.oversampling_ratio">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio</span></span><a class="headerlink" href="#adi.ad7405.ad7405.oversampling_ratio" title="Permalink to this definition"></a></dt>
+<dd><p>Get oversampling ratio</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_mode_chan1</span></span><a class="headerlink" href="#adi.fmcjesdadc1.fmcjesdadc1.test_mode_chan1" title="Permalink to this definition"></a></dt>
-<dd><p>test_mode_chan1: Select Test Mode. Options are:
-off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one_zero_toggle user ramp</p>
+<dt class="sig sig-object py" id="adi.ad7405.ad7405.oversampling_ratio_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio_available</span></span><a class="headerlink" href="#adi.ad7405.ad7405.oversampling_ratio_available" title="Permalink to this definition"></a></dt>
+<dd><p>Return list of valid oversampling ratios</p>
 </dd></dl>
 
 </dd></dl>
@@ -341,8 +339,8 @@ off midscale_short pos_fullscale neg_fullscale checkerboard pn_long pn_short one
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.fmcadc3.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adi.fmcadc3 module</a>
-    <a href="adi.fmclidar1.html" title="Next document (Alt+Shift+RightArrow)" class="next">fmclidar1</a>
+    <a href="adi.ad738x.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad738x</a>
+    <a href="adi.ad7490.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad7490</a>
               </div>
           
         </div>
