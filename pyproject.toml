@@ -41,6 +41,9 @@ include = ["adi"]
 exclude = ["test*"]
 namespaces = true
 
+[project.scripts]
+ad9088-cal-dump = "adi.ad9088_cal_dump:main"
+
 [project.optional-dependencies]
 jesd = [
     "paramiko"
