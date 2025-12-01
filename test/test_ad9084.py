@@ -332,7 +332,7 @@ def test_ad9084_tx_data_split_buffers(
     test_dma_tx(iio_uri, classname, channel, use_tx2)
 
 
-@pytest.mark.iio_hardware("adsy1100")
+@pytest.mark.iio_hardware("adsy1100", True)
 def test_ad9084_adc_jesd_calibrations(iio_uri):
     import adi
 
