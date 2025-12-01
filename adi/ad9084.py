@@ -12,7 +12,11 @@ from adi.rx_tx import rx_tx
 from adi.sync_start import sync_start, sync_start_b
 
 from .ad9088_cal_dump import validate_data
-from .sshfs import sshfs
+
+try:
+    from .sshfs import sshfs
+except ImportError:
+    sshfs = None
 
 
 def _map_to_dict(paths, ch):
@@ -614,6 +618,8 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
         # SSH Method
         if "ip:" not in self.uri:
             raise RuntimeError("Calibration save/load only supported over IP")
+        if sshfs is None:
+            raise RuntimeError("sshfs module not available")
         ssh = sshfs(self.uri.split("ip:")[1], self._ssh_username, self._ssh_password)
         path = f"/sys/bus/iio/devices/{self._rxadc.id}/calibration_data"
         if not ssh.isfile(path):
@@ -652,6 +658,8 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
         # Copy file to device
         if "ip:" not in self.uri:
             raise RuntimeError("Calibration save/load only supported over IP")
+        if sshfs is None:
+            raise RuntimeError("sshfs module not available")
         ssh = sshfs(self.uri.split("ip:")[1], self._ssh_username, self._ssh_password)
         remote_path = target_path + os.path.basename(filename)
         ftp_client = ssh.ssh.open_sftp()
