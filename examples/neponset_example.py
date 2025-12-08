@@ -159,8 +159,8 @@ gpio_map = {
 	"LO_3_FLTR_SEL0": "voltage27",
 	"LO_3_FLTR_SEL1": "voltage28",
 	
-	# RFPC POWER GOOD
-	"RFPC_PGOOD": "voltage66"
+	# BASE POWER GOOD
+	"BASE_PGOOD": "voltage66"
 }
 
 # Device configuration mapping
@@ -304,14 +304,14 @@ def power_up():
 	disable_rx_channels()
 	disable_tx_channels()
 	print("Power UP Neponset ...")
-	set_gpio("RFPC_PGOOD", 0)
+	set_gpio("BASE_PGOOD", 0)
 
 def power_down():
 	"""Power down the device"""
 	disable_rx_channels()
 	disable_tx_channels()
 	print("Power DOWN Neponset ...")
-	set_gpio("RFPC_PGOOD", 1)
+	set_gpio("BASE_PGOOD", 1)
 
 def initialize_devices():
 	"""Initialize and configure all ADMV devices to 4-wire SPI"""
