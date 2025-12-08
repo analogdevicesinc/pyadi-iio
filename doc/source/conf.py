@@ -65,6 +65,10 @@ coverage_show_missing_items = True
 coverage_ignore_classes = ["phy"]
 coverage_ignore_modules = ["test.dma_tests", "test.generics"]
 
+# Link check configuration
+linkcheck_ignore = [
+    r"_static/logos.*",
+]
 
 # -- External docs configuration ----------------------------------------------
 
