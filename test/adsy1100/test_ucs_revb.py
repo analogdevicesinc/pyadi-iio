@@ -90,25 +90,48 @@ def do_flush(neb_uart):
 # @pytest.fixture(scope="module")
 @pytest.fixture(scope="session")
 def power_supply(parse_instruments):
-    if "E36233A" not in parse_instruments.keys():
-        pytest.skip("E36233A not found. Skipping test")
-    address = parse_instruments["E36233A"]
-    powerSupply = E36233A(address)
-    powerSupply.connect()
 
-    powerSupply.first_boot_powered = False
-    # powerSupply.first_boot_powered = True
+    neb_manager = nebula.manager(
+        configfilename=config_file_zu4eg, board_name="zu4eg-washington"
+    )
+    pdu = neb_manager.power is not None
 
-    # Turn system off initially
-    powerSupply.ch1.output_enabled = False
-    # powerSupply.ch2.output_enabled = False
+    instrument = "E36233A" in parse_instruments.keys()
+
+    if not instrument and not pdu:
+        pytest.skip("Power supply not found. Skipping test")
+
+    if instrument:
+        address = parse_instruments["E36233A"]
+        powerSupply = E36233A(address)
+        powerSupply.connect()
+
+        powerSupply.first_boot_powered = False
+        # powerSupply.first_boot_powered = True
+
+        # Turn system off initially
+        powerSupply.ch1.output_enabled = False
+        # powerSupply.ch2.output_enabled = False
+
+        yield powerSupply
+
+    else:
+        neb_manager.power.power_down_board()
+        neb_manager.first_boot_powered = False
+        # del neb_manager
+
+        yield neb_manager
+    
     time.sleep(5)
 
-    yield powerSupply
+    
 
     logger.info("Powering down supply")
     time.sleep(5)
-    powerSupply.ch1.output_enabled = False
+    if not pdu:
+        powerSupply.ch1.output_enabled = False
+    else:
+        neb_manager.power.power_down_board()
     time.sleep(2)
 
 # @pytest.fixture
@@ -140,8 +163,11 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
         if not power_supply.first_boot_powered:
             power_supply.first_boot_powered = True
             logger.info("Power cycling for first boot")
-            power_supply.ch1.output_enabled = True
-            # # power_supply.ch2.output_enabled = True
+            if hasattr(power_supply, "ch1"):
+                power_supply.ch1.output_enabled = True
+                # # power_supply.ch2.output_enabled = True
+            else:
+                power_supply.power.power_up_board()
 
             # wait for linux to boot
             # neb_manager.monitor[0].print_to_console = True
@@ -238,7 +264,7 @@ def nebula_boot_adsy1100_ethernet(request, power_supply):
         neb_manager.network_check()
 
         # Take power measurement
-        pre_measure = measure_power(power_supply)
+        # pre_measure = measure_power(power_supply)
         # record_property("pre_measure", pre_measure)
 
         # Load selmap overlay
@@ -293,8 +319,9 @@ class TestOverBootFiles:
         params, neb_manager = nebula_boot_adsy1100_ethernet
 
         # Check power
-        post_measure = measure_power(power_supply)
-        record_property("post_measure", post_measure)
+        if hasattr(power_supply, "ch1"):
+            post_measure = measure_power(power_supply)
+            record_property("post_measure", post_measure)
 
         # Get dmesg
         dmesg = neb_manager.net.run_ssh_command("dmesg", show_log=False)
