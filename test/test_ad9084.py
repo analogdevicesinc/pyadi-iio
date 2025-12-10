@@ -330,3 +330,34 @@ def test_ad9084_tx_data_split_buffers(
     test_dma_tx, iio_uri, classname, channel, use_tx2
 ):
     test_dma_tx(iio_uri, classname, channel, use_tx2)
+
+
+@pytest.mark.iio_hardware("adsy1100", True)
+def test_ad9084_adc_jesd_calibrations(iio_uri):
+    import adi
+
+    dev = adi.ad9084(uri=iio_uri)
+    here = dirname(realpath(__file__))
+    filename = "calibration_data.bin"
+    filepath = join(here, filename)
+    dev.save_calibrations(filepath)
+    # Check that calibration files are created
+    files = listdir(here)
+    assert filename in files
+    # Check size
+    import os
+
+    size = os.path.getsize(filepath)
+    assert size > 0
+    print(f"Calibration file size: {size} bytes")
+
+    from adi.ad9088_cal_dump import validate_and_dump
+
+    # 0x41443930 ('09DA') [OK]
+    validate_and_dump(filepath)
+
+    # Load calibrations
+    dev.load_calibrations(filename=filepath, load_now=True)
+    # # Clean up calibration file
+    # import os
+    # os.remove(filepath)
