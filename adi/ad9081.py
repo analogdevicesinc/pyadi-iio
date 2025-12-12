@@ -99,15 +99,6 @@ class ad9081(rx_tx, context_manager, sync_start):
         self._rxadc = self._ctx.find_device("axi-ad9081-rx-hpc")
         self._txdac = self._ctx.find_device("axi-ad9081-tx-hpc")
 
-        # Update Complex data flags
-        if self._rx_complex_data is None:
-            self._rx_complex_data = are_channels_complex(self._rxadc.channels)
-        if self._tx_complex_data is None:
-            self._tx_complex_data = are_channels_complex(self._txdac.channels)
-
-        if not disable_jesd_control and jesd_eye_scan:
-            self._jesd = jesd_eye_scan(self, uri, username=username, password=password)
-
         # Get DDC and DUC mappings
         paths = {}
 
@@ -125,6 +116,12 @@ class ad9081(rx_tx, context_manager, sync_start):
                 self._tx_channel_names.append(ch._id)
             else:
                 self._dds_channel_names.append(ch._id)
+
+        # Update Complex data flags based on actual data channel names
+        if self._rx_complex_data is None:
+            self._rx_complex_data = are_channels_complex(self._rx_channel_names)
+        if self._tx_complex_data is None:
+            self._tx_complex_data = are_channels_complex(self._tx_channel_names)
 
         # Sort channel names
         self._rx_channel_names = _sortconv(
@@ -158,6 +155,9 @@ class ad9081(rx_tx, context_manager, sync_start):
         rx_tx.__init__(self)
         sync_start.__init__(self)
         self.rx_buffer_size = 2 ** 16
+
+        if not disable_jesd_control and jesd_eye_scan:
+            self._jesd = jesd_eye_scan(self, uri, username=username, password=password)
 
     def _get_iio_attr_str_single(self, channel_name, attr, output):
         # This is overridden by subclasses

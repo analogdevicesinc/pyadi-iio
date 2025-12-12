@@ -83,7 +83,7 @@ class jesd_eye_scan(jesd):
     _max_possible_lanes_index = 24
 
     _half_rate = {"mode": "Half Rate", "scale": 1}
-    _quarter_rate = {"mode": "Quarter Rate", "scale": 4}
+    _quarter_rate = {"mode": "Quarter Rate", "scale": 1}
 
     lanes = {}
 
@@ -173,54 +173,72 @@ class jesd_eye_scan(jesd):
             if lane not in available_lanes:
                 raise Exception(f"Lane {lane} not found for device {device}.")
 
-        # Enable PRBS on TX side
+        # Enable PRBS on TX side (optional - some boards don't have this device)
         devices_root = "/sys/bus/platform/devices/"
         dev_list = self.fs.listdir(devices_root)
         tx_dev = next((dev for dev in dev_list if "adxcvr-tx" in dev), None)
-        if not tx_dev:
-            raise Exception("No adxcvr-tx device found. Cannot enable PRBS.")
-
-        self.fs.echo_to_fd("7", f"{devices_root}/{tx_dev}/prbs_select")
+        if tx_dev:
+            self.fs.echo_to_fd("7", f"{devices_root}/{tx_dev}/prbs_select")
 
         lane_eye_data = {}
 
+        import time
+
         print("Hold tight while we get the eye data...")
 
+        max_retries = 3
         for lane in lanes:
             # Configure BIST
             print(f"Getting eye data for lane {lane}")
-
-            self._parent._set_iio_debug_attr_str(
-                "bist_2d_eyescan_jrx",
-                f"{lane} {self._jesd_prbs} {self._jesd_es_duration_ms}",
-            )
-
-            eye_data = self._parent._get_iio_debug_attr_str("bist_2d_eyescan_jrx")
 
             x = []
             y1 = []
             y2 = []
 
-            for eye_line in eye_data.splitlines():
-                if "#" in eye_line:
-                    info = [int(s) for s in eye_line.split() if s.isdigit()]
-                    if info[1] == 64:
-                        mode = self._half_rate["mode"]
-                        scale = self._half_rate["scale"]
-                    else:
-                        mode = self._quarter_rate["mode"]
-                        scale = self._quarter_rate["scale"]
-                    if info[0] != int(lane):
-                        print("Invalid lane number for eye data")
-                        print(f"Expected {lane}, got {info[0]}")
-                else:
-                    spo = [float(x) for x in eye_line.split(",")]
-                    x.append(spo[0])
-                    y1.append(spo[1] * scale)
-                    y2.append(spo[2] * scale)
+            for attempt in range(max_retries):
+                try:
+                    self._parent._set_iio_debug_attr_str(
+                        "bist_2d_eyescan_jrx",
+                        f"{lane} {self._jesd_prbs} {self._jesd_es_duration_ms}",
+                    )
+
+                    eye_data = self._parent._get_iio_debug_attr_str("bist_2d_eyescan_jrx")
+
+                    x = []
+                    y1 = []
+                    y2 = []
+
+                    for eye_line in eye_data.splitlines():
+                        if "#" in eye_line:
+                            info = [int(s) for s in eye_line.split() if s.isdigit()]
+                            if info[1] == 64:
+                                mode = self._half_rate["mode"]
+                                scale = self._half_rate["scale"]
+                            else:
+                                mode = self._quarter_rate["mode"]
+                                scale = self._quarter_rate["scale"]
+                            if info[0] != int(lane):
+                                print("Invalid lane number for eye data")
+                                print(f"Expected {lane}, got {info[0]}")
+                        else:
+                            spo = [float(x) for x in eye_line.split(",")]
+                            x.append(spo[0])
+                            y1.append(spo[1] * scale)
+                            y2.append(spo[2] * scale)
+
+                    if len(x) > 0:
+                        break  # Success, exit retry loop
+
+                except Exception as e:
+                    print(f"  Attempt {attempt + 1} failed: {e}")
+
+                if attempt < max_retries - 1:
+                    print(f"  Retrying lane {lane} (attempt {attempt + 2}/{max_retries})...")
+                    time.sleep(0.5)
 
             if len(x) == 0:
-                raise Exception(f"No eye data found for lane {lane}.")
+                print(f"  Warning: No eye data found for lane {lane} after {max_retries} attempts, skipping.")
+                continue
 
             graph_helpers = {
                 "xlim": [-info[1] / 2, info[1] / 2 - 1],

@@ -2,9 +2,10 @@ import time
 
 import adi
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy import signal
 
-dev = adi.ad9081("ip:10.44.3.92", disable_jesd_control=False)
+dev = adi.ad9081("ip:10.44.3.56", disable_jesd_control=False)
 
 # Configure properties
 print("--Setting up chip")
