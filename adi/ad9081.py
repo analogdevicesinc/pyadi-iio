@@ -5,6 +5,7 @@
 from typing import Dict, List
 
 from adi.context_manager import context_manager
+from adi.jesd import jesd_eye_scan
 from adi.rx_tx import are_channels_complex, rx_tx
 from adi.sync_start import sync_start
 
@@ -77,7 +78,9 @@ class ad9081(rx_tx, context_manager, sync_start):
 
     _path_map: Dict[str, Dict[str, Dict[str, List[str]]]] = {}
 
-    def __init__(self, uri=""):
+    def __init__(
+        self, uri="", username="root", password="analog", disable_jesd_control=True
+    ):
 
         # Reset default channel names
         self._rx_channel_names = []
@@ -101,6 +104,9 @@ class ad9081(rx_tx, context_manager, sync_start):
             self._rx_complex_data = are_channels_complex(self._rxadc.channels)
         if self._tx_complex_data is None:
             self._tx_complex_data = are_channels_complex(self._txdac.channels)
+
+        if not disable_jesd_control and jesd_eye_scan:
+            self._jesd = jesd_eye_scan(self, uri, username=username, password=password)
 
         # Get DDC and DUC mappings
         paths = {}
