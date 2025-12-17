@@ -1337,7 +1337,7 @@ class adar1000_array(context_manager):
         self._element_map = element_map
         #self._element_spacing = 0.015 #Stingray
         self._element_spacing = 0.013635 #Mantaray
-        self._frequency = 10e9
+        self._frequency = 9e9
         self._rx_azimuth = 0
         self._rx_azimuth_phi = 0
         self._rx_elevation = 0

@@ -162,7 +162,7 @@ def disable_pa_bias_channel(obj, elements=None):
     #                         print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
     #                         print(f"Element number {channel}")
      
-def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None):
+def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -2.0):
     """
     Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
@@ -204,7 +204,7 @@ def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None):
 
         # perform operations per device, iterating channels only once
         for device in obj.devices.values():
-            gate_voltage_bias = -2
+            # gate_voltage_bias = -2.0
             tol = 0.1 * abs(gate_voltage_bias)
             tries = 3
             for channel in device.channels:
@@ -425,7 +425,7 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     mag_cal_diff = np.zeros(np.shape(analog_mag_pre_cal))
 
     for i in range(np.size(analog_mag_pre_cal)):
-        if (analog_mag_pre_cal[i] - mag_min <= 0.75):
+        if (analog_mag_pre_cal[i] - mag_min <= 0.25):
             mag_cal_diff[i] = 0
         else:
             mag_cal_diff[i] = analog_mag_pre_cal[i] - mag_min
@@ -1131,7 +1131,7 @@ def quantize_phase(phase, bits=8):
     step = phase_max/levels
     return np.round(phase/step)*step
 
-def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10, elec_steer_angle=[0]):  # Electronic steering angles (az or el)
+def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10, elec_steer_angle=[0], M=8, N=8):  # Electronic steering angles (az or el)
 
     # === Constants ===
     from scipy.constants import c
@@ -1148,7 +1148,7 @@ def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10, elec_s
     # elec_steer_angles = np.arange(-20, 21, 10)      # Electronic steering angles (az or el)
 
     # === Array size
-    M, N = 8, 8
+    # M, N = 8, 8
     x = (np.arange(N) - (N - 1) / 2) * d  # X-coordinates (azimuth direction)
     y = (np.arange(M) - (M - 1) / 2) * d  # Y-coordinates (elevation direction)
 

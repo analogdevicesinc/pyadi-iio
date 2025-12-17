@@ -55,22 +55,11 @@ CXA = "TCPIP0::192.168.1.77::hislip0::INSTR"
 
 SpecAn = N9000A.N9000A(rm, CXA)
 
-
-SELF_BIASED_LNAs = True
-
-GIMBAL_H = mbx.H
-GIMBAL_V = mbx.V
-
-maxsweepangle = 120
-sweepstep = 1
-gimbal_motor = GIMBAL_H
-sig_gen_freq_GHz=10
-
-
+##############################################
+## Step 1: Initial Array ##
+###############################################
 talise_ip = "192.168.1.1" # ADRV9009-zu11eg board ip address
 talise_uri = "ip:" + talise_ip
-sdr  = adi.adrv9009_zu11eg(talise_uri)
-ctx = sdr._ctrl.ctx
 
 
 dev = adi.adar1000_array(
@@ -111,14 +100,8 @@ dev = adi.adar1000_array(
 
 talise_ip = "192.168.1.1" # ADRV9009-zu11eg board ip address
 talise_uri = "ip:" + talise_ip
-# Create radio
-sdr  = adi.adrv9009_zu11eg(talise_uri)
-sdr.tx_hardwaregain_chan0 = -10
-sdr.tx_hardwaregain_chan1 = -10
-sdr.tx_hardwaregain_chan0_chip_b = -10
-sdr.tx_hardwaregain_chan1_chip_b = -10  
 
-    
+
 ## Set TR Source, Mode, and Bias DAC Mode ##
 ## toggle with respect to T/R state.
 for device in dev.devices.values():
@@ -167,92 +150,11 @@ dev.latch_tx_settings()
 dev.latch_rx_settings()
 print("Initialized BFC Tile")
 
-# # ## Set attenuation to 1, gain to max, and phase to 0 for all elements ##
-# for element in dev.elements.values():
-#     """
-#     Iterate through each element in the Stingray object
-#     Convert the element to a string and extract the last two digits
-#     This is used to map the element to its corresponding gain and attenuation values
-#     in the dictionaries created above
-#     """
-#     str_channel = str(element)
-#     print(element)
-#     value = int(mr.strip_to_last_two_digits(str_channel))
-
-#     # element.tx_attenuator = atten_dict[value]
-#     element.tx_attenuator = 0
-#     time.sleep(0.1)
-#     element.tx_gain = 50
-#     element.tx_phase = 0
-
-#     dev.latch_tx_settings() # Latch SPI settings to devices
+mr.disable_pa_bias_channel(dev)
+PA_Supplies.output_on(1)
 
 
 
-# analog_phase_vals_tx = []
-# for element in dev.elements.values():
-#     str_channel = str(element)
-#     value = int(mr.strip_to_last_two_digits(str_channel))
-#     analog_phase_vals_tx.append(element.tx_phase)
-
-# mr.create_dict()
-#     # Assign the calculated steered phase to the element
-#     element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
-
-
-# for element in dev.elements.values():
-#     str_channel = str(element)
-#     value = int(mr.strip_to_last_two_digits(str_channel))
-
-#     # Assign the calculated steered phase to the element
-#     element.rx_phase = (steering_angle - element.tx_phase) % 360
-
-# dev.steer_tx(azimuth=steering_angle, elevation=0) # Steer to desired angle
-
-### Setup Spec An ##
-
-
-# SpecAn.reset()  
-
-# SpecAn.set_to_spec_an_mode() 
-# SpecAn_Center_Freq = 9.9945e9   #Set to transmit frequency
-# SpecAn_IQ_BW =  10e6   #Set based upon instrument - testing done at 10MHz (Maximum for CXA used)
-# # SpecAn_Res_BW = 10e3
-# SpecAn_Res_BW = 8e6    #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
-# SpecAn_Dig_IFBW = 10e6   #Set the digital IFBW of Spec An. Tested at 10MHz for both 10 and 20% Duty Cycles
-# MinCodeVal = 0.015   #Set to 0.00055 for 20% DC, 0.00031 for 10% DC
-# NumChannels = 4   #Set to number of channels being used #Reset instrument
-# SpecAn.set_initiate_continuous_sweep('ON') #Set contionuous mode of spec an
-# SpecAn.set_center_freq(SpecAn_Center_Freq)     #Set SpecAn center frequency
-# ## Set span to 10 MHz for spectrum analyzer mode ##
-# SpecAn.write("SENS:FREQ:SPAN 0E3")
-# # SpecAn.set_resolution_bandwidth(9e-3)
-# SpecAn.set_resolution_bandwidth(8)
-# SpecAn.set_continuous_peak_search(1,1)
-
-# SpecAn.reset()  
-# SpecAn.set_to_spec_an_mode() 
-# SpecAn_Center_Freq = 9.994e9   #Set to transmit frequency
-# SpecAn.set_initiate_continuous_sweep('ON') #Set contionuous mode of spec an
-# SpecAn.set_center_freq(SpecAn_Center_Freq)     #Set SpecAn center frequency
-# SpecAn.write("SENS:FREQ:SPAN 0E6")
-# SpecAn.set_resolution_bandwidth(1)
-# SpecAn.write("SENS:SWE:TIME 20E-6")
-# SpecAn.set_continuous_peak_search(1,1)
-# SpecAn.write("TRIG:SOUR VID")
-# SpecAn.write("TRIG:VID:LEV -43 dBm")
-# SpecAn.write("TRIG:VID:DEL 6 us")
-
-gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)  # Define gimbal positions from -90 to 90 degrees
-mbx.move(gimbal_motor,-(maxsweepangle/2))
-SpecAn_Values = []
-
-## Center 4x4 array ##
-# active_array = [19,27,20,28,21,29,22,30,35,43,36,44,37,45,38,46]
-## Center 6x6 array ##
-# active_array = [19,27,20,28,21,29,22,30,35,43,36,44,37,45,38,46,10, 18, 26, 34, 42, 50, 51, 52, 53, 54, 55, 47, 39, 31, 23, 15, 14, 13, 12, 11]
-## Full 8x8 array ##
-# active_array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64]
 
 array_shapes =[[19,27,20,28,21,29,22,30,35,43,36,44,37,45,38,46], 
               [19,27,20,28,21,29,22,30,35,43,36,44,37,45,38,46,10, 18, 26, 34, 42, 50, 51, 52, 53, 54, 55, 47, 39, 31, 23, 15, 14, 13, 12, 11],
@@ -295,89 +197,50 @@ elif desired_array_shape == "subarray 1":
 elif desired_array_shape == "single":
     active_array = array_shapes[8]
 
-mr.disable_pa_bias_channel(dev)
-PA_Supplies.output_on(1)
+
+
+##############################################
+## Step 2: Initialize Gimbal and Beamsteer ##
+###############################################
+
+GIMBAL_H = mbx.H
+GIMBAL_V = mbx.V
+
+maxsweepangle = 180
+sweepstep = 1
+gimbal_motor = GIMBAL_H
+sig_gen_freq_GHz=9
+gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)  # Define gimbal positions from -90 to 90 degrees
+
+SpecAn_Values = []
+
+beamsteering = False
+steering_angle = 0 # degrees
+active_array = np.array(active_array)
+phase_dict_ref = active_array.transpose().flatten()
+phase_dict = mr.create_dict(phase_dict_ref, np.zeros(64))
+mag_dict_ref = active_array.transpose().flatten()
+mag_dict = mr.create_dict(mag_dict_ref, np.zeros(64))
+        
+# Get Phase Data from ADAR1000 
+for element in dev.elements.values():
+    str_channel = str(element)
+    value = int(mr.strip_to_last_two_digits(str_channel))
+    phase_dict[value] = element.tx_phase
+    mag_dict[value] = element.tx_gain
 
 ## Set TR Source to external and bias_dac_mode to toggle ##
 for device in dev.devices.values():
     device.tr_source = "external"
     device.bias_dac_mode = "toggle"
 
-a=1
 
-
-
-
-beamsteering = False
-steering_angle = 0 # degrees
-
-for i in range(len(gimbal_positions)):
-    try:
-        mr.enable_pa_bias_channel(dev, active_array)
-        if beamsteering == True:
-            dev.steer_tx(azimuth=steering_angle, elevation=0)
-            dev.latch_tx_settings()
-
-        # time.sleep(5)
-        time.sleep(3)
-        tone_value = SpecAn.get_marker_power(marker=1)
-        SpecAn_Values.append(tone_value)
-        print(tone_value)
-        mbx.move(gimbal_motor,sweepstep)
-
-
-        mr.disable_pa_bias_channel(dev, active_array)
-        # time.sleep(3)
-    except Exception as e:
-        print(f"Unexpected error in sweep loop at index {i}: {e}")
-        # Ensure supplies are turned off on error
-        PA_Supplies.output_off(1)
-        mr.disable_pa_bias_channel(dev)
-        exit()
-
-    
-a=1
-peak_mag = SpecAn_Values
-mr.disable_pa_bias_channel(dev)
-# exit()    
-    
-# print(peak_mag.shape)    
-# mbx.gotoZERO()
-
-# Convert to dBm if needed (assuming -10.2 dBm full scale)
-# single_element_sweep_dbm = np.array(single_element_sweep) - 10.2
-
-# Define the corresponding anglesSpecAn_Values
-angles = np.linspace(-(maxsweepangle/2), (maxsweepangle/2), len(peak_mag))
-
-
-mechanical_sweep, elec_steer_angle, azim_results, elev_results, = mr.calc_array_pattern(theta_sweep=(-60, 60), elec_steer_angle=steering_angle,f_op_GHz=9.994, M=8, N=8)
-
-# Calculate peak FFT magnitude for each steering angle
-norm_peak_mag = peak_mag - np.max(peak_mag)  # Normalize the peak magnitudes    
-
-plt.figure(figsize=(10, 6))
-plt.plot(angles, norm_peak_mag, linestyle='dotted', color='green', label='Measured (SpecAn)')
-# overlay model azimuth result (use mechanical_sweep for x)
-# if azim_results are linear magnitudes convert to dB: 20*np.log10(azim_results)
-# model_y = 20*np.log10(azim_results)   # uncomment if needed
-model_y = azim_results
-plt.plot(mechanical_sweep, model_y, linestyle=':', color='black', linewidth=1.5, label='Model Azimuth (azim_results)')
-# plt.plot(angles, peak_mag, linestyle='dotted', color='green', label='Element 1')
-plt.title(f'{desired_array_shape} Element Azimuth Beam Pattern')
-plt.xlabel('Azimuth Angle (degrees)')
-plt.ylabel('Measured Power (dBm)')
-plt.grid(True)
-plt.legend()
-plt.tight_layout()
-plt.show()
-
+mechanical_sweep, elec_steer_angle, azim_results, elev_results, = mr.calc_array_pattern(theta_sweep=(-90, 90), elec_steer_angle=steering_angle,f_op_GHz=9.994, M=8, N=8)
 
 # Define the corresponding angles (assuming gimbal_positions is 0 to 80, map to -40 to 40)
 angles = np.linspace(-(maxsweepangle/2), (maxsweepangle/2), len(gimbal_positions))
 
 plt.figure(figsize=(10, 6))
-
 
 # Calculate and plot
 mechanical_sweep, elec_steer_angle, azim_results, elev_results, = mr.calc_array_pattern(elec_steer_angle=steering_angle,f_op_GHz=sig_gen_freq_GHz)
@@ -385,7 +248,7 @@ mechanical_sweep, elec_steer_angle, azim_results, elev_results, = mr.calc_array_
 
 # Define steering angles to test
 steering_angles = [-60, -45, -30, -15, 0, 15, 30, 45, 60]
-
+# steering_angles = [0]
 # Initialize arrays for both azimuth and elevation
 peak_mags_az = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
 peak_mags_el = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
@@ -397,101 +260,116 @@ print("Starting Azimuth Sweep...")
 gimbal_motor = GIMBAL_H
 mbx.gotoZERO()
 mbx.move(gimbal_motor,-(maxsweepangle/2))
-
+mr.enable_pa_bias_channel(dev, active_array)
+time.sleep(3)
 # Single mechanical sweep for azimuth
 for i in range(len(gimbal_positions)):
-    mbx.move(gimbal_motor, sweepstep)
-    time.sleep(0.3)
+    # mr.enable_pa_bias_channel(dev, active_array)
+    # time.sleep(3)
     
     for steering_angle in steering_angles:
-        sray.steer_rx(azimuth=steering_angle, elevation=0)
-        
+        dev.steer_tx(azimuth=steering_angle, elevation=0)
+        dev.latch_tx_settings()
         # Apply analog phase calibration
-        for element in sray.elements.values():
+        for element in dev.elements.values():
             str_channel = str(element)
             value = int(mr.strip_to_last_two_digits(str_channel))
-            element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
-        sray.latch_rx_settings()
+            element.tx_phase = (phase_dict[value] - element.tx_phase) % 360
+        
+        dev.latch_tx_settings()
+        time.sleep(0.5)
+        peak_mags_az[steering_angle][i] = SpecAn.get_marker_power(marker=1)
 
-        steer_data = np.transpose(np.array(mr.data_capture(conv)))
-        steer_data = np.array(steer_data).T
-        steer_data = mr.cal_data(steer_data, cal_ant)
-        steer_data = np.array(steer_data).T
-
-        combined_data = np.sum(steer_data,axis=1)
-        peak_mags_az[steering_angle][i] = mr.get_analog_mag(combined_data)
-
+    mbx.move(gimbal_motor, sweepstep)
+    # mr.disable_pa_bias_channel(dev, active_array)
 mbx.gotoZERO()
+mr.disable_pa_bias_channel(dev, active_array)
+#Set Phases back to calibrated phases
+for element in dev.elements.values():
+    str_channel = str(element)
+    value = int(mr.strip_to_last_two_digits(str_channel))
+    element.tx_phase = (phase_dict[value])
 
-# === Elevation Sweep ===
+# # === Elevation Sweep ===
 print("Starting Elevation Sweep...")
 gimbal_motor = GIMBAL_V
 mbx.gotoZERO()
 mbx.move(gimbal_motor,-(maxsweepangle/2))
+mr.enable_pa_bias_channel(dev, active_array)
+time.sleep(3)
 
-# Single mechanical sweep for elevation
+# # Single mechanical sweep for elevation
 for i in range(len(gimbal_positions)):
-    mbx.move(gimbal_motor, sweepstep)
-    time.sleep(0.3)
+    # mr.enable_pa_bias_channel(dev, active_array)
+    # time.sleep(3)
     
     for steering_angle in steering_angles:
-        sray.steer_rx(azimuth=0, elevation=steering_angle)
-        
+        dev.steer_tx(azimuth=0, elevation=steering_angle)
+        dev.latch_tx_settings()
         # Apply analog phase calibration
-        for element in sray.elements.values():
+        for element in dev.elements.values():
             str_channel = str(element)
             value = int(mr.strip_to_last_two_digits(str_channel))
-            element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
-        sray.latch_rx_settings()
+            element.tx_phase = (phase_dict[value] - element.tx_phase) % 360
+        
+        dev.latch_tx_settings()
+        time.sleep(0.5)
+        peak_mags_el[steering_angle][i] = SpecAn.get_marker_power(marker=1)
 
-        steer_data = np.transpose(np.array(mr.data_capture(conv)))
-        steer_data = np.array(steer_data).T
-        steer_data = mr.cal_data(steer_data, cal_ant)
-        steer_data = np.array(steer_data).T
+    mbx.move(gimbal_motor, sweepstep)
+    # mr.disable_pa_bias_channel(dev, active_array)
+mbx.gotoZERO()
+mr.disable_pa_bias_channel(dev, active_array)
+#Set Phases back to calibrated phases
+for element in dev.elements.values():
+    str_channel = str(element)
+    value = int(mr.strip_to_last_two_digits(str_channel))
+    element.tx_phase = (phase_dict[value])
 
-        combined_data = np.sum(steer_data, axis=1)
-        peak_mags_el[steering_angle][i] = mr.get_analog_mag(combined_data)
-
-# mbx.gotoZERO()
+# # mbx.gotoZERO()
 
 # Save data to MATLAB file with both azimuth and elevation patterns
+
+
+
 
 matlab_data = {
     'mechanical_angles': angles,
     'steering_angles': steering_angles,
+    'phase_dict': phase_dict,
+    'mag_dict': mag_dict,
     # 'cal_antenna': cal_ant,
     # Azimuth patterns (convert to dBm)
-    'measured_patterns_az_neg60': peak_mags_az[-60] - 10.2,
-    'measured_patterns_az_neg45': peak_mags_az[-45] - 10.2,
-    'measured_patterns_az_neg30': peak_mags_az[-30] - 10.2,
-    'measured_patterns_az_neg15': peak_mags_az[-15] - 10.2,
-    'measured_patterns_az_0': peak_mags_az[0] - 10.2,
-    'measured_patterns_az_pos15': peak_mags_az[15] - 10.2,
-    'measured_patterns_az_pos30': peak_mags_az[30] - 10.2,
-    'measured_patterns_az_pos45': peak_mags_az[45] - 10.2,
-    'measured_patterns_az_pos60': peak_mags_az[60] - 10.2,
+    'measured_patterns_az_neg60': peak_mags_az[-60],
+    'measured_patterns_az_neg45': peak_mags_az[-45],
+    'measured_patterns_az_neg30': peak_mags_az[-30],
+    'measured_patterns_az_neg15': peak_mags_az[-15],
+    'measured_patterns_az_0': peak_mags_az[0],
+    'measured_patterns_az_pos15': peak_mags_az[15],
+    'measured_patterns_az_pos30': peak_mags_az[30],
+    'measured_patterns_az_pos45': peak_mags_az[45],
+    'measured_patterns_az_pos60': peak_mags_az[60],
     # Elevation patterns (convert to dBm)
-    'measured_patterns_el_neg60': peak_mags_el[-60] - 10.2,
-    'measured_patterns_el_neg45': peak_mags_el[-45] - 10.2,
-    'measured_patterns_el_neg30': peak_mags_el[-30] - 10.2,
-    'measured_patterns_el_neg15': peak_mags_el[-15] - 10.2,
-    'measured_patterns_el_0': peak_mags_el[0] - 10.2,
-    'measured_patterns_el_pos15': peak_mags_el[15] - 10.2,
-    'measured_patterns_el_pos30': peak_mags_el[30] - 10.2,
-    'measured_patterns_el_pos45': peak_mags_el[45] - 10.2,
-    'measured_patterns_el_pos60': peak_mags_el[60] - 10.2
+    'measured_patterns_el_neg60': peak_mags_el[-60],
+    'measured_patterns_el_neg45': peak_mags_el[-45],
+    'measured_patterns_el_neg30': peak_mags_el[-30],
+    'measured_patterns_el_neg15': peak_mags_el[-15],
+    'measured_patterns_el_0': peak_mags_el[0],
+    'measured_patterns_el_pos15': peak_mags_el[15],
+    'measured_patterns_el_pos30': peak_mags_el[30],
+    'measured_patterns_el_pos45': peak_mags_el[45],
+    'measured_patterns_el_pos60': peak_mags_el[60]
 }
 
 # Save combined azimuth and elevation data
-savemat('/home/snuc/Desktop/beamforming_patterns_azel.mat', matlab_data)
-
+savemat('/home/snuc/Desktop/tx_beamforming_patterns_azel.mat', matlab_data)
 # Create plots for both azimuth and elevation patterns
 plt.ioff()  # Turn off interactive mode for batch saving
 
 # Plot and save azimuth patterns
 for steering_angle in steering_angles:
     plt.figure(figsize=(10, 6))
-    plt.plot(angles, peak_mags_az[steering_angle] - 10.2,  # Convert to dBm
+    plt.plot(angles, peak_mags_az[steering_angle],  # Convert to dBm
              linestyle='dotted', label='Measured Data', 
              color='blue', markersize=9)
     plt.title(f'Azimuth Pattern (Steering Angle: {steering_angle}°)')
@@ -508,7 +386,7 @@ for steering_angle in steering_angles:
 # Plot and save elevation patterns
 for steering_angle in steering_angles:
     plt.figure(figsize=(10, 6))
-    plt.plot(angles, peak_mags_el[steering_angle] - 10.2,  # Convert to dBm
+    plt.plot(angles, peak_mags_el[steering_angle],  # Convert to dBm
              linestyle='dotted', label='Measured Data', 
              color='red', markersize=9)
     plt.title(f'Elevation Pattern (Steering Angle: {steering_angle}°)')
