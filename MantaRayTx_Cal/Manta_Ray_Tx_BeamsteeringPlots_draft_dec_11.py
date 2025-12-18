@@ -209,7 +209,7 @@ GIMBAL_V = mbx.V
 maxsweepangle = 180
 sweepstep = 1
 gimbal_motor = GIMBAL_H
-sig_gen_freq_GHz=9
+sig_gen_freq_GHz=11
 gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)  # Define gimbal positions from -90 to 90 degrees
 
 SpecAn_Values = []

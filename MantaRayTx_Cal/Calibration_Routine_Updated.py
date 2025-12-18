@@ -35,13 +35,13 @@ mbx.connect(DEVICENAME, BAUDRATE)
 mbx.gotoZERO()
 
 ## Set whether or not to run bootstrap script
-bootstrap_needed = False
+bootstrap_needed = True
 config = True
-DAC_config = False
+DAC_config = True
 Gain_calibration = True
 Digi_Phase_calibration = False
 Analog_Phase_calibration = True
-operational_frequency = 9e9
+operational_frequency = 11e9
 
 ##############################################
 ## Step 0: Initialize Power Supplies ##
