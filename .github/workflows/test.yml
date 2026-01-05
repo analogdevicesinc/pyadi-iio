@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10", "3.11"]
-        libiio: ['main', 'v0.25']
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        libiio: ['main', 'v0.26']
 
     steps:
       - uses: actions/checkout@v2
@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies
         run: |
           export LIBIIO_BRANCH=${{ matrix.libiio }}
-          bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_pydeps.sh
+          bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_part_libs.sh
 
       - name: Test
@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8]
+        python-version: ["3.10"]
 
     steps:
       - uses: actions/checkout@v2
@@ -43,10 +43,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          bash ./.github/scripts/install_pydeps.sh
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_part_libs.sh
           bash ./.github/scripts/install_iioemu.sh
-          bash ./.github/scripts/install_pydeps.sh
           sudo apt install -y python3-tk
 
       - name: Test without optional dependencies
@@ -55,7 +55,7 @@ jobs:
                 pytest -vs --cov=adi --emu --junitxml="results.xml" -k 'not prod' --skip-scan
 
       - name: Report coverage
-        if: (github.event_name != 'pull_request') && (matrix.python-version == 3.8)
+        if: (github.event_name != 'pull_request') && (matrix.python-version == 3.10)
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: coveralls
@@ -71,7 +71,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8, 3.9, "3.10", "3.11"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v2
@@ -82,9 +82,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          bash ./.github/scripts/install_pydeps.sh
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_part_libs.sh
-          bash ./.github/scripts/install_pydeps.sh
 
       - name: Lint
         run: |
@@ -98,16 +98,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
+          bash ./.github/scripts/install_pydeps.sh
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_part_libs.sh
-          bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
       - name: Build doc
@@ -122,16 +122,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
+          bash ./.github/scripts/install_pydeps.sh
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_part_libs.sh
-          bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
       - name: Build doc and release
@@ -154,16 +154,16 @@ jobs:
     if: github.event_name == 'pull_request' && github.base_ref == 'main' && ! github.event.pull_request.head.repo.fork
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
+          bash ./.github/scripts/install_pydeps.sh
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_part_libs.sh
-          bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
       - name: Build doc and release
@@ -194,16 +194,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
+          bash ./.github/scripts/install_pydeps.sh
           bash ./.github/scripts/install_libiio.sh
           bash ./.github/scripts/install_part_libs.sh
-          bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
           pip install setuptools wheel twine build
 

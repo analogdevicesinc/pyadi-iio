@@ -1,4 +1,4 @@
-# Copyright (C) 2023-2025 Analog Devices, Inc.
+# Copyright (C) 2023-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 """Compatibility module for libiio v1.X."""
