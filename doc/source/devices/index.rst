@@ -69,6 +69,7 @@ Supported Devices
    adi.ad9625
    adi.ad9680
    adi.ad9739a
+   adi.ad9910
    adi.ada4355
    adi.ada4356_lidar
    adi.ada4961
