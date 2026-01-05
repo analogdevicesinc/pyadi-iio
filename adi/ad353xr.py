@@ -1,9 +1,10 @@
-# Copyright (C) 2025 Analog Devices, Inc.
+# Copyright (C) 2025-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
 from adi.device_base import tx_chan_comp
+
 
 class ad353xr_channel(attribute):
     """AD353xr channel"""
