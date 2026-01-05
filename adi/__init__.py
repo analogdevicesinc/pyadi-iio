@@ -60,6 +60,7 @@ from adi.ad9434 import ad9434
 from adi.ad9467 import ad9467
 from adi.ad9625 import ad9625
 from adi.ad9680 import ad9680
+from adi.ad9910 import ad9910
 from adi.ada4355 import ada4355
 from adi.ada4356_lidar import ada4356_lidar
 from adi.ada4961 import ada4961
