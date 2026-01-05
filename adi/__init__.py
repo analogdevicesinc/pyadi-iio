@@ -73,6 +73,7 @@ from adi.adf4377 import adf4377
 from adi.adf4382 import adf4382
 from adi.adf5610 import adf5610
 from adi.adf5611 import adf5611
+from adi.adf4151x import adf4151x, adf41510, adf41513
 from adi.adg2128 import adg2128
 from adi.adis16460 import adis16460
 from adi.adis16475 import adis16475
