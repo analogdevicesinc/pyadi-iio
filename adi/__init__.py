@@ -95,6 +95,7 @@ from adi.adis16550 import adis16550
 from adi.adl5240 import adl5240
 from adi.adl5960 import adl5960
 from adi.adl8113 import adl8113
+from adi.admfm8000 import admfm8000
 from adi.admt4000 import admt4000
 from adi.admt4000ard1z import admt4000ard1z, admt4000ard2z
 from adi.admv8818 import admv8818
