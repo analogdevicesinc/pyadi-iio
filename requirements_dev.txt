@@ -16,3 +16,6 @@ pyvisa
 matplotlib
 pytoml
 pytest-xdist
+jupyter
+ipywidgets
+anywidget
