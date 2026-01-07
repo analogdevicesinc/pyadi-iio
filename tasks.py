@@ -189,7 +189,7 @@ def checkparts(c):
             and not c in ignored_parts
         ):
             parts.append(c)
-    # Check if in README
+    # Check if in supported_parts.md
     count = 1
     with open("supported_parts.md") as reader:
         rm = reader.read()
@@ -201,7 +201,7 @@ def checkparts(c):
             p = p.replace("_", "-")
             if not p.lower() in rm.lower():
                 count += 1
-                print("Missing", p, "from README")
+                print("Missing", p, "from supported_parts.md")
         if count == 0:
             print("No parts missing from supported_parts.md")
 
