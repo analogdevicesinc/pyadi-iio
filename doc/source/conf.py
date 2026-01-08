@@ -68,6 +68,8 @@ coverage_ignore_modules = ["test.dma_tests", "test.generics"]
 # Link check configuration
 linkcheck_ignore = [
     r"_static/logos.*",
+    r"https://ez.analog.com.*",
+    r"https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_.*",
 ]
 
 # -- External docs configuration ----------------------------------------------
