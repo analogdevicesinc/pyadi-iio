@@ -710,12 +710,11 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
         # Set up channels
         if self._txdac and self._tx_channel_names is None:
             self._tx_channel_names = [
-                chan.id for chan in self._rxadc.channels if chan.scan_element
+                chan.id for chan in self._txdac.channels if chan.scan_element
             ]
 
             if not self._tx_channel_names:
-                raise Exception(f"No scan elements found for device {self._rxadc.name}")
-
+                raise Exception(f"No scan elements found for device {self._txdac.name}")
         tx.__init__(self)
 
         if self.__run_tx_post_init__:
