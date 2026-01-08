@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,9 +8,9 @@
 
     <title>cn0565 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5d595293" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=3a4867e9"></script>
+    <script async="async" src="../_static/app.umd.js?v=46a18818"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -114,7 +114,7 @@
     </div>
 
   
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
     <a id="logo" href="../index.html">
       <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
@@ -311,10 +311,10 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="module-adi.cn0565">
-<span id="cn0565"></span><h1>cn0565<a class="headerlink" href="#module-adi.cn0565" title="Permalink to this heading"></a></h1>
+<span id="cn0565"></span><h1>cn0565<a class="headerlink" href="#module-adi.cn0565" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.cn0565.cn0565">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0565.</span></span><span class="sig-name descname"><span class="pre">cn0565</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0565.cn0565" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0565.</span></span><span class="sig-name descname"><span class="pre">cn0565</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0565.cn0565" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="adi.ad5940.html#adi.ad5940.ad5940" title="adi.ad5940.ad5940"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad5940</span></code></a>, <a class="reference internal" href="adi.adg2128.html#adi.adg2128.adg2128" title="adi.adg2128.adg2128"><code class="xref py py-class docutils literal notranslate"><span class="pre">adg2128</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
 <p>The CN0565 class inherits features from both the AD5940 (providing high
 precision in impedance and electrochemical frontend) and the ADG2128
@@ -330,39 +330,39 @@ Impedance Tomography.</p>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0565.cn0565.all_voltages">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_voltages</span></span><a class="headerlink" href="#adi.cn0565.cn0565.all_voltages" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_voltages</span></span><a class="headerlink" href="#adi.cn0565.cn0565.all_voltages" title="Link to this definition"></a></dt>
 <dd><p>all_voltages: type=np.array
 Voltage readings from different electrode combinations</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0565.cn0565.electrode_count">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrode_count</span></span><a class="headerlink" href="#adi.cn0565.cn0565.electrode_count" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrode_count</span></span><a class="headerlink" href="#adi.cn0565.cn0565.electrode_count" title="Link to this definition"></a></dt>
 <dd><p>electrode_count: Number of electrodes</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0565.cn0565.electrode_count_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrode_count_available</span></span><a class="headerlink" href="#adi.cn0565.cn0565.electrode_count_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrode_count_available</span></span><a class="headerlink" href="#adi.cn0565.cn0565.electrode_count_available" title="Link to this definition"></a></dt>
 <dd><p>electrode_count_available: type=np.array
 Supported Electrode Counts</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0565.cn0565.force_distance">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">force_distance</span></span><a class="headerlink" href="#adi.cn0565.cn0565.force_distance" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">force_distance</span></span><a class="headerlink" href="#adi.cn0565.cn0565.force_distance" title="Link to this definition"></a></dt>
 <dd><p>force_distance: Number of electrodes between forcing electrodes. 1 means they are adjacent</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0565.cn0565.sense_distance">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sense_distance</span></span><a class="headerlink" href="#adi.cn0565.cn0565.sense_distance" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sense_distance</span></span><a class="headerlink" href="#adi.cn0565.cn0565.sense_distance" title="Link to this definition"></a></dt>
 <dd><p>sense_distance: Number of electrodes between sensing electrodes. 1 means they are adjacent</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.cn0565.cn0565.switch_sequence">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">switch_sequence</span></span><a class="headerlink" href="#adi.cn0565.cn0565.switch_sequence" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">switch_sequence</span></span><a class="headerlink" href="#adi.cn0565.cn0565.switch_sequence" title="Link to this definition"></a></dt>
 <dd><p>switch_sequence: type=np.array
 Sequence of combinations of forcing electrodes and sensing electrodes in the form of
 f+, s+, s-, s+</p>
@@ -387,7 +387,7 @@ f+, s+, s-, s+</p>
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2025, Analog Devices, Inc
+      &#169;2019-2026, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

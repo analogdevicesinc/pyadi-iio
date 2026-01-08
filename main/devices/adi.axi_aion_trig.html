@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,9 +8,9 @@
 
     <title>adi.axi_aion_trig module &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5d595293" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=3a4867e9"></script>
+    <script async="async" src="../_static/app.umd.js?v=46a18818"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -106,7 +106,7 @@
     </div>
 
   
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
     <a id="logo" href="../index.html">
       <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
@@ -303,23 +303,23 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="module-adi.axi_aion_trig">
-<span id="adi-axi-aion-trig-module"></span><h1>adi.axi_aion_trig module<a class="headerlink" href="#module-adi.axi_aion_trig" title="Permalink to this heading"></a></h1>
+<span id="adi-axi-aion-trig-module"></span><h1>adi.axi_aion_trig module<a class="headerlink" href="#module-adi.axi_aion_trig" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.axi_aion_trig.axi_aion_trig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.axi_aion_trig.</span></span><span class="sig-name descname"><span class="pre">axi_aion_trig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.axi_aion_trig.axi_aion_trig" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.axi_aion_trig.</span></span><span class="sig-name descname"><span class="pre">axi_aion_trig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.axi_aion_trig.axi_aion_trig" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
 <p>axi_aion_trig IIO Device Interface</p>
 <p>This class provides an interface to the ‘axi_aion_trig’ IIO device, allowing
 control and monitoring of its voltage channels and associated attributes.</p>
 <section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>uri<span class="classifier">str, optional</span></dt><dd><p>URI of the IIO context to connect to. Defaults to an empty string.</p>
 </dd>
 </dl>
 </section>
 <section id="attributes-per-voltage-channel">
-<h2>Attributes (per voltage channel)<a class="headerlink" href="#attributes-per-voltage-channel" title="Permalink to this heading"></a></h2>
+<h2>Attributes (per voltage channel)<a class="headerlink" href="#attributes-per-voltage-channel" title="Link to this heading"></a></h2>
 <p>For each voltage channel (e.g., voltage0, voltage1, …), the following
 properties are dynamically created:</p>
 <ul class="simple">
@@ -366,14 +366,14 @@ properties are dynamically created:</p>
 </ul>
 </section>
 <section id="raises">
-<h2>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h2>
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>Exception</dt><dd><p>If the ‘axi_aion_trig’ device is not found in the IIO context.</p>
 </dd>
 </dl>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">trig</span> <span class="o">=</span> <span class="n">axi_aion_trig</span><span class="p">(</span><span class="s2">&quot;ip:192.168.1.100&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trig</span><span class="o">.</span><span class="n">trig0_en</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">trig</span><span class="o">.</span><span class="n">trig0_status</span><span class="p">)</span>
@@ -399,7 +399,7 @@ properties are dynamically created:</p>
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2025, Analog Devices, Inc
+      &#169;2019-2026, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

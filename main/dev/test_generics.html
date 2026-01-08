@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,9 +8,9 @@
 
     <title>Generic Tests &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5d595293" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=3a4867e9"></script>
+    <script async="async" src="../_static/app.umd.js?v=46a18818"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -107,7 +107,7 @@
     </div>
 
   
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
     <a id="logo" href="../index.html">
       <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
@@ -304,11 +304,11 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="generic-tests">
-<h1>Generic Tests<a class="headerlink" href="#generic-tests" title="Permalink to this heading"></a></h1>
+<h1>Generic Tests<a class="headerlink" href="#generic-tests" title="Link to this heading"></a></h1>
 <p>Functions used by test fixtures for evaluating drivers without pyadi-iio classes or not by using pyadi-iio classes.</p>
-<span class="target" id="module-test.generics"></span><dl class="py function">
+<dl class="py function" id="module-test.generics">
 <dt class="sig sig-object py" id="test.generics.iio_attribute_single_value">
-<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chan_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_attribute_single_value" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_attribute_single_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chan_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_attribute_single_value" title="Link to this definition"></a></dt>
 <dd><p>iio_attribute_single_value: Test numeric attributes over ranges
 This is a generic test that does not use pyadi-iio classes
 but instead uses libiio directly.</p>
@@ -346,7 +346,7 @@ attribute under test</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="test.generics.iio_buffer_check">
-<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_buffer_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_fail</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_buffer_check" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">test.generics.</span></span><span class="sig-name descname"><span class="pre">iio_buffer_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rxdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_fail</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.generics.iio_buffer_check" title="Link to this definition"></a></dt>
 <dd><p>iio_buffer_check: Check receive buffers for repeative patterns of zeros.
 This function does not require an interfaces class in pyadi but will
 construct a generic interface on the fly.</p>
@@ -383,7 +383,7 @@ buffers</p>
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2025, Analog Devices, Inc
+      &#169;2019-2026, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

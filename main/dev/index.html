@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,9 +8,9 @@
 
     <title>Developers &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5d595293" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=3a4867e9"></script>
+    <script async="async" src="../_static/app.umd.js?v=46a18818"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -119,7 +119,7 @@
     </div>
 
   
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
     <a id="logo" href="../index.html">
       <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
@@ -316,14 +316,14 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="developers">
-<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this heading"></a></h1>
+<h1>Developers<a class="headerlink" href="#developers" title="Link to this heading"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This section is only for developers and advanced users.</p>
 </div>
 <p>When submitting code or running tests, there are a few ways things are done in pyadi-iio.</p>
 <section id="invoke">
-<h2>Invoke<a class="headerlink" href="#invoke" title="Permalink to this heading"></a></h2>
+<h2>Invoke<a class="headerlink" href="#invoke" title="Link to this heading"></a></h2>
 <p>To make repetitve tasks easier, pyadi-iio utilizes pyinvoke. To see the available options (once pyinvoke is installed) run:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke --list</span>
 <span class="go">Available tasks:</span>
@@ -341,7 +341,7 @@ Content on this topic
 </div>
 </section>
 <section id="precommit">
-<h2>Precommit<a class="headerlink" href="#precommit" title="Permalink to this heading"></a></h2>
+<h2>Precommit<a class="headerlink" href="#precommit" title="Link to this heading"></a></h2>
 <p><strong>pre-commit</strong> is heavily relied on for keeping code in order and for eliminating certain bugs. Be sure to run these checks before submitting code. This can be run through pyinvoke or directly from the repo root as:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke precommit</span>
 </pre></div>
@@ -351,7 +351,7 @@ Content on this topic
 </div>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
 <p>Testing pyadi-iio requires hardware, but fortunately by default it assumes no hardware is connected unless found. It will only load specific tests for hardware it can find and skip all other tests. <strong>pytest</strong>, which is the framework pyadi-iio uses, can be call as following:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">invoke test</span>
 </pre></div>
@@ -360,7 +360,7 @@ Content on this topic
 </pre></div>
 </div>
 <section id="test-configuration">
-<h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Permalink to this heading"></a></h3>
+<h3>Test Configuration<a class="headerlink" href="#test-configuration" title="Link to this heading"></a></h3>
 <p>There are several advanced features of pytest that are utilized by pyadi-iio. Specifically custom markers and custom plugins.</p>
 <p>Markers are a way of labeling tests, which can be then used to filter specific tests. Markers are provided through the <a class="icon link reference external" href="https://github.com/analogdevicesinc/pyadi-iio/blob/master/test/test_map.py" target="_blank">test_map.py</a> file in the test directory. These markers are used to map FPGA based boards with daughtercards to specific tests. <a class="icon link reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/embedded_arm_images" target="_blank">Reference design folder names</a> from the ADI SD cards are using as the markers, which them can be passed through the <em>-m</em> flag to enabled certain tests. For example, the following would enable all tests related to <em>ADRV9009</em>, assuming the hardware is available:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pytest -m zynqmp-zcu102-rev10-adrv9009</span>
@@ -373,7 +373,7 @@ Content on this topic
 <p>If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the <a class="icon link reference external" href="https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps" target="_blank">pytest-libiio CLI</a>.</p>
 </section>
 <section id="new-hardware-requirements">
-<h3>New Hardware Requirements<a class="headerlink" href="#new-hardware-requirements" title="Permalink to this heading"></a></h3>
+<h3>New Hardware Requirements<a class="headerlink" href="#new-hardware-requirements" title="Link to this heading"></a></h3>
 <p>In order to maintain pyadi-iio, for all new drivers the development team will require emulation contexts to be submitted alongside the new class interfaces. This is to ensure that the new drivers are tested and maintained. Emulation contexts can be created using <a class="icon link reference external" href="https://pytest-libiio.readthedocs.io/en/latest/emulation/#adding-device-support" target="_blank">xml_gen</a>. CI will automatically validate that all hardware interfaces have emulation contexts and prevent merging if they are missing.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -381,7 +381,7 @@ Content on this topic
 </div>
 </section>
 <section id="test-functions-and-fixtures">
-<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Permalink to this heading"></a></h3>
+<h3>Test Functions and Fixtures<a class="headerlink" href="#test-functions-and-fixtures" title="Link to this heading"></a></h3>
 <p>pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links belows to the different test categories:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -447,10 +447,10 @@ Content on this topic
 </section>
 </section>
 <section id="set-up-isolated-environment">
-<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Permalink to this heading"></a></h2>
+<h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Link to this heading"></a></h2>
 <p>This section will discuss a method to do isolated development with the correct package versions. The main purpose here is to eliminate any discrepancies that can arise (especially with the linting tools) when running precommit and other checks. This is also useful to not pollute your local global packages. The approach here relies upon leveraging <strong>pyenv</strong> and <strong>pipenv</strong> together.</p>
 <section id="install-pyenv">
-<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Permalink to this heading"></a></h3>
+<h3>Install pyenv<a class="headerlink" href="#install-pyenv" title="Link to this heading"></a></h3>
 <p><strong>pyenv</strong> is a handy tool for installing different and isolated versions of python on your system. Since distributions can ship with rather random versions of python, pyenv can help us install exactly the versions we want. The quick way to install pyenv is with their bash script:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>https://pyenv.run<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </pre></div>
@@ -467,7 +467,7 @@ Content on this topic
 </div>
 </section>
 <section id="create-isolated-install-with-pipenv">
-<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Permalink to this heading"></a></h3>
+<h3>Create isolated install with pipenv<a class="headerlink" href="#create-isolated-install-with-pipenv" title="Link to this heading"></a></h3>
 <p>Get the repo, set python version, and setup env</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pipenv
 pyenv<span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="m">3</span>.6.9
@@ -487,7 +487,7 @@ pipenv<span class="w"> </span>shell
 </section>
 </section>
 <section id="emulation">
-<h2>Emulation<a class="headerlink" href="#emulation" title="Permalink to this heading"></a></h2>
+<h2>Emulation<a class="headerlink" href="#emulation" title="Link to this heading"></a></h2>
 <p>By leveraging <a class="icon link reference external" href="https://github.com/analogdevicesinc/iio-emu" target="_blank">iio-emu</a>, hardware or contexts can be emulated for testing without physical devices. However, currently this emulation does not validate attribute rates, states of drivers, or equivalent data sources. This feature should be used to test a library itself rather than hardware drivers.</p>
 <p><strong>pyadi-iio</strong> uses <em>iio-emu</em> through <em>pytest-libiio</em>, which handles loading the correct context files based on the fixtures used for each test. Essentially, when <em>pytest</em> is run, based on the fixture below, <em>pytest-libiio</em> will spawn the correct context with <em>iio-emu</em> and pass the URI of that context to the test.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
@@ -519,7 +519,7 @@ pipenv<span class="w"> </span>shell
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2025, Analog Devices, Inc
+      &#169;2019-2026, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>
