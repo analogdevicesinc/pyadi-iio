@@ -616,11 +616,27 @@ class shared_def(context_manager, metaclass=ABCMeta):
 
         # Set up devices
         if self._control_device_name:
-            self._ctrl = self._ctx.find_device(self._control_device_name)
-            if not self._ctrl:
-                raise Exception(
-                    f"No device found with name {self._control_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._ctrl = None
+                for device in self._ctx.devices:
+                    if device.name == self._control_device_name:
+                        if index == self._device_index:
+                            self._ctrl = device
+                            break
+                        else:
+                            index += 1
+                if not self._ctrl:
+                    raise Exception(
+                        f"No device found with name {self._control_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._ctrl = self._ctx.find_device(self._control_device_name)
+                if not self._ctrl:
+                    raise Exception(
+                        f"No device found with name {self._control_device_name}"
+                    )
 
     def __post_init__(self):
         pass
@@ -653,11 +669,30 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
         shared_def.__init__(self, *args, **kwargs)
 
         if self._rx_data_device_name:
-            self._rxadc = self._ctx.find_device(self._rx_data_device_name)
-            if not self._rxadc:
-                raise Exception(
-                    f"No device found with name {self._rx_data_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._rxadc = None
+                for device in self._ctx.devices:
+                    if device.name == self._rx_data_device_name:
+                        if index == self._device_index:
+                            self._rxadc = device
+                            break
+                        else:
+                            index += 1
+                if not self._rxadc:
+                    raise Exception(
+                        f"No device found with name {self._rx_data_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._rxadc = self._ctx.find_device(self._rx_data_device_name)
+                if not self._rxadc:
+                    raise Exception(
+                        f"No device found with name {self._rx_data_device_name}"
+                    )
+
+        if not self._rxadc:
+            raise Exception("RX device not found")
 
         # Set up channels
         if self._rxadc and self._rx_channel_names is None:
@@ -667,6 +702,8 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
 
             if not self._rx_channel_names:
                 raise Exception(f"No scan elements found for device {self._rxadc.name}")
+
+        assert self._rx_channel_names is not None, "RX channel names must be defined"
 
         rx.__init__(self)
 
@@ -701,11 +738,27 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
         shared_def.__init__(self, *args, **kwargs)
 
         if self._tx_data_device_name:
-            self._txdac = self._ctx.find_device(self._tx_data_device_name)
-            if not self._txdac:
-                raise Exception(
-                    f"No device found with name {self._tx_data_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._txdac = None
+                for device in self._ctx.devices:
+                    if device.name == self._tx_data_device_name:
+                        if index == self._device_index:
+                            self._txdac = device
+                            break
+                        else:
+                            index += 1
+                if not self._txdac:
+                    raise Exception(
+                        f"No device found with name {self._tx_data_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._txdac = self._ctx.find_device(self._tx_data_device_name)
+                if not self._txdac:
+                    raise Exception(
+                        f"No device found with name {self._tx_data_device_name}"
+                    )
 
         # Set up channels
         if self._txdac and self._tx_channel_names is None:

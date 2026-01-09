@@ -20,15 +20,14 @@ class device_base(shared_def):
 
     compatible_parts = None  # To be defined in subclasses
     _control_device_name = None  # Set through device_base.__init__
+    _device_index = 0  # Index when multiple devices with same name exist
 
-    def __init__(
-        self, device_name="",
-    ):
+    def __init__(self, device_name="", device_index=0):
         """Initialize device with common pattern.
 
         Args:
-            uri: Device URI string
             device_name: Specific device name or empty for default
+            device_index: Index of device when multiple devices with same name exist
         """
         if self.compatible_parts is None:
             raise Exception("compatible_parts must be defined in subclass")
@@ -43,9 +42,14 @@ class device_base(shared_def):
                     f"are: {','.join(self.compatible_parts)}"
                 )
 
-        if not self._control_device_name:
+        # Store device_index for use in device discovery
+        self._device_index = device_index
+
+        if hasattr(self, "_control_device_name") and not self._control_device_name:
             self._control_device_name = device_name
-        if not self._tx_data_device_name:
+        if hasattr(self, "_rx_data_device_name") and not self._rx_data_device_name:
+            self._rx_data_device_name = device_name
+        if hasattr(self, "_tx_data_device_name") and not self._tx_data_device_name:
             self._tx_data_device_name = device_name
 
         return device_name
@@ -68,14 +72,15 @@ class tx_chan_comp(tx_def, device_base):
     """Channel class definition for setattr usage."""
     _channel_def = None  # To be defined in subclasses
 
-    def __init__(self, uri="", device_name=""):
+    def __init__(self, uri="", device_name="", device_index=0):
         """Initialize TX device with common pattern.
 
         Args:
             uri: Device URI string
             device_name: Specific device name or empty for default
+            device_index: Index of device when multiple devices with same name exist
         """
-        device_base.__init__(self, device_name=device_name)
+        device_base.__init__(self, device_name=device_name, device_index=device_index)
         tx_def.__init__(self, uri=uri)
         self._add_channel_instances()
 
@@ -88,13 +93,14 @@ class rx_chan_comp(rx_def, device_base):
     """Channel class definition for setattr usage."""
     _channel_def = None  # To be defined in subclasses
 
-    def __init__(self, uri="", device_name=""):
+    def __init__(self, uri="", device_name="", device_index=0):
         """Initialize RX device with common pattern.
 
         Args:
             uri: Device URI string
             device_name: Specific device name or empty for default
+            device_index: Index of device when multiple devices with same name exist
         """
-        device_base.__init__(self, device_name=device_name)
+        device_base.__init__(self, device_name=device_name, device_index=device_index)
         rx_def.__init__(self, uri=uri)
         self._add_channel_instances()
