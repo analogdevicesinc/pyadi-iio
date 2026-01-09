@@ -45,7 +45,6 @@ def pytest_collection_modifyitems(items):
             hardware_list = item.keywords["iio_hardware"].args[0]
             for key in test_map_keys:
                 if key in hardware_list:
-                    print(f"assigning markers for {item.originalname}: {test_map[key]}")
                     for marker in test_map[key]:
                         item.add_marker(marker.replace("-", "_"))
                     break
