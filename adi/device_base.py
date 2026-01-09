@@ -4,7 +4,7 @@
 
 from adi.context_manager import context_manager
 
-from .rx_tx import rx_def, shared_def, tx_def
+from .rx_tx import rx_def, rx_def_no_buff, shared_def, tx_def, tx_def_no_buff
 
 
 class device_base(shared_def):
@@ -103,4 +103,46 @@ class rx_chan_comp(rx_def, device_base):
         """
         device_base.__init__(self, device_name=device_name, device_index=device_index)
         rx_def.__init__(self, uri=uri)
+        self._add_channel_instances()
+
+
+class tx_chan_comp_no_buff(tx_def_no_buff, device_base):
+    """Extend TX device base without buffer support with complex channel object support."""
+
+    _tx_data_device_name = None  # Set through device_base.__init__
+
+    """Channel class definition for setattr usage."""
+    _channel_def = None  # To be defined in subclasses
+
+    def __init__(self, uri="", device_name="", device_index=0):
+        """Initialize TX device without buffer support with common pattern.
+
+        Args:
+            uri: Device URI string
+            device_name: Specific device name or empty for default
+            device_index: Index of device when multiple devices with same name exist
+        """
+        device_base.__init__(self, device_name=device_name, device_index=device_index)
+        tx_def_no_buff.__init__(self, uri=uri)
+        self._add_channel_instances()
+
+
+class rx_chan_comp_no_buff(rx_def_no_buff, device_base):
+    """Extend RX device base without buffer support with complex channel object support."""
+
+    _rx_data_device_name = None  # Set through device_base.__init__
+
+    """Channel class definition for setattr usage."""
+    _channel_def = None  # To be defined in subclasses
+
+    def __init__(self, uri="", device_name="", device_index=0):
+        """Initialize RX device without buffer support with common pattern.
+
+        Args:
+            uri: Device URI string
+            device_name: Specific device name or empty for default
+            device_index: Index of device when multiple devices with same name exist
+        """
+        device_base.__init__(self, device_name=device_name, device_index=device_index)
+        rx_def_no_buff.__init__(self, uri=uri)
         self._add_channel_instances()

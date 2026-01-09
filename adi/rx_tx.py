@@ -642,16 +642,7 @@ class shared_def(context_manager, metaclass=ABCMeta):
         pass
 
 
-class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
-    """Template metaclass for rx only device specific interfaces."""
-
-    """Names of rx data channels.
-    List of strings with names of channels.
-    If not defined all channels with scan elements will
-    be populated as available channels.
-    """
-    _rx_channel_names = None
-
+class rx_def_no_buff(shared_def, rx, context_manager, metaclass=ABCMeta):
     @property
     @abstractmethod
     def _rx_data_device_name(self) -> None:
@@ -694,6 +685,21 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
         if not self._rxadc:
             raise Exception("RX device not found")
 
+
+class rx_def(rx_def_no_buff):
+    """Template metaclass for rx only device specific interfaces."""
+
+    """Names of rx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _rx_channel_names = None
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+        rx_def_no_buff.__init__(self, *args, **kwargs)
         # Set up channels
         if self._rxadc and self._rx_channel_names is None:
             self._rx_channel_names = [
@@ -711,16 +717,7 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
             self.__post_init__()
 
 
-class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
-    """Template metaclass for rx only device specific interfaces."""
-
-    """Names of tx data channels.
-    List of strings with names of channels.
-    If not defined all channels with scan elements will
-    be populated as available channels.
-    """
-    _tx_channel_names = None
-
+class tx_def_no_buff(shared_def, tx, context_manager, metaclass=ABCMeta):
     @property
     @abstractmethod
     def _tx_data_device_name(self) -> None:
@@ -760,6 +757,24 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
                         f"No device found with name {self._tx_data_device_name}"
                     )
 
+        if not self._txdac:
+            raise Exception("TX device not found")
+
+
+class tx_def(tx_def_no_buff):
+    """Template metaclass for tx only device specific interfaces."""
+
+    """Names of tx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _tx_channel_names = None
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+        tx_def_no_buff.__init__(self, *args, **kwargs)
         # Set up channels
         if self._txdac and self._tx_channel_names is None:
             self._tx_channel_names = [
@@ -768,6 +783,9 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
 
             if not self._tx_channel_names:
                 raise Exception(f"No scan elements found for device {self._txdac.name}")
+
+        assert self._tx_channel_names is not None, "TX channel names must be defined"
+
         tx.__init__(self)
 
         if self.__run_tx_post_init__:
