@@ -61,6 +61,10 @@ class TestPatternARXDevices:
                 ],
             ),
             (adi.ad777x, ["ad7770", "ad7771", "ad7779"]),
+            (adi.ad7799, ["AD7799"]),
+            (adi.ad7091rx, ["ad7091r-8", "ad7091r-4", "ad7091r-2"]),
+            (adi.ad7490, ["ad7490"]),
+            (adi.ad7405, ["adum7701", "adum7702", "adum7703", "ad7405"]),
         ],
     )
     def test_compatible_parts_attribute(self, device_class, expected_parts):
@@ -86,6 +90,10 @@ class TestPatternARXDevices:
             (adi.ad719x, "ad719x_channel"),
             (adi.ad738x, "ad738x_channel"),
             (adi.ad777x, "ad777x_channel"),
+            (adi.ad7799, "ad7799_channel"),
+            (adi.ad7091rx, "ad7091rx_channel"),
+            (adi.ad7490, "ad7490_channel"),
+            (adi.ad7405, "ad7405_channel"),
         ],
     )
     def test_channel_def_attribute(self, device_class, channel_class_name):
@@ -112,6 +120,10 @@ class TestPatternARXDevices:
             adi.ad719x,
             adi.ad738x,
             adi.ad777x,
+            adi.ad7799,
+            adi.ad7091rx,
+            adi.ad7490,
+            adi.ad7405,
         ],
     )
     def test_complex_data_attribute(self, device_class):
@@ -137,6 +149,9 @@ class TestPatternARXDevices:
             adi.ad719x,
             adi.ad738x,
             adi.ad777x,
+            adi.ad7799,
+            adi.ad7490,
+            adi.ad7405,
         ],
     )
     def test_channel_list_attribute(self, device_class):
@@ -207,6 +222,10 @@ class TestChannelClasses:
                 "ad5754r_channel",
                 ["raw", "scale", "offset", "powerup", "range"],
             ),
+            ("ad7799", "ad7799_channel", ["value"]),
+            ("ad7091rx", "ad7091rx_channel", ["raw", "scale"]),
+            ("ad7490", "ad7490_channel", ["raw", "scale"]),
+            ("ad7405", "ad7405_channel", ["scale", "offset"]),
         ],
     )
     def test_channel_class_properties(
@@ -245,6 +264,10 @@ class TestDeviceSpecificFeatures:
     def test_ad2s1210_has_post_init(self):
         """Verify ad2s1210 has __post_init__ for custom channels"""
         assert hasattr(adi.ad2s1210, "__post_init__")
+
+    def test_ad7091rx_has_post_init(self):
+        """Verify ad7091rx has __post_init__ for setattr pattern"""
+        assert hasattr(adi.ad7091rx, "__post_init__")
 
     def test_ad2s1210_custom_channels(self):
         """Verify ad2s1210 has custom channel classes"""
@@ -294,6 +317,7 @@ class TestToVoltsConversion:
             adi.ad777x,
             adi.ad4170,
             adi.ad4130,
+            adi.ad7490,
         ],
     )
     def test_to_volts_method_exists(self, device_class):
@@ -306,6 +330,11 @@ class TestToVoltsConversion:
         assert callable(
             device_class.to_volts
         ), f"{device_class.__name__}.to_volts should be callable"
+
+    def test_ad7091rx_to_mvolts_method_exists(self):
+        """Verify ad7091rx has to_mvolts method"""
+        assert hasattr(adi.ad7091rx, "to_mvolts"), "ad7091rx missing to_mvolts method"
+        assert callable(adi.ad7091rx.to_mvolts), "ad7091rx.to_mvolts should be callable"
 
 
 class TestInheritanceStructure:
@@ -325,6 +354,10 @@ class TestInheritanceStructure:
             (adi.ad719x, "rx_chan_comp"),
             (adi.ad738x, "rx_chan_comp"),
             (adi.ad777x, "rx_chan_comp"),
+            (adi.ad7799, "rx_chan_comp"),
+            (adi.ad7091rx, "rx_chan_comp_no_buff"),
+            (adi.ad7490, "rx_chan_comp"),
+            (adi.ad7405, "rx_chan_comp"),
             (adi.ad579x, "tx_chan_comp"),
             (adi.ad5754r, "tx_chan_comp_no_buff"),
             (adi.ad2s1210, "rx_def"),
@@ -356,6 +389,10 @@ class TestBackwardsCompatibility:
             adi.ad719x,
             adi.ad738x,
             adi.ad777x,
+            adi.ad7799,
+            adi.ad7091rx,
+            adi.ad7490,
+            adi.ad7405,
             adi.ad579x,
             adi.ad5754r,
             adi.ad2s1210,
@@ -381,6 +418,9 @@ class TestBackwardsCompatibility:
             adi.ad719x,
             adi.ad738x,
             adi.ad777x,
+            adi.ad7799,
+            adi.ad7490,
+            adi.ad7405,
         ],
     )
     def test_rx_channel_list_exists(self, device_class):
@@ -431,6 +471,10 @@ class TestDocumentation:
             adi.ad719x,
             adi.ad738x,
             adi.ad777x,
+            adi.ad7799,
+            adi.ad7091rx,
+            adi.ad7490,
+            adi.ad7405,
             adi.ad579x,
             adi.ad5754r,
             adi.ad2s1210,
