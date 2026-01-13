@@ -44,7 +44,6 @@ class ad7124_channel(attribute):
 class ad7124(rx_chan_comp):
     """AD7124 ADC"""
 
-    channel = []  # type: ignore
     compatible_parts = ["ad7124-8", "ad7124-4"]
     _device_name = ""
     _complex_data = False

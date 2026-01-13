@@ -44,7 +44,6 @@ class ad405x_channel(attribute):
 class ad405x(rx_chan_comp):
     """ AD405x ADC """
 
-    channel = []  # type: ignore
     compatible_parts = ["ad4052", "ad4050", "ad4062", "ad4060"]
     _device_name = ""
     _complex_data = False

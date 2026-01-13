@@ -45,25 +45,7 @@ class ad777x_channel(attribute):
 class ad777x(rx_chan_comp):
     """AD777x ADC"""
 
-    channel = []  # type: ignore
     compatible_parts = ["ad7770", "ad7771", "ad7779"]
     _device_name = ""
     _complex_data = False
     _channel_def = ad777x_channel
-
-    def to_volts(self, index, val):
-        """Converts raw value to SI."""
-        _scale = self.channel[index].scale
-
-        ret = None
-
-        if isinstance(val, np.int16):
-            ret = val * _scale
-
-        if isinstance(val, np.ndarray):
-            ret = [x * _scale for x in val]
-
-        if ret is None:
-            raise Exception("Error in converting to actual voltage")
-
-        return ret

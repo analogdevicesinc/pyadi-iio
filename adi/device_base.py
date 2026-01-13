@@ -21,6 +21,7 @@ class device_base(shared_def):
     compatible_parts = None  # To be defined in subclasses
     _control_device_name = None  # Set through device_base.__init__
     _device_index = 0  # Index when multiple devices with same name exist
+    _ignore_channels = []  # List of channel names to ignore during initialization
 
     def __init__(self, device_name="", device_index=0):
         """Initialize device with common pattern.
@@ -56,12 +57,16 @@ class device_base(shared_def):
 
     def _add_channel_instances(self):
         """Initiate channel objects for each channel in the device."""
+        self.channel = []  # type: ignore
         if self._channel_def:
             if not callable(self._channel_def):
                 raise Exception("_channel_def must be a callable class")
             for ch in self._ctrl.channels:
+                if ch.id in self._ignore_channels:
+                    continue
                 name = ch.id
                 setattr(self, name, self._channel_def(self._ctrl, name))
+                self.channel.append(getattr(self, name))
 
 
 class tx_chan_comp(tx_def, device_base):

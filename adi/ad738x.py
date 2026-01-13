@@ -44,12 +44,11 @@ class ad738x_channel(attribute):
 class ad738x(rx_chan_comp):
     """AD738x ADC"""
 
-    channel = []  # type: ignore
     compatible_parts = [
+        "ad7381",
         "ad7380",
         "ad7380-4",
         "ad7389-4",
-        "ad7381",
         "ad7381-4",
         "ad7383",
         "ad7384",
@@ -64,6 +63,7 @@ class ad738x(rx_chan_comp):
     _device_name = ""
     _complex_data = False
     _channel_def = ad738x_channel
+    _ignore_channels = ["timestamp"]
 
     def to_volts(self, index, val):
         """Converts raw value to SI."""
