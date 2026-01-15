@@ -29,15 +29,13 @@ class Hammerhead_setup():
 
         #Set AD9213 DC couping and calibration registers
         self.ad9213_phy.ad9213_register_write(0x1617,0x1)
+        self.ad9213_phy.ad9213_register_write(0x1600, 0x1)
         self.ad9213_phy.ad9213_register_write(0x1601,0x1)
         print("DC-coupling reg (1617):", self.ad9213_phy.ad9213_register_read(0x1617))
         print("Cal freeze reg (1601):", self.ad9213_phy.ad9213_register_read(0x1601))
 
         # Set up high-speed path switches
         self.gpio_controller = adi.one_bit_adc_dac(uri, name="one-bit-adc-dac")
-        setattr(self.gpio_controller, "gpio_adrf5203_ctrl0", 0) # defaults to high atten path
-        setattr(self.gpio_controller, "gpio_adrf5203_ctrl1", 1) # low atten path -> SW0_ctrl = 1, SW1_ctrl = SW2_ctrl = 0
-        setattr(self.gpio_controller, "gpio_adrf5203_ctrl2", 1)
 
   	# Set up adl558_en
         setattr(self.gpio_controller, "gpio_adl5580_en", 1)
@@ -71,18 +69,6 @@ class Hammerhead():
         self.ad4080_phy  = adi.ad4080(uri, device_name="ad4080")
         #self.run_cal(0)
 
-
-    def set_atten_path(self, atten_path):
-        if atten_path == 1: #high attenuation path
-            setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl0", 0)
-            setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl1", 1)
-            setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl2", 1)
-        if atten_path == 0: #low attenuation path
-            setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl0", 1)
-            setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl1", 0)
-            setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl2", 0)
-
-
     def set_dac_offset(self, voltage):
         #set DAC ch0 (ADL5580 VINM) to voltage (in mV)
         self.board.ltc2664.voltage0.volt = voltage
@@ -113,7 +99,7 @@ class Hammerhead():
         #The use can save the plot of AD9213 data, such as a PDF file, using the plt.savefig method, as in the next line
         #plt.savefig('AD9213_plot.pdf', format='pdf', bbox_inches='tight')
         #print('\nThis plot has been saved as AD9213_plot.pdf in the current path.')
-        print('\nIf the user is interested in saving the plot as a file, please remove # to un-comment line#111 of ADMX6001_multiClass-pCal.py.')
+        print('\nIf the user is interested in saving the plot as a file, please remove # to un-comment line#100 of ADMX6001_multiClass-pCal.py.')
         plt.show(block=False)
         plt.pause(3)
         plt.close(fig)
@@ -132,7 +118,7 @@ class Hammerhead():
         # The use can save the plot of AD4080 data, such as a PDF file, using the plt.savefig method, as in the next line
         #plt.savefig('AD4080_plot.pdf', format='pdf', bbox_inches='tight')
         #print('\nThis plot has been saved as AD4080_plot.pdf in the current path.')
-        print('\nIf the user is interested in saving the plot as a file, please remove # to un-comment line#130 of ADMX6001_multiClass-pCal.py.')
+        print('\nIf the user is interested in saving the plot as a file, please remove # to un-comment line#119 of ADMX6001_multiClass-pCal.py.')
 
         plt.show(block=False)
         plt.pause(3)
@@ -140,13 +126,10 @@ class Hammerhead():
 
 
     def run_cal(self, offset):
-        # Calibrate to a specified DC voltage (will center this voltage at the AD9213 zero code)
+        # Calibrate to a specified DC voltage
+        print("AD9213 ADC Calibration: Ensure a test tone at desired frequency and DC offset is applied to the 50ohm input")
         print("Beginning calibration...")
         self.set_dac_offset(offset)
-        # set switch path to terminate input of ADL5580 driver amp
-        setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl0", 1)
-        setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl1", 1)
-        setattr(self.board.gpio_controller, "gpio_adrf5203_ctrl2", 1)
         time.sleep(1)
         self.board.ad9213_phy.ad9213_register_write(0x1601, 0x0)
         time.sleep(3)
