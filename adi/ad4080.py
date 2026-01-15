@@ -18,13 +18,20 @@ class ad4080(rx, context_manager):
     def __init__(self, uri="", device_name="ad4080"):
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_part = "ad4080"
+        compatible_parts = [
+            "ad4080",
+            "ad4081",
+            "ad4083",
+            "ad4084",
+            "ad4086",
+            "ad4087",
+        ]
         self._ctrl = None
 
         if not device_name:
-            device_name = compatible_part
+            device_name = compatible_parts[0]
         else:
-            if device_name != compatible_part:
+            if device_name not in compatible_parts:
                 raise Exception(f"Not a compatible device: {device_name}")
 
         # Select the device matching device_name as working device
@@ -36,7 +43,7 @@ class ad4080(rx, context_manager):
 
         # Raise an exception if the device isn't found
         if not self._ctrl:
-            raise Exception("AD4080 device not found")
+            raise Exception(f"{device_name} device not found")
 
         if not self._rxadc:
             raise Exception("Error in selecting matching device")
