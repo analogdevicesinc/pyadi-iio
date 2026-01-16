@@ -6,26 +6,6 @@ from adi.attribute import attribute
 from adi.context_manager import context_manager
 
 
-class _dyn_property:
-    """ Class descriptor for accessing individual attributes """
-
-    def __init__(self, attr, dev, channel_name, output):
-        self._dev = dev
-        self._attr = attr
-        self._channel_name = channel_name
-        self._output = output
-
-    def __get__(self, instance, owner):
-        return instance._get_iio_attr(
-            self._channel_name, self._attr, self._output, self._dev
-        )
-
-    def __set__(self, instance, value):
-        instance._set_iio_attr_int(
-            self._channel_name, self._attr, self._output, int(value), self._dev
-        )
-
-
 class one_bit_adc_dac(attribute, context_manager):
     """One bit ADC/DAC (GPIO). This driver will create a handle for the
         GPIO device as well as properties for each GPIO pin it accesses.
@@ -37,7 +17,7 @@ class one_bit_adc_dac(attribute, context_manager):
             URI of IIO context with GPIO pins
         name: type=string
             String identifying the device by name from the device tree.
-            Dynamic class properties will be created for each channel.
+            Dynamic instance properties will be created for each channel.
     """
 
     _device_name = ""
@@ -63,11 +43,58 @@ class one_bit_adc_dac(attribute, context_manager):
         if not self._ctrl:
             raise Exception(f"No device found for {name}")
 
+        # Store GPIO channel info for dynamic property handling
+        # This fixes the bug where class-level properties were shared between instances
+        self._gpio_channels = {}
         for chan in self._ctrl.channels:
-            setattr(
-                type(self),
-                f"gpio_{chan.attrs['label'].value.lower()}",
-                _dyn_property(
-                    "raw", dev=self._ctrl, channel_name=chan.id, output=chan.output
-                ),
-            )
+            gpio_name = f"gpio_{chan.attrs['label'].value.lower()}"
+            self._gpio_channels[gpio_name] = {
+                "channel_id": chan.id,
+                "output": chan.output,
+            }
+
+    def __getattribute__(self, name):
+        """Custom attribute access to handle GPIO properties dynamically per instance"""
+        # First try normal attribute access
+        try:
+            return object.__getattribute__(self, name)
+        except AttributeError:
+            pass
+
+        # Check if it's a GPIO attribute
+        if name.startswith("gpio_"):
+            try:
+                gpio_channels = object.__getattribute__(self, "_gpio_channels")
+                if name in gpio_channels:
+                    chan_info = gpio_channels[name]
+                    ctrl = object.__getattribute__(self, "_ctrl")
+                    return self._get_iio_attr(
+                        chan_info["channel_id"], "raw", chan_info["output"], ctrl
+                    )
+            except AttributeError:
+                # _gpio_channels doesn't exist yet (during initialization)
+                pass
+
+        raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+
+    def __setattr__(self, name, value):
+        """Custom attribute setting to handle GPIO properties dynamically per instance"""
+        # Handle GPIO attributes if we have the channel info available
+        if name.startswith("gpio_") and hasattr(self, "_gpio_channels"):
+            gpio_channels = object.__getattribute__(self, "_gpio_channels")
+            if name in gpio_channels:
+                chan_info = gpio_channels[name]
+                ctrl = object.__getattribute__(self, "_ctrl")
+                self._set_iio_attr_int(
+                    chan_info["channel_id"],
+                    "raw",
+                    chan_info["output"],
+                    int(value),
+                    ctrl,
+                )
+                return
+
+        # Default behavior for all other attributes
+        object.__setattr__(self, name, value)
