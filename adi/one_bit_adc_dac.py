@@ -7,22 +7,23 @@ from adi.context_manager import context_manager
 
 
 class _dyn_property:
-    """ Class descriptor for accessing individual attributes """
+    """Class descriptor for accessing individual attributes."""
 
-    def __init__(self, attr, dev, channel_name, output):
-        self._dev = dev
+    def __init__(self, attr, channel_name, output):
         self._attr = attr
         self._channel_name = channel_name
         self._output = output
 
     def __get__(self, instance, owner):
+        if instance is None:
+            return self
         return instance._get_iio_attr(
-            self._channel_name, self._attr, self._output, self._dev
+            self._channel_name, self._attr, self._output, instance._ctrl
         )
 
     def __set__(self, instance, value):
         instance._set_iio_attr_int(
-            self._channel_name, self._attr, self._output, int(value), self._dev
+            self._channel_name, self._attr, self._output, int(value), instance._ctrl
         )
 
 
@@ -67,7 +68,5 @@ class one_bit_adc_dac(attribute, context_manager):
             setattr(
                 type(self),
                 f"gpio_{chan.attrs['label'].value.lower()}",
-                _dyn_property(
-                    "raw", dev=self._ctrl, channel_name=chan.id, output=chan.output
-                ),
+                _dyn_property("raw", channel_name=chan.id, output=chan.output),
             )
