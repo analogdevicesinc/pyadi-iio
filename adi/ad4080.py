@@ -41,16 +41,44 @@ class ad4080(rx, context_manager):
 
     _complex_data = False
     _rx_channel_names = ["voltage0"]
-    _device_name = "ad4080"
+    _device_name = "" #dosloan
 
-    def __init__(self, uri=""):
-
+    def __init__(self, uri="", device_name="ad4080"): # dosloan allow device name to be passed
+## dosloan: added start: support for compatible parts
         """Initialize."""
         context_manager.__init__(self, uri, self._device_name)
+        compatible_parts = [
+            "ad4080",
+            "ad4081",
+            "ad4082",
+            "ad4083",
+            "ad4084",
+            "ad4085",
+            "ad4086",
+            "ad4087",
+            "ad4088"
+        ]
+        self._ctrl = None
 
-        self._rxadc = self._ctx.find_device("ad4080")
-        self._ctrl = self._ctx.find_device("ad4080")
+        if not device_name:
+            device_name = compatible_parts[0]
+        else:
+            if device_name not in compatible_parts:
+                raise Exception(f"Not a compatible device: {device_name}")
 
+        # Select the device matching device_name as working device
+        for device in self._ctx.devices:
+            if device.name == device_name:
+                self._ctrl = device
+                self._rxadc = device
+                break
+
+        if not self._ctrl:
+            raise Exception("Error in selecting matching device")
+
+        if not self._rxadc:
+            raise Exception("Error in selecting matching device")
+# dosloan added end
         rx.__init__(self)
 
     @property
@@ -86,6 +114,26 @@ class ad4080(rx, context_manager):
     def filter_sel_available(self):
         """"""
         return self._get_iio_dev_attr_str("filter_sel_available", False)
+## dosloan addeded start: filter selection attributes and lvds_sync attributes
+    @property
+    def filter_sel(self):
+        """"""
+        return self._get_iio_dev_attr_str("filter_sel", False)
+
+    @filter_sel.setter
+    def filter_sel(self, value):
+        self._set_iio_dev_attr_str("filter_sel", str(value))
+
+    @property
+    def lvds_sync(self):
+        """"""
+        return self._get_iio_attr("voltage0", "lvds_sync", False)
+
+    @lvds_sync.setter
+    def lvds_sync(self, value):
+        """"""
+        self._set_iio_attr("voltage0", "lvds_sync", False, value)
+### dosloan added end
 
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""
