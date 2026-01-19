@@ -55,7 +55,7 @@ class ad9508(attribute, context_manager):
         @frequency.setter
         def frequency(self, frequency):
             """"""
-            self._set_iio_attr(self.name, "frequency", False, frequency, self._ctrl)
+            self._set_iio_attr(self.name, "frequency", True, frequency, self._ctrl) # dosloan fixed attribute, as per previous discussion with Antoniu
 
         @property
         def phase(self):
