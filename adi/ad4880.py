@@ -20,7 +20,47 @@ class ad4880(rx, context_manager):
         """Initialize."""
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = ["ad4880", "ad4880_chb"]
+        # compatible_parts = ["ad4880", "ad4880_chb"]
+        # self._ctrl = None
+        #
+        # if not device_name:
+        #     device_name = compatible_parts[0]
+        # else:
+        #     if device_name not in compatible_parts:
+        #         raise Exception(f"Not a compatible device: {device_name}")
+        #
+        # # Select the device matching device_name as working device
+        # for device in self._ctx.devices:
+        #     if device.name == device_name:
+        #         self._ctrl = device
+        #         self._rxadc = device
+        #         break
+        #
+        # if not self._ctrl:
+        #     raise Exception("Error in selecting matching device")
+        #
+        # if not self._rxadc:
+        #     raise Exception("Error in selecting matching device")
+        #
+        # self._rx_channel_names = []
+        # self.channel = []
+        # for ch in self._ctrl.channels:
+        #     name = ch._id
+        #     self._rx_channel_names.append(name)
+        #     self.channel.append(self._channel(self._ctrl, name))
+
+# dosloan added start: adding support for all generics
+        compatible_parts = [
+            "ad4880", "ad4880_chb",
+            "ad4881", "ad4881_chb",
+            "ad4882", "ad4882_chb",
+            "ad4883", "ad4883_chb",
+            "ad4884", "ad4884_chb",
+            "ad4885", "ad4885_chb",
+            "ad4886", "ad4886_chb",
+            "ad4887", "ad4887_chb",
+            "ad4888", "ad4888_chb"
+        ]
         self._ctrl = None
 
         if not device_name:
@@ -48,7 +88,7 @@ class ad4880(rx, context_manager):
             name = ch._id
             self._rx_channel_names.append(name)
             self.channel.append(self._channel(self._ctrl, name))
-
+# dosloan added end
         rx.__init__(self)
 
     class _channel(attribute):
