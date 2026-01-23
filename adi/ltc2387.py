@@ -4,45 +4,24 @@
 
 import numpy as np
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
-class ltc2387(rx, context_manager):
+class ltc2387(rx_def):
 
     """LTC2387 family devices"""
 
-    _device_name = ""
+    compatible_parts = [
+        "ltc2387",
+        "ltc2387-16",
+        "ltc2387-18",
+        "adaq23876",
+        "adaq23878",
+    ]
     _rx_data_type = np.int32
     _complex_data = False
     _rx_channel_names = ["voltage"]
-
-    def __init__(self, uri="", device_index=0):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = [
-            "ltc2387",
-            "ltc2387-16",
-            "ltc2387-18",
-            "adaq23876",
-            "adaq23878",
-        ]
-
-        self._ctrl = None
-        index = 0
-
-        # Selecting the device_index-th device from the xxx2387 family as working device.
-        for device in self._ctx.devices:
-            if device.name in compatible_parts:
-                if index == device_index:
-                    self._ctrl = device
-                    self._rxadc = device
-                    break
-                else:
-                    index += 1
-
-        rx.__init__(self)
+    _device_name = ""
 
     @property
     def sampling_frequency(self):
