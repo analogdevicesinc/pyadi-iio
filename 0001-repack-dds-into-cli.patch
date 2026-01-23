@@ -1,0 +1,884 @@
+From c465b8f460931c9ecb30948d259289bfff6d0e29 Mon Sep 17 00:00:00 2001
+From: Jorge Marques <jorge.marques@analog.com>
+Date: Fri, 12 Dec 2025 16:46:56 +0100
+Subject: [PATCH]: repack dds into cli
+
+prompt:
+You are in the iio-oscilloscope repository, a app that leverages libiio.
+You can build it with `(cd build ; cmake .. ;  make -j8)`. I would like
+you to extract some commands to enable the dac buffer so I can use as a
+cli instead of a gui. It is to Select the DDS Mode as DAC Buffer Output,
+then at DAC Buffer Settings, set a file e.g. sinewave_0.9.mat on all DAC
+Channels (voltage0_i to voltage3_q (number may change, but always all)).
+For example, at plugins/dac_data_manager.c gui_dds_mode_chooser_create I
+already found the DDS Mode dropdown
+the mat is at ./waveforms/sinewave_0.9.mat
+You can test at remote ip:10.x.x.x.xx
+
+Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+---
+ Makefile.dac_cli |  31 ++
+ dac_buffer_cli.c | 814 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 845 insertions(+)
+ create mode 100644 Makefile.dac_cli
+ create mode 100644 dac_buffer_cli.c
+
+diff --git a/Makefile.dac_cli b/Makefile.dac_cli
+new file mode 100644
+index 0000000..6f2bbff
+--- /dev/null
++++ b/Makefile.dac_cli
+@@ -0,0 +1,31 @@
++# Makefile for DAC Buffer CLI Tool
++# ./dac_buffer_cli -u ip:10.44.3.88 -d axi-ad9084-tx-hpc -f ./waveforms/sinewave_0.9.mat
++
++CC = gcc
++CFLAGS = -Wall -Wextra -O2
++LDFLAGS = -liio -lmatio -lm
++
++# Target
++TARGET = dac_buffer_cli
++
++# Source
++SRC = dac_buffer_cli.c
++
++# Object
++OBJ = $(SRC:.c=.o)
++
++all: $(TARGET)
++
++$(TARGET): $(OBJ)
++	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
++
++%.o: %.c
++	$(CC) $(CFLAGS) -c -o $@ $<
++
++clean:
++	rm -f $(OBJ) $(TARGET)
++
++install: $(TARGET)
++	install -D -m 755 $(TARGET) /usr/local/bin/$(TARGET)
++
++.PHONY: all clean install
+diff --git a/dac_buffer_cli.c b/dac_buffer_cli.c
+new file mode 100644
+index 0000000..e7bf0fb
+--- /dev/null
++++ b/dac_buffer_cli.c
+@@ -0,0 +1,814 @@
++/**
++ * DAC Buffer CLI Tool
++ * Enables DAC Buffer Output mode and loads waveform files
++ *
++ * Usage: dac_buffer_cli <dac_device> <waveform_file> [options]
++ */
++
++#include <iio/iio.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <stdbool.h>
++#include <errno.h>
++#include <math.h>
++#include <float.h>
++#include <sys/stat.h>
++#include <unistd.h>
++#include <matio.h>
++#include <getopt.h>
++
++#define SCALE_MINUS_INFINITE -91
++
++/* add backwards compat for <matio-1.5.0 */
++#if MATIO_MAJOR_VERSION == 1 && MATIO_MINOR_VERSION < 5
++typedef struct ComplexSplit mat_complex_split_t;
++#endif
++
++struct _complex_ref {
++	double *re;
++	double *im;
++};
++
++static double db_full_scale_convert(double value, bool inverse)
++{
++	if (inverse) {
++		if (value == 0)
++			return -DBL_MAX;
++		return (int)((20 * log10(value)) - 0.5);
++	} else {
++		if (value == SCALE_MINUS_INFINITE)
++			return 0;
++		return pow(10, value / 20.0);
++	}
++}
++
++static double dac_offset_get_value(struct iio_device *dac)
++{
++	double offset;
++	const char *dev_name;
++
++	if (!dac)
++		return 0.0;
++
++	offset = 0.0;
++	dev_name = iio_device_get_name(dac);
++	if (dev_name && !strcmp(dev_name, "cf-ad9122-core-lpc"))
++		offset = 32767.0;
++	else if (dev_name && !strcmp(dev_name, "cf-ad9122-core-hpc"))
++		offset = 32767.0;
++
++	return offset;
++}
++
++/*
++ * Fill empty channels with copies of other channels
++ * E.g. (data, NULL, NULL, NULL) becomes (data, data, data, data)
++ */
++static void replicate_tx_data_channels(struct _complex_ref *data, int count)
++{
++	if (!data)
++		return;
++
++	if (count > 2)
++		replicate_tx_data_channels(data, count / 2);
++
++	int i, half = count / 2;
++
++	/* Check if the second half of the array needs to be filled */
++	if (data[half].re == NULL || data[half].im == NULL) {
++		for (i = 0; i < half; i++) {
++			data[half + i].re = data[i].re;
++			data[half + i].im = data[i].im;
++		}
++	}
++}
++
++static unsigned short convert(double scale, float val, double offset)
++{
++	return (short) (val * scale + offset);
++}
++
++static int parse_wavefile_line(const char *line, double *vals, unsigned int max_num_vals)
++{
++	unsigned int n = 0;
++	char *endptr;
++
++	while (n < max_num_vals) {
++		/* Skip white space */
++		while (*line == ' ' || *line == '\t' || *line == ',')
++			line++;
++
++		if (*line == '\n' || *line == '\r' || *line == '\0')
++			break;
++
++		vals[n++] = strtod(line, &endptr);
++
++		if (errno || line == (const char *)endptr)
++			return -1;
++		line = (const char *)endptr;
++	}
++
++	return n;
++}
++
++static int analyse_wavefile(struct iio_device *dac, const char *file_name,
++		char **buf, int *count, int tx_channels, double full_scale, unsigned alignment)
++{
++	int ret, rep;
++	unsigned int size, j, i = 0;
++	double max = 0.0, val[8], scale = 0.0;
++	double offset;
++	char line[80];
++	mat_t *matfp;
++	matvar_t **matvars;
++
++	FILE *infile = fopen(file_name, "r");
++
++	*buf = NULL;
++
++	if (infile == NULL)
++		return -errno;
++
++	offset = dac_offset_get_value(dac);
++
++	if (fgets(line, 80, infile) != NULL) {
++		if (strncmp(line, "TEXT", 4) == 0) {
++			/* TEXT file format */
++			if (strncmp(line, "TEXTU", 5) == 0)
++				scale = 16.0;
++			ret = sscanf(line, "TEXT%*c REPEAT %d", &rep);
++			if (ret != 1) {
++				rep = 1;
++			}
++			size = 0;
++			while (fgets(line, 80, infile)) {
++				ret = parse_wavefile_line(line, val, 8);
++				if (ret == 0)
++					continue;
++				if (!(ret == 4 || ret == 2 || ret == 8)) {
++					fclose(infile);
++					fprintf(stderr, "ERROR: No 2, 4 or 8 columns of data inside the text file\n");
++					return -1;
++				}
++
++				for (i = 0; i < (unsigned int) ret; i++)
++					if (fabs(val[i]) > max)
++						max = fabs(val[i]);
++
++				size += tx_channels * 2;
++			}
++
++			size *= rep;
++			if (scale == 0.0)
++				scale = 32767.0 * full_scale / max;
++
++			while ((size % alignment) != 0)
++				size *= 2;
++
++			*buf = malloc(size);
++			if (*buf == NULL)
++				return -errno;
++
++			unsigned short *sample_16 = *((unsigned short **) buf);
++
++			rewind(infile);
++
++			if (fgets(line, 80, infile) != NULL) {
++				if (strncmp(line, "TEXT", 4) == 0) {
++					int n;
++					size = 0;
++					i = 0;
++					while (fgets(line, 80, infile)) {
++						ret = parse_wavefile_line(line, val, 8);
++						if (ret == 0)
++							continue;
++
++						for (j = 0; j < (unsigned int) rep; j++) {
++							for (n = 0; n < tx_channels; n++)
++								sample_16[i++] = convert(scale, val[n & (ret - 1)], offset);
++
++							size += tx_channels * 2;
++						}
++					}
++				}
++			}
++
++			while ((size % alignment) != 0) {
++				memcpy(*buf + size, *buf, size);
++				size += size;
++			}
++
++			fclose(infile);
++			*count = size;
++
++		} else {
++			/* Try MATLAB file */
++			fclose(infile);
++			ret = 0;
++
++			matfp = Mat_Open(file_name, MAT_ACC_RDONLY);
++			if (matfp == NULL) {
++				fprintf(stderr, "ERROR: Could not open %s as a matlab file\n", file_name);
++				return -1;
++			}
++
++			bool complex_format = false;
++			bool real_format = false;
++
++			rep = 0;
++			matvars = malloc(sizeof(matvar_t *) * tx_channels);
++
++			while (rep < tx_channels && (matvars[rep] = Mat_VarReadNextInfo(matfp)) != NULL) {
++				/* must be a vector */
++				if (matvars[rep]->rank != 2 || (matvars[rep]->dims[0] > 1 && matvars[rep]->dims[1] > 1)) {
++					fprintf(stderr, "ERROR: Data inside the matlab file must be a vector\n");
++					free(matvars);
++					Mat_Close(matfp);
++					return -1;
++				}
++				/* should be a double */
++				if (matvars[rep]->class_type != MAT_C_DOUBLE) {
++					fprintf(stderr, "ERROR: Data inside the matlab file must be of type double\n");
++					free(matvars);
++					Mat_Close(matfp);
++					return -1;
++				}
++
++				Mat_VarReadDataAll(matfp, matvars[rep]);
++
++				if (matvars[rep]->isComplex) {
++					mat_complex_split_t *complex_data = matvars[rep]->data;
++					double *re, *im;
++					re = complex_data->Re;
++					im = complex_data->Im;
++
++					for (j = 0; j < (unsigned int) matvars[rep]->dims[0] ; j++) {
++						if (fabs(re[j]) > max)
++							max = fabs(re[j]);
++						if (fabs(im[j]) > max)
++							max = fabs(im[j]);
++					}
++					complex_format = true;
++				} else {
++					double re;
++
++					for (j = 0; j < (unsigned int) matvars[rep]->dims[0] ; j++) {
++						re = ((double *)matvars[rep]->data)[j];
++						if (fabs(re) > max)
++							max = fabs(re);
++					}
++					real_format = true;
++				}
++				rep++;
++			}
++			rep--;
++
++			if (rep < 0) {
++				fprintf(stderr, "ERROR: Could not find any valid data in %s\n", file_name);
++				free(matvars);
++				Mat_Close(matfp);
++				return -1;
++			}
++
++			if (max <= 1.0)
++				max = 1.0;
++
++			scale = 32767.0 * full_scale / max;
++
++			size = matvars[0]->dims[0];
++
++			for (i = 0; i <= (unsigned int) rep; i++) {
++				if (size != (unsigned int) matvars[i]->dims[0]) {
++					fprintf(stderr, "ERROR: Vector dimensions in the matlab file don't match\n");
++					free(matvars);
++					Mat_Close(matfp);
++					return -1;
++				}
++			}
++
++			if (complex_format && real_format) {
++				fprintf(stderr, "ERROR: Both complex and real data formats in the same matlab file are not supported\n");
++				free(matvars);
++				Mat_Close(matfp);
++				return -1;
++			}
++
++			*buf = malloc((size + 1) * tx_channels * 2);
++
++			if (*buf == NULL) {
++				free(matvars);
++				Mat_Close(matfp);
++				return -errno;
++			}
++
++			*count = size * tx_channels * 2;
++
++			unsigned short *sample_16 = *((unsigned short **) buf);
++			struct _complex_ref *tx_data = calloc(tx_channels, sizeof(struct _complex_ref));
++
++			mat_complex_split_t *complex_data[64];
++
++			if (complex_format) {
++				for (i = 0; i <= (unsigned int) rep; i++) {
++					complex_data[i] = matvars[i]->data;
++					tx_data[i].re = complex_data[i]->Re;
++					tx_data[i].im = complex_data[i]->Im;
++				}
++			} else if (real_format) {
++				for (i = 0; i <= (unsigned int) rep; i++) {
++					if (i % 2)
++						tx_data[i / 2].im = matvars[i]->data;
++					else
++						tx_data[i / 2].re = matvars[i]->data;
++				}
++			}
++			replicate_tx_data_channels(tx_data, tx_channels);
++
++			unsigned int ch = 0;
++			unsigned int sample_i = 0;
++			unsigned int tx_data_end = (tx_channels % 2 == 0) ? (tx_channels / 2) : tx_channels;
++
++			for (i = 0 ; i < size; i++) {
++				for (ch = 0; ch < tx_data_end; ch++) {
++					if (tx_channels % 2 == 0) {
++						sample_16[sample_i++] = ((unsigned int) convert(scale, tx_data[ch].re[i], offset));
++						sample_16[sample_i++] = ((unsigned int) convert(scale, tx_data[ch].im[i], offset));
++					} else {
++						sample_16[sample_i++] = ((unsigned int) convert(scale, tx_data[ch].re[i], offset));
++					}
++				}
++			}
++
++			for (j = 0; j <= (unsigned int) rep; j++) {
++				Mat_VarFree(matvars[j]);
++			}
++			free(tx_data);
++			free(matvars);
++
++			Mat_Close(matfp);
++			return ret;
++		}
++	} else {
++		fclose(infile);
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static int disable_dds(struct iio_device *dac)
++{
++	const struct iio_attr *attr = NULL;
++	struct iio_channel *ch;
++	int ret;
++
++	if (!dac) {
++		fprintf(stderr, "Invalid DAC device\n");
++		return -1;
++	}
++
++	ch = iio_device_find_channel(dac, "altvoltage0", true);
++	if (!ch) {
++		fprintf(stderr, "Warning: Could not find altvoltage0 output channel (DDS may not be present)\n");
++		return 0; /* Not fatal - some devices don't have DDS */
++	}
++
++	attr = iio_channel_find_attr(ch, "raw");
++	if (!attr) {
++		fprintf(stderr, "Warning: Could not find 'raw' attribute on altvoltage0\n");
++		return 0; /* Not fatal */
++	}
++
++	ret = iio_attr_write_bool(attr, false);
++	if (ret < 0) {
++		fprintf(stderr, "Warning: Failed to disable DDS: %d (continuing anyway)\n", ret);
++		return 0; /* Not fatal */
++	}
++
++	printf("DDS disabled successfully\n");
++	return 0;
++}
++
++static int enable_all_scan_channels(struct iio_device *dac, struct iio_channels_mask *mask, bool *channel_states)
++{
++	unsigned int i;
++	int enabled_count = 0;
++
++	for (i = 0; i < iio_device_get_channels_count(dac); i++) {
++		struct iio_channel *ch = iio_device_get_channel(dac, i);
++
++		if (!iio_channel_is_scan_element(ch))
++			continue;
++
++		bool enable = channel_states ? channel_states[i] : true;
++
++		if (enable) {
++			iio_channel_enable(ch, mask);
++			enabled_count++;
++			printf("Enabled channel: %s\n", iio_channel_get_id(ch));
++		} else {
++			iio_channel_disable(ch, mask);
++			printf("Disabled channel: %s\n", iio_channel_get_id(ch));
++		}
++	}
++
++	printf("Total enabled channels: %d\n", enabled_count);
++	return enabled_count;
++}
++
++static void print_usage(const char *prog)
++{
++	printf("Usage: %s [options]\n", prog);
++	printf("Options:\n");
++	printf("  -d, --device <name>      DAC device name (required)\n");
++	printf("  -f, --file <path>        Waveform file path (required for loading)\n");
++	printf("  -u, --uri <uri>          IIO context URI (e.g., ip:192.168.1.10)\n");
++	printf("                           If not specified, uses IIO_URI env var or local\n");
++	printf("  -s, --scale <dBFS>       Scale in dBFS (default: 0.0, range: -91.0 to 0.0)\n");
++	printf("  -c, --cyclic             Enable cyclic mode (default: true)\n");
++	printf("  -n, --no-cyclic          Disable cyclic mode\n");
++	printf("  -a, --all-channels       Enable all channels (default)\n");
++	printf("  -l, --list-channels      List available channels and exit\n");
++	printf("  -h, --help               Show this help message\n");
++	printf("\nExamples:\n");
++	printf("  # Local device\n");
++	printf("  %s -d cf-ad9361-dds-core-lpc -f ./waveforms/sinewave_0.9.mat\n\n", prog);
++	printf("  # Remote device\n");
++	printf("  %s -u ip:10.44.3.88 -d axi-ad9084-tx-hpc -f ./waveforms/sinewave_0.9.mat\n\n", prog);
++	printf("  # List channels on remote device\n");
++	printf("  %s -u ip:10.44.3.88 -d axi-ad9084-tx-hpc -l\n", prog);
++}
++
++static void list_channels(struct iio_device *dac)
++{
++	unsigned int i;
++
++	if (!dac) {
++		fprintf(stderr, "Invalid device\n");
++		return;
++	}
++
++	const char *dev_name = iio_device_get_name(dac);
++	const char *dev_id = iio_device_get_id(dac);
++
++	printf("Available channels for device '%s':\n",
++	       dev_name ? dev_name : (dev_id ? dev_id : "unknown"));
++
++	for (i = 0; i < iio_device_get_channels_count(dac); i++) {
++		struct iio_channel *ch = iio_device_get_channel(dac, i);
++		if (!ch)
++			continue;
++
++		const char *id = iio_channel_get_id(ch);
++		if (!id)
++			id = "unknown";
++
++		bool is_scan = iio_channel_is_scan_element(ch);
++		bool is_output = iio_channel_is_output(ch);
++
++		printf("  [%u] %s %s%s\n", i, id,
++		       is_output ? "(output)" : "(input)",
++		       is_scan ? " [scan element]" : "");
++	}
++}
++
++int main(int argc, char **argv)
++{
++	struct iio_context *ctx = NULL;
++	struct iio_device *dac = NULL;
++	struct iio_buffer *buf = NULL;
++	struct iio_block *block = NULL;
++	struct iio_channels_mask *mask = NULL;
++
++	char *device_name = NULL;
++	char *waveform_file = NULL;
++	char *iio_uri = NULL;
++	double scale_dbfs = 0.0;
++	bool cyclic = true;
++	bool list_only = false;
++
++	char *waveform_data = NULL;
++	int waveform_size = 0;
++	int ret = 0;
++	unsigned alignment = 8;
++	bool hw_reported_alignment = false;
++
++	static struct option long_options[] = {
++		{"device", required_argument, 0, 'd'},
++		{"file", required_argument, 0, 'f'},
++		{"uri", required_argument, 0, 'u'},
++		{"scale", required_argument, 0, 's'},
++		{"cyclic", no_argument, 0, 'c'},
++		{"no-cyclic", no_argument, 0, 'n'},
++		{"all-channels", no_argument, 0, 'a'},
++		{"list-channels", no_argument, 0, 'l'},
++		{"help", no_argument, 0, 'h'},
++		{0, 0, 0, 0}
++	};
++
++	int opt;
++	int option_index = 0;
++
++	while ((opt = getopt_long(argc, argv, "d:f:u:s:cnalh", long_options, &option_index)) != -1) {
++		switch (opt) {
++		case 'd':
++			device_name = optarg;
++			break;
++		case 'f':
++			waveform_file = optarg;
++			break;
++		case 'u':
++			iio_uri = optarg;
++			break;
++		case 's':
++			scale_dbfs = atof(optarg);
++			if (scale_dbfs < -91.0 || scale_dbfs > 0.0) {
++				fprintf(stderr, "Scale must be between -91.0 and 0.0 dBFS\n");
++				return EXIT_FAILURE;
++			}
++			break;
++		case 'c':
++			cyclic = true;
++			break;
++		case 'n':
++			cyclic = false;
++			break;
++		case 'a':
++			/* all channels is default */
++			break;
++		case 'l':
++			list_only = true;
++			break;
++		case 'h':
++			print_usage(argv[0]);
++			return EXIT_SUCCESS;
++		default:
++			print_usage(argv[0]);
++			return EXIT_FAILURE;
++		}
++	}
++
++	/* Create IIO context */
++	/* Priority: command-line URI > environment variable > local */
++	const char *uri = iio_uri;
++	if (!uri) {
++		uri = getenv("IIO_URI");
++	}
++
++	if (uri) {
++		printf("Connecting to: %s\n", uri);
++		ctx = iio_create_context(NULL, uri);
++	} else {
++		printf("Using local IIO context\n");
++		ctx = iio_create_context(NULL, NULL);
++	}
++
++	if (!ctx) {
++		fprintf(stderr, "Failed to create IIO context\n");
++		return EXIT_FAILURE;
++	}
++
++
++	printf("IIO context created successfully\n");
++	/* Note: iio_context_get_name may crash with some remote backends, so skip it */
++
++	/* Find device */
++	if (!device_name && !list_only) {
++		fprintf(stderr, "Device name is required (use -d option)\n");
++		print_usage(argv[0]);
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++
++	if (device_name) {
++		dac = iio_context_find_device(ctx, device_name);
++		if (!dac) {
++			fprintf(stderr, "Could not find device '%s'\n", device_name);
++			fprintf(stderr, "Available devices:\n");
++			unsigned dev_count = iio_context_get_devices_count(ctx);
++
++			for (unsigned i = 0; i < dev_count; i++) {
++				struct iio_device *dev = iio_context_get_device(ctx, i);
++				if (!dev) {
++
++					continue;
++				}
++				const char *name = iio_device_get_name(dev);
++				const char *id = iio_device_get_id(dev);
++				fprintf(stderr, "  - %s%s%s%s\n",
++				        id ? id : "unknown",
++				        name ? " (" : "",
++				        name ? name : "",
++				        name ? ")" : "");
++			}
++			ret = EXIT_FAILURE;
++			goto cleanup;
++		}
++
++
++		printf("Found device: %s\n", device_name);
++	}
++
++	/* List channels if requested */
++
++	if (list_only) {
++		if (dac) {
++
++			list_channels(dac);
++
++		} else {
++			fprintf(stderr, "No device specified for listing\n");
++		}
++		ret = EXIT_SUCCESS;
++		goto cleanup;
++	}
++
++	/* Check waveform file */
++	if (!waveform_file) {
++		fprintf(stderr, "Waveform file is required (use -f option)\n");
++		print_usage(argv[0]);
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	/* Disable DDS */
++
++	fflush(stderr);
++	printf("\n=== Disabling DDS ===\n");
++	fflush(stdout);
++	if (disable_dds(dac) < 0) {
++		fprintf(stderr, "Warning: Could not disable DDS (may not be required)\n");
++	}
++
++	fflush(stderr);
++
++	/* Create channels mask */
++	printf("\n=== Configuring Channels ===\n");
++	mask = iio_create_channels_mask(iio_device_get_channels_count(dac));
++	if (!mask) {
++		fprintf(stderr, "Failed to create channels mask\n");
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	/* Enable all scan element channels */
++	int enabled_count = enable_all_scan_channels(dac, mask, NULL);
++	if (enabled_count <= 0) {
++		fprintf(stderr, "No channels enabled\n");
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	/* Create buffer */
++	printf("\n=== Creating Buffer ===\n");
++	buf = iio_device_create_buffer(dac, 0, mask);
++	if (!buf) {
++		fprintf(stderr, "Failed to create buffer: %s\n", strerror(errno));
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	printf("Buffer created successfully\n");
++
++	/* Get alignment from hardware if available */
++	const struct iio_attr *attr = iio_buffer_find_attr(buf, "length_align_bytes");
++	if (attr) {
++		long long align_val;
++		if (iio_attr_read_longlong(attr, &align_val) == 0) {
++			alignment = (unsigned)align_val;
++			hw_reported_alignment = true;
++			printf("Hardware alignment: %u bytes\n", alignment);
++		}
++	}
++	if (!hw_reported_alignment) {
++		printf("Using default alignment: %u bytes\n", alignment);
++	}
++
++	/* Get sample size */
++	int sample_size = iio_device_get_sample_size(dac, mask);
++	if (sample_size <= 0) {
++		fprintf(stderr, "Invalid sample size: %d\n", sample_size);
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++	printf("Sample size: %d bytes\n", sample_size);
++
++	/* Load waveform file */
++	printf("\n=== Loading Waveform ===\n");
++	printf("File: %s\n", waveform_file);
++	printf("Scale: %.1f dBFS\n", scale_dbfs);
++
++	double scale = db_full_scale_convert(scale_dbfs, false);
++
++	if (strstr(waveform_file, ".bin")) {
++		/* Binary file */
++		FILE *f = fopen(waveform_file, "rb");
++		if (!f) {
++			fprintf(stderr, "Failed to open file: %s\n", strerror(errno));
++			ret = EXIT_FAILURE;
++			goto cleanup;
++		}
++
++		struct stat st;
++		stat(waveform_file, &st);
++		waveform_data = malloc(st.st_size);
++		if (!waveform_data) {
++			fprintf(stderr, "Failed to allocate memory\n");
++			fclose(f);
++			ret = EXIT_FAILURE;
++			goto cleanup;
++		}
++
++		waveform_size = fread(waveform_data, 1, st.st_size, f);
++		fclose(f);
++		printf("Loaded binary file: %d bytes\n", waveform_size);
++	} else {
++		/* Text or MAT file */
++		ret = analyse_wavefile(dac, waveform_file, &waveform_data, &waveform_size,
++		                       enabled_count, scale, alignment);
++		if (ret < 0) {
++			fprintf(stderr, "Failed to parse waveform file\n");
++			ret = EXIT_FAILURE;
++			goto cleanup;
++		}
++		printf("Waveform parsed successfully: %d bytes\n", waveform_size);
++	}
++
++	/* Validate size */
++	if (waveform_size % sample_size != 0) {
++		fprintf(stderr, "Waveform size (%d) is not a multiple of sample size (%d)\n",
++		        waveform_size, sample_size);
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	if (waveform_size % alignment != 0) {
++		fprintf(stderr, "Waveform size (%d) is not a multiple of alignment (%u)\n",
++		        waveform_size, alignment);
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	/* Create block and copy data */
++	printf("\n=== Configuring DMA ===\n");
++	usleep(1000); /* Workaround for some hardware */
++
++	block = iio_buffer_create_block(buf, waveform_size);
++	if (iio_err(block)) {
++		fprintf(stderr, "Failed to create block: %d\n", iio_err(block));
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	printf("Block created: %d bytes\n", waveform_size);
++
++	/* Copy waveform data to block */
++	void *block_start = iio_block_start(block);
++	void *block_end = iio_block_end(block);
++	size_t block_size = block_end - block_start;
++
++	memcpy(block_start, waveform_data, block_size);
++	printf("Waveform data copied to block\n");
++
++	/* Enqueue block */
++	ret = iio_block_enqueue(block, 0, cyclic);
++	if (ret) {
++		fprintf(stderr, "Failed to enqueue block: %d\n", ret);
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	printf("Block enqueued (%s mode)\n", cyclic ? "cyclic" : "one-shot");
++
++	/* Enable buffer */
++	ret = iio_buffer_enable(buf);
++	if (ret < 0) {
++		fprintf(stderr, "Failed to enable buffer: %d\n", ret);
++		ret = EXIT_FAILURE;
++		goto cleanup;
++	}
++
++	printf("\n=== SUCCESS ===\n");
++	printf("DAC buffer output enabled");
++	if (cyclic)
++		printf(" (cyclic)");
++	printf("\n");
++
++	ret = EXIT_SUCCESS;
++
++cleanup:
++	if (waveform_data)
++		free(waveform_data);
++	if (block)
++		iio_block_destroy(block);
++	if (buf)
++		iio_buffer_destroy(buf);
++	if (mask)
++		iio_channels_mask_destroy(mask);
++	if (ctx)
++		iio_context_destroy(ctx);
++
++	return ret;
++}
+-- 
+2.51.1
+
