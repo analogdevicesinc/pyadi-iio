@@ -6,23 +6,91 @@ Usage:
     python3 ad9740_dma.py -f 1e6 -s 0.5
     python3 ad9740_dma.py --frequency 5000000 --scale 1.0
     python3 ad9740_dma.py -f 1e6 -s 0.5 --device ad9744
+    python3 ad9740_dma.py -f 1e6 -s 1.0 --sample-rate 200e6
 """
 
 import argparse
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+import iio
 import adi
 
-# Device configuration
+# Device configuration (bits and shift only, sample rate from ADF4351)
 DEVICE_CONFIG = {
-    'ad9748': {'bits': 8,  'shift': 8, 'sample_rate': 210e6},
-    'ad9740': {'bits': 10, 'shift': 6, 'sample_rate': 210e6},
-    'ad9742': {'bits': 12, 'shift': 4, 'sample_rate': 210e6},
-    'ad9744': {'bits': 14, 'shift': 0, 'sample_rate': 210e6},
+    'ad9748': {'bits': 8,  'shift': 8},
+    'ad9740': {'bits': 10, 'shift': 6},
+    'ad9742': {'bits': 12, 'shift': 4},
+    'ad9744': {'bits': 14, 'shift': 0},
 }
 
 DEFAULT_BUFFER_SIZE = 4096
+DEFAULT_SAMPLE_RATE = 210e6
+
+
+def set_sample_rate(uri, sample_rate):
+    """Set the ADF4351 clock frequency (DAC sample rate).
+
+    Args:
+        uri: IIO context URI
+        sample_rate: Desired sample rate in Hz
+
+    Returns:
+        Actual sample rate set, or None if ADF4351 not found
+    """
+    try:
+        ctx = iio.Context(uri)
+
+        adf4351 = None
+        for dev in ctx.devices:
+            if 'adf4351' in dev.name or 'adf4350' in dev.name:
+                adf4351 = dev
+                break
+
+        if not adf4351:
+            return None
+
+        ch0 = adf4351.find_channel('altvoltage0', True)
+        if not ch0:
+            return None
+
+        ch0.attrs['frequency'].value = str(int(sample_rate))
+        return int(ch0.attrs['frequency'].value)
+
+    except Exception as e:
+        print(f"Warning: Could not set sample rate: {e}")
+        return None
+
+
+def get_sample_rate(uri):
+    """Get the current ADF4351 clock frequency (DAC sample rate).
+
+    Args:
+        uri: IIO context URI
+
+    Returns:
+        Current sample rate in Hz, or None if ADF4351 not found
+    """
+    try:
+        ctx = iio.Context(uri)
+
+        adf4351 = None
+        for dev in ctx.devices:
+            if 'adf4351' in dev.name or 'adf4350' in dev.name:
+                adf4351 = dev
+                break
+
+        if not adf4351:
+            return None
+
+        ch0 = adf4351.find_channel('altvoltage0', True)
+        if not ch0:
+            return None
+
+        return int(ch0.attrs['frequency'].value)
+
+    except Exception:
+        return None
 
 
 def check_frequency_valid(frequency, sample_rate, buffer_size):
@@ -66,10 +134,11 @@ def main():
         description='Generate DMA sine wave on AD974x DAC',
         formatter_class=argparse.RawTextHelpFormatter,
         epilog="""Examples:
-  ad9740_dma.py -f 1e6 -s 0.5          # 1 MHz at 50% scale
-  ad9740_dma.py -f 5000000 -s 1.0      # 5 MHz at full scale
-  ad9740_dma.py -f 100e3 -s 0.25       # 100 kHz at 25% scale
-  ad9740_dma.py -f 1e6 --device ad9740 # Use AD9740 device
+  ad9740_dma.py -f 1e6 -s 0.5              # 1 MHz at 50% scale
+  ad9740_dma.py -f 5000000 -s 1.0          # 5 MHz at full scale
+  ad9740_dma.py -f 100e3 -s 0.25           # 100 kHz at 25% scale
+  ad9740_dma.py -f 1e6 --device ad9740     # Use AD9740 device
+  ad9740_dma.py -f 1e6 --sample-rate 200e6 # Set DAC clock to 200 MHz
 
 Valid frequencies for cyclic DMA must result in integer cycles in the buffer.
 Formula: frequency = k * sample_rate / buffer_size (where k is an integer)
@@ -80,19 +149,45 @@ For 210 MHz sample rate and 4096 buffer: valid frequencies are multiples of 51.2
                         help='Output frequency in Hz (default: 1230468.75 Hz)')
     parser.add_argument('-s', '--scale', type=float, default=1.0,
                         help='Output scale 0.0-1.0 (default: 1.0)')
-    parser.add_argument('-u', '--uri', type=str, default='ip:10.48.65.163',
-                        help='Device URI (default: ip:10.48.65.163)')
+    parser.add_argument('-u', '--uri', type=str, default='ip:10.48.65.134',
+                        help='Device URI (default: ip:10.48.65.134)')
     parser.add_argument('-d', '--device', type=str, default='ad9744',
                         choices=['ad9748', 'ad9740', 'ad9742', 'ad9744'],
                         help='DAC device name (default: ad9744)')
     parser.add_argument('-b', '--buffer-size', type=int, default=DEFAULT_BUFFER_SIZE,
                         help=f'DMA buffer size in samples (default: {DEFAULT_BUFFER_SIZE})')
+    parser.add_argument('-r', '--sample-rate', type=float, default=None,
+                        help='DAC sample rate in Hz via ADF4351 (e.g., 210e6)')
 
     args = parser.parse_args()
 
     # Get device config
     config = DEVICE_CONFIG[args.device]
-    sample_rate = config['sample_rate']
+
+    # Set or get sample rate
+    if args.sample_rate is not None:
+        if args.sample_rate <= 0:
+            print(f"Error: Sample rate must be positive, got {args.sample_rate}")
+            sys.exit(1)
+
+        print(f"Setting sample rate to {args.sample_rate/1e6:.3f} MHz...")
+        actual_rate = set_sample_rate(args.uri, args.sample_rate)
+
+        if actual_rate is None:
+            print("Warning: ADF4351 not found, using default sample rate")
+            sample_rate = DEFAULT_SAMPLE_RATE
+        else:
+            sample_rate = actual_rate
+            print(f"Sample rate set to {sample_rate/1e6:.3f} MHz")
+    else:
+        # Get current sample rate from ADF4351
+        current_rate = get_sample_rate(args.uri)
+        if current_rate:
+            sample_rate = current_rate
+            print(f"Current sample rate: {sample_rate/1e6:.3f} MHz")
+        else:
+            sample_rate = DEFAULT_SAMPLE_RATE
+            print(f"Using default sample rate: {sample_rate/1e6:.3f} MHz")
 
     # Validate parameters
     if args.frequency <= 0:
@@ -201,6 +296,7 @@ For 210 MHz sample rate and 4096 buffer: valid frequencies are multiples of 51.2
     info_text = (f"Frequency: {freq_str}\n"
                  f"Scale: {args.scale:.2f}\n"
                  f"Device: {args.device}\n"
+                 f"Sample Rate: {sample_rate/1e6:.1f} MHz\n"
                  f"Cycles: {int(round(num_cycles))}\n"
                  f"Buffer: {args.buffer_size} samples")
     ax.text(0.02, 0.98, info_text, transform=ax.transAxes, fontsize=10,
