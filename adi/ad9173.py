@@ -220,14 +220,25 @@ class ad9173(attribute, context_manager):
 
     @property
     def dac_page(self):
-        """Get current DAC Page setting"""
-        val = (self.reg_read(self.SPI_PAGEINDX_REG) >> 6) & 0x03
-        return val
+        """
+        Get current SPI_PAGEINDX page settings.
+        
+        :return: (maindac_page, channel_page)
+        """
+        val = self.reg_read(self.SPI_PAGEINDX_REG)
+        maindac_page = (val & 0xC0) >> 6
+        channel_page = val & 0x3F
+        return (maindac_page, channel_page)
 
     @dac_page.setter
-    def dac_page(self,dac_mask):
-        """Set current DAC Page setting"""
-        self.reg_write(self.SPI_PAGEINDX_REG, (dac_mask << 6))
+    def dac_page(self, dac_masks):
+        """
+        Set current SPI_PAGEINDX register.
+        :param dac_masks: Tuple in format (maindac_page, channel_page)
+        """
+        maindac_page = dac_masks[0]
+        channel_page = dac_masks[1]
+        self.reg_write(self.SPI_PAGEINDX_REG, (maindac_page <<6) + channel_page)
 
     @property
     def full_scale_current(self):
@@ -359,9 +370,9 @@ class ad9173(attribute, context_manager):
         :param freq_hz: Frequency in Hz
         """
         ftw = int(round((2 ** self.FTW_WIDTH) * float(freq_hz) / float(self._dac_frequency)))
-        self.dac_page = 0x1
+        self.dac_page = (1,0)
         self.dac_nco_ftw = ftw
-        self.dac_page = 0x2
+        self.dac_page = (2,0)
         self.dac_nco_ftw = ftw + self._df
 
     def zero_ddsc(self):
