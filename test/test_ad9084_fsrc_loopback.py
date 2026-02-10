@@ -57,6 +57,9 @@ def test_ad9084_fsrc_loopback():
         ch.attrs["channel_nco_frequency"].value = "150000000"
 
     rx_dev.find_channel("voltage0_i").attrs["loopback"].value = "loopback3_jesd"
+    rx_dev.find_channel("voltage1_i").attrs["loopback"].value = "loopback3_jesd"
+    rx_dev.find_channel("voltage2_i").attrs["loopback"].value = "loopback3_jesd"
+    rx_dev.find_channel("voltage3_i").attrs["loopback"].value = "loopback3_jesd"
 
     ratio_results = []
 
@@ -64,13 +67,20 @@ def test_ad9084_fsrc_loopback():
     mask.channels = [
         rx_dev.find_channel("voltage0_i"),
         rx_dev.find_channel("voltage0_q"),
+        rx_dev.find_channel("voltage1_i"),
+        rx_dev.find_channel("voltage1_q"),
+        rx_dev.find_channel("voltage2_i"),
+        rx_dev.find_channel("voltage2_q"),
+        rx_dev.find_channel("voltage3_i"),
+        rx_dev.find_channel("voltage3_q"),
     ]
     buf = iio.Buffer(rx_dev, mask)
-    stream = iio.Stream(buffer=buf, nb_blocks=1, samples_count=1024)
+    stream = iio.Stream(buffer=buf, nb_blocks=1, samples_count=1024*4)
 
     block = next(stream)
-    i_data = mask.channels[0].read(block)
-    q_data = mask.channels[1].read(block)
+    for i in range(4):
+        i_data = mask.channels[i].read(block)
+        q_data = mask.channels[i + 1].read(block)
 
     i_samples = np.frombuffer(i_data, dtype="i2")
     q_samples = np.frombuffer(q_data, dtype="i2")
@@ -112,8 +122,9 @@ def test_ad9084_fsrc_loopback():
 
             for r in range(0, 4):
                 block = next(stream)
-            i_data = mask.channels[0].read(block)
-            q_data = mask.channels[1].read(block)
+            for i in range(4):
+                i_data = mask.channels[i].read(block)
+                q_data = mask.channels[i + 1].read(block)
 
             i_samples = np.frombuffer(i_data, dtype="i2")
             q_samples = np.frombuffer(q_data, dtype="i2")
