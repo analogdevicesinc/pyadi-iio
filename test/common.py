@@ -55,9 +55,7 @@ def pytest_collection_modifyitems(items):
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--production-tests",
-        action="store_true",
-        help="Run production tests",
+        "--production-tests", action="store_true", help="Run production tests",
     )
     parser.addoption(
         "--obs-enable",
