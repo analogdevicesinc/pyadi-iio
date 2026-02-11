@@ -112,3 +112,23 @@ def test_ad579x_channel_definitions(test_channel_definitions, iio_uri, device_cl
 @pytest.mark.parametrize("device_class", ["ad5754r"])
 def test_ad5754r_channel_definitions(test_channel_definitions, iio_uri, device_class):
     test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ltc2314-14", True)
+@pytest.mark.parametrize("device_class", ["ltc2314_14"])
+def test_ltc2314_14_channel_definitions(
+    test_channel_definitions, iio_uri, device_class
+):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ad5686", True)
+@pytest.mark.parametrize("device_class", ["ad5686"])
+def test_ad5686_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ad7291", True)
+@pytest.mark.parametrize("device_class", ["ad7291"])
+def test_ad7291_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)

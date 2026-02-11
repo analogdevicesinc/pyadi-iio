@@ -631,9 +631,27 @@ ad7291:
   - pyadi_iio_class_support:
       - ad7291
   - emulate:
-      - filename: cn0566.xml
+      - filename: ad7291.xml
       - data_devices:
-          - iio:device1
+          - iio:device0
+
+ltc2314-14:
+  - ltc2314-14
+  - pyadi_iio_class_support:
+      - ltc2314_14
+  - emulate:
+      - filename: ltc2314-14.xml
+      - data_devices:
+          - iio:device0
+
+ad5686:
+  - ad5686
+  - pyadi_iio_class_support:
+      - ad5686
+  - emulate:
+      - filename: ad5686.xml
+      - data_devices:
+          - iio:device0
 
 max31865:
   - max31865
