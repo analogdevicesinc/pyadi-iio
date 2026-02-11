@@ -5,6 +5,7 @@
 from typing import Dict, List
 
 from adi.ad9084 import ad9084
+from adi.adf4030 import adf4030
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.gen_mux import genmux
@@ -112,6 +113,7 @@ class ad9084_mc(ad9084):
         self._tx_fine_duc_channel_names: List[str] = []
         self._dds_channel_names: List[str] = []
         self._rx_channel_names: List[str] = []
+        self.adf4382: List[object] = []
 
         context_manager.__init__(self, uri, self._device_name)
 
@@ -332,23 +334,79 @@ class Triton(ad9084_mc):
         ad9084_mc.__init__(self, uri=uri, phy_dev_name="axi-ad9084-rx-hpc")
         one_bit_adc_dac.__init__(self, uri)
 
+        self.adf4030 = adf4030(uri)
+        self.axi_aion_trig = self._ctx.find_device("axi_aion_trig")
+
         self._clock_chip_c = self._ctx.find_device("ltc6953_c")
         self._clock_chip_f = self._ctx.find_device("ltc6953_f")
 
-        self._rx_dsa = self._ctx.find_device("hmc425a")
+        self.adf4382.append(self._ctx.find_device("adf4382_0"))
+        self.adf4382.append(self._ctx.find_device("adf4382_1"))
+        self.adf4382.append(self._ctx.find_device("adf4382_2"))
+        self.adf4382.append(self._ctx.find_device("adf4382_3"))
 
-        self.lpf_ctrl = genmux(uri, device_name="lpf-ctrl")
-        self.hpf_ctrl = genmux(uri, device_name="hpf-ctrl")
+        self._rx_dsa0 = self._ctx.find_device("dsa0")
+        self._rx_dsa1 = self._ctx.find_device("dsa1")
+        self._rx_dsa2 = self._ctx.find_device("dsa2")
+        self._rx_dsa3 = self._ctx.find_device("dsa3")
+
+        self._lpf_ctrl = genmux(uri, device_name="lpf-ctrl")
+        self._hpf_ctrl = genmux(uri, device_name="hpf-ctrl")
 
         if calibration_board_attached:
             self._ad5592r = self._ctx.find_device("ad5592r")
             self._cb_gpio = self._ctx.find_device("one-bit-adc-dac")
 
     @property
-    def rx_dsa_gain(self):
-        """rx_dsa_gain: Receiver digital step attenuator gain"""
-        return self._get_iio_attr("voltage0", "hardwaregain", True, self._rx_dsa)
+    def rx_dsa0_gain(self):
+        """rx_dsa0_gain: Receiver digital step attenuator gain"""
+        return self._get_iio_attr("voltage0", "hardwaregain", True, self._rx_dsa0)
 
-    @rx_dsa_gain.setter
-    def rx_dsa_gain(self, value):
-        self._set_iio_attr("voltage0", "hardwaregain", True, value, self._rx_dsa)
+    @rx_dsa0_gain.setter
+    def rx_dsa0_gain(self, value):
+        self._set_iio_attr("voltage0", "hardwaregain", True, value, self._rx_dsa0)
+
+    @property
+    def rx_dsa1_gain(self):
+        """rx_dsa1_gain: Receiver digital step attenuator gain"""
+        return self._get_iio_attr("voltage0", "hardwaregain", True, self._rx_dsa1)
+
+    @rx_dsa1_gain.setter
+    def rx_dsa1_gain(self, value):
+        self._set_iio_attr("voltage0", "hardwaregain", True, value, self._rx_dsa1)
+
+    @property
+    def rx_dsa2_gain(self):
+        """rx_dsa2_gain: Receiver digital step attenuator gain"""
+        return self._get_iio_attr("voltage0", "hardwaregain", True, self._rx_dsa2)
+
+    @rx_dsa2_gain.setter
+    def rx_dsa2_gain(self, value):
+        self._set_iio_attr("voltage0", "hardwaregain", True, value, self._rx_dsa2)
+
+    @property
+    def rx_dsa3_gain(self):
+        """rx_dsa3_gain: Receiver digital step attenuator gain"""
+        return self._get_iio_attr("voltage0", "hardwaregain", True, self._rx_dsa3)
+
+    @rx_dsa3_gain.setter
+    def rx_dsa3_gain(self, value):
+        self._set_iio_attr("voltage0", "hardwaregain", True, value, self._rx_dsa3)
+
+    @property
+    def lpf_ctrl(self):
+        """lpf_ctrl: Low Pass Filter cutoff"""
+        return self._lpf_ctrl.select
+
+    @lpf_ctrl.setter
+    def lpf_ctrl(self, value):
+        self._lpf_ctrl.select = value
+
+    @property
+    def hpf_ctrl(self):
+        """hpf_ctrl: High Pass Filter cutoff"""
+        return self._hpf_ctrl.select
+
+    @hpf_ctrl.setter
+    def hpf_ctrl(self, value):
+        self._hpf_ctrl.select = value
