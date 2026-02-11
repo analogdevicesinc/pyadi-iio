@@ -22,10 +22,11 @@ class ltc2387(rx_def):
     _complex_data = False
     _rx_channel_names = ["voltage"]
     _device_name = ""
+    _control_device_name = "ltc2387"
+    _rx_data_device_name = "ltc2387"
 
     @property
     def sampling_frequency(self):
-
         """sample_rate: Sample rate in samples per second.
         Valid options are:
         Device's maximum sample rate (15000000 in the case of the LTC2387-18) and lower.

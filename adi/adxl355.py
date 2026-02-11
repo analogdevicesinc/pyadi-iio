@@ -52,9 +52,7 @@ class adxl355_channel(attribute):
     @property
     def filter_high_pass_3db_frequency(self):
         """ADXL355 highpass filter cutoff frequency"""
-        return self._get_iio_attr(
-            self.name, "filter_high_pass_3db_frequency", False
-        )
+        return self._get_iio_attr(self.name, "filter_high_pass_3db_frequency", False)
 
     @filter_high_pass_3db_frequency.setter
     def filter_high_pass_3db_frequency(self, value):
@@ -112,7 +110,13 @@ class adxl355(rx_chan_comp):
     _rx_data_device_name = "adxl355"
     _rx_channel_names = ["accel_x", "accel_y", "accel_z"]
 
-    def __post_init__(self):
+    __run_rx_post_init__ = False
+
+    def __init__(self, uri="", **kwargs):
+        rx_chan_comp.__init__(self, uri, **kwargs)
+        self._setup_channels()
+
+    def _setup_channels(self):
         """Set up named channel access and temperature channel."""
         # Add named channel access for accelerometer channels
         self.accel_x = self.channel[0] if len(self.channel) > 0 else None

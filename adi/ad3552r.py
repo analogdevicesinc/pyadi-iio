@@ -70,4 +70,3 @@ class ad3552r(tx_chan_comp):
                     if chan.name == name:
                         setattr(self, name, self.channel[i])
                         break
-            self._set_iio_attr(self.name, "scale", True, str(Decimal(value).real))

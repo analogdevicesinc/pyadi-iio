@@ -14,19 +14,8 @@ class ad7768(rx_def):
     compatible_parts = ["ad7768", "cf_axi_adc"]
     _rx_data_type = np.int32
     _complex_data = False
-    _control_device_name = ""
-    _rx_data_device_name = ""
-
-    def __post_init__(self):
-        """Handle special device name discovery for ad7768."""
-        # Try to find ad7768 first, fall back to cf_axi_adc
-        if not self._rxadc:
-            # Try alternative name
-            self._ctrl = self._ctx.find_device("cf_axi_adc")
-            self._rxadc = self._ctx.find_device("cf_axi_adc")
-            if self._rxadc:
-                self._rx_data_device_name = "cf_axi_adc"
-                self._control_device_name = "cf_axi_adc"
+    _control_device_name = "ad7768"
+    _rx_data_device_name = "ad7768"
 
     @property
     def sampling_frequency_available(self):
@@ -95,6 +84,9 @@ class ad7768(rx_def):
 class ad7768_4(ad7768):
 
     """ AD7768 4-channel, Simultaneous Sampling Sigma-Delta ADC """
+
+    _control_device_name = "cf_axi_adc"
+    _rx_data_device_name = "cf_axi_adc"
 
     @property
     def sync_start_enable_available(self):

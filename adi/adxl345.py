@@ -50,7 +50,13 @@ class adxl345(rx_chan_comp):
     _rx_data_device_name = "adxl345"
     _rx_channel_names = ["accel_x", "accel_y", "accel_z"]
 
-    def __post_init__(self):
+    __run_rx_post_init__ = False
+
+    def __init__(self, uri="", **kwargs):
+        rx_chan_comp.__init__(self, uri, **kwargs)
+        self._setup_channels()
+
+    def _setup_channels(self):
         """Set up named channel access."""
         # Add named channel access
         self.accel_x = self.channel[0] if len(self.channel) > 0 else None
