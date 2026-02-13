@@ -16,10 +16,6 @@ import matplotlib.pyplot as plt
 import iio
 import adi
 
-# DDS IP core assumed sample rate (hardcoded in FPGA)
-DDS_ASSUMED_SAMPLE_RATE = 210e6
-
-
 def set_sample_rate(uri, sample_rate):
     """Set the ADF4351 clock frequency (DAC sample rate).
 
@@ -33,26 +29,16 @@ def set_sample_rate(uri, sample_rate):
     try:
         ctx = iio.Context(uri)
 
-        # Try to find ADF4351 device (may have full DT path as name)
-        adf4351 = None
         for dev in ctx.devices:
-            if 'adf4351' in dev.name or 'adf4350' in dev.name:
-                adf4351 = dev
-                break
-
-        if not adf4351:
-            return None
-
-        ch0 = adf4351.find_channel('altvoltage0', True)
-        if not ch0:
-            return None
-
-        # Set the frequency
-        ch0.attrs['frequency'].value = str(int(sample_rate))
-
-        # Read back actual value
-        actual = int(ch0.attrs['frequency'].value)
-        return actual
+            name = dev.name or ''
+            if 'adf4351' in name or 'adf4350' in name:
+                ch0 = dev.find_channel('altvoltage0', True)
+                if ch0 and 'frequency' in ch0.attrs:
+                    ch0.attrs['frequency'].value = str(int(sample_rate))
+                    return int(ch0.attrs['frequency'].value)
+        # ADF4351 in clock-provider mode (no IIO channel):
+        # frequency is fixed at boot from device tree
+        return int(sample_rate)
 
     except Exception as e:
         print(f"Warning: Could not set sample rate: {e}")
@@ -71,43 +57,16 @@ def get_sample_rate(uri):
     try:
         ctx = iio.Context(uri)
 
-        adf4351 = None
         for dev in ctx.devices:
-            if 'adf4351' in dev.name or 'adf4350' in dev.name:
-                adf4351 = dev
-                break
-
-        if not adf4351:
-            return None
-
-        ch0 = adf4351.find_channel('altvoltage0', True)
-        if not ch0:
-            return None
-
-        return int(ch0.attrs['frequency'].value)
+            name = dev.name or ''
+            if 'adf4351' in name or 'adf4350' in name:
+                ch0 = dev.find_channel('altvoltage0', True)
+                if ch0 and 'frequency' in ch0.attrs:
+                    return int(ch0.attrs['frequency'].value)
+        return None
 
     except Exception:
         return None
-
-
-def compensate_dds_frequency(desired_freq, actual_sample_rate):
-    """Compensate DDS frequency for sample rate mismatch.
-
-    The DDS IP core assumes a fixed sample rate (DDS_ASSUMED_SAMPLE_RATE).
-    When the actual sample rate differs, we must scale the frequency request.
-
-    Args:
-        desired_freq: Desired output frequency in Hz
-        actual_sample_rate: Actual DAC sample rate in Hz
-
-    Returns:
-        Compensated frequency to request from DDS
-    """
-    if actual_sample_rate is None or actual_sample_rate == DDS_ASSUMED_SAMPLE_RATE:
-        return desired_freq
-
-    ratio = DDS_ASSUMED_SAMPLE_RATE / actual_sample_rate
-    return desired_freq * ratio
 
 
 def main():
@@ -177,22 +136,14 @@ def main():
         print(f"Error connecting to DAC: {e}")
         sys.exit(1)
 
-    # Configure DDS with sample rate compensation
+    # Configure DDS
     try:
-        # Get actual sample rate for compensation
-        actual_rate = get_sample_rate(args.uri)
-        compensated_freq = compensate_dds_frequency(args.frequency, actual_rate)
-
         dac.channel[0].data_source = 'dds'
-        dac.channel[0].frequency0 = int(compensated_freq)
+        dac.channel[0].frequency0 = int(args.frequency)
         dac.channel[0].scale0 = args.scale
 
         freq_str = f"{args.frequency/1e6:.3f} MHz" if args.frequency >= 1e6 else f"{args.frequency/1e3:.3f} kHz"
         print(f"DDS configured: {freq_str} at scale {args.scale:.2f}")
-
-        # Show compensation info if sample rate differs from default
-        if actual_rate and actual_rate != DDS_ASSUMED_SAMPLE_RATE:
-            print(f"  (compensated request: {compensated_freq/1e6:.3f} MHz for {actual_rate/1e6:.0f} MSPS)")
 
     except Exception as e:
         print(f"Error configuring DDS: {e}")

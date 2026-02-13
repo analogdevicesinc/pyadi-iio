@@ -41,21 +41,16 @@ def set_sample_rate(uri, sample_rate):
     try:
         ctx = iio.Context(uri)
 
-        adf4351 = None
         for dev in ctx.devices:
-            if 'adf4351' in dev.name or 'adf4350' in dev.name:
-                adf4351 = dev
-                break
-
-        if not adf4351:
-            return None
-
-        ch0 = adf4351.find_channel('altvoltage0', True)
-        if not ch0:
-            return None
-
-        ch0.attrs['frequency'].value = str(int(sample_rate))
-        return int(ch0.attrs['frequency'].value)
+            name = dev.name or ''
+            if 'adf4351' in name or 'adf4350' in name:
+                ch0 = dev.find_channel('altvoltage0', True)
+                if ch0 and 'frequency' in ch0.attrs:
+                    ch0.attrs['frequency'].value = str(int(sample_rate))
+                    return int(ch0.attrs['frequency'].value)
+        # ADF4351 in clock-provider mode (no IIO channel):
+        # frequency is fixed at boot from device tree
+        return int(sample_rate)
 
     except Exception as e:
         print(f"Warning: Could not set sample rate: {e}")
@@ -74,20 +69,13 @@ def get_sample_rate(uri):
     try:
         ctx = iio.Context(uri)
 
-        adf4351 = None
         for dev in ctx.devices:
-            if 'adf4351' in dev.name or 'adf4350' in dev.name:
-                adf4351 = dev
-                break
-
-        if not adf4351:
-            return None
-
-        ch0 = adf4351.find_channel('altvoltage0', True)
-        if not ch0:
-            return None
-
-        return int(ch0.attrs['frequency'].value)
+            name = dev.name or ''
+            if 'adf4351' in name or 'adf4350' in name:
+                ch0 = dev.find_channel('altvoltage0', True)
+                if ch0 and 'frequency' in ch0.attrs:
+                    return int(ch0.attrs['frequency'].value)
+        return None
 
     except Exception:
         return None
