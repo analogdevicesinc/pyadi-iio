@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 hardware = ["adsy1100"]
-uri = "ip:10.44.3.92"
+uri = "ip:10.44.3.116"
 
 RATIOS = [
     (2000, 1010),
