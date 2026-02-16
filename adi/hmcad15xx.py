@@ -70,6 +70,11 @@ class hmcad15xx(rx, context_manager):
         self._set_iio_dev_attr_str("clk_div", value, self._ctrl)
 
     @property
+    def sampling_rate(self):
+        """sampling_rate: Sample rate in samples per second"""
+        return self._get_iio_dev_attr("sampling_frequency", self._ctrl)
+
+    @property
     def operation_mode(self):
      return self._get_iio_dev_attr_str("operation_mode", self._ctrl)
     @operation_mode.setter
