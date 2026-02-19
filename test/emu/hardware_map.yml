@@ -816,6 +816,15 @@ ad5710r:
       - filename: ad5710r.xml
       - data_devices:
           - iio:device0
+
+ad5706r:
+  - ad5706r
+  - pyadi_iio_class_support:
+      - ad5706r
+  - emulate:
+      - filename: ad5706r.xml
+      - data_devices:
+          - iio:device0
 ad7405:
   - adum7701
   - pyadi_iio_class_support:
