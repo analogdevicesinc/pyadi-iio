@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: ad9361" name="description" />
+<meta content="Bases: tx, context_manager" name="description" />
 
-    <title>fmcomms5 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
+    <title>ad5706r &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="adi.fmcomms11 module" href="adi.fmcomms11.html" />
-    <link rel="prev" title="fmclidar1" href="adi.fmclidar1.html" />
+    <link rel="next" title="ad5710r" href="adi.ad5710r.html" />
+    <link rel="prev" title="ad5686" href="adi.ad5686.html" />
    
   
   
@@ -95,21 +95,29 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">fmcomms5</a><ul>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5"><code class="docutils literal notranslate"><span class="pre">FMComms5</span></code></a><ul>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.filter"><code class="docutils literal notranslate"><span class="pre">FMComms5.filter</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan0"><code class="docutils literal notranslate"><span class="pre">FMComms5.gain_control_mode_chip_b_chan0</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan1"><code class="docutils literal notranslate"><span class="pre">FMComms5.gain_control_mode_chip_b_chan1</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.loopback_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.loopback_chip_b</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan0"><code class="docutils literal notranslate"><span class="pre">FMComms5.rx_hardwaregain_chip_b_chan0</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan1"><code class="docutils literal notranslate"><span class="pre">FMComms5.rx_hardwaregain_chip_b_chan1</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.rx_lo_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.rx_lo_chip_b</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.rx_rf_bandwidth_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.rx_rf_bandwidth_chip_b</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.sample_rate"><code class="docutils literal notranslate"><span class="pre">FMComms5.sample_rate</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan0"><code class="docutils literal notranslate"><span class="pre">FMComms5.tx_hardwaregain_chip_b_chan0</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan1"><code class="docutils literal notranslate"><span class="pre">FMComms5.tx_hardwaregain_chip_b_chan1</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.tx_lo_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.tx_lo_chip_b</span></code></a></li>
-<li><a class="reference internal" href="#adi.fmcomms5.FMComms5.tx_rf_bandwidth_chip_b"><code class="docutils literal notranslate"><span class="pre">FMComms5.tx_rf_bandwidth_chip_b</span></code></a></li>
+<li><a class="reference internal" href="#">ad5706r</a><ul>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r"><code class="docutils literal notranslate"><span class="pre">ad5706r</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.addr_ascension"><code class="docutils literal notranslate"><span class="pre">ad5706r.addr_ascension</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.addr_ascension_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.addr_ascension_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.dev_addr"><code class="docutils literal notranslate"><span class="pre">ad5706r.dev_addr</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.hw_ldac_tg_pwm"><code class="docutils literal notranslate"><span class="pre">ad5706r.hw_ldac_tg_pwm</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.hw_ldac_tg_pwm_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.hw_ldac_tg_pwm_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.hw_ldac_tg_state"><code class="docutils literal notranslate"><span class="pre">ad5706r.hw_ldac_tg_state</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.hw_ldac_tg_state_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.hw_ldac_tg_state_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.hw_shutdown_state"><code class="docutils literal notranslate"><span class="pre">ad5706r.hw_shutdown_state</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.hw_shutdown_state_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.hw_shutdown_state_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.multi_dac_input_a"><code class="docutils literal notranslate"><span class="pre">ad5706r.multi_dac_input_a</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.multi_dac_sw_ldac_trigger"><code class="docutils literal notranslate"><span class="pre">ad5706r.multi_dac_sw_ldac_trigger</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.multi_dac_sw_ldac_trigger_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.multi_dac_sw_ldac_trigger_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.mux_out_sel"><code class="docutils literal notranslate"><span class="pre">ad5706r.mux_out_sel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.mux_out_sel_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.mux_out_sel_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.output_bits"><code class="docutils literal notranslate"><span class="pre">ad5706r.output_bits</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.ref_select"><code class="docutils literal notranslate"><span class="pre">ad5706r.ref_select</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.ref_select_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.ref_select_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.reference_volts"><code class="docutils literal notranslate"><span class="pre">ad5706r.reference_volts</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad5706r.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.single_instr"><code class="docutils literal notranslate"><span class="pre">ad5706r.single_instr</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.single_instr_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.single_instr_available</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -174,7 +182,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5592r.html">ad5592r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.ad5706r.html">ad5706r</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ad5706r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5710r.html">ad5710r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad579x.html">ad579x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5754r.html">ad5754r</a></li>
@@ -278,7 +286,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcadc3.html">adi.fmcadc3 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmclidar1.html">fmclidar1</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.fmcomms5.html">fmcomms5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.fmcomms11.html">adi.fmcomms11 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.gen_mux.html">gen_mux</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.hmc7044.html">adi.hmc7044 module</a></li>
@@ -318,97 +326,147 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.fmcomms5">
-<span id="fmcomms5"></span><h1>fmcomms5<a class="headerlink" href="#module-adi.fmcomms5" title="Link to this heading"></a></h1>
+  <section id="module-adi.ad5706r">
+<span id="ad5706r"></span><h1>ad5706r<a class="headerlink" href="#module-adi.ad5706r" title="Link to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.fmcomms5.</span></span><span class="sig-name descname"><span class="pre">FMComms5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.fmcomms5.FMComms5" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="adi.ad936x.html#adi.ad936x.ad9361" title="adi.ad936x.ad9361"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9361</span></code></a></p>
-<p>FMComms5 Dual Transceiver Evaluation Board</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5706r.</span></span><span class="sig-name descname"><span class="pre">ad5706r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5706r.ad5706r" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>ad5706r DAC</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.filter">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.filter" title="Link to this definition"></a></dt>
-<dd><p>Load FIR filter file. Provide path to filter file to attribute</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.addr_ascension">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">addr_ascension</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.addr_ascension" title="Link to this definition"></a></dt>
+<dd><p>AD5706R Address Ascension</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan0">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_control_mode_chip_b_chan0</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan0" title="Link to this definition"></a></dt>
-<dd><p>gain_control_mode_chip_b_chan0: Mode of receive path AGC of second transceiver.
-Options are: slow_attack, fast_attack, manual</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.addr_ascension_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">addr_ascension_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.addr_ascension_available" title="Link to this definition"></a></dt>
+<dd><p>addr_ascension_available: Options are:
+descending, ascending</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_control_mode_chip_b_chan1</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.gain_control_mode_chip_b_chan1" title="Link to this definition"></a></dt>
-<dd><p>gain_control_mode_chip_b_chan1: Mode of receive path AGC of second transceiver.
-Options are: slow_attack, fast_attack, manual</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.dev_addr">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dev_addr</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.dev_addr" title="Link to this definition"></a></dt>
+<dd><p>AD5706R multi-drop spi address config</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.loopback_chip_b">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loopback_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.loopback_chip_b" title="Link to this definition"></a></dt>
-<dd><p>loopback_chip_b: Set loopback mode of second transceiver. Options are:
-0 (Disable), 1 (Digital), 2 (RF)</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.hw_ldac_tg_pwm">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_tg_pwm</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.hw_ldac_tg_pwm" title="Link to this definition"></a></dt>
+<dd><p>ad5706r HW LDAC/TG PWM</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan0">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chip_b_chan0</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan0" title="Link to this definition"></a></dt>
-<dd><p>rx_hardwaregain_chip_b_chan0: Gain applied to RX path of second transceiver.
-Only applicable when gain_control_mode is set to ‘manual’</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.hw_ldac_tg_pwm_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_tg_pwm_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.hw_ldac_tg_pwm_available" title="Link to this definition"></a></dt>
+<dd><p>hw_ldac_tg_pwm_available: Options are:
+disable, enable</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_hardwaregain_chip_b_chan1</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.rx_hardwaregain_chip_b_chan1" title="Link to this definition"></a></dt>
-<dd><p>rx_hardwaregain_chip_b_chan1: Gain applied to RX path of second transceiver.
-Only applicable when gain_control_mode is set to ‘manual’</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.hw_ldac_tg_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_tg_state</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.hw_ldac_tg_state" title="Link to this definition"></a></dt>
+<dd><p>ad5706r HW LDAC/TG PWM</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.rx_lo_chip_b">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_lo_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.rx_lo_chip_b" title="Link to this definition"></a></dt>
-<dd><p>rx_lo_chip_b: Carrier frequency of RX path of second transceiver</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.hw_ldac_tg_state_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_ldac_tg_state_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.hw_ldac_tg_state_available" title="Link to this definition"></a></dt>
+<dd><p>hw_ldac_tg_state_available: Options are:
+low, high</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.rx_rf_bandwidth_chip_b">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_rf_bandwidth_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.rx_rf_bandwidth_chip_b" title="Link to this definition"></a></dt>
-<dd><p>rx_rf_bandwidth_chip_b: Bandwidth of front-end analog filter of RX path
-of second transceiver</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.hw_shutdown_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_shutdown_state</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.hw_shutdown_state" title="Link to this definition"></a></dt>
+<dd><p>ad5706r HW Shutdown State</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.sample_rate" title="Link to this definition"></a></dt>
-<dd><p>sample_rate: Sample rate RX and TX paths in samples per second of
-second transceiver</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.hw_shutdown_state_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_shutdown_state_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.hw_shutdown_state_available" title="Link to this definition"></a></dt>
+<dd><p>hw_shutdown_state_available: Options are:
+low, high</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan0">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chip_b_chan0</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan0" title="Link to this definition"></a></dt>
-<dd><p>tx_hardwaregain_chip_b_chan0: Attenuation applied to TX path of second transceiver</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.multi_dac_input_a">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multi_dac_input_a</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.multi_dac_input_a" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Multi DAC Input Register A value</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_hardwaregain_chip_b_chan1</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.tx_hardwaregain_chip_b_chan1" title="Link to this definition"></a></dt>
-<dd><p>tx_hardwaregain_chip_b_chan1: Attenuation applied to TX path of second transceiver</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.multi_dac_sw_ldac_trigger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multi_dac_sw_ldac_trigger</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.multi_dac_sw_ldac_trigger" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Multi DAC SW LDAC Trigger</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.tx_lo_chip_b">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_lo_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.tx_lo_chip_b" title="Link to this definition"></a></dt>
-<dd><p>tx_lo_chip_b: Carrier frequency of TX path of second transceiver</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.multi_dac_sw_ldac_trigger_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multi_dac_sw_ldac_trigger_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.multi_dac_sw_ldac_trigger_available" title="Link to this definition"></a></dt>
+<dd><p>multi_dac_sw_ldac_trigger_available: Options are:
+trigger</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.fmcomms5.FMComms5.tx_rf_bandwidth_chip_b">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_rf_bandwidth_chip_b</span></span><a class="headerlink" href="#adi.fmcomms5.FMComms5.tx_rf_bandwidth_chip_b" title="Link to this definition"></a></dt>
-<dd><p>tx_rf_bandwidth_chip_b: Bandwidth of front-end analog filter of TX path
-of second transceiver</p>
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.mux_out_sel">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mux_out_sel</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.mux_out_sel" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Mux Output Select</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.mux_out_sel_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mux_out_sel_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.mux_out_sel_available" title="Link to this definition"></a></dt>
+<dd><p>mux_out_sel_available: Options are:
+agnd, avdd, vref, agnd, iout0_vmon, iout1_vmon, iout2_vmon, iout3_vmon,
+iout0_imon, iout1_imon, iout2_imon, iout3_imon, pvdd0, pvdd1, pvdd2, pvdd3
+tdiode_ch0, tdiode_ch1, tdiode_ch2, tdiode_ch3, mux_in0, mux_in1, mux_in2, mux_in03</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.output_bits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_bits</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.output_bits" title="Link to this definition"></a></dt>
+<dd><p>AD5706r channel-wise number of output bits list</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.ref_select">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ref_select</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.ref_select" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Reference Select</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.ref_select_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ref_select_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.ref_select_available" title="Link to this definition"></a></dt>
+<dd><p>ref_select_available: Options are:
+internal, external</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.reference_volts">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_volts</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.reference_volts" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Reference value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.sampling_frequency" title="Link to this definition"></a></dt>
+<dd><p>ad5706r sampling frequency config</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.single_instr">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">single_instr</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.single_instr" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Single instruction</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.single_instr_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">single_instr_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.single_instr_available" title="Link to this definition"></a></dt>
+<dd><p>single_instr_available: Options are:
+single_instruction, streaming</p>
 </dd></dl>
 
 </dd></dl>
@@ -419,8 +477,8 @@ of second transceiver</p>
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.fmclidar1.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">fmclidar1</a>
-    <a href="adi.fmcomms11.html" title="Next document (Alt+Shift+RightArrow)" class="next">adi.fmcomms11 module</a>
+    <a href="adi.ad5686.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad5686</a>
+    <a href="adi.ad5710r.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad5710r</a>
               </div>
           
         </div>
