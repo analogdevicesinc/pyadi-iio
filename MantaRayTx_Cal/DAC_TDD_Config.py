@@ -251,10 +251,18 @@ for i in range(2):
     ## 3 Separate groups of TDD channels.
 
     ## Always on channels
-    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN,TDD_MANTARAY_EN, TDD_CHANNEL6]:
+    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_CHANNEL6]:
         tddn.channel[chan].on_ms   = 0
         tddn.channel[chan].off_ms  = 0
         tddn.channel[chan].polarity = 1
+        tddn.channel[chan].enable   = 1
+
+
+    ## Always on channels
+    for chan in [TDD_MANTARAY_EN]:
+        tddn.channel[chan].on_ms   = 0
+        tddn.channel[chan].off_ms  = 0
+        tddn.channel[chan].polarity = 0
         tddn.channel[chan].enable   = 1
 
     ## Previously set by software team, untouched

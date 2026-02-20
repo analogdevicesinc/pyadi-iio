@@ -7,6 +7,8 @@ import importlib
 import genalyzer as gn
 import adi
 from adi.sshfs import sshfs
+import os
+os.environ['QT_QPA_PLATFORM'] = 'wayland'
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import interp1d
@@ -206,22 +208,31 @@ elif desired_array_shape == "single":
 GIMBAL_H = mbx.H
 GIMBAL_V = mbx.V
 
-maxsweepangle = 180
-sweepstep = 1
+sig_gen_freq_GHz=10
+beamsteering = False
+steering_angle = 0 # degrees
+maxsweepangle = 120  # degrees
+sweepstep = 0.5
 gimbal_motor = GIMBAL_H
-sig_gen_freq_GHz=11
 gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)  # Define gimbal positions from -90 to 90 degrees
 
 SpecAn_Values = []
 
-beamsteering = False
-steering_angle = 0 # degrees
+
+# active_array = np.array(active_array)
+# phase_dict_ref = active_array.transpose().flatten()
+# phase_dict = mr.create_dict(phase_dict_ref, np.zeros(16))
+# mag_dict_ref = active_array.transpose().flatten()
+# mag_dict = mr.create_dict(mag_dict_ref, np.zeros(16))
+        
+
 active_array = np.array(active_array)
 phase_dict_ref = active_array.transpose().flatten()
 phase_dict = mr.create_dict(phase_dict_ref, np.zeros(64))
 mag_dict_ref = active_array.transpose().flatten()
 mag_dict = mr.create_dict(mag_dict_ref, np.zeros(64))
-        
+
+
 # Get Phase Data from ADAR1000 
 for element in dev.elements.values():
     str_channel = str(element)
@@ -240,15 +251,15 @@ mechanical_sweep, elec_steer_angle, azim_results, elev_results, = mr.calc_array_
 # Define the corresponding angles (assuming gimbal_positions is 0 to 80, map to -40 to 40)
 angles = np.linspace(-(maxsweepangle/2), (maxsweepangle/2), len(gimbal_positions))
 
-plt.figure(figsize=(10, 6))
+# plt.figure(figsize=(10, 6))
 
 # Calculate and plot
 mechanical_sweep, elec_steer_angle, azim_results, elev_results, = mr.calc_array_pattern(elec_steer_angle=steering_angle,f_op_GHz=sig_gen_freq_GHz)
 
 
 # Define steering angles to test
-steering_angles = [-60, -45, -30, -15, 0, 15, 30, 45, 60]
-# steering_angles = [0]
+# steering_angles = [-60, -45, -30, -15, 0, 15, 30, 45, 60]
+steering_angles = [0]
 # Initialize arrays for both azimuth and elevation
 peak_mags_az = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
 peak_mags_el = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
@@ -262,11 +273,26 @@ mbx.gotoZERO()
 mbx.move(gimbal_motor,-(maxsweepangle/2))
 mr.enable_pa_bias_channel(dev, active_array)
 time.sleep(3)
-# Single mechanical sweep for azimuth
+
+
+# Prepare interactive plot for real-time updates
+plt.ion()
+fig, ax = plt.subplots(figsize=(10, 6))
+
+ax.set_title('Azimuth Pattern (real-time)')
+ax.set_xlabel('Mechanical Azimuth Angle (degrees)')
+ax.set_ylabel('Combined RF Input Power (dBm)')
+ax.set_xlim([-(maxsweepangle/2), (maxsweepangle/2)])
+ax.grid(True)
+ax.legend(loc='best')
+
+# Single mechanical sweep for azimuth with real-time plotting
+mbx.gotoZERO()
+mbx.move(gimbal_motor, -(maxsweepangle/2))
+mr.enable_pa_bias_channel(dev, active_array)
+time.sleep(3)
+
 for i in range(len(gimbal_positions)):
-    # mr.enable_pa_bias_channel(dev, active_array)
-    # time.sleep(3)
-    
     for steering_angle in steering_angles:
         dev.steer_tx(azimuth=steering_angle, elevation=0)
         dev.latch_tx_settings()
@@ -275,22 +301,56 @@ for i in range(len(gimbal_positions)):
             str_channel = str(element)
             value = int(mr.strip_to_last_two_digits(str_channel))
             element.tx_phase = (phase_dict[value] - element.tx_phase) % 360
-        
+
         dev.latch_tx_settings()
         time.sleep(0.5)
         peak_mags_az[steering_angle][i] = SpecAn.get_marker_power(marker=1)
 
+    # update real-time plot after this mechanical position
+    ax.clear()
+    x = angles[: i + 1]
+    for sa in steering_angles:
+        y = peak_mags_az[sa][: i + 1]
+        ax.plot(x, y, linestyle='dotted', marker='o', markersize=4, label=f'Measured SA={sa}°')
+
+    ax.set_title('Azimuth Pattern (real-time)')
+    ax.set_xlabel('Mechanical Azimuth Angle (degrees)')
+    ax.set_ylabel('Combined RF Input Power (dBm)')
+    ax.set_xlim([-(maxsweepangle/2), (maxsweepangle/2)])
+    
+    # Dynamically adjust y limits with ±10 dBm margin
+    all_data = np.concatenate([peak_mags_az[sa][: i + 1] for sa in steering_angles])
+    if len(all_data) > 0:
+        y_min = np.nanmin(all_data) - 10
+        y_max = np.nanmax(all_data) + 10
+        ax.set_ylim(y_min, y_max)
+    
+    ax.grid(True)
+    ax.legend(loc='best')
+    fig.canvas.draw()
+    fig.canvas.flush_events()
+    plt.pause(0.01)   # small pause to allow GUI event loop to update
+
     mbx.move(gimbal_motor, sweepstep)
-    # mr.disable_pa_bias_channel(dev, active_array)
+
+# finish sweep
 mbx.gotoZERO()
 mr.disable_pa_bias_channel(dev, active_array)
+
 #Set Phases back to calibrated phases
 for element in dev.elements.values():
     str_channel = str(element)
     value = int(mr.strip_to_last_two_digits(str_channel))
     element.tx_phase = (phase_dict[value])
 
-# # === Elevation Sweep ===
+# turn off interactive mode (optional)
+plt.ioff()
+# ...existing code...
+
+
+
+
+# === Elevation Sweep ===
 print("Starting Elevation Sweep...")
 gimbal_motor = GIMBAL_V
 mbx.gotoZERO()
@@ -326,63 +386,36 @@ for element in dev.elements.values():
     value = int(mr.strip_to_last_two_digits(str_channel))
     element.tx_phase = (phase_dict[value])
 
-# # mbx.gotoZERO()
+# mbx.gotoZERO()
 
 # Save data to MATLAB file with both azimuth and elevation patterns
 
 
 
 
-matlab_data = {
-    'mechanical_angles': angles,
-    'steering_angles': steering_angles,
-    'phase_dict': phase_dict,
-    'mag_dict': mag_dict,
-    # 'cal_antenna': cal_ant,
-    # Azimuth patterns (convert to dBm)
-    'measured_patterns_az_neg60': peak_mags_az[-60],
-    'measured_patterns_az_neg45': peak_mags_az[-45],
-    'measured_patterns_az_neg30': peak_mags_az[-30],
-    'measured_patterns_az_neg15': peak_mags_az[-15],
-    'measured_patterns_az_0': peak_mags_az[0],
-    'measured_patterns_az_pos15': peak_mags_az[15],
-    'measured_patterns_az_pos30': peak_mags_az[30],
-    'measured_patterns_az_pos45': peak_mags_az[45],
-    'measured_patterns_az_pos60': peak_mags_az[60],
-    # Elevation patterns (convert to dBm)
-    'measured_patterns_el_neg60': peak_mags_el[-60],
-    'measured_patterns_el_neg45': peak_mags_el[-45],
-    'measured_patterns_el_neg30': peak_mags_el[-30],
-    'measured_patterns_el_neg15': peak_mags_el[-15],
-    'measured_patterns_el_0': peak_mags_el[0],
-    'measured_patterns_el_pos15': peak_mags_el[15],
-    'measured_patterns_el_pos30': peak_mags_el[30],
-    'measured_patterns_el_pos45': peak_mags_el[45],
-    'measured_patterns_el_pos60': peak_mags_el[60]
-}
 
-# Save combined azimuth and elevation data
-savemat('/home/snuc/Desktop/tx_beamforming_patterns_azel.mat', matlab_data)
-# Create plots for both azimuth and elevation patterns
-plt.ioff()  # Turn off interactive mode for batch saving
+# # Create plots for both azimuth and elevation patterns
+# plt.ioff()  # Turn off interactive mode for batch saving
 
 # Plot and save azimuth patterns
-for steering_angle in steering_angles:
-    plt.figure(figsize=(10, 6))
-    plt.plot(angles, peak_mags_az[steering_angle],  # Convert to dBm
-             linestyle='dotted', label='Measured Data', 
-             color='blue', markersize=9)
-    plt.title(f'Azimuth Pattern (Steering Angle: {steering_angle}°)')
-    plt.xlabel('Mechanical Azimuth Angle (degrees)')
-    plt.ylabel('Combined RF Input Power (dBm)')
-    plt.ylim(-60, 0)
-    plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(f'/home/snuc/Desktop/azimuth_pattern_{steering_angle}deg.png')
-    plt.close()
+# for steering_angle in steering_angles:
+#     plt.figure(figsize=(10, 6))
+#     plt.plot(angles, peak_mags_az[steering_angle],  # Convert to dBm
+#              linestyle='dotted', label='Measured Data', 
+#              color='blue', markersize=9)
+#     plt.title(f'Azimuth Pattern (Steering Angle: {steering_angle}°)')
+#     plt.xlabel('Mechanical Azimuth Angle (degrees)')
+#     plt.ylabel('Combined RF Input Power (dBm)')
+#     plt.ylim(-80, 0)
+#     plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
+#     plt.grid(True)
+#     plt.legend()
+#     plt.tight_layout()
+#     plt.savefig(f'/home/snuc/Desktop/azimuth_pattern_{steering_angle}deg.png')
+#     plt.close()
 
+
+a=1
 # Plot and save elevation patterns
 for steering_angle in steering_angles:
     plt.figure(figsize=(10, 6))
@@ -399,3 +432,128 @@ for steering_angle in steering_angles:
     plt.tight_layout()
     plt.savefig(f'/home/snuc/Desktop/elevation_pattern_{steering_angle}deg.png')
     plt.close()
+
+
+
+
+# ==== Minimal MATLAB .m export (simple variables only) ====
+
+def _mat_row(vec):
+    import numpy as _np
+    return "[" + " ".join(f"{float(x):.10g}" for x in _np.asarray(vec).ravel()) + "]"
+
+def _matrix_to_matlab(M):
+    """
+    Convert a 2D numpy array to MATLAB matrix literal with rows separated by ';'
+    """
+    import numpy as _np
+    if M.size == 0:
+        return "[]"
+    rows = []
+    for i in range(M.shape[0]):
+        row = " ".join(f"{float(x):.10g}" for x in M[i, :])
+        rows.append("  " + row)
+    return "[\n" + ";\n".join(rows) + "\n]"
+
+# Prepare azimuth arrays
+import numpy as _np
+az_keys = sorted(peak_mags_az.keys(), key=float) if peak_mags_az else []
+if az_keys:
+    az_matrix = _np.column_stack([_np.asarray(peak_mags_az[k]).ravel() for k in az_keys])
+else:
+    az_matrix = _np.zeros((len(angles), 0))
+
+# Prepare elevation arrays (may be empty if elevation sweep disabled)
+el_keys = sorted(peak_mags_el.keys(), key=float) if peak_mags_el else []
+if el_keys:
+    el_matrix = _np.column_stack([_np.asarray(peak_mags_el[k]).ravel() for k in el_keys])
+else:
+    el_matrix = _np.zeros((len(angles), 0))
+
+# Ensure az/el vectors match the angles length (basic guard)
+if az_matrix.shape[0] and az_matrix.shape[0] != len(angles):
+    raise ValueError("Azimuth data length does not match angles length.")
+if el_matrix.shape[0] and el_matrix.shape[0] != len(angles):
+    raise ValueError("Elevation data length does not match angles length.")
+
+m_path = "/home/snuc/Desktop/beam_sweeps.m"
+with open(m_path, "w") as f:
+    f.write("%% Auto-generated sweep data from Python\n")
+    f.write("%% Variables: angles, az_steering_angles, az_power, el_steering_angles, el_power\n\n")
+
+    # Angles (column vector)
+    f.write(f"angles = {_mat_row(angles)}';  % Nx1 mechanical angles (deg)\n\n")
+
+    # Azimuth
+    if az_keys:
+        f.write(f"az_steering_angles = {_mat_row(az_keys)};  % 1xM steering angles (deg)\n")
+        f.write(f"az_power = {_matrix_to_matlab(az_matrix)};  % NxM, dBm\n\n")
+    else:
+        f.write("az_steering_angles = [];\naz_power = [];\n\n")
+
+    # Elevation
+    if el_keys:
+        f.write(f"el_steering_angles = {_mat_row(el_keys)};  % 1xK steering angles (deg)\n")
+        f.write(f"el_power = {_matrix_to_matlab(el_matrix)};  % NxK, dBm\n\n")
+    else:
+        f.write("el_steering_angles = [];\nel_power = [];\n\n")
+
+    # Quick example plot (comment out if not needed)
+    f.write("% Example usage in MATLAB:\n")
+    f.write("% figure; plot(angles, az_power); grid on;\n")
+    f.write("% xlabel('Mechanical Angle (deg)'); ylabel('Power (dBm)');\n")
+    f.write("% legend(arrayfun(@(x) sprintf('SA=%g^o', x), az_steering_angles, 'UniformOutput', false));\n")
+
+print(f"MATLAB .m data file written to: {m_path}")
+
+
+
+
+# --- Save measured sweep data to a MATLAB .mat file (variables only) ---
+from scipy.io import savemat
+import os
+
+matlab_data = {}
+
+# mechanical angles vector
+matlab_data["angles"] = np.asarray(angles).reshape(-1, 1)  # Nx1 column vector
+
+# azimuth data
+az_keys = sorted(peak_mags_az.keys(), key=float) if peak_mags_az else []
+if az_keys:
+    az_matrix = np.column_stack([np.asarray(peak_mags_az[k]).ravel() for k in az_keys])  # NxM
+    matlab_data["az_steering_angles"] = np.asarray(az_keys).astype(float).reshape(1, -1)    # 1xM
+    matlab_data["az_power"] = az_matrix
+else:
+    matlab_data["az_steering_angles"] = np.zeros((1, 0))
+    matlab_data["az_power"] = np.zeros((len(angles), 0))
+
+# elevation data
+el_keys = sorted(peak_mags_el.keys(), key=float) if peak_mags_el else []
+if el_keys:
+    el_matrix = np.column_stack([np.asarray(peak_mags_el[k]).ravel() for k in el_keys])  # NxK
+    matlab_data["el_steering_angles"] = np.asarray(el_keys).astype(float).reshape(1, -1)    # 1xK
+    matlab_data["el_power"] = el_matrix
+else:
+    matlab_data["el_steering_angles"] = np.zeros((1, 0))
+    matlab_data["el_power"] = np.zeros((len(angles), 0))
+
+# optional: include model results if available
+try:
+    matlab_data["mechanical_sweep"] = np.asarray(mechanical_sweep)
+    matlab_data["azim_results_model"] = np.asarray(azim_results)
+    matlab_data["elev_results_model"] = np.asarray(elev_results)
+except NameError:
+    pass
+
+# optional: include phase/mag dicts if present
+try:
+    matlab_data["phase_dict"] = np.asarray([phase_dict.get(i+1, np.nan) for i in range(64)])
+    matlab_data["mag_dict"] = np.asarray([mag_dict.get(i+1, np.nan) for i in range(64)])
+except NameError:
+    pass
+
+out_path = "/home/snuc/Desktop/beam_sweeps.mat"
+os.makedirs(os.path.dirname(out_path), exist_ok=True)
+savemat(out_path, matlab_data, do_compression=True)
+print(f"Saved MATLAB .mat data file to: {out_path}")

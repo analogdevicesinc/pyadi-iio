@@ -284,6 +284,7 @@ def disable_stingray_channel(obj, elements=None, man_input=False):
     for i in range(10):
         try:
             for device in obj.devices.values():
+                # print(device.mode)
                 time.sleep(0.01)
                 if device.mode == "tx":
                     for channel in device.channels:
@@ -310,7 +311,7 @@ def disable_stingray_channel(obj, elements=None, man_input=False):
                                         print(f"Not set properly: {channel.pa_bias_on=}")
                                         print(f"Element number {channel}")
 
-                if device.mode == "rx":
+                elif device.mode == "rx":
                     for channel in device.channels:
                         str_channel = str(channel)
                         value = int(strip_to_last_two_digits(str_channel))
@@ -443,7 +444,7 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     gain_codes_cal = mag_cal_poly
 
     atten = np.zeros(np.shape(analog_mag_pre_cal))
-    return gain_codes_cal, atten 
+    return gain_codes_cal, atten, mag_cal_diff
 
 def strip_to_last_two_digits(input_string):
     """
@@ -470,6 +471,9 @@ def create_dict(new_keys, array):
     reshaped_array = array.reshape(8, 8,order='F')
 
     # Map each key in reshaped_keys to the corresponding row in reshaped_array
+
+
+            
     for i in range(8):
         for j in range(8):
             result_dict[reshaped_keys[i][j]] = reshaped_array[i][j]
@@ -715,7 +719,7 @@ def rx_gain(obj, adc, subarray, adc_map, element_map):
     # This is necessary to match the element_map mapping
     # analog_mag_pre_cal0 = np.reshape(analog_mag_pre_cal, np.shape(element_map), order = 'F')
     # Calculate gain codes and attenuation values based on pre-calibration magnitude
-    gain_codes_cal, atten_cal = gain_codes(obj, analog_mag_pre_cal, "rx")
+    gain_codes_cal, atten_cal, mag_cal_diff = gain_codes(obj, analog_mag_pre_cal, "rx")
     print(gain_codes_cal)
     # Create dictionary to assign gain codes and attenuation values to elements
     gain_dict = create_dict(element_map, gain_codes_cal)
@@ -1046,8 +1050,7 @@ def get_analog_mag(data):
     Returns analog_mag which is a 1x32 row vector of magnitudes in dBFS.
     """
 
-    print("shape of data into analog mag:")
-    print(np.shape(data))
+   
 
     analog_mag = np.zeros((1, np.size(data,0)))
    
@@ -1059,8 +1062,7 @@ def get_analog_mag(data):
             adc_fft_data = fft(data[i,:], False, "OneTone")
             analog_mag[0,i] = adc_fft_data['A:mag_dbfs']
     
-    print("shape of analog mag out of function:")
-    print(np.shape(analog_mag))
+    
     return analog_mag
  
 def fft(complex_data, combined_waveforms, tone_type):

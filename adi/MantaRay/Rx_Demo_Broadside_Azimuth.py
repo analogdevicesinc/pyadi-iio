@@ -1,0 +1,537 @@
+# Manta Ray 64 Element Electronic Steering Array Calibration and Sweep
+# Copyright (C) 2025 Analog Devices, Inc.
+#
+# SPDX short identifier: ADIBSD
+import os
+os.environ['QT_QPA_PLATFORM'] = 'wayland'
+import matplotlib
+import time
+import importlib
+from datetime import datetime
+import genalyzer as gn
+import adi
+from adi.sshfs import sshfs
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.interpolate import interp1d
+# import adar_functions
+import re
+import json
+import os
+import pandas as pd
+from scipy.special import factorial
+from scipy.io import savemat
+import sys
+from MantaRayTx_Cal import MantaRay as mr
+import paramiko
+import pyvisa
+# Import from Drivers folder (subfolder relative to this file)
+from Drivers import N9000A_Driver as N9000A
+from Drivers import E8267D_Driver as E8267D
+from Drivers import N6705B_Driver as N6705B
+from Drivers import E36233A_Driver as E36233A
+# Import from Millibox folder (subfolder relative to this file)
+from Millibox import mbx_functions as mbx
+
+## Gimbal connection parameters ##
+BAUDRATE                    = 57600                  
+DEVICENAME                  = "/dev/ttyUSB0"
+mbx.connect(DEVICENAME, BAUDRATE)
+
+## Connect to power supplies ##
+## Set up VISA for external instruments ##
+rm = pyvisa.ResourceManager()
+## Keysight N6705B Power Supply (modular) for Manta Ray Rails ##
+N67 = "TCPIP::192.168.1.25::INSTR"
+Pwr_Supplies = N6705B.N6705B(rm, N67)
+
+########################################################
+# Run the bootstrap script and block until it completes
+########################################################
+
+## Setup SSH conection into Talise SOM for control ##
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
+
+bootstrap_needed = False
+if bootstrap_needed == True:
+    boot_cmd = "bash manta_ray_adar1000_boot.bash"
+    stdin, stdout, stderr = ssh.exec_command(boot_cmd,get_pty=True)
+    chan = stdout.channel
+
+    # stream output while the command runs
+    while not chan.exit_status_ready():
+        if chan.recv_ready():
+            out_chunk = chan.recv(1024).decode(errors="ignore")
+            print(out_chunk, end="")
+        if chan.recv_stderr_ready():
+            err_chunk = chan.recv_stderr(1024).decode(errors="ignore")
+            print(err_chunk, end="", file=sys.stderr)
+        time.sleep(0.1)
+
+    # flush any remaining output
+    if chan.recv_ready():
+        print(chan.recv(1024).decode(errors="ignore"), end="")
+    if chan.recv_stderr_ready():
+        print(chan.recv_stderr(1024).decode(errors="ignore"), end="", file=sys.stderr)
+
+    exit_status = chan.recv_exit_status()
+    if exit_status != 0:
+        ssh.close()
+        raise RuntimeError(f"Boot script failed (exit {exit_status})")
+    else:
+        print(f"Boot script completed (exit {exit_status})")
+
+    ## Turn on 5.7V rail for LNAs ##
+    print("Turning on 5.7V")
+    Pwr_Supplies.output_on(3)
+    boot_cmd = "bash All_Rx_on.bash"
+    stdin, stdout, stderr = ssh.exec_command(boot_cmd,get_pty=True)
+    chan = stdout.channel
+
+    # stream output while the command runs
+    while not chan.exit_status_ready():
+        if chan.recv_ready():
+            out_chunk = chan.recv(1024).decode(errors="ignore")
+            print(out_chunk, end="")
+        if chan.recv_stderr_ready():
+            err_chunk = chan.recv_stderr(1024).decode(errors="ignore")
+            print(err_chunk, end="", file=sys.stderr)
+        time.sleep(0.1)
+
+    # flush any remaining output
+    if chan.recv_ready():
+        print(chan.recv(1024).decode(errors="ignore"), end="")
+    if chan.recv_stderr_ready():
+        print(chan.recv_stderr(1024).decode(errors="ignore"), end="", file=sys.stderr)
+
+    exit_status = chan.recv_exit_status()
+    if exit_status != 0:
+        ssh.close()
+        raise RuntimeError(f"Boot script failed (exit {exit_status})")
+    else:
+        print(f"Boot script completed (exit {exit_status})")
+    ssh.close()
+mbx.gotoZERO()
+
+
+
+# Run the DAC_TDD_Config script
+import subprocess
+subprocess.run(["/usr/bin/env", "python3", "/home/snuc/pyadi-iio/adi/MantaRay/DAC_TDD_Config.py"], cwd="/home/snuc/pyadi-iio")
+
+SELF_BIASED_LNAs = True
+ARRAY_MODE = "rx" 
+url = "ip:192.168.1.1"
+print("Connecting to", url ,"...")
+ 
+# url = "local:" if len(sys.argv) == 1 else sys.argv[1]
+ssh = sshfs(address=url, username="root", password="analog")
+
+# Setup Talise RX, TDDN Engine & ADAR1000
+tddn = adi.tddn(uri = url)
+fs_RxIQ = 245.76e6;  #I/Q Data Rate in MSPS
+conv = adi.adrv9009_zu11eg(uri = url)
+conv._rxadc.set_kernel_buffers_count(1)
+conv.rx_main_nco_frequencies = [450000000] * 4
+conv.rx_main_nco_phases = [0] * 4
+conv.rx_channel_nco_frequencies = [0] * 4
+conv.rx_channel_nco_phases = [0] * 4
+conv.rx_enabled_channels = [0, 1, 2, 3]
+conv.rx_nyquist_zone     = ["odd"] * 4
+conv.rx_buffer_size = 2 ** 12
+conv.dds_phases = []
+
+## Define Subarrays, Reference Channels, and ADC maps ##
+subarray = np.array([
+    [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28], # subarray 1
+    [33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60], # subarray 2
+    [37, 38, 39, 40, 45, 46, 47, 48, 53, 54, 55, 56, 61, 62, 63, 64],  # subarray 3
+    [5, 6, 7, 8, 13, 14, 15, 16, 21, 22, 23, 24, 29, 30, 31, 32], # subarray 4
+    ])
+subarray_ref = np.array([1, 33, 37, 5])  
+adc_map      = np.array([0, 1, 2, 3])  # ADC map to subarray
+adc_ref      = 0  # ADC reference channel (indexed at 0)
+
+## Setup ADAR1000 Array ##
+sray = adi.adar1000_array(
+    uri = url,
+    
+    chip_ids = ["adar1000_csb_0_1_2", "adar1000_csb_0_1_1", "adar1000_csb_0_2_2", "adar1000_csb_0_2_1",
+                "adar1000_csb_0_1_3", "adar1000_csb_0_1_4", "adar1000_csb_0_2_3", "adar1000_csb_0_2_4",
+
+                "adar1000_csb_1_1_2", "adar1000_csb_1_1_1", "adar1000_csb_1_2_2", "adar1000_csb_1_2_1",
+                "adar1000_csb_1_1_3", "adar1000_csb_1_1_4", "adar1000_csb_1_2_3", "adar1000_csb_1_2_4"],
+
+    
+    device_map = [[1, 5, 2, 6], [3, 7, 4, 8], [9, 13, 10, 14], [11, 15, 12, 16]],
+ 
+    element_map = np.array([[1, 9,  17, 25, 33, 41, 49, 57],
+                            [2, 10, 18, 26, 34, 42, 50, 58],
+                            [3, 11, 19, 27, 35, 43, 51, 59],
+                            [4, 12, 20, 28, 36, 44, 52, 60],
+                            
+                            [5, 13, 21, 29, 37, 45, 53, 61],
+                            [6, 14, 22, 30, 38, 46, 54, 62],
+                            [7, 15, 23, 31, 39, 47, 55, 63],
+                            [8, 16, 24, 32, 40, 48, 56, 64]]),
+    
+    device_element_map = {
+ 
+        1:  [9, 10, 2, 1],      3:  [41, 42, 34, 33],
+        2:  [25, 26, 18, 17],   4:  [57, 58, 50, 49],
+        5:  [4, 3, 11, 12]  ,   7:  [36, 35, 43, 44],
+        6:  [20, 19, 27, 28],   8:  [52, 51, 59, 60],
+ 
+        9:  [13, 14, 6, 5],     11: [45, 46, 38, 37],
+        10: [29, 30, 22, 21],   12: [61, 62, 54, 53],
+        13: [8, 7, 15, 16],     15: [40, 39, 47, 48],
+        14: [24, 23, 31, 32],   16: [56, 55, 63, 64],
+    },
+)
+
+# Define delay phases for phase calibration
+delay_phases = np.arange(-180,181,1) # sweep phase from -180 to 180 in 1 degree steps.
+# Disable all channels initially
+mr.disable_stingray_channel(sray)
+sray.latch_rx_settings() 
+
+d = ~np.isin(subarray, subarray_ref)
+subarray_targ = subarray[d] # analog target channels
+subarray_targ = np.reshape(subarray_targ, (subarray.shape[0],-1)) # matrix of subarray target channels to enable/disable wrt reference
+ 
+
+# Set RX array to desired mode and set ADAR1000s to max gain and 0 phase
+if ARRAY_MODE == "rx":
+    print("ARRAY_MODE =",ARRAY_MODE,"Setting all devices to rx mode")
+    for element in sray.elements.values():
+        element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
+        element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
+        element.rx_phase = 0 # Set all phases to 0
+    sray.latch_rx_settings() # Latch SPI settings to devices
+
+# Broadside steer to start
+sray.steer_rx(azimuth=0, elevation=0) # Broadside # Broadside
+
+# Setup ADXUD1AEBZ
+ctx = conv._ctrl.ctx
+xud = ctx.find_device("xud_control")
+PLLselect = xud.find_channel("voltage1", True)
+rxgainmode = xud.find_channel("voltage0", True)
+cal_ant = mr.find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
+PLLselect.attrs["raw"].value = "1"
+rxgainmode.attrs["raw"].value = "1"
+
+
+#########################################################################
+#########################################################################
+#### Initilization complete; Calibration begins here ####################
+#########################################################################
+#########################################################################
+
+input("Make sure RF is on! Press Enter to continue...")
+
+
+# Enable subarray reference
+mr.enable_stingray_channel(sray,subarray)
+
+
+# Take data capture
+no_cal_data = np.transpose(np.array(mr.data_capture(conv)))
+
+# Gain cal
+mr.disable_stingray_channel(sray)
+gain_dict, atten_dict, mag_pre_cal, mag_post_cal = mr.rx_gain(sray, conv, subarray, adc_map, sray.element_map)
+
+# Phase cal
+print("Calibrating Phase... Please wait...")
+cal_ant = mr.find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
+analog_phase, analog_phase_dict = mr.phase_analog(sray, conv, adc_map, adc_ref, subarray_ref, subarray_targ, cal_ant)
+
+# Take calibrated data capture
+mr.enable_stingray_channel(sray)
+calibrated_data = np.transpose(np.array(mr.data_capture(conv)))
+calibrated_data = np.array(calibrated_data).T
+calibrated_data = mr.cal_data(calibrated_data, cal_ant)
+calibrated_data = np.array(calibrated_data).T
+mr.disable_stingray_channel(sray)
+
+## Plot results ##
+plt.ion()   # Turn on interactive mode
+fig, axs = plt.subplots(2,1) # Creates a 2x1 grid of subplots
+
+axs[0].plot(no_cal_data.real)
+axs[0].set_title('Without Calibration')
+axs[0].set_xlabel("Index")
+axs[0].set_ylabel("Value")
+axs[0].grid(visible=True)
+axs[0].set_xlim([100,600])
+axs[1].set_ylim([-28000,28000])
+
+axs[1].plot(calibrated_data.real)
+axs[1].set_title('With Calibration')
+axs[1].set_xlabel("Index")
+axs[1].set_ylabel("Value")
+axs[1].grid(visible=True)
+axs[1].set_ylim([-28000,28000])
+axs[1].set_xlim([100,600])
+plt.savefig('MantaRay_64Element_Electronic_Steering_Array_Calibration.png')
+# Adjust layout and display
+plt.tight_layout()
+plt.draw()
+plt.pause(0.001) 
+plt.show() 
+
+GIMBAL_H = mbx.H
+GIMBAL_V = mbx.V
+
+maxsweepangle = 120
+sweepstep = 0.5
+gimbal_motor = GIMBAL_H
+sig_gen_freq_GHz=10
+
+
+steering_angle = 0 # degrees
+
+print("Before Steering Phase:")
+print(sray.all_rx_phases)
+
+sray.steer_rx(azimuth=steering_angle, elevation=0) # Steer to desired angle
+
+
+for element in sray.elements.values():
+    str_channel = str(element)
+    value = int(mr.strip_to_last_two_digits(str_channel))
+
+    # Assign the calculated steered phase to the element
+    element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
+
+sray.latch_rx_settings()  # Latch SPI settings to devices
+
+print("After Steering Phase:")
+print(sray.all_rx_phases)
+
+gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)  # Define gimbal positions from -90 to 90 degrees
+mbx.move(gimbal_motor,-(maxsweepangle/2))
+
+
+single_element_sweep = [] # initialize array to hold single element sweep data
+steer_data = []
+mag_single_sweep = []
+peak_mag = np.zeros(len(gimbal_positions))
+print(peak_mag.shape)
+
+GIMBAL_H = mbx.H
+GIMBAL_V = mbx.V
+
+sig_gen_freq_GHz = 10
+steering_angle = 0  # degrees
+maxsweepangle = 120  # degrees
+sweepstep = 1
+gimbal_motor = GIMBAL_H
+gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)
+angles = np.linspace(-(maxsweepangle/2), (maxsweepangle/2), len(gimbal_positions))
+
+
+# Define steering angles to test
+steering_angles = [0]
+
+# Subarrays dictionary
+subarrays = {
+    'subarray 1': subarray[0],
+    'subarray 2': subarray[1],
+    'subarray 3': subarray[2],
+    'subarray 4': subarray[3],
+}
+
+# Run order
+subarray_run_order = ['subarray 1', 'subarray 2', 'subarray 3', 'subarray 4']
+
+##############################################
+## Step 4: Run Combined RX Sweep ##
+###############################################
+
+# Output folder setup
+base_out_dir = "/home/snuc/Desktop/rx_subarray_plots"
+os.makedirs(base_out_dir, exist_ok=True)
+
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+print("\n" + "="*70)
+print("STARTING COMBINED RX BEAM PATTERN TEST FOR ALL SUBARRAYS")
+print("="*70)
+
+# Calculate and plot
+mechanical_sweep, elec_steer_angle, azim_results, elev_results, = mr.calc_array_pattern(elec_steer_angle=steering_angle,f_op_GHz=sig_gen_freq_GHz)
+
+# Define steering angles to test
+steering_angles = [0]
+
+# Initialize arrays for both azimuth and elevation
+peak_mags_az = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
+peak_mags_el = {angle: np.zeros(len(gimbal_positions)) for angle in steering_angles}
+azim_results_all = {}
+elev_results_all = {}
+
+# === Azimuth Sweep ===
+print("Starting Azimuth Sweep...")
+gimbal_motor = GIMBAL_H
+mbx.gotoZERO()
+mbx.move(gimbal_motor,-(maxsweepangle/2))
+
+# Set up live plot for full 64-element sweep
+plt.ion()
+fig_full_array, ax_full_array = plt.subplots(figsize=(14, 8))
+mng = fig_full_array.canvas.manager
+# Maximize window
+try:
+    mng.window.showMaximized()
+except:
+    pass
+
+line_full_array, = ax_full_array.plot([], [], linestyle='dotted', marker='o', markersize=6, linewidth=2, color='darkblue', label='Full 64-Element Array')
+
+ax_full_array.set_xlabel("Mechanical Azimuth Angle (degrees)", fontsize=14)
+ax_full_array.set_ylabel("Combined RF Input Power (dBm)", fontsize=14)
+ax_full_array.set_title(f"RX Azimuth Pattern - Full 64-Element Array (Live) @ {sig_gen_freq_GHz} GHz", fontsize=16, fontweight='bold')
+ax_full_array.set_xlim([-(maxsweepangle/2), (maxsweepangle/2)])
+ax_full_array.grid(True, alpha=0.3)
+ax_full_array.legend(fontsize=12, loc='best')
+
+# Initialize storage for all IQ data and metadata
+all_iq_data_64 = []
+all_gimbal_angles_64 = []
+all_steering_angles_64 = []
+all_powers_64 = []
+
+# Single mechanical sweep for azimuth
+for i in range(len(gimbal_positions)):
+    mbx.move(gimbal_motor, sweepstep)
+    time.sleep(0.3)
+    
+    for steering_angle in steering_angles:
+        sray.steer_rx(azimuth=steering_angle, elevation=0)
+        time.sleep(0.1)
+        
+        # Enable all 64 elements for full array measurement
+        mr.enable_stingray_channel(sray, subarray.flatten().tolist())
+        time.sleep(0.3)
+        
+        # Apply analog phase calibration
+        for element in sray.elements.values():
+            str_channel = str(element)
+            value = int(mr.strip_to_last_two_digits(str_channel))
+            element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
+        sray.latch_rx_settings()
+        time.sleep(0.2)
+
+        steer_data = np.transpose(np.array(mr.data_capture(conv)))
+        steer_data = np.array(steer_data).T
+        steer_data = mr.cal_data(steer_data, cal_ant)
+        steer_data = np.array(steer_data).T
+
+        combined_data = np.sum(steer_data,axis=1)
+        peak_mags_az[steering_angle][i] = mr.get_analog_mag(combined_data)
+        
+        # Collect IQ data and metadata for combined save
+        gimbal_angle = i - (maxsweepangle/2)
+        all_iq_data_64.append(steer_data)
+        all_gimbal_angles_64.append(gimbal_angle)
+        all_steering_angles_64.append(steering_angle)
+        all_powers_64.append(peak_mags_az[steering_angle][i])
+        
+        # Update live plot for full array
+        plot_angles = angles[:i+1]
+        plot_power = peak_mags_az[steering_angle][:i+1]
+        line_full_array.set_data(plot_angles, plot_power)
+        
+        # Dynamically adjust y-axis
+        valid_data = plot_power[~np.isnan(plot_power)]
+        if len(valid_data) > 0:
+            y_min = np.min(valid_data) - 5
+            y_max = np.max(valid_data) + 5
+            ax_full_array.set_ylim([y_min, y_max])
+        
+        ax_full_array.relim()
+        ax_full_array.autoscale_view(scalex=False)
+        fig_full_array.canvas.draw()
+        fig_full_array.canvas.flush_events()
+
+plt.ioff()
+
+# Save all IQ data to single combined .mat file
+iq_save_dir = os.path.join(base_out_dir, "raw_iq_data")
+os.makedirs(iq_save_dir, exist_ok=True)
+combined_iq_mat_path = os.path.join(
+    iq_save_dir,
+    f"raw_iq_full_64element_combined_azimuth_sweep_{sig_gen_freq_GHz}GHz_{timestamp}.mat"
+)
+combined_iq_dict = {
+    "all_iq_data": np.array(all_iq_data_64),
+    "gimbal_angles_deg": np.array(all_gimbal_angles_64),
+    "steering_angles_deg": np.array(all_steering_angles_64),
+    "power_dBm": np.array(all_powers_64),
+    "mechanical_angles_deg": angles,
+    "frequency_GHz": sig_gen_freq_GHz,
+    "description": "Full 64-element combined RX sweep from -60 to +60 degrees",
+    "num_sweeps": len(all_iq_data_64),
+}
+savemat(combined_iq_mat_path, combined_iq_dict, do_compression=True)
+print(f"\nSaved all 64-element IQ data to: {combined_iq_mat_path}")
+print(f"Total captures: {len(all_iq_data_64)}")
+
+
+mbx.gotoZERO()
+
+# Save data to MATLAB file with both azimuth and elevation patterns
+matlab_data = {
+    'mechanical_angles': angles,
+    'steering_angles': steering_angles,
+    'cal_antenna': cal_ant,
+    # Azimuth patterns (convert to dBm)
+    # 'measured_patterns_az_neg45': peak_mags_az[-45],
+    # 'measured_patterns_az_neg30': peak_mags_az[-30],
+    # 'measured_patterns_az_neg15': peak_mags_az[-15],
+    'measured_patterns_az_0': peak_mags_az[0],
+    # 'measured_patterns_az_pos15': peak_mags_az[15],
+    # 'measured_patterns_az_pos30': peak_mags_az[30],
+    # 'measured_patterns_az_pos45': peak_mags_az[45],
+    # Elevation patterns (convert to dBm)
+    # 'measured_patterns_el_neg60': peak_mags_el[-60] - 10.2,
+    # 'measured_patterns_el_neg45': peak_mags_el[-45] - 10.2,
+    # 'measured_patterns_el_neg30': peak_mags_el[-30] - 10.2,
+    # 'measured_patterns_el_neg15': peak_mags_el[-15] - 10.2,
+    # 'measured_patterns_el_0': peak_mags_el[0] - 10.2,
+    # 'measured_patterns_el_pos15': peak_mags_el[15] - 10.2,
+    # 'measured_patterns_el_pos30': peak_mags_el[30] - 10.2,
+    # 'measured_patterns_el_pos45': peak_mags_el[45] - 10.2,
+    # 'measured_patterns_el_pos60': peak_mags_el[60] - 10.2
+}
+
+# Save combined azimuth and elevation data
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+savemat(f'/home/snuc/Desktop/rx_beamforming_patterns_azel_{timestamp}.mat', matlab_data)
+
+# Create plots for both azimuth and elevation patterns
+plt.ioff()  # Turn off interactive mode for batch saving
+
+# Plot and save azimuth patterns
+for steering_angle in steering_angles:
+    plt.figure(figsize=(10, 6))
+    plt.plot(angles, peak_mags_az[steering_angle] - 10.2,  # Convert to dBm
+             linestyle='dotted', label='Measured Data', 
+             color='blue', markersize=9)
+    plt.title(f'Azimuth Pattern (Steering Angle: {steering_angle}°)')
+    plt.xlabel('Mechanical Azimuth Angle (degrees)')
+    plt.ylabel('Combined RF Input Power (dBm)')
+    plt.ylim(-60, 0)
+    plt.xlim([-(maxsweepangle/2), (maxsweepangle/2)])
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(f'/home/snuc/Desktop/azimuth_pattern_{steering_angle}deg_{timestamp}.png')
+    plt.close()
+
+time.sleep(200)

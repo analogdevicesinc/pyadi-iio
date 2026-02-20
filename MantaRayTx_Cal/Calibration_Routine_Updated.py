@@ -1,10 +1,15 @@
 ## Manta Ray Tx Pulsed Cal Method ##
 
+import os
+os.environ['QT_QPA_PLATFORM'] = 'offscreen'  # Use offscreen backend to avoid X11/Wayland issues
+
 import adi
 import pyvisa
 from pyvisa import constants
 import time
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend for matplotlib
 import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 import N9000A_Driver as N9000A
@@ -35,13 +40,13 @@ mbx.connect(DEVICENAME, BAUDRATE)
 mbx.gotoZERO()
 
 ## Set whether or not to run bootstrap script
-bootstrap_needed = True
+bootstrap_needed = False
 config = True
 DAC_config = True
 Gain_calibration = True
 Digi_Phase_calibration = False
 Analog_Phase_calibration = True
-operational_frequency = 11e9
+operational_frequency = 10e9
 
 ##############################################
 ## Step 0: Initialize Power Supplies ##
@@ -141,12 +146,18 @@ if bootstrap_needed == True:
 ## Setup array mapping of ADAR1000s and elements ##
 ##########################################
 
+
+
+
 subarray = np.array([
     [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28], # subarray 1
     [5, 6, 7, 8, 13, 14, 15, 16, 21, 22, 23, 24, 29, 30, 31, 32], # subarray 2
     [37, 38, 39, 40, 45, 46, 47, 48, 53, 54, 55, 56, 61, 62, 63, 64],  # subarray 3
     [33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60], # subarray 4
     ])
+
+#Reference channel for phase calibration 
+ref_chan = subarray[0, 10]  ## Currently set to element 10
 
 dev = adi.adar1000_array(
     uri = talise_uri,
@@ -158,6 +169,7 @@ dev = adi.adar1000_array(
                 "adar1000_csb_1_1_3", "adar1000_csb_1_1_4", "adar1000_csb_1_2_3", "adar1000_csb_1_2_4"],
 
     
+
     device_map = [[1, 5, 2, 6], [3, 7, 4, 8], [9, 13, 10, 14], [11, 15, 12, 16]],
  
     element_map = np.array([[1, 9,  17, 25, 33, 41, 49, 57],
@@ -261,22 +273,17 @@ time.sleep(1)
 print(f"5.7V Rail is {Pwr_Supplies.measure_voltage(3)}V and {Pwr_Supplies.measure_current(3)}A")
 
 
-print("Turning on 18V, current should be ~4mA")
-PA_Supplies.output_on(1)
-PA_Supplies.output_on(2)
-time.sleep(2)
-print(f"18V Rail is {PA_Supplies.measure_voltage(1)}V and {PA_Supplies.measure_current(1)}A")
+# print("Turning on 18V, current should be ~4mA")
+# PA_Supplies.output_on(1)
+# PA_Supplies.output_on(2)
+# time.sleep(2)
+# print(f"18V Rail is {PA_Supplies.measure_voltage(1)}V and {PA_Supplies.measure_current(1)}A")
 
 
 ## Set elements to turn on for Tx ##
 subarray_ref = np.array([1, 5, 37, 33])
 
 
-#########################################################
-#########################################################
-############## Amplitude Cal ############################
-#########################################################
-#########################################################
 
 
 ##############################################
@@ -284,7 +291,6 @@ subarray_ref = np.array([1, 5, 37, 33])
 ###############################################
 
 ## Set elements to turn on for Tx ##
-
 subarray_ref = np.array([1, 5, 37, 33])
 
 if DAC_config == True:
@@ -593,10 +599,273 @@ for device in dev.devices.values():
 print("Turning off 5.7V rail (LNA bias rail) for heat management")
 Pwr_Supplies.output_off(3)
 
+# if Gain_calibration == True:
+#     print("Beginning Gain Calibration Routine")
+#     CXA = "TCPIP0::192.168.1.77::hislip0::INSTR"
+#     # PSG = "TCPIP0::192.168.20.25::inst0::INSTR"
+
+#     SpecAn = N9000A.N9000A(rm, CXA)
+#     # SigGen = E8267D.E8267D(rm, PSG)
+
+#     # SpecAn.reset()   
+#     SpecAn_Center_Freq = operational_frequency   #Set to transmit frequency
+#     SpecAn_Res_BW = 150    #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
+#     SpecAn.set_initiate_continuous_sweep('ON') #Set contionuous mode of spec an
+#     SpecAn.set_center_freq(SpecAn_Center_Freq)     #Set SpecAn center frequency
+#     # SpecAn.write("TRIGger:SEQ:RFB:LEV:ABS -60 dBm")
+#     #Iterate 16 Times to get all TX Amplitude Data
+#     detect = []
+
+#     ## Set TR Source to external and bias_dac_mode to toggle ##
+#     for device in dev.devices.values():
+#         device.tr_source = "external"
+#         device.bias_dac_mode = "toggle"
+
+
+#     ####################################
+#     ####################################
+#     ######## Begin Gain Cal ############   
+#     ####################################
+#     ####################################
+
+#     # Disable all channels before starting calibration
+#     mr.disable_pa_bias_channel(dev)
+
+#     # Set Spectrum Analyzer to Spec An mode 
+#     SpecAn.set_to_spec_an_mode()
+#     # Set span to 5 MHz for spectrum analyzer mode ##
+#     SpecAn.write("SENS:FREQ:SPAN 18E3")
+#     # SpecAn.set_resolution_bandwidth(9e-3)
+#     SpecAn.set_resolution_bandwidth(150e-6)
+#     SpecAn.write("SENS:SWE:TIME 75E-3")
+#     SpecAn.set_continuous_peak_search(1,1)
+#     # Configure spectrum analyzer video (RF envelope) trigger parameters
+#     SpecAn.write("TRIGger:VIDeo:SOURce VIDeo")
+#     SpecAn.write("TRIGger:VIDeo:LEVel -66.80 dBm")
+#     SpecAn.write("TRIGger:VIDeo:SLOPe NEGative")
+#     SpecAn.write("TRIGger:VIDeo:DELay -14.1E-6")
+#     # enable the video trigger
+#     SpecAn.write("TRIGger:VIDeo:STAT ON")
+
+
+#     # SpecAn.write("*RST;*CLS")
+#     # SpecAn.write("CONF:SAN")                           # Spectrum (SAN) application
+#     # SpecAn.write("FREQuency:CENTer 10 GHz")           # <-- SET YOUR CARRIER
+#     # SpecAn.write("SENSe:SPAN 0")                       # Zero span (time domain)
+#     # SpecAn.write("DISPlay:WINDow:TRACe:Y:SCALe:PDIV 5")# 5 dB/div (adjust as needed)
+#     # SpecAn.write("DISPlay:WINDow:TRACe:Y:SCALe:TOP 0 dBm")  # Ref level (set for your signal)
+    
+#     # # Bandwidths
+#     # SpecAn.write("SENSe:BANDwidth:RESolution 1 MHz")   # RBW ≥ 1 MHz for 5 µs pulse
+#     # SpecAn.write("SENSe:BANDwidth:VIDeo 1 MHz")        # VBW ≥ RBW (avoid smoothing)
+    
+#     # # Detector & averaging
+#     # SpecAn.write("SENSe:DETector:FUNCtion POSitive")   # POSitive (or SAMPle)
+#     # SpecAn.write("SENSe:AVERage:STATe OFF")            # No trace averaging
+    
+#     # # Input attenuation (avoid compression)
+#     # SpecAn.write("SENSe:POWer:ATTenuation 10 dB")      # Adjust based on level/OVLD
+    
+#     # # Sweep settings
+#     # SpecAn.write("SENSe:SWEep:TIME 500E-6")            # 500 µs (≈ 5 PRIs)
+#     # SpecAn.write("SENSe:SWEep:POINts 2001")            # Adequate time resolution
+#     # SpecAn.write("INITiate:CONTinuous OFF")            # Single shot for repeatability
+    
+#     # # Fast data format (optional)
+#     # SpecAn.write("FORMat:DATA REAL,32")                # Binary floats for faster transfers
+
+#     # SpecAn.write("TRIGger:SOURce VIDeo")
+#     # SpecAn.write("TRIGger:VIDeo:LEVel -60 dBm")        # Set just below expected pulse peak
+#     # SpecAn.write("TRIGger:VIDeo:SLOPe POSitive")       # Trigger on rising edge
+#     # SpecAn.write("TRIGger:DELay 0")                    # No delay (use ± for offset)
+    
+#     # # Acquire one sweep
+#     # SpecAn.write("INITiate")
+#     # SpecAn.write("*WAI")
+    
+#     # # Marker & data fetch (optional)
+#     # SpecAn.write("CALCulate:MARKer1:STATe ON")
+#     # SpecAn.write("CALCulate:MARKer1:MAX")
+#     # data = SpecAn.query("TRACe:DATA? TRACE1")
+
+#     PA_Supplies.output_on(1)
+#     PA_Supplies.output_on(2)
+
+
+#     wait = 0.5
+
+#     ## Disable all elemements
+#     mr.disable_pa_bias_channel(dev,)
+#     for i in range(16):
+
+#         print(f"Capturing Elements: {subarray[:,i]}")
+
+#         ## Set center freq to 9.994 GHz ##
+#         SpecAn.set_center_freq(operational_frequency)  
+#         # print(tone_0)
+
+
+#         mr.enable_pa_bias_channel(dev,subarray[0,i])
+#         time.sleep(wait)
+#         tone_0 = SpecAn.get_marker_power(marker=1)
+#         detect.append(tone_0)
+#         print(f"Element: {subarray[0,i]}")
+#         print(tone_0)
+#         mr.disable_pa_bias_channel(dev,subarray[0,i])
+
+#         mr.enable_pa_bias_channel(dev,subarray[1,i])
+#         time.sleep(wait)
+#         tone_1 = SpecAn.get_marker_power(marker=1)
+#         detect.append(tone_1)
+#         print(f"Element: {subarray[1,i]}")
+#         print(tone_1)
+#         mr.disable_pa_bias_channel(dev,subarray[1,i])
+
+#         mr.enable_pa_bias_channel(dev,subarray[2,i])
+#         time.sleep(wait)
+#         tone_2 = SpecAn.get_marker_power(marker=1)
+#         detect.append(tone_2)
+#         print(f"Element: {subarray[2,i]}")
+#         print(tone_2)
+#         mr.disable_pa_bias_channel(dev,subarray[2,i])
+
+#         mr.enable_pa_bias_channel(dev,subarray[3,i])
+#         time.sleep(wait)
+#         tone_3 = SpecAn.get_marker_power(marker=1)
+#         detect.append(tone_3)
+#         print(f"Element: {subarray[3,i]}")
+#         print(tone_3)
+#         mr.disable_pa_bias_channel(dev,subarray[3,i])
+
+
+#     #Calculate Statistics:
+#     pre_detect_arr = np.array(detect, dtype=float)
+#     pre_detect_mean = float(pre_detect_arr.mean())
+#     pre_detect_min = float(pre_detect_arr.min())
+#     pre_detect_max = float(pre_detect_arr.max())
+#     pre_detect_var = float(pre_detect_arr.var())  # population variance; use ddof=1 for sample variance
+
+
+#     gain_codes_cal, atten_cal = mr.gain_codes(dev,np.array(detect),mode="tx")
+#     print(gain_codes_cal)
+
+#     gain_dict_ref = subarray.transpose().flatten()
+#     gain_dict = mr.create_dict(gain_dict_ref, gain_codes_cal)
+#     print("gain_dict:", gain_dict)
+
+#     atten_dict_ref = subarray.transpose().flatten()
+#     atten_dict = mr.create_dict(atten_dict_ref, atten_cal)
+
+
+#     for element in dev.elements.values():
+#         """
+#         Iterate through each element in the Stingray object
+#         Convert the element to a string and extract the last two digits
+#         This is used to map the element to its corresponding gain and attenuation values
+#         in the dictionaries created above
+#         """
+#         str_channel = str(element)
+#         print(element)
+#         value = int(mr.strip_to_last_two_digits(str_channel))
+
+#         # element.tx_attenuator = atten_dict[value]
+#         element.tx_attenuator = 1
+#         element.tx_gain = gain_dict[value]
+
+#         dev.latch_tx_settings() # Latch SPI settings to devices
+
+
+
+#     ## Create array to hold amplitude data ##
+#     #Iterate 16 Times to get all TX Amplitude Data
+#     detect = []
+
+
+#     for i in range(16):
+
+        
+
+#         print(f"Capturing Elements: {subarray[:,i]}")
+
+#         mr.enable_pa_bias_channel(dev,subarray[0,i])
+
+#         ## Set center freq to 9.994 GHz ##
+#         SpecAn.set_center_freq(operational_frequency)
+#         time.sleep(wait)
+#         tone_0 = SpecAn.get_marker_power(marker=1)
+#         detect.append(tone_0)
+#         print(f"Element: {subarray[0,i]}")
+#         print(tone_0)
+#         mr.disable_pa_bias_channel(dev,subarray[0,i])
+
+#         mr.enable_pa_bias_channel(dev,subarray[1,i])
+#         time.sleep(wait)
+#         tone_1 = SpecAn.get_marker_power(marker=1)
+#         detect.append(tone_1)
+#         print(f"Element: {subarray[1,i]}")
+#         print(tone_1)
+#         mr.disable_pa_bias_channel(dev,subarray[1,i])
+
+#         mr.enable_pa_bias_channel(dev,subarray[2,i])
+#         time.sleep(wait)
+#         tone_2 = SpecAn.get_marker_power(marker=1)
+#         detect.append(tone_2)
+#         print(f"Element: {subarray[2,i]}")
+#         print(tone_2)
+#         mr.disable_pa_bias_channel(dev,subarray[2,i])
+
+#         mr.enable_pa_bias_channel(dev,subarray[3,i])
+#         time.sleep(wait)
+#         tone_3 = SpecAn.get_marker_power(marker=1)
+#         detect.append(tone_3)
+#         print(f"Element: {subarray[3,i]}")
+#         print(tone_3)
+#         mr.disable_pa_bias_channel(dev,subarray[3,i])
+
+
+#     #Calculate Statistics:
+#     post_detect_arr = np.array(detect, dtype=float)
+#     post_detect_mean = float(post_detect_arr.mean())
+#     post_detect_min = float(post_detect_arr.min())
+#     post_detect_max = float(post_detect_arr.max())
+#     post_detect_var = float(post_detect_arr.var())  # population variance; use ddof=1 for sample variance
+
+
+#     print("Pre Gain Calibration Detection summary")
+#     print(f"  mean: {pre_detect_mean:.6f}")
+#     print(f"  min : {pre_detect_min:.6f}")
+#     print(f"  max : {pre_detect_max:.6f}")
+#     print(f"  var : {pre_detect_var:.6e}")
+
+#     print("Post Gain Calibration Detection summary")
+#     print(f"  mean: {post_detect_mean:.6f}")
+#     print(f"  min : {post_detect_min:.6f}")
+#     print(f"  max : {post_detect_max:.6f}")
+#     print(f"  var : {post_detect_var:.6e}")
+
 if Gain_calibration == True:
+
     print("Beginning Gain Calibration Routine")
     CXA = "TCPIP0::192.168.1.77::hislip0::INSTR"
     # PSG = "TCPIP0::192.168.20.25::inst0::INSTR"
+
+    for element in dev.elements.values():
+        """
+        Iterate through each element in the Stingray object
+        Convert the element to a string and extract the last two digits
+        This is used to map the element to its corresponding gain and attenuation values
+        in the dictionaries created above
+        """
+        str_channel = str(element)
+        print(element)
+        value = int(mr.strip_to_last_two_digits(str_channel))
+
+        # element.tx_attenuator = atten_dict[value]
+        element.tx_attenuator = 1
+        time.sleep(0.1)
+        element.tx_gain = 127
+
+        dev.latch_tx_settings() # Latch SPI settings to devices
 
     SpecAn = N9000A.N9000A(rm, CXA)
     # SigGen = E8267D.E8267D(rm, PSG)
@@ -638,6 +907,7 @@ if Gain_calibration == True:
     # # Configure spectrum analyzer video (RF envelope) trigger parameters
     # SpecAn.write("TRIGger:VIDeo:SOURce VIDeo")
     # SpecAn.write("TRIGger:VIDeo:LEVel -66.80 dBm")
+    
     # SpecAn.write("TRIGger:VIDeo:SLOPe NEGative")
     # SpecAn.write("TRIGger:VIDeo:DELay -14.1E-6")
     # # enable the video trigger
@@ -645,17 +915,16 @@ if Gain_calibration == True:
 
 
     wait = 0.5
+    PA_Supplies.output_on(1)
 
     ## Disable all elemements
     mr.disable_pa_bias_channel(dev,)
     for i in range(16):
 
-        print(f"Capturing Elements: {subarray[:,i]}")
+        print(f"Capturing Pre Calibration data for Elements: {subarray[:,i]}")
 
         ## Set center freq to 9.994 GHz ##
         SpecAn.set_center_freq(operational_frequency)  
-        # print(tone_0)
-
 
         mr.enable_pa_bias_channel(dev,subarray[0,i])
         time.sleep(wait)
@@ -697,8 +966,9 @@ if Gain_calibration == True:
     pre_detect_max = float(pre_detect_arr.max())
     pre_detect_var = float(pre_detect_arr.var())  # population variance; use ddof=1 for sample variance
 
+    # first_measurement = mr.create_dict(subarray.transpose().flatten(), np.array(detect).flatten())
 
-    gain_codes_cal, atten_cal = mr.gain_codes(dev,np.array(detect),mode="tx")
+    gain_codes_cal, atten_cal, gain_cal_diff = mr.gain_codes(dev,np.array(detect),mode="tx")
     print(gain_codes_cal)
 
     gain_dict_ref = subarray.transpose().flatten()
@@ -707,7 +977,6 @@ if Gain_calibration == True:
 
     atten_dict_ref = subarray.transpose().flatten()
     atten_dict = mr.create_dict(atten_dict_ref, atten_cal)
-
 
     for element in dev.elements.values():
         """
@@ -723,21 +992,28 @@ if Gain_calibration == True:
         # element.tx_attenuator = atten_dict[value]
         element.tx_attenuator = 1
         element.tx_gain = gain_dict[value]
-
         dev.latch_tx_settings() # Latch SPI settings to devices
 
+    
+    
+    # # Initialize a new dictionary to hold calibrated magnitude values
+    # current_mag_dict_ref = subarray.transpose().flatten()
+    # current_mag_dict = mr.create_dict(current_mag_dict_ref, np.zeros(64))
 
+    # # Get Gain Data from ADAR1000 
+    # for element in dev.elements.values():
+    #     str_channel = str(element)
+    #     value = int(mr.strip_to_last_two_digits(str_channel))
+    #     current_mag_dict[value] = element.tx_gain
 
+    
     ## Create array to hold amplitude data ##
     #Iterate 16 Times to get all TX Amplitude Data
     detect = []
 
-
     for i in range(16):
 
-        
-
-        print(f"Capturing Elements: {subarray[:,i]}")
+        print(f"Capturing Post Calibration 1 data for Elements: {subarray[:,i]}")
 
         mr.enable_pa_bias_channel(dev,subarray[0,i])
 
@@ -776,12 +1052,88 @@ if Gain_calibration == True:
 
 
     #Calculate Statistics:
-    post_detect_arr = np.array(detect, dtype=float)
-    post_detect_mean = float(post_detect_arr.mean())
-    post_detect_min = float(post_detect_arr.min())
-    post_detect_max = float(post_detect_arr.max())
-    post_detect_var = float(post_detect_arr.var())  # population variance; use ddof=1 for sample variance
+    post_0_detect_arr = np.array(detect, dtype=float)
+    post_0_detect_mean = float(post_0_detect_arr.mean())
+    post_0_detect_min = float(post_0_detect_arr.min())
+    post_0_detect_max = float(post_0_detect_arr.max())
+    post_0_detect_var = float(post_0_detect_arr.var())  # population variance; use ddof=1 for sample variance
 
+    # second_measurement = mr.create_dict(subarray.transpose().flatten(), np.array(detect).flatten())
+
+    # result_dict = {key: abs(first_measurement[key] - second_measurement[key]) for key in gain_dict}
+    # result = [item for v in result_dict.values() for item in (v if isinstance(v, (list,tuple)) else [v])]
+    result = np.array(detect) + gain_cal_diff
+    # Apply the new measured data to the current_mag_dict by subtracting the previous measurements
+    gain_codes_cal, atten_cal, gain_ref = mr.gain_codes(dev,np.array(result) ,mode="tx")
+    gain_dict_ref = subarray.transpose().flatten()
+    gain_dict = mr.create_dict(gain_dict_ref, gain_codes_cal)
+    # result_dict = {key: abs(current_mag_dict[key] - 2*gain_dict[key] ) for key in gain_dict}
+
+    for element in dev.elements.values():
+        """
+        Iterate through each element in the Stingray object
+        Convert the element to a string and extract the last two digits
+        This is used to map the element to its corresponding gain and attenuation values
+        in the dictionaries created above
+        """
+        str_channel = str(element)
+        print(element)
+        value = int(mr.strip_to_last_two_digits(str_channel))
+        # element.tx_attenuator = atten_dict[value]
+        element.tx_attenuator = 1
+        element.tx_gain = gain_dict[value]
+        dev.latch_tx_settings() # Latch SPI settings to devices
+
+        ####################################################################################
+
+    detect = []
+
+    for i in range(16):
+
+        print(f"Capturing Post Calibration 2 data for Elements: {subarray[:,i]}")
+
+        mr.enable_pa_bias_channel(dev,subarray[0,i])
+
+        ## Set center freq to 9.994 GHz ##
+        SpecAn.set_center_freq(operational_frequency)
+        time.sleep(wait)
+        tone_0 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_0)
+        print(f"Element: {subarray[0,i]}")
+        print(tone_0)
+        mr.disable_pa_bias_channel(dev,subarray[0,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[1,i])
+        time.sleep(wait)
+        tone_1 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_1)
+        print(f"Element: {subarray[1,i]}")
+        print(tone_1)
+        mr.disable_pa_bias_channel(dev,subarray[1,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[2,i])
+        time.sleep(wait)
+        tone_2 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_2)
+        print(f"Element: {subarray[2,i]}")
+        print(tone_2)
+        mr.disable_pa_bias_channel(dev,subarray[2,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[3,i])
+        time.sleep(wait)
+        tone_3 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_3)
+        print(f"Element: {subarray[3,i]}")
+        print(tone_3)
+        mr.disable_pa_bias_channel(dev,subarray[3,i])
+
+
+    #Calculate Statistics:
+    post_1_detect_arr = np.array(detect, dtype=float)
+    post_1_detect_mean = float(post_1_detect_arr.mean())
+    post_1_detect_min = float(post_1_detect_arr.min())
+    post_1_detect_max = float(post_1_detect_arr.max())
+    post_1_detect_var = float(post_1_detect_arr.var())  # population variance; use ddof=1 for sample variance
 
     print("Pre Gain Calibration Detection summary")
     print(f"  mean: {pre_detect_mean:.6f}")
@@ -789,13 +1141,18 @@ if Gain_calibration == True:
     print(f"  max : {pre_detect_max:.6f}")
     print(f"  var : {pre_detect_var:.6e}")
 
-    print("Post Gain Calibration Detection summary")
-    print(f"  mean: {post_detect_mean:.6f}")
-    print(f"  min : {post_detect_min:.6f}")
-    print(f"  max : {post_detect_max:.6f}")
-    print(f"  var : {post_detect_var:.6e}")
+    print("Post Gain Calibration 1 Detection summary")
+    print(f"  mean: {post_0_detect_mean:.6f}")
+    print(f"  min : {post_0_detect_min:.6f}")
+    print(f"  max : {post_0_detect_max:.6f}")
+    print(f"  var : {post_0_detect_var:.6e}")
 
-
+    print("Post Gain Calibration 2 Detection summary")
+    print(f"  mean: {post_1_detect_mean:.6f}")
+    print(f"  min : {post_1_detect_min:.6f}")
+    print(f"  max : {post_1_detect_max:.6f}")
+    print(f"  var : {post_1_detect_var:.6e}")
+    
 if Digi_Phase_calibration == True:
     print("Beginning Digital Phase Calibration Routine")
     #########################################################################
@@ -1133,17 +1490,17 @@ if Digi_Phase_calibration == True:
 
     ######## END DEFINE MATLAB PULSESEP and PULSEPERIOD FUNCTIONS ##########
 
-    SpecAn_Center_Freq = 9.9945e9   #Set to transmit frequency
-    SpecAn_IQ_BW =  10e6   #Set based upon instrument - testing done at 10MHz (Maximum for CXA used)
-    SpecAn_Res_BW = 10e3   #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
-    SpecAn_Dig_IFBW = 10e6   #Set the digital IFBW of Spec An. Tested at 10MHz for both 10 and 20% Duty Cycles
-    MinCodeVal = 0.015   #Set to 0.00055 for 20% DC, 0.00031 for 10% DC
-    NumChannels = 4   #Set to number of channels being used
+    # SpecAn_Center_Freq = 9.9945e9   #Set to transmit frequency
+    # SpecAn_IQ_BW =  10e6   #Set based upon instrument - testing done at 10MHz (Maximum for CXA used)
+    # SpecAn_Res_BW = 10e3   #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
+    # SpecAn_Dig_IFBW = 10e6   #Set the digital IFBW of Spec An. Tested at 10MHz for both 10 and 20% Duty Cycles
+    # MinCodeVal = 0.015   #Set to 0.00055 for 20% DC, 0.00031 for 10% DC
+    # NumChannels = 4   #Set to number of channels being used
 
 
     SpecAn.select_iq_mode()    #Set spec an for complex IQ mode
     # SpecAn.reset()   
-    SpecAn_Center_Freq = 9.9945e9   #Set to transmit frequency
+    SpecAn_Center_Freq = 10e9   #Set to transmit frequency
     SpecAn_IQ_BW =  10e6   #Set based upon instrument - testing done at 10MHz (Maximum for CXA used)
     SpecAn_Res_BW = 10e3   #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
     SpecAn_Dig_IFBW = 10e6   #Set the digital IFBW of Spec An. Tested at 10MHz for both 10 and 20% Duty Cycles
@@ -1277,24 +1634,41 @@ if Analog_Phase_calibration == True:
     CXA = "TCPIP0::192.168.1.77::hislip0::INSTR"
     SpecAn = N9000A.N9000A(rm, CXA)
     # SpecAn.reset()  
+    PA_Supplies.output_on(1)
+
     # SpecAn.set_to_spec_an_mode() 
-    # SpecAn_Center_Freq = 10e9   #Set to transmit frequency
-    # SpecAn_IQ_BW =  10e6   #Set based upon instrument - testing done at 10MHz (Maximum for CXA used)
-    # # SpecAn_Res_BW = 10e3
-    # SpecAn_Res_BW = 1e6    #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
-    # SpecAn_Dig_IFBW = 10e6   #Set the digital IFBW of Spec An. Tested at 10MHz for both 10 and 20% Duty Cycles
-    # MinCodeVal = 0.015   #Set to 0.00055 for 20% DC, 0.00031 for 10% DC
-    # NumChannels = 4   #Set to number of channels being used #Reset instrument
-    # # SpecAn.set_initiate_continuous_sweep('ON') #Set contionuous mode of spec an
-    # # SpecAn.set_center_freq(SpecAn_Center_Freq)     #Set SpecAn center frequency
+    # # SpecAn_Center_Freq = 10e9   #Set to transmit frequency
+    # # SpecAn_IQ_BW =  10e6   #Set based upon instrument - testing done at 10MHz (Maximum for CXA used)
+    # # # SpecAn_Res_BW = 10e3
+    # # SpecAn_Res_BW = 1e6    #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
+    # # SpecAn_Dig_IFBW = 10e6   #Set the digital IFBW of Spec An. Tested at 10MHz for both 10 and 20% Duty Cycles
+    # # MinCodeVal = 0.015   #Set to 0.00055 for 20% DC, 0.00031 for 10% DC
+    # # NumChannels = 4   #Set to number of channels being used #Reset instrument
+    # # # SpecAn.set_initiate_continuous_sweep('ON') #Set contionuous mode of spec an
+    # # # SpecAn.set_center_freq(SpecAn_Center_Freq)     #Set SpecAn center frequency
 
     # # Set Spectrum Analyzer to Spec An mode 
     # SpecAn.set_to_spec_an_mode()
     # ## Set span to 5 MHz for spectrum analyzer mode ##
-    # SpecAn.write("SENS:FREQ:SPAN 0E6")
+    # SpecAn.write("SENS:FREQ:SPAN 100E3")
     # # SpecAn.set_resolution_bandwidth(9e-3)
     # SpecAn.set_resolution_bandwidth(1)
-    # SpecAn.write("SENS:SWE:TIME 20E-6")
+    # SpecAn.write("SENS:SWE:TIME 145.7E-3")
+    # SpecAn.set_continuous_peak_search(1,1)
+    # # Configure spectrum analyzer video (RF envelope) trigger parameters
+    # SpecAn.write("TRIGger:VIDeo:SOURce VIDeo")
+    # SpecAn.write("TRIGger:VIDeo:LEVel -90 dBm")
+    # SpecAn.write("TRIGger:VIDeo:SLOPe NEGative")
+    # SpecAn.write("TRIGger:VIDeo:DELay -14.1E-6")
+    # # enable the video trigger
+    # SpecAn.write("TRIGger:VIDeo:STAT ON")
+    # # wait = 2
+
+    # #     # Set Spectrum Analyzer to Spec An mode 
+    # SpecAn.set_to_spec_an_mode()
+    # ## Set span to 5 MHz for spectrum analyzer mode ##
+    # # SpecAn.set_resolution_bandwidth(9e-3)
+    # SpecAn.set_resolution_bandwidth(150e-6)
     # SpecAn.set_continuous_peak_search(1,1)
     # # Configure spectrum analyzer video (RF envelope) trigger parameters
     # SpecAn.write("TRIGger:VIDeo:SOURce VIDeo")
@@ -1303,49 +1677,72 @@ if Analog_Phase_calibration == True:
     # SpecAn.write("TRIGger:VIDeo:DELay -14.1E-6")
     # # enable the video trigger
     # SpecAn.write("TRIGger:VIDeo:STAT ON")
-    # wait = 2
 
-        # Set Spectrum Analyzer to Spec An mode 
-    SpecAn.set_to_spec_an_mode()
-    ## Set span to 5 MHz for spectrum analyzer mode ##
-    SpecAn.write("SENS:FREQ:SPAN 18E3")
-    # SpecAn.set_resolution_bandwidth(9e-3)
-    SpecAn.set_resolution_bandwidth(150e-6)
-    SpecAn.write("SENS:SWE:TIME 75E-3")
-    SpecAn.set_continuous_peak_search(1,1)
-    # # Configure spectrum analyzer video (RF envelope) trigger parameters
-    # SpecAn.write("TRIGger:VIDeo:SOURce VIDeo")
-    # SpecAn.write("TRIGger:VIDeo:LEVel -66.80 dBm")
-    # SpecAn.write("TRIGger:VIDeo:SLOPe NEGative")
-    # SpecAn.write("TRIGger:VIDeo:DELay -14.1E-6")
-    # # enable the video trigger
-    # SpecAn.write("TRIGger:VIDeo:STAT ON")
+    # SpecAn.write("*RST;*CLS")
+    # SpecAn.write("CONF:SAN")                           # Spectrum (SAN) application
+    # SpecAn.write("FREQuency:CENTer 10 GHz")           # <-- SET YOUR CARRIER
+    # SpecAn.write("SENSe:SPAN 0")                       # Zero span (time domain)
+    # SpecAn.write("DISPlay:WINDow:TRACe:Y:SCALe:PDIV 5")# 5 dB/div (adjust as needed)
+    # SpecAn.write("DISPlay:WINDow:TRACe:Y:SCALe:TOP 0 dBm")  # Ref level (set for your signal)
+    
+    # # Bandwidths
+    # SpecAn.write("SENSe:BANDwidth:RESolution 1 MHz")   # RBW ≥ 1 MHz for 5 µs pulse
+    # SpecAn.write("SENSe:BANDwidth:VIDeo 1 MHz")        # VBW ≥ RBW (avoid smoothing)
+    
+    # # Detector & averaging
+    # SpecAn.write("SENSe:DETector:FUNCtion POSitive")   # POSitive (or SAMPle)
+    # SpecAn.write("SENSe:AVERage:STATe OFF")            # No trace averaging
+    
+    # # Input attenuation (avoid compression)
+    # SpecAn.write("SENSe:POWer:ATTenuation 10 dB")      # Adjust based on level/OVLD
+    
+    # # Sweep settings
+    # SpecAn.write("SENSe:SWEep:TIME 500E-6")            # 500 µs (≈ 5 PRIs)
+    # SpecAn.write("SENSe:SWEep:POINts 2001")            # Adequate time resolution
+    # SpecAn.write("INITiate:CONTinuous OFF")            # Single shot for repeatability
+    
+    # # Fast data format (optional)
+    # SpecAn.write("FORMat:DATA REAL,32")                # Binary floats for faster transfers
+
+    # SpecAn.write("TRIGger:SOURce VIDeo")
+    # SpecAn.write("TRIGger:VIDeo:LEVel -60 dBm")        # Set just below expected pulse peak
+    # SpecAn.write("TRIGger:VIDeo:SLOPe POSitive")       # Trigger on rising edge
+    # SpecAn.write("TRIGger:DELay 0")                    # No delay (use ± for offset)
+    
+    # # Acquire one sweep
+    # SpecAn.write("INITiate")
+    # SpecAn.write("*WAI")
+    
+    # # Marker & data fetch (optional)
+    # SpecAn.write("CALCulate:MARKer1:STATe ON")
+    # SpecAn.write("CALCulate:MARKer1:MAX")
+    # data = SpecAn.query("TRACe:DATA? TRACE1")
+    
 
 
-    ########################################################
-    ################ Analog Phase Cal ######################
-    ########################################################
+    # ########################################################
+    # ################ Analog Phase Cal ######################
+    # ########################################################
 
-    ## Set ADAR1000 phases to 0 degrees for all elements ##
-    for element in dev.elements.values():
-        str_channel = str(element)
-        value = int(mr.strip_to_last_two_digits(str_channel))
-        element.tx_phase = 0
-        dev.latch_tx_settings()
+    # ## Set ADAR1000 phases to 0 degrees for all elements ##
+    # for element in dev.elements.values():
+    #     str_channel = str(element)
+    #     value = int(mr.strip_to_last_two_digits(str_channel))
+    #     element.tx_phase = 0
+    # dev.latch_tx_settings()
 
-    ## Change DACs back to CW tones ##
-    ## Set TR Source to external and bias_dac_mode to toggle ##
-    for device in dev.devices.values():
-        device.tr_source = "external"
-        device.bias_dac_mode = "toggle"
+    # ## Change DACs back to CW tones ##
+    # ## Set TR Source to external and bias_dac_mode to toggle ##
+    # for device in dev.devices.values():
+    #     device.tr_source = "external"
+    #     device.bias_dac_mode = "toggle"
 
-    mr.disable_pa_bias_channel(dev)
+    # mr.disable_pa_bias_channel(dev)
 
 
-    ## NULL POWER PHASE CAL ##
+    # ## NULL POWER PHASE CAL ##
 
-    #Reference Channel
-    ref_chan = subarray[0, 2]
+
     mr.enable_pa_bias_channel(dev, ref_chan)
     # dig_cal_channels = subarray[:, 2]
     matrix_64elem = np.arange(1,65)
@@ -1355,7 +1752,197 @@ if Analog_Phase_calibration == True:
     digi_phase_values = []
 
 
-    # Constants for the Coarse-Fine Search
+    #     # Constants for the Coarse-Fine Search
+    # COARSE_STEP = 15
+    # FINE_RANGE = 15  # +/- 15 degrees from the coarse minimum
+
+    # for element in dev.elements.values():
+    #     str_channel = str(element)
+    #     value = int(mr.strip_to_last_two_digits(str_channel))
+        
+    #     if value in matrix_64elem:
+            
+    #         if value == ref_chan:
+    #             continue
+            
+    #         print(f"\n--- Element: {value} ---")
+            
+    #         # 1. SETUP
+    #         # (Assuming SpecAn setup and trigger configuration is done outside this loop)
+    #         mr.enable_pa_bias_channel(dev, value)
+    #         mr.enable_pa_bias_channel(dev, ref_chan)
+
+            
+    #         # --- PHASE 1: COARSE SWEEP (0 to 180 degrees in COARSE_STEP increments) ---
+    #         coarse_detect = {} # Dictionary to store {phase: power}
+            
+    #         print(f"Coarse Sweep (Step: {COARSE_STEP} deg)")
+    #         for j in range(0, 360, COARSE_STEP):
+                
+    #             # Ensure phase wraps around 360, though your original script used 0-180
+    #             # We'll stick to 0-180 for now as per your original script
+                
+    #             element.tx_phase = j
+    #             dev.latch_tx_settings()
+                
+    #             # Measure Power
+    #             tone_0 = SpecAn.get_marker_power(marker=1)
+    #             # tone_0_freq = SpecAn.get_marker_freq(marker=1) # Unused, but kept for context
+                
+    #             coarse_detect[j] = tone_0
+            
+    #         # Find the phase with the minimum power from the coarse sweep
+    #         # Use min() with a key to find the dictionary key (phase) with the minimum value (power)
+    #         min_coarse_phase = min(coarse_detect, key=coarse_detect.get)
+    #         min_coarse_power = coarse_detect[min_coarse_phase]
+            
+    #         print(f"Coarse min at {min_coarse_phase} deg with power {min_coarse_power:.2f} dBm")
+            
+            
+    #         # --- PHASE 2: FINE SWEEP (+/- FINE_RANGE around the coarse minimum) ---
+    #         fine_detect = {} # Dictionary to store {phase: power}
+            
+    #         # Define the fine sweep range, handling phase wrap (0-359 or 0-180 in your case)
+    #         # Since your original code used 0 to 180, we will assume you expect the phase to stay in this range.
+    #         # We will search from min_coarse_phase - FINE_RANGE to min_coarse_phase + FINE_RANGE
+    #         start_fine = max(0, min_coarse_phase - FINE_RANGE)
+    #         end_fine = min(360, min_coarse_phase + FINE_RANGE)
+            
+    #         print(f"Fine Sweep (Range: {start_fine} to {end_fine} deg)")
+
+    #         # Sweep in 1 degree steps
+    #         for j in range(start_fine, end_fine + 1):
+                
+    #             element.tx_phase = j
+    #             dev.latch_tx_settings()
+                
+    #             # Measure Power
+    #             tone_0 = SpecAn.get_marker_power(marker=1)
+    #             fine_detect[j] = tone_0
+
+    #         # Find the phase with the minimum power from the fine sweep
+    #         min_fine_phase = min(fine_detect, key=fine_detect.get)
+    #         min_fine_power = fine_detect[min_fine_phase]
+            
+    #         print(f'Fine min (final null) power at {min_fine_phase} deg')
+            
+            
+    #         # --- PHASE 3: APPLY CALIBRATED PHASE ---
+            
+    #         # The null phase is 'min_fine_phase', so the in-phase setting is + 180 degrees
+    #         calibrated_phase = (min_fine_phase + 180) % 360 # Use modulo for wrap around if required, or simply +180
+            
+    #         print(f'Setting {element} calibrated phase to {calibrated_phase} deg')
+            
+    #         element.tx_phase = calibrated_phase
+    #         digi_phase_values.append(calibrated_phase)
+    #         dev.latch_tx_settings()
+
+    #         # 4. CLEANUP
+    #         mr.disable_pa_bias_channel(dev, value)
+    #         mr.disable_pa_bias_channel(dev, ref_chan)
+
+    #     else: 
+    #         pass
+
+        # Constants for the Coarse-Fine Search
+    # COARSE_STEP = 15
+    # FINE_RANGE = 15  # +/- 15 degrees from the coarse minimum
+
+    # for element in dev.elements.values():
+    #     str_channel = str(element)
+    #     value = int(mr.strip_to_last_two_digits(str_channel))
+        
+    #     if value in matrix_64elem:
+            
+    #         if value == ref_chan:
+    #             continue
+            
+    #         print(f"\n--- Element: {value} ---")
+            
+    #         # 1. SETUP
+    #         # (Assuming SpecAn setup and trigger configuration is done outside this loop)
+    #         mr.enable_pa_bias_channel(dev, value)
+    #         mr.enable_pa_bias_channel(dev, ref_chan)
+
+            
+    #         # --- PHASE 1: COARSE SWEEP (0 to 180 degrees in COARSE_STEP increments) ---
+    #         coarse_detect = {} # Dictionary to store {phase: power}
+            
+    #         print(f"Coarse Sweep (Step: {COARSE_STEP} deg)")
+    #         for j in range(0, 360, COARSE_STEP):
+                
+    #             # Ensure phase wraps around 360, though your original script used 0-180
+    #             # We'll stick to 0-180 for now as per your original script
+                
+    #             element.tx_phase = j
+    #             dev.latch_tx_settings()
+                
+    #             # Measure Power
+    #             tone_0 = SpecAn.get_marker_power(marker=1)
+    #             # tone_0_freq = SpecAn.get_marker_freq(marker=1) # Unused, but kept for context
+                
+    #             coarse_detect[j] = tone_0
+            
+    #         # Find the phase with the minimum power from the coarse sweep
+    #         # Use min() with a key to find the dictionary key (phase) with the minimum value (power)
+    #         min_coarse_phase = min(coarse_detect, key=coarse_detect.get)
+    #         min_coarse_power = coarse_detect[min_coarse_phase]
+            
+    #         print(f"Coarse min at {min_coarse_phase} deg with power {min_coarse_power:.2f} dBm")
+            
+            
+    #         # --- PHASE 2: FINE SWEEP (+/- FINE_RANGE around the coarse minimum) ---
+    #         fine_detect = {} # Dictionary to store {phase: power}
+            
+    #         # Define the fine sweep range, handling phase wrap around 360 degrees
+    #         # Generate phase values that wrap around 360 if necessary
+    #         start_fine = min_coarse_phase - FINE_RANGE
+    #         end_fine = min_coarse_phase + FINE_RANGE
+            
+    #         # Create list of phase values, wrapping around 360
+    #         phase_values = []
+    #         for phase in range(start_fine, end_fine + 1):
+    #             phase_values.append(phase % 360)
+            
+    #         print(f"Fine Sweep (Range: {min_coarse_phase - FINE_RANGE} to {min_coarse_phase + FINE_RANGE} deg, wrapping at 360)")
+
+    #         # Sweep in 1 degree steps
+    #         for j in phase_values:
+                
+    #             element.tx_phase = j
+    #             dev.latch_tx_settings()
+                
+    #             # Measure Power
+    #             tone_0 = SpecAn.get_marker_power(marker=1)
+    #             fine_detect[j] = tone_0
+
+    #         # Find the phase with the minimum power from the fine sweep
+    #         min_fine_phase = min(fine_detect, key=fine_detect.get)
+    #         min_fine_power = fine_detect[min_fine_phase]
+            
+    #         print(f'Fine min (final null) power at {min_fine_phase} deg')
+            
+            
+    #         # --- PHASE 3: APPLY CALIBRATED PHASE ---
+            
+    #         # The null phase is 'min_fine_phase', so the in-phase setting is + 180 degrees
+    #         calibrated_phase = (min_fine_phase + 180) % 360 # Use modulo for wrap around if required, or simply +180
+            
+    #         print(f'Setting {element} calibrated phase to {calibrated_phase} deg')
+            
+    #         element.tx_phase = calibrated_phase
+    #         digi_phase_values.append(calibrated_phase)
+    #         dev.latch_tx_settings()
+
+    #         # 4. CLEANUP
+    #         mr.disable_pa_bias_channel(dev, value)
+    #         mr.disable_pa_bias_channel(dev, ref_chan)
+
+    #     else: 
+    #         pass
+ 
+
 COARSE_STEP = 15
 FINE_RANGE = 15  # +/- 15 degrees from the coarse minimum
 
@@ -1380,7 +1967,7 @@ for element in dev.elements.values():
         coarse_detect = {} # Dictionary to store {phase: power}
         
         print(f"Coarse Sweep (Step: {COARSE_STEP} deg)")
-        for j in range(0, 196, COARSE_STEP):
+        for j in range(0, 360, COARSE_STEP):
             
             # Ensure phase wraps around 360, though your original script used 0-180
             # We'll stick to 0-180 for now as per your original script
@@ -1393,7 +1980,7 @@ for element in dev.elements.values():
             # tone_0_freq = SpecAn.get_marker_freq(marker=1) # Unused, but kept for context
             
             coarse_detect[j] = tone_0
-        
+
         # Find the phase with the minimum power from the coarse sweep
         # Use min() with a key to find the dictionary key (phase) with the minimum value (power)
         min_coarse_phase = min(coarse_detect, key=coarse_detect.get)
@@ -1405,16 +1992,20 @@ for element in dev.elements.values():
         # --- PHASE 2: FINE SWEEP (+/- FINE_RANGE around the coarse minimum) ---
         fine_detect = {} # Dictionary to store {phase: power}
         
-        # Define the fine sweep range, handling phase wrap (0-359 or 0-180 in your case)
-        # Since your original code used 0 to 180, we will assume you expect the phase to stay in this range.
-        # We will search from min_coarse_phase - FINE_RANGE to min_coarse_phase + FINE_RANGE
-        start_fine = max(0, min_coarse_phase - FINE_RANGE)
-        end_fine = min(196, min_coarse_phase + FINE_RANGE)
+        # Define the fine sweep range, handling phase wrap around 360 degrees
+        # Generate phase values that wrap around 360 if necessary
+        start_fine = min_coarse_phase - FINE_RANGE
+        end_fine = min_coarse_phase + FINE_RANGE
         
-        print(f"Fine Sweep (Range: {start_fine} to {end_fine} deg)")
+        # Create list of phase values, wrapping around 360
+        phase_values = []
+        for phase in range(start_fine, end_fine + 1):
+            phase_values.append(phase % 360)
+        
+        print(f"Fine Sweep (Range: {min_coarse_phase - FINE_RANGE} to {min_coarse_phase + FINE_RANGE} deg, wrapping at 360)")
 
         # Sweep in 1 degree steps
-        for j in range(start_fine, end_fine + 1):
+        for j in phase_values:
             
             element.tx_phase = j
             dev.latch_tx_settings()
@@ -1427,13 +2018,13 @@ for element in dev.elements.values():
         min_fine_phase = min(fine_detect, key=fine_detect.get)
         min_fine_power = fine_detect[min_fine_phase]
         
-        print(f'Fine min (final null) power at {min_fine_phase} deg')
+        print(f'Fine min power at {min_fine_phase} deg')
         
         
         # --- PHASE 3: APPLY CALIBRATED PHASE ---
-        
+
         # The null phase is 'min_fine_phase', so the in-phase setting is + 180 degrees
-        calibrated_phase = (min_fine_phase + 180) % 360 # Use modulo for wrap around if required, or simply +180
+        calibrated_phase = (min_fine_phase + 180) % 360 # Add 180 degrees to flip to constructive interference
         
         print(f'Setting {element} calibrated phase to {calibrated_phase} deg')
         
@@ -1449,115 +2040,12 @@ for element in dev.elements.values():
         pass
 
 
-    # for element in dev.elements.values():
-    #     str_channel = str(element)
-    #     value = int(mr.strip_to_last_two_digits(str_channel))
-    #     if value in matrix_64elem:
-    #         detect = []
-    #         if value == ref_chan:
-    #             continue
-    #         else:
-    #             print(f"Element: {value}")
-    #             # SpecAn.write("INIT:CONT OFF ")
-    #             # SpecAn.write("TRIGger:VIDeo:STAT ON")
-    #             # SpecAn.write("TRIGger:VIDeo:SOURce VIDeo")
-    #             # SpecAn.write("TRIGger:VIDeo:LEVel -66.80 dBm")
-    #             # SpecAn.write("TRIGger:VIDeo:SLOPe NEGative")
-    #             # SpecAn.write("TRIGger:VIDeo:DELay -14.1E-6")
-    #             # enable the video trigger
-                
-    #             mr.enable_pa_bias_channel(dev, value)
-    #             mr.enable_pa_bias_channel(dev, ref_chan)
 
+a=1
 
-    #             for j in range(181):
-                
-    #                 element.tx_phase = j
-    #                 dev.latch_tx_settings()
-    #                 tone_0 = SpecAn.get_marker_power(marker=1)
-    #                 tone_0_freq = SpecAn.get_marker_freq(marker = 1)
-    #                 detect.append(tone_0)
-
-                
-
-    #         mr.disable_pa_bias_channel(dev, value)
-    #         mr.disable_pa_bias_channel(dev, ref_chan)
-    #         min_phase = detect.index(min(detect))
-    #         print(f'Null power at {min_phase} deg')
-            
-    #         print(f'Setting {element} calibrated phase')
-    #         element.tx_phase = min_phase + 180
-    #         digi_phase_values.append(min_phase + 180)
-    #         dev.latch_tx_settings()
-
-    #     else: 
-    #         pass
-
-    ## Turn off all elements
-    mr.disable_pa_bias_channel(dev)
-    #Calculate Relative Digital Phase Values
-
-    # NumChannels = 4
-    # digi_phase_relative = np.zeros(NumChannels)
-    # # for i in range(NumChannels):
-
-
-    # sdr  = adi.adrv9009_zu11eg(talise_uri)
-    # # Send phase aligned pulses out of DAC
-    # sdr.tx_destroy_buffer()
-    # sdr.tx([pulse0_iq, pulse0_iq*np.exp(1j*digi_phase_values[0]*np.pi/180), pulse0_iq*np.exp(1j*digi_phase_values[1]*np.pi/180), pulse0_iq*np.exp(1j*digi_phase_values[2]*np.pi/180)])
-
-    # dig_phase = [0, digi_phase_values[0], digi_phase_values[1], digi_phase_values[2]]
-
-    # #Reference Channel
-    # # ref_channels = subarray[:, 1]
-    # ref_channels = [3]
-    # # mr.enable_pa_bias_channel(dev, ref_channels[0])
-    # mr.enable_pa_bias_channel(dev, ref_channels)
-
-
-
-    # ## Enable channel one at a time.  Sweep phase 0-180 degrees and find null point.  ##
-    # ## Set calibrated phase to null point + 180 degrees ##
-    # for element in dev.elements.values():
-    #     str_channel = str(element)
-    #     value = int(mr.strip_to_last_two_digits(str_channel))
-    #     if value not in ref_channels:
-    #         detect = []
-    #         print(f"Element: {value}")
-    #         mr.enable_pa_bias_channel(dev, value)
-    #         mr.enable_pa_bias_channel(dev, ref_channels[0])
-
-
-    #         for j in range(181):
-            
-    #             element.tx_phase = j
-    #             print('Phase: ', element.tx_phase)
-    #             dev.latch_tx_settings()
-    #             tone_0 = SpecAn.get_marker_power(marker=1)
-    #             detect.append(tone_0)
-                
-
-    #         mr.disable_pa_bias_channel(dev, value)
-    #         mr.disable_pa_bias_channel(dev, ref_channels[0])
-    #         min_phase = detect.index(min(detect))
-    #         print(f'Null power at {min_phase} deg')
-            
-    #         print(f'Setting {element} calibrated phase')
-    #         element.tx_phase = min_phase + 180
-    #         dev.latch_tx_settings()
-
-    #     else: 
-    #         pass
-
-    # ## Turn off all elements
-    # mr.disable_pa_bias_channel(dev)
-
-## Auto launch beamsteering plot script ##
-
-
+# ## Auto launch beamsteering plot script ##
 try:
-    script_path = os.path.join(os.path.dirname(__file__), "Manta_Ray_Tx_BeamsteeringPlots_draft_dec_11.py")
+    script_path = os.path.join(os.path.dirname(__file__), "Manta_Ray_Tx_Demo.py")
     print(f"Launching beamsteering plot script: {script_path}")
     result = subprocess.run([sys.executable, script_path], cwd=os.path.dirname(__file__))
     if result.returncode != 0:

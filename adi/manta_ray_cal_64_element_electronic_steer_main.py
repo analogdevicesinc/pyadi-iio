@@ -2,6 +2,9 @@
 # Copyright (C) 2025 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
+import os
+os.environ['QT_QPA_PLATFORM'] = 'wayland'
+import matplotlib
 import time
 import importlib
 import genalyzer as gn
@@ -18,20 +21,95 @@ import pandas as pd
 import mbx_functions as mbx
 from scipy.special import factorial
 from scipy.io import savemat
-import MantaRay as mr
+import sys
+from MantaRayTx_Cal import MantaRay as mr
 
 
 BAUDRATE                    = 57600                     # for windows and Linux set to 1000000 for MacOS change BAUDRATE to 57600 and set the motor baudrate accordingly
-DEVICENAME                  = "/dev/ttyUSB1"
+DEVICENAME                  = "/dev/ttyUSB0"
 
 mbx.connect(DEVICENAME, BAUDRATE)
+import numpy as np
+import time
+import paramiko
+import sys
+
+
+# ######################################################
+# Run the bootstrap script and block until it completes
+########################################################
+
+## Setup SSH conection into Talise SOM for control ##
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
+
+bootstrap_needed = False
+
+if bootstrap_needed == True:
+    boot_cmd = "bash manta_ray_adar1000_boot.bash"
+    stdin, stdout, stderr = ssh.exec_command(boot_cmd,get_pty=True)
+    chan = stdout.channel
+
+    # stream output while the command runs
+    while not chan.exit_status_ready():
+        if chan.recv_ready():
+            out_chunk = chan.recv(1024).decode(errors="ignore")
+            print(out_chunk, end="")
+        if chan.recv_stderr_ready():
+            err_chunk = chan.recv_stderr(1024).decode(errors="ignore")
+            print(err_chunk, end="", file=sys.stderr)
+        time.sleep(0.1)
+
+    # flush any remaining output
+    if chan.recv_ready():
+        print(chan.recv(1024).decode(errors="ignore"), end="")
+    if chan.recv_stderr_ready():
+        print(chan.recv_stderr(1024).decode(errors="ignore"), end="", file=sys.stderr)
+
+    exit_status = chan.recv_exit_status()
+    if exit_status != 0:
+        ssh.close()
+        raise RuntimeError(f"Boot script failed (exit {exit_status})")
+    else:
+        print(f"Boot script completed (exit {exit_status})")
+    ssh.close()
+
+    input("Enable 5.7V Source.. Running All RX on script start up.. Press Enter to continue...")
+    boot_cmd = "bash All_Rx_on.bash"
+    stdin, stdout, stderr = ssh.exec_command(boot_cmd,get_pty=True)
+    chan = stdout.channel
+
+    # stream output while the command runs
+    while not chan.exit_status_ready():
+        if chan.recv_ready():
+            out_chunk = chan.recv(1024).decode(errors="ignore")
+            print(out_chunk, end="")
+        if chan.recv_stderr_ready():
+            err_chunk = chan.recv_stderr(1024).decode(errors="ignore")
+            print(err_chunk, end="", file=sys.stderr)
+        time.sleep(0.1)
+
+    # flush any remaining output
+    if chan.recv_ready():
+        print(chan.recv(1024).decode(errors="ignore"), end="")
+    if chan.recv_stderr_ready():
+        print(chan.recv_stderr(1024).decode(errors="ignore"), end="", file=sys.stderr)
+
+    exit_status = chan.recv_exit_status()
+    if exit_status != 0:
+        ssh.close()
+        raise RuntimeError(f"Boot script failed (exit {exit_status})")
+    else:
+        print(f"Boot script completed (exit {exit_status})")
+    ssh.close()
 mbx.gotoZERO()
 
 SELF_BIASED_LNAs = True
 ARRAY_MODE = "rx" # start rx cals first
 #print("Turn on RF Source...")
 #input('Press Enter to continue...')
-url = "ip:192.168.0.1"
+url = "ip:192.168.1.1"
 print("Connecting to", url ,"...")
  
 # url = "local:" if len(sys.argv) == 1 else sys.argv[1]
@@ -46,50 +124,50 @@ tddn = adi.tddn(uri = url)
 
 fs_RxIQ = 245.76e6;  #I/Q Data Rate in MSPS
 
-# Startup and connect TDDN
-tddn.enable = False
-tddn.startup_delay_ms = 0
-# Configure top level engine
-samplesPerFrame = 2**12
-frame_length_ms = samplesPerFrame/fs_RxIQ*1000
-tddn.frame_length_ms = frame_length_ms
-# Configure component channels
-on_time = 0
-off_time = frame_length_ms - 0.1
-# Setup TDDN Channel for CW mode
-tddn_channels = {
-    "TX_OFFLOAD_SYNC": 0,
-    "RX_OFFLOAD_SYNC": 1,
-    "TDD_ENABLE": 2,
-    "RX_MXFE_EN": 3,
-    # "TX_MXFE_EN": 4,
-    # "TX_STINGRAY_EN": 5
-}
-# Assign channel properties for CW
-for key, value in tddn_channels.items():
-    if value == 0 or value == 1:
-        tddn.channel[value].on_raw = 0
-        tddn.channel[value].off_raw = 0
-        tddn.channel[value].on_ms = 0
-        tddn.channel[value].off_ms = 0
-        tddn.channel[value].polarity = True
-        tddn.channel[value].enable = True
-    elif value == 2 or value == 5:
-        tddn.channel[value].on_raw = 0
-        tddn.channel[value].off_raw = 0
-        tddn.channel[value].on_ms = 0
-        tddn.channel[value].off_ms = 0
-        tddn.channel[value].polarity = False
-        tddn.channel[value].enable = True
-    else:
-        tddn.channel[value].on_raw = 0
-        tddn.channel[value].off_raw = 10
-        tddn.channel[value].polarity = True
-        tddn.channel[value].enable = True
-tddn.enable = True # Fire up TDD engine
-tddn.sync_internal = True # software enable TDD mode
-# Setup Stingray for RX mode
-# tddn.sync_soft = True
+# # Startup and connect TDDN
+# tddn.enable = False
+# tddn.startup_delay_ms = 0
+# # Configure top level engine
+# samplesPerFrame = 2**12
+# frame_length_ms = samplesPerFrame/fs_RxIQ*1000
+# tddn.frame_length_ms = frame_length_ms
+# # Configure component channels
+# on_time = 0
+# off_time = frame_length_ms - 0.1
+# # Setup TDDN Channel for CW mode
+# tddn_channels = {
+#     "TX_OFFLOAD_SYNC": 0,
+#     "RX_OFFLOAD_SYNC": 1,
+#     "TDD_ENABLE": 2,
+#     "RX_MXFE_EN": 3,
+#     # "TX_MXFE_EN": 4,
+#     # "TX_STINGRAY_EN": 5
+# }
+# # Assign channel properties for CW
+# for key, value in tddn_channels.items():
+#     if value == 0 or value == 1:
+#         tddn.channel[value].on_raw = 0
+#         tddn.channel[value].off_raw = 0
+#         tddn.channel[value].on_ms = 0
+#         tddn.channel[value].off_ms = 0
+#         tddn.channel[value].polarity = True
+#         tddn.channel[value].enable = True
+#     elif value == 2 or value == 5:
+#         tddn.channel[value].on_raw = 0
+#         tddn.channel[value].off_raw = 0
+#         tddn.channel[value].on_ms = 0
+#         tddn.channel[value].off_ms = 0
+#         tddn.channel[value].polarity = False
+#         tddn.channel[value].enable = True
+#     else:
+#         tddn.channel[value].on_raw = 0
+#         tddn.channel[value].off_raw = 10
+#         tddn.channel[value].polarity = True
+#         tddn.channel[value].enable = True
+# tddn.enable = True # Fire up TDD engine
+# tddn.sync_internal = True # software enable TDD mode
+# # Setup Stingray for RX mode
+# # tddn.sync_soft = True
 
 conv = adi.adrv9009_zu11eg(uri = url)
  
@@ -174,26 +252,49 @@ sray.steer_rx(azimuth=0, elevation=0) # Broadside # Broadside
 ctx = conv._ctrl.ctx
 xud = ctx.find_device("xud_control")
 adf4371 = ctx.find_device("adf4371-0")
+
+
+# #####################
+# # TDD signal channels
+# #####################
+
+# TDD_XUD = 5
+
+# #Configure TDD engine
+# tddn.enable = 0  ## Set to 0 to make config changes
+
+# ## Always on channels
+# for chan in [TDD_XUD]:
+#     tddn.channel[chan].on_ms   = 0
+#     tddn.channel[chan].off_ms  = 0
+#     tddn.channel[chan].polarity = 1
+#     tddn.channel[chan].enable   = 1
+
+# ## Enable TDD engine after config chages
+# tddn.enable = 1
+# tddn.sync_soft  = 1
+
+
  
-# Find channel attribute for TX & RX
-txrx1 = xud.find_channel("voltage1", True)
-txrx2 = xud.find_channel("voltage2", True)
-txrx3 = xud.find_channel("voltage3", True)
-txrx4 = xud.find_channel("voltage4", True)
-PLLselect = xud.find_channel("voltage5", True)
+# # Find channel attribute for TX & RX
+# txrx1 = xud.find_channel("voltage1", True)
+# txrx2 = xud.find_channel("voltage2", True)
+# txrx3 = xud.find_channel("voltage3", True)
+# txrx4 = xud.find_channel("voltage4", True)
+PLLselect = xud.find_channel("voltage1", True)
 rxgainmode = xud.find_channel("voltage0", True)
-XUDLO = adf4371.find_channel("altvoltage2", True)
+# XUDLO = adf4371.find_channel("altvoltage2", True)
  
 # 0 for rx, 1 for tx
-txrx1.attrs["raw"].value = "0" # Subarray 4print("Calibrating Phase... Please wait...")
+# txrx1.attrs["raw"].value = "0" # Subarray 4print("Calibrating Phase... Please wait...")
 cal_ant = mr.find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
-txrx2.attrs["raw"].value = "0" # Subarray 3
-txrx3.attrs["raw"].value = "0" # Subarray 1
-txrx4.attrs["raw"].value = "0" # Subarray 2
+# txrx2.attrs["raw"].value = "0" # Subarray 3
+# txrx3.attrs["raw"].value = "0" # Subarray 1
+# txrx4.attrs["raw"].value = "0" # Subarray 2
 PLLselect.attrs["raw"].value = "1"
 rxgainmode.attrs["raw"].value = "1"
-XUDLO.attrs["frequency"].value = "14480000000"
-XUDLO.attrs["powerdown"].value = "0"
+# XUDLO.attrs["frequency"].value = "14490000000"
+# XUDLO.attrs["powerdown"].value = "0"
 
 
  
@@ -266,7 +367,7 @@ axs[1].set_ylabel("Value")
 axs[1].grid(visible=True)
 axs[1].set_ylim([-28000,28000])
 axs[1].set_xlim([100,600])
-
+plt.savefig('MantaRay_64Element_Electronic_Steering_Array_Calibration.png')
 # Adjust layout and display
 plt.tight_layout()
 plt.draw()
@@ -373,6 +474,16 @@ norm_peak_mag = peak_mag - np.max(peak_mag)  # Normalize the peak magnitudes
 # Define the corresponding angles (assuming gimbal_positions is 0 to 80, map to -40 to 40)
 angles = np.linspace(-(maxsweepangle/2), (maxsweepangle/2), len(gimbal_positions))
 
+plt.figure(figsize=(10, 6))
+plt.plot(angles, norm_peak_mag, linestyle='dotted', color='green', label='Element 1')
+plt.title('Single Element Azimuth Beam Pattern (Element 1)')
+plt.xlabel('Azimuth Angle (degrees)')
+plt.ylabel('Measured Power (dBm)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.savefig('MantaRay_64Element_Electronic_Steering_Array_Single_Element_Beam_Pattern.png')
+plt.show()
 
 
 plt.figure(figsize=(10, 6))

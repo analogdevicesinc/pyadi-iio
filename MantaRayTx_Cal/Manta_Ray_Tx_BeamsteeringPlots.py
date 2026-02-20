@@ -62,7 +62,7 @@ GIMBAL_H = mbx.H
 GIMBAL_V = mbx.V
 
 maxsweepangle = 120
-sweepstep = 1
+sweepstep = 2
 gimbal_motor = GIMBAL_H
 sig_gen_freq_GHz=10
 
