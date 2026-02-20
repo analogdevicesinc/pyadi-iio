@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 hardware = ["adsy1100"]
-uri = os.getenv("TEST_URI", "ip:10.44.3.132")
+uri = os.environ.get("IIO_URI", "ip:10.44.3.143")
 
 
 @pytest.mark.iio_hardware(hardware)
