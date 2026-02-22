@@ -833,3 +833,11 @@ ad7405:
       - filename: ad7405.xml
       - data_devices:
           - iio:device0
+ad4851:
+ - ad4851
+ - pyadi_iio_class_support:
+     - ad4851
+ - emulate:
+     - filename: ad4851.xml
+     - data_devices:
+         - iio:device0
