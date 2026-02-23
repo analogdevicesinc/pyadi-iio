@@ -125,6 +125,7 @@ from adi.fmcomms11 import FMComms11
 from adi.gen_mux import genmux
 from adi.hmc7044 import hmc7044
 from adi.hmcad15xx import hmcad15xx
+from adi.sharkbyte import sharkbyte
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2378 import ltc2378
