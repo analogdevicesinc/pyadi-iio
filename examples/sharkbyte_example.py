@@ -26,24 +26,42 @@ hmcad15xx_dev2 = adi.hmcad15xx(uri=my_uri,device_name="axi_adc2_hmcad15xx")
 ad5696_dev     = adi.ad5686(uri=my_uri)
 gpio_controller  = adi.one_bit_adc_dac(uri=my_uri, name="one-bit-adc-dac")
 
+tddn_channel_on_raw = 0
+tddn_channel_off_raw = 10
+tddn_channel_polarity = 0
+tddn_channel_enable = 1
+
 tddn = adi.tddn(my_uri)
-tddn.burst_count = 0
+tddn.burst_count = 5
 tddn.startup_delay_ms = 0
-tddn.frame_length_raw  = 20
+tddn.frame_length_ms  = 1
 
 tddn.enable = 0
 
-tddn.channel[0].on_raw   = 0
-tddn.channel[0].off_raw  = 10
+tddn.channel[0].on_ms    = 0
+tddn.channel[0].off_ms   = 0
 tddn.channel[0].polarity = 0
 tddn.channel[0].enable   = 1
 
-tddn.channel[1].on_raw   = 0
-tddn.channel[1].off_raw  = 10
+tddn.channel[1].on_ms    = 0
+tddn.channel[1].off_ms   = 0
 tddn.channel[1].polarity = 0
 tddn.channel[1].enable   = 1
 
 tddn.enable = 1
+tddn.enable = 0
+
+# ADC1 DMA sync
+tddn.channel[0].on_raw   = tddn_channel_on_raw
+tddn.channel[0].off_raw  = tddn_channel_off_raw
+tddn.channel[0].polarity = tddn_channel_polarity
+tddn.channel[0].enable   = tddn_channel_enable
+
+# ADC2 DMA sync
+tddn.channel[1].on_raw   = tddn_channel_on_raw
+tddn.channel[1].off_raw  = tddn_channel_off_raw
+tddn.channel[1].polarity = tddn_channel_polarity
+tddn.channel[1].enable   = tddn_channel_enable
 
 gpio_controller.gpio_clk_sel = 0
 
@@ -89,21 +107,9 @@ hmcad15xx_dev2.channel[1].input_select = "IP1_IN1"
 hmcad15xx_dev2.channel[2].input_select = "IP1_IN1"
 hmcad15xx_dev2.channel[3].input_select = "IP1_IN1"
 
-# First demonstration: Individual device capture (non-synchronized)
-capture_data1  = hmcad15xx_dev1.rx()
-capture_data2  = hmcad15xx_dev2.rx()
-
-# Plot channel 0 from both devices (individual capture)
-plt.figure(figsize=(12, 6))
-plt.plot(capture_data1, label='hmcad15xx_dev1 - Channel 0', alpha=0.7)
-plt.plot(capture_data2, label='hmcad15xx_dev2 - Channel 0', alpha=0.7)
-plt.xlabel('Sample Index')
-plt.ylabel('ADC Value')
-plt.title('ADC Data - Channel 0 from Both Devices (Individual Capture)')
-plt.legend()
-plt.grid(True)
-plt.savefig("Data channels 0 of both devices - Individual")
-plt.close()  # Close the figure to free memory
+# Enable TDD and configure sync for synchronized multi-ADC capture
+tddn.enable = 1
+tddn.sync_external = False
 
 # Second demonstration: Synchronized multi-ADC capture using sharkbyte class
 print("\n--- Synchronized Multi-ADC Capture ---")
@@ -153,22 +159,5 @@ plt.close()  # Close the figure to free memory
 
 print("Synchronized data capture complete!")
 
-tddn.enable = 0
-
-tddn.channel[0].on_ms    = 0
-tddn.channel[0].off_ms   = 0
-tddn.channel[0].polarity = 0
-tddn.channel[0].enable   = 1
-
-tddn.channel[1].on_ms    = 0
-tddn.channel[1].off_ms   = 0
-tddn.channel[1].polarity = 0
-tddn.channel[1].enable   = 1
-
-tddn.enable = 1
-tddn.enable = 0
-
 # Cleanup buffers
-hmcad15xx_dev1.rx_destroy_buffer()
-hmcad15xx_dev2.rx_destroy_buffer()
 multi.rx_destroy_buffer()

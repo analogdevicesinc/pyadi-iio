@@ -2,6 +2,7 @@
 #
 # SPDX short identifier: ADIBSD
 
+import time
 from adi.hmcad15xx import hmcad15xx
 
 
@@ -96,6 +97,7 @@ class sharkbyte(object):
         """Trigger TDD synchronization pulse if TDD object is available"""
         if self._tddn:
             self._tddn.sync_soft = 0
+            time.sleep(0.001)  # 1ms delay to ensure hardware registers the transition
             self._tddn.sync_soft = 1
 
     def rx_destroy_buffer(self):
