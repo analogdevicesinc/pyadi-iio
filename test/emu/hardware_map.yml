@@ -818,6 +818,13 @@ ad4080:
      - data_devices:
          - iio:device2
 
+adl8113:
+  - adl8113
+  - pyadi_iio_class_support:
+      - adl8113
+  - emulate:
+      - filename: adl8113.xml
+
 ad7490:
   - ad7490
   - pyadi_iio_class_support:
