@@ -2,26 +2,25 @@
 #
 # SPDX short identifier: ADIBSD
 
-import time
 from adi.hmcad15xx import hmcad15xx
+from adi.sync_start import sync_start
+import time
 
 
-class sharkbyte(object):
+class sharkbyte(sync_start):
     """Sharkbyte Multi-ADC Manager
 
-    Manages synchronized data capture from two HMCAD15xx ADCs using TDD-based
-    DMA synchronization.
+    Manages synchronized data capture from two HMCAD15xx ADCs using
+    software-based DMA synchronization via util_ext_sync.
 
     Parameters:
         uri: type=string
             URI of the hardware platform (e.g., "ip:192.168.2.1")
         device1_name: type=string
             Device name for first ADC (default: "axi_adc1_hmcad15xx")
+            This device's util_ext_sync module provides the sync signal for both DMAs
         device2_name: type=string
             Device name for second ADC (default: "axi_adc2_hmcad15xx")
-        tddn: type=adi.tddn (optional)
-            TDD controller object for DMA synchronization. If provided,
-            the rx() method will trigger TDD sync before capture.
     """
 
     __rx_buffer_size_multi = 2 ** 14
@@ -31,17 +30,17 @@ class sharkbyte(object):
         uri="",
         device1_name="axi_adc1_hmcad15xx",
         device2_name="axi_adc2_hmcad15xx",
-        tddn=None,
     ):
         """Initialize sharkbyte multi-ADC manager"""
 
-        self._dma_show_arming = False
-        self._rx_initialized = False
-        self._tddn = tddn
+        self._dma_show_arming = True
 
         # Create both ADC devices
         self.dev1 = hmcad15xx(uri=uri, device_name=device1_name)
         self.dev2 = hmcad15xx(uri=uri, device_name=device2_name)
+
+        # Set _rxadc for sync_start base class to use dev1
+        self._rxadc = self.dev1._rxadc
 
         # Set kernel buffers to 1 for both devices
         for dev in [self.dev1, self.dev2]:
@@ -84,22 +83,6 @@ class sharkbyte(object):
             self.dev1.rx_enabled_channels = value
             self.dev2.rx_enabled_channels = value
 
-    def __rx_dma_arm(self):
-        """Arm DMAs for synchronized capture"""
-        for dev in [self.dev1, self.dev2]:
-            if self._dma_show_arming:
-                print(f"--DMA ARMING-- {dev._device_name}")
-            dev.rx_sync_start = "arm"
-            if self._dma_show_arming:
-                print(f"--DMA ARMED-- {dev._device_name}")
-
-    def __trigger_tdd_sync(self):
-        """Trigger TDD synchronization pulse if TDD object is available"""
-        if self._tddn:
-            self._tddn.sync_soft = 0
-            time.sleep(0.001)  # 1ms delay to ensure hardware registers the transition
-            self._tddn.sync_soft = 1
-
     def rx_destroy_buffer(self):
         """Destroy RX buffers for both devices"""
         for dev in [self.dev1, self.dev2]:
@@ -108,33 +91,57 @@ class sharkbyte(object):
     def rx(self):
         """Receive synchronized data from both ADC devices
 
-        This method:
-        1. Arms both DMAs for synchronized capture
-        2. Destroys and recreates buffers
-        3. Triggers TDD sync (if tddn object was provided)
-        4. Captures data from both devices
+        This method follows the ad9084 sync_start workflow:
+        1. ARM dev1's DMA (controls both DMAs via util_ext_sync)
+        2. Verify armed state
+        3. Destroy and recreate buffers
+        4. TRIGGER_MANUAL to start synchronized capture
+        5. Verify auto-disarmed state
+        6. Capture data from both devices
 
         Returns:
             tuple: (data_dev1, data_dev2)
                 data_dev1: numpy array or list of arrays from device 1
                 data_dev2: numpy array or list of arrays from device 2
         """
-        if not self._rx_initialized:
-            self._rx_initialized = True
 
-        # Arm DMAs
-        self.__rx_dma_arm()
-
-        # Recreate all buffers for synchronized capture
+        # Step 1: Destroy and recreate buffers
+        if self._dma_show_arming:
+            print("--DESTROYING/RECREATING BUFFERS--", flush=True)
         for dev in [self.dev1, self.dev2]:
             dev.rx_destroy_buffer()
             dev._rx_init_channels()
 
-        # Trigger TDD sync if available
-        self.__trigger_tdd_sync()
+        # Step 2: ARM dev1's DMA
+        if self._dma_show_arming:
+            print("--ARMING dev1--", flush=True)
+        self.rx_sync_start = "arm"
 
-        # Capture data from both devices
+        # Step 3: Verify armed state
+        dev1_state = self.rx_sync_start
+        if self._dma_show_arming:
+            print(f"--ARM CHECK-- dev1: {dev1_state}", flush=True)
+
+        if dev1_state != "arm":
+            raise Exception(f"Unexpected SYNC status after ARM: dev1={dev1_state}")
+
+        # Step 4: TRIGGER_MANUAL
+        if self._dma_show_arming:
+            print("--TRIGGER_MANUAL on dev1--", flush=True)
+        self.rx_sync_start = "trigger_manual"
+
+        # Step 5: Capture data
+        if self._dma_show_arming:
+            print("--CAPTURING DATA--", flush=True)
         rx_data1 = self.dev1.rx()
         rx_data2 = self.dev2.rx()
+
+        if self._dma_show_arming:
+            print("--CAPTURE COMPLETE--", flush=True)
+
+        # Step 6: Explicitly disarm to reset state for next capture
+        if self._dma_show_arming:
+            print("--DISARMING after capture--", flush=True)
+        self.rx_sync_start = "disarm"
 
         return rx_data1, rx_data2
