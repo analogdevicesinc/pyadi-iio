@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Source XML: test/emu/devices/ad9375.xml" name="description" />
+
+    <title>Emulation Context: ad9375.xml &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
+    <script async="async" src="../_static/app.umd.js?v=fcf3088a"></script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Emulation Context: ad9434.xml" href="ad9434.html" />
+    <link rel="prev" title="Emulation Context: ad9371.xml" href="ad9371.html" />
+   
+  
+  
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.21">
+  
+    <meta name="page_source_suffix" content=".rst">
+  
+  
+  
+
+
+<style>
+  body {
+    
+  }
+
+  body.dark {
+    
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body:not(.light) {
+      
+    }
+  }
+</style>
+  </head>
+  
+    <body>
+  
+  <input type="checkbox" id="input-show-toc">
+  <input type="checkbox" id="input-show-localtoc">
+  <input type="checkbox" id="input-show-repotoc">
+
+  
+  <div class="search-area">
+    <form action="" method="get">
+      <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="search" placeholder="Search"/>
+      <button class="icon"></button>
+    </form>
+  </div>
+  
+
+  <header>
+    <div id="left">
+      <label id="show-sidebar" class="icon" for="input-show-toc" title="Show/hide index"></label>
+    </div>
+    <div id="right">
+      <span>
+        <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
+        <div class="vertical-divider"></div>
+        
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        
+        <a id="logo" href="../index.html">
+          <div>pyadi-iio</div>
+        </a>
+      </span>
+      <span class="reverse">
+        <label id="show-localtoc" class="icon" for="input-show-localtoc" title="Show/hide contents"></label>
+      </span>
+    </div>
+  </header>
+
+
+  <div class="repotoc-tree overlay">
+    <root>
+  <a href="../index.html" class="current">pyadi-iio</a>
+</root>
+
+  </div>
+    <div class="localtoc">
+      <div class="tocwrapper">
+        <div class="header localtoc-header">
+          <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
+        </div>
+        <nav>
+          <ul>
+<li><a class="reference internal" href="#">Emulation Context: ad9375.xml</a><ul>
+<li><a class="reference internal" href="#tree">Tree</a></li>
+</ul>
+</li>
+</ul>
+
+        </nav>
+      </div>
+    </div>
+
+  
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+    <a id="logo" href="../index.html">
+      <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
+      <img class="only-dark" src="../_static/logos/PyADI-IIO_Logo_w_300_cropped.png"/>
+    </a><input id="input-switch-toc" type="checkbox">
+<label id="show-repotoc" for="input-switch-toc">
+All content
+</label>
+<label id="show-toc" for="input-switch-toc">
+Content on this topic
+</label>
+<div class="repotoc-tree">
+  <root>
+  <a href="../index.html" class="current">pyadi-iio</a>
+</root>
+
+</div>
+<div class="toc-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-1" id="toctree-collapse-1"/><div class="collapse"><a class="reference internal" href="../dev/index.html">Developers</a><label for="toctree-collapse-1"><div class="icon"></div></label></div><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_jesd.html">JESD204 Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad353xr.html">ad353xr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4080.html">ad4080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4130.html">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4170.html">ad4170</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4630.html">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad469x.html">ad469x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5592r.html">ad5592r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5706r.html">ad5706r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5710r.html">ad5710r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad579x.html">ad579x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5754r.html">ad5754r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5940.html">adi.ad5940 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad6676.html">adi.ad6676 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7091rx.html">ad7091rx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7134.html">ad7134</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad717x.html">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7291.html">ad7291</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad738x.html">ad738x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7405.html">ad7405</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7490.html">ad7490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7689.html">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7746.html">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7768.html">ad7768</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad777x.html">ad777x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7799.html">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9083.html">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9084</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084_mc.html">ad9084_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9136.html">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9162.html">adi.ad9162 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9166.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9213.html">ad9213</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9250.html">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9265.html">adi.ad9265 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad937x.html">ad937x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9434.html">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9467.html">adi.ad9467 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9625.html">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4858.html">ad4858</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9739a.html">adi.ad9739a module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ada4355.html">ada4355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ada4961.html">adi.ada4961 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adaq8092.html">adaq8092</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4030.html">adi.adf4030 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4355.html">adi.adf4355 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4382.html">adf4382</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4377.html">adf4377</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf5611.html">adf5611</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16375.html">adis16375</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16475.html">adis16475</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16480.html">adis16480</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16485.html">adis16485</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16488.html">adis16488</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16490.html">adis16490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16497.html">adis16497</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16545.html">adis16545</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16547.html">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16550.html">adis16550</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5240.html">adi.adl5240 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5960.html">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.admv8818.html">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd410x.html">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrf5720.html">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adt7420.html">adi.adt7420 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl313.html">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl380.html">adxl380</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0511.html">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0554.html">cn0554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0556.html">cn0556</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0565.html">cn0565</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0566.html">adi.cn0566 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0575.html">cn0575</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0579.html">cn0579</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmc_vna.html">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcadc3.html">adi.fmcadc3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms11.html">adi.fmcomms11 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.hmc7044.html">adi.hmc7044 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.lm75.html">lm75</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2378.html">ltc2378</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2387.html">ltc2387</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2499.html">adi.ltc2499 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2664.html">ltc2664</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2688.html">ltc2688</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2672.html">ltc2672</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max11205.html">adi.max11205 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max14001.html">adi.max14001 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31865.html">adi.max31865 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max9611.html">adi.max9611 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.tdd.html">tdd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.tddn.html">tddn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-3" id="toctree-collapse-3" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Emulation XML Context Trees</a><label for="toctree-collapse-3"><div class="icon"></div></label></div><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ad2s1210.html">Emulation Context: ad2s1210.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad353xr.html">Emulation Context: ad353xr.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad3552r.html">Emulation Context: ad3552r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad3552r_hs.html">Emulation Context: ad3552r_hs.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4000.html">Emulation Context: ad4000.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4001.html">Emulation Context: ad4001.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4002.html">Emulation Context: ad4002.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4003.html">Emulation Context: ad4003.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4020.html">Emulation Context: ad4020.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad405x.html">Emulation Context: ad405x.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4080.html">Emulation Context: ad4080.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4170.html">Emulation Context: ad4170.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4858.html">Emulation Context: ad4858.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad5592r.html">Emulation Context: ad5592r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad5706r.html">Emulation Context: ad5706r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad5710r.html">Emulation Context: ad5710r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad5754r.html">Emulation Context: ad5754r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad579x.html">Emulation Context: ad579x.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad6676.html">Emulation Context: ad6676.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7091rx.html">Emulation Context: ad7091rx.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7124-8.html">Emulation Context: ad7124-8.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7134.html">Emulation Context: ad7134.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7381.html">Emulation Context: ad7381.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7405.html">Emulation Context: ad7405.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7490.html">Emulation Context: ad7490.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7746.html">Emulation Context: ad7746.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7768-4.html">Emulation Context: ad7768-4.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7768.html">Emulation Context: ad7768.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9081.html">Emulation Context: ad9081.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9081_full_bw_mock.html">Emulation Context: ad9081_full_bw_mock.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9081_tdd.html">Emulation Context: ad9081_tdd.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9084-fmca-ebz.html">Emulation Context: ad9084-fmca-ebz.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9084.html">Emulation Context: ad9084.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9172.html">Emulation Context: ad9172.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9265.html">Emulation Context: ad9265.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9371.html">Emulation Context: ad9371.xml</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Emulation Context: ad9375.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9434.html">Emulation Context: ad9434.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ada4355.html">Emulation Context: ada4355.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaq4224.html">Emulation Context: adaq4224.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adf4377.html">Emulation Context: adf4377.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adf5611.html">Emulation Context: adf5611.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adis16475.html">Emulation Context: adis16475.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adis16480.html">Emulation Context: adis16480.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adis16550.html">Emulation Context: adis16550.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9002.html">Emulation Context: adrv9002.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9002_singledma.html">Emulation Context: adrv9002_singledma.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9002_splitdma.html">Emulation Context: adrv9002_splitdma.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9008-1.html">Emulation Context: adrv9008-1.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9008-2.html">Emulation Context: adrv9008-2.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9361-z7035.html">Emulation Context: adrv9361-z7035.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9364-z7020.html">Emulation Context: adrv9364-z7020.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adsy1100.html">Emulation Context: adsy1100.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adxl345.html">Emulation Context: adxl345.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adxl355.html">Emulation Context: adxl355.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adxl382.html">Emulation Context: adxl382.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adxrs290.html">Emulation Context: adxrs290.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0511.html">Emulation Context: cn0511.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0540.html">Emulation Context: cn0540.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0554.html">Emulation Context: cn0554.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0556.html">Emulation Context: cn0556.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0565.html">Emulation Context: cn0565.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0566.html">Emulation Context: cn0566.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0579.html">Emulation Context: cn0579.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daq2.html">Emulation Context: daq2.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daq3.html">Emulation Context: daq3.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmcomms11.html">Emulation Context: fmcomms11.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmcomms2-3.html">Emulation Context: fmcomms2-3.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmcomms4.html">Emulation Context: fmcomms4.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmcomms5.html">Emulation Context: fmcomms5.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lm75.html">Emulation Context: lm75.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2378.html">Emulation Context: ltc2378.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2387.html">Emulation Context: ltc2387.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2664.html">Emulation Context: ltc2664.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2672.html">Emulation Context: ltc2672.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2688.html">Emulation Context: ltc2688.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="max14001.html">Emulation Context: max14001.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="max31865.html">Emulation Context: max31865.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="max9611.html">Emulation Context: max9611.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pluto.html">Emulation Context: pluto.xml</a></li>
+</ul>
+</li>
+</ul>
+
+
+</div>
+        </div>
+      </div>
+
+  <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper" id="top-anchor">
+          <div class="body-header">
+  <nav class="breadcrumb"><ol><li><a href="index.html">Emulation XML Context Trees</a></li></ol></nav>
+</div>
+          <div class="body" role="main">
+            
+  <section id="emulation-context-ad9375-xml">
+<h1>Emulation Context: ad9375.xml<a class="headerlink" href="#emulation-context-ad9375-xml" title="Link to this heading"></a></h1>
+<p>Source XML: <code class="docutils literal notranslate"><span class="pre">test/emu/devices/ad9375.xml</span></code></p>
+<section id="tree">
+<h2>Tree<a class="headerlink" href="#tree" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>context name=network description=192.168.10.231 Linux analog 5.15.0-175834-ga8f4e04aad8f #218 SMP Wed Aug 23 14:14:47 EEST 2023 aarch64
+|-- context-attribute name=hdl_system_id value=[adrv9371x] on [zcu102] git branch [next_stable] git [e9044e9b8c3bf9c75c46175449c3c833a41ea106] clean [2023-08-18 14:06:27] UTC
+|-- context-attribute name=hw_carrier value=ZynqMP ZCU102 Rev1.0
+|-- context-attribute name=hw_mezzanine value=ADRV9375-W/PCBZ
+|-- context-attribute name=hw_model value=ADRV9375-W/PCBZ on ZynqMP ZCU102 Rev1.0
+|-- context-attribute name=hw_name value=Wide Tuning Range AD9375 Eval Brd
+|-- context-attribute name=hw_serial value=00068
+|-- context-attribute name=hw_vendor value=Analog Devices
+|-- context-attribute name=ip,ip-addr value=192.168.10.231
+|-- context-attribute name=local,kernel value=5.15.0-175834-ga8f4e04aad8f
+|-- context-attribute name=unique_id value=1000002353635912002000052710153ead
+|-- context-attribute name=uri value=ip:192.168.10.231
+|-- device id=hwmon0 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=1234
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=6
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=846
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=1050000
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon1 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=308
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=2
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=849
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=262500
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon10 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=1843
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=4
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=848
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=1562500
+|   |-- attribute name=shunt_resistor value=2000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon11 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=31
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=850
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=25000
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon12 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=308
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=2
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1796
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=550000
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon13 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=21
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1200
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=25000
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon14 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=34
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=3295
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=112500
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon15 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=18
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1799
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=37500
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon16 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=205
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=1
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=899
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=187500
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon17 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=355
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=2
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1198
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=425000
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon18 name=max20751
+|   |-- channel id=curr1 type=input
+|   |   |-- attribute name=input filename=curr1_input value=0
+|   |   |-- attribute name=label filename=curr1_label value=iout1
+|   |   |-- attribute name=max filename=curr1_max value=511500
+|   |   `-- attribute name=max_alarm filename=curr1_max_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=alarm filename=in1_alarm value=0
+|   |   |-- attribute name=crit filename=in1_crit value=15000
+|   |   |-- attribute name=input filename=in1_input value=11937
+|   |   |-- attribute name=label filename=in1_label value=vin
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=4687
+|   |   |-- attribute name=max filename=in1_max value=14906
+|   |   `-- attribute name=min filename=in1_min value=4750
+|   |-- channel id=in2 type=input
+|   |   |-- attribute name=input filename=in2_input value=900
+|   |   |-- attribute name=label filename=in2_label value=vout1
+|   |   |-- attribute name=lcrit filename=in2_lcrit value=735
+|   |   |-- attribute name=lcrit_alarm filename=in2_lcrit_alarm value=0
+|   |   |-- attribute name=max filename=in2_max value=945
+|   |   |-- attribute name=max_alarm filename=in2_max_alarm value=0
+|   |   |-- attribute name=min filename=in2_min value=855
+|   |   `-- attribute name=min_alarm filename=in2_min_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=input filename=power1_input value=0
+|   |   `-- attribute name=label filename=power1_label value=pout1
+|   `-- channel id=temp1 type=input
+|       |-- attribute name=crit filename=temp1_crit value=133000
+|       |-- attribute name=crit_alarm filename=temp1_crit_alarm value=0
+|       |-- attribute name=input filename=temp1_input value=43000
+|       |-- attribute name=max filename=temp1_max value=130000
+|       |-- attribute name=max_alarm filename=temp1_max_alarm value=0
+|       |-- attribute name=min filename=temp1_min value=-40000
+|       `-- attribute name=min_alarm filename=temp1_min_alarm value=0
+|-- device id=hwmon19 name=max20751
+|   |-- channel id=curr1 type=input
+|   |   |-- attribute name=input filename=curr1_input value=0
+|   |   |-- attribute name=label filename=curr1_label value=iout1
+|   |   |-- attribute name=max filename=curr1_max value=511500
+|   |   `-- attribute name=max_alarm filename=curr1_max_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=alarm filename=in1_alarm value=0
+|   |   |-- attribute name=crit filename=in1_crit value=15000
+|   |   |-- attribute name=input filename=in1_input value=11937
+|   |   |-- attribute name=label filename=in1_label value=vin
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=4687
+|   |   |-- attribute name=max filename=in1_max value=14906
+|   |   `-- attribute name=min filename=in1_min value=4750
+|   |-- channel id=in2 type=input
+|   |   |-- attribute name=input filename=in2_input value=1200
+|   |   |-- attribute name=label filename=in2_label value=vout1
+|   |   |-- attribute name=lcrit filename=in2_lcrit value=980
+|   |   |-- attribute name=lcrit_alarm filename=in2_lcrit_alarm value=0
+|   |   |-- attribute name=max filename=in2_max value=1260
+|   |   |-- attribute name=max_alarm filename=in2_max_alarm value=0
+|   |   |-- attribute name=min filename=in2_min value=1140
+|   |   `-- attribute name=min_alarm filename=in2_min_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=input filename=power1_input value=0
+|   |   `-- attribute name=label filename=power1_label value=pout1
+|   `-- channel id=temp1 type=input
+|       |-- attribute name=crit filename=temp1_crit value=133000
+|       |-- attribute name=crit_alarm filename=temp1_crit_alarm value=0
+|       |-- attribute name=input filename=temp1_input value=36000
+|       |-- attribute name=max filename=temp1_max value=130000
+|       |-- attribute name=max_alarm filename=temp1_max_alarm value=0
+|       |-- attribute name=min filename=temp1_min value=-40000
+|       `-- attribute name=min_alarm filename=temp1_min_alarm value=0
+|-- device id=hwmon2 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=11
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1823
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=25000
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon3 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=27
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1200
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=37500
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon4 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=63
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=850
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=62500
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon5 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=12
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1815
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=25000
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon6 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=155
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=1
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1191
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=187500
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon7 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=8
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1795
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=25000
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon8 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=1
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1814
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=0
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=hwmon9 name=ina226
+|   |-- channel id=curr1 type=input
+|   |   `-- attribute name=input filename=curr1_input value=25
+|   |-- channel id=in0 type=input
+|   |   |-- attribute name=crit filename=in0_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in0_crit_alarm value=0
+|   |   |-- attribute name=input filename=in0_input value=0
+|   |   |-- attribute name=lcrit filename=in0_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in0_lcrit_alarm value=0
+|   |-- channel id=in1 type=input
+|   |   |-- attribute name=crit filename=in1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=in1_crit_alarm value=0
+|   |   |-- attribute name=input filename=in1_input value=1821
+|   |   |-- attribute name=lcrit filename=in1_lcrit value=0
+|   |   `-- attribute name=lcrit_alarm filename=in1_lcrit_alarm value=0
+|   |-- channel id=power1 type=input
+|   |   |-- attribute name=crit filename=power1_crit value=0
+|   |   |-- attribute name=crit_alarm filename=power1_crit_alarm value=0
+|   |   `-- attribute name=input filename=power1_input value=37500
+|   |-- attribute name=shunt_resistor value=5000
+|   `-- attribute name=update_interval value=35
+|-- device id=iio:device0 name=ams
+|   |-- channel id=temp0 type=input name=ps_temp
+|   |   |-- attribute name=label filename=in_temp0_ps_temp_label value=ps_temp
+|   |   |-- attribute name=offset filename=in_temp0_ps_temp_offset value=-36058
+|   |   |-- attribute name=raw filename=in_temp0_ps_temp_raw value=40594
+|   |   `-- attribute name=scale filename=in_temp0_ps_temp_scale value=7.771514892
+|   |-- channel id=temp1 type=input name=remote_temp
+|   |   |-- attribute name=label filename=in_temp1_remote_temp_label value=remote_temp
+|   |   |-- attribute name=offset filename=in_temp1_remote_temp_offset value=-36058
+|   |   |-- attribute name=raw filename=in_temp1_remote_temp_raw value=40446
+|   |   `-- attribute name=scale filename=in_temp1_remote_temp_scale value=7.771514892
+|   |-- channel id=temp2 type=input name=pl_temp
+|   |   |-- attribute name=label filename=in_temp2_pl_temp_label value=pl_temp
+|   |   |-- attribute name=offset filename=in_temp2_pl_temp_offset value=-36058
+|   |   |-- attribute name=raw filename=in_temp2_pl_temp_raw value=40440
+|   |   `-- attribute name=scale filename=in_temp2_pl_temp_scale value=7.771514892
+|   |-- channel id=voltage0 type=input name=vcc_pspll0
+|   |   |-- attribute name=label filename=in_voltage0_vcc_pspll0_label value=vcc_pspll0
+|   |   |-- attribute name=raw filename=in_voltage0_vcc_pspll0_raw value=26219
+|   |   `-- attribute name=scale filename=in_voltage0_vcc_pspll0_scale value=0.045776367
+|   |-- channel id=voltage1 type=input name=vcc_psbatt
+|   |   |-- attribute name=label filename=in_voltage1_vcc_psbatt_label value=vcc_psbatt
+|   |   |-- attribute name=raw filename=in_voltage1_vcc_psbatt_raw value=38093
+|   |   `-- attribute name=scale filename=in_voltage1_vcc_psbatt_scale value=0.045776367
+|   |-- channel id=voltage10 type=input name=vccpsddr
+|   |   |-- attribute name=label filename=in_voltage10_vccpsddr_label value=vccpsddr
+|   |   |-- attribute name=raw filename=in_voltage10_vccpsddr_raw value=26045
+|   |   `-- attribute name=scale filename=in_voltage10_vccpsddr_scale value=0.045776367
+|   |-- channel id=voltage11 type=input name=vccpsio3
+|   |   |-- attribute name=label filename=in_voltage11_vccpsio3_label value=vccpsio3
+|   |   |-- attribute name=raw filename=in_voltage11_vccpsio3_raw value=19710
+|   |   `-- attribute name=scale filename=in_voltage11_vccpsio3_scale value=0.091552734
+|   |-- channel id=voltage12 type=input name=vccpsio0
+|   |   |-- attribute name=label filename=in_voltage12_vccpsio0_label value=vccpsio0
+|   |   |-- attribute name=raw filename=in_voltage12_vccpsio0_raw value=19492
+|   |   `-- attribute name=scale filename=in_voltage12_vccpsio0_scale value=0.091552734
+|   |-- channel id=voltage13 type=input name=vccpsio1
+|   |   |-- attribute name=label filename=in_voltage13_vccpsio1_label value=vccpsio1
+|   |   |-- attribute name=raw filename=in_voltage13_vccpsio1_raw value=19500
+|   |   `-- attribute name=scale filename=in_voltage13_vccpsio1_scale value=0.091552734
+|   |-- channel id=voltage14 type=input name=vccpsio2
+|   |   |-- attribute name=label filename=in_voltage14_vccpsio2_label value=vccpsio2
+|   |   |-- attribute name=raw filename=in_voltage14_vccpsio2_raw value=19491
+|   |   `-- attribute name=scale filename=in_voltage14_vccpsio2_scale value=0.091552734
+|   |-- channel id=voltage15 type=input name=psmgtravcc
+|   |   |-- attribute name=label filename=in_voltage15_psmgtravcc_label value=psmgtravcc
+|   |   |-- attribute name=raw filename=in_voltage15_psmgtravcc_raw value=18515
+|   |   `-- attribute name=scale filename=in_voltage15_psmgtravcc_scale value=0.045776367
+|   |-- channel id=voltage16 type=input name=psmgtravtt
+|   |   |-- attribute name=label filename=in_voltage16_psmgtravtt_label value=psmgtravtt
+|   |   |-- attribute name=raw filename=in_voltage16_psmgtravtt_raw value=39603
+|   |   `-- attribute name=scale filename=in_voltage16_psmgtravtt_scale value=0.045776367
+|   |-- channel id=voltage17 type=input name=vccams
+|   |   |-- attribute name=label filename=in_voltage17_vccams_label value=vccams
+|   |   |-- attribute name=raw filename=in_voltage17_vccams_raw value=39824
+|   |   `-- attribute name=scale filename=in_voltage17_vccams_scale value=0.015258789
+|   |-- channel id=voltage18 type=input name=vccint
+|   |   |-- attribute name=label filename=in_voltage18_vccint_label value=vccint
+|   |   |-- attribute name=raw filename=in_voltage18_vccint_raw value=18486
+|   |   `-- attribute name=scale filename=in_voltage18_vccint_scale value=0.045776367
+|   |-- channel id=voltage19 type=input name=vccaux
+|   |   |-- attribute name=label filename=in_voltage19_vccaux_label value=vccaux
+|   |   |-- attribute name=raw filename=in_voltage19_vccaux_raw value=39234
+|   |   `-- attribute name=scale filename=in_voltage19_vccaux_scale value=0.045776367
+|   |-- channel id=voltage2 type=input name=vccint
+|   |   |-- attribute name=label filename=in_voltage2_vccint_label value=vccint
+|   |   |-- attribute name=raw filename=in_voltage2_vccint_raw value=18523
+|   |   `-- attribute name=scale filename=in_voltage2_vccint_scale value=0.045776367
+|   |-- channel id=voltage20 type=input name=vccvrefp
+|   |   |-- attribute name=label filename=in_voltage20_vccvrefp_label value=vccvrefp
+|   |   |-- attribute name=raw filename=in_voltage20_vccvrefp_raw value=27297
+|   |   `-- attribute name=scale filename=in_voltage20_vccvrefp_scale value=0.045776367
+|   |-- channel id=voltage21 type=input name=vccvrefn
+|   |   |-- attribute name=label filename=in_voltage21_vccvrefn_label value=vccvrefn
+|   |   |-- attribute name=raw filename=in_voltage21_vccvrefn_raw value=4
+|   |   `-- attribute name=scale filename=in_voltage21_vccvrefn_scale value=0.045776367
+|   |-- channel id=voltage22 type=input name=vccbram
+|   |   |-- attribute name=label filename=in_voltage22_vccbram_label value=vccbram
+|   |   |-- attribute name=raw filename=in_voltage22_vccbram_raw value=18549
+|   |   `-- attribute name=scale filename=in_voltage22_vccbram_scale value=0.045776367
+|   |-- channel id=voltage23 type=input name=vccplintlp
+|   |   |-- attribute name=label filename=in_voltage23_vccplintlp_label value=vccplintlp
+|   |   |-- attribute name=raw filename=in_voltage23_vccplintlp_raw value=18578
+|   |   `-- attribute name=scale filename=in_voltage23_vccplintlp_scale value=0.045776367
+|   |-- channel id=voltage24 type=input name=vccplintfp
+|   |   |-- attribute name=label filename=in_voltage24_vccplintfp_label value=vccplintfp
+|   |   |-- attribute name=raw filename=in_voltage24_vccplintfp_raw value=18518
+|   |   `-- attribute name=scale filename=in_voltage24_vccplintfp_scale value=0.045776367
+|   |-- channel id=voltage25 type=input name=vccplaux
+|   |   |-- attribute name=label filename=in_voltage25_vccplaux_label value=vccplaux
+|   |   |-- attribute name=raw filename=in_voltage25_vccplaux_raw value=39838
+|   |   `-- attribute name=scale filename=in_voltage25_vccplaux_scale value=0.045776367
+|   |-- channel id=voltage26 type=input name=vccams
+|   |   |-- attribute name=label filename=in_voltage26_vccams_label value=vccams
+|   |   |-- attribute name=raw filename=in_voltage26_vccams_raw value=39312
+|   |   `-- attribute name=scale filename=in_voltage26_vccams_scale value=0.015258789
+|   |-- channel id=voltage3 type=input name=vccbram
+|   |   |-- attribute name=label filename=in_voltage3_vccbram_label value=vccbram
+|   |   |-- attribute name=raw filename=in_voltage3_vccbram_raw value=18570
+|   |   `-- attribute name=scale filename=in_voltage3_vccbram_scale value=0.045776367
+|   |-- channel id=voltage4 type=input name=vccaux
+|   |   |-- attribute name=label filename=in_voltage4_vccaux_label value=vccaux
+|   |   |-- attribute name=raw filename=in_voltage4_vccaux_raw value=39202
+|   |   `-- attribute name=scale filename=in_voltage4_vccaux_scale value=0.045776367
+|   |-- channel id=voltage5 type=input name=vcc_psddrpll
+|   |   |-- attribute name=label filename=in_voltage5_vcc_psddrpll_label value=vcc_psddrpll
+|   |   |-- attribute name=raw filename=in_voltage5_vcc_psddrpll_raw value=39826
+|   |   `-- attribute name=scale filename=in_voltage5_vcc_psddrpll_scale value=0.045776367
+|   |-- channel id=voltage6 type=input name=vccpsintfpddr
+|   |   |-- attribute name=label filename=in_voltage6_vccpsintfpddr_label value=vccpsintfpddr
+|   |   |-- attribute name=raw filename=in_voltage6_vccpsintfpddr_raw value=18428
+|   |   `-- attribute name=scale filename=in_voltage6_vccpsintfpddr_scale value=0.045776367
+|   |-- channel id=voltage7 type=input name=vccpsintlp
+|   |   |-- attribute name=label filename=in_voltage7_vccpsintlp_label value=vccpsintlp
+|   |   |-- attribute name=raw filename=in_voltage7_vccpsintlp_raw value=18534
+|   |   `-- attribute name=scale filename=in_voltage7_vccpsintlp_scale value=0.045776367
+|   |-- channel id=voltage8 type=input name=vccpsintfp
+|   |   |-- attribute name=label filename=in_voltage8_vccpsintfp_label value=vccpsintfp
+|   |   |-- attribute name=raw filename=in_voltage8_vccpsintfp_raw value=18471
+|   |   `-- attribute name=scale filename=in_voltage8_vccpsintfp_scale value=0.045776367
+|   |-- channel id=voltage9 type=input name=vccpsaux
+|   |   |-- attribute name=label filename=in_voltage9_vccpsaux_label value=vccpsaux
+|   |   |-- attribute name=raw filename=in_voltage9_vccpsaux_raw value=39796
+|   |   `-- attribute name=scale filename=in_voltage9_vccpsaux_scale value=0.045776367
+|   `-- attribute name=sampling_frequency value=ERROR
+|-- device id=iio:device1 name=ad9528-1
+|   |-- channel id=altvoltage1 type=output name=FMC_CLK
+|   |   |-- attribute name=frequency filename=out_altvoltage1_FMC_CLK_frequency value=122880000
+|   |   |-- attribute name=label filename=out_altvoltage1_FMC_CLK_label value=FMC_CLK
+|   |   |-- attribute name=phase filename=out_altvoltage1_FMC_CLK_phase value=0.000000
+|   |   `-- attribute name=raw filename=out_altvoltage1_FMC_CLK_raw value=1
+|   |-- channel id=altvoltage12 type=output name=DEV_SYSREF
+|   |   |-- attribute name=frequency filename=out_altvoltage12_DEV_SYSREF_frequency value=120000
+|   |   |-- attribute name=label filename=out_altvoltage12_DEV_SYSREF_label value=DEV_SYSREF
+|   |   |-- attribute name=phase filename=out_altvoltage12_DEV_SYSREF_phase value=0.000000
+|   |   `-- attribute name=raw filename=out_altvoltage12_DEV_SYSREF_raw value=1
+|   |-- channel id=altvoltage13 type=output name=DEV_CLK
+|   |   |-- attribute name=frequency filename=out_altvoltage13_DEV_CLK_frequency value=122880000
+|   |   |-- attribute name=label filename=out_altvoltage13_DEV_CLK_label value=DEV_CLK
+|   |   |-- attribute name=phase filename=out_altvoltage13_DEV_CLK_phase value=0.000000
+|   |   `-- attribute name=raw filename=out_altvoltage13_DEV_CLK_raw value=1
+|   |-- channel id=altvoltage3 type=output name=FMC_SYSREF
+|   |   |-- attribute name=frequency filename=out_altvoltage3_FMC_SYSREF_frequency value=120000
+|   |   |-- attribute name=label filename=out_altvoltage3_FMC_SYSREF_label value=FMC_SYSREF
+|   |   |-- attribute name=phase filename=out_altvoltage3_FMC_SYSREF_phase value=0.000000
+|   |   `-- attribute name=raw filename=out_altvoltage3_FMC_SYSREF_raw value=1
+|   |-- attribute name=pll1_feedback_clk_present value=1
+|   |-- attribute name=pll1_locked value=0
+|   |-- attribute name=pll1_reference_clk_a_present value=0
+|   |-- attribute name=pll1_reference_clk_ab_missing value=1
+|   |-- attribute name=pll1_reference_clk_b_present value=0
+|   |-- attribute name=pll2_feedback_clk_present value=1
+|   |-- attribute name=pll2_locked value=1
+|   |-- attribute name=sync_dividers value=ERROR
+|   |-- attribute name=vcxo_clk_present value=1
+|   `-- debug-attribute name=direct_reg_access value=0x18
+|-- device id=iio:device2 name=ad7291
+|   |-- channel id=temp0 type=input
+|   |   |-- attribute name=mean_raw filename=in_temp0_mean_raw value=174
+|   |   |-- attribute name=raw filename=in_temp0_raw value=174
+|   |   `-- attribute name=scale filename=in_temp0_scale value=250
+|   |-- channel id=voltage0 type=input
+|   |   |-- attribute name=raw filename=in_voltage0_raw value=2701
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage1 type=input
+|   |   |-- attribute name=raw filename=in_voltage1_raw value=2104
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage2 type=input
+|   |   |-- attribute name=raw filename=in_voltage2_raw value=1481
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage3 type=input
+|   |   |-- attribute name=raw filename=in_voltage3_raw value=2719
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage4 type=input
+|   |   |-- attribute name=raw filename=in_voltage4_raw value=1891
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage5 type=input
+|   |   |-- attribute name=raw filename=in_voltage5_raw value=2915
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage6 type=input
+|   |   |-- attribute name=raw filename=in_voltage6_raw value=1240
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   `-- channel id=voltage7 type=input
+|       |-- attribute name=raw filename=in_voltage7_raw value=2132
+|       `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|-- device id=iio:device3 name=ad9371-phy
+|   |-- channel id=altvoltage0 type=output name=RX_LO
+|   |   |-- attribute name=frequency filename=out_altvoltage0_RX_LO_frequency value=2500000000
+|   |   `-- attribute name=label filename=out_altvoltage0_RX_LO_label value=RX_LO
+|   |-- channel id=altvoltage1 type=output name=TX_LO
+|   |   |-- attribute name=frequency filename=out_altvoltage1_TX_LO_frequency value=2500000000
+|   |   `-- attribute name=label filename=out_altvoltage1_TX_LO_label value=TX_LO
+|   |-- channel id=altvoltage2 type=output name=RX_SN_LO
+|   |   |-- attribute name=frequency filename=out_altvoltage2_RX_SN_LO_frequency value=2600000000
+|   |   `-- attribute name=label filename=out_altvoltage2_RX_SN_LO_label value=RX_SN_LO
+|   |-- channel id=temp type=input
+|   |   |-- attribute name=raw filename=in_temp_raw value=79
+|   |   `-- attribute name=scale filename=in_temp_scale value=1000.000000
+|   |-- channel id=voltage0 type=input
+|   |   |-- attribute name=gain_control_mode filename=in_voltage0_gain_control_mode value=manual
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage_gain_control_mode_available value=manual automatic hybrid
+|   |   |-- attribute name=hardwaregain filename=in_voltage0_hardwaregain value=10.000000 dB
+|   |   |-- attribute name=quadrature_tracking_en filename=in_voltage0_quadrature_tracking_en value=1
+|   |   |-- attribute name=rf_bandwidth filename=in_voltage0_rf_bandwidth value=100000000
+|   |   |-- attribute name=rf_port_select_available filename=in_voltage_rf_port_select_available value=OFF INTERNALCALS OBS_SNIFFER SN_A SN_B SN_C ORX1_TX_LO ORX2_TX_LO ORX1_SN_LO ORX2_SN_LO
+|   |   |-- attribute name=rssi filename=in_voltage0_rssi value=45.500 dB
+|   |   |-- attribute name=sampling_frequency filename=in_voltage0_sampling_frequency value=122880000
+|   |   `-- attribute name=temp_comp_gain filename=in_voltage0_temp_comp_gain value=-3.00 dB
+|   |-- channel id=voltage0 type=output
+|   |   |-- attribute name=clgc_current_gain filename=out_voltage0_clgc_current_gain value=0
+|   |   |-- attribute name=clgc_desired_gain filename=out_voltage0_clgc_desired_gain value=-400
+|   |   |-- attribute name=clgc_orx_rms filename=out_voltage0_clgc_orx_rms value=-5862
+|   |   |-- attribute name=clgc_status filename=out_voltage0_clgc_status value=19
+|   |   |-- attribute name=clgc_track_count filename=out_voltage0_clgc_track_count value=111
+|   |   |-- attribute name=clgc_tracking_en filename=out_voltage0_clgc_tracking_en value=0
+|   |   |-- attribute name=clgc_tx_gain filename=out_voltage0_clgc_tx_gain value=0
+|   |   |-- attribute name=clgc_tx_rms filename=out_voltage0_clgc_tx_rms value=-2147483648
+|   |   |-- attribute name=dpd_actuator_en filename=out_voltage0_dpd_actuator_en value=0
+|   |   |-- attribute name=dpd_external_path_delay filename=out_voltage0_dpd_external_path_delay value=1809
+|   |   |-- attribute name=dpd_model_error filename=out_voltage0_dpd_model_error value=1000
+|   |   |-- attribute name=dpd_reset_en filename=out_voltage0_dpd_reset_en value=0
+|   |   |-- attribute name=dpd_status filename=out_voltage0_dpd_status value=7
+|   |   |-- attribute name=dpd_track_count filename=out_voltage0_dpd_track_count value=0
+|   |   |-- attribute name=dpd_tracking_en filename=out_voltage0_dpd_tracking_en value=0
+|   |   |-- attribute name=hardwaregain filename=out_voltage0_hardwaregain value=0.000000 dB
+|   |   |-- attribute name=lo_leakage_tracking_en filename=out_voltage0_lo_leakage_tracking_en value=0
+|   |   |-- attribute name=quadrature_tracking_en filename=out_voltage0_quadrature_tracking_en value=1
+|   |   |-- attribute name=rf_bandwidth filename=out_voltage0_rf_bandwidth value=75000000
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |   |-- attribute name=vswr_forward_gain filename=out_voltage0_vswr_forward_gain value=2147483647
+|   |   |-- attribute name=vswr_forward_gain_imag filename=out_voltage0_vswr_forward_gain_imag value=2147483647
+|   |   |-- attribute name=vswr_forward_gain_real filename=out_voltage0_vswr_forward_gain_real value=2147483647
+|   |   |-- attribute name=vswr_forward_orx filename=out_voltage0_vswr_forward_orx value=-7992
+|   |   |-- attribute name=vswr_forward_tx filename=out_voltage0_vswr_forward_tx value=-2147483648
+|   |   |-- attribute name=vswr_reflected_gain filename=out_voltage0_vswr_reflected_gain value=2147483647
+|   |   |-- attribute name=vswr_reflected_gain_imag filename=out_voltage0_vswr_reflected_gain_imag value=2147483647
+|   |   |-- attribute name=vswr_reflected_gain_real filename=out_voltage0_vswr_reflected_gain_real value=2147483647
+|   |   |-- attribute name=vswr_reflected_orx filename=out_voltage0_vswr_reflected_orx value=-7953
+|   |   |-- attribute name=vswr_reflected_tx filename=out_voltage0_vswr_reflected_tx value=-2147483648
+|   |   |-- attribute name=vswr_status filename=out_voltage0_vswr_status value=0
+|   |   |-- attribute name=vswr_track_count filename=out_voltage0_vswr_track_count value=31
+|   |   `-- attribute name=vswr_tracking_en filename=out_voltage0_vswr_tracking_en value=0
+|   |-- channel id=voltage1 type=input
+|   |   |-- attribute name=gain_control_mode filename=in_voltage1_gain_control_mode value=manual
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage_gain_control_mode_available value=manual automatic hybrid
+|   |   |-- attribute name=hardwaregain filename=in_voltage1_hardwaregain value=10.000000 dB
+|   |   |-- attribute name=quadrature_tracking_en filename=in_voltage1_quadrature_tracking_en value=1
+|   |   |-- attribute name=rf_bandwidth filename=in_voltage1_rf_bandwidth value=100000000
+|   |   |-- attribute name=rf_port_select_available filename=in_voltage_rf_port_select_available value=OFF INTERNALCALS OBS_SNIFFER SN_A SN_B SN_C ORX1_TX_LO ORX2_TX_LO ORX1_SN_LO ORX2_SN_LO
+|   |   |-- attribute name=rssi filename=in_voltage1_rssi value=16.500 dB
+|   |   |-- attribute name=sampling_frequency filename=in_voltage1_sampling_frequency value=122880000
+|   |   `-- attribute name=temp_comp_gain filename=in_voltage1_temp_comp_gain value=-3.00 dB
+|   |-- channel id=voltage1 type=output
+|   |   |-- attribute name=clgc_current_gain filename=out_voltage1_clgc_current_gain value=0
+|   |   |-- attribute name=clgc_desired_gain filename=out_voltage1_clgc_desired_gain value=-400
+|   |   |-- attribute name=clgc_orx_rms filename=out_voltage1_clgc_orx_rms value=-5764
+|   |   |-- attribute name=clgc_status filename=out_voltage1_clgc_status value=19
+|   |   |-- attribute name=clgc_track_count filename=out_voltage1_clgc_track_count value=106
+|   |   |-- attribute name=clgc_tracking_en filename=out_voltage1_clgc_tracking_en value=0
+|   |   |-- attribute name=clgc_tx_gain filename=out_voltage1_clgc_tx_gain value=0
+|   |   |-- attribute name=clgc_tx_rms filename=out_voltage1_clgc_tx_rms value=-1200
+|   |   |-- attribute name=dpd_actuator_en filename=out_voltage1_dpd_actuator_en value=0
+|   |   |-- attribute name=dpd_external_path_delay filename=out_voltage1_dpd_external_path_delay value=2648
+|   |   |-- attribute name=dpd_model_error filename=out_voltage1_dpd_model_error value=1000
+|   |   |-- attribute name=dpd_reset_en filename=out_voltage1_dpd_reset_en value=0
+|   |   |-- attribute name=dpd_status filename=out_voltage1_dpd_status value=5
+|   |   |-- attribute name=dpd_track_count filename=out_voltage1_dpd_track_count value=0
+|   |   |-- attribute name=dpd_tracking_en filename=out_voltage1_dpd_tracking_en value=0
+|   |   |-- attribute name=hardwaregain filename=out_voltage1_hardwaregain value=0.000000 dB
+|   |   |-- attribute name=lo_leakage_tracking_en filename=out_voltage1_lo_leakage_tracking_en value=0
+|   |   |-- attribute name=quadrature_tracking_en filename=out_voltage1_quadrature_tracking_en value=1
+|   |   |-- attribute name=rf_bandwidth filename=out_voltage1_rf_bandwidth value=75000000
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |   |-- attribute name=vswr_forward_gain filename=out_voltage1_vswr_forward_gain value=-4561
+|   |   |-- attribute name=vswr_forward_gain_imag filename=out_voltage1_vswr_forward_gain_imag value=0
+|   |   |-- attribute name=vswr_forward_gain_real filename=out_voltage1_vswr_forward_gain_real value=0
+|   |   |-- attribute name=vswr_forward_orx filename=out_voltage1_vswr_forward_orx value=-7869
+|   |   |-- attribute name=vswr_forward_tx filename=out_voltage1_vswr_forward_tx value=-3307
+|   |   |-- attribute name=vswr_reflected_gain filename=out_voltage1_vswr_reflected_gain value=-4559
+|   |   |-- attribute name=vswr_reflected_gain_imag filename=out_voltage1_vswr_reflected_gain_imag value=0
+|   |   |-- attribute name=vswr_reflected_gain_real filename=out_voltage1_vswr_reflected_gain_real value=0
+|   |   |-- attribute name=vswr_reflected_orx filename=out_voltage1_vswr_reflected_orx value=-7867
+|   |   |-- attribute name=vswr_reflected_tx filename=out_voltage1_vswr_reflected_tx value=-3307
+|   |   |-- attribute name=vswr_status filename=out_voltage1_vswr_status value=0
+|   |   |-- attribute name=vswr_track_count filename=out_voltage1_vswr_track_count value=31
+|   |   `-- attribute name=vswr_tracking_en filename=out_voltage1_vswr_tracking_en value=0
+|   |-- channel id=voltage10 type=output
+|   |   |-- attribute name=offset filename=out_voltage10_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage10_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage10_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage11 type=output
+|   |   |-- attribute name=offset filename=out_voltage11_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage11_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage11_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage2 type=input
+|   |   |-- attribute name=gain_control_mode filename=in_voltage2_gain_control_mode value=manual
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage_gain_control_mode_available value=manual automatic hybrid
+|   |   |-- attribute name=hardwaregain filename=in_voltage2_hardwaregain value=-190.000000 dB
+|   |   |-- attribute name=quadrature_tracking_en filename=in_voltage2_quadrature_tracking_en value=1
+|   |   |-- attribute name=rf_bandwidth filename=in_voltage2_rf_bandwidth value=200000000
+|   |   |-- attribute name=rf_port_select filename=in_voltage2_rf_port_select value=INTERNALCALS
+|   |   |-- attribute name=rf_port_select_available filename=in_voltage_rf_port_select_available value=OFF INTERNALCALS OBS_SNIFFER SN_A SN_B SN_C ORX1_TX_LO ORX2_TX_LO ORX1_SN_LO ORX2_SN_LO
+|   |   |-- attribute name=rssi filename=in_voltage2_rssi value=40.250 dB
+|   |   |-- attribute name=sampling_frequency filename=in_voltage2_sampling_frequency value=245760000
+|   |   `-- attribute name=temp_comp_gain filename=in_voltage2_temp_comp_gain value=0.00 dB
+|   |-- channel id=voltage2 type=output
+|   |   |-- attribute name=offset filename=out_voltage2_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage2_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage2_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage3 type=input
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage_gain_control_mode_available value=manual automatic hybrid
+|   |   |-- attribute name=offset filename=in_voltage3_offset value=45
+|   |   |-- attribute name=raw filename=in_voltage3_raw value=2052
+|   |   |-- attribute name=rf_port_select_available filename=in_voltage_rf_port_select_available value=OFF INTERNALCALS OBS_SNIFFER SN_A SN_B SN_C ORX1_TX_LO ORX2_TX_LO ORX1_SN_LO ORX2_SN_LO
+|   |   `-- attribute name=scale filename=in_voltage3_scale value=0.775194
+|   |-- channel id=voltage3 type=output
+|   |   |-- attribute name=offset filename=out_voltage3_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage3_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage3_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage4 type=input
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage_gain_control_mode_available value=manual automatic hybrid
+|   |   |-- attribute name=offset filename=in_voltage4_offset value=45
+|   |   |-- attribute name=raw filename=in_voltage4_raw value=45
+|   |   |-- attribute name=rf_port_select_available filename=in_voltage_rf_port_select_available value=OFF INTERNALCALS OBS_SNIFFER SN_A SN_B SN_C ORX1_TX_LO ORX2_TX_LO ORX1_SN_LO ORX2_SN_LO
+|   |   `-- attribute name=scale filename=in_voltage4_scale value=0.775194
+|   |-- channel id=voltage4 type=output
+|   |   |-- attribute name=offset filename=out_voltage4_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage4_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage4_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage5 type=input
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage_gain_control_mode_available value=manual automatic hybrid
+|   |   |-- attribute name=offset filename=in_voltage5_offset value=45
+|   |   |-- attribute name=raw filename=in_voltage5_raw value=1173
+|   |   |-- attribute name=rf_port_select_available filename=in_voltage_rf_port_select_available value=OFF INTERNALCALS OBS_SNIFFER SN_A SN_B SN_C ORX1_TX_LO ORX2_TX_LO ORX1_SN_LO ORX2_SN_LO
+|   |   `-- attribute name=scale filename=in_voltage5_scale value=0.775194
+|   |-- channel id=voltage5 type=output
+|   |   |-- attribute name=offset filename=out_voltage5_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage5_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage5_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage6 type=input
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage_gain_control_mode_available value=manual automatic hybrid
+|   |   |-- attribute name=offset filename=in_voltage6_offset value=45
+|   |   |-- attribute name=raw filename=in_voltage6_raw value=2370
+|   |   |-- attribute name=rf_port_select_available filename=in_voltage_rf_port_select_available value=OFF INTERNALCALS OBS_SNIFFER SN_A SN_B SN_C ORX1_TX_LO ORX2_TX_LO ORX1_SN_LO ORX2_SN_LO
+|   |   `-- attribute name=scale filename=in_voltage6_scale value=0.775194
+|   |-- channel id=voltage6 type=output
+|   |   |-- attribute name=offset filename=out_voltage6_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage6_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage6_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage7 type=output
+|   |   |-- attribute name=offset filename=out_voltage7_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage7_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage7_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage8 type=output
+|   |   |-- attribute name=offset filename=out_voltage8_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage8_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage8_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- channel id=voltage9 type=output
+|   |   |-- attribute name=offset filename=out_voltage9_offset value=204
+|   |   |-- attribute name=raw filename=out_voltage9_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=245760000
+|   |   |-- attribute name=scale filename=out_voltage9_scale value=1.560671
+|   |   `-- attribute name=scale_available filename=out_voltage_scale_available value=0.783951 0.798128 0.810932 0.822608 1.560671 1.590157 1.613612 1.637490
+|   |-- attribute name=calibrate value=0
+|   |-- attribute name=calibrate_clgc_en value=0
+|   |-- attribute name=calibrate_dpd_en value=0
+|   |-- attribute name=calibrate_loopback_rx_lo_delay_en value=0
+|   |-- attribute name=calibrate_loopback_rx_rx_qec_en value=0
+|   |-- attribute name=calibrate_rx_lo_delay_en value=0
+|   |-- attribute name=calibrate_rx_qec_en value=0
+|   |-- attribute name=calibrate_tx_lol_en value=0
+|   |-- attribute name=calibrate_tx_lol_ext_en value=0
+|   |-- attribute name=calibrate_tx_qec_en value=0
+|   |-- attribute name=calibrate_vswr_en value=0
+|   |-- attribute name=ensm_mode value=radio_on
+|   |-- attribute name=ensm_mode_available value=radio_on radio_off
+|   |-- attribute name=gain_table_config value=ERROR
+|   |-- attribute name=large_lo_step_calibration_en value=0
+|   |-- attribute name=profile_config value=TB
+|   |-- debug-attribute name=adi,arm-gpio-orx-mode0-pin value=0
+|   |-- debug-attribute name=adi,arm-gpio-orx-mode1-pin value=0
+|   |-- debug-attribute name=adi,arm-gpio-orx-mode2-pin value=0
+|   |-- debug-attribute name=adi,arm-gpio-orx-pin-mode value=0
+|   |-- debug-attribute name=adi,arm-gpio-orx-trigger-pin value=0
+|   |-- debug-attribute name=adi,arm-gpio-orx1-enable-ack value=0
+|   |-- debug-attribute name=adi,arm-gpio-orx2-enable-ack value=0
+|   |-- debug-attribute name=adi,arm-gpio-rx1-enable-ack value=0
+|   |-- debug-attribute name=adi,arm-gpio-rx2-enable-ack value=0
+|   |-- debug-attribute name=adi,arm-gpio-srx-enable-ack value=0
+|   |-- debug-attribute name=adi,arm-gpio-tx-obs-select value=0
+|   |-- debug-attribute name=adi,arm-gpio-tx-rx-pin-mode value=0
+|   |-- debug-attribute name=adi,arm-gpio-tx1-enable-ack value=0
+|   |-- debug-attribute name=adi,arm-gpio-tx2-enable-ack value=0
+|   |-- debug-attribute name=adi,arm-gpio-use-rx2-enable-pin value=0
+|   |-- debug-attribute name=adi,arm-gpio-use-tx2-enable-pin value=0
+|   |-- debug-attribute name=adi,aux-dac-enable-mask value=0
+|   |-- debug-attribute name=adi,aux-dac-slope0 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope1 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope2 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope3 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope4 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope5 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope6 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope7 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope8 value=0
+|   |-- debug-attribute name=adi,aux-dac-slope9 value=0
+|   |-- debug-attribute name=adi,aux-dac-value0 value=0
+|   |-- debug-attribute name=adi,aux-dac-value1 value=0
+|   |-- debug-attribute name=adi,aux-dac-value2 value=0
+|   |-- debug-attribute name=adi,aux-dac-value3 value=0
+|   |-- debug-attribute name=adi,aux-dac-value4 value=0
+|   |-- debug-attribute name=adi,aux-dac-value5 value=0
+|   |-- debug-attribute name=adi,aux-dac-value6 value=0
+|   |-- debug-attribute name=adi,aux-dac-value7 value=0
+|   |-- debug-attribute name=adi,aux-dac-value8 value=0
+|   |-- debug-attribute name=adi,aux-dac-value9 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref0 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref1 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref2 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref3 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref4 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref5 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref6 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref7 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref8 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref9 value=0
+|   |-- debug-attribute name=adi,clgc-additional-delay-offset value=0
+|   |-- debug-attribute name=adi,clgc-allow-tx1-atten-updates value=1
+|   |-- debug-attribute name=adi,clgc-allow-tx2-atten-updates value=1
+|   |-- debug-attribute name=adi,clgc-path-delay-pn-seq-level value=255
+|   |-- debug-attribute name=adi,clgc-tx1-atten-limit value=0
+|   |-- debug-attribute name=adi,clgc-tx1-control-ratio value=75
+|   |-- debug-attribute name=adi,clgc-tx1-desired-gain value=63536
+|   |-- debug-attribute name=adi,clgc-tx1-rel-threshold value=600
+|   |-- debug-attribute name=adi,clgc-tx1-rel-threshold-en value=0
+|   |-- debug-attribute name=adi,clgc-tx2-atten-limit value=0
+|   |-- debug-attribute name=adi,clgc-tx2-control-ratio value=75
+|   |-- debug-attribute name=adi,clgc-tx2-desired-gain value=63536
+|   |-- debug-attribute name=adi,clgc-tx2-rel-threshold value=600
+|   |-- debug-attribute name=adi,clgc-tx2-rel-threshold-en value=0
+|   |-- debug-attribute name=adi,clocks-clk-pll-hs-div value=4
+|   |-- debug-attribute name=adi,clocks-clk-pll-vco-div value=2
+|   |-- debug-attribute name=adi,clocks-clk-pll-vco-freq_khz value=9830400
+|   |-- debug-attribute name=adi,clocks-device-clock_khz value=122880
+|   |-- debug-attribute name=adi,default-initial-calibrations-mask value=261631
+|   |-- debug-attribute name=adi,dpd-additional-delay-offset value=0
+|   |-- debug-attribute name=adi,dpd-damping value=5
+|   |-- debug-attribute name=adi,dpd-high-power-model-update value=1
+|   |-- debug-attribute name=adi,dpd-model-prior-weight value=20
+|   |-- debug-attribute name=adi,dpd-model-version value=2
+|   |-- debug-attribute name=adi,dpd-num-weights value=1
+|   |-- debug-attribute name=adi,dpd-outlier-threshold value=4096
+|   |-- debug-attribute name=adi,dpd-path-delay-pn-seq-level value=255
+|   |-- debug-attribute name=adi,dpd-robust-modeling value=0
+|   |-- debug-attribute name=adi,dpd-samples value=512
+|   |-- debug-attribute name=adi,dpd-weights0-imag value=0
+|   |-- debug-attribute name=adi,dpd-weights0-real value=64
+|   |-- debug-attribute name=adi,dpd-weights1-imag value=0
+|   |-- debug-attribute name=adi,dpd-weights1-real value=0
+|   |-- debug-attribute name=adi,dpd-weights2-imag value=0
+|   |-- debug-attribute name=adi,dpd-weights2-real value=0
+|   |-- debug-attribute name=adi,gpio-3v3-oe-mask value=0
+|   |-- debug-attribute name=adi,gpio-3v3-src-ctrl11_8 value=3
+|   |-- debug-attribute name=adi,gpio-3v3-src-ctrl3_0 value=3
+|   |-- debug-attribute name=adi,gpio-3v3-src-ctrl7_4 value=3
+|   |-- debug-attribute name=adi,gpio-oe-mask value=0
+|   |-- debug-attribute name=adi,gpio-src-ctrl11_8 value=0
+|   |-- debug-attribute name=adi,gpio-src-ctrl15_12 value=0
+|   |-- debug-attribute name=adi,gpio-src-ctrl18_16 value=0
+|   |-- debug-attribute name=adi,gpio-src-ctrl3_0 value=0
+|   |-- debug-attribute name=adi,gpio-src-ctrl7_4 value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-bank-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-deserializer-lane-crossbar value=228
+|   |-- debug-attribute name=adi,jesd204-deframer-deserializer-lanes-enabled value=15
+|   |-- debug-attribute name=adi,jesd204-deframer-device-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-enable-auto-chan-xbar value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-eq-setting value=3
+|   |-- debug-attribute name=adi,jesd204-deframer-external-sysref value=1
+|   |-- debug-attribute name=adi,jesd204-deframer-invert-lane-polarity value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-k value=32
+|   |-- debug-attribute name=adi,jesd204-deframer-lane0-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-lmfc-offset value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-m value=4
+|   |-- debug-attribute name=adi,jesd204-deframer-new-sysref-on-relink value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-scramble value=1
+|   |-- debug-attribute name=adi,jesd204-deframer-tx-syncb-mode value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-bank-id value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-device-id value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-enable-auto-chan-xbar value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-external-sysref value=1
+|   |-- debug-attribute name=adi,jesd204-obs-framer-invert-lane-polarity value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-k value=32
+|   |-- debug-attribute name=adi,jesd204-obs-framer-lane0-id value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-lmfc-offset value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-m value=2
+|   |-- debug-attribute name=adi,jesd204-obs-framer-new-sysref-on-relink value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-obs-rx-syncb-select value=1
+|   |-- debug-attribute name=adi,jesd204-obs-framer-over-sample value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-pre-emphasis value=4
+|   |-- debug-attribute name=adi,jesd204-obs-framer-rx-syncb-mode value=0
+|   |-- debug-attribute name=adi,jesd204-obs-framer-scramble value=1
+|   |-- debug-attribute name=adi,jesd204-obs-framer-serializer-amplitude value=22
+|   |-- debug-attribute name=adi,jesd204-obs-framer-serializer-lane-crossbar value=228
+|   |-- debug-attribute name=adi,jesd204-obs-framer-serializer-lanes-enabled value=12
+|   |-- debug-attribute name=adi,jesd204-rx-framer-bank-id value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-device-id value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-enable-auto-chan-xbar value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-external-sysref value=1
+|   |-- debug-attribute name=adi,jesd204-rx-framer-invert-lane-polarity value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-k value=32
+|   |-- debug-attribute name=adi,jesd204-rx-framer-lane0-id value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-lmfc-offset value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-m value=4
+|   |-- debug-attribute name=adi,jesd204-rx-framer-new-sysref-on-relink value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-obs-rx-syncb-select value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-over-sample value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-pre-emphasis value=4
+|   |-- debug-attribute name=adi,jesd204-rx-framer-rx-syncb-mode value=0
+|   |-- debug-attribute name=adi,jesd204-rx-framer-scramble value=1
+|   |-- debug-attribute name=adi,jesd204-rx-framer-serializer-amplitude value=22
+|   |-- debug-attribute name=adi,jesd204-rx-framer-serializer-lane-crossbar value=228
+|   |-- debug-attribute name=adi,jesd204-rx-framer-serializer-lanes-enabled value=3
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-enable-sync-pulse-for-gain-counter value=0
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-gain-update-counter value=30720
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-low-ths-prevent-gain-increase value=1
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-obs-rx-max-gain-index value=255
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-obs-rx-min-gain-index value=203
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-obs-rx-select value=1
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-peak-threshold-mode value=1
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-peak-wait-time value=4
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-reset-on-rx-enable value=0
+|   |-- debug-attribute name=adi,obs-agc-conf-agc-slow-loop-settling-delay value=3
+|   |-- debug-attribute name=adi,obs-peak-agc-apd-fast-attack value=0
+|   |-- debug-attribute name=adi,obs-peak-agc-apd-high-gain-step-attack value=4
+|   |-- debug-attribute name=adi,obs-peak-agc-apd-high-thresh value=42
+|   |-- debug-attribute name=adi,obs-peak-agc-apd-high-thresh-exceeded-cnt value=3
+|   |-- debug-attribute name=adi,obs-peak-agc-apd-low-gain-step-recovery value=2
+|   |-- debug-attribute name=adi,obs-peak-agc-apd-low-thresh value=22
+|   |-- debug-attribute name=adi,obs-peak-agc-apd-low-thresh-exceeded-cnt value=3
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-fast-attack value=0
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-high-gain-step-attack value=4
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-high-thresh value=181
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-high-thresh-exceeded-cnt value=3
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-low-gain-step-recovery value=2
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-low-thresh value=128
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-low-thresh-exceeded-cnt value=3
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-overload-detect-enable value=1
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-overload-duration-cnt value=1
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-overload-thresh-cnt value=1
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-very-low-gain-step-recovery value=4
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-very-low-thresh value=64
+|   |-- debug-attribute name=adi,obs-peak-agc-hb2-very-low-thresh-exceeded-cnt value=3
+|   |-- debug-attribute name=adi,obs-profile-adc-div value=1
+|   |-- debug-attribute name=adi,obs-profile-en-high-rej-dec5 value=1
+|   |-- debug-attribute name=adi,obs-profile-iq-rate_khz value=245760
+|   |-- debug-attribute name=adi,obs-profile-rf-bandwidth_hz value=200000000
+|   |-- debug-attribute name=adi,obs-profile-rhb1-decimation value=1
+|   |-- debug-attribute name=adi,obs-profile-rx-bbf-3db-corner_khz value=100000
+|   |-- debug-attribute name=adi,obs-profile-rx-dec5-decimation value=5
+|   |-- debug-attribute name=adi,obs-profile-rx-fir-decimation value=1
+|   |-- debug-attribute name=adi,obs-profile-rx-fir-gain_db value=6
+|   |-- debug-attribute name=adi,obs-profile-rx-fir-num-fir-coefs value=24
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-lower-high-gain-step-recovery value=0
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-lower-high-thresh value=12
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-lower-low-gain-step-recovery value=0
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-lower-low-thresh value=4
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-meas-config value=2
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-meas-duration value=8
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-upper-high-gain-step-attack value=0
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-upper-high-thresh value=1
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-upper-low-gain-step-attack value=0
+|   |-- debug-attribute name=adi,obs-pwr-agc-pmd-upper-low-thresh value=3
+|   |-- debug-attribute name=adi,obs-settings-default-obs-rx-channel value=3
+|   |-- debug-attribute name=adi,obs-settings-obs-rx-channels-enable value=31
+|   |-- debug-attribute name=adi,obs-settings-obs-rx-lo-source value=0
+|   |-- debug-attribute name=adi,obs-settings-real-if-data value=0
+|   |-- debug-attribute name=adi,obs-settings-sniffer-pll-lo-frequency_hz value=2600000000
+|   |-- debug-attribute name=adi,orx-gain-mode value=0
+|   |-- debug-attribute name=adi,orx-max-gain-index value=255
+|   |-- debug-attribute name=adi,orx-min-gain-index value=237
+|   |-- debug-attribute name=adi,orx1-gain-index value=255
+|   |-- debug-attribute name=adi,orx2-gain-index value=255
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-enable-sync-pulse-for-gain-counter value=0
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-gain-update-counter value=30720
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-low-ths-prevent-gain-increase value=1
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-peak-threshold-mode value=1
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-peak-wait-time value=2
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-reset-on-rx-enable value=0
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-rx1-max-gain-index value=255
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-rx1-min-gain-index value=195
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-rx2-max-gain-index value=255
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-rx2-min-gain-index value=195
+|   |-- debug-attribute name=adi,rx-agc-conf-agc-slow-loop-settling-delay value=3
+|   |-- debug-attribute name=adi,rx-gain-mode value=0
+|   |-- debug-attribute name=adi,rx-peak-agc-apd-fast-attack value=1
+|   |-- debug-attribute name=adi,rx-peak-agc-apd-high-gain-step-attack value=4
+|   |-- debug-attribute name=adi,rx-peak-agc-apd-high-thresh value=31
+|   |-- debug-attribute name=adi,rx-peak-agc-apd-high-thresh-exceeded-cnt value=6
+|   |-- debug-attribute name=adi,rx-peak-agc-apd-low-gain-step-recovery value=2
+|   |-- debug-attribute name=adi,rx-peak-agc-apd-low-thresh value=22
+|   |-- debug-attribute name=adi,rx-peak-agc-apd-low-thresh-exceeded-cnt value=4
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-fast-attack value=1
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-high-gain-step-attack value=4
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-high-thresh value=181
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-high-thresh-exceeded-cnt value=6
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-low-gain-step-recovery value=2
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-low-thresh value=128
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-low-thresh-exceeded-cnt value=4
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-overload-detect-enable value=1
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-overload-duration-cnt value=1
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-overload-thresh-cnt value=1
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-very-low-gain-step-recovery value=4
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-very-low-thresh value=64
+|   |-- debug-attribute name=adi,rx-peak-agc-hb2-very-low-thresh-exceeded-cnt value=4
+|   |-- debug-attribute name=adi,rx-profile-adc-div value=1
+|   |-- debug-attribute name=adi,rx-profile-en-high-rej-dec5 value=1
+|   |-- debug-attribute name=adi,rx-profile-iq-rate_khz value=122880
+|   |-- debug-attribute name=adi,rx-profile-rf-bandwidth_hz value=100000000
+|   |-- debug-attribute name=adi,rx-profile-rhb1-decimation value=1
+|   |-- debug-attribute name=adi,rx-profile-rx-bbf-3db-corner_khz value=100000
+|   |-- debug-attribute name=adi,rx-profile-rx-dec5-decimation value=5
+|   |-- debug-attribute name=adi,rx-profile-rx-fir-decimation value=2
+|   |-- debug-attribute name=adi,rx-profile-rx-fir-gain_db value=250
+|   |-- debug-attribute name=adi,rx-profile-rx-fir-num-fir-coefs value=48
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-lower-high-gain-step-recovery value=2
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-lower-high-thresh value=12
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-lower-low-gain-step-recovery value=4
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-lower-low-thresh value=4
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-meas-config value=2
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-meas-duration value=8
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-upper-high-gain-step-attack value=4
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-upper-high-thresh value=1
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-upper-low-gain-step-attack value=2
+|   |-- debug-attribute name=adi,rx-pwr-agc-pmd-upper-low-thresh value=3
+|   |-- debug-attribute name=adi,rx-settings-real-if-data value=0
+|   |-- debug-attribute name=adi,rx-settings-rx-channels-enable value=3
+|   |-- debug-attribute name=adi,rx-settings-rx-pll-lo-frequency_hz value=2500000000
+|   |-- debug-attribute name=adi,rx-settings-rx-pll-use-external-lo value=0
+|   |-- debug-attribute name=adi,rx1-gain-index value=215
+|   |-- debug-attribute name=adi,rx1-max-gain-index value=255
+|   |-- debug-attribute name=adi,rx1-min-gain-index value=195
+|   |-- debug-attribute name=adi,rx2-gain-index value=215
+|   |-- debug-attribute name=adi,rx2-max-gain-index value=255
+|   |-- debug-attribute name=adi,rx2-min-gain-index value=195
+|   |-- debug-attribute name=adi,sniffer-gain-index value=255
+|   |-- debug-attribute name=adi,sniffer-gain-mode value=0
+|   |-- debug-attribute name=adi,sniffer-max-gain-index value=255
+|   |-- debug-attribute name=adi,sniffer-min-gain-index value=203
+|   |-- debug-attribute name=adi,sniffer-profile-adc-div value=1
+|   |-- debug-attribute name=adi,sniffer-profile-en-high-rej-dec5 value=0
+|   |-- debug-attribute name=adi,sniffer-profile-iq-rate_khz value=30720
+|   |-- debug-attribute name=adi,sniffer-profile-rf-bandwidth_hz value=20000000
+|   |-- debug-attribute name=adi,sniffer-profile-rhb1-decimation value=2
+|   |-- debug-attribute name=adi,sniffer-profile-rx-bbf-3db-corner_khz value=100000
+|   |-- debug-attribute name=adi,sniffer-profile-rx-dec5-decimation value=5
+|   |-- debug-attribute name=adi,sniffer-profile-rx-fir-decimation value=4
+|   |-- debug-attribute name=adi,tx-profile-dac-div value=1
+|   |-- debug-attribute name=adi,tx-profile-enable-dpd-data-path value=1
+|   |-- debug-attribute name=adi,tx-profile-iq-rate_khz value=245760
+|   |-- debug-attribute name=adi,tx-profile-primary-sig-bandwidth_hz value=75000000
+|   |-- debug-attribute name=adi,tx-profile-rf-bandwidth_hz value=200000000
+|   |-- debug-attribute name=adi,tx-profile-thb1-interpolation value=2
+|   |-- debug-attribute name=adi,tx-profile-thb2-interpolation value=1
+|   |-- debug-attribute name=adi,tx-profile-tx-bbf-3db-corner_khz value=100000
+|   |-- debug-attribute name=adi,tx-profile-tx-dac-3db-corner_khz value=187000
+|   |-- debug-attribute name=adi,tx-profile-tx-fir-gain_db value=6
+|   |-- debug-attribute name=adi,tx-profile-tx-fir-interpolation value=1
+|   |-- debug-attribute name=adi,tx-profile-tx-fir-num-fir-coefs value=16
+|   |-- debug-attribute name=adi,tx-profile-tx-input-hb-interpolation value=1
+|   |-- debug-attribute name=adi,tx-settings-tx-atten-step-size value=0
+|   |-- debug-attribute name=adi,tx-settings-tx-channels-enable value=3
+|   |-- debug-attribute name=adi,tx-settings-tx-pll-lo-frequency_hz value=2500000000
+|   |-- debug-attribute name=adi,tx-settings-tx-pll-use-external-lo value=0
+|   |-- debug-attribute name=adi,tx-settings-tx1-atten_mdb value=10000
+|   |-- debug-attribute name=adi,tx-settings-tx2-atten_mdb value=10000
+|   |-- debug-attribute name=adi,vswr-additional-delay-offset value=0
+|   |-- debug-attribute name=adi,vswr-path-delay-pn-seq-level value=255
+|   |-- debug-attribute name=adi,vswr-tx1-vswr-switch-delay_us value=50
+|   |-- debug-attribute name=adi,vswr-tx1-vswr-switch-gpio3p3-pin value=0
+|   |-- debug-attribute name=adi,vswr-tx1-vswr-switch-polarity value=0
+|   |-- debug-attribute name=adi,vswr-tx2-vswr-switch-delay_us value=50
+|   |-- debug-attribute name=adi,vswr-tx2-vswr-switch-gpio3p3-pin value=1
+|   |-- debug-attribute name=adi,vswr-tx2-vswr-switch-polarity value=0
+|   |-- debug-attribute name=bist_prbs_err_obs value=0
+|   |-- debug-attribute name=bist_prbs_err_rx value=0
+|   |-- debug-attribute name=bist_prbs_err_tx value=0x00000000 0x00000000 0x00000000 0x00000000
+|   |-- debug-attribute name=bist_prbs_obs value=0
+|   |-- debug-attribute name=bist_prbs_rx value=0
+|   |-- debug-attribute name=bist_prbs_tx value=0
+|   |-- debug-attribute name=bist_tone value=0
+|   |-- debug-attribute name=direct_reg_access value=0x3C
+|   |-- debug-attribute name=initialize value=0
+|   |-- debug-attribute name=loopback_tx_obs value=0
+|   |-- debug-attribute name=loopback_tx_rx value=0
+|   |-- debug-attribute name=monitor_out value=0 255
+|   `-- debug-attribute name=plls_lock_status value=0x0f
+|-- device id=iio:device4 name=axi-ad9371-rx-hpc
+|   |-- channel id=voltage0_i type=input
+|   |   |-- scan-element index=0 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibbias filename=in_voltage0_i_calibbias value=0
+|   |   |-- attribute name=calibphase filename=in_voltage0_i_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=in_voltage0_i_calibscale value=0.000000
+|   |   |-- attribute name=label filename=in_voltage0_i_label value=ERROR
+|   |   |-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=122880000
+|   |   `-- attribute name=sampling_frequency_available filename=in_voltage_sampling_frequency_available value=122880000 15360000
+|   |-- channel id=voltage0_q type=input
+|   |   |-- scan-element index=1 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibbias filename=in_voltage0_q_calibbias value=0
+|   |   |-- attribute name=calibphase filename=in_voltage0_q_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=in_voltage0_q_calibscale value=0.000000
+|   |   |-- attribute name=label filename=in_voltage0_q_label value=ERROR
+|   |   |-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=122880000
+|   |   `-- attribute name=sampling_frequency_available filename=in_voltage_sampling_frequency_available value=122880000 15360000
+|   |-- channel id=voltage1_i type=input
+|   |   |-- scan-element index=2 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibbias filename=in_voltage1_i_calibbias value=0
+|   |   |-- attribute name=calibphase filename=in_voltage1_i_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=in_voltage1_i_calibscale value=0.000000
+|   |   |-- attribute name=label filename=in_voltage1_i_label value=ERROR
+|   |   |-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=122880000
+|   |   `-- attribute name=sampling_frequency_available filename=in_voltage_sampling_frequency_available value=122880000 15360000
+|   |-- channel id=voltage1_q type=input
+|   |   |-- scan-element index=3 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibbias filename=in_voltage1_q_calibbias value=0
+|   |   |-- attribute name=calibphase filename=in_voltage1_q_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=in_voltage1_q_calibscale value=0.000000
+|   |   |-- attribute name=label filename=in_voltage1_q_label value=ERROR
+|   |   |-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=122880000
+|   |   `-- attribute name=sampling_frequency_available filename=in_voltage_sampling_frequency_available value=122880000 15360000
+|   |-- attribute name=sync_start_enable value=disarm
+|   |-- attribute name=sync_start_enable_available value=arm
+|   |-- debug-attribute name=direct_reg_access value=0x0
+|   |-- debug-attribute name=pseudorandom_err_check value=ERROR
+|   |-- buffer-attribute name=data_available value=0
+|   `-- buffer-attribute name=length_align_bytes value=8
+|-- device id=iio:device5 name=axi-ad9371-rx-obs-hpc
+|   |-- channel id=voltage0_i type=input
+|   |   `-- scan-element index=0 format=le:S16/16&gt;&gt;0
+|   |-- channel id=voltage0_q type=input
+|   |   `-- scan-element index=1 format=le:S16/16&gt;&gt;0
+|   |-- attribute name=sampling_frequency value=245760000
+|   |-- debug-attribute name=direct_reg_access value=0xA0300
+|   |-- buffer-attribute name=data_available value=0
+|   `-- buffer-attribute name=length_align_bytes value=8
+|-- device id=iio:device6 name=axi-ad9371-tx-hpc
+|   |-- channel id=altvoltage0 type=output name=TX1_I_F1
+|   |   |-- attribute name=frequency filename=out_altvoltage0_TX1_I_F1_frequency value=12288937
+|   |   |-- attribute name=label filename=out_altvoltage0_TX1_I_F1_label value=TX1_I_F1
+|   |   |-- attribute name=phase filename=out_altvoltage0_TX1_I_F1_phase value=0
+|   |   |-- attribute name=raw filename=out_altvoltage0_TX1_I_F1_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=245760000
+|   |   `-- attribute name=scale filename=out_altvoltage0_TX1_I_F1_scale value=0.000000
+|   |-- channel id=altvoltage1 type=output name=TX1_I_F2
+|   |   |-- attribute name=frequency filename=out_altvoltage1_TX1_I_F2_frequency value=40001860
+|   |   |-- attribute name=label filename=out_altvoltage1_TX1_I_F2_label value=TX1_I_F2
+|   |   |-- attribute name=phase filename=out_altvoltage1_TX1_I_F2_phase value=0
+|   |   |-- attribute name=raw filename=out_altvoltage1_TX1_I_F2_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=245760000
+|   |   `-- attribute name=scale filename=out_altvoltage1_TX1_I_F2_scale value=0.000000
+|   |-- channel id=altvoltage2 type=output name=TX1_Q_F1
+|   |   |-- attribute name=frequency filename=out_altvoltage2_TX1_Q_F1_frequency value=12288937
+|   |   |-- attribute name=label filename=out_altvoltage2_TX1_Q_F1_label value=TX1_Q_F1
+|   |   |-- attribute name=phase filename=out_altvoltage2_TX1_Q_F1_phase value=270000
+|   |   |-- attribute name=raw filename=out_altvoltage2_TX1_Q_F1_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=245760000
+|   |   `-- attribute name=scale filename=out_altvoltage2_TX1_Q_F1_scale value=0.000000
+|   |-- channel id=altvoltage3 type=output name=TX1_Q_F2
+|   |   |-- attribute name=frequency filename=out_altvoltage3_TX1_Q_F2_frequency value=40001860
+|   |   |-- attribute name=label filename=out_altvoltage3_TX1_Q_F2_label value=TX1_Q_F2
+|   |   |-- attribute name=phase filename=out_altvoltage3_TX1_Q_F2_phase value=0
+|   |   |-- attribute name=raw filename=out_altvoltage3_TX1_Q_F2_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=245760000
+|   |   `-- attribute name=scale filename=out_altvoltage3_TX1_Q_F2_scale value=0.000000
+|   |-- channel id=altvoltage4 type=output name=TX2_I_F1
+|   |   |-- attribute name=frequency filename=out_altvoltage4_TX2_I_F1_frequency value=12288937
+|   |   |-- attribute name=label filename=out_altvoltage4_TX2_I_F1_label value=TX2_I_F1
+|   |   |-- attribute name=phase filename=out_altvoltage4_TX2_I_F1_phase value=90000
+|   |   |-- attribute name=raw filename=out_altvoltage4_TX2_I_F1_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=245760000
+|   |   `-- attribute name=scale filename=out_altvoltage4_TX2_I_F1_scale value=0.251160
+|   |-- channel id=altvoltage5 type=output name=TX2_I_F2
+|   |   |-- attribute name=frequency filename=out_altvoltage5_TX2_I_F2_frequency value=40001860
+|   |   |-- attribute name=label filename=out_altvoltage5_TX2_I_F2_label value=TX2_I_F2
+|   |   |-- attribute name=phase filename=out_altvoltage5_TX2_I_F2_phase value=0
+|   |   |-- attribute name=raw filename=out_altvoltage5_TX2_I_F2_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=245760000
+|   |   `-- attribute name=scale filename=out_altvoltage5_TX2_I_F2_scale value=0.000000
+|   |-- channel id=altvoltage6 type=output name=TX2_Q_F1
+|   |   |-- attribute name=frequency filename=out_altvoltage6_TX2_Q_F1_frequency value=12288937
+|   |   |-- attribute name=label filename=out_altvoltage6_TX2_Q_F1_label value=TX2_Q_F1
+|   |   |-- attribute name=phase filename=out_altvoltage6_TX2_Q_F1_phase value=0
+|   |   |-- attribute name=raw filename=out_altvoltage6_TX2_Q_F1_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=245760000
+|   |   `-- attribute name=scale filename=out_altvoltage6_TX2_Q_F1_scale value=0.251160
+|   |-- channel id=altvoltage7 type=output name=TX2_Q_F2
+|   |   |-- attribute name=frequency filename=out_altvoltage7_TX2_Q_F2_frequency value=40001860
+|   |   |-- attribute name=label filename=out_altvoltage7_TX2_Q_F2_label value=TX2_Q_F2
+|   |   |-- attribute name=phase filename=out_altvoltage7_TX2_Q_F2_phase value=0
+|   |   |-- attribute name=raw filename=out_altvoltage7_TX2_Q_F2_raw value=0
+|   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=245760000
+|   |   `-- attribute name=scale filename=out_altvoltage7_TX2_Q_F2_scale value=0.000000
+|   |-- channel id=voltage0 type=output
+|   |   |-- scan-element index=0 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibphase filename=out_voltage0_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=out_voltage0_calibscale value=0.000000
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=30720000
+|   |   `-- attribute name=sampling_frequency_available filename=out_voltage_sampling_frequency_available value=245760000 30720000
+|   |-- channel id=voltage1 type=output
+|   |   |-- scan-element index=1 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibphase filename=out_voltage1_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=out_voltage1_calibscale value=0.000000
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=30720000
+|   |   `-- attribute name=sampling_frequency_available filename=out_voltage_sampling_frequency_available value=245760000 30720000
+|   |-- channel id=voltage2 type=output
+|   |   |-- scan-element index=2 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibphase filename=out_voltage2_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=out_voltage2_calibscale value=0.000000
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=30720000
+|   |   `-- attribute name=sampling_frequency_available filename=out_voltage_sampling_frequency_available value=245760000 30720000
+|   |-- channel id=voltage3 type=output
+|   |   |-- scan-element index=3 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibphase filename=out_voltage3_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=out_voltage3_calibscale value=0.000000
+|   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=30720000
+|   |   `-- attribute name=sampling_frequency_available filename=out_voltage_sampling_frequency_available value=245760000 30720000
+|   |-- attribute name=sync_start_enable value=disarm
+|   |-- attribute name=sync_start_enable_available value=arm
+|   |-- debug-attribute name=direct_reg_access value=0x90162
+|   |-- debug-attribute name=pl_ddr_fifo_enable value=1
+|   |-- buffer-attribute name=data_available value=0
+|   `-- buffer-attribute name=length_align_bytes value=16
+`-- device id=iio_sysfs_trigger
+    |-- attribute name=add_trigger value=ERROR
+    `-- attribute name=remove_trigger value=ERROR
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+              <div class="related">
+                &nbsp;
+    <a href="ad9371.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">Emulation Context: ad9371.xml</a>
+    <a href="ad9434.html" title="Next document (Alt+Shift+RightArrow)" class="next">Emulation Context: ad9434.xml</a>
+              </div>
+          
+        </div>
+      </div>
+  </div>
+
+  <label id="cancel-area-show-toc" for="input-show-toc"></label>
+  <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
+    <footer>
+      &#169;2019-2026, Analog Devices, Inc
+      
+      |
+      Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+      &amp; <a href="https://github.com/analogdevicesinc/doctools">Doctools</a>
+      
+    </footer>
+  </body>
+</html>

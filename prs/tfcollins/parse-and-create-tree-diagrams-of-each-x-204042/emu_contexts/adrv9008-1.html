@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Source XML: test/emu/devices/adrv9008-1.xml" name="description" />
+
+    <title>Emulation Context: adrv9008-1.xml &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
+    <script async="async" src="../_static/app.umd.js?v=fcf3088a"></script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Emulation Context: adrv9008-2.xml" href="adrv9008-2.html" />
+    <link rel="prev" title="Emulation Context: adrv9002_splitdma.xml" href="adrv9002_splitdma.html" />
+   
+  
+  
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.21">
+  
+    <meta name="page_source_suffix" content=".rst">
+  
+  
+  
+
+
+<style>
+  body {
+    
+  }
+
+  body.dark {
+    
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body:not(.light) {
+      
+    }
+  }
+</style>
+  </head>
+  
+    <body>
+  
+  <input type="checkbox" id="input-show-toc">
+  <input type="checkbox" id="input-show-localtoc">
+  <input type="checkbox" id="input-show-repotoc">
+
+  
+  <div class="search-area">
+    <form action="" method="get">
+      <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="search" placeholder="Search"/>
+      <button class="icon"></button>
+    </form>
+  </div>
+  
+
+  <header>
+    <div id="left">
+      <label id="show-sidebar" class="icon" for="input-show-toc" title="Show/hide index"></label>
+    </div>
+    <div id="right">
+      <span>
+        <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
+        <div class="vertical-divider"></div>
+        
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        
+        <a id="logo" href="../index.html">
+          <div>pyadi-iio</div>
+        </a>
+      </span>
+      <span class="reverse">
+        <label id="show-localtoc" class="icon" for="input-show-localtoc" title="Show/hide contents"></label>
+      </span>
+    </div>
+  </header>
+
+
+  <div class="repotoc-tree overlay">
+    <root>
+  <a href="../index.html" class="current">pyadi-iio</a>
+</root>
+
+  </div>
+    <div class="localtoc">
+      <div class="tocwrapper">
+        <div class="header localtoc-header">
+          <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
+        </div>
+        <nav>
+          <ul>
+<li><a class="reference internal" href="#">Emulation Context: adrv9008-1.xml</a><ul>
+<li><a class="reference internal" href="#tree">Tree</a></li>
+</ul>
+</li>
+</ul>
+
+        </nav>
+      </div>
+    </div>
+
+  
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+    <a id="logo" href="../index.html">
+      <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
+      <img class="only-dark" src="../_static/logos/PyADI-IIO_Logo_w_300_cropped.png"/>
+    </a><input id="input-switch-toc" type="checkbox">
+<label id="show-repotoc" for="input-switch-toc">
+All content
+</label>
+<label id="show-toc" for="input-switch-toc">
+Content on this topic
+</label>
+<div class="repotoc-tree">
+  <root>
+  <a href="../index.html" class="current">pyadi-iio</a>
+</root>
+
+</div>
+<div class="toc-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-1" id="toctree-collapse-1"/><div class="collapse"><a class="reference internal" href="../dev/index.html">Developers</a><label for="toctree-collapse-1"><div class="icon"></div></label></div><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/test_jesd.html">JESD204 Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.QuadMxFE_multi.html">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad2s1210.html">ad2s1210</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad353xr.html">ad353xr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r.html">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4020.html">ad4020</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad405x.html">ad405x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4080.html">ad4080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4110.html">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4130.html">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4170.html">ad4170</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4630.html">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad469x.html">ad469x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5592r.html">ad5592r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5627.html">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5706r.html">ad5706r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5710r.html">ad5710r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad579x.html">ad579x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5754r.html">ad5754r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad5940.html">adi.ad5940 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad6676.html">adi.ad6676 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7091rx.html">ad7091rx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7124.html">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7134.html">ad7134</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad717x.html">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad719x.html">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7291.html">ad7291</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad738x.html">ad738x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7405.html">ad7405</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7490.html">ad7490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7606.html">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7689.html">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7746.html">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7768.html">ad7768</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad777x.html">ad777x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad7799.html">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081.html">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9081_mc.html">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9083.html">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084.html">ad9084</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9084_mc.html">ad9084_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9094.html">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9136.html">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9144.html">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9152.html">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9162.html">adi.ad9162 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9166.html">adi.ad9166 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9172.html">adi.ad9172 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9213.html">ad9213</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9250.html">adi.ad9250 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9265.html">adi.ad9265 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad936x.html">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad937x.html">ad937x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9434.html">adi.ad9434 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9467.html">adi.ad9467 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9625.html">adi.ad9625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9680.html">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad4858.html">ad4858</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ad9739a.html">adi.ad9739a module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ada4355.html">ada4355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ada4961.html">adi.ada4961 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adaq8092.html">adaq8092</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adar1000.html">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4030.html">adi.adf4030 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4159.html">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4355.html">adi.adf4355 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4371.html">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4382.html">adf4382</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf4377.html">adf4377</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf5610.html">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adf5611.html">adf5611</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adg2128.html">adi.adg2128 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16375.html">adis16375</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16460.html">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16475.html">adis16475</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16480.html">adis16480</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16485.html">adis16485</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16488.html">adis16488</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16490.html">adis16490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16495.html">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16497.html">adis16497</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16507.html">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16545.html">adis16545</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16547.html">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adis16550.html">adis16550</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5240.html">adi.adl5240 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adl5960.html">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.admv8818.html">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd1080.html">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd188.html">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adpd410x.html">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrf5720.html">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9002.html">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009.html">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg.html">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg_fmcomms8.html">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adrv9009_zu11eg_multi.html">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adt7420.html">adi.adt7420 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl313.html">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl345.html">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl355.html">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxl380.html">adxl380</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.adxrs290.html">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0511.html">adi.cn0511 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0532.html">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0554.html">cn0554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0556.html">cn0556</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0565.html">cn0565</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0566.html">adi.cn0566 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0575.html">cn0575</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.cn0579.html">cn0579</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.daq2.html">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.daq3.html">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmc_vna.html">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcadc3.html">adi.fmcadc3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcjesdadc1.html">adi.fmcjesdadc1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmclidar1.html">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms5.html">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.fmcomms11.html">adi.fmcomms11 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.gen_mux.html">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.hmc7044.html">adi.hmc7044 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.jesd.html">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.lm75.html">lm75</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2314_14.html">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2378.html">ltc2378</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2387.html">ltc2387</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2499.html">adi.ltc2499 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2664.html">ltc2664</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2688.html">ltc2688</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2672.html">ltc2672</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.ltc2983.html">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max11205.html">adi.max11205 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max14001.html">adi.max14001 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31855.html">adi.max31855 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31865.html">adi.max31865 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.max9611.html">adi.max9611 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.tdd.html">tdd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.tddn.html">tddn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-3" id="toctree-collapse-3" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Emulation XML Context Trees</a><label for="toctree-collapse-3"><div class="icon"></div></label></div><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ad2s1210.html">Emulation Context: ad2s1210.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad353xr.html">Emulation Context: ad353xr.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad3552r.html">Emulation Context: ad3552r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad3552r_hs.html">Emulation Context: ad3552r_hs.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4000.html">Emulation Context: ad4000.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4001.html">Emulation Context: ad4001.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4002.html">Emulation Context: ad4002.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4003.html">Emulation Context: ad4003.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4020.html">Emulation Context: ad4020.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad405x.html">Emulation Context: ad405x.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4080.html">Emulation Context: ad4080.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4170.html">Emulation Context: ad4170.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad4858.html">Emulation Context: ad4858.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad5592r.html">Emulation Context: ad5592r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad5706r.html">Emulation Context: ad5706r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad5710r.html">Emulation Context: ad5710r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad5754r.html">Emulation Context: ad5754r.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad579x.html">Emulation Context: ad579x.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad6676.html">Emulation Context: ad6676.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7091rx.html">Emulation Context: ad7091rx.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7124-8.html">Emulation Context: ad7124-8.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7134.html">Emulation Context: ad7134.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7381.html">Emulation Context: ad7381.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7405.html">Emulation Context: ad7405.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7490.html">Emulation Context: ad7490.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7746.html">Emulation Context: ad7746.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7768-4.html">Emulation Context: ad7768-4.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad7768.html">Emulation Context: ad7768.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9081.html">Emulation Context: ad9081.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9081_full_bw_mock.html">Emulation Context: ad9081_full_bw_mock.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9081_tdd.html">Emulation Context: ad9081_tdd.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9084-fmca-ebz.html">Emulation Context: ad9084-fmca-ebz.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9084.html">Emulation Context: ad9084.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9172.html">Emulation Context: ad9172.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9265.html">Emulation Context: ad9265.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9371.html">Emulation Context: ad9371.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9375.html">Emulation Context: ad9375.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ad9434.html">Emulation Context: ad9434.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ada4355.html">Emulation Context: ada4355.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaq4224.html">Emulation Context: adaq4224.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adf4377.html">Emulation Context: adf4377.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adf5611.html">Emulation Context: adf5611.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adis16475.html">Emulation Context: adis16475.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adis16480.html">Emulation Context: adis16480.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adis16550.html">Emulation Context: adis16550.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9002.html">Emulation Context: adrv9002.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9002_singledma.html">Emulation Context: adrv9002_singledma.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9002_splitdma.html">Emulation Context: adrv9002_splitdma.xml</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Emulation Context: adrv9008-1.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9008-2.html">Emulation Context: adrv9008-2.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9361-z7035.html">Emulation Context: adrv9361-z7035.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrv9364-z7020.html">Emulation Context: adrv9364-z7020.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adsy1100.html">Emulation Context: adsy1100.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adxl345.html">Emulation Context: adxl345.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adxl355.html">Emulation Context: adxl355.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adxl382.html">Emulation Context: adxl382.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adxrs290.html">Emulation Context: adxrs290.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0511.html">Emulation Context: cn0511.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0540.html">Emulation Context: cn0540.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0554.html">Emulation Context: cn0554.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0556.html">Emulation Context: cn0556.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0565.html">Emulation Context: cn0565.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0566.html">Emulation Context: cn0566.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cn0579.html">Emulation Context: cn0579.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daq2.html">Emulation Context: daq2.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daq3.html">Emulation Context: daq3.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmcomms11.html">Emulation Context: fmcomms11.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmcomms2-3.html">Emulation Context: fmcomms2-3.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmcomms4.html">Emulation Context: fmcomms4.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmcomms5.html">Emulation Context: fmcomms5.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lm75.html">Emulation Context: lm75.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2378.html">Emulation Context: ltc2378.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2387.html">Emulation Context: ltc2387.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2664.html">Emulation Context: ltc2664.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2672.html">Emulation Context: ltc2672.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ltc2688.html">Emulation Context: ltc2688.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="max14001.html">Emulation Context: max14001.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="max31865.html">Emulation Context: max31865.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="max9611.html">Emulation Context: max9611.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pluto.html">Emulation Context: pluto.xml</a></li>
+</ul>
+</li>
+</ul>
+
+
+</div>
+        </div>
+      </div>
+
+  <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper" id="top-anchor">
+          <div class="body-header">
+  <nav class="breadcrumb"><ol><li><a href="index.html">Emulation XML Context Trees</a></li></ol></nav>
+</div>
+          <div class="body" role="main">
+            
+  <section id="emulation-context-adrv9008-1-xml">
+<h1>Emulation Context: adrv9008-1.xml<a class="headerlink" href="#emulation-context-adrv9008-1-xml" title="Link to this heading"></a></h1>
+<p>Source XML: <code class="docutils literal notranslate"><span class="pre">test/emu/devices/adrv9008-1.xml</span></code></p>
+<section id="tree">
+<h2>Tree<a class="headerlink" href="#tree" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>context name=network description=10.116.110.141 Linux analog 6.1.70-284094-g54eb23f4b5c6 #209 SMP PREEMPT Fri Nov  8 06:39:15 EET 2024 armv7l
+|-- context-attribute name=hdl_system_id value=[adrv9009] [RX:M=4 L=2 S=1 TX:M=4 L=4 S=1 RX_OS:M=2 L=2 S=1 DAC_FIFO_ADDR_WIDTH=10] on [zc706] git branch [hdl_2023_r2] git [2156ac7e874a1dc321d9f64a325009fafe563419] clean [2024-11-01 15:05:22] UTC
+|-- context-attribute name=hw_carrier value=Xilinx Zynq ZC706
+|-- context-attribute name=hw_mezzanine value=ADRV9009-W/PCBZ
+|-- context-attribute name=hw_model value=ADRV9009-W/PCBZ on Xilinx Zynq ZC706
+|-- context-attribute name=hw_name value=9009RC0,9528
+|-- context-attribute name=hw_serial value=00177
+|-- context-attribute name=hw_vendor value=Analog Devices
+|-- context-attribute name=ip,ip-addr value=10.116.110.141
+|-- context-attribute name=local,kernel value=6.1.70-284094-g54eb23f4b5c6
+|-- context-attribute name=uri value=ip:10.116.110.141
+|-- device id=iio:device0 name=ad7291
+|   |-- channel id=temp0 type=input
+|   |   |-- attribute name=mean_raw filename=in_temp0_mean_raw value=166
+|   |   |-- attribute name=raw filename=in_temp0_raw value=164
+|   |   `-- attribute name=scale filename=in_temp0_scale value=250
+|   |-- channel id=voltage0 type=input
+|   |   |-- attribute name=raw filename=in_voltage0_raw value=2809
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage1 type=input
+|   |   |-- attribute name=raw filename=in_voltage1_raw value=2144
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage2 type=input
+|   |   |-- attribute name=raw filename=in_voltage2_raw value=2041
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage3 type=input
+|   |   |-- attribute name=raw filename=in_voltage3_raw value=2723
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage4 type=input
+|   |   |-- attribute name=raw filename=in_voltage4_raw value=3360
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage5 type=input
+|   |   |-- attribute name=raw filename=in_voltage5_raw value=3333
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage6 type=input
+|   |   |-- attribute name=raw filename=in_voltage6_raw value=1143
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   |-- channel id=voltage7 type=input
+|   |   |-- attribute name=raw filename=in_voltage7_raw value=2145
+|   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
+|   `-- attribute name=waiting_for_supplier value=0
+|-- device id=iio:device1 name=xadc
+|   |-- channel id=temp0 type=input
+|   |   |-- attribute name=offset filename=in_temp0_offset value=-2219
+|   |   |-- attribute name=raw filename=in_temp0_raw value=2573
+|   |   `-- attribute name=scale filename=in_temp0_scale value=123.040771484
+|   |-- channel id=voltage0 type=input name=vccint
+|   |   |-- attribute name=label filename=in_voltage0_vccint_label value=vccint
+|   |   |-- attribute name=raw filename=in_voltage0_vccint_raw value=1366
+|   |   `-- attribute name=scale filename=in_voltage0_vccint_scale value=0.732421875
+|   |-- channel id=voltage1 type=input name=vccaux
+|   |   |-- attribute name=label filename=in_voltage1_vccaux_label value=vccaux
+|   |   |-- attribute name=raw filename=in_voltage1_vccaux_raw value=2454
+|   |   `-- attribute name=scale filename=in_voltage1_vccaux_scale value=0.732421875
+|   |-- channel id=voltage2 type=input name=vccbram
+|   |   |-- attribute name=label filename=in_voltage2_vccbram_label value=vccbram
+|   |   |-- attribute name=raw filename=in_voltage2_vccbram_raw value=1366
+|   |   `-- attribute name=scale filename=in_voltage2_vccbram_scale value=0.732421875
+|   |-- channel id=voltage3 type=input name=vccpint
+|   |   |-- attribute name=label filename=in_voltage3_vccpint_label value=vccpint
+|   |   |-- attribute name=raw filename=in_voltage3_vccpint_raw value=1361
+|   |   `-- attribute name=scale filename=in_voltage3_vccpint_scale value=0.732421875
+|   |-- channel id=voltage4 type=input name=vccpaux
+|   |   |-- attribute name=label filename=in_voltage4_vccpaux_label value=vccpaux
+|   |   |-- attribute name=raw filename=in_voltage4_vccpaux_raw value=2451
+|   |   `-- attribute name=scale filename=in_voltage4_vccpaux_scale value=0.732421875
+|   |-- channel id=voltage5 type=input name=vccoddr
+|   |   |-- attribute name=label filename=in_voltage5_vccoddr_label value=vccoddr
+|   |   |-- attribute name=raw filename=in_voltage5_vccoddr_raw value=2042
+|   |   `-- attribute name=scale filename=in_voltage5_vccoddr_scale value=0.732421875
+|   |-- channel id=voltage6 type=input name=vrefp
+|   |   |-- attribute name=label filename=in_voltage6_vrefp_label value=vrefp
+|   |   |-- attribute name=raw filename=in_voltage6_vrefp_raw value=1701
+|   |   `-- attribute name=scale filename=in_voltage6_vrefp_scale value=0.732421875
+|   |-- channel id=voltage7 type=input name=vrefn
+|   |   |-- attribute name=label filename=in_voltage7_vrefn_label value=vrefn
+|   |   |-- attribute name=raw filename=in_voltage7_vrefn_raw value=-3
+|   |   `-- attribute name=scale filename=in_voltage7_vrefn_scale value=0.732421875
+|   |-- attribute name=sampling_frequency value=961538
+|   `-- attribute name=waiting_for_supplier value=0
+|-- device id=iio:device2 name=ad9528-1
+|   |-- channel id=altvoltage1 type=output name=FMC_CLK
+|   |   |-- attribute name=frequency filename=out_altvoltage1_FMC_CLK_frequency value=122880000
+|   |   |-- attribute name=label filename=out_altvoltage1_FMC_CLK_label value=FMC_CLK
+|   |   |-- attribute name=phase filename=out_altvoltage1_FMC_CLK_phase value=0.000000
+|   |   `-- attribute name=raw filename=out_altvoltage1_FMC_CLK_raw value=1
+|   |-- channel id=altvoltage12 type=output name=DEV_SYSREF
+|   |   |-- attribute name=frequency filename=out_altvoltage12_DEV_SYSREF_frequency value=3840000
+|   |   |-- attribute name=label filename=out_altvoltage12_DEV_SYSREF_label value=DEV_SYSREF
+|   |   |-- attribute name=phase filename=out_altvoltage12_DEV_SYSREF_phase value=0.000000
+|   |   `-- attribute name=raw filename=out_altvoltage12_DEV_SYSREF_raw value=1
+|   |-- channel id=altvoltage13 type=output name=DEV_CLK
+|   |   |-- attribute name=frequency filename=out_altvoltage13_DEV_CLK_frequency value=122880000
+|   |   |-- attribute name=label filename=out_altvoltage13_DEV_CLK_label value=DEV_CLK
+|   |   |-- attribute name=phase filename=out_altvoltage13_DEV_CLK_phase value=0.000000
+|   |   `-- attribute name=raw filename=out_altvoltage13_DEV_CLK_raw value=1
+|   |-- channel id=altvoltage3 type=output name=FMC_SYSREF
+|   |   |-- attribute name=frequency filename=out_altvoltage3_FMC_SYSREF_frequency value=3840000
+|   |   |-- attribute name=label filename=out_altvoltage3_FMC_SYSREF_label value=FMC_SYSREF
+|   |   |-- attribute name=phase filename=out_altvoltage3_FMC_SYSREF_phase value=0.000000
+|   |   `-- attribute name=raw filename=out_altvoltage3_FMC_SYSREF_raw value=1
+|   |-- attribute name=pll1_feedback_clk_present value=1
+|   |-- attribute name=pll1_locked value=0
+|   |-- attribute name=pll1_reference_clk_a_present value=1
+|   |-- attribute name=pll1_reference_clk_ab_missing value=0
+|   |-- attribute name=pll1_reference_clk_b_present value=0
+|   |-- attribute name=pll2_feedback_clk_present value=1
+|   |-- attribute name=pll2_locked value=1
+|   |-- attribute name=sync_dividers value=ERROR
+|   |-- attribute name=vcxo_clk_present value=1
+|   |-- attribute name=waiting_for_supplier value=0
+|   `-- debug-attribute name=direct_reg_access value=0x18
+|-- device id=iio:device3 name=adrv9009-phy
+|   |-- channel id=altvoltage0 type=output name=RX_LO
+|   |   |-- attribute name=frequency filename=out_altvoltage0_RX_LO_frequency value=2400000000
+|   |   |-- attribute name=frequency_hopping_mode filename=out_altvoltage0_RX_LO_frequency_hopping_mode value=2400000000
+|   |   |-- attribute name=frequency_hopping_mode_enable filename=out_altvoltage0_RX_LO_frequency_hopping_mode_enable value=0
+|   |   `-- attribute name=label filename=out_altvoltage0_RX_LO_label value=RX_LO
+|   |-- channel id=temp0 type=input
+|   |   `-- attribute name=input filename=in_temp0_input value=52000
+|   |-- channel id=voltage0 type=input
+|   |   |-- attribute name=bb_dc_offset_tracking_en filename=in_voltage0_bb_dc_offset_tracking_en value=1
+|   |   |-- attribute name=gain_control_mode filename=in_voltage0_gain_control_mode value=manual
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage0_gain_control_mode_available value=manual slow_attack
+|   |   |-- attribute name=gain_control_pin_mode_en filename=in_voltage0_gain_control_pin_mode_en value=0
+|   |   |-- attribute name=hardwaregain filename=in_voltage0_hardwaregain value=30.000000 dB
+|   |   |-- attribute name=hd2_tracking_en filename=in_voltage0_hd2_tracking_en value=0
+|   |   |-- attribute name=powerdown filename=in_voltage0_powerdown value=0
+|   |   |-- attribute name=quadrature_tracking_en filename=in_voltage0_quadrature_tracking_en value=0
+|   |   |-- attribute name=rf_bandwidth filename=in_voltage0_rf_bandwidth value=100000000
+|   |   |-- attribute name=rssi filename=in_voltage0_rssi value=44.250 dB
+|   |   `-- attribute name=sampling_frequency filename=in_voltage0_sampling_frequency value=122880000
+|   |-- channel id=voltage1 type=input
+|   |   |-- attribute name=bb_dc_offset_tracking_en filename=in_voltage1_bb_dc_offset_tracking_en value=1
+|   |   |-- attribute name=gain_control_mode filename=in_voltage1_gain_control_mode value=manual
+|   |   |-- attribute name=gain_control_mode_available filename=in_voltage1_gain_control_mode_available value=manual slow_attack
+|   |   |-- attribute name=gain_control_pin_mode_en filename=in_voltage1_gain_control_pin_mode_en value=0
+|   |   |-- attribute name=hardwaregain filename=in_voltage1_hardwaregain value=30.000000 dB
+|   |   |-- attribute name=hd2_tracking_en filename=in_voltage1_hd2_tracking_en value=0
+|   |   |-- attribute name=powerdown filename=in_voltage1_powerdown value=0
+|   |   |-- attribute name=quadrature_tracking_en filename=in_voltage1_quadrature_tracking_en value=0
+|   |   |-- attribute name=rf_bandwidth filename=in_voltage1_rf_bandwidth value=100000000
+|   |   |-- attribute name=rssi filename=in_voltage1_rssi value=44.250 dB
+|   |   `-- attribute name=sampling_frequency filename=in_voltage1_sampling_frequency value=122880000
+|   |-- channel id=voltage10 type=output
+|   |   |-- attribute name=offset filename=out_voltage10_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage10_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage10_scale value=0.782954
+|   |-- channel id=voltage11 type=output
+|   |   |-- attribute name=offset filename=out_voltage11_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage11_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage11_scale value=0.782954
+|   |-- channel id=voltage12 type=output
+|   |   |-- attribute name=raw filename=out_voltage12_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage12_scale value=0.805861
+|   |-- channel id=voltage13 type=output
+|   |   |-- attribute name=raw filename=out_voltage13_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage13_scale value=0.805861
+|   |-- channel id=voltage2 type=output
+|   |   |-- attribute name=offset filename=out_voltage2_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage2_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage2_scale value=0.782954
+|   |-- channel id=voltage3 type=output
+|   |   |-- attribute name=offset filename=out_voltage3_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage3_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage3_scale value=0.782954
+|   |-- channel id=voltage4 type=input
+|   |   |-- attribute name=offset filename=in_voltage4_offset value=45
+|   |   |-- attribute name=raw filename=in_voltage4_raw value=48
+|   |   `-- attribute name=scale filename=in_voltage4_scale value=0.775194
+|   |-- channel id=voltage4 type=output
+|   |   |-- attribute name=offset filename=out_voltage4_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage4_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage4_scale value=0.782954
+|   |-- channel id=voltage5 type=input
+|   |   |-- attribute name=offset filename=in_voltage5_offset value=45
+|   |   |-- attribute name=raw filename=in_voltage5_raw value=2188
+|   |   `-- attribute name=scale filename=in_voltage5_scale value=0.775194
+|   |-- channel id=voltage5 type=output
+|   |   |-- attribute name=offset filename=out_voltage5_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage5_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage5_scale value=0.782954
+|   |-- channel id=voltage6 type=input
+|   |   |-- attribute name=offset filename=in_voltage6_offset value=45
+|   |   |-- attribute name=raw filename=in_voltage6_raw value=2149
+|   |   `-- attribute name=scale filename=in_voltage6_scale value=0.775194
+|   |-- channel id=voltage6 type=output
+|   |   |-- attribute name=offset filename=out_voltage6_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage6_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage6_scale value=0.782954
+|   |-- channel id=voltage7 type=input
+|   |   |-- attribute name=offset filename=in_voltage7_offset value=45
+|   |   |-- attribute name=raw filename=in_voltage7_raw value=2084
+|   |   `-- attribute name=scale filename=in_voltage7_scale value=0.775194
+|   |-- channel id=voltage7 type=output
+|   |   |-- attribute name=offset filename=out_voltage7_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage7_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage7_scale value=0.782954
+|   |-- channel id=voltage8 type=output
+|   |   |-- attribute name=offset filename=out_voltage8_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage8_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage8_scale value=0.782954
+|   |-- channel id=voltage9 type=output
+|   |   |-- attribute name=offset filename=out_voltage9_offset value=2726
+|   |   |-- attribute name=raw filename=out_voltage9_raw value=0
+|   |   `-- attribute name=scale filename=out_voltage9_scale value=0.782954
+|   |-- attribute name=calibrate value=0
+|   |-- attribute name=calibrate_fhm_en value=0
+|   |-- attribute name=calibrate_rx_phase_correction_en value=0
+|   |-- attribute name=calibrate_rx_qec_en value=0
+|   |-- attribute name=ensm_mode value=radio_on
+|   |-- attribute name=ensm_mode_available value=radio_on radio_off
+|   |-- attribute name=gain_table_config value=ERROR
+|   |-- attribute name=multichip_sync value=ERROR
+|   |-- attribute name=profile_config value=TB
+|   |-- attribute name=radio_pinctrl_en value=0
+|   |-- attribute name=waiting_for_supplier value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-en-tx-tracking-cals-enable value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-en-tx-tracking-cals-gpio-pin-sel value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-en-tx-tracking-cals-polarity value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx1-tx-sel0-pin-enable value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx1-tx-sel0-pin-gpio-pin-sel value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx1-tx-sel0-pin-polarity value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx1-tx-sel1-pin-enable value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx1-tx-sel1-pin-gpio-pin-sel value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx1-tx-sel1-pin-polarity value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx2-tx-sel0-pin-enable value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx2-tx-sel0-pin-gpio-pin-sel value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx2-tx-sel0-pin-polarity value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx2-tx-sel1-pin-enable value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx2-tx-sel1-pin-gpio-pin-sel value=0
+|   |-- debug-attribute name=adi,arm-gpio-config-orx2-tx-sel1-pin-polarity value=0
+|   |-- debug-attribute name=adi,aux-dac-enables value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution0 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution1 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution2 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution3 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution4 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution5 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution6 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution7 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution8 value=0
+|   |-- debug-attribute name=adi,aux-dac-resolution9 value=0
+|   |-- debug-attribute name=adi,aux-dac-values0 value=0
+|   |-- debug-attribute name=adi,aux-dac-values1 value=0
+|   |-- debug-attribute name=adi,aux-dac-values10 value=0
+|   |-- debug-attribute name=adi,aux-dac-values11 value=0
+|   |-- debug-attribute name=adi,aux-dac-values2 value=0
+|   |-- debug-attribute name=adi,aux-dac-values3 value=0
+|   |-- debug-attribute name=adi,aux-dac-values4 value=0
+|   |-- debug-attribute name=adi,aux-dac-values5 value=0
+|   |-- debug-attribute name=adi,aux-dac-values6 value=0
+|   |-- debug-attribute name=adi,aux-dac-values7 value=0
+|   |-- debug-attribute name=adi,aux-dac-values8 value=0
+|   |-- debug-attribute name=adi,aux-dac-values9 value=0
+|   |-- debug-attribute name=adi,aux-dac-vref0 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref1 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref2 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref3 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref4 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref5 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref6 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref7 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref8 value=3
+|   |-- debug-attribute name=adi,aux-dac-vref9 value=3
+|   |-- debug-attribute name=adi,aux-pll-lo-frequency_hz value=2500000000
+|   |-- debug-attribute name=adi,default-initial-calibrations-mask value=9362927
+|   |-- debug-attribute name=adi,dig-clocks-clk-pll-hs-div value=1
+|   |-- debug-attribute name=adi,dig-clocks-clk-pll-vco-freq_khz value=9830400
+|   |-- debug-attribute name=adi,dig-clocks-device-clock_khz value=122880
+|   |-- debug-attribute name=adi,dig-clocks-rf-pll-phase-sync-mode value=0
+|   |-- debug-attribute name=adi,dig-clocks-rf-pll-use-external-lo value=0
+|   |-- debug-attribute name=adi,fhm-config-fhm-gpio-pin value=0
+|   |-- debug-attribute name=adi,fhm-config-fhm-max-freq_mhz value=100
+|   |-- debug-attribute name=adi,fhm-config-fhm-min-freq_mhz value=100
+|   |-- debug-attribute name=adi,fhm-mode-enable-mcs-sync value=0
+|   |-- debug-attribute name=adi,fhm-mode-fhm-enable value=0
+|   |-- debug-attribute name=adi,fhm-mode-fhm-exit-mode value=0
+|   |-- debug-attribute name=adi,fhm-mode-fhm-init-frequency_hz value=2450000000
+|   |-- debug-attribute name=adi,fhm-mode-fhm-trigger-mode value=0
+|   |-- debug-attribute name=adi,gpio3v3-output-enable-mask value=0
+|   |-- debug-attribute name=adi,gpio3v3-output-level-mask value=0
+|   |-- debug-attribute name=adi,gpio3v3-source-control value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-bank-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-deserializer-lane-crossbar value=228
+|   |-- debug-attribute name=adi,jesd204-deframer-a-deserializer-lanes-enabled value=15
+|   |-- debug-attribute name=adi,jesd204-deframer-a-device-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-enable-manual-lane-xbar value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-external-sysref value=1
+|   |-- debug-attribute name=adi,jesd204-deframer-a-k value=32
+|   |-- debug-attribute name=adi,jesd204-deframer-a-lane0-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-lmfc-offset value=17
+|   |-- debug-attribute name=adi,jesd204-deframer-a-m value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-new-sysref-on-relink value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-np value=16
+|   |-- debug-attribute name=adi,jesd204-deframer-a-scramble value=1
+|   |-- debug-attribute name=adi,jesd204-deframer-a-syncb-out-cmos-drive-level value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-syncb-out-cmos-slew-rate value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-syncb-out-lvds-mode value=1
+|   |-- debug-attribute name=adi,jesd204-deframer-a-syncb-out-lvds-pn-invert value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-a-syncb-out-select value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-bank-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-deserializer-lane-crossbar value=228
+|   |-- debug-attribute name=adi,jesd204-deframer-b-deserializer-lanes-enabled value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-device-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-enable-manual-lane-xbar value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-external-sysref value=1
+|   |-- debug-attribute name=adi,jesd204-deframer-b-k value=32
+|   |-- debug-attribute name=adi,jesd204-deframer-b-lane0-id value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-lmfc-offset value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-m value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-new-sysref-on-relink value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-np value=16
+|   |-- debug-attribute name=adi,jesd204-deframer-b-scramble value=1
+|   |-- debug-attribute name=adi,jesd204-deframer-b-syncb-out-cmos-drive-level value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-syncb-out-cmos-slew-rate value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-syncb-out-lvds-mode value=1
+|   |-- debug-attribute name=adi,jesd204-deframer-b-syncb-out-lvds-pn-invert value=0
+|   |-- debug-attribute name=adi,jesd204-deframer-b-syncb-out-select value=0
+|   |-- debug-attribute name=adi,jesd204-des-eq-setting value=1
+|   |-- debug-attribute name=adi,jesd204-des-invert-lane-polarity value=0
+|   |-- debug-attribute name=adi,jesd204-framer-a-bank-id value=1
+|   |-- debug-attribute name=adi,jesd204-framer-a-device-id value=0
+|   |-- debug-attribute name=adi,jesd204-framer-a-enable-manual-lane-xbar value=0
+|   |-- debug-attribute name=adi,jesd204-framer-a-external-sysref value=1
+|   |-- debug-attribute name=adi,jesd204-framer-a-f value=4
+|   |-- debug-attribute name=adi,jesd204-framer-a-k value=32
+|   |-- debug-attribute name=adi,jesd204-framer-a-lane0-id value=0
+|   |-- debug-attribute name=adi,jesd204-framer-a-lmfc-offset value=31
+|   |-- debug-attribute name=adi,jesd204-framer-a-m value=4
+|   |-- debug-attribute name=adi,jesd204-framer-a-new-sysref-on-relink value=0
+|   |-- debug-attribute name=adi,jesd204-framer-a-np value=16
+|   |-- debug-attribute name=adi,jesd204-framer-a-over-sample value=0
+|   |-- debug-attribute name=adi,jesd204-framer-a-scramble value=1
+|   |-- debug-attribute name=adi,jesd204-framer-a-serializer-lane-crossbar value=228
+|   |-- debug-attribute name=adi,jesd204-framer-a-serializer-lanes-enabled value=3
+|   |-- debug-attribute name=adi,jesd204-framer-a-syncb-in-lvds-mode value=1
+|   |-- debug-attribute name=adi,jesd204-framer-a-syncb-in-lvds-pn-invert value=0
+|   |-- debug-attribute name=adi,jesd204-framer-a-syncb-in-select value=0
+|   |-- debug-attribute name=adi,jesd204-framer-b-bank-id value=0
+|   |-- debug-attribute name=adi,jesd204-framer-b-device-id value=0
+|   |-- debug-attribute name=adi,jesd204-framer-b-enable-manual-lane-xbar value=0
+|   |-- debug-attribute name=adi,jesd204-framer-b-external-sysref value=1
+|   |-- debug-attribute name=adi,jesd204-framer-b-f value=2
+|   |-- debug-attribute name=adi,jesd204-framer-b-k value=32
+|   |-- debug-attribute name=adi,jesd204-framer-b-lane0-id value=0
+|   |-- debug-attribute name=adi,jesd204-framer-b-lmfc-offset value=31
+|   |-- debug-attribute name=adi,jesd204-framer-b-m value=2
+|   |-- debug-attribute name=adi,jesd204-framer-b-new-sysref-on-relink value=0
+|   |-- debug-attribute name=adi,jesd204-framer-b-np value=16
+|   |-- debug-attribute name=adi,jesd204-framer-b-over-sample value=0
+|   |-- debug-attribute name=adi,jesd204-framer-b-scramble value=1
+|   |-- debug-attribute name=adi,jesd204-framer-b-serializer-lane-crossbar value=228
+|   |-- debug-attribute name=adi,jesd204-framer-b-serializer-lanes-enabled value=12
+|   |-- debug-attribute name=adi,jesd204-framer-b-syncb-in-lvds-mode value=1
+|   |-- debug-attribute name=adi,jesd204-framer-b-syncb-in-lvds-pn-invert value=0
+|   |-- debug-attribute name=adi,jesd204-framer-b-syncb-in-select value=1
+|   |-- debug-attribute name=adi,jesd204-ser-amplitude value=15
+|   |-- debug-attribute name=adi,jesd204-ser-invert-lane-polarity value=0
+|   |-- debug-attribute name=adi,jesd204-ser-pre-emphasis value=1
+|   |-- debug-attribute name=adi,jesd204-sysref-lvds-mode value=1
+|   |-- debug-attribute name=adi,jesd204-sysref-lvds-pn-invert value=0
+|   |-- debug-attribute name=adi,obs-settings-framer-sel value=1
+|   |-- debug-attribute name=adi,obs-settings-obs-rx-channels-enable value=0
+|   |-- debug-attribute name=adi,obs-settings-obs-rx-lo-source value=0
+|   |-- debug-attribute name=adi,orx-gain-control-gain-mode value=0
+|   |-- debug-attribute name=adi,orx-gain-control-orx1-gain-index value=255
+|   |-- debug-attribute name=adi,orx-gain-control-orx1-max-gain-index value=255
+|   |-- debug-attribute name=adi,orx-gain-control-orx1-min-gain-index value=195
+|   |-- debug-attribute name=adi,orx-gain-control-orx2-gain-index value=255
+|   |-- debug-attribute name=adi,orx-gain-control-orx2-max-gain-index value=255
+|   |-- debug-attribute name=adi,orx-gain-control-orx2-min-gain-index value=195
+|   |-- debug-attribute name=adi,orx-lo-cfg-disable-aux-pll-relocking value=0
+|   |-- debug-attribute name=adi,orx-lo-cfg-gpio-select value=19
+|   |-- debug-attribute name=adi,orx-profile-orx-ddc-mode value=0
+|   |-- debug-attribute name=adi,orx-profile-orx-output-rate_khz value=122880
+|   |-- debug-attribute name=adi,orx-profile-rf-bandwidth_hz value=100000000
+|   |-- debug-attribute name=adi,orx-profile-rhb1-decimation value=2
+|   |-- debug-attribute name=adi,orx-profile-rx-bbf3d-bcorner_khz value=225000
+|   |-- debug-attribute name=adi,orx-profile-rx-dec5-decimation value=4
+|   |-- debug-attribute name=adi,orx-profile-rx-fir-decimation value=2
+|   |-- debug-attribute name=adi,orx-profile-rx-fir-gain_db value=250
+|   |-- debug-attribute name=adi,orx-profile-rx-fir-num-fir-coefs value=48
+|   |-- debug-attribute name=adi,radio-ctl-pin-mode-options-mask value=1
+|   |-- debug-attribute name=adi,radio-ctl-pin-mode-orx-en-pinsel value=3
+|   |-- debug-attribute name=adi,rx-gain-control-gain-mode value=0
+|   |-- debug-attribute name=adi,rx-gain-control-rx1-gain-index value=255
+|   |-- debug-attribute name=adi,rx-gain-control-rx1-max-gain-index value=255
+|   |-- debug-attribute name=adi,rx-gain-control-rx1-min-gain-index value=195
+|   |-- debug-attribute name=adi,rx-gain-control-rx2-gain-index value=255
+|   |-- debug-attribute name=adi,rx-gain-control-rx2-max-gain-index value=255
+|   |-- debug-attribute name=adi,rx-gain-control-rx2-min-gain-index value=195
+|   |-- debug-attribute name=adi,rx-nco-shifter-band-a-input-band-width_khz value=0
+|   |-- debug-attribute name=adi,rx-nco-shifter-band-a-input-center-freq_khz value=0
+|   |-- debug-attribute name=adi,rx-nco-shifter-band-a-nco1-freq_khz value=0
+|   |-- debug-attribute name=adi,rx-nco-shifter-band-a-nco2-freq_khz value=0
+|   |-- debug-attribute name=adi,rx-nco-shifter-band-binput-band-width_khz value=0
+|   |-- debug-attribute name=adi,rx-nco-shifter-band-binput-center-freq_khz value=0
+|   |-- debug-attribute name=adi,rx-nco-shifter-band-bnco1-freq_khz value=0
+|   |-- debug-attribute name=adi,rx-nco-shifter-band-bnco2-freq_khz value=0
+|   |-- debug-attribute name=adi,rx-profile-rf-bandwidth_hz value=100000000
+|   |-- debug-attribute name=adi,rx-profile-rhb1-decimation value=2
+|   |-- debug-attribute name=adi,rx-profile-rx-bbf3d-bcorner_khz value=100000
+|   |-- debug-attribute name=adi,rx-profile-rx-ddc-mode value=0
+|   |-- debug-attribute name=adi,rx-profile-rx-dec5-decimation value=4
+|   |-- debug-attribute name=adi,rx-profile-rx-fir-decimation value=2
+|   |-- debug-attribute name=adi,rx-profile-rx-fir-gain_db value=250
+|   |-- debug-attribute name=adi,rx-profile-rx-fir-num-fir-coefs value=48
+|   |-- debug-attribute name=adi,rx-profile-rx-output-rate_khz value=122880
+|   |-- debug-attribute name=adi,rx-settings-framer-sel value=0
+|   |-- debug-attribute name=adi,rx-settings-rx-channels value=3
+|   |-- debug-attribute name=adi,rx1-gain-ctrl-pin-dec-step value=1
+|   |-- debug-attribute name=adi,rx1-gain-ctrl-pin-enable value=0
+|   |-- debug-attribute name=adi,rx1-gain-ctrl-pin-inc-step value=1
+|   |-- debug-attribute name=adi,rx1-gain-ctrl-pin-rx-gain-dec-pin value=1
+|   |-- debug-attribute name=adi,rx1-gain-ctrl-pin-rx-gain-inc-pin value=0
+|   |-- debug-attribute name=adi,rx2-gain-ctrl-pin-dec-step value=1
+|   |-- debug-attribute name=adi,rx2-gain-ctrl-pin-enable value=0
+|   |-- debug-attribute name=adi,rx2-gain-ctrl-pin-inc-step value=1
+|   |-- debug-attribute name=adi,rx2-gain-ctrl-pin-rx-gain-dec-pin value=4
+|   |-- debug-attribute name=adi,rx2-gain-ctrl-pin-rx-gain-inc-pin value=3
+|   |-- debug-attribute name=adi,rxagc-agc-change-gain-if-thresh-high value=1
+|   |-- debug-attribute name=adi,rxagc-agc-enable-fast-recovery-loop value=0
+|   |-- debug-attribute name=adi,rxagc-agc-enable-ip3-optimization-thresh value=0
+|   |-- debug-attribute name=adi,rxagc-agc-enable-sync-pulse-for-gain-counter value=0
+|   |-- debug-attribute name=adi,rxagc-agc-gain-update-counter_us value=250
+|   |-- debug-attribute name=adi,rxagc-agc-low-thresh-prevent-gain value=0
+|   |-- debug-attribute name=adi,rxagc-agc-peak-thresh-gain-control-mode value=1
+|   |-- debug-attribute name=adi,rxagc-agc-peak-wait-time value=4
+|   |-- debug-attribute name=adi,rxagc-agc-reset-on-rxon value=0
+|   |-- debug-attribute name=adi,rxagc-agc-rx1-attack-delay value=10
+|   |-- debug-attribute name=adi,rxagc-agc-rx1-max-gain-index value=255
+|   |-- debug-attribute name=adi,rxagc-agc-rx1-min-gain-index value=195
+|   |-- debug-attribute name=adi,rxagc-agc-rx2-attack-delay value=10
+|   |-- debug-attribute name=adi,rxagc-agc-rx2-max-gain-index value=255
+|   |-- debug-attribute name=adi,rxagc-agc-rx2-min-gain-index value=195
+|   |-- debug-attribute name=adi,rxagc-agc-slow-loop-settling-delay value=16
+|   |-- debug-attribute name=adi,rxagc-ip3-over-range-thresh value=31
+|   |-- debug-attribute name=adi,rxagc-ip3-over-range-thresh-index value=246
+|   |-- debug-attribute name=adi,rxagc-ip3-peak-exceeded-cnt value=4
+|   |-- debug-attribute name=adi,rxagc-peak-agc-under-range-high-interval value=4
+|   |-- debug-attribute name=adi,rxagc-peak-agc-under-range-low-interval_ns value=205
+|   |-- debug-attribute name=adi,rxagc-peak-agc-under-range-mid-interval value=2
+|   |-- debug-attribute name=adi,rxagc-peak-apd-gain-step-attack value=4
+|   |-- debug-attribute name=adi,rxagc-peak-apd-gain-step-recovery value=2
+|   |-- debug-attribute name=adi,rxagc-peak-apd-high-thresh value=39
+|   |-- debug-attribute name=adi,rxagc-peak-apd-low-gain-mode-high-thresh value=36
+|   |-- debug-attribute name=adi,rxagc-peak-apd-low-gain-mode-low-thresh value=19
+|   |-- debug-attribute name=adi,rxagc-peak-apd-low-thresh value=23
+|   |-- debug-attribute name=adi,rxagc-peak-apd-lower-thresh-peak-exceeded-cnt value=3
+|   |-- debug-attribute name=adi,rxagc-peak-apd-upper-thresh-peak-exceeded-cnt value=6
+|   |-- debug-attribute name=adi,rxagc-peak-enable-hb2-overload value=1
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-gain-step-attack value=4
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-gain-step-high-recovery value=2
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-gain-step-low-recovery value=4
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-gain-step-mid-recovery value=8
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-high-thresh value=181
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-lower-thresh-peak-exceeded-cnt value=3
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-overload-duration-cnt value=1
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-overload-power-mode value=1
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-overload-thresh-cnt value=4
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-ovrg-sel value=0
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-thresh-config value=3
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-under-range-high-thresh value=128
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-under-range-low-thresh value=45
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-under-range-mid-thresh value=90
+|   |-- debug-attribute name=adi,rxagc-peak-hb2-upper-thresh-peak-exceeded-cnt value=6
+|   |-- debug-attribute name=adi,rxagc-power-power-enable-measurement value=1
+|   |-- debug-attribute name=adi,rxagc-power-power-log-shift value=0
+|   |-- debug-attribute name=adi,rxagc-power-power-measurement-duration value=5
+|   |-- debug-attribute name=adi,rxagc-power-power-use-bbdc2 value=0
+|   |-- debug-attribute name=adi,rxagc-power-power-use-rfir-out value=1
+|   |-- debug-attribute name=adi,rxagc-power-rx1-tdd-power-meas-delay value=1
+|   |-- debug-attribute name=adi,rxagc-power-rx1-tdd-power-meas-duration value=5
+|   |-- debug-attribute name=adi,rxagc-power-rx2-tdd-power-meas-delay value=1
+|   |-- debug-attribute name=adi,rxagc-power-rx2-tdd-power-meas-duration value=5
+|   |-- debug-attribute name=adi,rxagc-power-under-range-high-power-gain-step-recovery value=4
+|   |-- debug-attribute name=adi,rxagc-power-under-range-high-power-thresh value=9
+|   |-- debug-attribute name=adi,rxagc-power-under-range-low-power-gain-step-recovery value=4
+|   |-- debug-attribute name=adi,rxagc-power-under-range-low-power-thresh value=2
+|   |-- debug-attribute name=adi,rxagc-power-upper0-power-thresh value=2
+|   |-- debug-attribute name=adi,rxagc-power-upper1-power-thresh value=0
+|   |-- debug-attribute name=adi,trx-pll-lo-frequency_hz value=2400000000
+|   |-- debug-attribute name=adi,tx-pa-protection-avg-duration value=3
+|   |-- debug-attribute name=adi,tx-pa-protection-peak-count value=4
+|   |-- debug-attribute name=adi,tx-pa-protection-tx-atten-step value=2
+|   |-- debug-attribute name=adi,tx-pa-protection-tx1-peak-threshold value=130
+|   |-- debug-attribute name=adi,tx-pa-protection-tx1-power-threshold value=4096
+|   |-- debug-attribute name=adi,tx-pa-protection-tx2-peak-threshold value=130
+|   |-- debug-attribute name=adi,tx-pa-protection-tx2-power-threshold value=4096
+|   |-- debug-attribute name=adi,tx-profile-dac-div value=1
+|   |-- debug-attribute name=adi,tx-profile-primary-sig-bandwidth_hz value=50000000
+|   |-- debug-attribute name=adi,tx-profile-rf-bandwidth_hz value=100000000
+|   |-- debug-attribute name=adi,tx-profile-thb1-interpolation value=2
+|   |-- debug-attribute name=adi,tx-profile-thb2-interpolation value=2
+|   |-- debug-attribute name=adi,tx-profile-thb3-interpolation value=2
+|   |-- debug-attribute name=adi,tx-profile-tx-bbf3d-bcorner_khz value=56000
+|   |-- debug-attribute name=adi,tx-profile-tx-dac3d-bcorner_khz value=187000
+|   |-- debug-attribute name=adi,tx-profile-tx-fir-gain_db value=6
+|   |-- debug-attribute name=adi,tx-profile-tx-fir-interpolation value=2
+|   |-- debug-attribute name=adi,tx-profile-tx-fir-num-fir-coefs value=80
+|   |-- debug-attribute name=adi,tx-profile-tx-input-rate_khz value=122880
+|   |-- debug-attribute name=adi,tx-profile-tx-int5-interpolation value=1
+|   |-- debug-attribute name=adi,tx-settings-deframer-sel value=0
+|   |-- debug-attribute name=adi,tx-settings-dis-tx-data-if-pll-unlock value=0
+|   |-- debug-attribute name=adi,tx-settings-tx-atten-step-size value=0
+|   |-- debug-attribute name=adi,tx-settings-tx-channels value=0
+|   |-- debug-attribute name=adi,tx-settings-tx1-atten_md-b value=10000
+|   |-- debug-attribute name=adi,tx-settings-tx2-atten_md-b value=10000
+|   |-- debug-attribute name=adi,tx1-atten-ctrl-pin-enable value=0
+|   |-- debug-attribute name=adi,tx1-atten-ctrl-pin-step-size value=0
+|   |-- debug-attribute name=adi,tx1-atten-ctrl-pin-tx-atten-dec-pin value=5
+|   |-- debug-attribute name=adi,tx1-atten-ctrl-pin-tx-atten-inc-pin value=4
+|   |-- debug-attribute name=adi,tx2-atten-ctrl-pin-enable value=0
+|   |-- debug-attribute name=adi,tx2-atten-ctrl-pin-step-size value=0
+|   |-- debug-attribute name=adi,tx2-atten-ctrl-pin-tx-atten-dec-pin value=7
+|   |-- debug-attribute name=adi,tx2-atten-ctrl-pin-tx-atten-inc-pin value=6
+|   |-- debug-attribute name=bist_framer_a_loopback value=0
+|   |-- debug-attribute name=bist_framer_a_prbs value=0
+|   |-- debug-attribute name=bist_framer_b_loopback value=0
+|   |-- debug-attribute name=bist_framer_b_prbs value=0
+|   |-- debug-attribute name=bist_serializer_a_prbs value=0
+|   |-- debug-attribute name=bist_serializer_b_prbs value=0
+|   |-- debug-attribute name=bist_tone value=0
+|   |-- debug-attribute name=direct_reg_access value=0x3C
+|   |-- debug-attribute name=gpio3v3 value=0
+|   `-- debug-attribute name=initialize value=0
+|-- device id=iio:device4 name=axi-adrv9009-rx-hpc
+|   |-- channel id=voltage0_i type=input
+|   |   |-- scan-element index=0 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibbias filename=in_voltage0_i_calibbias value=0
+|   |   |-- attribute name=calibphase filename=in_voltage0_i_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=in_voltage0_i_calibscale value=0.000000
+|   |   `-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=122880000
+|   |-- channel id=voltage0_q type=input
+|   |   |-- scan-element index=1 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibbias filename=in_voltage0_q_calibbias value=0
+|   |   |-- attribute name=calibphase filename=in_voltage0_q_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=in_voltage0_q_calibscale value=0.000000
+|   |   `-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=122880000
+|   |-- channel id=voltage1_i type=input
+|   |   |-- scan-element index=2 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibbias filename=in_voltage1_i_calibbias value=0
+|   |   |-- attribute name=calibphase filename=in_voltage1_i_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=in_voltage1_i_calibscale value=0.000000
+|   |   `-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=122880000
+|   |-- channel id=voltage1_q type=input
+|   |   |-- scan-element index=3 format=le:S16/16&gt;&gt;0
+|   |   |-- attribute name=calibbias filename=in_voltage1_q_calibbias value=0
+|   |   |-- attribute name=calibphase filename=in_voltage1_q_calibphase value=0.000000
+|   |   |-- attribute name=calibscale filename=in_voltage1_q_calibscale value=0.000000
+|   |   `-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=122880000
+|   |-- attribute name=sync_start_enable value=disarm
+|   |-- attribute name=sync_start_enable_available value=arm
+|   |-- attribute name=waiting_for_supplier value=0
+|   |-- debug-attribute name=direct_reg_access value=0x0
+|   |-- debug-attribute name=pseudorandom_err_check value=ERROR
+|   |-- buffer-attribute name=data_available value=0
+|   |-- buffer-attribute name=direction value=in
+|   `-- buffer-attribute name=length_align_bytes value=8
+`-- device id=iio_sysfs_trigger
+    |-- attribute name=add_trigger value=ERROR
+    `-- attribute name=remove_trigger value=ERROR
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+              <div class="related">
+                &nbsp;
+    <a href="adrv9002_splitdma.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">Emulation Context: adrv9002_splitdma.xml</a>
+    <a href="adrv9008-2.html" title="Next document (Alt+Shift+RightArrow)" class="next">Emulation Context: adrv9008-2.xml</a>
+              </div>
+          
+        </div>
+      </div>
+  </div>
+
+  <label id="cancel-area-show-toc" for="input-show-toc"></label>
+  <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
+    <footer>
+      &#169;2019-2026, Analog Devices, Inc
+      
+      |
+      Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+      &amp; <a href="https://github.com/analogdevicesinc/doctools">Doctools</a>
+      
+    </footer>
+  </body>
+</html>
