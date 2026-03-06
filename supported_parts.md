@@ -1,13 +1,7 @@
-# pyadi-iio: Analog Devices python interfaces for hardware with Industrial I/O drivers
+# Supported Parts and Boards
 
-![PyADI-IIO Logo](images/PyADI-IIO_Logo_72.png)
-
-[![Build Status](https://travis-ci.org/analogdevicesinc/pyadi-iio.svg?branch=master)](https://travis-ci.org/analogdevicesinc/pyadi-iio)
-[![PyPI version](https://badge.fury.io/py/pyadi-iio.svg)](https://badge.fury.io/py/pyadi-iio) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4bd027bfc5774029a30a9e1cedf5a434)](https://www.codacy.com/app/travis.collins/pyadi-iio?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade) [![](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/download/releases/3.8.0/)
-
-[[Docs](http://analogdevicesinc.github.io/pyadi-iio/)]
-[[Support](http://ez.analog.com)]
-[[Wiki](https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio)]
+## Table of contents
+- [Currently supported hardware](#currently-supported-hardware)
 
 ### Currently supported hardware
 - AD2S1210

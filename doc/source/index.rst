@@ -83,9 +83,10 @@ Sections
    buffers/index
    fpga/index
    libiio
+   supported_parts
    support
-   dev/index
    devices/index
+   dev/index
 
 Indices and tables
 ==================

@@ -1,8 +1,7 @@
-Supported Devices
-=================
+Device API Reference
+====================
 
-
-
+For a consolidated list of supported parts and boards, see :doc:`/supported_parts`.
 
 .. toctree::
    :maxdepth: 2
