@@ -14,8 +14,31 @@ from numpy import (
     pi,
 )
 from numpy.fft import fft, fftfreq, fftshift
-from scipy import signal
-from scipy.signal import find_peaks
+
+
+def _find_peaks(values, distance=1):
+    """Find local maxima with a simple NumPy-only implementation."""
+    x = np.asarray(values)
+    if x.size < 3:
+        return np.array([], dtype=int), {}
+
+    # Candidate points are higher than the previous sample and not lower than the next.
+    peaks = np.where((x[1:-1] > x[:-2]) & (x[1:-1] >= x[2:]))[0] + 1
+    if peaks.size <= 1:
+        return peaks.astype(int), {}
+
+    distance = max(int(distance), 1)
+    if distance == 1:
+        return peaks.astype(int), {}
+
+    # Keep strongest peaks first, enforcing minimum distance between selected peaks.
+    ordered = peaks[np.argsort(x[peaks])[::-1]]
+    selected = []
+    for idx in ordered:
+        if all(abs(int(idx) - int(kept)) >= distance for kept in selected):
+            selected.append(int(idx))
+
+    return np.array(sorted(selected), dtype=int), {}
 
 
 def spec_est(x, fs, ref=2 ** 15, plot=False, useWindow=False):
@@ -24,7 +47,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False, useWindow=False):
 
     # Apply window
     if useWindow:
-        window = signal.kaiser(N, beta=8.6)
+        window = np.kaiser(N, beta=8.6)
         x = multiply(x, window)
 
     # Use FFT to get the amplitude of the spectrum
@@ -137,7 +160,7 @@ def sfdr(x, fs=1, ref=2 ** 15, plot=False):
     amp, freqs = spec_est(x, fs=fs, ref=ref, plot=plot)
     amp_org = amp
     amp = fftshift(amp)
-    peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.1))
+    peak_indxs, _ = _find_peaks(amp, distance=floor(len(x) * 0.1))
 
     # Sort peaks
     indxs = argsort(amp[peak_indxs])

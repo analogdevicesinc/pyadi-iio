@@ -1,26 +1,46 @@
 import inspect
 import random
-import test.rf.spec as spec
 import time
-from test.attr_tests import *
-from test.common import (
-    dev_interface,
-    pytest_addoption,
-    pytest_collection_modifyitems,
-    pytest_configure,
-    pytest_generate_tests,
-    pytest_runtest_setup,
-)
-from test.dma_tests import *
-from test.generics import iio_attribute_single_value
-from test.globals import *
-from test.html import pytest_html_report_title, pytest_runtest_makereport
-from test.jesd_tests import *
 
 import numpy as np
 import pytest
 
-import adi
+try:
+    from test.attr_tests import *
+    from test.common import (
+        dev_interface,
+        pytest_addoption,
+        pytest_collection_modifyitems,
+        pytest_configure,
+        pytest_generate_tests,
+        pytest_runtest_setup,
+    )
+    from test.dma_tests import *
+    from test.generics import iio_attribute_single_value
+    from test.globals import *
+    from test.html import pytest_html_report_title, pytest_runtest_makereport
+    from test.jesd_tests import *
+
+    import adi
+
+    _HW_STACK_AVAILABLE = True
+except ImportError:
+    _HW_STACK_AVAILABLE = False
+
+    def pytest_addoption(parser):
+        return None
+
+    def pytest_collection_modifyitems(config, items):
+        return None
+
+    def pytest_configure(config):
+        return None
+
+    def pytest_generate_tests(metafunc):
+        return None
+
+    def pytest_runtest_setup(item):
+        return None
 
 try:
     from test.scpi import dcxo_calibrate

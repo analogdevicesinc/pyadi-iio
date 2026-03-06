@@ -20,7 +20,10 @@ sys.path.insert(0, os.path.abspath("../.."))
 sys.path.append(os.path.abspath("./ext"))
 sys.setrecursionlimit(1500)
 
-import adi  # isort:skip
+try:
+    import adi  # isort:skip
+except Exception:  # pragma: no cover
+    adi = None
 
 # -- Project information -----------------------------------------------------
 
@@ -31,7 +34,7 @@ copyright = f"2019-{year_now}, Analog Devices, Inc"
 author = "Travis Collins"
 
 # The full version, including alpha/beta/rc tags
-release = adi.__version__
+release = adi.__version__ if adi else os.getenv("PYADI_DOCS_VERSION", "0+unknown")
 version = release
 
 
@@ -64,6 +67,10 @@ exclude_patterns: List[str] = []
 coverage_show_missing_items = True
 coverage_ignore_classes = ["phy"]
 coverage_ignore_modules = ["test.dma_tests", "test.generics"]
+
+# Allow docs to build in constrained environments where optional runtime deps
+# are not installed.
+autodoc_mock_imports = ["iio", "matplotlib", "numpy", "paramiko", "scipy"]
 
 # Link check configuration
 linkcheck_ignore = [
