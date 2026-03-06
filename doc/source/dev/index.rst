@@ -26,6 +26,20 @@ To make repetitve tasks easier, pyadi-iio utilizes pyinvoke. To see the availabl
           test            Run pytest tests
 
 
+Documentation Build Notes
+---------------------------
+Sphinx documentation builds can run in constrained environments where optional runtime
+dependencies are not installed.
+
+If the package version cannot be imported from ``adi`` during doc builds, provide a
+fallback value through an environment variable:
+
+.. code-block:: console
+
+        export PYADI_DOCS_VERSION=0+local
+        invoke builddoc
+
+
 
 Precommit
 ---------------------------

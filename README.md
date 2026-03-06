@@ -82,6 +82,12 @@ Build actual doc with sphinx
 tcollins@jeeves:~$ cd doc
 tcollins@jeeves:~$ make html
 ```
+For constrained build environments where `adi` and/or optional runtime dependencies
+are not importable, set a fallback docs version before building:
+```
+tcollins@jeeves:~$ export PYADI_DOCS_VERSION=0+local
+```
+
 ### Developing
 Install necessary tools
 ```
