@@ -86,7 +86,7 @@ Tree
    |   |-- channel id=timestamp type=input
    |   |   `-- scan-element index=13 format=le:S64/64>>0
    |   |-- attribute name=current_timestamp_clock value=realtime
-   
+
    |   |-- attribute name=filter_low_pass_3db_frequency value=720
    |   |-- attribute name=sampling_frequency value=2000.000000
    |   |-- attribute name=waiting_for_supplier value=0

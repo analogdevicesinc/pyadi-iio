@@ -65,7 +65,7 @@ Tree
    |   |   |-- attribute name=shuffler_thresh filename=in_voltage_shuffler_thresh value=5
    |   |   |-- attribute name=shuffler_thresh_available filename=in_voltage_shuffler_thresh_available value=0 1 2 3 4 5 6 7 8
    |   |   |-- attribute name=test_mode filename=in_voltage_test_mode value=off
-   |   |   `-- attribute name=test_mode_available filename=in_voltage_test_mode_available value=off checkerboard one_zero_toggle pn23 pn9 rep_user_pat sing_user_pat ramp mod_rpat jspat jtspat 
+   |   |   `-- attribute name=test_mode_available filename=in_voltage_test_mode_available value=off checkerboard one_zero_toggle pn23 pn9 rep_user_pat sing_user_pat ramp mod_rpat jspat jtspat
    |   |-- channel id=voltage1 type=input
    |   |   |-- scan-element index=1 format=le:S16/16>>0 scale=1.000000
    |   |   |-- attribute name=adc_frequency filename=in_voltage_adc_frequency value=3072000000
@@ -83,7 +83,7 @@ Tree
    |   |   |-- attribute name=shuffler_thresh filename=in_voltage_shuffler_thresh value=5
    |   |   |-- attribute name=shuffler_thresh_available filename=in_voltage_shuffler_thresh_available value=0 1 2 3 4 5 6 7 8
    |   |   |-- attribute name=test_mode filename=in_voltage_test_mode value=off
-   |   |   `-- attribute name=test_mode_available filename=in_voltage_test_mode_available value=off checkerboard one_zero_toggle pn23 pn9 rep_user_pat sing_user_pat ramp mod_rpat jspat jtspat 
+   |   |   `-- attribute name=test_mode_available filename=in_voltage_test_mode_available value=off checkerboard one_zero_toggle pn23 pn9 rep_user_pat sing_user_pat ramp mod_rpat jspat jtspat
    |   |-- attribute name=sync_start_enable value=disarm
    |   |-- attribute name=sync_start_enable_available value=arm
    |   |-- debug-attribute name=direct_reg_access value=0x1

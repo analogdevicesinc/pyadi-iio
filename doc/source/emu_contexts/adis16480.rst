@@ -93,7 +93,7 @@ Tree
    |   |   `-- attribute name=scale filename=in_temp0_scale value=5.650000
    |   |-- channel id=timestamp type=input
    |   |   `-- scan-element index=11 format=le:S64/64>>0
-   |   |-- attribute name=current_timestamp_clock value=realtime 
+   |   |-- attribute name=current_timestamp_clock value=realtime
    |   |-- attribute name=sampling_frequency value=12.813000
    |   |-- debug-attribute name=direct_reg_access value=0x0
    |   |-- debug-attribute name=firmware_date value=04-14-2015

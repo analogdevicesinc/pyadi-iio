@@ -5,9 +5,9 @@ from __future__ import annotations
 
 import argparse
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
-import xml.etree.ElementTree as ET
 
 ALLOWED_TAGS = {
     "context",
@@ -73,10 +73,7 @@ def _node_sort_key(elem: ET.Element) -> Tuple[str, ...]:
 def _sorted_children(elem: ET.Element) -> List[ET.Element]:
     children = [child for child in elem if child.tag in ALLOWED_TAGS]
     children.sort(
-        key=lambda child: (
-            CHILD_TAG_ORDER.get(child.tag, 99),
-            _node_sort_key(child),
-        )
+        key=lambda child: (CHILD_TAG_ORDER.get(child.tag, 99), _node_sort_key(child),)
     )
     return children
 
@@ -143,9 +140,7 @@ def _parse_context_root(xml_path: Path) -> ET.Element:
                         except ET.ParseError:
                             pass
 
-        raise ValueError(
-            f"Unable to parse XML context {xml_path.name}: {exc}"
-        ) from exc
+        raise ValueError(f"Unable to parse XML context {xml_path.name}: {exc}") from exc
 
 
 def tree_from_xml_path(xml_path: Path) -> str:

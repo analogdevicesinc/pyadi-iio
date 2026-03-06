@@ -18,7 +18,7 @@ Tree
    |-- context-attribute name=uri value=serial:/dev/ttyACM0,230400,8n1n
    |-- device id=iio:device0 name=ad5940
    |   |-- channel id=voltage0 type=input name=bia
-   |   |   `-- attribute name=raw filename=in_voltage0_raw value=-12 16 
+   |   |   `-- attribute name=raw filename=in_voltage0_raw value=-12 16
    |   |-- attribute name=excitation_amplitude value=300
    |   |-- attribute name=excitation_frequency value=10000
    |   |-- attribute name=gpio1_toggle value=0

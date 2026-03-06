@@ -49,7 +49,7 @@ Tree
    |   |   `-- attribute name=scale filename=in_temp_scale value=-110.497238
    |   |-- channel id=timestamp type=input
    |   |   `-- scan-element index=4 format=le:S64/64>>0
-   |   |-- attribute name=current_timestamp_clock value=realtime 
+   |   |-- attribute name=current_timestamp_clock value=realtime
    |   |-- buffer-attribute name=data_available value=0
    |   `-- buffer-attribute name=watermark value=1
    |-- device id=iio_sysfs_trigger

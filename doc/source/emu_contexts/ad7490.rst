@@ -80,8 +80,8 @@ Tree
        |   |-- scan-element index=9 format=le:u12/16>>0
        |   |-- attribute name=raw filename=in_voltage9_raw value=0
        |   `-- attribute name=scale filename=in_voltage9_scale value=0.610351562
-       |-- attribute name=polarity value=UNIPOLAR 
-       |-- attribute name=polarity_available value=BIPOLAR UNIPOLAR 
-       |-- attribute name=range value=REF_IN 
-       |-- attribute name=range_available value=2X_REF_IN REF_IN 
+       |-- attribute name=polarity value=UNIPOLAR
+       |-- attribute name=polarity_available value=BIPOLAR UNIPOLAR
+       |-- attribute name=range value=REF_IN
+       |-- attribute name=range_available value=2X_REF_IN REF_IN
        `-- attribute name=sampling_frequency value=1000000

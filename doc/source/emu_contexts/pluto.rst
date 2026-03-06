@@ -363,13 +363,13 @@ Tree
    |   |   |-- attribute name=calibphase filename=out_voltage0_calibphase value=0.000000
    |   |   |-- attribute name=calibscale filename=out_voltage0_calibscale value=1.000000
    |   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=30720000
-   |   |   `-- attribute name=sampling_frequency_available filename=out_voltage_sampling_frequency_available value=30720000 3840000 
+   |   |   `-- attribute name=sampling_frequency_available filename=out_voltage_sampling_frequency_available value=30720000 3840000
    |   |-- channel id=voltage1 type=output
    |   |   |-- scan-element index=1 format=le:S16/16>>0
    |   |   |-- attribute name=calibphase filename=out_voltage1_calibphase value=0.000000
    |   |   |-- attribute name=calibscale filename=out_voltage1_calibscale value=1.000000
    |   |   |-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=30720000
-   |   |   `-- attribute name=sampling_frequency_available filename=out_voltage_sampling_frequency_available value=30720000 3840000 
+   |   |   `-- attribute name=sampling_frequency_available filename=out_voltage_sampling_frequency_available value=30720000 3840000
    |   |-- debug-attribute name=direct_reg_access value=0x90162
    |   |-- buffer-attribute name=data_available value=0
    |   |-- buffer-attribute name=length_align_bytes value=8
@@ -382,7 +382,7 @@ Tree
        |   |-- attribute name=calibscale filename=in_voltage0_calibscale value=1.000000
        |   |-- attribute name=samples_pps filename=in_voltage_samples_pps value=ERROR
        |   |-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=30720000
-       |   `-- attribute name=sampling_frequency_available filename=in_voltage_sampling_frequency_available value=30720000 3840000 
+       |   `-- attribute name=sampling_frequency_available filename=in_voltage_sampling_frequency_available value=30720000 3840000
        |-- channel id=voltage1 type=input
        |   |-- scan-element index=1 format=le:S12/16>>0
        |   |-- attribute name=calibbias filename=in_voltage1_calibbias value=0
@@ -390,7 +390,7 @@ Tree
        |   |-- attribute name=calibscale filename=in_voltage1_calibscale value=1.000000
        |   |-- attribute name=samples_pps filename=in_voltage_samples_pps value=ERROR
        |   |-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=30720000
-       |   `-- attribute name=sampling_frequency_available filename=in_voltage_sampling_frequency_available value=30720000 3840000 
+       |   `-- attribute name=sampling_frequency_available filename=in_voltage_sampling_frequency_available value=30720000 3840000
        |-- debug-attribute name=direct_reg_access value=0x0
        |-- debug-attribute name=pseudorandom_err_check value=CH0 : PN9 : Out of Sync : PN Error CH1 : PN9 : Out of Sync : PN Error
        |-- buffer-attribute name=data_available value=0

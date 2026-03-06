@@ -110,7 +110,7 @@ Tree
    |   |   `-- attribute name=scale filename=in_temp_scale value=100
    |   |-- channel id=timestamp type=input
    |   |   `-- scan-element index=3 format=le:S64/64>>0
-   |   |-- attribute name=current_timestamp_clock value=realtime 
+   |   |-- attribute name=current_timestamp_clock value=realtime
    |   |-- debug-attribute name=direct_reg_access value=0xAD
    |   `-- buffer-attribute name=data_available value=0
    |-- device id=iio_sysfs_trigger

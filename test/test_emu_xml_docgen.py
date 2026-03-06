@@ -1,6 +1,5 @@
-from pathlib import Path
 import sys
-
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DOC_DIR = REPO_ROOT / "doc"
@@ -42,16 +41,12 @@ def test_generation_is_deterministic_and_cleans_stale_files(tmp_path):
     stale_file.write_text("old", encoding="utf-8")
 
     first = gen_emu_xml_trees.generate_emu_xml_tree_docs(
-        repo_root=repo_root,
-        xml_dir=xml_dir,
-        output_dir=out_dir,
+        repo_root=repo_root, xml_dir=xml_dir, output_dir=out_dir,
     )
     first_contents = {path.name: path.read_text(encoding="utf-8") for path in first}
 
     second = gen_emu_xml_trees.generate_emu_xml_tree_docs(
-        repo_root=repo_root,
-        xml_dir=xml_dir,
-        output_dir=out_dir,
+        repo_root=repo_root, xml_dir=xml_dir, output_dir=out_dir,
     )
     second_contents = {path.name: path.read_text(encoding="utf-8") for path in second}
 

@@ -810,7 +810,7 @@ Tree
    |   |-- debug-attribute name=adi,direct-loopback-mode-dac-adc-mapping value=68
    |   |-- debug-attribute name=api_version value=1.6.0
    |   |-- debug-attribute name=bist_2d_eyescan_jrx value=ERROR
-   |   |-- debug-attribute name=bist_prbs_error_counters_jrx value=0/1 0/1 0/1 0/1 0/1 0/1 0/1 0/1 
+   |   |-- debug-attribute name=bist_prbs_error_counters_jrx value=0/1 0/1 0/1 0/1 0/1 0/1 0/1 0/1
    |   |-- debug-attribute name=bist_prbs_select_jrx value=0
    |   |-- debug-attribute name=bist_prbs_select_jtx value=0
    |   |-- debug-attribute name=bist_spo_set_jrx value=0
