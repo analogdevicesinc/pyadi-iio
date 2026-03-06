@@ -42,6 +42,7 @@ except ImportError:
     def pytest_runtest_setup(item):
         return None
 
+
 try:
     from test.scpi import dcxo_calibrate
 
