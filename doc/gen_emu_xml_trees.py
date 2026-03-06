@@ -1,0 +1,264 @@
+#!/usr/bin/env python3
+"""Generate Sphinx pages with ASCII trees for emulation XML contexts."""
+
+from __future__ import annotations
+
+import argparse
+import re
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+import xml.etree.ElementTree as ET
+
+ALLOWED_TAGS = {
+    "context",
+    "context-attribute",
+    "device",
+    "channel",
+    "attribute",
+    "debug-attribute",
+    "buffer-attribute",
+    "scan-element",
+}
+
+CHILD_TAG_ORDER = {
+    "context-attribute": 0,
+    "device": 1,
+    "channel": 2,
+    "scan-element": 3,
+    "attribute": 4,
+    "debug-attribute": 5,
+    "buffer-attribute": 6,
+}
+
+DISPLAY_ATTRS: Dict[str, Sequence[str]] = {
+    "context": ("name", "description"),
+    "context-attribute": ("name", "value"),
+    "device": ("id", "name"),
+    "channel": ("id", "type", "name"),
+    "attribute": ("name", "filename", "value"),
+    "debug-attribute": ("name", "value"),
+    "buffer-attribute": ("name", "value"),
+    "scan-element": ("index", "format", "scale"),
+}
+
+
+def _rreplace(text: str, old: str, new: str, count: int) -> str:
+    return new.join(text.rsplit(old, count))
+
+
+def _slug_from_xml_name(xml_name: str) -> str:
+    stem = Path(xml_name).stem.lower()
+    allowed = []
+    for char in stem:
+        if char.isalnum() or char in {"-", "_"}:
+            allowed.append(char)
+        else:
+            allowed.append("-")
+    return "".join(allowed).strip("-")
+
+
+def _node_sort_key(elem: ET.Element) -> Tuple[str, ...]:
+    attrs = elem.attrib
+    return (
+        attrs.get("id", ""),
+        attrs.get("name", ""),
+        attrs.get("filename", ""),
+        attrs.get("index", ""),
+        attrs.get("type", ""),
+        attrs.get("value", ""),
+        attrs.get("format", ""),
+    )
+
+
+def _sorted_children(elem: ET.Element) -> List[ET.Element]:
+    children = [child for child in elem if child.tag in ALLOWED_TAGS]
+    children.sort(
+        key=lambda child: (
+            CHILD_TAG_ORDER.get(child.tag, 99),
+            _node_sort_key(child),
+        )
+    )
+    return children
+
+
+def _format_node(elem: ET.Element) -> str:
+    attrs = DISPLAY_ATTRS.get(elem.tag, ())
+    parts = []
+    for attr in attrs:
+        value = elem.attrib.get(attr)
+        if value:
+            parts.append(f"{attr}={value}")
+    suffix = " " + " ".join(parts) if parts else ""
+    return f"{elem.tag}{suffix}"
+
+
+def render_ascii_tree(root: ET.Element) -> str:
+    lines = [_format_node(root)]
+
+    def walk(node: ET.Element, prefix: str) -> None:
+        children = _sorted_children(node)
+        for index, child in enumerate(children):
+            is_last = index == len(children) - 1
+            branch = "`-- " if is_last else "|-- "
+            lines.append(f"{prefix}{branch}{_format_node(child)}")
+            next_prefix = f"{prefix}{'    ' if is_last else '|   '}"
+            walk(child, next_prefix)
+
+    walk(root, "")
+    return "\n".join(lines)
+
+
+def _parse_context_root(xml_path: Path) -> ET.Element:
+    try:
+        return ET.parse(xml_path).getroot()
+    except ET.ParseError as exc:
+        raw = xml_path.read_bytes()
+        text_candidates = []
+        for encoding in ("utf-8", "utf-16", "utf-16le", "utf-16be", "latin-1"):
+            try:
+                text = raw.decode(encoding)
+            except UnicodeDecodeError:
+                continue
+            if text not in text_candidates:
+                text_candidates.append(text)
+
+        for text in text_candidates:
+            normalized = re.sub(r"^\s*<\?xml[^>]*\?>", "", text, count=1).strip()
+            try:
+                return ET.fromstring(normalized)
+            except ET.ParseError as inner_exc:
+                if "mismatched tag" in str(inner_exc):
+                    open_channels = normalized.count("<channel ")
+                    close_channels = normalized.count("</channel>")
+                    if open_channels > close_channels and "</device>" in normalized:
+                        repaired = _rreplace(
+                            normalized,
+                            "</device>",
+                            "</channel>" * (open_channels - close_channels)
+                            + "</device>",
+                            1,
+                        )
+                        try:
+                            return ET.fromstring(repaired)
+                        except ET.ParseError:
+                            pass
+
+        raise ValueError(
+            f"Unable to parse XML context {xml_path.name}: {exc}"
+        ) from exc
+
+
+def tree_from_xml_path(xml_path: Path) -> str:
+    root = _parse_context_root(xml_path)
+    if root.tag != "context":
+        raise ValueError(f"Expected root tag 'context' in {xml_path}, got {root.tag!r}")
+    return render_ascii_tree(root)
+
+
+def _page_content(xml_rel_path: Path, xml_name: str, tree_text: str) -> str:
+    title = f"Emulation Context: {xml_name}"
+    underline = "=" * len(title)
+    indented_tree = "\n".join(f"   {line}" for line in tree_text.splitlines())
+
+    return (
+        ".. This file is auto-generated by doc/gen_emu_xml_trees.py.\n"
+        "   Do not edit manually.\n\n"
+        f"{title}\n"
+        f"{underline}\n\n"
+        f"Source XML: ``{xml_rel_path.as_posix()}``\n\n"
+        "Tree\n"
+        "----\n\n"
+        ".. code-block:: text\n\n"
+        f"{indented_tree}\n"
+    )
+
+
+def _index_content(entries: Iterable[Tuple[str, str]]) -> str:
+    title = "Emulation XML Context Trees"
+    underline = "=" * len(title)
+    toctree_entries = "\n".join(f"   {slug}" for slug, _ in entries)
+    return (
+        ".. This file is auto-generated by doc/gen_emu_xml_trees.py.\n"
+        "   Do not edit manually.\n\n"
+        f"{title}\n"
+        f"{underline}\n\n"
+        "These pages are generated from ``test/emu/devices/*.xml`` and show a\n"
+        "deterministically sorted ASCII tree of each emulation context.\n\n"
+        ".. toctree::\n"
+        "   :maxdepth: 1\n\n"
+        f"{toctree_entries}\n"
+    )
+
+
+def _write_if_changed(path: Path, content: str) -> None:
+    if path.exists() and path.read_text(encoding="utf-8") == content:
+        return
+    path.write_text(content, encoding="utf-8")
+
+
+def generate_emu_xml_tree_docs(
+    repo_root: Optional[Path] = None,
+    xml_dir: Optional[Path] = None,
+    output_dir: Optional[Path] = None,
+) -> List[Path]:
+    if repo_root is None:
+        repo_root = Path(__file__).resolve().parent.parent
+
+    source_xml_dir = xml_dir or (repo_root / "test" / "emu" / "devices")
+    target_dir = output_dir or (repo_root / "doc" / "source" / "emu_contexts")
+
+    xml_files = sorted(source_xml_dir.glob("*.xml"), key=lambda path: path.name.lower())
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    entries: List[Tuple[str, str]] = []
+    written_files: List[Path] = []
+    valid_page_filenames = {"index.rst"}
+
+    for xml_file in xml_files:
+        slug = _slug_from_xml_name(xml_file.name)
+        page_path = target_dir / f"{slug}.rst"
+        xml_rel = xml_file.relative_to(repo_root)
+        try:
+            tree_text = tree_from_xml_path(xml_file)
+        except Exception as exc:
+            tree_text = (
+                "parse-error "
+                f"file={xml_file.name} "
+                f"message={str(exc).replace(chr(10), ' ')}"
+            )
+        page = _page_content(xml_rel, xml_file.name, tree_text)
+        _write_if_changed(page_path, page)
+
+        entries.append((slug, xml_file.name))
+        written_files.append(page_path)
+        valid_page_filenames.add(page_path.name)
+
+    index_path = target_dir / "index.rst"
+    _write_if_changed(index_path, _index_content(entries))
+    written_files.append(index_path)
+
+    for stale_path in target_dir.glob("*.rst"):
+        if stale_path.name not in valid_page_filenames:
+            stale_path.unlink()
+
+    return sorted(written_files)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Generate emulation context tree docs from test/emu/devices XML files."
+    )
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path(__file__).resolve().parent.parent,
+        help="Repository root path",
+    )
+    args = parser.parse_args()
+
+    generate_emu_xml_tree_docs(repo_root=args.repo_root.resolve())
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

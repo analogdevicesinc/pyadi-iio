@@ -16,11 +16,13 @@ import os
 import sys
 from typing import List
 
+sys.path.insert(0, os.path.abspath(".."))
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.append(os.path.abspath("./ext"))
 sys.setrecursionlimit(1500)
 
 import adi  # isort:skip
+from gen_emu_xml_trees import generate_emu_xml_tree_docs  # isort:skip
 
 # -- Project information -----------------------------------------------------
 
@@ -104,3 +106,11 @@ html_theme_options = {
     "light_logo": os.path.join("logos", "PyADI-IIO_Logo_300_cropped.png"),
     "dark_logo": os.path.join("logos", "PyADI-IIO_Logo_w_300_cropped.png"),
 }
+
+
+def _generate_emu_xml_pages(_: object) -> None:
+    generate_emu_xml_tree_docs()
+
+
+def setup(app: object) -> None:
+    app.connect("builder-inited", _generate_emu_xml_pages)
