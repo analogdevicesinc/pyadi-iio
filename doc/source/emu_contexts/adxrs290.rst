@@ -6,8 +6,18 @@ Emulation Context: adxrs290.xml
 
 Source XML: ``test/emu/devices/adxrs290.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: adxrs290.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,90 +41,3 @@ Tree
    |   |   `-- attribute name=scale_available filename=in_voltage_scale_available value=ERROR
    |   |-- channel id=voltage10-voltage11 type=input
    |   |   |-- scan-element index=5 format=be:u24/32>>0 scale=0.000149
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_voltage10-voltage11_filter_low_pass_3db_frequency value=3
-   |   |   |-- attribute name=offset filename=in_voltage10-voltage11_offset value=0
-   |   |   |-- attribute name=raw filename=in_voltage10-voltage11_raw value=0
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage10-voltage11_sampling_frequency value=10
-   |   |   |-- attribute name=scale filename=in_voltage10-voltage11_scale value=0.000149011
-   |   |   `-- attribute name=scale_available filename=in_voltage_scale_available value=ERROR
-   |   |-- channel id=voltage12-voltage13 type=input
-   |   |   |-- scan-element index=6 format=be:u24/32>>0 scale=0.000149
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_voltage12-voltage13_filter_low_pass_3db_frequency value=3
-   |   |   |-- attribute name=offset filename=in_voltage12-voltage13_offset value=0
-   |   |   |-- attribute name=raw filename=in_voltage12-voltage13_raw value=0
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage12-voltage13_sampling_frequency value=10
-   |   |   |-- attribute name=scale filename=in_voltage12-voltage13_scale value=0.000149011
-   |   |   `-- attribute name=scale_available filename=in_voltage_scale_available value=ERROR
-   |   |-- channel id=voltage14-voltage15 type=input
-   |   |   |-- scan-element index=7 format=be:u24/32>>0 scale=0.000149
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_voltage14-voltage15_filter_low_pass_3db_frequency value=3
-   |   |   |-- attribute name=offset filename=in_voltage14-voltage15_offset value=0
-   |   |   |-- attribute name=raw filename=in_voltage14-voltage15_raw value=0
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage14-voltage15_sampling_frequency value=10
-   |   |   |-- attribute name=scale filename=in_voltage14-voltage15_scale value=0.000149011
-   |   |   `-- attribute name=scale_available filename=in_voltage_scale_available value=ERROR
-   |   |-- channel id=voltage2-voltage3 type=input
-   |   |   |-- scan-element index=1 format=be:u24/32>>0 scale=0.000149
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_voltage2-voltage3_filter_low_pass_3db_frequency value=3
-   |   |   |-- attribute name=offset filename=in_voltage2-voltage3_offset value=0
-   |   |   |-- attribute name=raw filename=in_voltage2-voltage3_raw value=0
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage2-voltage3_sampling_frequency value=10
-   |   |   |-- attribute name=scale filename=in_voltage2-voltage3_scale value=0.000149011
-   |   |   `-- attribute name=scale_available filename=in_voltage_scale_available value=ERROR
-   |   |-- channel id=voltage4-voltage5 type=input
-   |   |   |-- scan-element index=2 format=be:u24/32>>0 scale=0.000149
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_voltage4-voltage5_filter_low_pass_3db_frequency value=3
-   |   |   |-- attribute name=offset filename=in_voltage4-voltage5_offset value=0
-   |   |   |-- attribute name=raw filename=in_voltage4-voltage5_raw value=0
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage4-voltage5_sampling_frequency value=10
-   |   |   |-- attribute name=scale filename=in_voltage4-voltage5_scale value=0.000149011
-   |   |   `-- attribute name=scale_available filename=in_voltage_scale_available value=ERROR
-   |   |-- channel id=voltage6-voltage7 type=input
-   |   |   |-- scan-element index=3 format=be:u24/32>>0 scale=0.000149
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_voltage6-voltage7_filter_low_pass_3db_frequency value=3
-   |   |   |-- attribute name=offset filename=in_voltage6-voltage7_offset value=0
-   |   |   |-- attribute name=raw filename=in_voltage6-voltage7_raw value=0
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage6-voltage7_sampling_frequency value=10
-   |   |   |-- attribute name=scale filename=in_voltage6-voltage7_scale value=0.000149011
-   |   |   `-- attribute name=scale_available filename=in_voltage_scale_available value=ERROR
-   |   |-- channel id=voltage8-voltage9 type=input
-   |   |   |-- scan-element index=4 format=be:u24/32>>0 scale=0.000149
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_voltage8-voltage9_filter_low_pass_3db_frequency value=3
-   |   |   |-- attribute name=offset filename=in_voltage8-voltage9_offset value=0
-   |   |   |-- attribute name=raw filename=in_voltage8-voltage9_raw value=0
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage8-voltage9_sampling_frequency value=10
-   |   |   |-- attribute name=scale filename=in_voltage8-voltage9_scale value=0.000149011
-   |   |   `-- attribute name=scale_available filename=in_voltage_scale_available value=ERROR
-   |   |-- debug-attribute name=direct_reg_access value=0x80
-   |   `-- buffer-attribute name=data_available value=2048
-   |-- device id=iio:device1 name=adxrs290
-   |   |-- channel id=anglvel_x type=input
-   |   |   |-- scan-element index=0 format=le:S16/16>>0 scale=0.000087
-   |   |   |-- attribute name=filter_high_pass_3db_frequency filename=in_anglvel_filter_high_pass_3db_frequency value=11.300000
-   |   |   |-- attribute name=filter_high_pass_3db_frequency_available filename=in_anglvel_filter_high_pass_3db_frequency_available value=ERROR
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_anglvel_filter_low_pass_3db_frequency value=20.000000
-   |   |   |-- attribute name=filter_low_pass_3db_frequency_available filename=in_anglvel_filter_low_pass_3db_frequency_available value=480.000000 320.000000 160.000000 80.000000 56.600000 40.000000 28.300000 20.000000
-   |   |   |-- attribute name=raw filename=in_anglvel_x_raw value=-2
-   |   |   `-- attribute name=scale filename=in_anglvel_scale value=0.000087266
-   |   |-- channel id=anglvel_y type=input
-   |   |   |-- scan-element index=1 format=le:S16/16>>0 scale=0.000087
-   |   |   |-- attribute name=filter_high_pass_3db_frequency filename=in_anglvel_filter_high_pass_3db_frequency value=11.300000
-   |   |   |-- attribute name=filter_high_pass_3db_frequency_available filename=in_anglvel_filter_high_pass_3db_frequency_available value=ERROR
-   |   |   |-- attribute name=filter_low_pass_3db_frequency filename=in_anglvel_filter_low_pass_3db_frequency value=20.000000
-   |   |   |-- attribute name=filter_low_pass_3db_frequency_available filename=in_anglvel_filter_low_pass_3db_frequency_available value=480.000000 320.000000 160.000000 80.000000 56.600000 40.000000 28.300000 20.000000
-   |   |   |-- attribute name=raw filename=in_anglvel_y_raw value=4
-   |   |   `-- attribute name=scale filename=in_anglvel_scale value=0.000087266
-   |   |-- channel id=temp type=input
-   |   |   |-- scan-element index=2 format=le:s12/16>>0 scale=100.000000
-   |   |   |-- attribute name=raw filename=in_temp_raw value=307
-   |   |   `-- attribute name=scale filename=in_temp_scale value=100
-   |   |-- channel id=timestamp type=input
-   |   |   `-- scan-element index=3 format=le:S64/64>>0
-   |   |-- attribute name=current_timestamp_clock value=realtime
-   |   |-- debug-attribute name=direct_reg_access value=0xAD
-   |   `-- buffer-attribute name=data_available value=0
-   |-- device id=iio_sysfs_trigger
-   |   |-- attribute name=add_trigger value=ERROR
-   |   `-- attribute name=remove_trigger value=ERROR
-   |-- device id=trigger0 name=ad7124-8-dev0
-   `-- device id=trigger1 name=adxrs290-dev1

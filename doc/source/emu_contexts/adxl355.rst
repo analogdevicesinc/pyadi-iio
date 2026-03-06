@@ -6,8 +6,18 @@ Emulation Context: adxl355.xml
 
 Source XML: ``test/emu/devices/adxl355.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: adxl355.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,28 +41,3 @@ Tree
    |   |   |-- attribute name=filter_high_pass_3db_frequency filename=in_accel_filter_high_pass_3db_frequency value=0.000000
    |   |   |-- attribute name=filter_high_pass_3db_frequency_available filename=in_accel_filter_high_pass_3db_frequency_available value=0.000000 9.880000 2.483360 0.621800 0.154480 0.038160 0.009520
    |   |   |-- attribute name=raw filename=in_accel_y_raw value=-2198
-   |   |   |-- attribute name=sampling_frequency filename=in_accel_sampling_frequency value=4000.000000
-   |   |   |-- attribute name=sampling_frequency_available filename=in_accel_sampling_frequency_available value=ERROR
-   |   |   `-- attribute name=scale filename=in_accel_scale value=0.000038245
-   |   |-- channel id=accel_z type=input
-   |   |   |-- scan-element index=2 format=be:s20/32>>4 scale=0.000038
-   |   |   |-- attribute name=calibbias filename=in_accel_z_calibbias value=0
-   |   |   |-- attribute name=filter_high_pass_3db_frequency filename=in_accel_filter_high_pass_3db_frequency value=0.000000
-   |   |   |-- attribute name=filter_high_pass_3db_frequency_available filename=in_accel_filter_high_pass_3db_frequency_available value=0.000000 9.880000 2.483360 0.621800 0.154480 0.038160 0.009520
-   |   |   |-- attribute name=raw filename=in_accel_z_raw value=257934
-   |   |   |-- attribute name=sampling_frequency filename=in_accel_sampling_frequency value=4000.000000
-   |   |   |-- attribute name=sampling_frequency_available filename=in_accel_sampling_frequency_available value=ERROR
-   |   |   `-- attribute name=scale filename=in_accel_scale value=0.000038245
-   |   |-- channel id=temp type=input
-   |   |   |-- attribute name=offset filename=in_temp_offset value=-2111.250000
-   |   |   |-- attribute name=raw filename=in_temp_raw value=1838
-   |   |   `-- attribute name=scale filename=in_temp_scale value=-110.497238
-   |   |-- channel id=timestamp type=input
-   |   |   `-- scan-element index=4 format=le:S64/64>>0
-   |   |-- attribute name=current_timestamp_clock value=realtime
-   |   |-- buffer-attribute name=data_available value=0
-   |   `-- buffer-attribute name=watermark value=1
-   |-- device id=iio_sysfs_trigger
-   |   |-- attribute name=add_trigger value=ERROR
-   |   `-- attribute name=remove_trigger value=ERROR
-   `-- device id=trigger0 name=adxl355-dev0

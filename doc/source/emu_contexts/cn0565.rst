@@ -6,8 +6,18 @@ Emulation Context: cn0565.xml
 
 Source XML: ``test/emu/devices/cn0565.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: cn0565.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -18,7 +28,7 @@ Tree
    |-- context-attribute name=uri value=serial:/dev/ttyACM0,230400,8n1n
    |-- device id=iio:device0 name=ad5940
    |   |-- channel id=voltage0 type=input name=bia
-   |   |   `-- attribute name=raw filename=in_voltage0_raw value=-12 16
+   |   |   `-- attribute name=raw filename=in_voltage0_raw value=-12 16 
    |   |-- attribute name=excitation_amplitude value=300
    |   |-- attribute name=excitation_frequency value=10000
    |   |-- attribute name=gpio1_toggle value=0

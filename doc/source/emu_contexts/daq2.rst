@@ -6,8 +6,18 @@ Emulation Context: daq2.xml
 
 Source XML: ``test/emu/devices/daq2.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: daq2.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,189 +41,3 @@ Tree
    |   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
    |   |-- channel id=voltage3 type=input
    |   |   |-- attribute name=raw filename=in_voltage3_raw value=1318
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-   |   |-- channel id=voltage4 type=input
-   |   |   |-- attribute name=raw filename=in_voltage4_raw value=2048
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-   |   |-- channel id=voltage5 type=input
-   |   |   |-- attribute name=raw filename=in_voltage5_raw value=2671
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-   |   |-- channel id=voltage6 type=input
-   |   |   |-- attribute name=raw filename=in_voltage6_raw value=2038
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-   |   `-- channel id=voltage7 type=input
-   |       |-- attribute name=raw filename=in_voltage7_raw value=2708
-   |       `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-   |-- device id=iio:device1 name=xadc
-   |   |-- channel id=temp0 type=input
-   |   |   |-- attribute name=offset filename=in_temp0_offset value=-2219
-   |   |   |-- attribute name=raw filename=in_temp0_raw value=2668
-   |   |   `-- attribute name=scale filename=in_temp0_scale value=123.040771484
-   |   |-- channel id=voltage0 type=input name=vccint
-   |   |   |-- attribute name=raw filename=in_voltage0_vccint_raw value=1386
-   |   |   `-- attribute name=scale filename=in_voltage0_vccint_scale value=0.732421875
-   |   |-- channel id=voltage1 type=input name=vccaux
-   |   |   |-- attribute name=raw filename=in_voltage1_vccaux_raw value=2473
-   |   |   `-- attribute name=scale filename=in_voltage1_vccaux_scale value=0.732421875
-   |   |-- channel id=voltage2 type=input name=vccbram
-   |   |   |-- attribute name=raw filename=in_voltage2_vccbram_raw value=1388
-   |   |   `-- attribute name=scale filename=in_voltage2_vccbram_scale value=0.732421875
-   |   |-- channel id=voltage3 type=input name=vccpint
-   |   |   |-- attribute name=raw filename=in_voltage3_vccpint_raw value=1373
-   |   |   `-- attribute name=scale filename=in_voltage3_vccpint_scale value=0.732421875
-   |   |-- channel id=voltage4 type=input name=vccpaux
-   |   |   |-- attribute name=raw filename=in_voltage4_vccpaux_raw value=2473
-   |   |   `-- attribute name=scale filename=in_voltage4_vccpaux_scale value=0.732421875
-   |   |-- channel id=voltage5 type=input name=vccoddr
-   |   |   |-- attribute name=raw filename=in_voltage5_vccoddr_raw value=2062
-   |   |   `-- attribute name=scale filename=in_voltage5_vccoddr_scale value=0.732421875
-   |   |-- channel id=voltage6 type=input name=vrefp
-   |   |   |-- attribute name=raw filename=in_voltage6_vrefp_raw value=1718
-   |   |   `-- attribute name=scale filename=in_voltage6_vrefp_scale value=0.732421875
-   |   |-- channel id=voltage7 type=input name=vrefn
-   |   |   |-- attribute name=raw filename=in_voltage7_vrefn_raw value=14
-   |   |   `-- attribute name=scale filename=in_voltage7_vrefn_scale value=0.732421875
-   |   `-- attribute name=sampling_frequency value=961538
-   |-- device id=iio:device2 name=ad9523-1
-   |   |-- channel id=altvoltage1 type=output name=DAC_CLK
-   |   |   |-- attribute name=frequency filename=out_altvoltage1_DAC_CLK_frequency value=1000000000
-   |   |   |-- attribute name=phase filename=out_altvoltage1_DAC_CLK_phase value=3.141592
-   |   |   `-- attribute name=raw filename=out_altvoltage1_DAC_CLK_raw value=1
-   |   |-- channel id=altvoltage13 type=output name=ADC_CLK
-   |   |   |-- attribute name=frequency filename=out_altvoltage13_ADC_CLK_frequency value=1000000000
-   |   |   |-- attribute name=phase filename=out_altvoltage13_ADC_CLK_phase value=3.141592
-   |   |   `-- attribute name=raw filename=out_altvoltage13_ADC_CLK_raw value=1
-   |   |-- channel id=altvoltage4 type=output name=ADC_CLK_FMC
-   |   |   |-- attribute name=frequency filename=out_altvoltage4_ADC_CLK_FMC_frequency value=500000000
-   |   |   |-- attribute name=phase filename=out_altvoltage4_ADC_CLK_FMC_phase value=1.570796
-   |   |   `-- attribute name=raw filename=out_altvoltage4_ADC_CLK_FMC_raw value=1
-   |   |-- channel id=altvoltage5 type=output name=ADC_SYSREF
-   |   |   |-- attribute name=frequency filename=out_altvoltage5_ADC_SYSREF_frequency value=7812500
-   |   |   |-- attribute name=phase filename=out_altvoltage5_ADC_SYSREF_phase value=0.024543
-   |   |   `-- attribute name=raw filename=out_altvoltage5_ADC_SYSREF_raw value=1
-   |   |-- channel id=altvoltage6 type=output name=CLKD_ADC_SYSREF
-   |   |   |-- attribute name=frequency filename=out_altvoltage6_CLKD_ADC_SYSREF_frequency value=7812500
-   |   |   |-- attribute name=phase filename=out_altvoltage6_CLKD_ADC_SYSREF_phase value=0.024543
-   |   |   `-- attribute name=raw filename=out_altvoltage6_CLKD_ADC_SYSREF_raw value=1
-   |   |-- channel id=altvoltage7 type=output name=CLKD_DAC_SYSREF
-   |   |   |-- attribute name=frequency filename=out_altvoltage7_CLKD_DAC_SYSREF_frequency value=7812500
-   |   |   |-- attribute name=phase filename=out_altvoltage7_CLKD_DAC_SYSREF_phase value=0.024543
-   |   |   `-- attribute name=raw filename=out_altvoltage7_CLKD_DAC_SYSREF_raw value=1
-   |   |-- channel id=altvoltage8 type=output name=DAC_SYSREF
-   |   |   |-- attribute name=frequency filename=out_altvoltage8_DAC_SYSREF_frequency value=7812500
-   |   |   |-- attribute name=phase filename=out_altvoltage8_DAC_SYSREF_phase value=0.024543
-   |   |   `-- attribute name=raw filename=out_altvoltage8_DAC_SYSREF_raw value=1
-   |   |-- channel id=altvoltage9 type=output name=FMC_DAC_REF_CLK
-   |   |   |-- attribute name=frequency filename=out_altvoltage9_FMC_DAC_REF_CLK_frequency value=500000000
-   |   |   |-- attribute name=phase filename=out_altvoltage9_FMC_DAC_REF_CLK_phase value=1.570796
-   |   |   `-- attribute name=raw filename=out_altvoltage9_FMC_DAC_REF_CLK_raw value=1
-   |   |-- attribute name=pll1_locked value=0
-   |   |-- attribute name=pll1_reference_clk_a_present value=0
-   |   |-- attribute name=pll1_reference_clk_b_present value=0
-   |   |-- attribute name=pll1_reference_clk_test_present value=0
-   |   |-- attribute name=pll2_feedback_clk_present value=0
-   |   |-- attribute name=pll2_locked value=1
-   |   |-- attribute name=pll2_reference_clk_present value=1
-   |   |-- attribute name=store_eeprom value=ERROR
-   |   |-- attribute name=sync_dividers value=ERROR
-   |   |-- attribute name=vcxo_clk_present value=1
-   |   `-- debug-attribute name=direct_reg_access value=0x0
-   |-- device id=iio:device3 name=axi-ad9144-hpc
-   |   |-- channel id=altvoltage0 type=output name=1A
-   |   |   |-- attribute name=frequency filename=out_altvoltage0_1A_frequency value=159990844
-   |   |   |-- attribute name=phase filename=out_altvoltage0_1A_phase value=0
-   |   |   |-- attribute name=raw filename=out_altvoltage0_1A_raw value=1
-   |   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=1000000000
-   |   |   `-- attribute name=scale filename=out_altvoltage0_1A_scale value=0.028992
-   |   |-- channel id=altvoltage1 type=output name=1B
-   |   |   |-- attribute name=frequency filename=out_altvoltage1_1B_frequency value=159990844
-   |   |   |-- attribute name=phase filename=out_altvoltage1_1B_phase value=0
-   |   |   |-- attribute name=raw filename=out_altvoltage1_1B_raw value=1
-   |   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=1000000000
-   |   |   `-- attribute name=scale filename=out_altvoltage1_1B_scale value=0.000000
-   |   |-- channel id=altvoltage2 type=output name=2A
-   |   |   |-- attribute name=frequency filename=out_altvoltage2_2A_frequency value=300007629
-   |   |   |-- attribute name=phase filename=out_altvoltage2_2A_phase value=0
-   |   |   |-- attribute name=raw filename=out_altvoltage2_2A_raw value=1
-   |   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=1000000000
-   |   |   `-- attribute name=scale filename=out_altvoltage2_2A_scale value=0.028992
-   |   |-- channel id=altvoltage3 type=output name=2B
-   |   |   |-- attribute name=frequency filename=out_altvoltage3_2B_frequency value=300007629
-   |   |   |-- attribute name=phase filename=out_altvoltage3_2B_phase value=0
-   |   |   |-- attribute name=raw filename=out_altvoltage3_2B_raw value=1
-   |   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=1000000000
-   |   |   `-- attribute name=scale filename=out_altvoltage3_2B_scale value=0.000000
-   |   |-- channel id=altvoltage4 type=output name=3A
-   |   |   |-- attribute name=frequency filename=out_altvoltage4_3A_frequency value=869840543
-   |   |   |-- attribute name=phase filename=out_altvoltage4_3A_phase value=313138
-   |   |   |-- attribute name=raw filename=out_altvoltage4_3A_raw value=1
-   |   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=1000000000
-   |   |   `-- attribute name=scale filename=out_altvoltage4_3A_scale value=-1.479309
-   |   |-- channel id=altvoltage5 type=output name=3B
-   |   |   |-- attribute name=frequency filename=out_altvoltage5_3B_frequency value=869840543
-   |   |   |-- attribute name=phase filename=out_altvoltage5_3B_phase value=313138
-   |   |   |-- attribute name=raw filename=out_altvoltage5_3B_raw value=1
-   |   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=1000000000
-   |   |   `-- attribute name=scale filename=out_altvoltage5_3B_scale value=-1.479309
-   |   |-- channel id=altvoltage6 type=output name=4A
-   |   |   |-- attribute name=frequency filename=out_altvoltage6_4A_frequency value=869840543
-   |   |   |-- attribute name=phase filename=out_altvoltage6_4A_phase value=313138
-   |   |   |-- attribute name=raw filename=out_altvoltage6_4A_raw value=1
-   |   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=1000000000
-   |   |   `-- attribute name=scale filename=out_altvoltage6_4A_scale value=-1.479309
-   |   |-- channel id=altvoltage7 type=output name=4B
-   |   |   |-- attribute name=frequency filename=out_altvoltage7_4B_frequency value=869840543
-   |   |   |-- attribute name=phase filename=out_altvoltage7_4B_phase value=313138
-   |   |   |-- attribute name=raw filename=out_altvoltage7_4B_raw value=1
-   |   |   |-- attribute name=sampling_frequency filename=out_altvoltage_sampling_frequency value=1000000000
-   |   |   `-- attribute name=scale filename=out_altvoltage7_4B_scale value=-1.479309
-   |   |-- channel id=temp0 type=input
-   |   |   |-- attribute name=calibbias filename=in_temp0_calibbias value=0
-   |   |   `-- attribute name=input filename=in_temp0_input value=ERROR
-   |   |-- channel id=voltage0 type=output
-   |   |   |-- scan-element index=0 format=le:S16/16>>0
-   |   |   |-- attribute name=calibphase filename=out_voltage0_calibphase value=0.000000
-   |   |   |-- attribute name=calibscale filename=out_voltage0_calibscale value=0.000000
-   |   |   `-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=1000000000
-   |   |-- channel id=voltage1 type=output
-   |   |   |-- scan-element index=1 format=le:S16/16>>0
-   |   |   |-- attribute name=calibphase filename=out_voltage1_calibphase value=0.000000
-   |   |   |-- attribute name=calibscale filename=out_voltage1_calibscale value=0.000000
-   |   |   `-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=1000000000
-   |   |-- channel id=voltage2 type=output
-   |   |   |-- scan-element index=2 format=le:S16/16>>0
-   |   |   |-- attribute name=calibphase filename=out_voltage2_calibphase value=-1.479309
-   |   |   |-- attribute name=calibscale filename=out_voltage2_calibscale value=-1.479309
-   |   |   `-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=1000000000
-   |   |-- channel id=voltage3 type=output
-   |   |   |-- scan-element index=3 format=le:S16/16>>0
-   |   |   |-- attribute name=calibphase filename=out_voltage3_calibphase value=-1.479309
-   |   |   |-- attribute name=calibscale filename=out_voltage3_calibscale value=-1.479309
-   |   |   `-- attribute name=sampling_frequency filename=out_voltage_sampling_frequency value=1000000000
-   |   |-- debug-attribute name=direct_reg_access value=0x0
-   |   |-- buffer-attribute name=data_available value=0
-   |   |-- buffer-attribute name=length_align_bytes value=16
-   |   `-- buffer-attribute name=watermark value=2048
-   |-- device id=iio:device4 name=axi-ad9680-hpc
-   |   |-- channel id=voltage0 type=input
-   |   |   |-- scan-element index=0 format=le:S14/16>>0 scale=0.103759
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=1000000000
-   |   |   |-- attribute name=scale filename=in_voltage_scale value=0.103759
-   |   |   |-- attribute name=scale_available filename=in_voltage_scale_available value=0.089111 0.096435 0.103759 0.111083 0.118408 0.125732
-   |   |   |-- attribute name=test_mode filename=in_voltage0_test_mode value=off
-   |   |   `-- attribute name=test_mode_available filename=in_voltage_test_mode_available value=ERROR
-   |   |-- channel id=voltage1 type=input
-   |   |   |-- scan-element index=1 format=le:S14/16>>0 scale=0.103759
-   |   |   |-- attribute name=sampling_frequency filename=in_voltage_sampling_frequency value=1000000000
-   |   |   |-- attribute name=scale filename=in_voltage_scale value=0.103759
-   |   |   |-- attribute name=scale_available filename=in_voltage_scale_available value=0.089111 0.096435 0.103759 0.111083 0.118408 0.125732
-   |   |   |-- attribute name=test_mode filename=in_voltage1_test_mode value=off
-   |   |   `-- attribute name=test_mode_available filename=in_voltage_test_mode_available value=ERROR
-   |   |-- debug-attribute name=direct_reg_access value=0x0
-   |   |-- debug-attribute name=pseudorandom_err_check value=CH0 : PN9 : Out of Sync : PN Error CH1 : PN9 : Out of Sync : PN Error
-   |   |-- buffer-attribute name=data_available value=0
-   |   |-- buffer-attribute name=length_align_bytes value=8
-   |   `-- buffer-attribute name=watermark value=2048
-   `-- device id=iio_sysfs_trigger
-       |-- attribute name=add_trigger value=ERROR
-       `-- attribute name=remove_trigger value=ERROR

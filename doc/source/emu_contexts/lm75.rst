@@ -6,8 +6,18 @@ Emulation Context: lm75.xml
 
 Source XML: ``test/emu/devices/lm75.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: lm75.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,6 +41,3 @@ Tree
    |   |   |-- attribute name=max filename=temp1_max value=95000
    |   |   `-- attribute name=max_hyst filename=temp1_max_hyst value=35000
    |   `-- attribute name=update_interval value=100
-   `-- device id=iio_sysfs_trigger
-       |-- attribute name=add_trigger value=ERROR
-       `-- attribute name=remove_trigger value=ERROR

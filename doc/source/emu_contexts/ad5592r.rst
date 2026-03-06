@@ -6,8 +6,18 @@ Emulation Context: ad5592r.xml
 
 Source XML: ``test/emu/devices/ad5592r.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ad5592r.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,40 +41,3 @@ Tree
        |   `-- attribute name=scale filename=in_voltage1_scale value=0.61035156
        |-- channel id=voltage2 type=output name=voltage2
        |   |-- scan-element index=2 format=le:u12/16>>0
-       |   |-- attribute name=offset filename=in_voltage2_offset value=0
-       |   |-- attribute name=raw filename=in_voltage2_raw value=4095
-       |   `-- attribute name=scale filename=in_voltage2_scale value=0.61035156
-       |-- channel id=voltage3 type=output name=voltage3
-       |   |-- scan-element index=3 format=le:u12/16>>0
-       |   |-- attribute name=offset filename=in_voltage3_offset value=0
-       |   |-- attribute name=raw filename=in_voltage3_raw value=4095
-       |   `-- attribute name=scale filename=in_voltage3_scale value=0.61035156
-       |-- channel id=voltage4 type=input name=voltage4
-       |   |-- scan-element index=4 format=le:u12/16>>0
-       |   |-- attribute name=offset filename=in_voltage4_offset value=0
-       |   |-- attribute name=raw filename=in_voltage4_raw value=4095
-       |   `-- attribute name=scale filename=in_voltage4_scale value=0.61035156
-       |-- channel id=voltage5 type=input name=voltage5
-       |   |-- scan-element index=5 format=le:u12/16>>0
-       |   |-- attribute name=offset filename=in_voltage5_offset value=0
-       |   |-- attribute name=raw filename=in_voltage5_raw value=4095
-       |   `-- attribute name=scale filename=in_voltage5_scale value=0.61035156
-       |-- channel id=voltage6 type=input name=voltage6
-       |   |-- scan-element index=6 format=le:u12/16>>0
-       |   |-- attribute name=offset filename=in_voltage6_offset value=0
-       |   |-- attribute name=raw filename=in_voltage6_raw value=4095
-       |   `-- attribute name=scale filename=in_voltage6_scale value=0.61035156
-       |-- channel id=voltage7 type=input name=voltage7
-       |   |-- scan-element index=7 format=le:u12/16>>0
-       |   |-- attribute name=offset filename=in_voltage7_offset value=0
-       |   |-- attribute name=raw filename=in_voltage7_raw value=18
-       |   `-- attribute name=scale filename=in_voltage7_scale value=0.61035156
-       |-- attribute name=adc_buffer value=enabled
-       |-- attribute name=adc_buffer_available value=disabled enabled
-       |-- attribute name=die_temperature value=27.110022
-       |-- attribute name=ldac_mode value=sync
-       |-- attribute name=ldac_mode_available value=sync async trigger
-       |-- attribute name=sampling_frequency value=1
-       |-- attribute name=set_repetition_bit value=repeating
-       |-- attribute name=set_repetition_bit_available value=non-repeating repeating
-       `-- debug-attribute name=direct_reg_access value=0

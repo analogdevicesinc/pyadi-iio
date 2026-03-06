@@ -6,8 +6,18 @@ Emulation Context: ad7405.xml
 
 Source XML: ``test/emu/devices/ad7405.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ad7405.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,6 +41,3 @@ Tree
        |-- attribute name=oversampling_ratio_available value=[32 1 4096]
        |-- attribute name=scale value=0.009765625
        |-- attribute name=waiting_for_supplier value=0
-       |-- buffer-attribute name=data_available value=8192
-       |-- buffer-attribute name=direction value=in
-       `-- buffer-attribute name=length_align_bytes value=8

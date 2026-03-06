@@ -6,8 +6,18 @@ Emulation Context: adxl382.xml
 
 Source XML: ``test/emu/devices/adxl382.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: adxl382.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,33 +41,3 @@ Tree
        |   |-- attribute name=calibbias filename=in_accel_y_calibbias value=0
        |   |-- attribute name=filter_high_pass_3db_frequency filename=in_accel_filter_high_pass_3db_frequency value=0.000000
        |   |-- attribute name=filter_high_pass_3db_frequency_available filename=in_accel_filter_high_pass_3db_frequency_available value=0.000000 39.520000 9.933440 2.487200 0.617920 0.152640 0.038080
-       |   |-- attribute name=filter_low_pass_3db_frequency filename=in_accel_filter_low_pass_3db_frequency value=16000
-       |   |-- attribute name=filter_low_pass_3db_frequency_available filename=in_accel_filter_low_pass_3db_frequency_available value=16000 4000 2000 1000
-       |   |-- attribute name=raw filename=in_accel_y_raw value=246
-       |   |-- attribute name=scale filename=in_accel_scale value=0.004903325
-       |   `-- attribute name=scale_available filename=in_accel_scale_available value=0.004903325 0.009806650 0.019613300
-       |-- channel id=accel_z type=input
-       |   |-- scan-element index=2 format=be:S16/16>>0 scale=0.004903
-       |   |-- attribute name=calibbias filename=in_accel_z_calibbias value=0
-       |   |-- attribute name=filter_high_pass_3db_frequency filename=in_accel_filter_high_pass_3db_frequency value=0.000000
-       |   |-- attribute name=filter_high_pass_3db_frequency_available filename=in_accel_filter_high_pass_3db_frequency_available value=0.000000 39.520000 9.933440 2.487200 0.617920 0.152640 0.038080
-       |   |-- attribute name=filter_low_pass_3db_frequency filename=in_accel_filter_low_pass_3db_frequency value=16000
-       |   |-- attribute name=filter_low_pass_3db_frequency_available filename=in_accel_filter_low_pass_3db_frequency_available value=16000 4000 2000 1000
-       |   |-- attribute name=raw filename=in_accel_z_raw value=319
-       |   |-- attribute name=scale filename=in_accel_scale value=0.004903325
-       |   `-- attribute name=scale_available filename=in_accel_scale_available value=0.004903325 0.009806650 0.019613300
-       |-- channel id=temp type=input
-       |   |-- scan-element index=3 format=be:s12/16>>4 scale=98.039215
-       |   |-- attribute name=offset filename=in_temp_offset value=-315
-       |   |-- attribute name=raw filename=in_temp_raw value=701
-       |   `-- attribute name=scale filename=in_temp_scale value=98.039215686
-       |-- attribute name=sampling_frequency value=16000
-       |-- attribute name=sampling_frequency_available value=16000 32000 64000
-       |-- attribute name=waiting_for_supplier value=0
-       |-- debug-attribute name=direct_reg_access value=0xAD
-       |-- buffer-attribute name=data_available value=1992
-       |-- buffer-attribute name=direction value=in
-       |-- buffer-attribute name=hwfifo_enabled value=0
-       |-- buffer-attribute name=hwfifo_watermark value=105
-       |-- buffer-attribute name=hwfifo_watermark_max value=315
-       `-- buffer-attribute name=hwfifo_watermark_min value=1

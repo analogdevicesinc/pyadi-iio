@@ -6,8 +6,18 @@ Emulation Context: ad3552r_hs.xml
 
 Source XML: ``test/emu/devices/ad3552r_hs.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ad3552r_hs.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,10 +41,3 @@ Tree
        |-- channel id=voltage1 type=output
        |   |-- scan-element index=1 format=be:U16/16>>0 scale=0.152588
        |   |-- attribute name=offset filename=out_voltage1_offset value=-32768.000000
-       |   |-- attribute name=raw filename=out_voltage1_raw value=31450
-       |   |-- attribute name=sampling_frequency filename=out_voltage1_sampling_frequency value=16666667
-       |   `-- attribute name=scale filename=out_voltage1_scale value=0.152588
-       |-- attribute name=waiting_for_supplier value=0
-       |-- buffer-attribute name=data_available value=3328
-       |-- buffer-attribute name=direction value=out
-       `-- buffer-attribute name=length_align_bytes value=4

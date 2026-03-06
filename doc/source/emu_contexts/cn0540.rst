@@ -6,8 +6,18 @@ Emulation Context: cn0540.xml
 
 Source XML: ``test/emu/devices/cn0540.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: cn0540.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,62 +41,3 @@ Tree
    |-- device id=iio:device1 name=ltc2308
    |   |-- channel id=voltage0 type=input
    |   |   |-- attribute name=raw filename=in_voltage0_raw value=2330
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=1.000000000
-   |   |-- channel id=voltage1 type=input
-   |   |   |-- attribute name=raw filename=in_voltage1_raw value=1820
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=1.000000000
-   |   |-- channel id=voltage2 type=input
-   |   |   |-- attribute name=raw filename=in_voltage2_raw value=3961
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=1.000000000
-   |   |-- channel id=voltage3 type=input
-   |   |   |-- attribute name=raw filename=in_voltage3_raw value=1934
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=1.000000000
-   |   |-- channel id=voltage4 type=input
-   |   |   |-- attribute name=raw filename=in_voltage4_raw value=2900
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=1.000000000
-   |   |-- channel id=voltage5 type=input
-   |   |   |-- attribute name=raw filename=in_voltage5_raw value=1952
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=1.000000000
-   |   |-- channel id=voltage6 type=input
-   |   |   |-- attribute name=raw filename=in_voltage6_raw value=1977
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=1.000000000
-   |   |-- channel id=voltage7 type=input
-   |   |   |-- attribute name=raw filename=in_voltage7_raw value=2053
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=1.000000000
-   |   |-- attribute name=sleep_mode value=DISABLED
-   |   `-- attribute name=sleep_mode_available value=DISABLED ENABLED
-   |-- device id=iio:device2 name=one-bit-adc-dac
-   |   |-- channel id=voltage0 type=input
-   |   |   |-- attribute name=label filename=in_voltage0_label value=cn0540_sw_ff_gpio
-   |   |   `-- attribute name=raw filename=in_voltage0_raw value=0
-   |   |-- channel id=voltage0 type=output
-   |   |   |-- attribute name=label filename=out_voltage0_label value=cn0540_blue_led
-   |   |   `-- attribute name=raw filename=out_voltage0_raw value=0
-   |   |-- channel id=voltage1 type=output
-   |   |   |-- attribute name=label filename=out_voltage1_label value=cn0540_red_led
-   |   |   `-- attribute name=raw filename=out_voltage1_raw value=0
-   |   |-- channel id=voltage2 type=output
-   |   |   |-- attribute name=label filename=out_voltage2_label value=cn0540_shutdown_gpio
-   |   |   `-- attribute name=raw filename=out_voltage2_raw value=0
-   |   |-- channel id=voltage3 type=output
-   |   |   |-- attribute name=label filename=out_voltage3_label value=cn0540_ad7768-1-gpio0
-   |   |   `-- attribute name=raw filename=out_voltage3_raw value=0
-   |   |-- channel id=voltage4 type=output
-   |   |   |-- attribute name=label filename=out_voltage4_label value=cn0540_ad7768-1-gpio1
-   |   |   `-- attribute name=raw filename=out_voltage4_raw value=0
-   |   |-- channel id=voltage5 type=output
-   |   |   |-- attribute name=label filename=out_voltage5_label value=cn0540_FDA_DIS
-   |   |   `-- attribute name=raw filename=out_voltage5_raw value=0
-   |   `-- channel id=voltage6 type=output
-   |       |-- attribute name=label filename=out_voltage6_label value=cn0540_FDA_MODE
-   |       `-- attribute name=raw filename=out_voltage6_raw value=0
-   |-- device id=iio:device3 name=ltc2606
-   |   `-- channel id=voltage0 type=output
-   |       |-- attribute name=powerdown filename=out_voltage0_powerdown value=0
-   |       |-- attribute name=powerdown_mode filename=out_voltage0_powerdown_mode value=90kohm_to_gnd
-   |       |-- attribute name=powerdown_mode_available filename=out_voltage_powerdown_mode_available value=90kohm_to_gnd
-   |       |-- attribute name=raw filename=out_voltage0_raw value=32768
-   |       `-- attribute name=scale filename=out_voltage0_scale value=0.062500000
-   `-- device id=iio_sysfs_trigger
-       |-- attribute name=add_trigger value=ERROR
-       `-- attribute name=remove_trigger value=ERROR

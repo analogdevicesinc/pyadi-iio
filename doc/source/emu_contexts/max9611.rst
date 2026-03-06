@@ -6,8 +6,18 @@ Emulation Context: max9611.xml
 
 Source XML: ``test/emu/devices/max9611.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: max9611.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,14 +41,3 @@ Tree
    |   |   |-- attribute name=input filename=in_power_input value=165167.730000000
    |   |   `-- attribute name=shunt_resistor filename=in_power_shunt_resistor value=0.005000
    |   |-- channel id=temp type=input
-   |   |   |-- attribute name=raw filename=in_temp_raw value=45
-   |   |   `-- attribute name=scale filename=in_temp_scale value=480.076812289
-   |   |-- channel id=voltage0 type=input
-   |   |   `-- attribute name=input filename=in_voltage0_input value=14.297500000
-   |   `-- channel id=voltage1 type=input
-   |       |-- attribute name=offset filename=in_voltage1_offset value=1
-   |       |-- attribute name=raw filename=in_voltage1_raw value=0
-   |       `-- attribute name=scale filename=in_voltage1_scale value=14
-   `-- device id=iio_sysfs_trigger
-       |-- attribute name=add_trigger value=ERROR
-       `-- attribute name=remove_trigger value=ERROR

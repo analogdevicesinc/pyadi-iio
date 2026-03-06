@@ -6,8 +6,18 @@ Emulation Context: ad2s1210.xml
 
 Source XML: ``test/emu/devices/ad2s1210.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ad2s1210.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,71 +41,3 @@ Tree
    |   |   |-- attribute name=raw filename=in_voltage0_vccint_raw value=1394
    |   |   `-- attribute name=scale filename=in_voltage0_vccint_scale value=0.732421875
    |   |-- channel id=voltage1 type=input name=vccaux
-   |   |   |-- attribute name=label filename=in_voltage1_vccaux_label value=vccaux
-   |   |   |-- attribute name=raw filename=in_voltage1_vccaux_raw value=2459
-   |   |   `-- attribute name=scale filename=in_voltage1_vccaux_scale value=0.732421875
-   |   |-- channel id=voltage2 type=input name=vccbram
-   |   |   |-- attribute name=label filename=in_voltage2_vccbram_label value=vccbram
-   |   |   |-- attribute name=raw filename=in_voltage2_vccbram_raw value=1397
-   |   |   `-- attribute name=scale filename=in_voltage2_vccbram_scale value=0.732421875
-   |   |-- channel id=voltage3 type=input name=vccpint
-   |   |   |-- attribute name=label filename=in_voltage3_vccpint_label value=vccpint
-   |   |   |-- attribute name=raw filename=in_voltage3_vccpint_raw value=1393
-   |   |   `-- attribute name=scale filename=in_voltage3_vccpint_scale value=0.732421875
-   |   |-- channel id=voltage4 type=input name=vccpaux
-   |   |   |-- attribute name=label filename=in_voltage4_vccpaux_label value=vccpaux
-   |   |   |-- attribute name=raw filename=in_voltage4_vccpaux_raw value=2464
-   |   |   `-- attribute name=scale filename=in_voltage4_vccpaux_scale value=0.732421875
-   |   |-- channel id=voltage5 type=input name=vccoddr
-   |   |   |-- attribute name=label filename=in_voltage5_vccoddr_label value=vccoddr
-   |   |   |-- attribute name=raw filename=in_voltage5_vccoddr_raw value=2051
-   |   |   `-- attribute name=scale filename=in_voltage5_vccoddr_scale value=0.732421875
-   |   |-- channel id=voltage6 type=input name=vrefp
-   |   |   |-- attribute name=label filename=in_voltage6_vrefp_label value=vrefp
-   |   |   |-- attribute name=raw filename=in_voltage6_vrefp_raw value=1715
-   |   |   `-- attribute name=scale filename=in_voltage6_vrefp_scale value=0.732421875
-   |   |-- channel id=voltage7 type=input name=vrefn
-   |   |   |-- attribute name=label filename=in_voltage7_vrefn_label value=vrefn
-   |   |   |-- attribute name=raw filename=in_voltage7_vrefn_raw value=11
-   |   |   `-- attribute name=scale filename=in_voltage7_vrefn_scale value=0.732421875
-   |   |-- attribute name=sampling_frequency value=961538
-   |   `-- attribute name=waiting_for_supplier value=0
-   |-- device id=iio:device1 name=ad2s1210
-   |   |-- channel id=altvoltage0 type=input
-   |   |   `-- attribute name=label filename=in_altvoltage0_label value=monitor signal
-   |   |-- channel id=altvoltage0 type=output
-   |   |   |-- attribute name=frequency filename=out_altvoltage0_frequency value=10000
-   |   |   |-- attribute name=frequency_available filename=out_altvoltage0_frequency_available value=[2000 250 20000]
-   |   |   `-- attribute name=label filename=out_altvoltage0_label value=excitation
-   |   |-- channel id=altvoltage1 type=input
-   |   |   `-- attribute name=label filename=in_altvoltage1_label value=cosine
-   |   |-- channel id=altvoltage2 type=input
-   |   |   `-- attribute name=label filename=in_altvoltage2_label value=sine
-   |   |-- channel id=angl0 type=input
-   |   |   |-- scan-element index=0 format=be:U16/16>>0 scale=0.000096
-   |   |   |-- attribute name=hysteresis filename=in_angl0_hysteresis value=64
-   |   |   |-- attribute name=hysteresis_available filename=in_angl0_hysteresis_available value=0 64
-   |   |   |-- attribute name=label filename=in_angl0_label value=position
-   |   |   |-- attribute name=raw filename=in_angl0_raw value=12577
-   |   |   `-- attribute name=scale filename=in_angl0_scale value=0.000095874
-   |   |-- channel id=angl1 type=input
-   |   |   `-- attribute name=label filename=in_angl1_label value=tracking error
-   |   |-- channel id=anglvel0 type=input
-   |   |   |-- scan-element index=1 format=be:S16/16>>0 scale=0.023968
-   |   |   |-- attribute name=label filename=in_anglvel0_label value=velocity
-   |   |   |-- attribute name=raw filename=in_anglvel0_raw value=3
-   |   |   `-- attribute name=scale filename=in_anglvel0_scale value=0.023968449
-   |   |-- channel id=phase0 type=input
-   |   |   `-- attribute name=label filename=in_phase0_label value=synthetic reference
-   |   |-- channel id=timestamp type=input
-   |   |   `-- scan-element index=2 format=le:S64/64>>0
-   |   |-- attribute name=current_timestamp_clock value=realtime
-   |   |-- attribute name=waiting_for_supplier value=0
-   |   |-- debug-attribute name=direct_reg_access value=ERROR
-   |   |-- buffer-attribute name=data_available value=0
-   |   `-- buffer-attribute name=direction value=in
-   |-- device id=iio_sysfs_trigger
-   |   |-- attribute name=add_trigger value=ERROR
-   |   `-- attribute name=remove_trigger value=ERROR
-   `-- device id=trigger0 name=test
-       `-- attribute name=sampling_frequency value=100.000000

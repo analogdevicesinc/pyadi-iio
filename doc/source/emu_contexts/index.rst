@@ -5,7 +5,7 @@ Emulation XML Context Trees
 ===========================
 
 These pages are generated from ``test/emu/devices/*.xml`` and show a
-deterministically sorted ASCII tree of each emulation context.
+deterministically sorted compact tree diagram of each emulation context.
 
 .. toctree::
    :maxdepth: 1

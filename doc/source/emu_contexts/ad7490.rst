@@ -6,8 +6,18 @@ Emulation Context: ad7490.xml
 
 Source XML: ``test/emu/devices/ad7490.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ad7490.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,57 +41,3 @@ Tree
        |-- channel id=voltage11 type=input
        |   |-- scan-element index=11 format=le:u12/16>>0
        |   |-- attribute name=raw filename=in_voltage11_raw value=0
-       |   `-- attribute name=scale filename=in_voltage11_scale value=0.610351562
-       |-- channel id=voltage12 type=input
-       |   |-- scan-element index=12 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage12_raw value=0
-       |   `-- attribute name=scale filename=in_voltage12_scale value=0.610351562
-       |-- channel id=voltage13 type=input
-       |   |-- scan-element index=13 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage13_raw value=0
-       |   `-- attribute name=scale filename=in_voltage13_scale value=0.610351562
-       |-- channel id=voltage14 type=input
-       |   |-- scan-element index=14 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage14_raw value=0
-       |   `-- attribute name=scale filename=in_voltage14_scale value=0.610351562
-       |-- channel id=voltage15 type=input
-       |   |-- scan-element index=15 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage15_raw value=0
-       |   `-- attribute name=scale filename=in_voltage15_scale value=0.610351562
-       |-- channel id=voltage2 type=input
-       |   |-- scan-element index=2 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage2_raw value=0
-       |   `-- attribute name=scale filename=in_voltage2_scale value=0.610351562
-       |-- channel id=voltage3 type=input
-       |   |-- scan-element index=3 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage3_raw value=0
-       |   `-- attribute name=scale filename=in_voltage3_scale value=0.610351562
-       |-- channel id=voltage4 type=input
-       |   |-- scan-element index=4 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage4_raw value=0
-       |   `-- attribute name=scale filename=in_voltage4_scale value=0.610351562
-       |-- channel id=voltage5 type=input
-       |   |-- scan-element index=5 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage5_raw value=0
-       |   `-- attribute name=scale filename=in_voltage5_scale value=0.610351562
-       |-- channel id=voltage6 type=input
-       |   |-- scan-element index=6 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage6_raw value=0
-       |   `-- attribute name=scale filename=in_voltage6_scale value=0.610351562
-       |-- channel id=voltage7 type=input
-       |   |-- scan-element index=7 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage7_raw value=0
-       |   `-- attribute name=scale filename=in_voltage7_scale value=0.610351562
-       |-- channel id=voltage8 type=input
-       |   |-- scan-element index=8 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage8_raw value=0
-       |   `-- attribute name=scale filename=in_voltage8_scale value=0.610351562
-       |-- channel id=voltage9 type=input
-       |   |-- scan-element index=9 format=le:u12/16>>0
-       |   |-- attribute name=raw filename=in_voltage9_raw value=0
-       |   `-- attribute name=scale filename=in_voltage9_scale value=0.610351562
-       |-- attribute name=polarity value=UNIPOLAR
-       |-- attribute name=polarity_available value=BIPOLAR UNIPOLAR
-       |-- attribute name=range value=REF_IN
-       |-- attribute name=range_available value=2X_REF_IN REF_IN
-       `-- attribute name=sampling_frequency value=1000000

@@ -6,8 +6,18 @@ Emulation Context: max31865.xml
 
 Source XML: ``test/emu/devices/max31865.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: max31865.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,6 +41,3 @@ Tree
    |   |   `-- attribute name=scale filename=in_temp_scale value=31.250000
    |   |-- attribute name=fault_ovuv value=0
    |   `-- attribute name=sampling_frequency_available value=50 60
-   `-- device id=iio_sysfs_trigger
-       |-- attribute name=add_trigger value=ERROR
-       `-- attribute name=remove_trigger value=ERROR

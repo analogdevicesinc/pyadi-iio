@@ -6,8 +6,18 @@ Emulation Context: ad7768-4.xml
 
 Source XML: ``test/emu/devices/ad7768-4.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ad7768-4.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,61 +41,3 @@ Tree
    |   |-- channel id=voltage0 type=input
    |   |   |-- scan-element index=0 format=le:s24/32>>0 scale=0.000488
    |   |   |-- attribute name=label filename=in_voltage0_label value=ERROR
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=0.000488281
-   |   |-- channel id=voltage1 type=input
-   |   |   |-- scan-element index=1 format=le:s24/32>>0 scale=0.000488
-   |   |   |-- attribute name=label filename=in_voltage1_label value=ERROR
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=0.000488281
-   |   |-- channel id=voltage2 type=input
-   |   |   |-- scan-element index=2 format=le:s24/32>>0 scale=0.000488
-   |   |   |-- attribute name=label filename=in_voltage2_label value=ERROR
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=0.000488281
-   |   |-- channel id=voltage3 type=input
-   |   |   |-- scan-element index=3 format=le:s24/32>>0 scale=0.000488
-   |   |   |-- attribute name=label filename=in_voltage3_label value=ERROR
-   |   |   `-- attribute name=scale filename=in_voltage_scale value=0.000488281
-   |   |-- attribute name=filter_type value=SINC5
-   |   |-- attribute name=filter_type_available value=WIDEBAND SINC5
-   |   |-- attribute name=power_mode value=FAST_MODE
-   |   |-- attribute name=power_mode_available value=LOW_POWER_MODE MEDIAN_MODE FAST_MODE
-   |   |-- attribute name=sampling_frequency value=32000
-   |   |-- attribute name=sampling_frequency_available value=1000 2000 4000 8000 16000 32000 64000 128000 256000
-   |   |-- attribute name=sync_start_enable value=arm
-   |   |-- attribute name=sync_start_enable_available value=arm
-   |   |-- debug-attribute name=direct_reg_access value=0x0
-   |   |-- debug-attribute name=pseudorandom_err_check value=ERROR
-   |   |-- buffer-attribute name=data_available value=0
-   |   `-- buffer-attribute name=length_align_bytes value=8
-   |-- device id=iio:device2 name=xadc
-   |   |-- channel id=temp0 type=input
-   |   |   |-- attribute name=offset filename=in_temp0_offset value=-2219
-   |   |   |-- attribute name=raw filename=in_temp0_raw value=2649
-   |   |   `-- attribute name=scale filename=in_temp0_scale value=123.040771484
-   |   |-- channel id=voltage0 type=input name=vccint
-   |   |   |-- attribute name=raw filename=in_voltage0_vccint_raw value=1399
-   |   |   `-- attribute name=scale filename=in_voltage0_vccint_scale value=0.732421875
-   |   |-- channel id=voltage1 type=input name=vccaux
-   |   |   |-- attribute name=raw filename=in_voltage1_vccaux_raw value=2467
-   |   |   `-- attribute name=scale filename=in_voltage1_vccaux_scale value=0.732421875
-   |   |-- channel id=voltage2 type=input name=vccbram
-   |   |   |-- attribute name=raw filename=in_voltage2_vccbram_raw value=1396
-   |   |   `-- attribute name=scale filename=in_voltage2_vccbram_scale value=0.732421875
-   |   |-- channel id=voltage3 type=input name=vccpint
-   |   |   |-- attribute name=raw filename=in_voltage3_vccpint_raw value=1394
-   |   |   `-- attribute name=scale filename=in_voltage3_vccpint_scale value=0.732421875
-   |   |-- channel id=voltage4 type=input name=vccpaux
-   |   |   |-- attribute name=raw filename=in_voltage4_vccpaux_raw value=2465
-   |   |   `-- attribute name=scale filename=in_voltage4_vccpaux_scale value=0.732421875
-   |   |-- channel id=voltage5 type=input name=vccoddr
-   |   |   |-- attribute name=raw filename=in_voltage5_vccoddr_raw value=2056
-   |   |   `-- attribute name=scale filename=in_voltage5_vccoddr_scale value=0.732421875
-   |   |-- channel id=voltage6 type=input name=vrefp
-   |   |   |-- attribute name=raw filename=in_voltage6_vrefp_raw value=1718
-   |   |   `-- attribute name=scale filename=in_voltage6_vrefp_scale value=0.732421875
-   |   |-- channel id=voltage7 type=input name=vrefn
-   |   |   |-- attribute name=raw filename=in_voltage7_vrefn_raw value=14
-   |   |   `-- attribute name=scale filename=in_voltage7_vrefn_scale value=0.732421875
-   |   `-- attribute name=sampling_frequency value=961538
-   `-- device id=iio_sysfs_trigger
-       |-- attribute name=add_trigger value=ERROR
-       `-- attribute name=remove_trigger value=ERROR

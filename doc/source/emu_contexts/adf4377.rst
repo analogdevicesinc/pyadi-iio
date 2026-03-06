@@ -6,8 +6,18 @@ Emulation Context: adf4377.xml
 
 Source XML: ``test/emu/devices/adf4377.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: adf4377.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,8 +41,3 @@ Tree
        |-- attribute name=reference_divider value=1
        |-- attribute name=reference_doubler_enable value=1
        |-- attribute name=rfout_divider value=1029990688
-       |-- attribute name=rfout_divider_available value=1 2 4 8
-       |-- attribute name=sysref_delay_adjust value=0
-       |-- attribute name=sysref_invert_adjust value=0
-       |-- attribute name=sysref_monitoring value=0
-       `-- debug-attribute name=direct_reg_access value=24

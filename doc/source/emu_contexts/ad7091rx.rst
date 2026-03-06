@@ -6,8 +6,18 @@ Emulation Context: ad7091rx.xml
 
 Source XML: ``test/emu/devices/ad7091rx.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ad7091rx.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,13 +41,3 @@ Tree
        |-- channel id=voltage4 type=input
        |   |-- attribute name=raw filename=in_voltage4_raw value=2376
        |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-       |-- channel id=voltage5 type=input
-       |   |-- attribute name=raw filename=in_voltage5_raw value=0
-       |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-       |-- channel id=voltage6 type=input
-       |   |-- attribute name=raw filename=in_voltage6_raw value=1076
-       |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-       |-- channel id=voltage7 type=input
-       |   |-- attribute name=raw filename=in_voltage7_raw value=1747
-       |   `-- attribute name=scale filename=in_voltage_scale value=0.610351562
-       `-- attribute name=waiting_for_supplier value=0

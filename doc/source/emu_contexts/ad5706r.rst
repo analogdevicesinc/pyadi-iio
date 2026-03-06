@@ -6,8 +6,18 @@ Emulation Context: ad5706r.xml
 
 Source XML: ``test/emu/devices/ad5706r.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ad5706r.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,97 +41,3 @@ Tree
        |   |-- attribute name=ldac_trigger_chn filename=out_current0_ldac_trigger_chn value=None
        |   |-- attribute name=ldac_trigger_chn_available filename=out_current0_ldac_trigger_chn_available value=None sw_ldac hw_ldac
        |   |-- attribute name=multi_dac_sel_ch filename=out_current0_multi_dac_sel_ch value=exclude
-       |   |-- attribute name=multi_dac_sel_ch_available filename=out_current0_multi_dac_sel_ch_available value=exclude include
-       |   |-- attribute name=offset filename=out_current0_offset value=0
-       |   |-- attribute name=output_state filename=out_current0_output_state value=normal_sw
-       |   |-- attribute name=output_state_available filename=out_current0_output_state_available value=shutdown_to_tristate_sw shutdown_to_gnd_sw normal_sw shutdown_to_tristate_hw shutdown_to_gnd_hw normal_hw
-       |   |-- attribute name=range_sel filename=out_current0_range_sel value=200mA
-       |   |-- attribute name=range_sel_available filename=out_current0_range_sel_available value=50mA 150mA 200mA 300mA
-       |   |-- attribute name=raw filename=out_current0_raw value=0
-       |   |-- attribute name=scale filename=out_current0_scale value=0.000305175
-       |   |-- attribute name=toggle_trigger_chn filename=out_current0_toggle_trigger_chn value=None
-       |   `-- attribute name=toggle_trigger_chn_available filename=out_current0_toggle_trigger_chn_available value=None sw_toggle hw_toggle
-       |-- channel id=current1 type=output name=Chn1
-       |   |-- scan-element index=1 format=le:u16/16>>0
-       |   |-- attribute name=hw_active_edge filename=out_current1_hw_active_edge value=rising_edge
-       |   |-- attribute name=hw_active_edge_available filename=out_current1_hw_active_edge_available value=rising_edge falling_edge any_edge
-       |   |-- attribute name=hw_func_sel filename=out_current1_hw_func_sel value=None
-       |   |-- attribute name=hw_func_sel_available filename=out_current1_hw_func_sel_available value=None LDAC Toggle Dither
-       |   |-- attribute name=input_register_a filename=out_current1_input_register_a value=0
-       |   |-- attribute name=input_register_b filename=out_current1_input_register_b value=0
-       |   |-- attribute name=ldac_trigger_chn filename=out_current1_ldac_trigger_chn value=None
-       |   |-- attribute name=ldac_trigger_chn_available filename=out_current1_ldac_trigger_chn_available value=None sw_ldac hw_ldac
-       |   |-- attribute name=multi_dac_sel_ch filename=out_current1_multi_dac_sel_ch value=exclude
-       |   |-- attribute name=multi_dac_sel_ch_available filename=out_current1_multi_dac_sel_ch_available value=exclude include
-       |   |-- attribute name=offset filename=out_current1_offset value=0
-       |   |-- attribute name=output_state filename=out_current1_output_state value=normal_sw
-       |   |-- attribute name=output_state_available filename=out_current1_output_state_available value=shutdown_to_tristate_sw shutdown_to_gnd_sw normal_sw shutdown_to_tristate_hw shutdown_to_gnd_hw normal_hw
-       |   |-- attribute name=range_sel filename=out_current1_range_sel value=200mA
-       |   |-- attribute name=range_sel_available filename=out_current1_range_sel_available value=50mA 150mA 200mA 300mA
-       |   |-- attribute name=raw filename=out_current1_raw value=0
-       |   |-- attribute name=scale filename=out_current1_scale value=0.000305175
-       |   |-- attribute name=toggle_trigger_chn filename=out_current1_toggle_trigger_chn value=None
-       |   `-- attribute name=toggle_trigger_chn_available filename=out_current1_toggle_trigger_chn_available value=None sw_toggle hw_toggle
-       |-- channel id=current2 type=output name=Chn2
-       |   |-- scan-element index=2 format=le:u16/16>>0
-       |   |-- attribute name=hw_active_edge filename=out_current2_hw_active_edge value=rising_edge
-       |   |-- attribute name=hw_active_edge_available filename=out_current2_hw_active_edge_available value=rising_edge falling_edge any_edge
-       |   |-- attribute name=hw_func_sel filename=out_current2_hw_func_sel value=None
-       |   |-- attribute name=hw_func_sel_available filename=out_current2_hw_func_sel_available value=None LDAC Toggle Dither
-       |   |-- attribute name=input_register_a filename=out_current2_input_register_a value=0
-       |   |-- attribute name=input_register_b filename=out_current2_input_register_b value=0
-       |   |-- attribute name=ldac_trigger_chn filename=out_current2_ldac_trigger_chn value=None
-       |   |-- attribute name=ldac_trigger_chn_available filename=out_current2_ldac_trigger_chn_available value=None sw_ldac hw_ldac
-       |   |-- attribute name=multi_dac_sel_ch filename=out_current2_multi_dac_sel_ch value=exclude
-       |   |-- attribute name=multi_dac_sel_ch_available filename=out_current2_multi_dac_sel_ch_available value=exclude include
-       |   |-- attribute name=offset filename=out_current2_offset value=0
-       |   |-- attribute name=output_state filename=out_current2_output_state value=normal_sw
-       |   |-- attribute name=output_state_available filename=out_current2_output_state_available value=shutdown_to_tristate_sw shutdown_to_gnd_sw normal_sw shutdown_to_tristate_hw shutdown_to_gnd_hw normal_hw
-       |   |-- attribute name=range_sel filename=out_current2_range_sel value=200mA
-       |   |-- attribute name=range_sel_available filename=out_current2_range_sel_available value=50mA 150mA 200mA 300mA
-       |   |-- attribute name=raw filename=out_current2_raw value=0
-       |   |-- attribute name=scale filename=out_current2_scale value=0.000305175
-       |   |-- attribute name=toggle_trigger_chn filename=out_current2_toggle_trigger_chn value=None
-       |   `-- attribute name=toggle_trigger_chn_available filename=out_current2_toggle_trigger_chn_available value=None sw_toggle hw_toggle
-       |-- channel id=current3 type=output name=Chn3
-       |   |-- scan-element index=3 format=le:u16/16>>0
-       |   |-- attribute name=hw_active_edge filename=out_current3_hw_active_edge value=rising_edge
-       |   |-- attribute name=hw_active_edge_available filename=out_current3_hw_active_edge_available value=rising_edge falling_edge any_edge
-       |   |-- attribute name=hw_func_sel filename=out_current3_hw_func_sel value=None
-       |   |-- attribute name=hw_func_sel_available filename=out_current3_hw_func_sel_available value=None LDAC Toggle Dither
-       |   |-- attribute name=input_register_a filename=out_current3_input_register_a value=0
-       |   |-- attribute name=input_register_b filename=out_current3_input_register_b value=0
-       |   |-- attribute name=ldac_trigger_chn filename=out_current3_ldac_trigger_chn value=None
-       |   |-- attribute name=ldac_trigger_chn_available filename=out_current3_ldac_trigger_chn_available value=None sw_ldac hw_ldac
-       |   |-- attribute name=multi_dac_sel_ch filename=out_current3_multi_dac_sel_ch value=exclude
-       |   |-- attribute name=multi_dac_sel_ch_available filename=out_current3_multi_dac_sel_ch_available value=exclude include
-       |   |-- attribute name=offset filename=out_current3_offset value=0
-       |   |-- attribute name=output_state filename=out_current3_output_state value=normal_sw
-       |   |-- attribute name=output_state_available filename=out_current3_output_state_available value=shutdown_to_tristate_sw shutdown_to_gnd_sw normal_sw shutdown_to_tristate_hw shutdown_to_gnd_hw normal_hw
-       |   |-- attribute name=range_sel filename=out_current3_range_sel value=200mA
-       |   |-- attribute name=range_sel_available filename=out_current3_range_sel_available value=50mA 150mA 200mA 300mA
-       |   |-- attribute name=raw filename=out_current3_raw value=0
-       |   |-- attribute name=scale filename=out_current3_scale value=0.000305175
-       |   |-- attribute name=toggle_trigger_chn filename=out_current3_toggle_trigger_chn value=None
-       |   `-- attribute name=toggle_trigger_chn_available filename=out_current3_toggle_trigger_chn_available value=None sw_toggle hw_toggle
-       |-- attribute name=addr_ascension value=ascending
-       |-- attribute name=addr_ascension_available value=descending ascending
-       |-- attribute name=dev_addr value=0
-       |-- attribute name=hw_ldac_tg_pwm value=disable
-       |-- attribute name=hw_ldac_tg_pwm_available value=disable enable
-       |-- attribute name=hw_ldac_tg_state value=low
-       |-- attribute name=hw_ldac_tg_state_available value=low high
-       |-- attribute name=hw_shutdown_state value=low
-       |-- attribute name=hw_shutdown_state_available value=low high
-       |-- attribute name=multi_dac_input_a value=0
-       |-- attribute name=multi_dac_sw_ldac_trigger value=trigger
-       |-- attribute name=multi_dac_sw_ldac_trigger_available value=trigger
-       |-- attribute name=mux_out_sel value=agnd
-       |-- attribute name=mux_out_sel_available value=agnd avdd vref iout0_vmon iout1_vmon iout2_vmon iout3_vmon iout0_imon iout1_imon iout2_imon iout3_imon pvdd0 pvdd1 pvdd2 pvdd3 tdiode_ch0 tdiode_ch1 tdiode_ch2 tdiode_ch3 mux_in0 mux_in1 mux_in2 mux_in3
-       |-- attribute name=ref_select value=internal
-       |-- attribute name=ref_select_available value=internal external
-       |-- attribute name=reference_volts value=2.5
-       |-- attribute name=sampling_frequency value=1000000
-       |-- attribute name=single_instr value=single_instruction
-       |-- attribute name=single_instr_available value=single_instruction streaming
-       `-- debug-attribute name=direct_reg_access

@@ -6,8 +6,18 @@ Emulation Context: adxl345.xml
 
 Source XML: ``test/emu/devices/adxl345.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: adxl345.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,17 +41,3 @@ Tree
    |   |   |-- attribute name=raw filename=in_accel_x_raw value=192
    |   |   |-- attribute name=sampling_frequency filename=in_accel_sampling_frequency value=100.000000000
    |   |   `-- attribute name=scale filename=in_accel_scale value=0.038300
-   |   |-- channel id=accel_y type=input
-   |   |   |-- attribute name=calibbias filename=in_accel_y_calibbias value=100
-   |   |   |-- attribute name=raw filename=in_accel_y_raw value=104
-   |   |   |-- attribute name=sampling_frequency filename=in_accel_sampling_frequency value=100.000000000
-   |   |   `-- attribute name=scale filename=in_accel_scale value=0.038300
-   |   |-- channel id=accel_z type=input
-   |   |   |-- attribute name=calibbias filename=in_accel_z_calibbias value=100
-   |   |   |-- attribute name=raw filename=in_accel_z_raw value=334
-   |   |   |-- attribute name=sampling_frequency filename=in_accel_sampling_frequency value=100.000000000
-   |   |   `-- attribute name=scale filename=in_accel_scale value=0.038300
-   |   `-- attribute name=sampling_frequency_available value=0.09765625 0.1953125 0.390625 0.78125 1.5625 3.125 6.25 12.5 25 50 100 200 400 800 1600 3200
-   `-- device id=iio_sysfs_trigger
-       |-- attribute name=add_trigger value=ERROR
-       `-- attribute name=remove_trigger value=ERROR

@@ -6,8 +6,18 @@ Emulation Context: adrv9002_singledma.xml
 
 Source XML: ``test/emu/devices/adrv9002_singledma.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: adrv9002_singledma.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 

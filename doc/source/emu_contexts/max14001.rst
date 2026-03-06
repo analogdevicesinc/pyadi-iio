@@ -6,8 +6,18 @@ Emulation Context: max14001.xml
 
 Source XML: ``test/emu/devices/max14001.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: max14001.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 

@@ -6,8 +6,18 @@ Emulation Context: ltc2387.xml
 
 Source XML: ``test/emu/devices/ltc2387.xml``
 
-Tree
-----
+Diagram
+-------
+
+.. Note:: The diagram intentionally groups large attribute lists to keep
+   the structure readable.
+
+.. image:: ltc2387.svg
+   :alt: Emulation context tree diagram
+   :width: 100%
+
+Text Preview
+------------
 
 .. code-block:: text
 
@@ -31,29 +41,3 @@ Tree
    |   |   `-- attribute name=scale filename=in_temp0_scale value=123.040771484
    |   |-- channel id=voltage0 type=input name=vccint
    |   |   |-- attribute name=raw filename=in_voltage0_vccint_raw value=1343
-   |   |   `-- attribute name=scale filename=in_voltage0_vccint_scale value=0.732421875
-   |   |-- channel id=voltage1 type=input name=vccaux
-   |   |   |-- attribute name=raw filename=in_voltage1_vccaux_raw value=2450
-   |   |   `-- attribute name=scale filename=in_voltage1_vccaux_scale value=0.732421875
-   |   |-- channel id=voltage2 type=input name=vccbram
-   |   |   |-- attribute name=raw filename=in_voltage2_vccbram_raw value=1345
-   |   |   `-- attribute name=scale filename=in_voltage2_vccbram_scale value=0.732421875
-   |   |-- channel id=voltage3 type=input name=vccpint
-   |   |   |-- attribute name=raw filename=in_voltage3_vccpint_raw value=1341
-   |   |   `-- attribute name=scale filename=in_voltage3_vccpint_scale value=0.732421875
-   |   |-- channel id=voltage4 type=input name=vccpaux
-   |   |   |-- attribute name=raw filename=in_voltage4_vccpaux_raw value=2450
-   |   |   `-- attribute name=scale filename=in_voltage4_vccpaux_scale value=0.732421875
-   |   |-- channel id=voltage5 type=input name=vccoddr
-   |   |   |-- attribute name=raw filename=in_voltage5_vccoddr_raw value=2021
-   |   |   `-- attribute name=scale filename=in_voltage5_vccoddr_scale value=0.732421875
-   |   |-- channel id=voltage6 type=input name=vrefp
-   |   |   |-- attribute name=raw filename=in_voltage6_vrefp_raw value=1698
-   |   |   `-- attribute name=scale filename=in_voltage6_vrefp_scale value=0.732421875
-   |   |-- channel id=voltage7 type=input name=vrefn
-   |   |   |-- attribute name=raw filename=in_voltage7_vrefn_raw value=-8
-   |   |   `-- attribute name=scale filename=in_voltage7_vrefn_scale value=0.732421875
-   |   `-- attribute name=sampling_frequency value=961538
-   `-- device id=iio_sysfs_trigger
-       |-- attribute name=add_trigger value=ERROR
-       `-- attribute name=remove_trigger value=ERROR
