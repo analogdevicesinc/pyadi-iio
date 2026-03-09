@@ -30,10 +30,11 @@ class sharkbyte(sync_start):
         uri="",
         device1_name="axi_adc1_hmcad15xx",
         device2_name="axi_adc2_hmcad15xx",
+        show_dma_arming = False
     ):
         """Initialize sharkbyte multi-ADC manager"""
 
-        self._dma_show_arming = True
+        self._dma_show_arming = show_dma_arming
 
         # Create both ADC devices
         self.dev1 = hmcad15xx(uri=uri, device_name=device1_name)
