@@ -443,7 +443,8 @@ mermaid.initialize(
     }
 );
 
-window.addEventListener("load", load);</script>
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
@@ -548,8 +549,7 @@ Content on this topic
 
 </div>
 <div class="toc-tree">
-  <html>
-  <body><ul>
+  <ul>
 <li class="toctree-l1"><a class="reference internal" href="guides/quick.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/examples.html">Examples</a></li>
@@ -579,6 +579,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4170.html">ad4170</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad4630.html">ad4630</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad469x.html">ad469x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/adi.ad514x.html">ad514x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5592r.html">ad5592r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="devices/adi.ad5686.html">ad5686</a></li>
@@ -711,8 +712,7 @@ Content on this topic
 </ul>
 </li>
 </ul>
-</body>
-</html>
+
 
 </div>
         </div>
@@ -1068,6 +1068,8 @@ Content on this topic
 </li>
       <li><a href="devices/adi.ad4858.html#adi.ad4858.ad4858">ad4858 (class in adi.ad4858)</a>
 </li>
+      <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x">ad514x (class in adi.ad514x)</a>
+</li>
       <li><a href="devices/adi.ad5592r.html#adi.ad5592r.ad5592r">ad5592r (class in adi.ad5592r)</a>
 </li>
       <li><a href="devices/adi.ad5592r.html#adi.ad5592r.ad5592r.channel_adc">ad5592r.channel_adc (class in adi.ad5592r)</a>
@@ -1326,6 +1328,13 @@ Content on this topic
 
       <ul>
         <li><a href="devices/adi.ad4858.html#module-adi.ad4858">module</a>
+</li>
+      </ul></li>
+      <li>
+    adi.ad514x
+
+      <ul>
+        <li><a href="devices/adi.ad514x.html#module-adi.ad514x">module</a>
 </li>
       </ul></li>
       <li>
@@ -1706,6 +1715,8 @@ Content on this topic
         <li><a href="devices/adi.adf4371.html#module-adi.adf4371">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adf4377
 
@@ -1713,8 +1724,6 @@ Content on this topic
         <li><a href="devices/adi.adf4377.html#module-adi.adf4377">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adf4382
 
@@ -2841,6 +2850,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ad4858.html#adi.ad4858.ad4858.channel">(adi.ad4858.ad4858 attribute)</a>
 </li>
+        <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x.channel">(adi.ad514x.ad514x attribute)</a>
+</li>
         <li><a href="devices/adi.ad5592r.html#adi.ad5592r.ad5592r.channel">(adi.ad5592r.ad5592r attribute)</a>
 </li>
         <li><a href="devices/adi.ad5686.html#adi.ad5686.ad5686.channel">(adi.ad5686.ad5686 attribute)</a>
@@ -3022,9 +3033,11 @@ Content on this topic
 </li>
       <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.common_tx_beam_state">common_tx_beam_state (adi.adar1000.adar1000 property)</a>
 </li>
-      <li><a href="devices/adi.adis16375.html#adi.adis16375.compatible_parts">compatible_parts (adi.adis16375 attribute)</a>
+      <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x.compatible_parts">compatible_parts (adi.ad514x.ad514x attribute)</a>
 
       <ul>
+        <li><a href="devices/adi.adis16375.html#adi.adis16375.compatible_parts">(adi.adis16375 attribute)</a>
+</li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.compatible_parts">(adi.adis16480 attribute)</a>
 </li>
         <li><a href="devices/adi.adis16485.html#adi.adis16485.compatible_parts">(adi.adis16485 attribute)</a>
@@ -4432,6 +4445,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ad4858.html#module-adi.ad4858">adi.ad4858</a>
 </li>
+        <li><a href="devices/adi.ad514x.html#module-adi.ad514x">adi.ad514x</a>
+</li>
         <li><a href="devices/adi.ad5592r.html#module-adi.ad5592r">adi.ad5592r</a>
 </li>
         <li><a href="devices/adi.ad5627.html#module-adi.ad5627">adi.ad5627</a>
@@ -4729,13 +4744,17 @@ Content on this topic
 </li>
       <li><a href="devices/adi.ad9083.html#adi.ad9083.ad9083.nco2_frequency">nco2_frequency (adi.ad9083.ad9083 property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.ad9166.html#adi.ad9166.ad9166.nco_enable">nco_enable (adi.ad9166.ad9166 property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/test_dma.html#test.dma_tests.nco_loopback">nco_loopback() (in module test.dma_tests)</a>
 </li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.num_elements">num_elements (adi.cn0566.CN0566 attribute)</a>
+</li>
+      <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x.nvm_programming">nvm_programming (adi.ad514x.ad514x property)</a>
+</li>
+      <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x.nvm_programming_avail">nvm_programming_avail (adi.ad514x.ad514x property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -5017,6 +5036,10 @@ Content on this topic
         <li><a href="devices/adi.ad9166.html#adi.ad9166.ad9166.raw">(adi.ad9166.ad9166 property)</a>
 </li>
       </ul></li>
+      <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x.rdac_wp">rdac_wp (adi.ad514x.ad514x property)</a>
+</li>
+      <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x.rdac_wp_avail">rdac_wp_avail (adi.ad514x.ad514x property)</a>
+</li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.read_monitor">read_monitor() (adi.cn0566.CN0566 method)</a>
 </li>
       <li><a href="devices/adi.cn0556.html#adi.cn0556.cn0556.read_value">read_value() (adi.cn0556.cn0556 method)</a>
