@@ -2,8 +2,6 @@
 #
 # SPDX short identifier: ADIBSD
 
-from adi.context_manager import context_manager
-
 from .rx_tx import rx_def, rx_def_no_buff, shared_def, tx_def, tx_def_no_buff
 
 

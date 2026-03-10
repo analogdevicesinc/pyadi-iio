@@ -709,7 +709,8 @@ class rx_def(rx_def_no_buff):
             if not self._rx_channel_names:
                 raise Exception(f"No scan elements found for device {self._rxadc.name}")
 
-        assert self._rx_channel_names is not None, "RX channel names must be defined"
+        if self._rx_channel_names is None:
+            raise AssertionError("RX channel names must be defined")
 
         rx.__init__(self)
 
@@ -784,7 +785,8 @@ class tx_def(tx_def_no_buff):
             if not self._tx_channel_names:
                 raise Exception(f"No scan elements found for device {self._txdac.name}")
 
-        assert self._tx_channel_names is not None, "TX channel names must be defined"
+        if self._tx_channel_names is None:
+            raise AssertionError("TX channel names must be defined")
 
         tx.__init__(self)
 
