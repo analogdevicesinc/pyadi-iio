@@ -157,6 +157,7 @@ if ARRAY_MODE == "rx":
 
 # Broadside steer to start
 sray.steer_rx(azimuth=0, elevation=0)
+mbx.gotoZERO()
 
 # Setup ADXUD1AEBZ
 ctx = conv._ctrl.ctx
@@ -167,6 +168,7 @@ rxgainmode = xud.find_channel("voltage0", True)
 cal_ant = mr.find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
 PLLselect.attrs["raw"].value = "1"
 rxgainmode.attrs["raw"].value = "1"
+                                                                                                                                                                                                                   
 
 # Enable subarray reference
 mr.enable_stingray_channel(sray, subarray)
@@ -305,8 +307,7 @@ all_powers_64_el = [[] for _ in range(NUM_REPEATS)]
 # =====================================================
 print("Starting Azimuth Sweep...")
 gimbal_motor = GIMBAL_H
-mbx.gotoZERO()
-mbx.move(gimbal_motor, -(maxsweepangle / 2))
+
 
 plt.ion()
 fig_full_array, ax_full_array = plt.subplots(figsize=(14, 8))
@@ -337,14 +338,18 @@ for run_idx in range(NUM_REPEATS):
 
     # --- Reset AZ gimbal to start position for this run ---
     gimbal_motor = GIMBAL_H
-    mbx.gotoZERO()
-    mbx.move(gimbal_motor, -(maxsweepangle / 2))
     time.sleep(0.5)
 
     # Single mechanical sweep for azimuth
     for i in range(len(gimbal_positions)):
-        mbx.move(gimbal_motor, sweepstep)
-        time.sleep(0.3)
+
+        if i == 0:
+            print("Sweeping Gimbal to Starting Position...")
+            mbx.gotoZERO()
+            mbx.move(gimbal_motor, -(maxsweepangle / 2))
+        else:
+            mbx.move(gimbal_motor, sweepstep)
+            time.sleep(0.3)
 
         for steering_angle in steering_angles:
             sray.steer_rx(azimuth=steering_angle, elevation=0)
@@ -417,7 +422,7 @@ for run_idx in range(NUM_REPEATS):
             fig_full_array.canvas.draw()
             fig_full_array.canvas.flush_events()
 
-    # =====================================================
+    # # =====================================================
     # === ELEVATION LIVE PLOT (Σ and Δ)
     # =====================================================
     plt.ion()
@@ -443,21 +448,26 @@ for run_idx in range(NUM_REPEATS):
 
     # --- Reset EL gimbal to start position for this run ---
     gimbal_motor = GIMBAL_V
-    mbx.gotoZERO()
-    mbx.move(gimbal_motor, -(maxsweepangle / 2))
     time.sleep(0.5)
 
     print("Starting Elevation Sweep...")
     gimbal_motor = GIMBAL_V
-    mbx.gotoZERO()
-    mbx.move(gimbal_motor, -(maxsweepangle / 2))
+    
+    
 
     # Define elevation delta weights (your original)
     elevation_weights = np.array([1, 1, -1, -1])
 
     for i in range(len(gimbal_positions)):
-        mbx.move(gimbal_motor, sweepstep)
-        time.sleep(0.3)
+
+        if i == 0:
+            print("Sweeping Gimbal to Starting Position (Elevation)...")
+            mbx.gotoZERO()
+            mbx.move(gimbal_motor, -(maxsweepangle / 2)+2)
+            time.sleep(0.3)
+        else:
+            mbx.move(gimbal_motor, sweepstep)
+            time.sleep(0.3)
 
         for steering_angle in steering_angles:
             sray.steer_rx(azimuth=0, elevation=steering_angle)

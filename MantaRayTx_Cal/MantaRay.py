@@ -413,7 +413,7 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     # bad_val_thresh = np.average(analog_mag_pre_cal) - 3
     # bad_val_thresh = np.average(analog_mag_pre_cal) - 2.5
 
-    bad_val_thresh = np.average(analog_mag_pre_cal) - 6
+    bad_val_thresh = np.average(analog_mag_pre_cal) - 3
     for i in range(np.size(analog_mag_pre_cal)):
         if analog_mag_pre_cal[i] < bad_val_thresh:
             print("Bad Value: ", analog_mag_pre_cal[i])

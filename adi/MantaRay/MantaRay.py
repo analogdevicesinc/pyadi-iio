@@ -61,11 +61,11 @@ def enable_stingray_channel(obj, elements=None, man_input=False):
                             if elem == value:
                                 channel.tx_enable = True
                                 print(f"setting channel: {channel}")
-                                channel.pa_bias_on = -2.25
-                                if round(channel.pa_bias_on,1) != -2.25:
+                                channel.pa_bias_on = -2.05
+                                if round(channel.pa_bias_on,1) != -2.05:
                                     found = False
                                     for _ in range(tries):
-                                        if round(channel.pa_bias_on,1) != -2.25:
+                                        if round(channel.pa_bias_on,1) != -2.05:
                                             pass
                                         else:
                                             found = True

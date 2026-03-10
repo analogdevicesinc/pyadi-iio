@@ -47,8 +47,8 @@ PA_Supplies = E36233A.E36233A(rm, E36)
 PA_Supplies.output_off(1)
 
 
-#18 Volt Rail (for some reason, setting current isn't working)
-PA_Supplies.set_voltage(1,18)
+#22 Volt Rail (Drain Voltage, Vdd)
+PA_Supplies.set_voltage(1,22)
 PA_Supplies.set_current(1,30)
 
 
@@ -217,7 +217,7 @@ sig_gen_freq_GHz=10
 beamsteering = False
 steering_angle = 0 # degrees
 maxsweepangle = 120  # degrees
-sweepstep = 1
+sweepstep = 0.25
 gimbal_motor = GIMBAL_H
 gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)  # Define gimbal positions from -90 to 90 degrees
 
@@ -232,18 +232,33 @@ SpecAn_Values = []
         
 
 active_array = np.array(active_array)
-phase_dict_ref = active_array.transpose().flatten()
-phase_dict = mr.create_dict(phase_dict_ref, np.zeros(64))
-mag_dict_ref = active_array.transpose().flatten()
-mag_dict = mr.create_dict(mag_dict_ref, np.zeros(64))
 
+# =====================================================
+# Load saved cal values from JSON (written by Tx_Cal.py)
+# =====================================================
+cal_json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tx_cal_values.json")
+print(f"Loading TX cal values from: {cal_json_path}")
+with open(cal_json_path, "r") as f:
+    cal_data = json.load(f)
 
-# Get Phase Data from ADAR1000 
+# Convert string keys back to int keys
+phase_dict = {int(k): v for k, v in cal_data["phase_dict"].items()}
+mag_dict   = {int(k): v for k, v in cal_data["gain_dict"].items()}
+atten_dict = {int(k): v for k, v in cal_data["atten_dict"].items()}
+
+print(f"  Loaded phase_dict for {len(phase_dict)} elements")
+print(f"  Loaded gain_dict  for {len(mag_dict)} elements")
+print(f"  Loaded atten_dict for {len(atten_dict)} elements")
+
+# Apply saved cal values to hardware
 for element in dev.elements.values():
     str_channel = str(element)
     value = int(mr.strip_to_last_two_digits(str_channel))
-    phase_dict[value] = element.tx_phase
-    mag_dict[value] = element.tx_gain
+    element.tx_phase = phase_dict.get(value, 0)
+    element.tx_gain  = mag_dict.get(value, 127)
+    element.tx_attenuator = atten_dict.get(value, 1)
+dev.latch_tx_settings()
+print("Applied saved cal values to ADAR1000 hardware.")
 
 ## Set TR Source to external and bias_dac_mode to toggle ##
 for device in dev.devices.values():
@@ -258,9 +273,14 @@ angles = np.linspace(-(maxsweepangle/2), (maxsweepangle/2), len(gimbal_positions
 
 # plt.figure(figsize=(10, 6))
 
-# Calculate and plot
-mechanical_sweep, elec_steer_angle, azim_results, elev_results, = mr.calc_array_pattern(elec_steer_angle=steering_angle,f_op_GHz=sig_gen_freq_GHz)
+# Calculate theoretical beam pattern for overlay
+mechanical_sweep, elec_steer_angle, azim_results, elev_results = mr.calc_array_pattern(
+    elec_steer_angle=steering_angle, f_op_GHz=sig_gen_freq_GHz
+)
 
+# Interpolate theoretical pattern onto the measurement angle grid
+theory_pattern_dB = azim_results.flatten()  # normalized dB (0 dB at peak)
+theory_interp = np.interp(angles, mechanical_sweep, theory_pattern_dB)
 
 # Define steering angles to test
 # steering_angles = [-45, -30, -15, 0, 15, 30, 45]
@@ -300,11 +320,16 @@ ax.legend(loc='best')
 
 # Single mechanical sweep for azimuth with real-time plotting
 mbx.gotoZERO()
-mbx.move(gimbal_motor, -(maxsweepangle/2))
 mr.enable_pa_bias_channel(dev, active_array)
 time.sleep(3)
 
 for i in range(len(gimbal_positions)):
+    if i == 0:
+        mbx.move(gimbal_motor, -(maxsweepangle / 2))
+    else:
+        mbx.move(gimbal_motor, sweepstep)
+    time.sleep(0.3)
+
     for steering_angle in steering_angles:
         dev.steer_tx(azimuth=steering_angle, elevation=0)
         dev.latch_tx_settings()
@@ -325,6 +350,11 @@ for i in range(len(gimbal_positions)):
         y = peak_mags_az[sa][: i + 1]
         ax.plot(x, y, linestyle='dotted', marker='o', markersize=4, label=f'Measured SA={sa}°')
 
+    # Overlay theoretical pattern scaled to measured peak
+    meas_peak = np.nanmax(np.concatenate([peak_mags_az[sa][: i + 1] for sa in steering_angles]))
+    ax.plot(angles, theory_interp + meas_peak, color='red', linewidth=1.5,
+            linestyle='-', label=f'Theory {sig_gen_freq_GHz} GHz, 0° steer')
+
     ax.set_title('Azimuth Pattern (real-time)')
     ax.set_xlabel('Mechanical Azimuth Angle (degrees)')
     ax.set_ylabel('Combined RF Input Power (dBm)')
@@ -343,8 +373,6 @@ for i in range(len(gimbal_positions)):
     fig.canvas.flush_events()
     plt.pause(0.01)   # small pause to allow GUI event loop to update
 
-    mbx.move(gimbal_motor, sweepstep)
-
 # finish sweep
 mbx.gotoZERO()
 mr.disable_pa_bias_channel(dev, active_array)
@@ -354,5 +382,35 @@ for element in dev.elements.values():
     str_channel = str(element)
     value = int(mr.strip_to_last_two_digits(str_channel))
     element.tx_phase = (phase_dict[value])
+
+# =====================================================
+# Save .png and .mat to TxSweeps folder
+# =====================================================
+save_dir = os.path.join(os.path.expanduser("~"), "Desktop", "TxSweeps")
+os.makedirs(save_dir, exist_ok=True)
+
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+# Save the final sweep plot as .png
+png_path = os.path.join(save_dir, f"tx_az_sweep_{sig_gen_freq_GHz}GHz_{desired_array_shape}_{timestamp}.png")
+fig.savefig(png_path, dpi=200, bbox_inches='tight')
+print(f"Saved sweep plot to: {png_path}")
+
+# Build .mat data dictionary
+mat_data = {
+    "angles_deg": angles,
+    "gimbal_positions": np.array(gimbal_positions),
+    "steering_angles": np.array(steering_angles),
+    "frequency_GHz": float(sig_gen_freq_GHz),
+    "array_shape": desired_array_shape,
+    "maxsweepangle": float(maxsweepangle),
+    "sweepstep": float(sweepstep),
+}
+for sa in steering_angles:
+    mat_data[f"peak_mags_az_{sa}deg"] = peak_mags_az[sa]
+
+mat_path = os.path.join(save_dir, f"tx_az_sweep_{sig_gen_freq_GHz}GHz_{desired_array_shape}_{timestamp}.mat")
+savemat(mat_path, mat_data, do_compression=True)
+print(f"Saved .mat workspace to: {mat_path}")
 
 exit()

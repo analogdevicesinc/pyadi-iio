@@ -211,8 +211,8 @@ GIMBAL_H = mbx.H
 GIMBAL_V = mbx.V
 
 # Sweep parameters
-maxsweepangle = 120 # degrees
-sweepstep = 1 # degrees
+maxsweepangle = 60 # degrees
+sweepstep = 5 # degrees
 sig_gen_freq_GHz=10 # GHz
 steering_angle = 0 # degrees (elevation angle)
 gimbal_positions = np.arange(0, (maxsweepangle+1), sweepstep)  # Define gimbal positions from -90 to 90 degrees
@@ -379,13 +379,19 @@ for sample_num in range(1, num_samples + 1):
     # === Elevation Sweep for this sample ===
     print(f"Starting Elevation Sweep for Sample {sample_num}...")
     gimbal_motor = GIMBAL_V
-    mbx.gotoZERO()
-    mbx.move(gimbal_motor,-(maxsweepangle/2))
+
 
     # Single mechanical sweep for azimuth
     for i in range(len(gimbal_positions)):
-        mbx.move(gimbal_motor, sweepstep)
-        time.sleep(0.3)
+
+        if i == 0:
+            print(f"  Gimbal Position {i+1}/{len(gimbal_positions)}: {angles[i]:.1f}° (Starting Position)")
+            mbx.gotoZERO()
+            mbx.move(gimbal_motor,-(maxsweepangle/2))
+        else:
+            print(f"  Gimbal Position {i+1}/{len(gimbal_positions)}: {angles[i]:.1f}°")
+            mbx.move(gimbal_motor, sweepstep)
+            time.sleep(0.3)
         
         for angle in steering_angles:
             mray.steer_rx(azimuth=0, elevation=angle)
