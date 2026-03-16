@@ -141,12 +141,17 @@ class ad9084_mc(ad9084):
         for dev in self._ctx.devices:
             if dev.name and "ad9084" not in dev.name:
                 continue
+            if dev.label and "ad9084" in dev.label:
+                name = dev.label
+            else:
+                name = dev.name
+
             for ch in dev.channels:
                 not_buffer = False
                 if "label" in ch.attrs:
-                    paths, not_buffer = _map_to_dict(paths, ch, dev.name)
-                if not_buffer and dev.name not in self._default_ctrl_names:
-                    self._default_ctrl_names.append(dev.name)
+                    paths, not_buffer = _map_to_dict(paths, ch, name)
+                if not_buffer and name not in self._default_ctrl_names:
+                    self._default_ctrl_names.append(name)
 
         self._default_ctrl_names = sorted(self._default_ctrl_names)
         self._ctrls = [self._ctx.find_device(dn) for dn in self._default_ctrl_names]
