@@ -65,6 +65,7 @@ def update_devs():
         "sync_start",
         "dsp",
         "compat",
+        "device_base",
     ]
     adi_rst_path = os.path.join(root, "source", "devices", "adi.rst")
     with open(adi_rst_path, "r") as f:

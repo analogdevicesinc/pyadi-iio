@@ -31,6 +31,8 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "lvds_test: mark tests for LVDS")
     config.addinivalue_line("markers", "cmos_test: mark tests for CMOS")
     config.addinivalue_line("markers", "jesd204: mark tests for JESD204")
+    config.addinivalue_line("markers", "no_os_test: mark tests for No-OS")
+    config.addinivalue_line("markers", "production_test: mark tests for production")
 
 
 def pytest_collection_modifyitems(items):
@@ -40,6 +42,9 @@ def pytest_collection_modifyitems(items):
     test_map = tm.get_test_map()
     test_map_keys = test_map.keys()
 
+    for item in items:
+        if "test_fmcomms2-3_prod.py" in item.nodeid:
+            item.add_marker(pytest.mark.production_test)
     for item in items:
         if "iio_hardware" in item.keywords:
             hardware_list = item.keywords["iio_hardware"].args[0]
@@ -51,6 +56,9 @@ def pytest_collection_modifyitems(items):
 
 
 def pytest_addoption(parser):
+    parser.addoption(
+        "--production-tests", action="store_true", help="Run production tests",
+    )
     parser.addoption(
         "--obs-enable",
         action="store_true",
@@ -74,6 +82,11 @@ def pytest_addoption(parser):
 
 
 def pytest_runtest_setup(item):
+    # Handle production tests
+    prod = item.config.getoption("--production-tests")
+    if not prod and "production_test" in [mark.name for mark in item.iter_markers()]:
+        pytest.skip("Production tests disabled. Use --production-tests flag to enable")
+
     # Handle observation based devices
     obs = item.config.getoption("--obs-enable")
     marks = [mark.name for mark in item.iter_markers()]

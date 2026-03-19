@@ -3,64 +3,30 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class ad4080(rx, context_manager):
+class ad4080_channel(attribute):
+    """AD4080 channel"""
 
-    """ AD4080 ADC """
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
 
-    _complex_data = False
-    _device_name = ""
+    @property
+    def scale(self):
+        """Get Scale value"""
+        return self._get_iio_attr("voltage0", "scale", False)
+
+
+class ad4080(rx_chan_comp):
+    """AD4080 ADC"""
+
     channel = []  # type: ignore
-
-    def __init__(self, uri="", device_name="ad4080"):
-        context_manager.__init__(self, uri, self._device_name)
-
-        compatible_part = "ad4080"
-        self._ctrl = None
-
-        if not device_name:
-            device_name = compatible_part
-        else:
-            if device_name != compatible_part:
-                raise Exception(f"Not a compatible device: {device_name}")
-
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._rxadc = device
-                break
-
-        # Raise an exception if the device isn't found
-        if not self._ctrl:
-            raise Exception("AD4080 device not found")
-
-        if not self._rxadc:
-            raise Exception("Error in selecting matching device")
-
-        self._rx_channel_names = []
-        self.channel = []
-        for ch in self._ctrl.channels:
-            name = ch.id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-
-        rx.__init__(self)
-
-    class _channel(attribute):
-        """AD4080 channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def scale(self):
-            """Get Scale value"""
-            return self._get_iio_attr("voltage0", "scale", False)
+    compatible_parts = ["ad4080"]
+    _device_name = ""
+    _complex_data = False
+    _channel_def = ad4080_channel
 
     @property
     def sampling_frequency(self):

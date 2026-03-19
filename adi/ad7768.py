@@ -4,44 +4,18 @@
 
 import numpy as np
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
-class ad7768(rx, context_manager):
+class ad7768(rx_def):
 
     """ AD7768 8-channel, Simultaneous Sampling Sigma-Delta ADC """
 
-    _device_name = " "
+    compatible_parts = ["ad7768", "cf_axi_adc"]
     _rx_data_type = np.int32
-
-    def __init__(
-        self, uri="ip:analog.local",
-    ):
-        """Initialize."""
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._ctrl = self._ctx.find_device("ad7768")
-        self._rxadc = self._ctx.find_device("ad7768")
-        self._device_name = "ad7768"
-
-        if not self._rxadc:
-            self._ctrl = self._ctx.find_device("cf_axi_adc")
-            self._rxadc = self._ctx.find_device("cf_axi_adc")
-            self._device_name = "cf_axi_adc"
-
-        if not self._ctrl:
-            raise Exception("Error in selecting matching device")
-
-        if not self._rxadc:
-            raise Exception("Error in selecting matching device")
-
-        self._rx_channel_names = []
-        for ch in self._rxadc.channels:
-            name = ch._id
-            self._rx_channel_names.append(name)
-
-        rx.__init__(self)
+    _complex_data = False
+    _control_device_name = "ad7768"
+    _rx_data_device_name = "ad7768"
 
     @property
     def sampling_frequency_available(self):
@@ -110,6 +84,9 @@ class ad7768(rx, context_manager):
 class ad7768_4(ad7768):
 
     """ AD7768 4-channel, Simultaneous Sampling Sigma-Delta ADC """
+
+    _control_device_name = "cf_axi_adc"
+    _rx_data_device_name = "cf_axi_adc"
 
     @property
     def sync_start_enable_available(self):
