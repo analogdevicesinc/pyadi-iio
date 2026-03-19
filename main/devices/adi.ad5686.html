@@ -4,13 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: context_manager, attribute" name="description" />
+<meta content="Bases: tx_chan_comp_no_buff" name="description" />
 
     <title>ad5686 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5c8d5ce8" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=fcf3088a"></script>
+    <script async="async" src="../_static/app.umd.js?v=f78f54ff"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -69,7 +69,7 @@
         <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         
-        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs">Docs</label>
         
         <a id="logo" href="../index.html">
           <div>pyadi-iio</div>
@@ -97,7 +97,17 @@
           <ul>
 <li><a class="reference internal" href="#">ad5686</a><ul>
 <li><a class="reference internal" href="#adi.ad5686.ad5686"><code class="docutils literal notranslate"><span class="pre">ad5686</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad5686.ad5686.channel"><code class="docutils literal notranslate"><span class="pre">ad5686.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5686.ad5686.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad5686.compatible_parts</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad5686.ad5686_channel"><code class="docutils literal notranslate"><span class="pre">ad5686_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad5686.ad5686_channel.powerdown"><code class="docutils literal notranslate"><span class="pre">ad5686_channel.powerdown</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5686.ad5686_channel.powerdown_mode"><code class="docutils literal notranslate"><span class="pre">ad5686_channel.powerdown_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5686.ad5686_channel.powerdown_mode_available"><code class="docutils literal notranslate"><span class="pre">ad5686_channel.powerdown_mode_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5686.ad5686_channel.raw"><code class="docutils literal notranslate"><span class="pre">ad5686_channel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5686.ad5686_channel.scale"><code class="docutils literal notranslate"><span class="pre">ad5686_channel.scale</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5686.ad5686_channel.to_raw"><code class="docutils literal notranslate"><span class="pre">ad5686_channel.to_raw()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5686.ad5686_channel.volts"><code class="docutils literal notranslate"><span class="pre">ad5686_channel.volts</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -310,13 +320,62 @@ Content on this topic
 <span id="ad5686"></span><h1>ad5686<a class="headerlink" href="#module-adi.ad5686" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad5686.ad5686">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5686.</span></span><span class="sig-name descname"><span class="pre">ad5686</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5686.ad5686" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5686.</span></span><span class="sig-name descname"><span class="pre">ad5686</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5686.ad5686" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tx_chan_comp_no_buff</span></code></p>
 <p>AD5686 DAC</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad5686.ad5686.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad5686.ad5686.channel" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad5686.ad5686.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad5686',</span> <span class="pre">'ad5310r',</span> <span class="pre">'ad5311r',</span> <span class="pre">'ad5671r',</span> <span class="pre">'ad5672r',</span> <span class="pre">'ad5673r',</span> <span class="pre">'ad5674r',</span> <span class="pre">'ad5675r',</span> <span class="pre">'ad5676',</span> <span class="pre">'ad5676r',</span> <span class="pre">'ad5677r',</span> <span class="pre">'ad5679r',</span> <span class="pre">'ad5681r',</span> <span class="pre">'ad5682r',</span> <span class="pre">'ad5683',</span> <span class="pre">'ad5683r',</span> <span class="pre">'ad5684',</span> <span class="pre">'ad5684r',</span> <span class="pre">'ad5685r',</span> <span class="pre">'ad5686r',</span> <span class="pre">'ad5691r',</span> <span class="pre">'ad5692r',</span> <span class="pre">'ad5693',</span> <span class="pre">'ad5693r',</span> <span class="pre">'ad5694',</span> <span class="pre">'ad5694r',</span> <span class="pre">'ad5695r',</span> <span class="pre">'ad5696',</span> <span class="pre">'ad5696r']</span></em><a class="headerlink" href="#adi.ad5686.ad5686.compatible_parts" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad5686.ad5686_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5686.</span></span><span class="sig-name descname"><span class="pre">ad5686_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5686.ad5686_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>AD5686 channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5686.ad5686_channel.powerdown">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown</span></span><a class="headerlink" href="#adi.ad5686.ad5686_channel.powerdown" title="Link to this definition"></a></dt>
+<dd><p>AD5686 channel powerdown value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5686.ad5686_channel.powerdown_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown_mode</span></span><a class="headerlink" href="#adi.ad5686.ad5686_channel.powerdown_mode" title="Link to this definition"></a></dt>
+<dd><p>AD5686 channel powerdown mode value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5686.ad5686_channel.powerdown_mode_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown_mode_available</span></span><a class="headerlink" href="#adi.ad5686.ad5686_channel.powerdown_mode_available" title="Link to this definition"></a></dt>
+<dd><p>Provides all available powerdown mode settings for the AD5686</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5686.ad5686_channel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad5686.ad5686_channel.raw" title="Link to this definition"></a></dt>
+<dd><p>AD5686 channel raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5686.ad5686_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad5686.ad5686_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>AD5686 channel scale(gain)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad5686.ad5686_channel.to_raw">
+<span class="sig-name descname"><span class="pre">to_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5686.ad5686_channel.to_raw" title="Link to this definition"></a></dt>
+<dd><p>Converts raw value to SI</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5686.ad5686_channel.volts">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">volts</span></span><a class="headerlink" href="#adi.ad5686.ad5686_channel.volts" title="Link to this definition"></a></dt>
+<dd><p>AD5686 channel value in volts</p>
+</dd></dl>
 
 </dd></dl>
 

@@ -4,13 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: tx, context_manager" name="description" />
+<meta content="Bases: tx_def" name="description" />
 
     <title>adi.ad9739a module &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5c8d5ce8" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=fcf3088a"></script>
+    <script async="async" src="../_static/app.umd.js?v=f78f54ff"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -69,7 +69,7 @@
         <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         
-        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs">Docs</label>
         
         <a id="logo" href="../index.html">
           <div>pyadi-iio</div>
@@ -97,6 +97,7 @@
           <ul>
 <li><a class="reference internal" href="#">adi.ad9739a module</a><ul>
 <li><a class="reference internal" href="#adi.ad9739a.ad9739a"><code class="docutils literal notranslate"><span class="pre">ad9739a</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad9739a.ad9739a.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad9739a.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9739a.ad9739a.sample_rate"><code class="docutils literal notranslate"><span class="pre">ad9739a.sample_rate</span></code></a></li>
 </ul>
 </li>
@@ -310,9 +311,14 @@ Content on this topic
 <span id="adi-ad9739a-module"></span><h1>adi.ad9739a module<a class="headerlink" href="#module-adi.ad9739a" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad9739a.ad9739a">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9739a.</span></span><span class="sig-name descname"><span class="pre">ad9739a</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9739a.ad9739a" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9739a.</span></span><span class="sig-name descname"><span class="pre">ad9739a</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9739a.ad9739a" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx_def" title="adi.rx_tx.tx_def"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx_def</span></code></a></p>
 <p>AD9739A 14-Bit, 2.5 GSPS, RF Digital-to-Analog Converter</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad9739a.ad9739a.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad9739a']</span></em><a class="headerlink" href="#adi.ad9739a.ad9739a.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9739a.ad9739a.sample_rate">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad9739a.ad9739a.sample_rate" title="Link to this definition"></a></dt>

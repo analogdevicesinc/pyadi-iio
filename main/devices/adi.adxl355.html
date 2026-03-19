@@ -4,13 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager, attribute" name="description" />
+<meta content="Bases: rx_chan_comp" name="description" />
 
     <title>adxl355 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5c8d5ce8" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=fcf3088a"></script>
+    <script async="async" src="../_static/app.umd.js?v=f78f54ff"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -69,7 +69,7 @@
         <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         
-        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs">Docs</label>
         
         <a id="logo" href="../index.html">
           <div>pyadi-iio</div>
@@ -97,8 +97,25 @@
           <ul>
 <li><a class="reference internal" href="#">adxl355</a><ul>
 <li><a class="reference internal" href="#adi.adxl355.adxl355"><code class="docutils literal notranslate"><span class="pre">adxl355</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adxl355.adxl355.compatible_parts"><code class="docutils literal notranslate"><span class="pre">adxl355.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxl355.adxl355.current_timestamp_clock"><code class="docutils literal notranslate"><span class="pre">adxl355.current_timestamp_clock</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxl355.adxl355.to_degrees"><code class="docutils literal notranslate"><span class="pre">adxl355.to_degrees()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_channel"><code class="docutils literal notranslate"><span class="pre">adxl355_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_channel.calibbias"><code class="docutils literal notranslate"><span class="pre">adxl355_channel.calibbias</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_channel.filter_high_pass_3db_frequency"><code class="docutils literal notranslate"><span class="pre">adxl355_channel.filter_high_pass_3db_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_channel.filter_high_pass_3db_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxl355_channel.filter_high_pass_3db_frequency_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_channel.raw"><code class="docutils literal notranslate"><span class="pre">adxl355_channel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_channel.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">adxl355_channel.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_channel.sampling_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxl355_channel.sampling_frequency_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_channel.scale"><code class="docutils literal notranslate"><span class="pre">adxl355_channel.scale</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_tempchannel"><code class="docutils literal notranslate"><span class="pre">adxl355_tempchannel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_tempchannel.offset"><code class="docutils literal notranslate"><span class="pre">adxl355_tempchannel.offset</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_tempchannel.raw"><code class="docutils literal notranslate"><span class="pre">adxl355_tempchannel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl355.adxl355_tempchannel.scale"><code class="docutils literal notranslate"><span class="pre">adxl355_tempchannel.scale</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -311,9 +328,14 @@ Content on this topic
 <span id="adxl355"></span><h1>adxl355<a class="headerlink" href="#module-adi.adxl355" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adxl355.adxl355">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxl355.</span></span><span class="sig-name descname"><span class="pre">adxl355</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl355.adxl355" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxl355.</span></span><span class="sig-name descname"><span class="pre">adxl355</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl355.adxl355" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
 <p>ADXL355 3-axis accelerometer</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['adxl355']</span></em><a class="headerlink" href="#adi.adxl355.adxl355.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adxl355.adxl355.current_timestamp_clock">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_timestamp_clock</span></span><a class="headerlink" href="#adi.adxl355.adxl355.current_timestamp_clock" title="Link to this definition"></a></dt>
@@ -324,6 +346,80 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.adxl355.adxl355.to_degrees">
 <span class="sig-name descname"><span class="pre">to_degrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl355.adxl355.to_degrees" title="Link to this definition"></a></dt>
 <dd><p>Convert raw to degrees Celsius</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxl355.</span></span><span class="sig-name descname"><span class="pre">adxl355_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl355.adxl355_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>ADXL355 acceleration channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_channel.calibbias">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calibbias</span></span><a class="headerlink" href="#adi.adxl355.adxl355_channel.calibbias" title="Link to this definition"></a></dt>
+<dd><p>ADXL355 channel offset</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_channel.filter_high_pass_3db_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_high_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adxl355.adxl355_channel.filter_high_pass_3db_frequency" title="Link to this definition"></a></dt>
+<dd><p>ADXL355 highpass filter cutoff frequency</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_channel.filter_high_pass_3db_frequency_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_high_pass_3db_frequency_available</span></span><a class="headerlink" href="#adi.adxl355.adxl355_channel.filter_high_pass_3db_frequency_available" title="Link to this definition"></a></dt>
+<dd><p>Provides all available highpass filter cutoff frequency settings for the ADXL355 channels</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_channel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.adxl355.adxl355_channel.raw" title="Link to this definition"></a></dt>
+<dd><p>ADXL355 channel raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_channel.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.adxl355.adxl355_channel.sampling_frequency" title="Link to this definition"></a></dt>
+<dd><p>ADXL355 per-channel sampling frequency</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_channel.sampling_frequency_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency_available</span></span><a class="headerlink" href="#adi.adxl355.adxl355_channel.sampling_frequency_available" title="Link to this definition"></a></dt>
+<dd><p>Provides all available sampling frequency settings for the ADXL355 channels</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.adxl355.adxl355_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>ADXL355 channel scale(gain)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_tempchannel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxl355.</span></span><span class="sig-name descname"><span class="pre">adxl355_tempchannel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl355.adxl355_tempchannel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>ADXL355 temperature channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_tempchannel.offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.adxl355.adxl355_tempchannel.offset" title="Link to this definition"></a></dt>
+<dd><p>ADXL355 temperature offset value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_tempchannel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.adxl355.adxl355_tempchannel.raw" title="Link to this definition"></a></dt>
+<dd><p>ADXL355 temperature raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl355.adxl355_tempchannel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.adxl355.adxl355_tempchannel.scale" title="Link to this definition"></a></dt>
+<dd><p>ADXL355 channel scale value</p>
 </dd></dl>
 
 </dd></dl>

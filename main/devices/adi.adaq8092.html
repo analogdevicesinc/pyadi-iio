@@ -4,13 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager" name="description" />
+<meta content="Bases: rx_def" name="description" />
 
     <title>adaq8092 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5c8d5ce8" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=fcf3088a"></script>
+    <script async="async" src="../_static/app.umd.js?v=f78f54ff"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -69,7 +69,7 @@
         <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         
-        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs">Docs</label>
         
         <a id="logo" href="../index.html">
           <div>pyadi-iio</div>
@@ -97,6 +97,7 @@
           <ul>
 <li><a class="reference internal" href="#">adaq8092</a><ul>
 <li><a class="reference internal" href="#adi.adaq8092.adaq8092"><code class="docutils literal notranslate"><span class="pre">adaq8092</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adaq8092.adaq8092.compatible_parts"><code class="docutils literal notranslate"><span class="pre">adaq8092.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.adaq8092.adaq8092.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">adaq8092.sampling_frequency</span></code></a></li>
 </ul>
 </li>
@@ -310,9 +311,14 @@ Content on this topic
 <span id="adaq8092"></span><h1>adaq8092<a class="headerlink" href="#module-adi.adaq8092" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adaq8092.adaq8092">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adaq8092.</span></span><span class="sig-name descname"><span class="pre">adaq8092</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adaq8092.adaq8092" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adaq8092.</span></span><span class="sig-name descname"><span class="pre">adaq8092</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adaq8092.adaq8092" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx_def" title="adi.rx_tx.rx_def"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx_def</span></code></a></p>
 <p>ADAQ8092 14-Bit, 105MSPS, Dual-Channel uModule Data Acquisition Solution</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.adaq8092.adaq8092.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['adaq8092',</span> <span class="pre">'cf_axi_adc']</span></em><a class="headerlink" href="#adi.adaq8092.adaq8092.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adaq8092.adaq8092.sampling_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.adaq8092.adaq8092.sampling_frequency" title="Link to this definition"></a></dt>

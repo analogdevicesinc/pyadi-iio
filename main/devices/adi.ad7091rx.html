@@ -4,13 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager" name="description" />
+<meta content="Bases: rx_chan_comp_no_buff" name="description" />
 
     <title>ad7091rx &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5c8d5ce8" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=fcf3088a"></script>
+    <script async="async" src="../_static/app.umd.js?v=f78f54ff"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -69,7 +69,7 @@
         <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         
-        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs">Docs</label>
         
         <a id="logo" href="../index.html">
           <div>pyadi-iio</div>
@@ -97,8 +97,13 @@
           <ul>
 <li><a class="reference internal" href="#">ad7091rx</a><ul>
 <li><a class="reference internal" href="#adi.ad7091rx.ad7091rx"><code class="docutils literal notranslate"><span class="pre">ad7091rx</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad7091rx.ad7091rx.channel"><code class="docutils literal notranslate"><span class="pre">ad7091rx.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7091rx.ad7091rx.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad7091rx.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad7091rx.ad7091rx.to_mvolts"><code class="docutils literal notranslate"><span class="pre">ad7091rx.to_mvolts()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad7091rx.ad7091rx_channel"><code class="docutils literal notranslate"><span class="pre">ad7091rx_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad7091rx.ad7091rx_channel.raw"><code class="docutils literal notranslate"><span class="pre">ad7091rx_channel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7091rx.ad7091rx_channel.scale"><code class="docutils literal notranslate"><span class="pre">ad7091rx_channel.scale</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -311,19 +316,38 @@ Content on this topic
 <span id="ad7091rx"></span><h1>ad7091rx<a class="headerlink" href="#module-adi.ad7091rx" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad7091rx.ad7091rx">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7091rx.</span></span><span class="sig-name descname"><span class="pre">ad7091rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7091rx.ad7091rx" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7091rx.</span></span><span class="sig-name descname"><span class="pre">ad7091rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7091rx.ad7091rx" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp_no_buff</span></code></p>
 <p>AD7091R-2/AD7091R-4/AD7091R-8 SPI interface,
 2-/4-/8-channel, 12-bit SAR ADC</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad7091rx.ad7091rx.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad7091rx.ad7091rx.channel" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad7091rx.ad7091rx.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad7091r-8',</span> <span class="pre">'ad7091r-4',</span> <span class="pre">'ad7091r-2']</span></em><a class="headerlink" href="#adi.ad7091rx.ad7091rx.compatible_parts" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.ad7091rx.ad7091rx.to_mvolts">
 <span class="sig-name descname"><span class="pre">to_mvolts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7091rx.ad7091rx.to_mvolts" title="Link to this definition"></a></dt>
 <dd><p>Converts raw value to mV</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad7091rx.ad7091rx_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7091rx.</span></span><span class="sig-name descname"><span class="pre">ad7091rx_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7091rx.ad7091rx_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>AD7091R-8/-4/-2 Input Voltage Channels</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7091rx.ad7091rx_channel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad7091rx.ad7091rx_channel.raw" title="Link to this definition"></a></dt>
+<dd><p>AD7091r channel raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7091rx.ad7091rx_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad7091rx.ad7091rx_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>AD7091r channel scale</p>
 </dd></dl>
 
 </dd></dl>

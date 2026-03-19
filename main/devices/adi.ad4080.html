@@ -4,13 +4,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager" name="description" />
+<meta content="The class adi.ad4080 supports the following IIO drivers:" name="description" />
 
     <title>ad4080 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a525f648" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=5c8d5ce8" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=fcf3088a"></script>
+    <script async="async" src="../_static/app.umd.js?v=f78f54ff"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -69,7 +69,7 @@
         <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         
-        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs">Docs</label>
         
         <a id="logo" href="../index.html">
           <div>pyadi-iio</div>
@@ -96,15 +96,29 @@
         <nav>
           <ul>
 <li><a class="reference internal" href="#">ad4080</a><ul>
-<li><a class="reference internal" href="#adi.ad4080.ad4080"><code class="docutils literal notranslate"><span class="pre">ad4080</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad4080.ad4080.channel"><code class="docutils literal notranslate"><span class="pre">ad4080.channel</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4080.ad4080.filter_type"><code class="docutils literal notranslate"><span class="pre">ad4080.filter_type</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4080.ad4080.filter_type_available"><code class="docutils literal notranslate"><span class="pre">ad4080.filter_type_available</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4080.ad4080.oversampling_ratio"><code class="docutils literal notranslate"><span class="pre">ad4080.oversampling_ratio</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4080.ad4080.oversampling_ratio_available"><code class="docutils literal notranslate"><span class="pre">ad4080.oversampling_ratio_available</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4080.ad4080.reg_read"><code class="docutils literal notranslate"><span class="pre">ad4080.reg_read()</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4080.ad4080.reg_write"><code class="docutils literal notranslate"><span class="pre">ad4080.reg_write()</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4080.ad4080.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad4080.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#supported-drivers">Supported Drivers</a><ul>
+<li><a class="reference internal" href="#adi.ad4080.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad4080.compatible_parts</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#class-api">Class API</a><ul>
+<li><a class="reference internal" href="#adi.ad4080"><code class="docutils literal notranslate"><span class="pre">ad4080</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad4080.channel"><code class="docutils literal notranslate"><span class="pre">ad4080.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.filter_type"><code class="docutils literal notranslate"><span class="pre">ad4080.filter_type</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.filter_type_available"><code class="docutils literal notranslate"><span class="pre">ad4080.filter_type_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.oversampling_ratio"><code class="docutils literal notranslate"><span class="pre">ad4080.oversampling_ratio</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.oversampling_ratio_available"><code class="docutils literal notranslate"><span class="pre">ad4080.oversampling_ratio_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.reg_read"><code class="docutils literal notranslate"><span class="pre">ad4080.reg_read()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.reg_write"><code class="docutils literal notranslate"><span class="pre">ad4080.reg_write()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad4080.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad4080.sampling_frequency</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dynamic-attributes">Dynamic Attributes</a><ul>
+<li><a class="reference internal" href="#adi.ad4080.ad4080_channel"><code class="docutils literal notranslate"><span class="pre">ad4080_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad4080.ad4080_channel.scale"><code class="docutils literal notranslate"><span class="pre">ad4080_channel.scale</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -313,62 +327,91 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.ad4080">
-<span id="ad4080"></span><h1>ad4080<a class="headerlink" href="#module-adi.ad4080" title="Link to this heading"></a></h1>
+  <section id="ad4080">
+<h1>ad4080<a class="headerlink" href="#ad4080" title="Link to this heading"></a></h1>
+<section id="supported-drivers">
+<h2>Supported Drivers<a class="headerlink" href="#supported-drivers" title="Link to this heading"></a></h2>
+<p>The class <strong>adi.ad4080</strong> supports the following IIO drivers:</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad4080.compatible_parts">
+<span class="sig-prename descclassname"><span class="pre">ad4080.</span></span><span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad4080']</span></em><a class="headerlink" href="#adi.ad4080.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="class-api">
+<h2>Class API<a class="headerlink" href="#class-api" title="Link to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4080.</span></span><span class="sig-name descname"><span class="pre">ad4080</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ad4080'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.ad4080" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<dt class="sig sig-object py" id="adi.ad4080">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.</span></span><span class="sig-name descname"><span class="pre">ad4080</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
 <p>AD4080 ADC</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad4080.ad4080.channel" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad4080.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad4080.channel" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080.filter_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type</span></span><a class="headerlink" href="#adi.ad4080.ad4080.filter_type" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad4080.filter_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type</span></span><a class="headerlink" href="#adi.ad4080.filter_type" title="Link to this definition"></a></dt>
 <dd><p>Get the filter type value</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080.filter_type_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type_available</span></span><a class="headerlink" href="#adi.ad4080.ad4080.filter_type_available" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad4080.filter_type_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type_available</span></span><a class="headerlink" href="#adi.ad4080.filter_type_available" title="Link to this definition"></a></dt>
 <dd><p>Get the filter type available values</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080.oversampling_ratio">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio</span></span><a class="headerlink" href="#adi.ad4080.ad4080.oversampling_ratio" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad4080.oversampling_ratio">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio</span></span><a class="headerlink" href="#adi.ad4080.oversampling_ratio" title="Link to this definition"></a></dt>
 <dd><p>Get the oversampling ratio value</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080.oversampling_ratio_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio_available</span></span><a class="headerlink" href="#adi.ad4080.ad4080.oversampling_ratio_available" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad4080.oversampling_ratio_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio_available</span></span><a class="headerlink" href="#adi.ad4080.oversampling_ratio_available" title="Link to this definition"></a></dt>
 <dd><p>Get the oversampling ratio available values</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080.reg_read">
-<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.ad4080.reg_read" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad4080.reg_read">
+<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.reg_read" title="Link to this definition"></a></dt>
 <dd><p>Direct Register Access via debugfs</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080.reg_write">
-<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.ad4080.reg_write" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad4080.reg_write">
+<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.reg_write" title="Link to this definition"></a></dt>
 <dd><p>Direct Register Access via debugfs</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4080.ad4080.sampling_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad4080.ad4080.sampling_frequency" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ad4080.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad4080.sampling_frequency" title="Link to this definition"></a></dt>
 <dd><p>Get Sampling frequency value</p>
 </dd></dl>
 
 </dd></dl>
 
+</section>
+<section id="dynamic-attributes">
+<h2>Dynamic Attributes<a class="headerlink" href="#dynamic-attributes" title="Link to this heading"></a></h2>
+<p>The ad4080 class supports a variable number of channels depending on the hardware configuration. Therefore, the channel property interfaces are dynamically generated. They are available on an initiated object as attributes with names voltage0, voltage1, etc. They will be instances of the ad4080_channel class.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad4080.ad4080_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4080.</span></span><span class="sig-name descname"><span class="pre">ad4080_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4080.ad4080_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>AD4080 channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad4080.ad4080_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad4080.ad4080_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>Get Scale value</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
