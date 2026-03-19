@@ -45,9 +45,11 @@ def pytest_collection_modifyitems(items):
     for item in items:
         if "test_fmcomms2-3_prod.py" in item.nodeid:
             item.add_marker(pytest.mark.production_test)
-        if item.originalname:
+    for item in items:
+        if "iio_hardware" in item.keywords:
+            hardware_list = item.keywords["iio_hardware"].args[0]
             for key in test_map_keys:
-                if key in item.originalname:
+                if key in hardware_list:
                     for marker in test_map[key]:
                         item.add_marker(marker.replace("-", "_"))
                     break
