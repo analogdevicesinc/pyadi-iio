@@ -2,84 +2,53 @@
 #
 # SPDX short identifier: ADIBSD
 
-
 from decimal import Decimal
 
 import numpy as np
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class ad4130(rx, context_manager):
+class ad4130_channel(attribute):
+    """AD4130 channel"""
 
-    """ AD4130 ADC """
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
 
-    _complex_data = False
+    @property
+    def raw(self):
+        """AD4130 channel raw value."""
+        return self._get_iio_attr(self.name, "raw", False)
+
+    @property
+    def offset(self):
+        """AD4130 channel offset."""
+        return float(self._get_iio_attr_str(self.name, "offset", False))
+
+    @offset.setter
+    def offset(self, value):
+        self._set_iio_attr(self.name, "offset", False, str(Decimal(value).real))
+
+    @property
+    def scale(self):
+        """AD4130 channel scale."""
+        return float(self._get_iio_attr_str(self.name, "scale", False))
+
+    @scale.setter
+    def scale(self, value):
+        self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
+
+
+class ad4130(rx_chan_comp):
+    """AD4130 ADC"""
+
     channel = []  # type: ignore
+    compatible_parts = ["ad4130-8"]
     _device_name = ""
-
-    def __init__(self, uri="", device_name=""):
-        """Constructor for AD4130 class."""
-        context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = ["ad4130-8"]
-
-        self._ctrl = None
-
-        if not device_name:
-            device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception("Not a compatible device: " + device_name)
-
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._rxadc = device
-                break
-
-        self._rx_channel_names = []
-        self.channel = []
-        for ch in self._ctrl.channels:
-            name = ch._id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-
-        rx.__init__(self)
-
-    class _channel(attribute):
-
-        """AD4130 channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            """AD4130 channel raw value."""
-            return self._get_iio_attr(self.name, "raw", False)
-
-        @property
-        def offset(self):
-            """AD4130 channel offset."""
-            return float(self._get_iio_attr_str(self.name, "offset", False))
-
-        @offset.setter
-        def offset(self, value):
-            self._set_iio_attr(self.name, "offset", False, str(Decimal(value).real))
-
-        @property
-        def scale(self):
-            """AD4130 channel scale."""
-            return float(self._get_iio_attr_str(self.name, "scale", False))
-
-        @scale.setter
-        def scale(self, value):
-            self._set_iio_attr(self.name, "scale", False, str(Decimal(value).real))
+    _complex_data = False
+    _channel_def = ad4130_channel
 
     def to_volts(self, index, val):
         """Converts raw value to SI."""

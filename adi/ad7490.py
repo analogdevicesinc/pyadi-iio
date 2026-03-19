@@ -5,48 +5,34 @@
 import numpy as np
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class ad7490(rx, context_manager):
+class ad7490_channel(attribute):
+    """AD7490 channel"""
+
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
+
+    @property
+    def raw(self):
+        """AD7490 channel raw value"""
+        return self._get_iio_attr(self.name, "raw", False)
+
+    @property
+    def scale(self):
+        """AD7490 channel scale"""
+        return float(self._get_iio_attr_str(self.name, "scale", False))
+
+
+class ad7490(rx_chan_comp):
     """AD7490 ADC"""
 
+    compatible_parts = ["ad7490"]
     _complex_data = False
-    channel = []  # type: ignore
+    _channel_def = ad7490_channel
     _device_name = ""
-
-    def __init__(self, uri="", device_name=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = [
-            "ad7490",
-        ]
-
-        self._ctrl = None
-
-        if not device_name:
-            device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception("Not a compatible device: " + device_name)
-
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._rxadc = device
-                break
-
-        self._rx_channel_names = []
-        self.channel = []
-        for ch in self._ctrl.channels:
-            name = ch._id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-
-        rx.__init__(self)
 
     @property
     def polarity_available(self):
@@ -94,23 +80,6 @@ class ad7490(rx, context_manager):
     def sampling_frequency(self):
         """AD7490 sampling frequency"""
         return self._get_iio_dev_attr_str("sampling_frequency")
-
-    class _channel(attribute):
-        """AD7490 channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            """AD7490 channel raw value"""
-            return self._get_iio_attr(self.name, "raw", False)
-
-        @property
-        def scale(self):
-            """AD7490 channel scale"""
-            return float(self._get_iio_attr_str(self.name, "scale", False))
 
     def to_volts(self, index, val):
         """Converts raw value to SI"""
