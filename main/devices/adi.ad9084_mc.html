@@ -97,7 +97,12 @@
           <ul>
 <li><a class="reference internal" href="#">ad9084_mc</a><ul>
 <li><a class="reference internal" href="#adi.ad9084_mc.Triton"><code class="docutils literal notranslate"><span class="pre">Triton</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad9084_mc.Triton.rx_dsa_gain"><code class="docutils literal notranslate"><span class="pre">Triton.rx_dsa_gain</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084_mc.Triton.hpf_ctrl"><code class="docutils literal notranslate"><span class="pre">Triton.hpf_ctrl</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084_mc.Triton.lpf_ctrl"><code class="docutils literal notranslate"><span class="pre">Triton.lpf_ctrl</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084_mc.Triton.rx_dsa0_gain"><code class="docutils literal notranslate"><span class="pre">Triton.rx_dsa0_gain</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084_mc.Triton.rx_dsa1_gain"><code class="docutils literal notranslate"><span class="pre">Triton.rx_dsa1_gain</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084_mc.Triton.rx_dsa2_gain"><code class="docutils literal notranslate"><span class="pre">Triton.rx_dsa2_gain</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084_mc.Triton.rx_dsa3_gain"><code class="docutils literal notranslate"><span class="pre">Triton.rx_dsa3_gain</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#adi.ad9084_mc.ad9084_mc"><code class="docutils literal notranslate"><span class="pre">ad9084_mc</span></code></a></li>
@@ -357,9 +362,39 @@ Content on this topic
 </dd>
 </dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad9084_mc.Triton.rx_dsa_gain">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa_gain</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.rx_dsa_gain" title="Link to this definition"></a></dt>
-<dd><p>rx_dsa_gain: Receiver digital step attenuator gain</p>
+<dt class="sig sig-object py" id="adi.ad9084_mc.Triton.hpf_ctrl">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hpf_ctrl</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.hpf_ctrl" title="Link to this definition"></a></dt>
+<dd><p>hpf_ctrl: High Pass Filter cutoff</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084_mc.Triton.lpf_ctrl">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lpf_ctrl</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.lpf_ctrl" title="Link to this definition"></a></dt>
+<dd><p>lpf_ctrl: Low Pass Filter cutoff</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084_mc.Triton.rx_dsa0_gain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa0_gain</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.rx_dsa0_gain" title="Link to this definition"></a></dt>
+<dd><p>rx_dsa0_gain: Receiver digital step attenuator gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084_mc.Triton.rx_dsa1_gain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa1_gain</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.rx_dsa1_gain" title="Link to this definition"></a></dt>
+<dd><p>rx_dsa1_gain: Receiver digital step attenuator gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084_mc.Triton.rx_dsa2_gain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa2_gain</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.rx_dsa2_gain" title="Link to this definition"></a></dt>
+<dd><p>rx_dsa2_gain: Receiver digital step attenuator gain</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084_mc.Triton.rx_dsa3_gain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_dsa3_gain</span></span><a class="headerlink" href="#adi.ad9084_mc.Triton.rx_dsa3_gain" title="Link to this definition"></a></dt>
+<dd><p>rx_dsa3_gain: Receiver digital step attenuator gain</p>
 </dd></dl>
 
 </dd></dl>
@@ -368,16 +403,16 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.ad9084_mc.ad9084_mc">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad9084_mc.</span></span><span class="sig-name descname"><span class="pre">ad9084_mc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phy_dev_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084_mc.ad9084_mc" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="adi.ad9084.html#adi.ad9084.ad9084" title="adi.ad9084.ad9084"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad9084</span></code></a></p>
-<p>ad9084 Mixed-Signal Front End (MxFE) Multi-Chip Interface</p>
+<p>ad9084/ad9088 Mixed-Signal Front End (MxFE) Multi-Chip Interface</p>
 <blockquote>
 <div><p>This class is a generic interface for boards that utilize multiple ad9084
-devices.</p>
+or ad9088 devices.</p>
 </div></blockquote>
 <dl class="simple">
 <dt>parameters:</dt><dd><dl class="simple">
-<dt>uri: type=string</dt><dd><p>Optional parameter for the URI of IIO context with ad9084(s).</p>
+<dt>uri: type=string</dt><dd><p>Optional parameter for the URI of IIO context with ad9084/ad9088(s).</p>
 </dd>
-<dt>phy_dev_name: type=string</dt><dd><p>Optional parameter name of main control driver for multi-ad9084 board.
+<dt>phy_dev_name: type=string</dt><dd><p>Optional parameter name of main control driver for multi-MxFE board.
 If no argument is given the driver with the most channel attributes is
 assumed to be the main PHY driver</p>
 </dd>
