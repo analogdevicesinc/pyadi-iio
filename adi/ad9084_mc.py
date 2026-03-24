@@ -73,17 +73,25 @@ def _find_dev_with_buffers(ctx, output=False, contains=""):
                 return dev
 
 
+_DEVICE_MATCHES = ("ad9084", "ad9088")
+
+
+def _is_mxfe_device(name):
+    """Check if a device name matches any known MxFE device."""
+    return name and any(m in name for m in _DEVICE_MATCHES)
+
+
 class ad9084_mc(ad9084):
-    """ad9084 Mixed-Signal Front End (MxFE) Multi-Chip Interface
+    """ad9084/ad9088 Mixed-Signal Front End (MxFE) Multi-Chip Interface
 
         This class is a generic interface for boards that utilize multiple ad9084
-        devices.
+        or ad9088 devices.
 
     parameters:
         uri: type=string
-            Optional parameter for the URI of IIO context with ad9084(s).
+            Optional parameter for the URI of IIO context with ad9084/ad9088(s).
         phy_dev_name: type=string
-            Optional parameter name of main control driver for multi-ad9084 board.
+            Optional parameter name of main control driver for multi-MxFE board.
             If no argument is given the driver with the most channel attributes is
             assumed to be the main PHY driver
 
@@ -118,11 +126,11 @@ class ad9084_mc(ad9084):
         context_manager.__init__(self, uri, self._device_name)
 
         if not phy_dev_name:
-            # Get ad9084 dev name with most channel attributes
+            # Get MxFE dev name with most channel attributes
             channel_attr_count = {
                 dev.name: sum(len(chan.attrs) for chan in dev.channels)
                 for dev in self._ctx.devices
-                if dev.name and "ad9084" in dev.name
+                if _is_mxfe_device(dev.name)
             }
             phy_dev_name = max(channel_attr_count, key=channel_attr_count.get)
 
@@ -130,18 +138,23 @@ class ad9084_mc(ad9084):
         if not self._ctrl:
             raise Exception("phy_dev_name not found with name: {}".format(phy_dev_name))
 
-        # Find device with buffers
-        self._txdac = _find_dev_with_buffers(self._ctx, True, "axi-ad9084")
-        self._rxadc = _find_dev_with_buffers(self._ctx, False, "axi-ad9084")
+        # Find device with buffers (match both axi-ad9084 and axi-ad9088)
+        self._txdac = None
+        self._rxadc = None
+        for prefix in ("axi-ad9084", "axi-ad9088"):
+            if not self._txdac:
+                self._txdac = _find_dev_with_buffers(self._ctx, True, prefix)
+            if not self._rxadc:
+                self._rxadc = _find_dev_with_buffers(self._ctx, False, prefix)
 
         # Get DDC and DUC mappings
         # Labels span all devices so they must all be processed
         paths = {}
         self._default_ctrl_names = []
         for dev in self._ctx.devices:
-            if dev.name and "ad9084" not in dev.name:
+            if not _is_mxfe_device(dev.name):
                 continue
-            if dev.label and "ad9084" in dev.label:
+            if dev.label and _is_mxfe_device(dev.label):
                 name = dev.label
             else:
                 name = dev.name
