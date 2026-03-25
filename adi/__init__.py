@@ -127,6 +127,7 @@ from adi.fmcomms11 import FMComms11
 from adi.gen_mux import genmux
 from adi.hmc7044 import hmc7044
 from adi.hmcad15xx import hmcad15xx
+from adi.sharkbyte import sharkbyte
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2378 import ltc2378
@@ -145,9 +146,11 @@ from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.tdd import tdd
 from adi.tddn import tddn
+from adi.sshfs import sshfs
 
 try:
     from adi.jesd import jesd
+
 except ImportError:
     pass
 

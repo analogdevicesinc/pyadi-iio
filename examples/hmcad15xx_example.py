@@ -14,13 +14,14 @@ import numpy as np
 from scipy import signal
 
 
-my_uri = sys.argv[1] if len(sys.argv) >= 2 else "local:"
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:192.168.2.1"
 print("uri: " + str(my_uri))
 
 
-hmcad15xx_dev = adi.hmcad15xx(uri=my_uri)
+hmcad15xx_dev = adi.hmcad15xx(uri=my_uri,device_name="axi_adc2_hmcad15xx")
+ssh = adi.sshfs(address=my_uri, username="root", password="analog")
 
-hmcad15xx_dev.rx_buffer_size = 8096
+hmcad15xx_dev.rx_buffer_size = 1024
 hmcad15xx_dev.rx_enabled_channels = [0,1,2,3]
 print("RX rx_enabled_channels: " + str(hmcad15xx_dev.rx_enabled_channels))
 
@@ -46,13 +47,30 @@ hmcad15xx_dev.channel[3].input_select = "IP4_IN4"
 print("Signal input 0X3A is:", hmcad15xx_dev.hmcad15xx_register_read(0x3A))
 print("Signal input 0X3B is:", hmcad15xx_dev.hmcad15xx_register_read(0x3B))
 
-print("Writing 0xABCD to 0x26 custom pattern")
-hmcad15xx_dev.hmcad15xx_register_write(0x26,0xABCD)
-print("0x26 custom pattern is:", hmcad15xx_dev.hmcad15xx_register_read(0x26))
+
+test_pattern = 0x10
+custom_pattern = 0xAC5D
+hmcad15xx_dev.hmcad15xx_register_write(0x25, test_pattern)
+hmcad15xx_dev.hmcad15xx_register_write(0x26, custom_pattern)
+hmcad15xx_dev.hmcad15xx_register_write(0x46, 0x4)
+hmcad15xx_dev.hmcad15xx_register_write(0x42, 0x40)
+# specify the custom value
+
+ssh = adi.sshfs(address=my_uri, username="root", password="analog")
+base_addr_1   = 0x44A00800
+base_addr_2   = 0x44A60800
+lane = 0
+value = 1
+stdout, stderr = ssh._run(f"busybox devmem {base_addr_2 + 4*lane} {value}")
+print(stdout)
+stdout, stderr = ssh._run(f"busybox devmem {base_addr_2 + 4*lane} {value}")
+print(stdout)
 
 # rx data
 
 data = hmcad15xx_dev.rx()
+
+# read from register map
 
 # plot setup
 

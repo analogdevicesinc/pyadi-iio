@@ -29,9 +29,6 @@ class hmcad15xx(rx, context_manager):
 
         if not device_name:
             device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception(f"Not a compatible device: {device_name}")
 
         # Select the device matching device_name as working device
         for device in self._ctx.devices:
@@ -71,6 +68,11 @@ class hmcad15xx(rx, context_manager):
     @clk_div.setter
     def clk_div(self, value):
         self._set_iio_dev_attr_str("clk_div", value, self._ctrl)
+
+    @property
+    def sampling_rate(self):
+        """sampling_rate: Sample rate in samples per second"""
+        return self._get_iio_dev_attr("sampling_frequency", self._ctrl)
 
     @property
     def operation_mode(self):
