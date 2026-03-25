@@ -1,4 +1,4 @@
-# Copyright (C) 2024-2025 Analog Devices, Inc.
+# Copyright (C) 2024-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 import adi

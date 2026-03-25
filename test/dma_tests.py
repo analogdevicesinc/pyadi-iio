@@ -427,7 +427,6 @@ def dds_two_tone(
     s2 = f"Peak 2: {tone_peaks[indx2]} @ {tone_freqs[indx2]}"
     print(s2)
 
-
     if do_html_log:
         pytest.data_log = {
             "html": gen_line_plot_html(
@@ -447,8 +446,8 @@ def dds_two_tone(
     assert diff2 < (frequency2 * 0.01)
     assert tone_peaks[indx1] > peak_min1
     assert tone_peaks[indx2] > peak_min2
- 
- 
+
+
 def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     """nco_loopback: TX/DAC Test tone loopback with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
