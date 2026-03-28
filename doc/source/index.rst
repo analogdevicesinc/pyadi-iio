@@ -80,6 +80,7 @@ Sections
    attr/index
    guides/examples
    guides/connectivity
+   guides/ad9088_cal_dump
    buffers/index
    fpga/index
    libiio
