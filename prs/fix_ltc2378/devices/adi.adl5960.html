@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,9 +8,9 @@
 
     <title>adl5960 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=31a9e0ba" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=833c9372" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=3a4867e9"></script>
+    <script async="async" src="../_static/app.umd.js?v=f78f54ff"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -69,7 +69,7 @@
         <a id="logo-org" href="https://analog.com" aria-label="Analog Devices Inc. landing page"></a>
         <div class="vertical-divider"></div>
         
-        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs" tabindex="0">Docs</label>
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs">Docs</label>
         
         <a id="logo" href="../index.html">
           <div>pyadi-iio</div>
@@ -121,7 +121,7 @@
     </div>
 
   
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
     <a id="logo" href="../index.html">
       <img class="only-light" src="../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
@@ -140,8 +140,7 @@ Content on this topic
 
 </div>
 <div class="toc-tree">
-  <html>
-  <body><ul class="current">
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
@@ -171,9 +170,12 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4170.html">ad4170</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4630.html">ad4630</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad469x.html">ad469x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad514x.html">ad514x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5592r.html">ad5592r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5686.html">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5706r.html">ad5706r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad5710r.html">ad5710r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad579x.html">ad579x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5754r.html">ad5754r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5940.html">adi.ad5940 module</a></li>
@@ -185,6 +187,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad719x.html">ad719x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7291.html">ad7291</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad738x.html">ad738x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad7405.html">ad7405</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7490.html">ad7490</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7606.html">ad7606</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad7689.html">ad7689</a></li>
@@ -216,6 +219,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4858.html">ad4858</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad9739a.html">adi.ad9739a module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ada4355.html">ada4355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ada4356_lidar.html">ada4356_lidar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ada4961.html">adi.ada4961 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adaq8092.html">adaq8092</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adar1000.html">adar1000</a></li>
@@ -300,8 +304,7 @@ Content on this topic
 </ul>
 </li>
 </ul>
-</body>
-</html>
+
 
 </div>
         </div>
@@ -316,10 +319,10 @@ Content on this topic
           <div class="body" role="main">
             
   <section id="module-adi.adl5960">
-<span id="adl5960"></span><h1>adl5960<a class="headerlink" href="#module-adi.adl5960" title="Permalink to this heading"></a></h1>
+<span id="adl5960"></span><h1>adl5960<a class="headerlink" href="#module-adi.adl5960" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adl5960.</span></span><span class="sig-name descname"><span class="pre">adl5960</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adl5960.adl5960" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adl5960.</span></span><span class="sig-name descname"><span class="pre">adl5960</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adl5960.adl5960" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
 <p>ADL5960 10 MHz to 20 GHz, Integrated Vector Network Analyzer Front-End</p>
 <dl class="simple">
@@ -331,79 +334,79 @@ Content on this topic
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.forward_gain">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward_gain</span></span><a class="headerlink" href="#adi.adl5960.adl5960.forward_gain" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward_gain</span></span><a class="headerlink" href="#adi.adl5960.adl5960.forward_gain" title="Link to this definition"></a></dt>
 <dd><p>Get/Set Forward Gain</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.if_filter_cutoff">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">if_filter_cutoff</span></span><a class="headerlink" href="#adi.adl5960.adl5960.if_filter_cutoff" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">if_filter_cutoff</span></span><a class="headerlink" href="#adi.adl5960.adl5960.if_filter_cutoff" title="Link to this definition"></a></dt>
 <dd><p>Get/Set LPF 3db cutoff frequency (controls CIF1, CIF2)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.if_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">if_frequency</span></span><a class="headerlink" href="#adi.adl5960.adl5960.if_frequency" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">if_frequency</span></span><a class="headerlink" href="#adi.adl5960.adl5960.if_frequency" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the IF frequency in Hz</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.lo_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lo_frequency</span></span><a class="headerlink" href="#adi.adl5960.adl5960.lo_frequency" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lo_frequency</span></span><a class="headerlink" href="#adi.adl5960.adl5960.lo_frequency" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the frequency in Hz</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.lo_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lo_mode</span></span><a class="headerlink" href="#adi.adl5960.adl5960.lo_mode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lo_mode</span></span><a class="headerlink" href="#adi.adl5960.adl5960.lo_mode" title="Link to this definition"></a></dt>
 <dd><p>Get/Set LO mode</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.lo_mode_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lo_mode_available</span></span><a class="headerlink" href="#adi.adl5960.adl5960.lo_mode_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lo_mode_available</span></span><a class="headerlink" href="#adi.adl5960.adl5960.lo_mode_available" title="Link to this definition"></a></dt>
 <dd><p>Get available LO modes</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.offset_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset_frequency</span></span><a class="headerlink" href="#adi.adl5960.adl5960.offset_frequency" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset_frequency</span></span><a class="headerlink" href="#adi.adl5960.adl5960.offset_frequency" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the offset frequency in Hz</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.offset_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset_mode</span></span><a class="headerlink" href="#adi.adl5960.adl5960.offset_mode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset_mode</span></span><a class="headerlink" href="#adi.adl5960.adl5960.offset_mode" title="Link to this definition"></a></dt>
 <dd><p>Get/Set offset mode</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.offset_mode_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset_mode_available</span></span><a class="headerlink" href="#adi.adl5960.adl5960.offset_mode_available" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset_mode_available</span></span><a class="headerlink" href="#adi.adl5960.adl5960.offset_mode_available" title="Link to this definition"></a></dt>
 <dd><p>Get available offset modes</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.reflected_gain">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reflected_gain</span></span><a class="headerlink" href="#adi.adl5960.adl5960.reflected_gain" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reflected_gain</span></span><a class="headerlink" href="#adi.adl5960.adl5960.reflected_gain" title="Link to this definition"></a></dt>
 <dd><p>Get/Set Reflected Gain</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.reg_read">
-<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adl5960.adl5960.reg_read" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adl5960.adl5960.reg_read" title="Link to this definition"></a></dt>
 <dd><p>Direct Register Access via debugfs</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.reg_write">
-<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adl5960.adl5960.reg_write" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adl5960.adl5960.reg_write" title="Link to this definition"></a></dt>
 <dd><p>Direct Register Access via debugfs</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adl5960.adl5960.temperature">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature</span></span><a class="headerlink" href="#adi.adl5960.adl5960.temperature" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temperature</span></span><a class="headerlink" href="#adi.adl5960.adl5960.temperature" title="Link to this definition"></a></dt>
 <dd><p>Get the temperature reading in °C</p>
 </dd></dl>
 
@@ -426,7 +429,7 @@ Content on this topic
   <label id="cancel-area-show-toc" for="input-show-toc"></label>
   <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
     <footer>
-      &#169;2019-2025, Analog Devices, Inc
+      &#169;2019-2026, Analog Devices, Inc
       
       |
       Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>

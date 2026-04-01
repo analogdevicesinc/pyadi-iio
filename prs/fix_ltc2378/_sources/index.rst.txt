@@ -39,7 +39,7 @@ Analog Devices Hardware Python Interfaces
       :alt: PyPI version
 
    .. image:: https://app.codacy.com/project/badge/Grade/200b7479f5024f6ea386350ca1049077
-      :target: https://www.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade
+      :target: https://app.codacy.com/gh/analogdevicesinc/pyadi-iio/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
       :alt: Codacy Badge
 
    .. image:: https://img.shields.io/pypi/pyversions/pyadi-iio
