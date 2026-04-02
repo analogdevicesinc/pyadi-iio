@@ -307,6 +307,49 @@ async def enable_tx_test_tone(
 
 
 @mcp.tool()
+async def configure_dds(
+    connection_id: str,
+    frequency: int = 10000000,
+    scale: float = 0.9,
+    channel: int = 0,
+) -> str:
+    """
+    Configure the DDS (Digital Direct Synthesis) to generate a single tone.
+
+    This sets a single-tone output on the specified TX channel using the FPGA-side
+    DDS. Useful for loopback testing and spectral analysis.
+
+    Args:
+        connection_id: UUID of an active AD9084 connection.
+        frequency: Tone frequency in Hz (default 10 MHz). Must be < half the sample rate.
+        scale: Tone scale factor in range [0, 1] (default 0.9). 1.0 is full-scale.
+        channel: TX channel index (0-based, default 0).
+
+    Returns:
+        JSON with status and configured DDS parameters.
+    """
+    try:
+        device = connection_manager.get(connection_id)
+
+        def _configure_dds():
+            device.dds_single_tone(frequency, scale, channel)
+            return {
+                "frequency": frequency,
+                "scale": scale,
+                "channel": channel,
+            }
+
+        configured = await asyncio.to_thread(_configure_dds)
+        return json.dumps({
+            "status": "success",
+            "configured": configured,
+            "message": f"DDS single tone configured: {frequency} Hz, scale {scale}, channel {channel}",
+        })
+    except Exception as e:
+        return json.dumps({"status": "error", "error": str(e)})
+
+
+@mcp.tool()
 async def get_jesd_status(connection_id: str) -> str:
     """
     Get JESD204 link status from the AD9084.
