@@ -25,9 +25,15 @@ def _bitmask(nbits):
 
 class ad4630(rx, context_manager, attribute):
 
-    """ AD4630 is low power 24-bit precision SAR ADC """
+    """ AD4630 is low power precision SAR ADC family supporting 16-bit, 20-bit, and 24-bit variants """
 
-    _compatible_parts = ["ad4630-24", "ad4030-24", "ad4630-16"]
+    _compatible_parts = [
+        "ad4630-24",
+        "ad4030-24",
+        "ad4630-16",
+        "ad4630-20",
+        "ad4632-20",
+    ]
     _complex_data = False
     _data_type = np.uint32
     _device_name = ""
@@ -44,7 +50,7 @@ class ad4630(rx, context_manager, attribute):
                 "Not a compatible device: "
                 + str(device_name)
                 + ". Please select from "
-                + str(self.self._compatible_parts)
+                + str(self._compatible_parts)
             )
         else:
             self._ctrl = self._ctx.find_device(device_name)
@@ -85,6 +91,7 @@ class ad4630(rx, context_manager, attribute):
 
         return data
 
+    @property
     def output_data_mode(self):
         """Determine the output data mode in which device is configured."""
         if self.output_bits[0] == 30:
@@ -95,8 +102,20 @@ class ad4630(rx, context_manager, attribute):
             return "16bit_diff_8bit_cm"
         if len(self.output_bits) == 1 and self.output_bits[0] == 24:
             return "24bit_diff"
-        if len(self.output_bits) == 2 and self.output_bits[0] == self.output_bits[1]:
+        if len(self.output_bits) == 1 and self.output_bits[0] == 20:
+            return "20bit_diff"
+        if (
+            len(self.output_bits) == 2
+            and self.output_bits[0] == self.output_bits[1] == 24
+        ):
             return "24bit_diff"
+        if (
+            len(self.output_bits) == 2
+            and self.output_bits[0] == self.output_bits[1] == 20
+        ):
+            return "20bit_diff"
+        if self.output_bits[0] == 20:
+            return "20bit_diff_8bit_cm"
         else:
             return "24bit_diff_8bit_cm"
 
