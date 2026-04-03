@@ -340,7 +340,7 @@ def attribute_write_only_str(uri, classname, attr, value):
     """
     sdr = eval(classname + "(uri='" + uri + "')")
 
-    if not hasattr(sdr, attr):
+    if not hasattr(type(sdr), attr):
         raise AttributeError(f"no attribute named: {attr}")
 
     try:
@@ -371,10 +371,10 @@ def attribute_write_only_str_with_depends(uri, classname, attr, value, depends):
     sdr = eval(classname + "(uri='" + uri + "')")
 
     for p in depends:
-        if not hasattr(sdr, p):
+        if not hasattr(type(sdr), p):
             raise AttributeError(f"no attribute named: {p}")
 
-    if not hasattr(sdr, attr):
+    if not hasattr(type(sdr), attr):
         raise AttributeError(f"no attribute named: {attr}")
 
     for p in depends:
@@ -493,7 +493,7 @@ def attribute_write_only_str_device_channel(
         + "']"
     )
 
-    if not hasattr(sdr, attr):
+    if not hasattr(type(sdr), attr):
         raise AttributeError(f"no attribute named: {attr}")
 
     try:
