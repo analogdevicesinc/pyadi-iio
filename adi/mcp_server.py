@@ -79,6 +79,16 @@ def _introspect_device(device) -> dict:
     return capabilities
 
 
+def _success(**kwargs):
+    """Build a JSON success response."""
+    return json.dumps(dict(status="success", **kwargs))
+
+
+def _error(msg, **kwargs):
+    """Build a JSON error response."""
+    return json.dumps(dict(status="error", error=msg, **kwargs))
+
+
 def _serialize_value(value):
     """Convert a device property value to a JSON-serializable type."""
     if isinstance(value, np.ndarray):
@@ -106,8 +116,8 @@ class ConnectionManager:
         self.connections: Dict[str, dict] = {}
 
     def create(
-        self, uri: str, device: object, device_class_name: str, capabilities: dict,
-    ) -> str:
+        self, uri, device, device_class_name, capabilities,
+    ):
         """Register a device connection and return its UUID."""
         connection_id = str(uuid.uuid4())
         self.connections[connection_id] = {
@@ -118,26 +128,29 @@ class ConnectionManager:
         }
         return connection_id
 
-    def get(self, connection_id: str) -> object:
+    def get(self, connection_id):
         """Retrieve the device instance by connection ID."""
         if connection_id not in self.connections:
             raise ValueError(f"Connection {connection_id} not found")
         return self.connections[connection_id]["device"]
 
-    def get_info(self, connection_id: str) -> dict:
+    def get_info(self, connection_id):
         """Retrieve the full connection dict including capabilities."""
         if connection_id not in self.connections:
             raise ValueError(f"Connection {connection_id} not found")
         return self.connections[connection_id]
 
-    def list_connections(self) -> dict:
+    def list_connections(self):
         """List all active connections with metadata."""
-        return {
-            cid: {"uri": data["uri"], "device_class": data["device_class_name"],}
-            for cid, data in self.connections.items()
-        }
+        result = {}
+        for cid, data in self.connections.items():
+            result[cid] = {
+                "uri": data["uri"],
+                "device_class": data["device_class_name"],
+            }
+        return result
 
-    def remove(self, connection_id: str) -> None:
+    def remove(self, connection_id):
         """Remove a connection."""
         if connection_id not in self.connections:
             raise ValueError(f"Connection {connection_id} not found")
@@ -179,11 +192,9 @@ async def list_device_classes(filter_text: Optional[str] = None) -> str:
             return classes
 
         classes = await asyncio.to_thread(_list)
-        return json.dumps(
-            {"status": "success", "device_classes": classes, "count": len(classes),}
-        )
+        return _success(device_classes=classes, count=len(classes))
     except Exception as e:
-        return json.dumps({"status": "error", "error": str(e)})
+        return _error(str(e))
 
 
 @mcp.tool()
@@ -221,26 +232,16 @@ async def connect_device(
             "property_count": len(capabilities["properties"]),
         }
 
-        return json.dumps(
-            {
-                "status": "success",
-                "connection_id": connection_id,
-                "device_class": device_class,
-                "uri": uri,
-                "capabilities": summary,
-                "message": f"Connected to {device_class} at {uri}",
-            }
+        return _success(
+            connection_id=connection_id,
+            device_class=device_class,
+            uri=uri,
+            capabilities=summary,
+            message=f"Connected to {device_class} at {uri}",
         )
     except Exception as e:
         logger.error("Failed to connect %s at %s: %s", device_class, uri, e)
-        return json.dumps(
-            {
-                "status": "error",
-                "error": str(e),
-                "device_class": device_class,
-                "uri": uri,
-            }
-        )
+        return _error(str(e), device_class=device_class, uri=uri)
 
 
 @mcp.tool()
@@ -252,11 +253,9 @@ async def disconnect_device(connection_id: str) -> str:
     """
     try:
         connection_manager.remove(connection_id)
-        return json.dumps(
-            {"status": "success", "message": f"Disconnected {connection_id}",}
-        )
+        return _success(message=f"Disconnected {connection_id}")
     except Exception as e:
-        return json.dumps({"status": "error", "error": str(e)})
+        return _error(str(e))
 
 
 @mcp.tool()
@@ -282,19 +281,16 @@ async def discover_device_capabilities(
                 k: v for k, v in properties.items() if filter_text.lower() in k.lower()
             }
 
-        return json.dumps(
-            {
-                "status": "success",
-                "device_class": info["device_class_name"],
-                "has_rx": capabilities["has_rx"],
-                "has_tx": capabilities["has_tx"],
-                "has_dds": capabilities["has_dds"],
-                "properties": properties,
-                "property_count": len(properties),
-            }
+        return _success(
+            device_class=info["device_class_name"],
+            has_rx=capabilities["has_rx"],
+            has_tx=capabilities["has_tx"],
+            has_dds=capabilities["has_dds"],
+            properties=properties,
+            property_count=len(properties),
         )
     except Exception as e:
-        return json.dumps({"status": "error", "error": str(e)})
+        return _error(str(e))
 
 
 @mcp.tool()
@@ -312,40 +308,24 @@ async def get_property(connection_id: str, property_name: str) -> str:
         capabilities = info["capabilities"]
 
         if property_name.startswith("_"):
-            return json.dumps(
-                {"status": "error", "error": "Cannot access private properties",}
-            )
+            return _error("Cannot access private properties")
 
         prop_meta = capabilities["properties"].get(property_name)
         if prop_meta is None:
-            return json.dumps(
-                {
-                    "status": "error",
-                    "error": f"Property '{property_name}' not found. "
-                    "Use discover_device_capabilities to see available properties.",
-                }
+            return _error(
+                f"Property '{property_name}' not found. "
+                "Use discover_device_capabilities to see available properties."
             )
         if not prop_meta["readable"]:
-            return json.dumps(
-                {
-                    "status": "error",
-                    "error": f"Property '{property_name}' is not readable",
-                }
-            )
+            return _error(f"Property '{property_name}' is not readable")
 
         def _read():
             return getattr(device, property_name)
 
         value = await asyncio.to_thread(_read)
-        return json.dumps(
-            {
-                "status": "success",
-                "property": property_name,
-                "value": _serialize_value(value),
-            }
-        )
+        return _success(property=property_name, value=_serialize_value(value),)
     except Exception as e:
-        return json.dumps({"status": "error", "error": str(e)})
+        return _error(str(e))
 
 
 @mcp.tool()
@@ -364,26 +344,16 @@ async def set_property(connection_id: str, property_name: str, value: str,) -> s
         capabilities = info["capabilities"]
 
         if property_name.startswith("_"):
-            return json.dumps(
-                {"status": "error", "error": "Cannot access private properties",}
-            )
+            return _error("Cannot access private properties")
 
         prop_meta = capabilities["properties"].get(property_name)
         if prop_meta is None:
-            return json.dumps(
-                {
-                    "status": "error",
-                    "error": f"Property '{property_name}' not found. "
-                    "Use discover_device_capabilities to see available properties.",
-                }
+            return _error(
+                f"Property '{property_name}' not found. "
+                "Use discover_device_capabilities to see available properties."
             )
         if not prop_meta["writable"]:
-            return json.dumps(
-                {
-                    "status": "error",
-                    "error": f"Property '{property_name}' is not writable",
-                }
-            )
+            return _error(f"Property '{property_name}' is not writable")
 
         parsed_value = json.loads(value)
 
@@ -394,18 +364,15 @@ async def set_property(connection_id: str, property_name: str, value: str,) -> s
             return parsed_value
 
         confirmed = await asyncio.to_thread(_write)
-        return json.dumps(
-            {
-                "status": "success",
-                "property": property_name,
-                "value": _serialize_value(confirmed),
-                "message": f"Set {property_name} successfully",
-            }
+        return _success(
+            property=property_name,
+            value=_serialize_value(confirmed),
+            message=f"Set {property_name} successfully",
         )
     except json.JSONDecodeError as e:
-        return json.dumps({"status": "error", "error": f"Invalid JSON value: {e}",})
+        return _error(f"Invalid JSON value: {e}")
     except Exception as e:
-        return json.dumps({"status": "error", "error": str(e)})
+        return _error(str(e))
 
 
 @mcp.tool()
@@ -429,9 +396,7 @@ async def capture_rx_data(
         device = info["device"]
 
         if not info["capabilities"]["has_rx"]:
-            return json.dumps(
-                {"status": "error", "error": "Device does not have RX capabilities",}
-            )
+            return _error("Device does not have RX capabilities")
 
         channels = None
         if enabled_channels is not None:
@@ -448,18 +413,15 @@ async def capture_rx_data(
             return {"shape": str(shape), "dtype": dtype}
 
         meta = await asyncio.to_thread(_capture)
-        return json.dumps(
-            {
-                "status": "success",
-                "npy_path": output_path,
-                "buffer_size": buffer_size,
-                "data_shape": meta["shape"],
-                "data_dtype": meta["dtype"],
-                "message": f"Captured {buffer_size} samples to {output_path}",
-            }
+        return _success(
+            npy_path=output_path,
+            buffer_size=buffer_size,
+            data_shape=meta["shape"],
+            data_dtype=meta["dtype"],
+            message=f"Captured {buffer_size} samples to {output_path}",
         )
     except Exception as e:
-        return json.dumps({"status": "error", "error": str(e)})
+        return _error(str(e))
 
 
 @mcp.tool()
@@ -482,9 +444,7 @@ async def configure_dds(
         device = info["device"]
 
         if not info["capabilities"]["has_dds"]:
-            return json.dumps(
-                {"status": "error", "error": "Device does not have DDS capabilities",}
-            )
+            return _error("Device does not have DDS capabilities")
 
         def _configure_dds():
             device.dds_single_tone(frequency, scale, channel)
@@ -495,15 +455,10 @@ async def configure_dds(
             }
 
         configured = await asyncio.to_thread(_configure_dds)
-        return json.dumps(
-            {
-                "status": "success",
-                "configured": configured,
-                "message": f"DDS single tone configured: {frequency} Hz, scale {scale}, channel {channel}",
-            }
-        )
+        dds_msg = f"DDS single tone configured: {frequency} Hz, scale {scale}, channel {channel}"
+        return _success(configured=configured, message=dds_msg)
     except Exception as e:
-        return json.dumps({"status": "error", "error": str(e)})
+        return _error(str(e))
 
 
 def main():

@@ -66,6 +66,7 @@ def update_devs():
         "dsp",
         "compat",
         "device_base",
+        "mcp_server",
     ]
     adi_rst_path = os.path.join(root, "source", "devices", "adi.rst")
     with open(adi_rst_path, "r") as f:
