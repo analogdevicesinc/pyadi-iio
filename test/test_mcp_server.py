@@ -16,6 +16,38 @@ import numpy as np
 import pytest
 
 # ---------------------------------------------------------------------------
+# Stub fastmcp if not installed
+# ---------------------------------------------------------------------------
+
+if "fastmcp" not in sys.modules:
+
+    class _StubFastMCP:
+        def __init__(self, name=""):
+            self.name = name
+            self._tools = {}
+
+        def tool(self):
+            def decorator(func):
+                self._tools[func.__name__] = func
+                return func
+
+            return decorator
+
+        async def list_tools(self):
+            class _ToolInfo:
+                def __init__(self, name):
+                    self.name = name
+
+            return [_ToolInfo(name) for name in self._tools]
+
+        def run(self):
+            pass
+
+    _fastmcp_stub = types.ModuleType("fastmcp")
+    _fastmcp_stub.FastMCP = _StubFastMCP
+    sys.modules["fastmcp"] = _fastmcp_stub
+
+# ---------------------------------------------------------------------------
 # Stub the adi package to avoid importing libiio
 # ---------------------------------------------------------------------------
 
