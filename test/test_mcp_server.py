@@ -127,7 +127,12 @@ class TestConnectionManagerLifecycle:
     def test_lifecycle(self):
         mgr = mcp_mod.ConnectionManager()
         mock_device = MagicMock()
-        capabilities = {"has_rx": True, "has_tx": False, "has_dds": False, "properties": {}}
+        capabilities = {
+            "has_rx": True,
+            "has_tx": False,
+            "has_dds": False,
+            "properties": {},
+        }
 
         # Create
         conn_id = mgr.create("ip:192.168.2.1", mock_device, "ad9361", capabilities)
@@ -190,11 +195,17 @@ class TestConnectDevice:
                     "has_rx": True,
                     "has_tx": True,
                     "has_dds": True,
-                    "properties": {"rx_lo": {"readable": True, "writable": True, "doc": ""}},
+                    "properties": {
+                        "rx_lo": {"readable": True, "writable": True, "doc": ""}
+                    },
                 },
             ):
                 result = json.loads(
-                    _run(mcp_mod.connect_device(device_class="ad9361", uri="ip:192.168.2.1"))
+                    _run(
+                        mcp_mod.connect_device(
+                            device_class="ad9361", uri="ip:192.168.2.1"
+                        )
+                    )
                 )
 
         assert result["status"] == "success"
@@ -206,11 +217,18 @@ class TestConnectDevice:
     def test_connect_with_kwargs(self):
         mock_device = MagicMock()
 
-        with patch.object(mcp_mod, "_create_device", return_value=mock_device) as mock_create:
+        with patch.object(
+            mcp_mod, "_create_device", return_value=mock_device
+        ) as mock_create:
             with patch.object(
                 mcp_mod,
                 "_introspect_device",
-                return_value={"has_rx": True, "has_tx": True, "has_dds": True, "properties": {}},
+                return_value={
+                    "has_rx": True,
+                    "has_tx": True,
+                    "has_dds": True,
+                    "properties": {},
+                },
             ):
                 _run(
                     mcp_mod.connect_device(
@@ -328,7 +346,13 @@ class TestSetProperty:
         assert result["property"] == "rx_lo"
 
     def test_set_list_value(self):
-        props = {"rx_channel_nco_frequencies": {"readable": True, "writable": True, "doc": ""}}
+        props = {
+            "rx_channel_nco_frequencies": {
+                "readable": True,
+                "writable": True,
+                "doc": "",
+            }
+        }
         conn_id, device, _ = _register_mock_device(properties=props)
 
         result = json.loads(
@@ -424,9 +448,7 @@ class TestConfigureDds:
 
     def test_configure_dds_no_capability(self):
         conn_id, _, _ = _register_mock_device(has_dds=False)
-        result = json.loads(
-            _run(mcp_mod.configure_dds(connection_id=conn_id))
-        )
+        result = json.loads(_run(mcp_mod.configure_dds(connection_id=conn_id)))
         assert result["status"] == "error"
         assert "DDS" in result["error"]
 
