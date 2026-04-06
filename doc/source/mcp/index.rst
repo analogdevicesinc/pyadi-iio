@@ -131,10 +131,7 @@ Signal Generation
 .. code-block:: python
 
  configure_dds(
-     connection_id="...",
-     frequency=10000000,
-     scale=0.9,
-     channel=0,
+     connection_id="...", frequency=10000000, scale=0.9, channel=0,
  )
 
 

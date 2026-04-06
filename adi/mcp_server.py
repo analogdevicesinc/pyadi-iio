@@ -106,11 +106,7 @@ class ConnectionManager:
         self.connections: Dict[str, dict] = {}
 
     def create(
-        self,
-        uri: str,
-        device: object,
-        device_class_name: str,
-        capabilities: dict,
+        self, uri: str, device: object, device_class_name: str, capabilities: dict,
     ) -> str:
         """Register a device connection and return its UUID."""
         connection_id = str(uuid.uuid4())
@@ -137,10 +133,7 @@ class ConnectionManager:
     def list_connections(self) -> dict:
         """List all active connections with metadata."""
         return {
-            cid: {
-                "uri": data["uri"],
-                "device_class": data["device_class_name"],
-            }
+            cid: {"uri": data["uri"], "device_class": data["device_class_name"],}
             for cid, data in self.connections.items()
         }
 
@@ -161,14 +154,10 @@ connection_manager = ConnectionManager()
 
 @mcp.tool()
 async def list_device_classes(filter_text: Optional[str] = None) -> str:
-    """
-    List available pyadi-iio device classes.
+    """List available pyadi-iio device classes.
 
-    Args:
-        filter_text: Optional substring to filter class names (case-insensitive).
-
-    Returns:
-        JSON with a list of available device class names.
+    :param filter_text: Optional substring to filter class names (case-insensitive).
+    :returns: JSON with a list of available device class names.
     """
     try:
 
@@ -191,11 +180,7 @@ async def list_device_classes(filter_text: Optional[str] = None) -> str:
 
         classes = await asyncio.to_thread(_list)
         return json.dumps(
-            {
-                "status": "success",
-                "device_classes": classes,
-                "count": len(classes),
-            }
+            {"status": "success", "device_classes": classes, "count": len(classes),}
         )
     except Exception as e:
         return json.dumps({"status": "error", "error": str(e)})
@@ -203,22 +188,16 @@ async def list_device_classes(filter_text: Optional[str] = None) -> str:
 
 @mcp.tool()
 async def connect_device(
-    device_class: str,
-    uri: str,
-    kwargs: Optional[str] = None,
+    device_class: str, uri: str, kwargs: Optional[str] = None,
 ) -> str:
-    """
-    Create a connection to any pyadi-iio device.
+    """Create a connection to any pyadi-iio device.
 
-    Args:
-        device_class: Name of the device class (e.g. "ad9361", "Pluto", "ad9084").
-                      Use list_device_classes to discover available classes.
-        uri: IIO URI of the target device (e.g. "ip:192.168.2.1").
-        kwargs: Optional JSON string of extra constructor keyword arguments
-                (e.g. '{"rx1_device_name": "axi-ad9084-rx-hpc"}').
-
-    Returns:
-        JSON with connection_id and device capability summary.
+    :param device_class: Name of the device class (e.g. "ad9361", "Pluto", "ad9084").
+        Use list_device_classes to discover available classes.
+    :param uri: IIO URI of the target device (e.g. "ip:192.168.2.1").
+    :param kwargs: Optional JSON string of extra constructor keyword arguments
+        (e.g. '{"rx1_device_name": "axi-ad9084-rx-hpc"}').
+    :returns: JSON with connection_id and device capability summary.
     """
     try:
         extra_kwargs = {}
@@ -266,22 +245,15 @@ async def connect_device(
 
 @mcp.tool()
 async def disconnect_device(connection_id: str) -> str:
-    """
-    Disconnect from a device and clean up the connection.
+    """Disconnect from a device and clean up the connection.
 
-    Args:
-        connection_id: UUID of an active connection.
-
-    Returns:
-        JSON with status.
+    :param connection_id: UUID of an active connection.
+    :returns: JSON with status.
     """
     try:
         connection_manager.remove(connection_id)
         return json.dumps(
-            {
-                "status": "success",
-                "message": f"Disconnected {connection_id}",
-            }
+            {"status": "success", "message": f"Disconnected {connection_id}",}
         )
     except Exception as e:
         return json.dumps({"status": "error", "error": str(e)})
@@ -289,19 +261,16 @@ async def disconnect_device(connection_id: str) -> str:
 
 @mcp.tool()
 async def discover_device_capabilities(
-    connection_id: str,
-    filter_text: Optional[str] = None,
+    connection_id: str, filter_text: Optional[str] = None,
 ) -> str:
-    """
-    Discover what a connected device supports: RX/TX/DDS capabilities and
-    all available properties with read/write metadata.
+    """Discover what a connected device supports.
 
-    Args:
-        connection_id: UUID of an active connection.
-        filter_text: Optional substring to filter property names (case-insensitive).
+    Returns RX/TX/DDS capabilities and all available properties with
+    read/write metadata.
 
-    Returns:
-        JSON with device capabilities and property list.
+    :param connection_id: UUID of an active connection.
+    :param filter_text: Optional substring to filter property names (case-insensitive).
+    :returns: JSON with device capabilities and property list.
     """
     try:
         info = connection_manager.get_info(connection_id)
@@ -330,16 +299,12 @@ async def discover_device_capabilities(
 
 @mcp.tool()
 async def get_property(connection_id: str, property_name: str) -> str:
-    """
-    Read a property from a connected device.
+    """Read a property from a connected device.
 
-    Args:
-        connection_id: UUID of an active connection.
-        property_name: Name of the property to read (e.g. "rx_lo", "sample_rate").
-                       Use discover_device_capabilities to see available properties.
-
-    Returns:
-        JSON with the property value.
+    :param connection_id: UUID of an active connection.
+    :param property_name: Name of the property to read (e.g. "rx_lo", "sample_rate").
+        Use discover_device_capabilities to see available properties.
+    :returns: JSON with the property value.
     """
     try:
         info = connection_manager.get_info(connection_id)
@@ -348,10 +313,7 @@ async def get_property(connection_id: str, property_name: str) -> str:
 
         if property_name.startswith("_"):
             return json.dumps(
-                {
-                    "status": "error",
-                    "error": "Cannot access private properties",
-                }
+                {"status": "error", "error": "Cannot access private properties",}
             )
 
         prop_meta = capabilities["properties"].get(property_name)
@@ -387,22 +349,14 @@ async def get_property(connection_id: str, property_name: str) -> str:
 
 
 @mcp.tool()
-async def set_property(
-    connection_id: str,
-    property_name: str,
-    value: str,
-) -> str:
-    """
-    Set a property on a connected device.
+async def set_property(connection_id: str, property_name: str, value: str,) -> str:
+    """Set a property on a connected device.
 
-    Args:
-        connection_id: UUID of an active connection.
-        property_name: Name of the property to set (e.g. "rx_lo", "sample_rate").
-                       Use discover_device_capabilities to see writable properties.
-        value: JSON-encoded value to set (e.g. "1000000000", "[100, 200]", '"auto"').
-
-    Returns:
-        JSON with status and the confirmed value read back from the device.
+    :param connection_id: UUID of an active connection.
+    :param property_name: Name of the property to set (e.g. "rx_lo", "sample_rate").
+        Use discover_device_capabilities to see writable properties.
+    :param value: JSON-encoded value to set (e.g. "1000000000", "[100, 200]", '"auto"').
+    :returns: JSON with status and the confirmed value read back from the device.
     """
     try:
         info = connection_manager.get_info(connection_id)
@@ -411,10 +365,7 @@ async def set_property(
 
         if property_name.startswith("_"):
             return json.dumps(
-                {
-                    "status": "error",
-                    "error": "Cannot access private properties",
-                }
+                {"status": "error", "error": "Cannot access private properties",}
             )
 
         prop_meta = capabilities["properties"].get(property_name)
@@ -452,12 +403,7 @@ async def set_property(
             }
         )
     except json.JSONDecodeError as e:
-        return json.dumps(
-            {
-                "status": "error",
-                "error": f"Invalid JSON value: {e}",
-            }
-        )
+        return json.dumps({"status": "error", "error": f"Invalid JSON value: {e}",})
     except Exception as e:
         return json.dumps({"status": "error", "error": str(e)})
 
@@ -469,18 +415,14 @@ async def capture_rx_data(
     buffer_size: int = 65536,
     enabled_channels: Optional[str] = None,
 ) -> str:
-    """
-    Capture RX data from a connected device and save to a .npy file.
+    """Capture RX data from a connected device and save to a .npy file.
 
-    Args:
-        connection_id: UUID of an active connection.
-        output_path: Filesystem path where the .npy file will be saved.
-        buffer_size: Number of samples to capture (default 65536).
-        enabled_channels: JSON list of channel indices to enable (e.g. "[0, 1]").
-                          Default: device current setting.
-
-    Returns:
-        JSON with status, npy_path, and capture metadata.
+    :param connection_id: UUID of an active connection.
+    :param output_path: Filesystem path where the .npy file will be saved.
+    :param buffer_size: Number of samples to capture (default 65536).
+    :param enabled_channels: JSON list of channel indices to enable (e.g. "[0, 1]").
+        Default: device current setting.
+    :returns: JSON with status, npy_path, and capture metadata.
     """
     try:
         info = connection_manager.get_info(connection_id)
@@ -488,10 +430,7 @@ async def capture_rx_data(
 
         if not info["capabilities"]["has_rx"]:
             return json.dumps(
-                {
-                    "status": "error",
-                    "error": "Device does not have RX capabilities",
-                }
+                {"status": "error", "error": "Device does not have RX capabilities",}
             )
 
         channels = None
@@ -525,25 +464,18 @@ async def capture_rx_data(
 
 @mcp.tool()
 async def configure_dds(
-    connection_id: str,
-    frequency: int = 10000000,
-    scale: float = 0.9,
-    channel: int = 0,
+    connection_id: str, frequency: int = 10000000, scale: float = 0.9, channel: int = 0,
 ) -> str:
-    """
-    Configure the DDS (Digital Direct Synthesis) to generate a single tone.
+    """Configure the DDS (Digital Direct Synthesis) to generate a single tone.
 
     Sets a single-tone output on the specified TX channel using the FPGA-side
     DDS. Useful for loopback testing and spectral analysis.
 
-    Args:
-        connection_id: UUID of an active connection.
-        frequency: Tone frequency in Hz (default 10 MHz). Must be < half the sample rate.
-        scale: Tone scale factor in range [0, 1] (default 0.9). 1.0 is full-scale.
-        channel: TX channel index (0-based, default 0).
-
-    Returns:
-        JSON with status and configured DDS parameters.
+    :param connection_id: UUID of an active connection.
+    :param frequency: Tone frequency in Hz (default 10 MHz). Must be < half the sample rate.
+    :param scale: Tone scale factor in range [0, 1] (default 0.9). 1.0 is full-scale.
+    :param channel: TX channel index (0-based, default 0).
+    :returns: JSON with status and configured DDS parameters.
     """
     try:
         info = connection_manager.get_info(connection_id)
@@ -551,10 +483,7 @@ async def configure_dds(
 
         if not info["capabilities"]["has_dds"]:
             return json.dumps(
-                {
-                    "status": "error",
-                    "error": "Device does not have DDS capabilities",
-                }
+                {"status": "error", "error": "Device does not have DDS capabilities",}
             )
 
         def _configure_dds():

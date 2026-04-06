@@ -449,8 +449,7 @@ class TestCaptureRxData:
         result = json.loads(
             _run(
                 mcp_mod.capture_rx_data(
-                    connection_id=conn_id,
-                    output_path="/tmp/test.npy",
+                    connection_id=conn_id, output_path="/tmp/test.npy",
                 )
             )
         )
@@ -466,10 +465,7 @@ class TestConfigureDds:
         result = json.loads(
             _run(
                 mcp_mod.configure_dds(
-                    connection_id=conn_id,
-                    frequency=5000000,
-                    scale=0.5,
-                    channel=1,
+                    connection_id=conn_id, frequency=5000000, scale=0.5, channel=1,
                 )
             )
         )
