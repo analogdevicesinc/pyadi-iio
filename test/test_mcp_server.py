@@ -48,51 +48,42 @@ if "fastmcp" not in sys.modules:
     sys.modules["fastmcp"] = _fastmcp_stub
 
 # ---------------------------------------------------------------------------
-# Stub the adi package to avoid importing libiio
+# Stub the adi package only if it is not already loaded (i.e. libiio is
+# unavailable).  When the real adi package is present we must NOT overwrite
+# its classes or sub-modules because other tests running in the same pytest
+# session depend on them.
 # ---------------------------------------------------------------------------
 
-# Create a stub adi package that supports getattr for device class lookup
-_stub = types.ModuleType("adi")
-_stub.__path__ = [os.path.join(os.path.dirname(__file__), os.pardir, "adi")]
-_stub.__package__ = "adi"
-
-
-class _MockDeviceBase:
-    """A minimal mock base class used for introspection tests."""
-
-    pass
-
-
-# Create mock device classes with realistic structure
-_MockAd9361 = type("ad9361", (_MockDeviceBase,), {"__module__": "adi.ad936x"})
-_MockPluto = type("Pluto", (_MockDeviceBase,), {"__module__": "adi.ad936x"})
-_MockAd9084 = type("ad9084", (_MockDeviceBase,), {"__module__": "adi.ad9084"})
-
-_stub.ad9361 = _MockAd9361
-_stub.Pluto = _MockPluto
-_stub.ad9084 = _MockAd9084
-
 if "adi" not in sys.modules:
+    _stub = types.ModuleType("adi")
+    _stub.__path__ = [os.path.join(os.path.dirname(__file__), os.pardir, "adi")]
+    _stub.__package__ = "adi"
+
+    class _MockDeviceBase:
+        """A minimal mock base class used for introspection tests."""
+
+        pass
+
+    _MockAd9361 = type("ad9361", (_MockDeviceBase,), {"__module__": "adi.ad936x"})
+    _MockPluto = type("Pluto", (_MockDeviceBase,), {"__module__": "adi.ad936x"})
+    _MockAd9084 = type("ad9084", (_MockDeviceBase,), {"__module__": "adi.ad9084"})
+
+    _stub.ad9361 = _MockAd9361
+    _stub.Pluto = _MockPluto
+    _stub.ad9084 = _MockAd9084
     sys.modules["adi"] = _stub
-else:
-    # If already present, inject our mock classes
-    existing = sys.modules["adi"]
-    existing.ad9361 = _MockAd9361
-    existing.Pluto = _MockPluto
-    existing.ad9084 = _MockAd9084
 
-# Stub sub-modules that might be lazily imported
-for mod_name in ("adi.ad9084", "adi.ad936x", "adi.rx_tx", "adi.dds"):
-    if mod_name not in sys.modules:
-        sys.modules[mod_name] = types.ModuleType(mod_name)
+    # Stub sub-modules that the MCP server lazily imports
+    for mod_name in ("adi.ad9084", "adi.ad936x", "adi.rx_tx", "adi.dds"):
+        if mod_name not in sys.modules:
+            sys.modules[mod_name] = types.ModuleType(mod_name)
 
-# Provide base classes for introspection checks
-_rx_core_stub = type("rx_core", (), {})
-_tx_core_stub = type("tx_core", (), {})
-_dds_stub = type("dds", (), {})
-sys.modules["adi.rx_tx"].rx_core = _rx_core_stub
-sys.modules["adi.rx_tx"].tx_core = _tx_core_stub
-sys.modules["adi.dds"].dds = _dds_stub
+    _rx_core_stub = type("rx_core", (), {})
+    _tx_core_stub = type("tx_core", (), {})
+    _dds_stub = type("dds", (), {})
+    sys.modules["adi.rx_tx"].rx_core = _rx_core_stub
+    sys.modules["adi.rx_tx"].tx_core = _tx_core_stub
+    sys.modules["adi.dds"].dds = _dds_stub
 
 # Now import the MCP server module
 import adi.mcp_server as mcp_mod  # noqa: E402
