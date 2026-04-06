@@ -52,6 +52,8 @@ extensions = [
 
 needs_extensions = {"adi_doctools": "0.4.21"}
 
+autodoc_mock_imports = ["fastmcp"]
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
