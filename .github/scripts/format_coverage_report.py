@@ -72,7 +72,9 @@ def format_untested_details(data):
     for dev_name, attrs in sorted(dev_attrs.items()):
         untested = [a for a, c in sorted(attrs.items()) if c == 0]
         if untested:
-            lines.append(f"  - **{dev_name}** device attrs untested: `{'`, `'.join(untested)}`")
+            lines.append(
+                f"  - **{dev_name}** device attrs untested: `{'`, `'.join(untested)}`"
+            )
 
     # Untested channel attributes
     for dev_name, directions in sorted(chan_attrs.items()):
@@ -99,8 +101,12 @@ def generate_report(hardware_names, new_classes, coverage_folder):
     # Summary table
     lines.append("## Summary")
     lines.append("")
-    lines.append("| Hardware | Device Attr Coverage | Channel Attr Coverage | Total Coverage |")
-    lines.append("|----------|---------------------|----------------------|----------------|")
+    lines.append(
+        "| Hardware | Device Attr Coverage | Channel Attr Coverage | Total Coverage |"
+    )
+    lines.append(
+        "|----------|---------------------|----------------------|----------------|"
+    )
 
     details_lines = []
     missing = []
@@ -153,11 +159,19 @@ def generate_report(hardware_names, new_classes, coverage_folder):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Filter and format IIO coverage report")
-    parser.add_argument("--hardware-names", required=True, help="JSON array of hardware names")
-    parser.add_argument("--new-classes", required=True, help="JSON array of new class names")
+    parser = argparse.ArgumentParser(
+        description="Filter and format IIO coverage report"
+    )
     parser.add_argument(
-        "--coverage-folder", default="iio_coverage_results", help="Coverage results folder"
+        "--hardware-names", required=True, help="JSON array of hardware names"
+    )
+    parser.add_argument(
+        "--new-classes", required=True, help="JSON array of new class names"
+    )
+    parser.add_argument(
+        "--coverage-folder",
+        default="iio_coverage_results",
+        help="Coverage results folder",
     )
     parser.add_argument("--output", required=True, help="Output markdown file path")
     args = parser.parse_args()

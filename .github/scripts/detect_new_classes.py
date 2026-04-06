@@ -112,7 +112,7 @@ def main():
 
     # Write GitHub Actions outputs
     with open(os.environ.get("GITHUB_OUTPUT", "/dev/null"), "a") as f:
-        f.write(f"has_new_classes=true\n")
+        f.write("has_new_classes=true\n")
         f.write(f"new_classes={json.dumps(sorted(new_classes))}\n")
         f.write(f"hardware_names={json.dumps(sorted(hardware_names))}\n")
 
