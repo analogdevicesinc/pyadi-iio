@@ -556,6 +556,7 @@ Content on this topic
 <li class="toctree-l1"><a class="reference internal" href="guides/connectivity.html">Connectivity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="buffers/index.html">Buffers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fpga/index.html">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mcp/index.html">MCP Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="libiio.html">libiio Direct Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-1" id="toctree-collapse-1"/><div class="collapse"><a class="reference internal" href="dev/index.html">Developers</a><label for="toctree-collapse-1"><div class="icon"></div></label></div><ul>
@@ -1693,8 +1694,6 @@ Content on this topic
         <li><a href="devices/adi.adf4382.html#module-adi.adf4382">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adf5610
 
@@ -1702,6 +1701,8 @@ Content on this topic
         <li><a href="devices/adi.adf5610.html#module-adi.adf5610">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adf5611
 
@@ -2106,6 +2107,13 @@ Content on this topic
 
       <ul>
         <li><a href="devices/adi.max9611.html#module-adi.max9611">module</a>
+</li>
+      </ul></li>
+      <li>
+    adi.mcp_server
+
+      <ul>
+        <li><a href="mcp/index.html#module-adi.mcp_server">module</a>
 </li>
       </ul></li>
       <li>
@@ -2812,6 +2820,8 @@ Content on this topic
 </li>
       <li><a href="devices/adi.cn0511.html#adi.cn0511.cn0511.calibrated_output">calibrated_output (adi.cn0511.cn0511 property)</a>
 </li>
+      <li><a href="mcp/index.html#adi.mcp_server.capture_rx_data">capture_rx_data() (in module adi.mcp_server)</a>
+</li>
       <li><a href="devices/adi.cn0579.html#adi.cn0579.cn0579.CC_CH0">CC_CH0 (adi.cn0579.cn0579 property)</a>
 </li>
       <li><a href="devices/adi.cn0579.html#adi.cn0579.cn0579.CC_CH1">CC_CH1 (adi.cn0579.cn0579 property)</a>
@@ -3097,6 +3107,10 @@ Content on this topic
 </li>
       </ul></li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.configure">configure() (adi.cn0566.CN0566 method)</a>
+</li>
+      <li><a href="mcp/index.html#adi.mcp_server.configure_dds">configure_dds() (in module adi.mcp_server)</a>
+</li>
+      <li><a href="mcp/index.html#adi.mcp_server.connect_device">connect_device() (in module adi.mcp_server)</a>
 </li>
       <li><a href="devices/adi.ltc2983.html#adi.ltc2983.ltc2983.convert">convert() (adi.ltc2983.ltc2983 method)</a>
 </li>
@@ -3392,6 +3406,10 @@ Content on this topic
         <li><a href="devices/adi.adis16550.html#adi.adis16550.disable_trigger">(adi.adis16550 attribute)</a>
 </li>
       </ul></li>
+      <li><a href="mcp/index.html#adi.mcp_server.disconnect_device">disconnect_device() (in module adi.mcp_server)</a>
+</li>
+      <li><a href="mcp/index.html#adi.mcp_server.discover_device_capabilities">discover_device_capabilities() (in module adi.mcp_server)</a>
+</li>
       <li><a href="dev/test_dma.html#test.dma_tests.dma_dac_zeros">dma_dac_zeros() (in module test.dma_tests)</a>
 </li>
       <li><a href="devices/adi.tdd.html#adi.tdd.tdd.dma_gateing_mode">dma_gateing_mode (adi.tdd.tdd property)</a>
@@ -4034,6 +4052,8 @@ Content on this topic
         <li><a href="devices/adi.adis16488.html#adi.adis16488.get_pressure">(adi.adis16488 method)</a>
 </li>
       </ul></li>
+      <li><a href="mcp/index.html#adi.mcp_server.get_property">get_property() (in module adi.mcp_server)</a>
+</li>
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_temp">get_temp() (adi.adis16375 method)</a>
 
       <ul>
@@ -4309,6 +4329,8 @@ Content on this topic
 </li>
       </ul></li>
       <li><a href="devices/adi.cn0575.html#adi.cn0575.cn0575.led">led (adi.cn0575.cn0575 property)</a>
+</li>
+      <li><a href="mcp/index.html#adi.mcp_server.list_device_classes">list_device_classes() (in module adi.mcp_server)</a>
 </li>
       <li><a href="devices/adi.lm75.html#adi.lm75.lm75">lm75 (class in adi.lm75)</a>
 </li>
@@ -4713,6 +4735,8 @@ Content on this topic
         <li><a href="devices/adi.max31865.html#module-adi.max31865">adi.max31865</a>
 </li>
         <li><a href="devices/adi.max9611.html#module-adi.max9611">adi.max9611</a>
+</li>
+        <li><a href="mcp/index.html#module-adi.mcp_server">adi.mcp_server</a>
 </li>
         <li><a href="devices/adi.one_bit_adc_dac.html#module-adi.one_bit_adc_dac">adi.one_bit_adc_dac</a>
 </li>
@@ -6120,6 +6144,8 @@ Content on this topic
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.set_chan_gain">set_chan_gain() (adi.cn0566.CN0566 method)</a>
 </li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.set_chan_phase">set_chan_phase() (adi.cn0566.CN0566 method)</a>
+</li>
+      <li><a href="mcp/index.html#adi.mcp_server.set_property">set_property() (in module adi.mcp_server)</a>
 </li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.set_rx_hardwaregain">set_rx_hardwaregain() (adi.cn0566.CN0566 method)</a>
 </li>
