@@ -9,7 +9,6 @@ and generate a markdown report suitable for posting as a PR comment."""
 import argparse
 import json
 import os
-import sys
 
 
 def load_coverage(folder, hw_name):
