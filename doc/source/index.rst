@@ -82,6 +82,7 @@ Sections
    guides/connectivity
    buffers/index
    fpga/index
+   mcp/index
    libiio
    support
    dev/index
