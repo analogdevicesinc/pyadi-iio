@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: context_manager, attribute" name="description" />
+<meta content="Bases: attribute, context_manager" name="description" />
 
-    <title>adi.axi_aion_trig module &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
+    <title>adl8113 &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=833c9372" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="adi.cn0511 module" href="adi.cn0511.html" />
-    <link rel="prev" title="adxrs290" href="adi.adxrs290.html" />
+    <link rel="next" title="admv8818" href="adi.admv8818.html" />
+    <link rel="prev" title="adl5960" href="adi.adl5960.html" />
    
   
   
@@ -95,8 +95,11 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">adi.axi_aion_trig module</a><ul>
-<li><a class="reference internal" href="#adi.axi_aion_trig.axi_aion_trig"><code class="docutils literal notranslate"><span class="pre">axi_aion_trig</span></code></a></li>
+<li><a class="reference internal" href="#">adl8113</a><ul>
+<li><a class="reference internal" href="#adi.adl8113.adl8113"><code class="docutils literal notranslate"><span class="pre">adl8113</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adl8113.adl8113.hardwaregain"><code class="docutils literal notranslate"><span class="pre">adl8113.hardwaregain</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -232,7 +235,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adis16550.html">adis16550</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5240.html">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.adl8113.html">adl8113</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">adl8113</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd1080.html">adpd1080</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd188.html">adpd188</a></li>
@@ -249,7 +252,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl355.html">adxl355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxl380.html">adxl380</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">adi.axi_aion_trig module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
@@ -304,84 +307,19 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.axi_aion_trig">
-<span id="adi-axi-aion-trig-module"></span><h1>adi.axi_aion_trig module<a class="headerlink" href="#module-adi.axi_aion_trig" title="Link to this heading"></a></h1>
+  <section id="module-adi.adl8113">
+<span id="adl8113"></span><h1>adl8113<a class="headerlink" href="#module-adi.adl8113" title="Link to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.axi_aion_trig.axi_aion_trig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.axi_aion_trig.</span></span><span class="sig-name descname"><span class="pre">axi_aion_trig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.axi_aion_trig.axi_aion_trig" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
-<p>axi_aion_trig IIO Device Interface</p>
-<p>This class provides an interface to the ‘axi_aion_trig’ IIO device, allowing
-control and monitoring of its voltage channels and associated attributes.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>uri<span class="classifier">str, optional</span></dt><dd><p>URI of the IIO context to connect to. Defaults to an empty string.</p>
-</dd>
-</dl>
-</section>
-<section id="attributes-per-voltage-channel">
-<h2>Attributes (per voltage channel)<a class="headerlink" href="#attributes-per-voltage-channel" title="Link to this heading"></a></h2>
-<p>For each voltage channel (e.g., voltage0, voltage1, …), the following
-properties are dynamically created:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>trig{N}_en<span class="classifier">bool</span></dt><dd><p>Enable or disable the trigger for channel N.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>trig{N}_phase<span class="classifier">int</span></dt><dd><p>Phase setting for channel N.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>trig{N}_status<span class="classifier">int</span></dt><dd><p>Status of the trigger for channel N.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>trig{N}_frequency<span class="classifier">int</span></dt><dd><p>Frequency setting for channel N.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>trig{N}_internal_bsync_enable<span class="classifier">bool</span></dt><dd><p>Enable or disable internal bsync for channel N.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>trig{N}_output_enable<span class="classifier">bool</span></dt><dd><p>Enable or disable output for channel N.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>trig{N}_trigger_now<span class="classifier">bool</span></dt><dd><p>Trigger an immediate event on channel N.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>trig{N}_trigger_select_gpio_enable<span class="classifier">bool</span></dt><dd><p>Enable or disable GPIO selection for trigger on channel N.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</section>
-<section id="raises">
-<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>Exception</dt><dd><p>If the ‘axi_aion_trig’ device is not found in the IIO context.</p>
-</dd>
-</dl>
-</section>
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">trig</span> <span class="o">=</span> <span class="n">axi_aion_trig</span><span class="p">(</span><span class="s2">&quot;ip:192.168.1.100&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">trig</span><span class="o">.</span><span class="n">trig0_en</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">trig</span><span class="o">.</span><span class="n">trig0_status</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
+<dt class="sig sig-object py" id="adi.adl8113.adl8113">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adl8113.</span></span><span class="sig-name descname"><span class="pre">adl8113</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adl8113'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adl8113.adl8113" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<p>ADL8113 GPIO-controlled RF Amplifier</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adl8113.adl8113.hardwaregain">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hardwaregain</span></span><a class="headerlink" href="#adi.adl8113.adl8113.hardwaregain" title="Link to this definition"></a></dt>
+<dd><p>Get hardware gain in dB</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -390,8 +328,8 @@ properties are dynamically created:</p>
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.adxrs290.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adxrs290</a>
-    <a href="adi.cn0511.html" title="Next document (Alt+Shift+RightArrow)" class="next">adi.cn0511 module</a>
+    <a href="adi.adl5960.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adl5960</a>
+    <a href="adi.admv8818.html" title="Next document (Alt+Shift+RightArrow)" class="next">admv8818</a>
               </div>
           
         </div>
