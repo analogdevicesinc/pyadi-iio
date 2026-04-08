@@ -95,10 +95,10 @@ print("\nUpdate interval: " + str(my_lm75.update_interval))
 print("\nMax threshold: " + str(my_lm75.to_degrees(my_lm75.max)))
 print("Max hysteresis: " + str(my_lm75.to_degrees(my_lm75.max_hyst)))
 
-print("\nSetting max threshold, hyst. to 30C, 25C...\n")
+print("\nSetting max threshold to 10C...\n")
 
-my_lm75.max = my_lm75.to_millidegrees(15.0)
-my_lm75.max_hyst = my_lm75.to_millidegrees(25.0)
+my_lm75.max = my_lm75.to_millidegrees(10.0)
+my_lm75.max_hyst = my_lm75.to_millidegrees(5.0)  # No need to blink
 
 print("New thresholds:")
 print("Max: " + str(my_lm75.to_degrees(my_lm75.max)))
@@ -353,7 +353,7 @@ if beta_min < beta_pnp < beta_max:
 
 
 resp = input(
-    "Are the following true?\n * Left-hand LED (DS3) is RED\n * Right-hand LED (DS4) is GREEN\n * LM75 LED (DS2) is BLINKING\n(y or n)"
+    "Are the following true?\n * Left-hand LED (DS3) is RED\n * Right-hand LED (DS4) is GREEN\n * LM75 LED (DS2) is RED\n(y or n)"
 )
 if resp == "y" and len(failures) == 0:
     print("WooHoo! Whole board passes!")
