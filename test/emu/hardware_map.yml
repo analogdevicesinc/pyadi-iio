@@ -877,3 +877,11 @@ ad7405:
       - filename: ad7405.xml
       - data_devices:
           - iio:device0
+ad4692:
+  - ad4692
+  - pyadi_iio_class_support:
+      - ad4692
+  - emulate:
+      - filename: ad4692.xml
+      - data_devices:
+          - iio:device0
