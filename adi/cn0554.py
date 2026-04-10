@@ -25,18 +25,26 @@ class cn0554:
         self.adc._rx_unbuffered_data = False
         self.adc._rx_output_type = "SI"
         self.rx_buffer_size = 1024
-        self.adc.sample_rate = 19200
 
-        for in_ch in self.adc.channel:
+        self._voltage_channels = []
+        self._voltage_channel_indices = []
+        for i, channel_name in enumerate(self.adc.rx_channel_names):
+            if not channel_name.startswith("voltage"):
+                continue
+            in_ch = getattr(self.adc, channel_name)
+            self._voltage_channels.append(in_ch)
+            self._voltage_channel_indices.append(i)
+            in_ch.sampling_frequency = 19200
+
             in_name = "voltage"
             for char in in_ch.name:
                 if char.isnumeric():
                     in_name += char
 
-            """Default channels range is set to '+/-13.75'"""
             setattr(self, in_name + "_in_range", self._in_range_available[0])
-
             self.adc_in_channels.append(in_name)
+
+        self.adc.rx_enabled_channels = self._voltage_channel_indices
 
         self.dac = adi.ltc2688(uri=uri)
         self.dac_out_channels = self.dac.channel_names
@@ -102,13 +110,14 @@ class cn0554:
 
     @property
     def sample_rate(self):
-        """Get CN0554's AD7124 sampling rate"""
-        return self.adc.sample_rate
+        """Get CN0554's AD7124 sampling rate from the first voltage channel."""
+        return self._voltage_channels[0].sampling_frequency
 
     @sample_rate.setter
     def sample_rate(self, value):
-        """Set CN0554's AD7124 sampling rate"""
-        self.adc.sample_rate = value
+        """Set CN0554's AD7124 sampling rate on all voltage channels."""
+        for channel in self._voltage_channels:
+            channel.sampling_frequency = value
 
     @property
     def rx_buffer_size(self):

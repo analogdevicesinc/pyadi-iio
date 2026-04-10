@@ -106,3 +106,4 @@ venv.bak/
 
 # doc generation
 doc/source/_static/logos
+/adi/ad7124_before_channel_dict.py
