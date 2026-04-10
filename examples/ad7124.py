@@ -29,16 +29,16 @@ my_uri = args.u[0]
 print("uri: " + str(my_uri))
 
 ad7124 = adi.ad7124(uri=my_uri)
-ad_channel0 = 0  # voltage0-voltage1 plug to CH1 on my m2k
-ad_channel1 = 1  # voltage2-voltage3 plug to CH2 on my m2k
+ad_channel0 = 1  # voltage0-voltage1 plug to CH1 on my m2k
+ad_channel1 = 2  # voltage2-voltage3 plug to CH2 on my m2k
 
-sc = ad7124.scale_available
+sc = ad7124.channel[ad_channel0].scale_available
 
 ad7124.channel[ad_channel0].scale = sc[-1]  # get highest range
 ad7124.channel[ad_channel1].scale = sc[-1]  # get highest range
 ad7124.rx_output_type = "SI"
-# sets sample rate for all channels
-ad7124.sample_rate = 19200
+for ch in ad7124.channel:
+    ch.sampling_frequency = 19200
 ad7124.rx_enabled_channels = [ad_channel0, ad_channel1]
 ad7124.rx_buffer_size = 100
 ad7124._ctx.set_timeout(100000)
@@ -48,7 +48,7 @@ data = ad7124.rx()
 print(data)
 
 plt.figure(1)
-plt.title(f"{ad7124._ctrl.name} @{ad7124.sample_rate}sps")
+plt.title(f"{ad7124._ctrl.name} @{ad7124.channel[ad_channel0].sampling_frequency}sps")
 plt.ylabel("Volts")
 plt.xlabel("Sample Number")
 plt.plot(data[0], label=ad7124.channel[ad_channel0].name, color="orange", linewidth=2)

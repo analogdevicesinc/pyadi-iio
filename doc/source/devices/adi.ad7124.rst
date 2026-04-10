@@ -22,9 +22,14 @@ Class API
 Dynamic Attributes
 ------------------
 
-The ad7124 class supports a variable number of channels depending on the hardware configuration. Therefore, the channel property interfaces are dynamically generated. They are available on an initiated object as attributes with names voltage0-voltage0, voltage1-voltage1, etc. They will be instances of the ad7124_channel class.
+The ad7124 class supports a variable number of channels depending on the hardware configuration. Channel property interfaces are dynamically generated using their IIO channel IDs and are available in ``channel`` and as named attributes (e.g. ``temp`` or ``getattr(dev, "voltage0-voltage1")``). Voltage channels are instances of ``_ad7124_channel`` and temperature channels are instances of ``_temp_channel``.
 
-.. autoclass:: adi.ad7124.ad7124_channel
+.. autoclass:: adi.ad7124._ad7124_channel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: adi.ad7124._temp_channel
    :members:
    :undoc-members:
    :show-inheritance:
