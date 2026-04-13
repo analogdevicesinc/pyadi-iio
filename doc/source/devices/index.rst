@@ -153,6 +153,7 @@ Supported Devices
    adi.max9611
 
    adi.one_bit_adc_dac
+   adi.swiot1l
    adi.tdd
    adi.tddn
 
