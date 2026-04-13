@@ -834,6 +834,15 @@ ad74413r:
       - data_devices:
           - iio:device3
 
+max14906:
+    - max14906
+    - pyadi_iio_class_support:
+      - max14906
+    - emulate:
+      - filename: swiot1l.xml
+      - data_devices:
+          - iio:device1
+
 ad7490:
   - ad7490
   - pyadi_iio_class_support:

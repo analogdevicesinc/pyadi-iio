@@ -147,6 +147,7 @@ Supported Devices
    adi.ltc2983
    adi.max11205
    adi.max14001
+   adi.max14906
    adi.max31855
    adi.max31865
    adi.max9611
