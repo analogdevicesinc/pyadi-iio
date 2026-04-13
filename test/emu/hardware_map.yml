@@ -825,6 +825,15 @@ adl8113:
   - emulate:
       - filename: adl8113.xml
 
+ad74413r:
+    - ad74413r
+    - pyadi_iio_class_support:
+      - ad74413r
+    - emulate:
+      - filename: swiot1l.xml
+      - data_devices:
+          - iio:device3
+
 ad7490:
   - ad7490
   - pyadi_iio_class_support:
