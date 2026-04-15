@@ -104,6 +104,7 @@
 <li><a class="reference internal" href="#test-functions-and-fixtures">Test Functions and Fixtures</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#new-device-class-interfaces">New Device Class Interfaces</a></li>
 <li><a class="reference internal" href="#set-up-isolated-environment">Set Up Isolated Environment</a><ul>
 <li><a class="reference internal" href="#install-pyenv">Install pyenv</a></li>
 <li><a class="reference internal" href="#create-isolated-install-with-pipenv">Create isolated install with pipenv</a></li>
@@ -153,6 +154,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="test_jesd.html">JESD204 Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_base.html">Device Base Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
@@ -448,6 +450,24 @@ Content on this topic
 </ul>
 </div>
 </section>
+</section>
+<section id="new-device-class-interfaces">
+<h2>New Device Class Interfaces<a class="headerlink" href="#new-device-class-interfaces" title="Link to this heading"></a></h2>
+<p>New device-specific classes should build on the common base classes in
+<code class="docutils literal notranslate"><span class="pre">adi.device_base</span></code> rather than reimplementing the device discovery and channel
+initialization pattern. See:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="device_base.html">Device Base Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="device_base.html#available-base-classes">Available Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_base.html#required-class-attributes">Required Class Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_base.html#minimal-example">Minimal Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_base.html#supporting-multiple-devices-with-the-same-name">Supporting Multiple Devices With the Same Name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_base.html#when-to-not-use-these-classes">When To Not Use These Classes</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 <section id="set-up-isolated-environment">
 <h2>Set Up Isolated Environment<a class="headerlink" href="#set-up-isolated-environment" title="Link to this heading"></a></h2>

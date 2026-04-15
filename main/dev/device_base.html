@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="To simplify hardware configuration through different IIO drivers, basic class properties are exposed at the top-level of each device specific class. These properties abstract away the need to know a specific channel name, attribute type, source device name, and other details required in the libIIO API. Instead properties have easy to understand names, documentation, and error handling to help manage interfacing with different hardware. Property data can be read and written as follows from a given device interface class:" name="description" />
+<meta content="For new device-specific class interfaces, pyadi-iio provides a set of common parent classes in adi.device_base that encapsulate the boilerplate required for device discovery, channel initialization, and buffer setup. New drivers should use these base classes rather than re-implementing the initialization pattern, so behavior stays consistent across the library and future changes to the common pattern only need to be made in one place." name="description" />
 
-    <title>Attributes &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
+    <title>Device Base Classes &#8212; Analog Devices Hardware Python Interfaces 0.0.21 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=833c9372" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Examples" href="../guides/examples.html" />
-    <link rel="prev" title="Quick Start" href="../guides/quick.html" />
+    <link rel="next" title="Supported Devices" href="../devices/index.html" />
+    <link rel="prev" title="JESD204 Tests" href="test_jesd.html" />
    
   
   
@@ -95,7 +95,14 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">Attributes</a></li>
+<li><a class="reference internal" href="#">Device Base Classes</a><ul>
+<li><a class="reference internal" href="#available-base-classes">Available Base Classes</a></li>
+<li><a class="reference internal" href="#required-class-attributes">Required Class Attributes</a></li>
+<li><a class="reference internal" href="#minimal-example">Minimal Example</a></li>
+<li><a class="reference internal" href="#supporting-multiple-devices-with-the-same-name">Supporting Multiple Devices With the Same Name</a></li>
+<li><a class="reference internal" href="#when-to-not-use-these-classes">When To Not Use These Classes</a></li>
+</ul>
+</li>
 </ul>
 
         </nav>
@@ -124,7 +131,7 @@ Content on this topic
 <div class="toc-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../guides/quick.html">Quick Start</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attr/index.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/connectivity.html">Connectivity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../buffers/index.html">Buffers</a></li>
@@ -132,12 +139,12 @@ Content on this topic
 <li class="toctree-l1"><a class="reference internal" href="../mcp/index.html">MCP Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../libiio.html">libiio Direct Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
-<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-1" id="toctree-collapse-1"/><div class="collapse"><a class="reference internal" href="../dev/index.html">Developers</a><label for="toctree-collapse-1"><div class="icon"></div></label></div><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_attr.html">Attribute Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_dma.html">DMA Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_generics.html">Generic Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/test_jesd.html">JESD204 Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dev/device_base.html">Device Base Classes</a></li>
+<li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-1" id="toctree-collapse-1" checked=""/><div class="collapse"><a class="reference internal" href="index.html">Developers</a><label for="toctree-collapse-1"><div class="icon"></div></label></div><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="test_attr.html">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_dma.html">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_generics.html">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_jesd.html">JESD204 Tests</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Device Base Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2"/><div class="collapse"><a class="reference internal" href="../devices/index.html">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul>
@@ -299,40 +306,116 @@ Content on this topic
       <div class="documentwrapper">
         <div class="bodywrapper" id="top-anchor">
           <div class="body-header">
-  <nav class="breadcrumb empty"><ol></ol></nav>
+  <nav class="breadcrumb"><ol><li><a href="index.html">Developers</a></li></ol></nav>
 </div>
           <div class="body" role="main">
             
-  <section id="attributes">
-<h1>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h1>
-<p>To simplify hardware configuration through different IIO drivers, basic class properties are exposed at the top-level of each device specific class. These properties abstract away the need to know a specific channel name, attribute type, source device name, and other details required in the libIIO API. Instead properties have easy to understand names, documentation, and error handling to help manage interfacing with different hardware. Property data can be read and written as follows from a given device interface class:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
+  <section id="device-base-classes">
+<h1>Device Base Classes<a class="headerlink" href="#device-base-classes" title="Link to this heading"></a></h1>
+<p>For new device-specific class interfaces, pyadi-iio provides a set of common
+parent classes in <code class="docutils literal notranslate"><span class="pre">adi.device_base</span></code> that encapsulate the boilerplate required
+for device discovery, channel initialization, and buffer setup. New drivers
+should use these base classes rather than re-implementing the initialization
+pattern, so behavior stays consistent across the library and future changes to
+the common pattern only need to be made in one place.</p>
+<section id="available-base-classes">
+<h2>Available Base Classes<a class="headerlink" href="#available-base-classes" title="Link to this heading"></a></h2>
+<p>All base classes live in <code class="docutils literal notranslate"><span class="pre">adi/device_base.py</span></code>:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">device_base</span></code></dt><dd><p>Core mixin that handles device name validation against <code class="docutils literal notranslate"><span class="pre">compatible_parts</span></code>,
+device index selection, and channel instance creation via
+<code class="docutils literal notranslate"><span class="pre">_add_channel_instances</span></code>. Not used directly — combined with an RX/TX
+class below.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rx_chan_comp</span></code> / <code class="docutils literal notranslate"><span class="pre">rx_chan_comp_no_buff</span></code></dt><dd><p>RX device with (or without) buffer support, plus complex channel object
+support. Use the <code class="docutils literal notranslate"><span class="pre">_no_buff</span></code> variant for devices that do not expose a
+capture buffer.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tx_chan_comp</span></code> / <code class="docutils literal notranslate"><span class="pre">tx_chan_comp_no_buff</span></code></dt><dd><p>TX equivalents of the above.</p>
+</dd>
+</dl>
+</section>
+<section id="required-class-attributes">
+<h2>Required Class Attributes<a class="headerlink" href="#required-class-attributes" title="Link to this heading"></a></h2>
+<p>A subclass must set the following:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">compatible_parts</span></code></dt><dd><p>List of device names this class supports. The first entry is used as the
+default when no <code class="docutils literal notranslate"><span class="pre">device_name</span></code> is passed. An <code class="docutils literal notranslate"><span class="pre">Exception</span></code> is raised if a
+user passes a <code class="docutils literal notranslate"><span class="pre">device_name</span></code> that is not in this list.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">_channel_def</span></code></dt><dd><p>A callable (typically a channel class extending <code class="docutils literal notranslate"><span class="pre">attribute</span></code>) that is
+instantiated once per IIO channel found on the control device. Each
+instance is assigned as an attribute on the device object, named after the
+channel id, and appended to <code class="docutils literal notranslate"><span class="pre">self.channel</span></code>.</p>
+</dd>
+</dl>
+<p>Optional attributes:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">_ignore_channels</span></code></dt><dd><p>List of channel ids to skip during <code class="docutils literal notranslate"><span class="pre">_add_channel_instances</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">_complex_data</span></code></dt><dd><p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> for devices that expose paired I/Q channels.</p>
+</dd>
+</dl>
+</section>
+<section id="minimal-example">
+<h2>Minimal Example<a class="headerlink" href="#minimal-example" title="Link to this heading"></a></h2>
+<p>The following is a minimal RX device class that uses <code class="docutils literal notranslate"><span class="pre">rx_chan_comp</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">adi.attribute</span><span class="w"> </span><span class="kn">import</span> <span class="n">attribute</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">adi.device_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">rx_chan_comp</span>
 
-<span class="n">lidar</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">fmclidar1</span><span class="p">()</span>
-<span class="c1"># Read current pulse width</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">lidar</span><span class="o">.</span><span class="n">laser_pulse_width</span><span class="p">)</span>
-<span class="c1"># Change laser frequency to 1 MHz</span>
-<span class="n">lidar</span><span class="o">.</span><span class="n">laser_frequency</span> <span class="o">=</span> <span class="mi">1000000</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ad4080_channel</span><span class="p">(</span><span class="n">attribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;AD4080 channel&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">channel_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">channel_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ctrl</span> <span class="o">=</span> <span class="n">ctrl</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_iio_attr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ad4080</span><span class="p">(</span><span class="n">rx_chan_comp</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;AD4080 ADC&quot;&quot;&quot;</span>
+
+    <span class="n">compatible_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ad4080&quot;</span><span class="p">,</span> <span class="s2">&quot;ad4081&quot;</span><span class="p">,</span> <span class="s2">&quot;ad4083&quot;</span><span class="p">]</span>
+    <span class="n">_complex_data</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_channel_def</span> <span class="o">=</span> <span class="n">ad4080_channel</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sampling_frequency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_iio_dev_attr</span><span class="p">(</span><span class="s2">&quot;sampling_frequency&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If more detail is required about a specific property it can be directly inspected in the class definitions documnentation or in python itself through the help methods:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python3
-&gt;&gt;&gt; import adi
-&gt;&gt;&gt; help(adi.Pluto.gain_control_mode_chan0)
-Help on property:
-    gain_control_mode_chan0: Mode of receive path AGC. Options are:
-    slow_attack, fast_attack, manual
+<p>No custom <code class="docutils literal notranslate"><span class="pre">__init__</span></code> is required; <code class="docutils literal notranslate"><span class="pre">rx_chan_comp.__init__</span></code> handles URI
+connection, device lookup, and channel instantiation. Additional device-level
+properties are added as normal.</p>
+</section>
+<section id="supporting-multiple-devices-with-the-same-name">
+<h2>Supporting Multiple Devices With the Same Name<a class="headerlink" href="#supporting-multiple-devices-with-the-same-name" title="Link to this heading"></a></h2>
+<p>When a context exposes multiple IIO devices that share a name, pass
+<code class="docutils literal notranslate"><span class="pre">device_index</span></code> when constructing the class to select which one to bind to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dev0</span> <span class="o">=</span> <span class="n">ad4080</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:analog.local&quot;</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">dev1</span> <span class="o">=</span> <span class="n">ad4080</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:analog.local&quot;</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For complete documentation about class properties reference the <a class="reference internal" href="../devices/index.html"><span class="doc">supported devices</span></a> classes.</p>
+</section>
+<section id="when-to-not-use-these-classes">
+<h2>When To Not Use These Classes<a class="headerlink" href="#when-to-not-use-these-classes" title="Link to this heading"></a></h2>
+<p>These base classes target the common single-control-device pattern with one
+optional RX or TX buffer. Devices with more complex topologies — for example,
+multi-chip systems, mixed DMA paths, or non-standard channel discovery — should
+continue to compose <code class="docutils literal notranslate"><span class="pre">rx</span></code>, <code class="docutils literal notranslate"><span class="pre">tx</span></code>, and <code class="docutils literal notranslate"><span class="pre">context_manager</span></code> directly.</p>
+</section>
 </section>
 
 
           </div>
               <div class="related">
                 &nbsp;
-    <a href="../guides/quick.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">Quick Start</a>
-    <a href="../guides/examples.html" title="Next document (Alt+Shift+RightArrow)" class="next">Examples</a>
+    <a href="test_jesd.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">JESD204 Tests</a>
+    <a href="../devices/index.html" title="Next document (Alt+Shift+RightArrow)" class="next">Supported Devices</a>
               </div>
           
         </div>
