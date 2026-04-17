@@ -34,9 +34,9 @@ def main():
     adc.rx_buffer_size = N
     adc.sample_rate = fs
 
-    """sample_averaging is only supported by 30bit mode. and in this mode it cannot be OFF."""
+    """oversampling_ratio is only supported by 30bit mode. and in this mode it cannot be OFF."""
     if adc.output_data_mode == "30bit_avg":
-        adc.sample_averaging = 16
+        adc.chan0.oversampling_ratio = 16
 
     """ Prints Current output data mode"""
     print(f"Device: {device_name}, Output mode: {adc.output_data_mode}")
