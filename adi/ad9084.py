@@ -144,12 +144,19 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
                     self._dds2_channel_names.append(ch._id)
 
         # Sort channel names
-        self._rx_channel_names = _sortconv(self._rx_channel_names)
-        self._tx_channel_names = _sortconv(self._tx_channel_names)
+        noq = len(self._rx_channel_names) == 1
+        noq = noq or any("_q" not in name for name in self._rx_channel_names)
+        self._rx_channel_names = _sortconv(self._rx_channel_names, noq)
+        self._complex_data = not noq
+        noq = len(self._tx_channel_names) == 1
+        self._tx_channel_names = _sortconv(self._tx_channel_names, noq)
         self._dds_channel_names = _sortconv(self._dds_channel_names, dds=True)
         if not single_link:
-            self._rx2_channel_names = _sortconv(self._rx2_channel_names)
-            self._tx2_channel_names = _sortconv(self._tx2_channel_names)
+            noq = len(self._rx2_channel_names) == 1
+            noq = noq or any("_q" not in name for name in self._rx2_channel_names)
+            self._rx2_channel_names = _sortconv(self._rx2_channel_names, noq)
+            noq = len(self._tx2_channel_names) == 1
+            self._tx2_channel_names = _sortconv(self._tx2_channel_names, noq)
             self._dds2_channel_names = _sortconv(self._dds2_channel_names, dds=True)
 
         # Map unique attributes to channel properties
@@ -171,6 +178,12 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
                     else:
                         self._tx_coarse_duc_channel_names.append(channels[0])
                         self._tx_fine_duc_channel_names += channels
+
+        assert len(self._rx_channel_names) > 0, "No RX channels found"
+        assert len(self._tx_channel_names) > 0, "No TX channels found"
+        if not single_link:
+            assert len(self._rx2_channel_names) > 0, "No RX2 channels found"
+            assert len(self._tx2_channel_names) > 0, "No TX2 channels found"
 
         # Setup second DMA path
         if not single_link:

@@ -322,6 +322,25 @@ def test_split_rx_buffers(iio_uri):
 
 
 #########################################
+@pytest.mark.iio_hardware("adsy1100_uc61")
+def test_split_rx_buffers_uc61(iio_uri):
+    import adi
+
+    dev = adi.ad9084(uri=iio_uri)
+    dev.rx_buffer_size = 2 ** 10
+    dev.rx_enabled_channels = [0]
+    dev.rx2_enabled_channels = [0]
+
+    d = dev.rx()
+    d1 = dev.rx1()
+    d2 = dev.rx2()
+
+    assert d is not None
+    assert d1 is not None
+    assert d2 is not None
+
+
+#########################################
 @pytest.mark.iio_hardware("adsy1100")
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1])
