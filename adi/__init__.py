@@ -145,6 +145,7 @@ from adi.max31865 import max31865
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.sharkbyte import sharkbyte
+from adi.sshfs import sshfs
 from adi.tdd import tdd
 from adi.tddn import tddn
 
