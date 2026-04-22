@@ -152,6 +152,7 @@ Supported Devices
    adi.max9611
 
    adi.one_bit_adc_dac
+   adi.sharkbyte
    adi.tdd
    adi.tddn
 
