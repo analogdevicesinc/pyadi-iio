@@ -135,6 +135,7 @@ Supported Devices
    adi.gen_mux
    adi.hmc7044
    adi.jesd
+   adi.hmcad15xx
    adi.lm75
    adi.ltc2314_14
    adi.ltc2378

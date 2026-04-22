@@ -791,6 +791,11 @@ hmc7044:
       - data_devices:
           - iio:device1
 
+hmcad15xx:
+  - hmcad15xx
+  - pyadi_iio_class_support:
+      - hmcad15xx
+
 adf4030:
   - adf4030
   - pyadi_iio_class_support:
