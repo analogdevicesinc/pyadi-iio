@@ -842,6 +842,17 @@ ada4355:
       - data_devices:
           - iio:device2
 
+ada4356_dual:
+  - axi-ada4356-0
+  - axi-ada4356-1
+  - pyadi_iio_class_support:
+      - ada4356_dual
+  - emulate:
+      - filename: ada4356_dual.xml
+      - data_devices:
+          - iio:device5
+          - iio:device6
+
 ada4356_lidar:
   - ada4355
   - axi-tdd
