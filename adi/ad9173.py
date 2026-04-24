@@ -80,9 +80,10 @@ class ad9173(attribute, context_manager):
     DCTONE_FULL_SCALE = 0x50ff
     DEFAULT_DAC_CLK = 488281.25 * 9
 
-    def __init__(self, uri="", dac_frequency=12e9):
+    def __init__(self, uri="", dac_frequency=12e9, device_name=""):
         context_manager.__init__(self, uri, self._device_name)
 
+        self._device_name = device_name
         # Find the device
         self._ctrl = self._ctx.find_device(self._device_name)
 
