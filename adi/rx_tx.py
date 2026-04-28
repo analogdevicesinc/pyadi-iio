@@ -641,6 +641,22 @@ class shared_def(context_manager, metaclass=ABCMeta):
     def __post_init__(self):
         pass
 
+    def _resolve_trigger(self, trigger):
+        if isinstance(trigger, str):
+            trig = self._ctx.find_device(trigger) # iio.Trigger
+            if not trig:
+                raise ValueError(f"Trigger device '{trigger}' not found")
+        elif hasattr(trigger, "_ctrl"):
+            # wrapper class instance is passed in instead of a raw iio trigger
+            trig = trigger._ctrl
+        else:
+            trig = trigger
+
+        if trig is not None and not isinstance(trig, iio.Trigger):
+            raise ValueError(f"'{trig}' is not an IIO Trigger")
+
+        return trig
+
 
 class rx_def_no_buff(shared_def, rx, context_manager, metaclass=ABCMeta):
     @property
@@ -717,6 +733,19 @@ class rx_def(rx_def_no_buff):
         if self.__run_rx_post_init__:
             self.__post_init__()
 
+    def set_trigger(self, trigger):
+        """Set the trigger for the RX ADC.
+
+        This interface is typically used by devices with triggered buffer
+        support that does not have an internal/default trigger
+
+        :param trigger:
+            Can be Trigger device name or id, an iio.Trigger instance, or
+            wrapper class instance with _ctrl attribute pointing to an iio.Trigger.
+            Set to None to clear the trigger.
+        """
+        self._rxadc._set_trigger(self._resolve_trigger(trigger))
+
 
 class tx_def_no_buff(shared_def, tx, context_manager, metaclass=ABCMeta):
     @property
@@ -792,6 +821,19 @@ class tx_def(tx_def_no_buff):
 
         if self.__run_tx_post_init__:
             self.__post_init__()
+
+    def set_trigger(self, trigger):
+        """Set the trigger for the TX DAC.
+
+        This interface is typically used by devices with triggered buffer
+        support that does not have an internal/default trigger
+
+        :param trigger:
+            Can be Trigger device name or id, an iio.Trigger instance, or
+            wrapper class instance with _ctrl attribute pointing to an iio.Trigger.
+            Set to None to clear the trigger.
+        """
+        self._txdac._set_trigger(self._resolve_trigger(trigger))
 
 
 class rx_tx_def(tx_def, rx_def):
