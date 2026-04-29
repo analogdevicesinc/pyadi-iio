@@ -59,4 +59,35 @@ if BOOTSTRAP_NEEDED:
         raise RuntimeError(f"Boot script failed (exit {exit_status})")
     else:
         print(f"Boot script completed (exit {exit_status})")
+
+    # ------------------------------------------------------------------
+    # Prompt the user to enable the 5.7 V rail, then run All_Rx_on.bash
+    # ------------------------------------------------------------------
+    input("\nPlease turn on the 5.7 V rail, then press Enter to continue...")
+
+    print("Running All_Rx_on.bash...")
+    stdin, stdout, stderr = ssh.exec_command("bash All_Rx_on.bash", get_pty=True)
+    chan = stdout.channel
+
+    while not chan.exit_status_ready():
+        if chan.recv_ready():
+            out_chunk = chan.recv(1024).decode(errors="ignore")
+            print(out_chunk, end="")
+        if chan.recv_stderr_ready():
+            err_chunk = chan.recv_stderr(1024).decode(errors="ignore")
+            print(err_chunk, end="", file=sys.stderr)
+        time.sleep(0.1)
+
+    if chan.recv_ready():
+        print(chan.recv(1024).decode(errors="ignore"), end="")
+    if chan.recv_stderr_ready():
+        print(chan.recv_stderr(1024).decode(errors="ignore"), end="", file=sys.stderr)
+
+    rx_exit = chan.recv_exit_status()
+    if rx_exit != 0:
+        ssh.close()
+        raise RuntimeError(f"All_Rx_on.bash failed (exit {rx_exit})")
+    else:
+        print(f"All_Rx_on.bash completed (exit {rx_exit})")
+
     ssh.close()
