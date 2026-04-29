@@ -1,0 +1,1590 @@
+# ==========================================================================
+# ADSY2301 TX Calibration (Gain + Phase)
+# --------------------------------------------------------------------------
+# PURPOSE
+#   Performs end-to-end transmit calibration of the ADSY2301 64-element
+#   phased-array evaluation system.  The script:
+#     1. (Optional) Bootstraps the 16 ADAR1000 tiles via SSH.
+#     2. Initialises power supplies, the ADAR1000 beamformer array, and the
+#        ADRV9009 transceiver / TDD engine.
+#     3. Runs per-element gain calibration — measures each element
+#        individually via a spectrum analyser and adjusts gain codes to
+#        equalise amplitude across the array.
+#     4. (Optional) Runs digital phase calibration using IQ captures from
+#        the spectrum analyser to align the four DAC channels.
+#     5. Runs analog (ADAR1000) phase calibration — for each element a
+#        coarse/fine null-search finds the destructive-interference phase,
+#        then sets the constructive phase (+180 deg).
+#     6. Saves the final per-element phase, gain, and attenuation values to
+#        tx_cal_values.json for use by other scripts.
+#
+# SETUP
+#   - Place a receive horn antenna at boresight pointing at the array.
+#   - Connect the horn to a spectrum analyser (e.g. Keysight N9000A / CXA).
+#   - Connect the PA drain and bias power supplies.
+#   - No gimbal or mechanical positioner is needed.
+#
+# INSTRUMENT NOTE
+#   This script was developed with the following lab instruments:
+#     - Keysight N9000A (CXA) spectrum analyser
+#     - Keysight E36233A dual-output DC power supply (PA drain)
+#     - Keysight N6705B DC power analyser (bias supply)
+#   If you use different instruments you will need to replace or adapt the
+#   driver imports and VISA resource strings marked with *** INSTRUMENT ***
+#   throughout this file.
+#
+# OUTPUTS
+#   tx_cal_values.json — per-element phase, gain, and attenuation codes.
+#
+# Copyright (C) 2025 Analog Devices, Inc.
+# SPDX short identifier: ADIBSD
+# ==========================================================================
+
+import os
+os.environ['QT_QPA_PLATFORM'] = 'offscreen'  # Use offscreen back-end to avoid X11/Wayland issues
+import sys
+import time
+import json as _json
+import adi                          # pyadi-iio — Analog Devices hardware drivers
+import pyvisa                       # VISA instrument communication
+from pyvisa import constants
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')               # Non-interactive back-end (no display needed)
+import matplotlib.pyplot as plt
+from scipy.signal import find_peaks
+import paramiko                     # SSH for remote SoM access
+import ADSY2301 as mr               # ADSY2301 helper module (calibration, capture, etc.)
+
+# *** INSTRUMENT DRIVERS ***
+# The imports below are specific to the lab instruments used in this setup.
+# If you use different instruments, replace these with your own drivers or
+# use pyvisa SCPI commands directly.
+from Drivers import N9000A_Driver as N9000A    # Keysight N9000A / CXA spectrum analyser
+from Drivers import N6705B_Driver as N6705B    # Keysight N6705B DC power analyser
+from Drivers import E36233A_Driver as E36233A  # Keysight E36233A DC power supply
+
+# ──────────────────────────────────────────────────────────────────────────
+# USER CONFIGURATION  — Adjust these parameters for your test
+# ──────────────────────────────────────────────────────────────────────────
+talise_ip  = "192.168.1.1"          # ADRV9009-ZU11EG SoM IP address
+talise_uri = "ip:" + talise_ip
+
+# -- Calibration step enables --
+# Set these flags to control which parts of the calibration run.
+bootstrap_needed         = False    # True = run ADAR1000 tile bootstrap via SSH
+config                   = True     # True = configure ADAR1000 gain/phase/bias defaults
+DAC_config               = True     # True = programme the ADRV9009 DACs and TDD engine
+Gain_calibration         = True     # True = run per-element gain equalisation
+Digi_Phase_calibration   = False    # True = run DAC-channel digital phase alignment
+Analog_Phase_calibration = True     # True = run ADAR1000 analog phase null-search
+
+test_freq_GHz = 10                            # TX signal frequency in GHz
+operational_frequency = test_freq_GHz * 1e9   # Derived Hz value used downstream
+
+# ==========================================================================
+# STEP 0 — Initialise Power Supplies
+# ==========================================================================
+# Open a VISA resource manager for bench-instrument communication.
+rm = pyvisa.ResourceManager()
+
+# *** INSTRUMENT — PA Drain Power Supply ***
+# The E36233A supplies the PA drain voltage.  Replace this block if you use
+# a different supply.
+E36 = "TCPIP::192.168.1.35::inst0::INSTR"     # *** INSTRUMENT ADDRESS ***
+PA_Supplies = E36233A.E36233A(rm, E36)
+PA_Supplies.output_off(1)     # Start with outputs disabled
+PA_Supplies.output_off(2)
+
+# *** INSTRUMENT — Bias / Rail Power Supply ***
+# The N6705B provides bias and housekeeping rails.  Replace this block if
+# you use a different supply.
+N67 = "TCPIP::192.168.1.25::INSTR"            # *** INSTRUMENT ADDRESS ***
+Pwr_Supplies = N6705B.N6705B(rm, N67)
+
+# Set PA drain rail: 22 V, 2 A current limit
+PA_Supplies.set_voltage(1, 22)
+PA_Supplies.set_current(1, 2)
+
+# ==========================================================================
+# (Optional) Bootstrap — power-on and initialise ADAR1000 tiles via SSH
+# ==========================================================================
+# Only needed once after power cycle.  Set bootstrap_needed = True above.
+if bootstrap_needed == True:
+
+    # *** INSTRUMENT — Bias Supply Rail Sequencing ***
+    # The N6705B channels below power the ADSY2301 rails.  Adjust voltages
+    # and channel numbers to match your supply.
+    Pwr_Supplies.output_off(2)
+    Pwr_Supplies.output_off(3)
+    Pwr_Supplies.output_off(4)
+
+    # 4 V Rail
+    Pwr_Supplies.set_voltage(4, 4)
+    Pwr_Supplies.set_current(4, 10)
+
+    # -6 V Rail
+    Pwr_Supplies.set_voltage(2, -6)
+    Pwr_Supplies.set_current(2, 3)
+
+    # 5.7 V Rail
+    Pwr_Supplies.set_voltage(3, 5.7)
+    Pwr_Supplies.set_current(3, 10)
+
+
+    # -- SSH into the SoM and run the ADAR1000 bootstrap script --
+    ##############################################
+    ## Step 1: Configure Manta Ray for Tx ##
+    ###############################################
+
+
+    ## Setup SSH conection into Talise SOM for control ##
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
+
+    ## Turn on Manta Ray Power Supplies — sequence: 4 V, then -6 V ##
+    # *** INSTRUMENT — adjust channel numbers to match your supply ***
+    print("Turning on 4V, then -6V supplies")
+    Pwr_Supplies.output_on(4)
+    time.sleep(1)
+    print(f"4V Rail is {Pwr_Supplies.measure_voltage(4)}V and {Pwr_Supplies.measure_current(4)}A")
+    Pwr_Supplies.output_on(2)
+    time.sleep(1)
+    print(f"-6V Rail is {Pwr_Supplies.measure_voltage(2)}V and {Pwr_Supplies.measure_current(2)}A")
+
+
+    talise_ip = "192.168.1.1" # ADRV9009-zu11eg board ip address
+    talise_uri = "ip:" + talise_ip
+
+    #######################################################
+    # Run the bootstrap script and block until it completes
+    ########################################################
+
+    boot_cmd = "bash manta_ray_adar1000_boot.bash"
+    stdin, stdout, stderr = ssh.exec_command(boot_cmd,get_pty=True)
+    chan = stdout.channel
+
+    # stream output while the command runs
+    while not chan.exit_status_ready():
+        if chan.recv_ready():
+            out_chunk = chan.recv(1024).decode(errors="ignore")
+            print(out_chunk, end="")
+        if chan.recv_stderr_ready():
+            err_chunk = chan.recv_stderr(1024).decode(errors="ignore")
+            print(err_chunk, end="", file=sys.stderr)
+        time.sleep(0.1)
+
+    # flush any remaining output
+    if chan.recv_ready():
+        print(chan.recv(1024).decode(errors="ignore"), end="")
+    if chan.recv_stderr_ready():
+        print(chan.recv_stderr(1024).decode(errors="ignore"), end="", file=sys.stderr)
+
+    exit_status = chan.recv_exit_status()
+    if exit_status != 0:
+        ssh.close()
+        raise RuntimeError(f"Boot script failed (exit {exit_status})")
+    else:
+        print(f"Boot script completed (exit {exit_status})")
+    ssh.close()
+
+
+# ==========================================================================
+# Array Mapping — subarray-to-element assignments
+# ==========================================================================
+# Each row maps one subarray to the 16 antenna elements it serves.
+# These mappings are fixed by the ADSY2301 hardware layout.
+
+
+
+
+subarray = np.array([
+    [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28], # subarray 1
+    [5, 6, 7, 8, 13, 14, 15, 16, 21, 22, 23, 24, 29, 30, 31, 32], # subarray 2
+    [37, 38, 39, 40, 45, 46, 47, 48, 53, 54, 55, 56, 61, 62, 63, 64],  # subarray 3
+    [33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60], # subarray 4
+    ])
+
+# Reference element used as the phase-alignment target during calibration
+ref_chan = subarray[0, 10]  # Currently set to element 19
+
+# -- ADAR1000 beamformer array (16 ICs × 4 channels = 64 elements) --
+dev = adi.adar1000_array(
+    uri = talise_uri,
+    
+    chip_ids = ["adar1000_csb_0_1_2", "adar1000_csb_0_1_1", "adar1000_csb_0_2_2", "adar1000_csb_0_2_1",
+                "adar1000_csb_0_1_3", "adar1000_csb_0_1_4", "adar1000_csb_0_2_3", "adar1000_csb_0_2_4",
+
+                "adar1000_csb_1_1_2", "adar1000_csb_1_1_1", "adar1000_csb_1_2_2", "adar1000_csb_1_2_1",
+                "adar1000_csb_1_1_3", "adar1000_csb_1_1_4", "adar1000_csb_1_2_3", "adar1000_csb_1_2_4"],
+
+    
+
+    device_map = [[1, 5, 2, 6], [3, 7, 4, 8], [9, 13, 10, 14], [11, 15, 12, 16]],
+ 
+    element_map = np.array([[1, 9,  17, 25, 33, 41, 49, 57],
+                            [2, 10, 18, 26, 34, 42, 50, 58],
+                            [3, 11, 19, 27, 35, 43, 51, 59],
+                            [4, 12, 20, 28, 36, 44, 52, 60],
+
+                            [5, 13, 21, 29, 37, 45, 53, 61],
+                            [6, 14, 22, 30, 38, 46, 54, 62],
+                            [7, 15, 23, 31, 39, 47, 55, 63],
+                            [8, 16, 24, 32, 40, 48, 56, 64]]),
+    
+    device_element_map = {
+ 
+        1:  [9, 10, 2, 1],      3:  [41, 42, 34, 33],
+        2:  [25, 26, 18, 17],   4:  [57, 58, 50, 49],
+        5:  [4, 3, 11, 12]  ,   7:  [36, 35, 43, 44],
+        6:  [20, 19, 27, 28],   8:  [52, 51, 59, 60],
+ 
+        9:  [13, 14, 6, 5],     11: [45, 46, 38, 37],
+        10: [29, 30, 22, 21],   12: [61, 62, 54, 53],
+        13: [8, 7, 15, 16],     15: [40, 39, 47, 48],
+        14: [24, 23, 31, 32],   16: [56, 55, 63, 64],
+    },
+)
+
+# ==========================================================================
+# ADAR1000 Configuration — set all elements to max gain, zero phase
+# ==========================================================================
+if config == True:
+    ## Set attenuation to 1, gain to max, and phase to 0 for all elements ##
+    
+    
+    # Set TR source to SPI and enable the bias DAC on all 16 devices
+    ## toggle with respect to T/R state.
+    for device in dev.devices.values():
+        device.tr_source = "spi"
+    for device in dev.devices.values():    
+        # device.mode = "rx"
+        device.bias_dac_mode = "on"
+    
+    # Initialise every element: attenuator = 1 (minimal), gain = 127 (max),
+    # phase = 0 deg.  This gives a uniform starting point for calibration.
+    for element in dev.elements.values():
+        """
+        Iterate through each element in the Stingray object
+        Convert the element to a string and extract the last two digits
+        This is used to map the element to its corresponding gain and attenuation values
+        in the dictionaries created above
+        """
+        str_channel = str(element)
+        print(element)
+        value = int(mr.strip_to_last_two_digits(str_channel))
+
+        # element.tx_attenuator = atten_dict[value]
+        element.tx_attenuator = 1
+        time.sleep(0.1)
+        element.tx_gain = 127
+        element.tx_phase = 0
+
+        dev.latch_tx_settings() # Latch SPI settings to devices
+
+
+    ## Set PA Bias ON/OFF to -4.8 V for all channels ##
+    # The bias DAC drives the PA gate.  -4.8 V is the nominal pinch-off that
+    # keeps the PA in a safe idle state until the TDD engine gates it.
+    tries = 10  # Retry count — some writes may not stick on the first attempt
+    for device in dev.devices.values():
+        # device.mode = "rx"
+        # device.bias_dac_mode = "on"
+
+        for channel in device.channels:
+            channel.pa_bias_on = -4.8
+            if round(channel.pa_bias_on,1) != -4.8:
+                found = False
+                for _ in range(tries):
+                    if round(channel.pa_bias_on,1) != -4.8:
+                        pass
+                    else:
+                        found = True
+                        break
+                if not found:
+                    print(f"Not set properly: {channel.pa_bias_on=}")
+                    print(f"Element number {channel}")
+            
+            channel.pa_bias_off = -4.8
+            if round(channel.pa_bias_off,1) != -4.8:
+                found = False
+                for _ in range(tries):
+                    if round(channel.pa_bias_off,1) != -4.8:
+                        pass
+                    else:
+                        found = True
+                        break
+                if not found:
+                    print(f"Not set properly: {channel.pa_bias_off=}")
+                    print(f"Element number {channel}")
+            dev.latch_tx_settings()
+
+
+dev.latch_tx_settings()
+dev.latch_rx_settings()
+print("Initialized BFC Tile")
+
+
+# Reference elements — one per subarray (used during phase calibration)
+subarray_ref = np.array([1, 5, 37, 33])
+
+
+##############################################
+## Step 1: Configure Manta Ray for Tx ##
+###############################################
+
+# ==========================================================================
+# STEP 1 — DAC / TDD Configuration
+# ==========================================================================
+# Programme the ADRV9009 transmit DACs (CW tone generation) and the
+# FPGA-based TDD timing engine.  This block runs twice to ensure all
+# registers latch correctly.
+if DAC_config == True:
+## Initialize Talise SOM DACs ##
+    for i in range(2):
+        # Create radio and initialize TDD engine
+        sdr  = adi.adrv9009_zu11eg(talise_uri)
+        ctx = sdr._ctrl.ctx
+        tddn = adi.tddn(talise_uri)
+
+        # Setup ADXUD1AEBZ
+        xud = ctx.find_device("xud_control")
+
+        ## Updated XUD settings, PLLselect and RxGainMode ##
+        PLLselect = xud.find_channel("voltage1", True)
+        rxgainmode = xud.find_channel("voltage0", True)
+        PLLselect.attrs["raw"].value = "1"
+        rxgainmode.attrs["raw"].value = "0"
+
+
+        # Configure TX/RX properties
+        sdr.tx_enabled_channels = [0, 1, 2, 3]
+        ## TRx LO is preset to 4.5 GHz
+        sdr.trx_lo = 4500000000
+        sdr.trx_lo_chip_b = 4500000000
+        sdr.tx_hardwaregain_chan0 = 0
+        sdr.tx_hardwaregain_chan1 = 0
+        sdr.tx_hardwaregain_chan0_chip_b= 0
+        sdr.tx_hardwaregain_chan1_chip_b = 0
+        sdr.rx_hardwaregain_chan0 = 0
+        sdr.rx_hardwaregain_chan1 = 0
+        sdr.rx_hardwaregain_chan0_chip_b= 0
+        sdr.rx_hardwaregain_chan1_chip_b = 0
+        sdr.gain_control_mode_chan0 = "manual"
+        sdr.gain_control_mode_chan1 = "manual"
+        sdr.gain_control_mode_chan0_chip_b = "manual"
+        sdr.gain_control_mode_chan1_chip_b = "manual"
+        sdr.gain_control_mode_chan0 = "slow_attack"
+        sdr.gain_control_mode_chan1 = "slow_attack"
+        sdr.gain_control_mode_chan0_chip_b = "slow_attack"
+        sdr.gain_control_mode_chan1_chip_b = "slow_attack"
+
+        # Number of frame pulses to plot in the pulse train
+        # (will be used to calculate the RX buffer size)
+        frame_pulses_to_plot = 5
+
+        ## RX properties XX
+        # Frame and pulse timing (in milliseconds)
+        # frame_length_ms = 0.1 # 100 us
+        frame_length_ms = 0.1 # 1 ms
+        # sine data for 10 us pulse than 90 us of zero data
+        tx_pulse_start_ms = 0.00001 # 10 ns
+        tx_pulse_stop_ms = 0.100 # 100 us
+
+
+        # Pulse parameters #
+        # PRI_ms = 0.1 #100 us pulse repitition interval
+        PRI_ms = 0.100 # 0.1 ms pulse repitition interval
+        # duty_cycle = 0.025 # 2.5% duty cycle
+        duty_cycle = 1 # 100% duty cycle to send CW wave
+        pulse_spacing_ms = 0.002 # 2 us spacing between pulse start times
+        pulse_start_buffer_ms = 0.00001 # 10 ns
+        pulse0_start_ms = pulse_start_buffer_ms
+        pulse0_stop_ms = duty_cycle * PRI_ms + pulse_start_buffer_ms
+        pulse1_start_ms = pulse0_stop_ms + pulse_spacing_ms
+        pulse1_stop_ms = pulse1_start_ms + duty_cycle * PRI_ms
+        pulse2_start_ms = pulse1_stop_ms + pulse_spacing_ms
+        pulse2_stop_ms = pulse2_start_ms + duty_cycle * PRI_ms
+        pulse3_start_ms = pulse2_stop_ms + pulse_spacing_ms
+        pulse3_stop_ms = pulse3_start_ms + duty_cycle * PRI_ms
+
+        # Prepare TX data
+        fs = int(sdr.tx_sample_rate)
+        frame_length_seconds = PRI_ms * 1e-3
+        # carrier frequency for the I/Q signal = 20 kHz
+        fc = 1000e3
+        # calculate N for full frame duration: N = fs * frame_length_seconds
+        N = int(fs * frame_length_seconds)
+        ts = 1 / float(fs)
+        frame_length_ms = PRI_ms
+
+        #######################
+        ## Setup DAC outputs ##
+        #######################
+        # Calculate samples for TX pulse duration
+        pulse0_duration_ms = pulse0_stop_ms - pulse0_start_ms
+        pulse0_duration_seconds = pulse0_duration_ms * 1e-3
+        pulse0_samples = int(fs * pulse0_duration_seconds)
+        pulse0_start_sample = int(fs * pulse0_start_ms * 1e-3)
+        pulse1_duration_ms = pulse1_stop_ms - pulse1_start_ms
+        pulse1_duration_seconds = pulse1_duration_ms * 1e-3
+        pulse1_samples = int(fs * pulse1_duration_seconds)
+        pulse1_start_sample = int(fs * pulse1_start_ms * 1e-3)
+        pulse2_duration_ms = pulse2_stop_ms - pulse2_start_ms
+        pulse2_duration_seconds = pulse2_duration_ms * 1e-3
+        pulse2_samples = int(fs * pulse2_duration_seconds)
+        pulse2_start_sample = int(fs * pulse2_start_ms * 1e-3)
+        pulse3_duration_ms = pulse3_stop_ms - pulse3_start_ms
+        pulse3_duration_seconds = pulse3_duration_ms * 1e-3
+        pulse3_samples = int(fs * pulse3_duration_seconds)
+        pulse3_start_sample = int(fs * pulse3_start_ms * 1e-3)
+
+        # Create full time vector for entire frame
+        t = np.arange(0, N * ts, ts)
+
+        # Create full frame with zeros
+        pulse0_i = np.zeros(N)
+        pulse0_q = np.zeros(N)
+        pulse1_i = np.zeros(N)
+        pulse1_q = np.zeros(N)
+        pulse2_i = np.zeros(N)
+        pulse2_q = np.zeros(N)
+        pulse3_i = np.zeros(N)
+        pulse3_q = np.zeros(N)
+
+        for n in range(pulse0_start_sample, min(pulse0_start_sample + pulse0_samples, N)):
+            t_sample = n * ts
+            pulse0_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse0_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse1_start_sample, min(pulse1_start_sample + pulse1_samples, N)):
+            t_sample = n * ts
+            pulse1_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse1_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse2_start_sample, min(pulse2_start_sample + pulse2_samples, N)):
+            t_sample = n * ts
+            pulse2_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse2_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse3_start_sample, min(pulse3_start_sample + pulse3_samples, N)):
+            t_sample = n * ts
+            pulse3_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse3_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+
+        pulse0_data = pulse0_i + 1j * pulse0_q
+        pulse1_data = pulse1_i + 1j * pulse1_q
+        pulse2_data = pulse2_i + 1j * pulse2_q
+        pulse3_data = pulse3_i + 1j * pulse3_q
+
+        sdr.tx_destroy_buffer()
+
+        # scaling for 16-bit DAC
+        # use most of the dynamic range but avoid clipping
+        scale_factor = 2**15 - 1
+        pulse0_iq_real = np.int16(np.real(pulse0_data) * scale_factor)
+        pulse0_iq_imag = np.int16(np.imag(pulse0_data) * scale_factor)
+        pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
+        pulse1_iq_real = np.int16(np.real(pulse1_data) * scale_factor)
+        pulse1_iq_imag = np.int16(np.imag(pulse1_data) * scale_factor)
+        pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
+        pulse2_iq_real = np.int16(np.real(pulse2_data) * scale_factor)
+        pulse2_iq_imag = np.int16(np.imag(pulse2_data) * scale_factor)
+        pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
+        pulse3_iq_real = np.int16(np.real(pulse3_data) * scale_factor)
+        pulse3_iq_imag = np.int16(np.imag(pulse3_data) * scale_factor)
+        pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
+
+        # Configure TX data offload mode to cyclic
+        sdr._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
+        sdr.tx_cyclic_buffer = True
+
+        # Configure RX parameters
+        sdr.rx_enabled_channels = [0, 1, 2, 3]
+
+        # Calculate RX buffer size to match TX duration
+        rx_fs = int(sdr.rx_sample_rate)
+
+        # Match RX buffer duration to TX duration
+        desired_rx_duration = frame_pulses_to_plot * len(pulse0_iq) / fs * 1000  # ms
+        rx_buffer_samples = int(rx_fs * (desired_rx_duration * 1e-3))
+        sdr.rx_buffer_size = rx_buffer_samples
+
+        # Create time vector for plotting
+        rx_ts = 1 / float(rx_fs)
+        rx_t = np.arange(0, rx_buffer_samples * rx_ts, rx_ts)
+
+        # Create pulse train for the entire RX buffer duration
+        pulse_train = np.zeros(rx_buffer_samples)
+
+        # Calculate samples per frame and pulse
+        samples_per_frame = int(frame_length_ms * 1e-3 / rx_ts)
+        pulse_start_offset = int(tx_pulse_start_ms * 1e-3 / rx_ts)
+        pulse_stop_offset = int(tx_pulse_stop_ms * 1e-3 / rx_ts)
+
+        num_frames = len(rx_t) // samples_per_frame
+
+        for frame in range(num_frames):
+            frame_start = frame * samples_per_frame
+            pulse_start = frame_start + pulse_start_offset
+            pulse_stop = frame_start + pulse_stop_offset
+            pulse_train[pulse_start:pulse_stop] = 1
+        # # Configure TX data offload mode to cyclic
+        # sdr._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
+        # sdr.tx_cyclic_buffer = True
+
+
+        #####################
+        # TDD signal channels
+        #####################
+
+        TDD_TX_OFFLOAD_SYNC = 0
+        TDD_RX_OFFLOAD_SYNC = 1
+        TDD_ENABLE      = 2
+        TDD_ADRV9009_RX_EN = 3
+        TDD_ADRV9009_TX_EN = 4
+        TDD_MANTARAY_EN = 5
+        TDD_CHANNEL6     = 6  ## PA_ON_0, PA_ON_1
+        TDD_CHANNEL7     = 7  ## TR Pulse
+
+        #Configure TDD engine
+        tddn.enable = 0  ## Set to 0 to make config changes
+        # tddn.burst_count          = 0 # continuous mode, period repetead forever
+        # tddn.startup_delay_ms     = 0
+        tddn.frame_length_ms      = frame_length_ms  ## frame_length_ms = PRI_ms
+
+        ## 3 Separate groups of TDD channels.
+
+        ## Always on channels
+        for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN,TDD_MANTARAY_EN, TDD_CHANNEL6]:
+            tddn.channel[chan].on_ms   = 0
+            tddn.channel[chan].off_ms  = 0
+            tddn.channel[chan].polarity = 1
+            tddn.channel[chan].enable   = 1
+
+        ## Previously set by software team, untouched
+        for chan in [TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
+            tddn.channel[chan].on_raw   = 0
+            tddn.channel[chan].off_raw  = 10 # 10 samples at 250 MHz = 40 ns pulse width
+            tddn.channel[chan].polarity = 0
+            tddn.channel[chan].enable   = 1
+
+        ## TR pulse channel
+        for chan in [TDD_CHANNEL7]:
+            tddn.channel[chan].on_ms   = 0
+            tddn.channel[chan].off_ms  = 0.005 ## For 100 us PRI, 5 us TR pulse for 5% duty cycle
+            tddn.channel[chan].polarity = 0 # polarity inverted
+            tddn.channel[chan].enable   = 1
+
+
+        ## Enable TDD engine after config chages
+        tddn.enable = 1
+        tddn.sync_soft  = 1
+
+        tdd_tx_offload_frame_length_ms = frame_length_ms
+        tdd_tx_offload_pulse_start_ms = 0.00001 # 10 ns
+
+        # off_raw is in samples, so convert to time for offset calculation
+        off_raw_samples = tddn.channel[TDD_TX_OFFLOAD_SYNC].off_raw
+
+        # Create pulse train for the entire RX buffer duration
+        tdd_tx_offload_pulse_train = np.zeros(rx_buffer_samples)
+
+        # Calculate samples per frame and pulse
+        tdd_tx_offload_samples_per_frame = int(frame_length_ms * 1e-3 / rx_ts)
+        tdd_tx_offload_pulse_start_offset = int(tdd_tx_offload_pulse_start_ms * 1e-3 / rx_ts)
+        # Pulse stays high for off_raw_samples
+        tdd_tx_offload_pulse_stop_offset = tdd_tx_offload_pulse_start_offset + off_raw_samples
+
+        # Only plot as many pulses as requested
+        for frame in range(frame_pulses_to_plot):
+            tdd_tx_offload_frame_start = frame * tdd_tx_offload_samples_per_frame
+            tdd_tx_offload_pulse_start = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_start_offset
+            tdd_tx_offload_pulse_stop = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_stop_offset
+            tdd_tx_offload_pulse_train[tdd_tx_offload_pulse_start:tdd_tx_offload_pulse_stop] = 1
+
+
+        ##############################################
+        ## Step 3: Send Tx Data ##
+        ###############################################
+
+        ## Destroy buffer before sending new data ##
+        sdr.tx_destroy_buffer()
+
+
+        # Send the same CW waveform on all 4 DAC channels (used for gain cal).
+        # sdr.tx([pulse0_iq, pulse1_iq, pulse2_iq, pulse3_iq]) ## Use to send time interleaved pulses on each channel
+        sdr.tx([pulse0_iq, pulse0_iq, pulse0_iq, pulse0_iq]) ## Use to send same data on all channels
+        sdr.tx_cyclic_buffer
+
+
+        # Trigger TDD synchronization
+        tddn.sync_soft  = 1
+
+
+# Switch TR source to FPGA-controlled (external) and enable bias toggle
+# so the TDD engine gates the PA on/off each pulse.
+for device in dev.devices.values():
+        device.tr_source = "external"
+        device.bias_dac_mode = "toggle"
+
+# ==========================================================================
+# STEP 2 — Gain Calibration
+# ==========================================================================
+# Measures each element one at a time via the spectrum analyser, computes
+# the gain code needed to equalise amplitude, and writes the result back
+# to the ADAR1000 registers.  Two calibration passes are performed for
+# improved accuracy.
+##############################################
+## Step 4: Receive data from Spectrum Analyzer and Calibrate ##
+###############################################
+
+# *** INSTRUMENT — Turn off 5.7 V rail (LNA bias) during TX cal to reduce
+# heat load.  Adjust the channel number for your supply. ***
+print("Turning off 5.7V rail (LNA bias rail) for heat management")
+Pwr_Supplies.output_off(3)
+
+if Gain_calibration == True:
+
+    print("Beginning Gain Calibration Routine")
+
+    # *** INSTRUMENT — Spectrum Analyser ***
+    # Connect to the spectrum analyser.  Replace the VISA address and driver
+    # if you use a different analyser.
+    CXA = "TCPIP0::192.168.1.77::hislip0::INSTR"   # *** INSTRUMENT ADDRESS ***
+
+    # Initialise all elements at maximum gain before starting the
+    # element-by-element measurement loop.
+    for element in dev.elements.values():
+        str_channel = str(element)
+        print(element)
+        value = int(mr.strip_to_last_two_digits(str_channel))
+
+        # element.tx_attenuator = atten_dict[value]
+        element.tx_attenuator = 1
+        time.sleep(0.1)
+        element.tx_gain = 127
+
+        dev.latch_tx_settings() # Latch SPI settings to devices
+
+    # *** INSTRUMENT — Spectrum Analyser Setup ***
+    # The settings below configure the N9000A for CW power measurement.
+    # If you use a different analyser, replace these calls with equivalent
+    # SCPI commands or your own driver API.
+    SpecAn = N9000A.N9000A(rm, CXA)
+    # SpecAn.reset()   
+    SpecAn_Center_Freq = operational_frequency   #Set to transmit frequency
+    SpecAn_Res_BW = 100    #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
+    SpecAn.set_initiate_continuous_sweep('ON') #Set contionuous mode of spec an
+    SpecAn.set_center_freq(SpecAn_Center_Freq)     #Set SpecAn center frequency
+    # SpecAn.write("TRIGger:SEQ:RFB:LEV:ABS -60 dBm")
+
+    #Iterate 16 Times to get all TX Amplitude Data
+    detect = []
+
+    ## Set TR Source to external and bias_dac_mode to toggle ##
+    for device in dev.devices.values():
+        device.tr_source = "external"
+        device.bias_dac_mode = "toggle"
+
+
+    ####################################
+    ####################################
+    ######## Begin Gain Cal ############   
+    ####################################
+    ####################################
+
+    # -- Pre-calibration measurement pass --
+    # Measure the power of each element individually.  The results are used
+    # to compute per-element gain codes that equalise the array.
+
+    # Disable all channels before starting calibration
+    mr.disable_pa_bias_channel(dev)
+
+    # *** INSTRUMENT — Spectrum Analyser Configuration ***
+    # Narrow span + resolution BW for accurate CW power reading.
+    # Adjust these if your analyser has different capabilities.
+    SpecAn.set_to_spec_an_mode()
+    ## Set span to 5 kHz for spectrum analyzer mode ##
+    SpecAn.write("SENS:FREQ:SPAN 5E3")
+    # SpecAn.set_resolution_bandwidth(9e-3)
+    SpecAn.set_resolution_bandwidth(100e-6)
+    # SpecAn.write("SENS:SWE:TIME 75E-3")
+    SpecAn.set_continuous_peak_search(1,1)
+    SpecAn.set_attenuation(0)
+    SpecAn.set_reference_level(-50)
+
+
+    wait = 0.5
+    PA_Supplies.output_on(1)
+
+    ## Disable all elemements
+    mr.disable_pa_bias_channel(dev,)
+    for i in range(16):
+
+        print(f"Capturing Pre Calibration data for Elements: {subarray[:,i]}")
+
+        ## Set center freq to 9.994 GHz ##
+        SpecAn.set_center_freq(operational_frequency)  
+
+        mr.enable_pa_bias_channel(dev,subarray[0,i])
+        time.sleep(wait)
+        tone_0 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_0)
+        print(f"Element: {subarray[0,i]}")
+        print(tone_0)
+        mr.disable_pa_bias_channel(dev,subarray[0,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[1,i])
+        time.sleep(wait)
+        tone_1 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_1)
+        print(f"Element: {subarray[1,i]}")
+        print(tone_1)
+        mr.disable_pa_bias_channel(dev,subarray[1,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[2,i])
+        time.sleep(wait)
+        tone_2 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_2)
+        print(f"Element: {subarray[2,i]}")
+        print(tone_2)
+        mr.disable_pa_bias_channel(dev,subarray[2,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[3,i])
+        time.sleep(wait)
+        tone_3 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_3)
+        print(f"Element: {subarray[3,i]}")
+        print(tone_3)
+        mr.disable_pa_bias_channel(dev,subarray[3,i])
+
+
+    #Calculate Statistics:
+    pre_detect_arr = np.array(detect, dtype=float)
+    pre_detect_mean = float(pre_detect_arr.mean())
+    pre_detect_min = float(pre_detect_arr.min())
+    pre_detect_max = float(pre_detect_arr.max())
+    pre_detect_var = float(pre_detect_arr.var())  # population variance; use ddof=1 for sample variance
+
+    # Compute per-element gain correction codes from the pre-cal measurements
+    gain_codes_cal, atten_cal, gain_cal_diff = mr.gain_codes(dev,np.array(detect),mode="tx")
+    print(gain_codes_cal)
+
+    gain_dict_ref = subarray.transpose().flatten()
+    gain_dict = mr.create_dict(gain_dict_ref, gain_codes_cal)
+    print("gain_dict:", gain_dict)
+
+    atten_dict_ref = subarray.transpose().flatten()
+    atten_dict = mr.create_dict(atten_dict_ref, atten_cal)
+
+    # Write the gain corrections into the ADAR1000 registers
+    for element in dev.elements.values():
+        str_channel = str(element)
+        print(element)
+        value = int(mr.strip_to_last_two_digits(str_channel))
+
+        # element.tx_attenuator = atten_dict[value]
+        element.tx_attenuator = 1
+        element.tx_gain = gain_dict[value]
+        dev.latch_tx_settings() # Latch SPI settings to devices
+
+    
+    
+    # -- Post-calibration measurement pass 1 --
+    # Re-measure every element to verify the gain codes are effective.
+    detect = []
+
+    for i in range(16):
+
+        print(f"Capturing Post Calibration 1 data for Elements: {subarray[:,i]}")
+
+        mr.enable_pa_bias_channel(dev,subarray[0,i])
+
+        # *** INSTRUMENT — read power from spectrum analyser ***
+        SpecAn.set_center_freq(operational_frequency)
+        time.sleep(wait)
+        tone_0 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_0)
+        print(f"Element: {subarray[0,i]}")
+        print(tone_0)
+        mr.disable_pa_bias_channel(dev,subarray[0,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[1,i])
+        time.sleep(wait)
+        tone_1 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_1)
+        print(f"Element: {subarray[1,i]}")
+        print(tone_1)
+        mr.disable_pa_bias_channel(dev,subarray[1,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[2,i])
+        time.sleep(wait)
+        tone_2 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_2)
+        print(f"Element: {subarray[2,i]}")
+        print(tone_2)
+        mr.disable_pa_bias_channel(dev,subarray[2,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[3,i])
+        time.sleep(wait)
+        tone_3 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_3)
+        print(f"Element: {subarray[3,i]}")
+        print(tone_3)
+        mr.disable_pa_bias_channel(dev,subarray[3,i])
+
+
+    #Calculate Statistics:
+    post_0_detect_arr = np.array(detect, dtype=float)
+    post_0_detect_mean = float(post_0_detect_arr.mean())
+    post_0_detect_min = float(post_0_detect_arr.min())
+    post_0_detect_max = float(post_0_detect_arr.max())
+    post_0_detect_var = float(post_0_detect_arr.var())  # population variance; use ddof=1 for sample variance
+
+    # Refine the gain codes using the residual error from pass 1
+    result = np.array(detect) + gain_cal_diff
+    gain_codes_cal, atten_cal, gain_ref = mr.gain_codes(dev,np.array(result) ,mode="tx")
+    gain_dict_ref = subarray.transpose().flatten()
+    gain_dict = mr.create_dict(gain_dict_ref, gain_codes_cal)
+
+    # Write the refined gain corrections into the ADAR1000 registers
+    for element in dev.elements.values():
+        str_channel = str(element)
+        print(element)
+        value = int(mr.strip_to_last_two_digits(str_channel))
+        # element.tx_attenuator = atten_dict[value]
+        element.tx_attenuator = 1
+        element.tx_gain = gain_dict[value]
+        dev.latch_tx_settings() # Latch SPI settings to devices
+
+        ####################################################################################
+
+    # -- Post-calibration measurement pass 2 --
+    # Final verification after the second gain refinement.
+    detect = []
+
+    for i in range(16):
+
+        print(f"Capturing Post Calibration 2 data for Elements: {subarray[:,i]}")
+
+        mr.enable_pa_bias_channel(dev,subarray[0,i])
+
+        ## Set center freq to 9.994 GHz ##
+        SpecAn.set_center_freq(operational_frequency)
+        time.sleep(wait)
+        tone_0 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_0)
+        print(f"Element: {subarray[0,i]}")
+        print(tone_0)
+        mr.disable_pa_bias_channel(dev,subarray[0,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[1,i])
+        time.sleep(wait)
+        tone_1 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_1)
+        print(f"Element: {subarray[1,i]}")
+        print(tone_1)
+        mr.disable_pa_bias_channel(dev,subarray[1,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[2,i])
+        time.sleep(wait)
+        tone_2 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_2)
+        print(f"Element: {subarray[2,i]}")
+        print(tone_2)
+        mr.disable_pa_bias_channel(dev,subarray[2,i])
+
+        mr.enable_pa_bias_channel(dev,subarray[3,i])
+        time.sleep(wait)
+        tone_3 = SpecAn.get_marker_power(marker=1)
+        detect.append(tone_3)
+        print(f"Element: {subarray[3,i]}")
+        print(tone_3)
+        mr.disable_pa_bias_channel(dev,subarray[3,i])
+
+
+    #Calculate Statistics:
+    post_1_detect_arr = np.array(detect, dtype=float)
+    post_1_detect_mean = float(post_1_detect_arr.mean())
+    post_1_detect_min = float(post_1_detect_arr.min())
+    post_1_detect_max = float(post_1_detect_arr.max())
+    post_1_detect_var = float(post_1_detect_arr.var())  # population variance; use ddof=1 for sample variance
+
+    print("Pre Gain Calibration Detection summary")
+    print(f"  mean: {pre_detect_mean:.6f}")
+    print(f"  min : {pre_detect_min:.6f}")
+    print(f"  max : {pre_detect_max:.6f}")
+    print(f"  var : {pre_detect_var:.6e}")
+
+    print("Post Gain Calibration 1 Detection summary")
+    print(f"  mean: {post_0_detect_mean:.6f}")
+    print(f"  min : {post_0_detect_min:.6f}")
+    print(f"  max : {post_0_detect_max:.6f}")
+    print(f"  var : {post_0_detect_var:.6e}")
+
+    print("Post Gain Calibration 2 Detection summary")
+    print(f"  mean: {post_1_detect_mean:.6f}")
+    print(f"  min : {post_1_detect_min:.6f}")
+    print(f"  max : {post_1_detect_max:.6f}")
+    print(f"  var : {post_1_detect_var:.6e}")
+    
+# ==========================================================================
+# STEP 3 — Digital Phase Calibration (DAC Channel Alignment)
+# ==========================================================================
+# Aligns the four ADRV9009 DAC channels in phase by capturing IQ data from
+# the spectrum analyser, finding the inter-channel phase offsets, and
+# pre-rotating the DAC waveforms to compensate.
+# This step uses pulsed (time-interleaved) waveforms so each DAC channel
+# can be distinguished in the time-domain capture.
+if Digi_Phase_calibration == True:
+    print("Beginning Digital Phase Calibration Routine")
+    #########################################################################
+    #########################################################################
+    ########################## Digital Phase Cal ############################
+    #########################################################################
+    #########################################################################
+
+
+    # ### Set DACs to output interleaved pulses on each channel ##
+
+    ## Initialize Talise SOM DACs ##
+    for i in range(2):
+        # Create radio and initialize TDD engine
+        sdr  = adi.adrv9009_zu11eg(talise_uri)
+        ctx = sdr._ctrl.ctx
+        tddn = adi.tddn(talise_uri)
+
+        # Setup ADXUD1AEBZ
+        xud = ctx.find_device("xud_control")
+
+        # Find channel attribute for TX & RX
+        # txrx1 = xud.find_channel("voltage1", True)
+        # txrx2 = xud.find_channel("voltage2", True)
+        # txrx3 = xud.find_channel("voltage3", True)
+        # txrx4 = xud.find_channel("voltage4", True)
+
+        ## Updated XUD settings, PLLselect and RxGainMode ##
+        PLLselect = xud.find_channel("voltage1", True)
+        rxgainmode = xud.find_channel("voltage0", True)
+
+        
+        # 0 for rx, 1 for tx
+        # txrx1.attrs["raw"].value = "1" # Subarray 4
+        # txrx2.attrs["raw"].value = "1" # Subarray 3
+        # txrx3.attrs["raw"].value = "1" # Subarray 1
+        # txrx4.attrs["raw"].value = "1" # Subarray 2
+        PLLselect.attrs["raw"].value = "1"
+        rxgainmode.attrs["raw"].value = "0"
+
+
+        # Configure TX/RX properties
+        sdr.tx_enabled_channels = [0, 1, 2, 3]
+        ## TRx LO is preset to 4.5 GHz
+        # sdr.trx_lo = 4500000000
+        # sdr.trx_lo_chip_b = 4500000000
+        sdr.tx_hardwaregain_chan0 = 0
+        sdr.tx_hardwaregain_chan1 = 0
+        sdr.tx_hardwaregain_chan0_chip_b= 0
+        sdr.tx_hardwaregain_chan1_chip_b = 0
+        sdr.rx_hardwaregain_chan0 = 0
+        sdr.rx_hardwaregain_chan1 = 0
+        sdr.rx_hardwaregain_chan0_chip_b= 0
+        sdr.rx_hardwaregain_chan1_chip_b = 0
+        sdr.gain_control_mode_chan0 = "manual"
+        sdr.gain_control_mode_chan1 = "manual"
+        sdr.gain_control_mode_chan0_chip_b = "manual"
+        sdr.gain_control_mode_chan1_chip_b = "manual"
+        sdr.gain_control_mode_chan0 = "slow_attack"
+        sdr.gain_control_mode_chan1 = "slow_attack"
+        sdr.gain_control_mode_chan0_chip_b = "slow_attack"
+        sdr.gain_control_mode_chan1_chip_b = "slow_attack"
+
+        # Number of frame pulses to plot in the pulse train
+        # (will be used to calculate the RX buffer size)
+        frame_pulses_to_plot = 5
+
+        ## RX properties XX
+        # Frame and pulse timing (in milliseconds)
+        # frame_length_ms = 0.1 # 100 us
+        frame_length_ms = 0.1 # 1 ms
+        # sine data for 10 us pulse than 90 us of zero data
+        tx_pulse_start_ms = 0.00001 # 10 ns
+        tx_pulse_stop_ms = 0.100 # 100 us
+
+
+        # Pulse parameters #
+        # PRI_ms = 0.1 #100 us pulse repitition interval
+        PRI_ms = 0.100 # 0.1 ms pulse repitition interval
+        duty_cycle = 0.05 # 2.5% duty cycle
+        # duty_cycle = 1 # 100% duty cycle to send CW wave
+        pulse_spacing_ms = 0.002 # 2 us spacing between pulse start times
+        pulse_start_buffer_ms = 0.00001 # 10 ns
+        pulse0_start_ms = pulse_start_buffer_ms
+        pulse0_stop_ms = duty_cycle * PRI_ms + pulse_start_buffer_ms
+        pulse1_start_ms = pulse0_stop_ms + pulse_spacing_ms
+        pulse1_stop_ms = pulse1_start_ms + duty_cycle * PRI_ms
+        pulse2_start_ms = pulse1_stop_ms + pulse_spacing_ms
+        pulse2_stop_ms = pulse2_start_ms + duty_cycle * PRI_ms
+        pulse3_start_ms = pulse2_stop_ms + pulse_spacing_ms
+        pulse3_stop_ms = pulse3_start_ms + duty_cycle * PRI_ms
+
+        # Prepare TX data
+        fs = int(sdr.tx_sample_rate)
+        frame_length_seconds = PRI_ms * 1e-3
+        # carrier frequency for the I/Q signal = 20 kHz
+        fc = 1000e3
+        # calculate N for full frame duration: N = fs * frame_length_seconds
+        N = int(fs * frame_length_seconds)
+        ts = 1 / float(fs)
+        frame_length_ms = PRI_ms
+
+        #######################
+        ## Setup DAC outputs ##
+        #######################
+        # Calculate samples for TX pulse duration
+        pulse0_duration_ms = pulse0_stop_ms - pulse0_start_ms
+        pulse0_duration_seconds = pulse0_duration_ms * 1e-3
+        pulse0_samples = int(fs * pulse0_duration_seconds)
+        pulse0_start_sample = int(fs * pulse0_start_ms * 1e-3)
+        pulse1_duration_ms = pulse1_stop_ms - pulse1_start_ms
+        pulse1_duration_seconds = pulse1_duration_ms * 1e-3
+        pulse1_samples = int(fs * pulse1_duration_seconds)
+        pulse1_start_sample = int(fs * pulse1_start_ms * 1e-3)
+        pulse2_duration_ms = pulse2_stop_ms - pulse2_start_ms
+        pulse2_duration_seconds = pulse2_duration_ms * 1e-3
+        pulse2_samples = int(fs * pulse2_duration_seconds)
+        pulse2_start_sample = int(fs * pulse2_start_ms * 1e-3)
+        pulse3_duration_ms = pulse3_stop_ms - pulse3_start_ms
+        pulse3_duration_seconds = pulse3_duration_ms * 1e-3
+        pulse3_samples = int(fs * pulse3_duration_seconds)
+        pulse3_start_sample = int(fs * pulse3_start_ms * 1e-3)
+
+        # Create full time vector for entire frame
+        t = np.arange(0, N * ts, ts)
+
+        # Create full frame with zeros
+        pulse0_i = np.zeros(N)
+        pulse0_q = np.zeros(N)
+        pulse1_i = np.zeros(N)
+        pulse1_q = np.zeros(N)
+        pulse2_i = np.zeros(N)
+        pulse2_q = np.zeros(N)
+        pulse3_i = np.zeros(N)
+        pulse3_q = np.zeros(N)
+
+        for n in range(pulse0_start_sample, min(pulse0_start_sample + pulse0_samples, N)):
+            t_sample = n * ts
+            pulse0_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse0_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse1_start_sample, min(pulse1_start_sample + pulse1_samples, N)):
+            t_sample = n * ts
+            pulse1_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse1_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse2_start_sample, min(pulse2_start_sample + pulse2_samples, N)):
+            t_sample = n * ts
+            pulse2_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse2_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse3_start_sample, min(pulse3_start_sample + pulse3_samples, N)):
+            t_sample = n * ts
+            pulse3_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse3_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+
+        pulse0_data = pulse0_i + 1j * pulse0_q
+        pulse1_data = pulse1_i + 1j * pulse1_q
+        pulse2_data = pulse2_i + 1j * pulse2_q
+        pulse3_data = pulse3_i + 1j * pulse3_q
+
+        sdr.tx_destroy_buffer()
+
+        # scaling for 16-bit DAC
+        # use most of the dynamic range but avoid clipping
+        scale_factor = 2**15 - 1
+        pulse0_iq_real = np.int16(np.real(pulse0_data) * scale_factor)
+        pulse0_iq_imag = np.int16(np.imag(pulse0_data) * scale_factor)
+        pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
+        pulse1_iq_real = np.int16(np.real(pulse1_data) * scale_factor)
+        pulse1_iq_imag = np.int16(np.imag(pulse1_data) * scale_factor)
+        pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
+        pulse2_iq_real = np.int16(np.real(pulse2_data) * scale_factor)
+        pulse2_iq_imag = np.int16(np.imag(pulse2_data) * scale_factor)
+        pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
+        pulse3_iq_real = np.int16(np.real(pulse3_data) * scale_factor)
+        pulse3_iq_imag = np.int16(np.imag(pulse3_data) * scale_factor)
+        pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
+
+        # Configure TX data offload mode to cyclic
+        sdr._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
+        sdr.tx_cyclic_buffer = True
+
+        # Configure RX parameters
+        sdr.rx_enabled_channels = [0, 1, 2, 3]
+
+        # Calculate RX buffer size to match TX duration
+        rx_fs = int(sdr.rx_sample_rate)
+
+        # Match RX buffer duration to TX duration
+        desired_rx_duration = frame_pulses_to_plot * len(pulse0_iq) / fs * 1000  # ms
+        rx_buffer_samples = int(rx_fs * (desired_rx_duration * 1e-3))
+        sdr.rx_buffer_size = rx_buffer_samples
+
+        # Create time vector for plotting
+        rx_ts = 1 / float(rx_fs)
+        rx_t = np.arange(0, rx_buffer_samples * rx_ts, rx_ts)
+
+        # Create pulse train for the entire RX buffer duration
+        pulse_train = np.zeros(rx_buffer_samples)
+
+        # Calculate samples per frame and pulse
+        samples_per_frame = int(frame_length_ms * 1e-3 / rx_ts)
+        pulse_start_offset = int(tx_pulse_start_ms * 1e-3 / rx_ts)
+        pulse_stop_offset = int(tx_pulse_stop_ms * 1e-3 / rx_ts)
+
+        num_frames = len(rx_t) // samples_per_frame
+
+        for frame in range(num_frames):
+            frame_start = frame * samples_per_frame
+            pulse_start = frame_start + pulse_start_offset
+            pulse_stop = frame_start + pulse_stop_offset
+            pulse_train[pulse_start:pulse_stop] = 1
+        # # Configure TX data offload mode to cyclic
+        # sdr._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
+        # sdr.tx_cyclic_buffer = True
+
+
+        #####################
+        # TDD signal channels
+        #####################
+
+        TDD_TX_OFFLOAD_SYNC = 0
+        TDD_RX_OFFLOAD_SYNC = 1
+        TDD_ENABLE      = 2
+        TDD_ADRV9009_RX_EN = 3
+        TDD_ADRV9009_TX_EN = 4
+        TDD_MANTARAY_EN = 5
+        TDD_CHANNEL6     = 6  ## PA_ON_0, PA_ON_1
+        TDD_CHANNEL7     = 7  ## TR Pulse
+
+        #Configure TDD engine
+        tddn.enable = 0  ## Set to 0 to make config changes
+        # tddn.burst_count          = 0 # continuous mode, period repetead forever
+        # tddn.startup_delay_ms     = 0
+        tddn.frame_length_ms      = frame_length_ms  ## frame_length_ms = PRI_ms
+
+        ## 3 Separate groups of TDD channels.
+
+        ## Always on channels
+        for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN,TDD_MANTARAY_EN, TDD_CHANNEL6]:
+            tddn.channel[chan].on_ms   = 0
+            tddn.channel[chan].off_ms  = 0
+            tddn.channel[chan].polarity = 1
+            tddn.channel[chan].enable   = 1
+
+        ## Previously set by software team, untouched
+        for chan in [TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
+            tddn.channel[chan].on_raw   = 0
+            tddn.channel[chan].off_raw  = 10 # 10 samples at 250 MHz = 40 ns pulse width
+            tddn.channel[chan].polarity = 0
+            tddn.channel[chan].enable   = 1
+
+        ## TR pulse channel
+        for chan in [TDD_CHANNEL7]:
+            tddn.channel[chan].on_ms   = 0
+            tddn.channel[chan].off_ms  = 0.040 ## For 100 us PRI, 5 us TR pulse for 5% duty cycle
+            tddn.channel[chan].polarity = 0 # polarity inverted
+            tddn.channel[chan].enable   = 1
+
+
+        ## Enable TDD engine after config chages
+        tddn.enable = 1
+        tddn.sync_soft  = 1
+
+        tdd_tx_offload_frame_length_ms = frame_length_ms
+        tdd_tx_offload_pulse_start_ms = 0.00001 # 10 ns
+
+        # off_raw is in samples, so convert to time for offset calculation
+        off_raw_samples = tddn.channel[TDD_TX_OFFLOAD_SYNC].off_raw
+
+        # Create pulse train for the entire RX buffer duration
+        tdd_tx_offload_pulse_train = np.zeros(rx_buffer_samples)
+
+        # Calculate samples per frame and pulse
+        tdd_tx_offload_samples_per_frame = int(frame_length_ms * 1e-3 / rx_ts)
+        tdd_tx_offload_pulse_start_offset = int(tdd_tx_offload_pulse_start_ms * 1e-3 / rx_ts)
+        # Pulse stays high for off_raw_samples
+        tdd_tx_offload_pulse_stop_offset = tdd_tx_offload_pulse_start_offset + off_raw_samples
+
+        # Only plot as many pulses as requested
+        for frame in range(frame_pulses_to_plot):
+            tdd_tx_offload_frame_start = frame * tdd_tx_offload_samples_per_frame
+            tdd_tx_offload_pulse_start = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_start_offset
+            tdd_tx_offload_pulse_stop = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_stop_offset
+            tdd_tx_offload_pulse_train[tdd_tx_offload_pulse_start:tdd_tx_offload_pulse_stop] = 1
+
+
+        ##############################################
+        ## Step 3: Send Tx Data ##
+        ###############################################
+
+        ## Destroy buffer before sending new data ##
+        sdr.tx_destroy_buffer()
+
+
+        # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
+        sdr.tx([pulse0_iq, pulse1_iq, pulse2_iq, pulse3_iq]) ## Use to send time interleaved pulses on each channel
+        # sdr.tx([pulse0_iq, pulse0_iq, pulse0_iq, pulse0_iq]) ## Use to send same data on all channels
+        sdr.tx_cyclic_buffer
+
+
+        # Trigger TDD synchronization
+        tddn.sync_soft  = 1
+
+
+    # ##############################################
+    # ## Step 4: Receive data from Spectrum Analyzer and Calibrate ##
+    # ###############################################
+
+
+    # -- Capture IQ data from the spectrum analyser --
+    # *** INSTRUMENT — Spectrum Analyser (IQ mode) ***
+    # The IQ capture below uses the N9000A’s complex-IQ acquisition mode.
+    # If you use a different analyser, replace these calls with equivalent
+    # SCPI / driver commands for IQ data capture.
+    CXA = "TCPIP0::192.168.1.77::hislip0::INSTR"   # *** INSTRUMENT ADDRESS ***
+
+    SpecAn = N9000A.N9000A(rm, CXA)
+
+    time.sleep(1)
+
+    ######## DEFINE MATLAB PULSESEP and PULSEPERIOD FUNCTIONS ##########
+
+    def pulsesep(signal):
+        edges = np.where(np.diff(signal.astype(int)) == 1)[0] + 1
+        if len(edges) < 2:
+            separation = np.array([])
+            nextCross = np.array([])
+        else:
+            separation = np.diff(edges)
+            nextCross = edges[1:]
+        initialCross = edges[:-1] if len(edges) > 1 else edges
+        finalCross = edges[1:] if len(edges) > 1 else edges
+        midLev = 0.5
+        return separation, initialCross, finalCross, nextCross, midLev
+
+    def pulseperiod(signal):
+        #Functionally the same as pulse separation for our purposes - if the signal is no longer periodic, will need to add code here to change
+        return(pulsesep(signal))
+
+    ######## END DEFINE MATLAB PULSESEP and PULSEPERIOD FUNCTIONS ##########
+
+    # SpecAn_Center_Freq = 9.9945e9   #Set to transmit frequency
+    # SpecAn_IQ_BW =  10e6   #Set based upon instrument - testing done at 10MHz (Maximum for CXA used)
+    # SpecAn_Res_BW = 10e3   #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
+    # SpecAn_Dig_IFBW = 10e6   #Set the digital IFBW of Spec An. Tested at 10MHz for both 10 and 20% Duty Cycles
+    # MinCodeVal = 0.015   #Set to 0.00055 for 20% DC, 0.00031 for 10% DC
+    # NumChannels = 4   #Set to number of channels being used
+
+
+    SpecAn.select_iq_mode()    #Set spec an for complex IQ mode
+    # SpecAn.reset()   
+    SpecAn_Center_Freq = 10e9   #Set to transmit frequency
+    SpecAn_IQ_BW =  10e6   #Set based upon instrument - testing done at 10MHz (Maximum for CXA used)
+    SpecAn_Res_BW = 100   #Set Resolution Bandwidth of Spec An. 15kHz for 20% Duty Cycle was sufficient, 18kHz for 10% Duty Cycle was sufficient. Will automatically set #samples in FFT and FFT window length
+    SpecAn_Dig_IFBW = 10e6   #Set the digital IFBW of Spec An. Tested at 10MHz for both 10 and 20% Duty Cycles
+    MinCodeVal = 0.004   #Set to 0.00055 for 20% DC, 0.00031 for 10% DC
+    NumChannels = 4   #Set to number of channels being used          #Reset instrument
+    SpecAn.set_initiate_continuous_sweep('ON') #Set contionuous mode of spec an
+    SpecAn.set_iq_spec_span(SpecAn_IQ_BW)  #Set IQ bandwidth of instrument
+    SpecAn.set_iq_spec_bandwidth(SpecAn_Res_BW)    #Set ResBW
+    SpecAn.set_center_freq(SpecAn_Center_Freq)     #Set SpecAn center frequency
+    SpecAn.set_iq_mode_bandwidth(SpecAn_Dig_IFBW)  #Set Digital IFBW
+    # SpecAn.bursttrig('POS', -5, 0, -65)    #Set trigger parameters for Spec An. First input is slope, second is delay (uS), third is relative level, last is absolute level
+    # SpecAn.trigger()
+    SpecAn.wavexscale(0, 40000, 'LEFT', 'OFF')
+    SpecAn.waveyscale(0, 80, 'CENT', 'OFF')
+
+    mr.enable_pa_bias_channel(dev, subarray[:, 1])
+
+    numRuns = 1
+    PhaseAVG = 1
+    phaseValsAll = np.zeros((NumChannels, PhaseAVG))
+    for run in range(numRuns):
+
+
+
+        ## Take Data from Spec An ##
+        ComplexData = SpecAn.iq_complex_data()
+        # SigGen.set_output_state('OFF')  #Turn off Sig Gen output
+
+        # SpecAn.set_continuous_peak_search(1, 'ON')
+        # peakPowerSingleElement = SpecAn.get_marker_power(marker=1)
+        # print("Peak Power Single Element (dBm): ", peakPowerSingleElement)
+
+
+        #Separate the I and Q components of the complex data
+        I = np.real(ComplexData)
+        Q = np.imag(ComplexData)
+
+        # Plot the I and Q waveforms 
+        # plt.figure()
+        # plt.subplot(2, 1, 1)
+        # plt.plot(np.abs(I))
+        # plt.title('I Component')
+        # plt.subplot(2, 1, 2)
+        # plt.plot(np.abs(Q))
+        # plt.title('Q Component')
+
+
+        ########### Post Processign Section ############
+        #Find peaks above threshold
+        # RealPk, _ = find_peaks(np.abs(I), height = MinCodeVal)
+        # ImagPk, _ = find_peaks(np.abs(Q), height = MinCodeVal)
+
+        #Select I or Q component of complex data for calibration step
+        # if(len(RealPk) >= len(ImagPk)):
+        #     ProcessArray = I
+        # else:
+        #     ProcessArray = Q
+        ComplexData = np.roll(ComplexData, -700, axis=0)        #Roll data to ensure reference pulse set is complete
+        #Align Tx channels 
+        #Find pulse corresponding to Tx0
+        # if(abs(I[0]) > MinCodeVal or abs(Q[0]) > MinCodeVal or
+        # abs(I[144]) > MinCodeVal or abs(Q[144]) > MinCodeVal):
+        #     Separation, InitialCross, FinalCross, NextCross, Midlev = pulsesep(
+        #         (np.abs(np.real(ComplexData)) > MinCodeVal).astype(float))
+        #     maxloc = np.argmax(Separation)
+        #     channel0Start = int(np.ceil(NextCross[maxloc]))
+        # else:
+        Period, InitialCross, FinalCross, NextCross, Midlev = pulseperiod(
+            (np.abs(ComplexData) > MinCodeVal).astype(float))
+        channel0Start = int(np.ceil(InitialCross[0]))
+
+        timeZeroAlignedFirstRx = np.roll(ComplexData, -channel0Start)
+        timeZeroAligned = np.roll(ComplexData, -channel0Start, axis=0)
+
+        print(channel0Start)
+
+        plt.figure()
+        plt.plot(np.abs(timeZeroAligned))
+        plt.title('Zero Aligned Samples')
+        plt.show()
+
+
+
+        # Now Determine the Phase Offsets for Each Tx Channel
+        phaseVals = np.zeros((NumChannels, PhaseAVG))
+        relativePhaseVals = np.zeros((NumChannels, PhaseAVG))
+        
+
+        for k in range(PhaseAVG):
+            for i in range(NumChannels):
+                phaseVals[i, k] = (np.angle(timeZeroAlignedFirstRx[62 + (i*149)]) * (180/np.pi))
+                relativePhaseVals[i, k] = phaseVals[i, k] - phaseVals[0, k]
+                # relativePhaseVals[i, k] = np.mod(relativePhaseVals[i, 0], 360)
+                # if relativePhaseVals[i, k] > 360:
+                #     relativePhaseVals[i, k] = relativePhaseVals[i, k] - 360
+                #     relativePhaseVals[i, k] = relativePhaseVals[i, k] % 360
+                # else:    
+                relativePhaseVals[i, k] = relativePhaseVals[i, k] % 360
+            ComplexData = np.roll(ComplexData, -600)        #Roll data to next pulse set for averaging
+            Period, InitialCross, FinalCross, NextCross, Midlev = pulseperiod(
+                (np.abs(ComplexData) > MinCodeVal).astype(float))
+            channel0Start = int(np.ceil(InitialCross[0]))
+            timeZeroAlignedFirstRx = np.roll(ComplexData, -channel0Start)
+            timeZeroAligned = np.roll(ComplexData, -channel0Start, axis=0)
+            phaseValsAll[i, k] = relativePhaseVals[i, k]
+        
+    # print(relativePhaseVals)
+
+    print(relativePhaseVals)  
+
+    # print('PhaseValsAll:\n', phaseValsAll)
+
+    phaseValsAvg = np.mean(relativePhaseVals, axis=1)
+
+    print('PhaseValsAvg:\n', phaseValsAvg)
+
+    # sdr.tx_destroy_buffer()
+    # # When using sdr.tx, the the Data Offload Tx mode is automatically set to one shot...
+    # sdr.tx([pulse0_iq, pulse0_iq*np.exp(1j*phaseValsAvg[1]*np.pi/180), pulse0_iq*np.exp(1j*phaseValsAvg[2]*np.pi/180), pulse0_iq*np.exp(1j*phaseValsAvg[3]*np.pi/180)])
+
+
+    # Send phase aligned pulses out of DAC
+    sdr.tx_destroy_buffer()
+    sdr.tx([pulse0_iq, pulse0_iq*np.exp(1j*phaseValsAvg[1]*np.pi/180), pulse0_iq*np.exp(1j*phaseValsAvg[2]*np.pi/180), pulse0_iq*np.exp(1j*phaseValsAvg[3]*np.pi/180)])
+
+    dig_phase = [0, phaseValsAvg[1], phaseValsAvg[2], phaseValsAvg[3]]
+
+
+# ==========================================================================
+# STEP 4 — Analog Phase Calibration (ADAR1000 Null-Search)
+# ==========================================================================
+# For each element (except the reference), the script:
+#   1. Enables only the target element and the reference element.
+#   2. Coarse-sweeps the ADAR1000 TX phase (0–360° in 15° steps) and reads
+#      the measured power from the spectrum analyser at each step.
+#   3. Fine-sweeps ±15° around the coarse null in 1° steps.
+#   4. Sets the calibrated phase to (null phase + 180°) so the element
+#      contributes constructively at boresight.
+#   5. Saves the result and disables the element.
+#
+# The spectrum analyser must be configured for CW peak-power measurement
+# before entering this loop.
+if Analog_Phase_calibration == True:
+    print("Beginning Analog Phase Calibration Routine")
+
+    # *** INSTRUMENT — Spectrum Analyser ***
+    # Replace the VISA address and driver if you use a different analyser.
+    CXA = "TCPIP0::192.168.1.77::hislip0::INSTR"   # *** INSTRUMENT ADDRESS ***
+    SpecAn = N9000A.N9000A(rm, CXA)
+    # SpecAn.reset()  
+
+    # *** INSTRUMENT — Enable PA drain supply ***
+    PA_Supplies.output_on(1)
+
+    # ########################################################
+    # ################ Analog Phase Cal ######################
+    # ########################################################
+
+    mr.enable_pa_bias_channel(dev, ref_chan)
+    # dig_cal_channels = subarray[:, 2]
+    matrix_64elem = np.arange(1,65)
+
+    ## Enable channel one at a time.  Sweep phase 0-180 degrees and find null point.  ##
+    ## Set calibrated phase to null point + 180 degrees ##
+    digi_phase_values = []
+
+
+
+    # -- Coarse / Fine Null-Search Phase Calibration --
+    COARSE_STEP = 15          # Coarse sweep step size (degrees)
+    FINE_RANGE = 15           # Fine sweep range: +/- this value around the coarse null
+
+    for element in dev.elements.values():
+        str_channel = str(element)
+        value = int(mr.strip_to_last_two_digits(str_channel))
+        
+        if value in matrix_64elem:
+            
+            if value == ref_chan:
+                continue
+            
+            print(f"\n--- Element: {value} ---")
+            
+            # 1. SETUP
+            # (Assuming SpecAn setup and trigger configuration is done outside this loop)
+            mr.enable_pa_bias_channel(dev, value)
+            mr.enable_pa_bias_channel(dev, ref_chan)
+
+            
+            # --- PHASE 1: COARSE SWEEP (0 to 180 degrees in COARSE_STEP increments) ---
+            coarse_detect = {} # Dictionary to store {phase: power}
+            
+            print(f"Coarse Sweep (Step: {COARSE_STEP} deg)")
+            for j in range(0, 360, COARSE_STEP):
+                
+                # Ensure phase wraps around 360, though your original script used 0-180
+                # We'll stick to 0-180 for now as per your original script
+                
+                element.tx_phase = j
+                dev.latch_tx_settings()
+                
+                # *** INSTRUMENT — read peak power from spectrum analyser ***
+                tone_0 = SpecAn.get_marker_power(marker=1)
+                
+                coarse_detect[j] = tone_0
+
+            # Find the phase with the minimum power from the coarse sweep
+            # Use min() with a key to find the dictionary key (phase) with the minimum value (power)
+            min_coarse_phase = min(coarse_detect, key=coarse_detect.get)
+            min_coarse_power = coarse_detect[min_coarse_phase]
+            
+            print(f"Coarse min at {min_coarse_phase} deg with power {min_coarse_power:.2f} dBm")
+            
+            
+            # --- PHASE 2: FINE SWEEP (+/- FINE_RANGE around the coarse minimum) ---
+            fine_detect = {} # Dictionary to store {phase: power}
+            
+            # Define the fine sweep range, handling phase wrap around 360 degrees
+            # Generate phase values that wrap around 360 if necessary
+            start_fine = min_coarse_phase - FINE_RANGE
+            end_fine = min_coarse_phase + FINE_RANGE
+            
+            # Create list of phase values, wrapping around 360
+            phase_values = []
+            for phase in range(start_fine, end_fine + 1):
+                phase_values.append(phase % 360)
+            
+            print(f"Fine Sweep (Range: {min_coarse_phase - FINE_RANGE} to {min_coarse_phase + FINE_RANGE} deg, wrapping at 360)")
+
+            # Sweep in 1 degree steps
+            for j in phase_values:
+                
+                element.tx_phase = j
+                dev.latch_tx_settings()
+                
+                # *** INSTRUMENT — read peak power from spectrum analyser ***
+                tone_0 = SpecAn.get_marker_power(marker=1)
+                fine_detect[j] = tone_0
+
+            # Find the phase with the minimum power from the fine sweep
+            min_fine_phase = min(fine_detect, key=fine_detect.get)
+            min_fine_power = fine_detect[min_fine_phase]
+            
+            print(f'Fine min power at {min_fine_phase} deg')
+            
+            
+            # --- PHASE 3: APPLY CALIBRATED PHASE ---
+
+            # The null phase is 'min_fine_phase', so the in-phase setting is + 180 degrees
+            calibrated_phase = (min_fine_phase + 180) % 360 # Add 180 degrees to flip to constructive interference
+            
+            print(f'Setting {element} calibrated phase to {calibrated_phase} deg')
+            
+            element.tx_phase = calibrated_phase
+            digi_phase_values.append(calibrated_phase)
+            dev.latch_tx_settings()
+
+            # 4. CLEANUP
+            mr.disable_pa_bias_channel(dev, value)
+            mr.disable_pa_bias_channel(dev, ref_chan)
+
+        else: 
+            pass
+
+
+
+# ==========================================================================
+# STEP 5 — Save Calibration Values to JSON
+# ==========================================================================
+# Read the final per-element phase, gain, and attenuation from the ADAR1000
+# registers and write them to tx_cal_values.json.  This file is loaded by
+# the TX sweep and demo scripts so calibration does not need to be repeated.
+
+# Build phase_dict from current hardware state (post-cal)
+phase_dict_save = {}
+gain_dict_save = {}
+atten_dict_save = {}
+for element in dev.elements.values():
+    str_channel = str(element)
+    value = int(mr.strip_to_last_two_digits(str_channel))
+    phase_dict_save[value] = float(element.tx_phase)
+    gain_dict_save[value] = int(element.tx_gain)
+    # atten values come from the gain_dict / atten_dict computed earlier
+    if 'atten_dict' in dir():
+        atten_dict_save[value] = int(atten_dict.get(value, 1))
+    else:
+        atten_dict_save[value] = int(element.tx_attenuator)
+
+cal_data = {
+    "phase_dict": {str(k): v for k, v in phase_dict_save.items()},
+    "gain_dict":  {str(k): v for k, v in gain_dict_save.items()},
+    "atten_dict": {str(k): v for k, v in atten_dict_save.items()},
+}
+
+cal_save_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tx_cal_values.json")
+with open(cal_save_path, "w") as f:
+    _json.dump(cal_data, f, indent=2)
+print(f"\nSaved TX cal values to: {cal_save_path}")
+
+
+
+

@@ -24,6 +24,8 @@ beamformer and ADRV9009-ZU11EG transceiver SoM.
 | `ADSY2301_Rx_Cal.py` | End-to-end RX calibration script: gain equalization → phase alignment → before/after comparison plot. |
 | `ADSY2301_Rx_Steering_Example.py` | Demonstrates electronic beam steering — calibrates the array, captures at boresight, then steers to a user-defined angle and compares signal levels. |
 | `ADSY2301_Rx_Electronic_Sweep.py` | Sweeps the RX beam electronically from -60° to +60° (azimuth or elevation), plotting combined magnitude vs. steering angle in real time. Saves a .png plot and .mat data file. |
+| `ADSY2301_Tx_Cal.py` | End-to-end TX calibration script: per-element gain equalisation, optional DAC-channel digital phase alignment, and analog (ADAR1000) null-search phase calibration. Saves results to `tx_cal_values.json`. **Requires a spectrum analyser and power supplies** (see instrument notes in the script). |
+| `ADSY2301_Tx_Electronic_Sweep.py` | Sweeps the TX beam electronically from -60° to +60°, measuring radiated power with an external spectrum analyser at each angle. Saves a .png plot and .mat data file. **Requires a spectrum analyser and power supplies** (see instrument notes in the script). |
 | `ADSY2301_temp_checker.py` | Polls and displays all 16 ADAR1000 temperature sensors in a live table. |
 | `DAC_TDD_Config.py` | Configures the ADRV9009 transmit DACs and TDD timing engine (pulse timing, duty cycle, TR switching). |
 | `ADF4371_Internal_LO.py` | Programs the on-board ADF4371 LO PLL frequency. |
@@ -74,11 +76,44 @@ Sweeps the receive beam from -60° to +60° in 5° steps (configurable).
 A live plot displays combined magnitude vs. steering angle. Results are
 saved as a `.png` image and `.mat` data file under the output directory.
 
+### 6. Run TX Calibration
+
+```bash
+python ADSY2301_Tx_Cal.py
+```
+
+Performs per-element gain equalisation and analog phase calibration on the
+transmit path.  A receive horn at boresight connected to a spectrum analyser
+is required.  Calibration results are saved to `tx_cal_values.json` and
+automatically loaded by the TX sweep script.
+
+> **Instrument note:** This script was developed with a Keysight N9000A (CXA)
+> spectrum analyser, E36233A power supply, and N6705B DC power analyser.
+> Search for `*** INSTRUMENT ***` in the script to find the sections that
+> need to be adapted for your own equipment.
+
+### 7. Run TX Electronic Beam Sweep
+
+```bash
+python ADSY2301_Tx_Electronic_Sweep.py
+```
+
+Sweeps the transmit beam from -60° to +60° in 1° steps (configurable),
+reading the measured power from an external spectrum analyser at each angle.
+Results are saved as a `.png` image and `.mat` data file.
+
+> **Instrument note:** Same instrument requirements as TX Calibration.
+> Search for `*** INSTRUMENT ***` in the script.
+
 ## Configuration
 
 Most scripts connect to the SoM at `ip:192.168.1.1` by default. Edit the
 `url` or `talise_uri` variable at the top of each script if your network
 configuration differs.
+
+The TX scripts also require VISA addresses for the bench instruments
+(spectrum analyser, power supplies).  These are defined near the top of each
+script and marked with `*** INSTRUMENT ADDRESS ***`.
 
 ## License
 
