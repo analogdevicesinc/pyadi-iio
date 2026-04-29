@@ -129,30 +129,6 @@ class ad4630(rx, context_manager, attribute):
         """Set the sampling frequency."""
         self._set_iio_dev_attr("sampling_frequency", str(rate))
 
-    @property
-    def sample_averaging_avail(self):
-        """Get list of all the sample averaging values available. Only available in 30bit averaged mode."""
-        return self._get_iio_dev_attr("sample_averaging_available")
-
-    @property
-    def sample_averaging(self):
-        """Get the sample averaging. Only available in 30bit averaged mode."""
-        return self._get_iio_dev_attr_str("sample_averaging")
-
-    @sample_averaging.setter
-    def sample_averaging(self, n_sample):
-        """Set the sample averaging. Only available in 30bit averaged mode."""
-        if str(self.sample_averaging) != "OFF":
-            if str(n_sample) in str(self.sample_averaging_avail):
-                self._set_iio_dev_attr("sample_averaging", str(n_sample))
-            else:
-                raise ValueError(
-                    "Error: Number of avg samples not supported \nUse one of: "
-                    + str(self.sample_averaging_avail)
-                )
-        else:
-            raise Exception("Sample Averaging only available in 30bit averaged mode.")
-
     class _channel(attribute):
         """AD4x30 differential channel."""
 
@@ -181,6 +157,33 @@ class ad4630(rx, context_manager, attribute):
         def calibscale(self, calibscale):
             """Set calibration scale value."""
             self._set_iio_attr(self.name, "calibscale", False, calibscale, self._ctrl)
+
+        @property
+        def oversampling_ratio_avail(self):
+            """Get list of all the oversampling ratio values available. Only available in 30bit averaged mode."""
+            return self._get_iio_attr(
+                self.name, "oversampling_ratio_available", False, self._ctrl
+            )
+
+        @property
+        def oversampling_ratio(self):
+            """Get the oversampling ratio. Only available in 30bit averaged mode."""
+            return self._get_iio_attr_str(
+                self.name, "oversampling_ratio", False, self._ctrl
+            )
+
+        @oversampling_ratio.setter
+        def oversampling_ratio(self, n_sample):
+            """Set the oversampling ratio. Only available in 30bit averaged mode."""
+            if str(n_sample) in str(self.oversampling_ratio_avail):
+                self._set_iio_attr(
+                    self.name, "oversampling_ratio", False, str(n_sample), self._ctrl,
+                )
+            else:
+                raise ValueError(
+                    "Error: Number of avg samples not supported \nUse one of: "
+                    + str(self.oversampling_ratio_avail)
+                )
 
 
 class adaq42xx(ad4630):
