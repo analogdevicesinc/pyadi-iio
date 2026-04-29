@@ -23,6 +23,7 @@ beamformer and ADRV9009-ZU11EG transceiver SoM.
 | `ADSY2301_Init.py` | Standalone hardware init for interactive debugging. Creates the array object, sets PA bias, and loads saved TX cal values from `tx_cal_values.json`. |
 | `ADSY2301_Rx_Cal.py` | End-to-end RX calibration script: gain equalization → phase alignment → before/after comparison plot. |
 | `ADSY2301_Rx_Steering_Example.py` | Demonstrates electronic beam steering — calibrates the array, captures at boresight, then steers to a user-defined angle and compares signal levels. |
+| `ADSY2301_Rx_Electronic_Sweep.py` | Sweeps the RX beam electronically from -60° to +60° (azimuth or elevation), plotting combined magnitude vs. steering angle in real time. Saves a .png plot and .mat data file. |
 | `ADSY2301_temp_checker.py` | Polls and displays all 16 ADAR1000 temperature sensors in a live table. |
 | `DAC_TDD_Config.py` | Configures the ADRV9009 transmit DACs and TDD timing engine (pulse timing, duty cycle, TR switching). |
 | `ADF4371_Internal_LO.py` | Programs the on-board ADF4371 LO PLL frequency. |
@@ -62,6 +63,16 @@ python ADSY2301_Rx_Steering_Example.py
 
 After calibration, the script steers the beam to a configurable angle
 (default: 30°) and prints the measured signal drop relative to boresight.
+
+### 5. Run RX Electronic Beam Sweep
+
+```bash
+python ADSY2301_Rx_Electronic_Sweep.py
+```
+
+Sweeps the receive beam from -60° to +60° in 5° steps (configurable).
+A live plot displays combined magnitude vs. steering angle. Results are
+saved as a `.png` image and `.mat` data file under the output directory.
 
 ## Configuration
 
