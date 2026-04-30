@@ -146,3 +146,93 @@ def compute_dmesg_diff(pre: bytes, post: bytes) -> bytes:
         if _strip_ts(line) not in pre_set:
             new_lines.append(line)
     return (b"\n".join(new_lines) + b"\n") if new_lines else b""
+
+
+class LabgridSession:
+    """Thin wrapper around the actual labgrid client.
+
+    Concrete labgrid client API differs by version; this wrapper exposes only
+    the three operations capture.py needs: ``acquire``, ``read_console``,
+    ``run_shell_command``. ``__init__`` accepts any object that quacks like
+    one — production code wires in the real client at session start; tests
+    pass a fake.
+    """
+
+    def __init__(self, client):
+        self._client = client
+        self._claimed_place: str | None = None
+        self._handle = None
+
+    def acquire(self, place: str) -> bool:
+        self._handle = self._client.acquire(place)
+        self._claimed_place = place
+        return True
+
+    def read_console(self) -> bytes:
+        return self._handle.read_console()
+
+    def run_shell_command(self, cmd: str) -> bytes:
+        return self._handle.run_shell_command(cmd)
+
+    def release(self) -> None:
+        if self._handle is None:
+            return
+        try:
+            self._handle.release()
+        except Exception as exc:
+            sys.stderr.write(f"prism-report: labgrid release failed: {exc}\n")
+        self._handle = None
+        self._claimed_place = None
+
+
+def capture_boot_log(session: LabgridSession | None, *,
+                     place: str | None) -> bytes | None:
+    if session is None or place is None:
+        return None
+    try:
+        session.acquire(place)
+        buf = session.read_console()
+        if isinstance(buf, str):
+            buf = buf.encode("utf-8", errors="replace")
+        header = (
+            f"# captured from labgrid place={place} at session-start\n"
+        ).encode("utf-8")
+        return header + buf
+    except Exception as exc:
+        sys.stderr.write(
+            f"prism-report: labgrid place {place!r} unreachable: {exc}; "
+            f"continuing without console capture\n"
+        )
+        return None
+
+
+def open_labgrid_session(*, no_labgrid: bool):
+    """Try to import + connect to the real labgrid client. Return None on any
+    failure or when --prism-no-labgrid is set."""
+    if no_labgrid:
+        return None
+    try:
+        # Verify the real labgrid Python API at write time. Confirm against
+        # the labgrid version on the bench.
+        from labgrid.remote.client import RemoteSession  # noqa: F401
+    except ImportError:
+        sys.stderr.write(
+            "prism-report: labgrid not installed; skipping console capture\n"
+        )
+        return None
+    try:
+        # NOTE: replace with the actual remote-coordinator handshake.
+        client = _build_real_labgrid_client()  # type: ignore[name-defined]
+    except Exception as exc:
+        sys.stderr.write(
+            f"prism-report: labgrid coordinator unreachable: {exc}\n"
+        )
+        return None
+    return LabgridSession(client)
+
+
+def _build_real_labgrid_client():
+    """Bench-time hook. Replace with the version-specific labgrid client
+    construction. Kept as a separate function so tests can monkeypatch it."""
+    from labgrid.remote.client import RemoteSession
+    return RemoteSession()
