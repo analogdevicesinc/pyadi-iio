@@ -1,8 +1,11 @@
 """upload(): exercises a tiny in-process fake of the Prism API."""
 from __future__ import annotations
 
+import email
+import email.parser
 import http.server
 import json
+import re
 import threading
 import time
 from pathlib import Path
@@ -12,6 +15,27 @@ import pytest
 from test.plugins.prism_report.config import Config
 from test.plugins.prism_report.manifest import OutputDir
 from test.plugins.prism_report.upload import upload, UploadError
+
+
+def _parse_multipart(body: bytes, content_type: str) -> dict:
+    """Return {field_name: bytes_payload} extracted from a multipart body.
+
+    Pure-stdlib parser using email.parser. Used by the fake handler to
+    validate that the upload payload uses the field names prism's API
+    requires (`metadata`, `junit`, optional `archive`).
+    """
+    headers = f"Content-Type: {content_type}\r\nMIME-Version: 1.0\r\n\r\n".encode()
+    msg = email.parser.BytesParser().parsebytes(headers + body)
+    parts: dict[str, bytes] = {}
+    for part in msg.walk():
+        if part.is_multipart():
+            continue
+        cd = part.get("Content-Disposition", "")
+        m = re.search(r'name="([^"]+)"', cd)
+        if not m:
+            continue
+        parts[m.group(1)] = part.get_payload(decode=True)
+    return parts
 
 
 class _FakeHandler(http.server.BaseHTTPRequestHandler):
@@ -36,10 +60,20 @@ class _FakeHandler(http.server.BaseHTTPRequestHandler):
             csrf = self.headers.get("X-Prism-Csrf")
             if csrf != "xyz":
                 self.send_response(403); self.end_headers(); return
+            ct = self.headers.get("Content-Type", "")
+            parts = _parse_multipart(body, ct)
             self.received.append({
                 "headers": dict(self.headers),
                 "len": len(body),
+                "parts": parts,
             })
+            # Mirror the real prism API: require `metadata` form field +
+            # `junit` file. 422 if either is missing.
+            if "metadata" not in parts or "junit" not in parts:
+                self.send_response(422)
+                self.end_headers()
+                self.wfile.write(b'{"detail":"missing metadata or junit"}')
+                return
             run_id = "run-1"
             self.runs[run_id] = "pending"
             self.send_response(201)
@@ -109,7 +143,16 @@ def test_upload_round_trip(fake_prism, tmp_path):
     res = upload(out, _cfg(fake_prism))
     assert res.run_id == "run-1"
     assert res.status == "ready"
-    assert _FakeHandler.received[0]["headers"].get("X-Prism-Csrf") == "xyz"
+    received = _FakeHandler.received[0]
+    assert received["headers"].get("X-Prism-Csrf") == "xyz"
+    # Payload-shape contract with prism's API:
+    parts = received["parts"]
+    assert "metadata" in parts and "junit" in parts and "archive" in parts
+    metadata = json.loads(parts["metadata"])
+    assert metadata["project_slug"] == "p1"
+    assert metadata["name"] == "r1"
+    assert metadata["tags"] == {"branch": "main"}
+    assert parts["junit"].startswith(b"<testsuites>")
 
 
 def test_login_failure_preserves_local(fake_prism, tmp_path, monkeypatch):
