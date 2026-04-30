@@ -1,20 +1,28 @@
 import argparse
-import os
-import sys  # We need sys so that we can pass argv to QApplication
+import sys
 import threading
-import time
 from queue import Full, Queue
-from random import randint
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pyqtgraph as pg
-from PyQt5 import QtCore, QtWidgets
-from pyqtgraph import GraphicsLayoutWidget, PlotWidget, plot
-from scipy import signal
-from scipy.fftpack import fft
+from PySide6.QtCore import QSize, QTimer
+from PySide6.QtWidgets import (
+    QApplication,
+    QFrame,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
+from scipy.signal.windows import kaiser
 
 import adi
+from harmonic.container import HmcCard, HmcMainWindow
+from harmonic.graph import HmcPlot
+from harmonic.icons import HmcIcon
+from harmonic.theme import HmcTheme
 
 try:
     import genalyzer
@@ -24,24 +32,21 @@ try:
 except ImportError:
     use_genalyzer = False
 
-pg.setConfigOptions(antialias=True)
-pg.setConfigOption("background", "k")
+pg.setConfigOptions(antialias=True, background=None)
 
 REAL_DEV_NAME = "cn05".lower()
 
 
 class ADIPlotter(object):
     def setup_genalyzer(self, fftsize, fs):
-
-        bits = 12
-        navg = 1
-        window = 2
-
-        c = genalyzer.config_fftz(fftsize, bits, navg, fftsize, window)
-        genalyzer.config_set_sample_rate(fs, c)
-        genalyzer.gn_config_fa_auto(ssb_width=120, c=c)
-
-        return c
+        key = "adiplot"
+        genalyzer.fa_create(key)
+        genalyzer.fa_fsample(key, fs)
+        genalyzer.fa_fdata(key, fs)
+        genalyzer.fa_max_tone(key, "signal", genalyzer.FaCompTag.SIGNAL)
+        genalyzer.fa_hd(key, 5)
+        genalyzer.fa_ssb(key, genalyzer.FaSsb.DEFAULT, 120)
+        return key
 
     def __init__(self, classname, uri):
         self.classname = classname
@@ -59,53 +64,110 @@ class ADIPlotter(object):
             self.c = self.setup_genalyzer(
                 self.stream.rx_buffer_size, self.stream.sample_rate
             )
-            self.update_interval = 100
+            self.update_interval = 10
             self.current_count = 0
 
-        self.app = QtWidgets.QApplication(sys.argv)
+        self.app = QApplication(sys.argv)
+        self._theme = HmcTheme.default
 
-        self.qmw = QtWidgets.QMainWindow()
+        self.qmw = HmcMainWindow()
+        self.qmw.setWindowTitle("ADI Spectrum Analyzer")
+        self.qmw.resize(1200, 800)
 
-        self.qmw.central_widget = QtWidgets.QWidget()
-        self.qmw.vertical_layout = QtWidgets.QVBoxLayout()
-        self.qmw.setCentralWidget(self.qmw.central_widget)
-        self.qmw.central_widget.setLayout(self.qmw.vertical_layout)
+        central = QWidget()
+        self.qmw.setCentralWidget(central)
+        main_layout = QVBoxLayout(central)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
 
-        #### Add Plot
-        self.qmw.graphWidget = pg.PlotWidget()
-        self.qmw.graphWidget.setBackground("black")
+        # --- Header ---
+        header = QFrame()
+        header.setProperty("class", "header")
+        header_layout = QHBoxLayout(header)
+        header_layout.setContentsMargins(16, 8, 16, 8)
 
+        title = QLabel("ADI Spectrum Analyzer")
+        title.setProperty("class", "heading")
+        header_layout.addWidget(title)
+        header_layout.addStretch()
+
+        self.theme_btn = QPushButton()
+        self.theme_btn.setProperty("class", "theme-toggle")
+        self._moon_icon = HmcIcon("mdi6.weather-night", HmcTheme.Token.CONTENT_MEDIUM, parent=self.theme_btn)
+        self._sun_icon = HmcIcon("mdi6.white-balance-sunny", HmcTheme.Token.CONTENT_MEDIUM, parent=self.theme_btn)
+        self.theme_btn.setIcon(self._moon_icon)
+        self.theme_btn.setIconSize(QSize(24, 24))
+        self.theme_btn.setFixedSize(40, 40)
+        self.theme_btn.clicked.connect(self._toggle_theme)
+        header_layout.addWidget(self.theme_btn)
+
+        main_layout.addWidget(header)
+
+        # --- Plot area ---
+        plot_area = QVBoxLayout()
+        plot_area.setContentsMargins(16, 16, 16, 16)
+        plot_area.setSpacing(12)
+
+        # Waveform plot
+        self.waveform = HmcPlot(theme=self._theme, title="Waveform")
+        wf_card_layout = QVBoxLayout()
+        wf_card = HmcCard(layout=wf_card_layout)
+        wf_card_layout.addWidget(self.waveform)
+        plot_area.addWidget(wf_card)
+
+        # Spectrum plot
+        self.spectrum = HmcPlot(theme=self._theme, title="Spectrum")
+        sp_card_layout = QVBoxLayout()
+        sp_card = HmcCard(layout=sp_card_layout)
+        sp_card_layout.addWidget(self.spectrum)
+        plot_area.addWidget(sp_card)
+
+        # --- Measurements panel ---
+        meas_group = QGroupBox("Measurements")
+        meas_layout = QHBoxLayout(meas_group)
+        meas_layout.setSpacing(24)
+
+        self.lbl_peak = QLabel("Peak: —")
+        self.lbl_peak.setProperty("class", "subheading")
+        self.lbl_freq = QLabel("Frequency: —")
+        self.lbl_freq.setProperty("class", "subheading")
+        self.lbl_amp = QLabel("Amplitude: —")
+        self.lbl_amp.setProperty("class", "subheading")
+        meas_layout.addWidget(self.lbl_peak)
+        meas_layout.addWidget(self.lbl_freq)
+        meas_layout.addWidget(self.lbl_amp)
+        meas_layout.addStretch()
+
+        self.genalyzer_labels = {}
+        plot_area.addWidget(meas_group)
+        if use_genalyzer:
+            from PySide6.QtWidgets import QGridLayout, QScrollArea
+
+            ga_group = QGroupBox("Genalyzer")
+            ga_group.setMinimumHeight(200)
+            ga_group.setMaximumHeight(300)
+            ga_inner = QWidget()
+            self.ga_grid = QGridLayout(ga_inner)
+            self.ga_grid.setSpacing(8)
+            self._ga_col_count = 4
+
+            scroll = QScrollArea()
+            scroll.setWidgetResizable(True)
+            scroll.setWidget(ga_inner)
+            scroll.setFrameShape(QFrame.Shape.NoFrame)
+            scroll.setStyleSheet("QScrollArea { background: transparent; }")
+            ga_inner.setStyleSheet("background: transparent;")
+
+            ga_box = QVBoxLayout(ga_group)
+            ga_box.setContentsMargins(0, 0, 0, 0)
+            ga_box.addWidget(scroll)
+            plot_area.addWidget(ga_group)
+
+        main_layout.addLayout(plot_area)
+
+        # --- Configure plots ---
         self.traces = {}
 
-        self.win = GraphicsLayoutWidget()
-        self.qmw.vertical_layout.addWidget(self.win, 1)
-        self.win.setWindowTitle("Spectrum Analyzer")
-        self.win.setGeometry(5, 115, 1910, 1070)
-        self.win.setBackground(background="black")
-
-        wf_xaxis = pg.AxisItem(orientation="bottom")
-        wf_xaxis.setLabel(units="Seconds")
-
-        if REAL_DEV_NAME in classname.lower():
-            wf_ylabels = [(0, "0"), (2 ** 11, "2047")]
-        else:
-            wf_ylabels = [(-2 * 11, "-2047"), (0, "0"), (2 ** 11, "2047")]
-        wf_yaxis = pg.AxisItem(orientation="left")
-        wf_yaxis.setTicks([wf_ylabels])
-
-        sp_xaxis = pg.AxisItem(orientation="bottom")
-        sp_xaxis.setLabel(units="Hz")
-
-        self.waveform = self.win.addPlot(
-            title="WAVEFORM", row=1, col=1, axisItems={"bottom": wf_xaxis},
-        )
-        self.spectrum = self.win.addPlot(
-            title="SPECTRUM", row=2, col=1, axisItems={"bottom": sp_xaxis},
-        )
-        self.waveform.showGrid(x=True, y=True)
-        self.spectrum.showGrid(x=True, y=True)
-
-        # waveform and spectrum x points
         self.x = np.arange(0, self.stream.rx_buffer_size) / self.stream.sample_rate
         self.f = np.linspace(
             -1 * self.stream.sample_rate / 2,
@@ -115,13 +177,7 @@ class ADIPlotter(object):
 
         self.counter = 0
         self.min = -100
-        self.window = signal.kaiser(self.stream.rx_buffer_size, beta=38)
-
-        #### Add a plot to contain our measurement data
-        # This is faster than using a table
-        self.measurements = self.win.addPlot(title="Measurements", row=3, col=1)
-        self.measurements.hideAxis("left")
-        self.measurements.hideAxis("bottom")
+        self.window = kaiser(self.stream.rx_buffer_size, beta=38)
 
         self.qmw.show()
 
@@ -130,6 +186,28 @@ class ADIPlotter(object):
         self.thread.start()
 
         self.markers_added = False
+
+    def _toggle_theme(self):
+        if self._theme is HmcTheme.LIGHT:
+            self._theme = HmcTheme.DARK
+            self.theme_btn.setIcon(self._sun_icon)
+        else:
+            self._theme = HmcTheme.LIGHT
+            self.theme_btn.setIcon(self._moon_icon)
+        self.qmw.theme = self._theme
+        self._recolor_traces()
+
+    def _recolor_traces(self):
+        if "waveform" in self.traces:
+            self.traces["waveform"].setPen(
+                pg.mkPen(self._theme.categorical[0], width=2)
+            )
+        if "spectrum" in self.traces:
+            self.traces["spectrum"].setPen(
+                pg.mkPen(self._theme.categorical[1], width=2)
+            )
+        if self.markers_added:
+            self.text_peak.setColor(self._theme.content_default)
 
     def source(self):
         print("Thread running")
@@ -143,80 +221,26 @@ class ADIPlotter(object):
                 continue
 
     def start(self):
-        self.app.exec_()
+        self.app.exec()
 
-    def add_markers(self, plot, genalyzer_results=None):
-        #### Add peak marker for spectrum plot
-        data = plot.getData()
-        if data[0] is None:
+    def add_markers(self):
+        spectrum_trace = self.traces.get("spectrum")
+        if spectrum_trace is None:
             return
-        self.curve_point = pg.CurvePoint(plot)
+        self.curve_point = pg.CurvePoint(spectrum_trace)
         self.spectrum.addItem(self.curve_point)
-        self.text_peak = pg.TextItem("TEST", anchor=(0.5, 1.0))
-        self.text_peak.setParentItem(parent=self.curve_point)
-
-        self.build_custom_table_from_textitems(genalyzer_results)
-
+        self.text_peak = pg.TextItem("", anchor=(0.5, 1.0))
+        self.text_peak.setColor(self._theme.content_default)
+        self.text_peak.setParentItem(self.curve_point)
         self.markers_added = True
-
-    def build_custom_table_from_textitems(self, genalyzer_results):
-        text_items = ["Peak", "Frequency", "Amplitude"]
-        self.custom_table = {}
-        self.table_x = 180
-        self.table_y = 50
-        scaler = 30
-        for i, text in enumerate(text_items):
-            self.custom_table[text] = pg.TextItem(text=text)
-            # set parent plot
-            self.custom_table[text].setParentItem(parent=self.measurements)
-            # set position
-            self.custom_table[text].setPos(self.table_x, self.table_y + scaler * i)
-
-        if use_genalyzer:
-            offset = (len(text_items) + 2) * scaler
-            for i, key in enumerate(genalyzer_results):
-                self.custom_table[key] = pg.TextItem(text=key)
-                self.custom_table[key].setParentItem(parent=self.measurements)
-                x_pos = i % 6
-                y_pos = np.floor(i // 6)
-                self.custom_table[key].setPos(
-                    self.table_x + x_pos * 300, self.table_y + offset + scaler * y_pos
-                )
-
-    def update_custom_table(self, genalyzer_updates=None):
-        if not self.markers_added:
-            return
-        self.custom_table["Frequency"].setText(
-            "Frequency: {:.2f} Hz".format(self.curve_point.pos().x())
-        )
-        self.custom_table["Amplitude"].setText(
-            "Amplitude: {:.2f} dB".format(self.curve_point.pos().y())
-        )
-
-        if use_genalyzer:
-            for key in genalyzer_updates:
-                self.custom_table[key].setText(
-                    "{}: {:.2f}".format(key, genalyzer_updates[key])
-                )
-
-    def update_genalyzer_table(self, table):
-        if not self.markers_added:
-            return
-
-        for key in table:
-            self.custom_table[key].setText("{}: {:.2f}".format(key, table[key]))
-        self.custom_table["Frequency"].setText(
-            "Frequency: {:.2f} Hz".format(self.curve_point.pos().x())
-        )
-        self.custom_table["Amplitude"].setText(
-            "Amplitude: {:.2f} dB".format(self.curve_point.pos().y())
-        )
 
     def set_plotdata(self, name, data_x, data_y):
         if name in self.traces:
             self.traces[name].setData(data_x, data_y)
         elif name == "spectrum":
-            self.traces[name] = self.spectrum.plot(pen="m", width=3)
+            self.traces[name] = self.spectrum.plot(
+                pen=pg.mkPen(self._theme.categorical[1], width=2)
+            )
             self.spectrum.setLogMode(x=False, y=False)
             self.spectrum.setYRange(self.min, 5, padding=0)
             start = (
@@ -227,12 +251,18 @@ class ADIPlotter(object):
             self.spectrum.setXRange(
                 start, self.stream.sample_rate / 2, padding=0.005,
             )
+            self.spectrum.setLabel("bottom", "Frequency", units="Hz")
+            self.spectrum.setLabel("left", "Power", units="dB")
         elif name == "waveform":
-            self.traces[name] = self.waveform.plot(pen="c", width=3)
+            self.traces[name] = self.waveform.plot(
+                pen=pg.mkPen(self._theme.categorical[0], width=2)
+            )
             self.waveform.setYRange(-(2 ** 11) - 200, 2 ** 11 + 200, padding=0)
             self.waveform.setXRange(
                 0, self.stream.rx_buffer_size / self.stream.sample_rate, padding=0.005,
             )
+            self.waveform.setLabel("bottom", "Time", units="s")
+            self.waveform.setLabel("left", "Amplitude")
 
     def update(self):
         while not self.q.empty():
@@ -240,27 +270,24 @@ class ADIPlotter(object):
             self.set_plotdata(
                 name="waveform", data_x=self.x, data_y=np.real(wf_data),
             )
+
+            genalyzer_results = None
             if use_genalyzer:
                 self.current_count = self.current_count + 1
                 if self.current_count >= self.update_interval:
                     self.current_count = 0
-                    # Convert array to list of ints
-                    i = [int(np.real(a)) for a in wf_data]
-                    q = [int(np.imag(b)) for b in wf_data]
-                    fft_out_i, fft_out_q = genalyzer.fftz(i, q, self.c)
-                    fft_out = [
-                        val for pair in zip(fft_out_i, fft_out_q) for val in pair
-                    ]
-
-                    # sp_data = np.array(fft_out_i) + 1j * np.array(fft_out_q)
-                    # sp_data = np.abs(np.fft.fftshift(sp_data)) / self.stream.rx_buffer_size
-                    # sp_data = 20 * np.log10(sp_data / (2**11))
-
-                    # get all Fourier analysis results
-                    all_results = genalyzer.get_fa_results(fft_out, self.c)
-
-            else:
-                all_results = None
+                    try:
+                        fft_out = genalyzer.fft(
+                            wf_data.astype(np.complex128),
+                            1,
+                            self.stream.rx_buffer_size,
+                            genalyzer.Window.NO_WINDOW,
+                        )
+                        genalyzer_results = genalyzer.fft_analysis(
+                            self.c, fft_out, self.stream.rx_buffer_size,
+                        )
+                    except Exception as e:
+                        print("genalyzer error:", e)
 
             sp_data = np.fft.fft(wf_data)
             sp_data = np.abs(np.fft.fftshift(sp_data)) / self.stream.rx_buffer_size
@@ -272,25 +299,43 @@ class ADIPlotter(object):
                 return
 
             if not self.markers_added:
-                self.add_markers(self.traces["spectrum"], all_results)
+                self.add_markers()
 
-            # Find peak of spectrum
             index = np.argmax(sp_data)
 
-            # Add label to plot at the peak of the spectrum
             if self.markers_added:
                 self.curve_point.setPos(float(index) / (len(self.f) - 1))
                 self.text_peak.setText(
-                    "[%0.1f, %0.1f]" % (self.f[index], sp_data[index])
+                    "[{:.1f}, {:.1f}]".format(self.f[index], sp_data[index])
                 )
-                self.update_custom_table(all_results)
+
+            self.lbl_peak.setText(
+                "Peak: [{:.1f} Hz, {:.1f} dB]".format(self.f[index], sp_data[index])
+            )
+            self.lbl_freq.setText("Frequency: {:.2f} Hz".format(self.f[index]))
+            self.lbl_amp.setText("Amplitude: {:.2f} dB".format(sp_data[index]))
+
+            if use_genalyzer and genalyzer_results:
+                self._update_genalyzer_labels(genalyzer_results)
+
+    def _update_genalyzer_labels(self, results):
+        for i, (key, value) in enumerate(results.items()):
+            if key not in self.genalyzer_labels:
+                lbl = QLabel()
+                lbl.setProperty("class", "caption")
+                row = i // self._ga_col_count
+                col = i % self._ga_col_count
+                self.ga_grid.addWidget(lbl, row, col)
+                self.genalyzer_labels[key] = lbl
+            self.genalyzer_labels[key].setText("{}: {:.2f}".format(key, value))
 
     def animation(self):
-        timer = QtCore.QTimer()
+        timer = QTimer()
         timer.timeout.connect(self.update)
         timer.start(1)
         self.start()
         self.run_source = False
+        self.thread.join()
 
 
 if __name__ == "__main__":
@@ -307,4 +352,3 @@ if __name__ == "__main__":
     app = ADIPlotter(args["class"], args["uri"])
     app.animation()
     print("Exiting...")
-    app.thread.join()
