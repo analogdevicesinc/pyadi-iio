@@ -1,4 +1,4 @@
+pyside6
+qtawesome
 pyqtgraph
 scipy
-PyQt5
-matplotlib
