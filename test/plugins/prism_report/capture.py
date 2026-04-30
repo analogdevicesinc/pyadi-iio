@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
+from dataclasses import dataclass
 
 
 def _open_iio_context(uri: str):
@@ -236,3 +237,65 @@ def _build_real_labgrid_client():
     construction. Kept as a separate function so tests can monkeypatch it."""
     from labgrid.remote.client import RemoteSession
     return RemoteSession()
+
+
+@dataclass
+class SessionPre:
+    iio_info: bytes | None
+    dmesg: bytes | None
+    boot_log: bytes | None
+    labgrid_session: LabgridSession | None
+    dmesg_capture_method: str  # "ssh" | "console" | "skipped"
+
+
+@dataclass
+class SessionPost:
+    dmesg_post: bytes | None
+    dmesg_diff: bytes | None
+
+
+def capture_session_pre(cfg, iio_uri: str) -> SessionPre:
+    info = capture_iio_info(iio_uri) if iio_uri else None
+    sess = open_labgrid_session(no_labgrid=cfg.no_labgrid)
+    boot = capture_boot_log(sess, place=cfg.labgrid_place)
+    if cfg.dmesg_via == "none":
+        dmesg, method = None, "skipped"
+    else:
+        before_kw = dict(
+            iio_uri=iio_uri, via=cfg.dmesg_via,
+            ssh_user=cfg.dmesg_ssh_user, ssh_key=cfg.dmesg_ssh_key,
+            labgrid_session=sess,
+        )
+        dmesg = capture_dmesg(**before_kw)
+        method = _which_method(cfg.dmesg_via, iio_uri,
+                               labgrid_present=sess is not None,
+                               got=dmesg is not None)
+    return SessionPre(
+        iio_info=info, dmesg=dmesg, boot_log=boot,
+        labgrid_session=sess, dmesg_capture_method=method,
+    )
+
+
+def capture_session_post(cfg, iio_uri: str, pre: SessionPre) -> SessionPost:
+    if cfg.dmesg_via == "none":
+        post = None
+    else:
+        post = capture_dmesg(
+            iio_uri=iio_uri, via=cfg.dmesg_via,
+            ssh_user=cfg.dmesg_ssh_user, ssh_key=cfg.dmesg_ssh_key,
+            labgrid_session=pre.labgrid_session,
+        )
+    diff = None
+    if pre.dmesg is not None and post is not None:
+        diff = compute_dmesg_diff(pre.dmesg, post)
+    if pre.labgrid_session is not None:
+        pre.labgrid_session.release()
+    return SessionPost(dmesg_post=post, dmesg_diff=diff)
+
+
+def _which_method(via, iio_uri, *, labgrid_present, got):
+    if not got:
+        return "skipped"
+    if via == "ssh" or (via == "auto" and iio_uri.startswith("ip:")):
+        return "ssh"
+    return "console"
