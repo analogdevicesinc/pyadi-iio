@@ -12,7 +12,9 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-pytest_plugins = ["pytester"]
+# NOTE: `pytest_plugins = ["pytester"]` would belong here, but pytest 9.x
+# rejects pytest_plugins in non-rootdir conftests. It is registered in the
+# top-level test/conftest.py instead.
 
 
 @pytest.fixture

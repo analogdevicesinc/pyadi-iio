@@ -24,7 +24,10 @@ import adi
 
 
 # Register prism_report plugin from test/ (kept out of the installed wheel).
-pytest_plugins = ["test.plugins.prism_report.plugin"]
+# Also register pytester here (the prism_report self-tests need it); pytest 9.x
+# rejects `pytest_plugins` in non-rootdir conftests, so it must live here and
+# not in test/plugins/prism_report/tests/conftest.py.
+pytest_plugins = ["test.plugins.prism_report.plugin", "pytester"]
 
 try:
     from test.scpi import dcxo_calibrate
