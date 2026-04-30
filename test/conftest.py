@@ -22,6 +22,10 @@ import pytest
 
 import adi
 
+
+# Register prism_report plugin from test/ (kept out of the installed wheel).
+pytest_plugins = ["test.plugins.prism_report.plugin"]
+
 try:
     from test.scpi import dcxo_calibrate
 
