@@ -4,6 +4,7 @@ Each function returns ``bytes | None`` — None on graceful skip.
 """
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 
@@ -60,3 +61,88 @@ def capture_iio_info(uri: str, *, timeout_s: float = 15.0) -> bytes | None:
             f"prism-report: could not capture iio_info: {exc}\n"
         )
         return None
+
+
+_TS_RE = re.compile(rb"^\[\s*[\d.]+\]\s*")
+
+
+def _strip_ts(line: bytes) -> bytes:
+    return _TS_RE.sub(b"", line)
+
+
+def _ssh_dmesg(host: str, user: str, key: str | None,
+               timeout_s: float = 15.0) -> bytes | None:
+    cmd = ["ssh", "-o", "BatchMode=yes",
+           "-o", "StrictHostKeyChecking=accept-new",
+           "-o", f"ConnectTimeout={int(timeout_s)}"]
+    if key:
+        cmd += ["-i", key]
+    cmd += [f"{user}@{host}", "dmesg"]
+    try:
+        proc = subprocess.run(cmd, capture_output=True,
+                              timeout=timeout_s, check=False)
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        sys.stderr.write(f"prism-report: dmesg via ssh failed: {exc}\n")
+        return None
+    if proc.returncode != 0:
+        sys.stderr.write(
+            f"prism-report: dmesg via ssh exited {proc.returncode}: "
+            f"{proc.stderr[:200]!r}\n"
+        )
+        return None
+    return proc.stdout
+
+
+def _console_dmesg(labgrid_session) -> bytes | None:
+    if labgrid_session is None:
+        return None
+    try:
+        result = labgrid_session.run_shell_command("dmesg")
+    except Exception as exc:
+        sys.stderr.write(f"prism-report: dmesg via console failed: {exc}\n")
+        return None
+    if isinstance(result, str):
+        result = result.encode("utf-8", errors="replace")
+    return result
+
+
+def capture_dmesg(*, iio_uri: str, via: str, ssh_user: str,
+                  ssh_key: str | None, labgrid_session) -> bytes | None:
+    if via == "none":
+        return None
+
+    host: str | None = None
+    if iio_uri.startswith("ip:"):
+        host = iio_uri[3:].split(",")[0]
+
+    methods: list[str] = []
+    if via == "ssh":
+        methods = ["ssh"]
+    elif via == "console":
+        methods = ["console"]
+    else:  # auto
+        if host is not None:
+            methods.append("ssh")
+        methods.append("console")
+
+    for m in methods:
+        if m == "ssh" and host is not None:
+            out = _ssh_dmesg(host, ssh_user, ssh_key)
+            if out is not None:
+                return out
+        elif m == "console":
+            out = _console_dmesg(labgrid_session)
+            if out is not None:
+                return out
+    return None
+
+
+def compute_dmesg_diff(pre: bytes, post: bytes) -> bytes:
+    pre_set = {_strip_ts(line) for line in pre.splitlines() if line.strip()}
+    new_lines: list[bytes] = []
+    for line in post.splitlines():
+        if not line.strip():
+            continue
+        if _strip_ts(line) not in pre_set:
+            new_lines.append(line)
+    return (b"\n".join(new_lines) + b"\n") if new_lines else b""
