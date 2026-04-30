@@ -18,11 +18,14 @@ pytest_plugins = ["pytester"]
 @pytest.fixture
 def pytester(pytester):  # type: ignore[no-redef]
     # Ensure inner pytest invocations do not try to re-init labgrid's
-    # global StepLogger (which the outer pytest already started).
+    # global StepLogger (which the outer pytest already started). Also
+    # explicitly load the prism_report plugin (the inner ini we install
+    # below shadows the outer rootdir's pyproject.toml/conftest, so the
+    # plugin must be referenced here for it to register its addoptions).
     pytester.makeini(
         """
         [pytest]
-        addopts = -p no:labgrid
+        addopts = -p no:labgrid -p test.plugins.prism_report.plugin
         """
     )
     return pytester

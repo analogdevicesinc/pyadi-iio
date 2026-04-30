@@ -61,8 +61,12 @@ class Config:
 
     @classmethod
     def from_pytest(cls, pytest_config) -> "Config":
+        # invocation_params.args includes pytest's own flags (-q, -v, ...)
+        # plus any user args. Use parse_known_args to ignore non-prism flags.
         argv = list(pytest_config.invocation_params.args)
-        return cls.from_argv(argv)
+        parser = _build_parser()
+        ns, _ = parser.parse_known_args(argv)
+        return _resolve(ns, os.environ)
 
 
 def _build_parser() -> argparse.ArgumentParser:
