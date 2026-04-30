@@ -71,3 +71,16 @@ def pytest_addoption(parser):
         "--update-golden", action="store_true", default=False,
         help="Regenerate render.py golden HTML files.",
     )
+
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "bench_pluto: hardware-loop tests that require a real Pluto. "
+        "Skipped unless BENCH_PLUTO_URI env var is set.",
+    )
+    config.addinivalue_line(
+        "markers",
+        "prism_live: contract test against a running Prism instance. "
+        "Skipped unless PRISM_LIVE_URL env var is set.",
+    )
