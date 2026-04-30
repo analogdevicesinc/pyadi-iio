@@ -16,6 +16,9 @@ pyvisa
 matplotlib
 pytoml
 pytest-xdist
+pyside6
+pyqtgraph
+qtawesome
 jupyter
 ipywidgets
 anywidget
