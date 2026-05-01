@@ -58,6 +58,25 @@ def test_safe_test_id_strips_unsafe_chars(tmp_path: Path):
     assert " " not in cases[0].name
 
 
+def test_long_nodeid_is_truncated_with_hash(tmp_path: Path):
+    out = OutputDir(tmp_path / "run")
+    out.initialize()
+    huge = "test_x::test_y[" + "a" * 600 + "]"
+    out.write_case_artifact(
+        case_nodeid=huge, filename="x.json", content=b"{}", kind="metrics",
+    )
+    cases = list((tmp_path / "run" / "cases").iterdir())
+    assert len(cases) == 1
+    name = cases[0].name
+    assert len(name.encode()) <= 200
+    # Two distinct long nodeids must map to distinct dirs:
+    huge2 = "test_x::test_y[" + "a" * 600 + "b]"
+    out.write_case_artifact(
+        case_nodeid=huge2, filename="x.json", content=b"{}", kind="metrics",
+    )
+    assert len(list((tmp_path / "run" / "cases").iterdir())) == 2
+
+
 def test_finalize_idempotent(tmp_path: Path):
     out = OutputDir(tmp_path / "run")
     out.initialize()

@@ -9,6 +9,7 @@ Layout on disk:
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import sys
@@ -16,11 +17,19 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 _UNSAFE = re.compile(r"[^A-Za-z0-9._-]")
+# ext4/xfs cap a single path component at 255 bytes; some encrypted FS at 143.
+# Leave headroom for parametrize ids that explode after sanitization.
+_MAX_SAFE_ID_LEN = 200
 
 
 def _safe_test_id(nodeid: str) -> str:
-    sanitized = _UNSAFE.sub("_", nodeid)
-    return sanitized or "case"
+    sanitized = _UNSAFE.sub("_", nodeid) or "case"
+    if len(sanitized) > _MAX_SAFE_ID_LEN:
+        digest = hashlib.blake2b(nodeid.encode(), digest_size=4).hexdigest()
+        # Reserve room for "_<8 hex chars>" suffix and rebuild.
+        head_len = _MAX_SAFE_ID_LEN - len(digest) - 1
+        sanitized = sanitized[:head_len] + "_" + digest
+    return sanitized
 
 
 @dataclass
