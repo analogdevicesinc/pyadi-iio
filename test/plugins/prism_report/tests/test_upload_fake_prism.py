@@ -114,9 +114,14 @@ def fake_prism():
 def _stage_outdir(tmp_path: Path) -> OutputDir:
     out = OutputDir(tmp_path / "run")
     out.initialize()
-    out.write_run_artifact("junit.xml",
-                           b"<testsuites><testsuite/></testsuites>",
-                           kind="junit")
+    out.write_run_artifact(
+        "junit.xml",
+        b'<testsuites><testsuite name="pytest">'
+        b'<testcase classname="t" name="c"/>'
+        b'</testsuite></testsuites>',
+        kind="junit",
+    )
+    out.write_run_artifact("iio_info.txt", b"IIO\n", kind="iio_info")
     out.write_case_artifact(
         case_nodeid="t::c", filename="spectrum.html",
         content=b"<html/>", kind="spectrum",
@@ -139,6 +144,9 @@ def _cfg(url: str, **kw):
 
 
 def test_upload_round_trip(fake_prism, tmp_path):
+    import io as _io
+    import zipfile as _zip
+
     out = _stage_outdir(tmp_path)
     res = upload(out, _cfg(fake_prism))
     assert res.run_id == "run-1"
@@ -153,6 +161,14 @@ def test_upload_round_trip(fake_prism, tmp_path):
     assert metadata["name"] == "r1"
     assert metadata["tags"] == {"branch": "main"}
     assert parts["junit"].startswith(b"<testsuites>")
+    # Archive uses prism's ingest convention: per-case artifacts get
+    # `{suite}__{case}__{label}.{ext}`; run-level artifacts stay flat.
+    with _zip.ZipFile(_io.BytesIO(parts["archive"])) as zf:
+        names = set(zf.namelist())
+    assert "pytest__c__spectrum.html" in names, names
+    assert "iio_info.txt" in names, names
+    # Manifest gets uploaded too, but as a run-level entry (bare name).
+    assert "manifest.json" in names, names
 
 
 def test_login_failure_preserves_local(fake_prism, tmp_path, monkeypatch):

@@ -9,6 +9,7 @@ from __future__ import annotations
 import io
 import json as _json
 import time
+import xml.etree.ElementTree as ET
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,15 +28,73 @@ class RunResult:
     url: str
 
 
+def _suite_name_from_junit(junit_xml: bytes) -> str:
+    """Return the first <testsuite name="..."> attr or 'pytest' as a fallback."""
+    try:
+        root = ET.fromstring(junit_xml)
+    except ET.ParseError:
+        return "pytest"
+    suite = root if root.tag == "testsuite" else root.find("testsuite")
+    if suite is not None and suite.get("name"):
+        return suite.get("name")
+    return "pytest"
+
+
 def _build_artifacts_zip(out_root: Path) -> bytes:
+    """Build the archive matching prism's ingest convention.
+
+    Prism parses each archive entry's basename as
+    ``{suite}__{case}__{label}.{ext}`` to attach it to the right case.
+    Our local-export layout is nested (``cases/<safe_id>/<filename>``), so
+    we rewrite each entry's archive name on upload using:
+      - suite name from <testsuite name=""> in junit.xml
+      - case name from the manifest entry's case_nodeid (the part after "::")
+    Run-level artifacts keep their bare filename (run-scoped).
+    """
     buf = io.BytesIO()
+
+    manifest_path = out_root / "manifest.json"
+    junit_path = out_root / "junit.xml"
+    suite_name = _suite_name_from_junit(junit_path.read_bytes()) if junit_path.exists() else "pytest"
+
+    case_dir_to_name: dict[str, str] = {}
+    if manifest_path.exists():
+        manifest = _json.loads(manifest_path.read_text())
+        for case in manifest.get("cases", []):
+            nodeid = case.get("case_nodeid", "")
+            if not case.get("artifacts"):
+                continue
+            # Pull safe_id from the first artifact's rel_path
+            sample = case["artifacts"][0].get("rel_path", "")
+            parts = sample.split("/")
+            if len(parts) >= 2 and parts[0] == "cases":
+                safe_id = parts[1]
+                case_name = nodeid.rsplit("::", 1)[-1] if "::" in nodeid else nodeid
+                case_dir_to_name[safe_id] = case_name
+
     with zipfile.ZipFile(buf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
         for p in out_root.rglob("*"):
             if not p.is_file():
                 continue
             if p.name == "junit.xml":
                 continue
-            zf.write(p, arcname=str(p.relative_to(out_root)))
+            rel = p.relative_to(out_root)
+            parts = rel.parts
+            if len(parts) >= 3 and parts[0] == "cases":
+                # Per-case artifact: rewrite to suite__case__label.ext
+                safe_id = parts[1]
+                filename = parts[-1]
+                case_name = case_dir_to_name.get(safe_id)
+                if case_name is None:
+                    # Manifest didn't list this case dir; attach to run as a
+                    # safety net rather than skipping.
+                    arcname = filename
+                else:
+                    arcname = f"{suite_name}__{case_name}__{filename}"
+            else:
+                # Run-level artifact: bare filename, prism treats as run-scoped
+                arcname = parts[-1]
+            zf.writestr(arcname, p.read_bytes())
     return buf.getvalue()
 
 
