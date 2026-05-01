@@ -19,7 +19,10 @@ from test.plugins.prism_report.capture import (
 )
 from test.plugins.prism_report.config import Config, ConfigError
 from test.plugins.prism_report.manifest import OutputDir
-from test.plugins.prism_report.render import render_spectrum
+from test.plugins.prism_report.render import (
+    render_spectrum,
+    render_spectrum_figure_json,
+)
 from test.plugins.prism_report.upload import UploadError, upload
 
 
@@ -147,15 +150,14 @@ def pytest_runtest_makereport(item, call):
         )
         return
 
+    meta = {
+        "test_id": item.nodeid,
+        "test_failed": test_failed,
+        "failure_summary": failure_summary,
+    }
     try:
-        html = render_spectrum(
-            result, payload,
-            meta={
-                "test_id": item.nodeid,
-                "test_failed": test_failed,
-                "failure_summary": failure_summary,
-            },
-        )
+        html = render_spectrum(result, payload, meta=meta)
+        figure_json = render_spectrum_figure_json(result, payload, meta=meta)
     except Exception as exc:
         sys.stderr.write(
             f"prism-report: case {item.nodeid}: render failed: {exc}\n"
@@ -165,6 +167,10 @@ def pytest_runtest_makereport(item, call):
     st.out_dir.write_case_artifact(
         case_nodeid=item.nodeid, filename="spectrum.html",
         content=html.encode("utf-8"), kind="spectrum",
+    )
+    st.out_dir.write_case_artifact(
+        case_nodeid=item.nodeid, filename="spectrum.json",
+        content=figure_json.encode("utf-8"), kind="spectrum_figure",
     )
     iq_buf = io.BytesIO()
     np.savez_compressed(

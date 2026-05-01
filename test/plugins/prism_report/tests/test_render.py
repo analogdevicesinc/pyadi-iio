@@ -1,6 +1,7 @@
 """Render-module tests: figure shape, golden snapshot, failure annotation."""
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -8,7 +9,10 @@ import numpy as np
 import pytest
 
 from test.plugins.prism_report.analyze import AnalysisResult, Component
-from test.plugins.prism_report.render import render_spectrum
+from test.plugins.prism_report.render import (
+    render_spectrum,
+    render_spectrum_figure_json,
+)
 
 GOLDEN_DIR = Path(__file__).parent / "golden"
 
@@ -79,3 +83,24 @@ def test_golden_snapshot_byte_stable(request):
         pytest.skip(f"golden missing — run with --update-golden once: {target}")
     expected = target.read_text()
     assert html == expected
+
+
+def test_figure_json_is_parseable_plotly_spec():
+    """The JSON variant must be a valid Plotly figure spec with carrier + HD
+    annotations encoded in `layout.shapes`/`layout.annotations`.
+    """
+    raw = render_spectrum_figure_json(
+        _result_one_tone(), _payload_one_tone(),
+        meta={"test_id": "x", "test_failed": False},
+    )
+    fig = json.loads(raw)
+    assert "data" in fig and isinstance(fig["data"], list) and fig["data"]
+    assert fig["data"][0]["mode"] == "lines"
+    layout = fig.get("layout", {})
+    # Carrier + 2 harmonics + NSD hline = at least 4 shapes (vlines/hlines)
+    shapes = layout.get("shapes", [])
+    assert len(shapes) >= 4, shapes
+    # Annotations include the per-component labels and the metrics card
+    ann_text = " ".join(a.get("text", "") for a in layout.get("annotations", []))
+    assert "HD2" in ann_text and "HD3" in ann_text
+    assert "SFDR" in ann_text

@@ -63,8 +63,9 @@ def _format_params(params: dict) -> str:
     return " · ".join(bits)
 
 
-def render_spectrum(result: AnalysisResult, payload: dict, *,
-                    meta: dict[str, Any]) -> str:
+def _build_spectrum_figure(result: AnalysisResult, payload: dict, *,
+                           meta: dict[str, Any]) -> "go.Figure":
+    """Build the annotated spectrum figure. Pure: numpy + Plotly types only."""
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=result.spectrum_freq_hz / 1e6,
@@ -130,6 +131,25 @@ def render_spectrum(result: AnalysisResult, payload: dict, *,
             text=f"⚠ {result.notes}", x=0.5, y=-0.15, xref="paper", yref="paper",
             showarrow=False, font=dict(color="#c00"),
         )
+    return fig
+
+
+def render_spectrum(result: AnalysisResult, payload: dict, *,
+                    meta: dict[str, Any]) -> str:
+    """Render the annotated spectrum to a self-contained HTML string."""
+    fig = _build_spectrum_figure(result, payload, meta=meta)
     return fig.to_html(
         include_plotlyjs="cdn", full_html=True, div_id="prism-spectrum"
     )
+
+
+def render_spectrum_figure_json(result: AnalysisResult, payload: dict, *,
+                                meta: dict[str, Any]) -> str:
+    """Render the same annotated spectrum as a Plotly figure JSON spec.
+
+    Suitable for fetching and rendering inline in a host UI (e.g. via
+    react-plotly.js) without the iframe + content-type gymnastics that
+    a full HTML payload requires.
+    """
+    fig = _build_spectrum_figure(result, payload, meta=meta)
+    return fig.to_json()
