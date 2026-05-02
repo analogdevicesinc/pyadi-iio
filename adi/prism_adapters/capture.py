@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Analog Devices, Inc.
+#
+# SPDX short identifier: ADIBSD
 """Run-level captures: iio_info, dmesg, labgrid console.
 
 Each function returns ``bytes | None`` — None on graceful skip.
@@ -7,18 +10,25 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
+from collections.abc import Mapping
 from dataclasses import dataclass
+from typing import Any, ClassVar
+
+from pytest_prism import SessionContext
 
 
 def _open_iio_context(uri: str):
     import iio  # pylibiio
+
     return iio.Context(uri)
 
 
 def _walk_iio_context(uri: str) -> bytes:
     ctx = _open_iio_context(uri)
-    lines = [f"# IIO context (library walk) uri={uri}",
-             f"# description: {getattr(ctx, 'description', '')}"]
+    lines = [
+        f"# IIO context (library walk) uri={uri}",
+        f"# description: {getattr(ctx, 'description', '')}",
+    ]
     for k, v in dict(ctx.attrs).items():
         lines.append(f"{k}: {v}")
     for dev in ctx.devices:
@@ -36,7 +46,9 @@ def capture_iio_info(uri: str, *, timeout_s: float = 15.0) -> bytes | None:
     try:
         proc = subprocess.run(
             ["iio_info", "-u", uri],
-            capture_output=True, timeout=timeout_s, check=False,
+            capture_output=True,
+            timeout=timeout_s,
+            check=False,
         )
         if proc.returncode == 0 and proc.stdout:
             return proc.stdout
@@ -46,8 +58,7 @@ def capture_iio_info(uri: str, *, timeout_s: float = 15.0) -> bytes | None:
         )
     except FileNotFoundError:
         sys.stderr.write(
-            "prism-report: iio_info binary not found; falling back to library "
-            "walk\n"
+            "prism-report: iio_info binary not found; falling back to library " "walk\n"
         )
     except subprocess.TimeoutExpired:
         sys.stderr.write(
@@ -58,9 +69,7 @@ def capture_iio_info(uri: str, *, timeout_s: float = 15.0) -> bytes | None:
     try:
         return _walk_iio_context(uri)
     except Exception as exc:  # iio import error, connection refused, etc.
-        sys.stderr.write(
-            f"prism-report: could not capture iio_info: {exc}\n"
-        )
+        sys.stderr.write(f"prism-report: could not capture iio_info: {exc}\n")
         return None
 
 
@@ -71,17 +80,23 @@ def _strip_ts(line: bytes) -> bytes:
     return _TS_RE.sub(b"", line)
 
 
-def _ssh_dmesg(host: str, user: str, key: str | None,
-               timeout_s: float = 15.0) -> bytes | None:
-    cmd = ["ssh", "-o", "BatchMode=yes",
-           "-o", "StrictHostKeyChecking=accept-new",
-           "-o", f"ConnectTimeout={int(timeout_s)}"]
+def _ssh_dmesg(
+    host: str, user: str, key: str | None, timeout_s: float = 15.0
+) -> bytes | None:
+    cmd = [
+        "ssh",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "StrictHostKeyChecking=accept-new",
+        "-o",
+        f"ConnectTimeout={int(timeout_s)}",
+    ]
     if key:
         cmd += ["-i", key]
     cmd += [f"{user}@{host}", "dmesg"]
     try:
-        proc = subprocess.run(cmd, capture_output=True,
-                              timeout=timeout_s, check=False)
+        proc = subprocess.run(cmd, capture_output=True, timeout=timeout_s, check=False)
     except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
         sys.stderr.write(f"prism-report: dmesg via ssh failed: {exc}\n")
         return None
@@ -107,8 +122,9 @@ def _console_dmesg(labgrid_session) -> bytes | None:
     return result
 
 
-def capture_dmesg(*, iio_uri: str, via: str, ssh_user: str,
-                  ssh_key: str | None, labgrid_session) -> bytes | None:
+def capture_dmesg(
+    *, iio_uri: str, via: str, ssh_user: str, ssh_key: str | None, labgrid_session
+) -> bytes | None:
     if via == "none":
         return None
 
@@ -186,8 +202,9 @@ class LabgridSession:
         self._claimed_place = None
 
 
-def capture_boot_log(session: LabgridSession | None, *,
-                     place: str | None) -> bytes | None:
+def capture_boot_log(
+    session: LabgridSession | None, *, place: str | None
+) -> bytes | None:
     if session is None or place is None:
         return None
     try:
@@ -195,9 +212,9 @@ def capture_boot_log(session: LabgridSession | None, *,
         buf = session.read_console()
         if isinstance(buf, str):
             buf = buf.encode("utf-8", errors="replace")
-        header = (
-            f"# captured from labgrid place={place} at session-start\n"
-        ).encode("utf-8")
+        header = (f"# captured from labgrid place={place} at session-start\n").encode(
+            "utf-8"
+        )
         return header + buf
     except Exception as exc:
         sys.stderr.write(
@@ -225,9 +242,7 @@ def open_labgrid_session(*, no_labgrid: bool):
         # NOTE: replace with the actual remote-coordinator handshake.
         client = _build_real_labgrid_client()  # type: ignore[name-defined]
     except Exception as exc:
-        sys.stderr.write(
-            f"prism-report: labgrid coordinator unreachable: {exc}\n"
-        )
+        sys.stderr.write(f"prism-report: labgrid coordinator unreachable: {exc}\n")
         return None
     return LabgridSession(client)
 
@@ -236,6 +251,7 @@ def _build_real_labgrid_client():
     """Bench-time hook. Replace with the version-specific labgrid client
     construction. Kept as a separate function so tests can monkeypatch it."""
     from labgrid.remote.client import RemoteSession
+
     return RemoteSession()
 
 
@@ -262,17 +278,25 @@ def capture_session_pre(cfg, iio_uri: str) -> SessionPre:
         dmesg, method = None, "skipped"
     else:
         before_kw = dict(
-            iio_uri=iio_uri, via=cfg.dmesg_via,
-            ssh_user=cfg.dmesg_ssh_user, ssh_key=cfg.dmesg_ssh_key,
+            iio_uri=iio_uri,
+            via=cfg.dmesg_via,
+            ssh_user=cfg.dmesg_ssh_user,
+            ssh_key=cfg.dmesg_ssh_key,
             labgrid_session=sess,
         )
         dmesg = capture_dmesg(**before_kw)
-        method = _which_method(cfg.dmesg_via, iio_uri,
-                               labgrid_present=sess is not None,
-                               got=dmesg is not None)
+        method = _which_method(
+            cfg.dmesg_via,
+            iio_uri,
+            labgrid_present=sess is not None,
+            got=dmesg is not None,
+        )
     return SessionPre(
-        iio_info=info, dmesg=dmesg, boot_log=boot,
-        labgrid_session=sess, dmesg_capture_method=method,
+        iio_info=info,
+        dmesg=dmesg,
+        boot_log=boot,
+        labgrid_session=sess,
+        dmesg_capture_method=method,
     )
 
 
@@ -281,8 +305,10 @@ def capture_session_post(cfg, iio_uri: str, pre: SessionPre) -> SessionPost:
         post = None
     else:
         post = capture_dmesg(
-            iio_uri=iio_uri, via=cfg.dmesg_via,
-            ssh_user=cfg.dmesg_ssh_user, ssh_key=cfg.dmesg_ssh_key,
+            iio_uri=iio_uri,
+            via=cfg.dmesg_via,
+            ssh_user=cfg.dmesg_ssh_user,
+            ssh_key=cfg.dmesg_ssh_key,
             labgrid_session=pre.labgrid_session,
         )
     diff = None
@@ -299,3 +325,51 @@ def _which_method(via, iio_uri, *, labgrid_present, got):
     if via == "ssh" or (via == "auto" and iio_uri.startswith("ip:")):
         return "ssh"
     return "console"
+
+
+# --- pytest-prism SessionHook adapter ---
+
+
+class ADIDUTHook:
+    """SessionHook that captures iio_info, dmesg pre/post, and labgrid console.
+
+    Uses the cfg fields (`labgrid_place`, `no_labgrid`, `dmesg_via`,
+    `dmesg_ssh_user`, `dmesg_ssh_key`) carried by `Config` from
+    `pytest_prism.config`. The IIO URI is read from the `PYADI_IIO_URI` env var.
+    """
+
+    name: ClassVar[str] = "adi_dut"
+
+    def __init__(self) -> None:
+        self._pre: SessionPre | None = None
+        self._iio_uri: str | None = None
+
+    def _resolve_iio_uri(self) -> str | None:
+        import os
+
+        return os.environ.get("PYADI_IIO_URI") or None
+
+    def session_pre(self, ctx: SessionContext) -> Mapping[str, Any]:
+        self._iio_uri = self._resolve_iio_uri() or ""
+        self._pre = capture_session_pre(ctx.config, self._iio_uri)
+        if self._pre.iio_info is not None:
+            (ctx.hook_dir / "iio_info.txt").write_bytes(self._pre.iio_info)
+        if self._pre.boot_log is not None:
+            (ctx.hook_dir / "boot.log").write_bytes(self._pre.boot_log)
+        if self._pre.dmesg is not None:
+            (ctx.hook_dir / "dmesg_pre.log").write_bytes(self._pre.dmesg)
+        return {
+            "iio_uri": self._iio_uri,
+            "labgrid_place": ctx.config.labgrid_place,
+            "dmesg_capture_method": self._pre.dmesg_capture_method,
+        }
+
+    def session_post(self, ctx: SessionContext) -> Mapping[str, Any]:
+        if self._pre is None:
+            self._pre = SessionPre(None, None, None, None, "skipped")
+        post = capture_session_post(ctx.config, self._iio_uri or "", self._pre)
+        if post.dmesg_post is not None:
+            (ctx.hook_dir / "dmesg_post.log").write_bytes(post.dmesg_post)
+        if post.dmesg_diff is not None:
+            (ctx.hook_dir / "dmesg_diff.log").write_bytes(post.dmesg_diff)
+        return {"dmesg_post_captured": post.dmesg_post is not None}
