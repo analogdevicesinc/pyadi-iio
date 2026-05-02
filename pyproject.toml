@@ -44,6 +44,12 @@ namespaces = true
 [project.scripts]
 pyadi-iio-mcp = "adi.mcp_server:main"
 
+[project.entry-points."pytest_prism.renderers"]
+"adi.iq" = "adi.prism_adapters.iq:IQRenderer"
+
+[project.entry-points."pytest_prism.session_hooks"]
+"adi_dut" = "adi.prism_adapters.capture:ADIDUTHook"
+
 [project.optional-dependencies]
 jesd = [
     "paramiko"
@@ -53,6 +59,7 @@ mcp = [
     "numpy",
 ]
 prism_report = [
+    "pytest-prism>=0.1,<0.2",
     "plotly >= 5.0",
     "pyyaml >= 5.4",
 ]
