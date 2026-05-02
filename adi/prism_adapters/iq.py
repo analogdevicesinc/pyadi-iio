@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Analog Devices, Inc.
+#
+# SPDX short identifier: ADIBSD
 """IQ analyzer + spectrum renderer for the pytest-prism plugin.
 
 Bundles the genalyzer Fourier-Analysis call and the Plotly figure builder
@@ -23,11 +26,13 @@ from pathlib import Path
 from typing import Any, ClassVar
 
 import numpy as np
+from pytest_prism import RenderContext, RenderResult
 
 # ---------- BEGIN: contents from analyze.py ----------
 
 try:
     import genalyzer
+
     _GENALYZER: Any = genalyzer
 except ImportError:
     _GENALYZER = None
@@ -39,11 +44,11 @@ class PayloadError(ValueError):
 
 @dataclass(frozen=True)
 class Component:
-    label: str            # "carrier", "HD2", "IMD3 (2f1-f2)", "image", "DC"
+    label: str  # "carrier", "HD2", "IMD3 (2f1-f2)", "image", "DC"
     freq_hz: float
     power_dbfs: float
     power_dbc: float | None  # None for carrier; dBc relative to fundamental
-    order: int | None        # harmonic order; None for non-harmonics
+    order: int | None  # harmonic order; None for non-harmonics
 
 
 @dataclass(frozen=True)
@@ -144,13 +149,15 @@ def _genalyzer_analyze(iq: np.ndarray, fs: float, expected_tones: list[float]):
         # additional tones (two-tone case) genalyzer's single-fundamental
         # FA call doesn't enumerate them, so report the requested freq.
         freq_for_carrier = fund_freq if (i == 0 and fund_freq is not None) else float(f)
-        carriers.append(Component(
-            label="carrier",
-            freq_hz=freq_for_carrier,
-            power_dbfs=fund_dbfs if i == 0 else float("nan"),
-            power_dbc=None,
-            order=None,
-        ))
+        carriers.append(
+            Component(
+                label="carrier",
+                freq_hz=freq_for_carrier,
+                power_dbfs=fund_dbfs if i == 0 else float("nan"),
+                power_dbc=None,
+                order=None,
+            )
+        )
     for k in (2, 3, 4, 5):
         key = f"{k}A:ffinal"
         f_h = fa.get(key)
@@ -159,13 +166,15 @@ def _genalyzer_analyze(iq: np.ndarray, fs: float, expected_tones: list[float]):
         amp = _safe_float(fa, f"{k}A:mag_dbfs")
         if amp is None:
             amp = _safe_float(fa, f"{k}A:mag_dbc")
-        harmonics.append(Component(
-            label=f"HD{k}",
-            freq_hz=float(f_h),
-            power_dbfs=amp if amp is not None else float("nan"),
-            power_dbc=_safe_float(fa, f"{k}A:mag_dbc"),
-            order=k,
-        ))
+        harmonics.append(
+            Component(
+                label=f"HD{k}",
+                freq_hz=float(f_h),
+                power_dbfs=amp if amp is not None else float("nan"),
+                power_dbc=_safe_float(fa, f"{k}A:mag_dbc"),
+                order=k,
+            )
+        )
     return freq, dbfs, carriers, harmonics, metrics
 
 
@@ -190,10 +199,14 @@ def analyze(payload: dict) -> AnalysisResult:
     if _GENALYZER is None or not expected_tones:
         freq, dbfs = _numpy_spectrum_complex(iq, fs)
         return AnalysisResult(
-            spectrum_freq_hz=freq, spectrum_dbfs=dbfs,
+            spectrum_freq_hz=freq,
+            spectrum_dbfs=dbfs,
             degraded=True,
-            notes=("genalyzer unavailable" if _GENALYZER is None
-                   else "no expected_tones supplied"),
+            notes=(
+                "genalyzer unavailable"
+                if _GENALYZER is None
+                else "no expected_tones supplied"
+            ),
         )
 
     try:
@@ -203,13 +216,17 @@ def analyze(payload: dict) -> AnalysisResult:
     except Exception as exc:
         freq, dbfs = _numpy_spectrum_complex(iq, fs)
         return AnalysisResult(
-            spectrum_freq_hz=freq, spectrum_dbfs=dbfs,
-            degraded=True, notes=f"genalyzer FA failed: {exc}",
+            spectrum_freq_hz=freq,
+            spectrum_dbfs=dbfs,
+            degraded=True,
+            notes=f"genalyzer FA failed: {exc}",
         )
 
     return AnalysisResult(
-        spectrum_freq_hz=freq, spectrum_dbfs=dbfs,
-        carriers=carriers, harmonics=harmonics,
+        spectrum_freq_hz=freq,
+        spectrum_dbfs=dbfs,
+        carriers=carriers,
+        harmonics=harmonics,
         sfdr_dbc=metrics.get("sfdr_dbc"),
         snr_db=metrics.get("snr_db"),
         sinad_db=metrics.get("sinad_db"),
@@ -217,6 +234,7 @@ def analyze(payload: dict) -> AnalysisResult:
         nsd_dbfs_per_hz=metrics.get("nsd_dbfs_per_hz"),
         degraded=False,
     )
+
 
 # ---------- END: contents from analyze.py ----------
 
@@ -243,9 +261,15 @@ _NSD_COLOR = "lightgray"
 def _vline(fig: "go.Figure", x: float, label: str, color: str, dash: str):
     fig.add_vline(x=x / 1e6, line_color=color, line_dash=dash, opacity=0.6)
     fig.add_annotation(
-        x=x / 1e6, y=1.0, xref="x", yref="paper",
-        text=label, showarrow=False, font=dict(size=10, color=color),
-        bgcolor="rgba(255,255,255,0.7)", borderpad=2,
+        x=x / 1e6,
+        y=1.0,
+        xref="x",
+        yref="paper",
+        text=label,
+        showarrow=False,
+        font=dict(size=10, color=color),
+        bgcolor="rgba(255,255,255,0.7)",
+        borderpad=2,
     )
 
 
@@ -267,8 +291,13 @@ def _format_metrics(r: AnalysisResult) -> str:
 def _format_params(params: dict) -> str:
     if not params:
         return ""
-    keys_of_interest = ("sample_rate", "tx_lo", "rx_lo",
-                        "tx_hardwaregain_chan0", "rx_hardwaregain_chan0")
+    keys_of_interest = (
+        "sample_rate",
+        "tx_lo",
+        "rx_lo",
+        "tx_hardwaregain_chan0",
+        "rx_hardwaregain_chan0",
+    )
     bits = []
     for k in keys_of_interest:
         if k in params:
@@ -276,47 +305,73 @@ def _format_params(params: dict) -> str:
     return " · ".join(bits)
 
 
-def _build_spectrum_figure(result: AnalysisResult, payload: dict, *,
-                           meta: dict[str, Any]) -> "go.Figure":
+def _build_spectrum_figure(
+    result: AnalysisResult, payload: dict, *, meta: dict[str, Any]
+) -> "go.Figure":
     """Build the annotated spectrum figure. Pure: numpy + Plotly types only."""
     fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=result.spectrum_freq_hz / 1e6,
-        y=result.spectrum_dbfs,
-        mode="lines", name="spectrum", line=dict(width=1),
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=result.spectrum_freq_hz / 1e6,
+            y=result.spectrum_dbfs,
+            mode="lines",
+            name="spectrum",
+            line=dict(width=1),
+        )
+    )
 
     for c in result.carriers:
-        _vline(fig, c.freq_hz,
-               f"f0={c.freq_hz/1e6:.3f} MHz · {c.power_dbfs:.1f} dBFS",
-               _CARRIER_COLOR, "solid")
+        _vline(
+            fig,
+            c.freq_hz,
+            f"f0={c.freq_hz / 1e6:.3f} MHz · {c.power_dbfs:.1f} dBFS",
+            _CARRIER_COLOR,
+            "solid",
+        )
     for h in result.harmonics:
-        _vline(fig, h.freq_hz,
-               f"{h.label} · {h.power_dbc:.1f} dBc"
-               if h.power_dbc is not None
-               else f"{h.label} · {h.power_dbfs:.1f} dBFS",
-               _HARMONIC_COLOR, "dash")
+        _vline(
+            fig,
+            h.freq_hz,
+            f"{h.label} · {h.power_dbc:.1f} dBc"
+            if h.power_dbc is not None
+            else f"{h.label} · {h.power_dbfs:.1f} dBFS",
+            _HARMONIC_COLOR,
+            "dash",
+        )
     for i in result.imd:
-        _vline(fig, i.freq_hz, f"{i.label} · {i.power_dbc:.1f} dBc",
-               _IMD_COLOR, "dot")
+        _vline(fig, i.freq_hz, f"{i.label} · {i.power_dbc:.1f} dBc", _IMD_COLOR, "dot")
     if result.image is not None:
-        _vline(fig, result.image.freq_hz,
-               f"image · {result.image.power_dbc:.1f} dBc",
-               _IMAGE_COLOR, "dash")
+        _vline(
+            fig,
+            result.image.freq_hz,
+            f"image · {result.image.power_dbc:.1f} dBc",
+            _IMAGE_COLOR,
+            "dash",
+        )
     if result.dc is not None:
-        _vline(fig, result.dc.freq_hz,
-               f"DC · {result.dc.power_dbfs:.1f} dBFS",
-               _DC_COLOR, "dash")
+        _vline(
+            fig,
+            result.dc.freq_hz,
+            f"DC · {result.dc.power_dbfs:.1f} dBFS",
+            _DC_COLOR,
+            "dash",
+        )
     if result.nsd_dbfs_per_hz is not None:
-        fig.add_hline(y=result.nsd_dbfs_per_hz, line_color=_NSD_COLOR,
-                      line_dash="dot", annotation_text="NSD",
-                      annotation_position="bottom right")
+        fig.add_hline(
+            y=result.nsd_dbfs_per_hz,
+            line_color=_NSD_COLOR,
+            line_dash="dot",
+            annotation_text="NSD",
+            annotation_position="bottom right",
+        )
 
     badge = ""
     if meta.get("test_failed"):
-        badge = (f"<span style='color:white;background:#c00;padding:2px 6px;"
-                 f"border-radius:3px;font-weight:bold;'>FAILED</span> "
-                 f"{meta.get('failure_summary', '')}")
+        badge = (
+            f"<span style='color:white;background:#c00;padding:2px 6px;"
+            f"border-radius:3px;font-weight:bold;'>FAILED</span> "
+            f"{meta.get('failure_summary', '')}"
+        )
 
     title = f"{meta.get('test_id', '?')} · {payload.get('classname', '?')}"
     params_line = _format_params(payload.get("params") or {})
@@ -329,35 +384,50 @@ def _build_spectrum_figure(result: AnalysisResult, payload: dict, *,
         title=dict(text=title, x=0.0, xanchor="left"),
         xaxis_title="Frequency (MHz)",
         yaxis_title="Power (dBFS)",
-        annotations=list(fig.layout.annotations) + [dict(
-            text=_format_metrics(result),
-            x=1.0, y=1.0, xref="paper", yref="paper",
-            xanchor="right", yanchor="top", showarrow=False,
-            bgcolor="rgba(255,255,255,0.85)",
-            bordercolor="#aaa", borderwidth=1, borderpad=6,
-            font=dict(family="monospace", size=11),
-        )],
+        annotations=list(fig.layout.annotations)
+        + [
+            dict(
+                text=_format_metrics(result),
+                x=1.0,
+                y=1.0,
+                xref="paper",
+                yref="paper",
+                xanchor="right",
+                yanchor="top",
+                showarrow=False,
+                bgcolor="rgba(255,255,255,0.85)",
+                bordercolor="#aaa",
+                borderwidth=1,
+                borderpad=6,
+                font=dict(family="monospace", size=11),
+            )
+        ],
         margin=dict(l=60, r=20, t=80, b=50),
     )
     if result.degraded and result.notes:
         fig.add_annotation(
-            text=f"⚠ {result.notes}", x=0.5, y=-0.15, xref="paper", yref="paper",
-            showarrow=False, font=dict(color="#c00"),
+            text=f"⚠ {result.notes}",
+            x=0.5,
+            y=-0.15,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            font=dict(color="#c00"),
         )
     return fig
 
 
-def render_spectrum(result: AnalysisResult, payload: dict, *,
-                    meta: dict[str, Any]) -> str:
+def render_spectrum(
+    result: AnalysisResult, payload: dict, *, meta: dict[str, Any]
+) -> str:
     """Render the annotated spectrum to a self-contained HTML string."""
     fig = _build_spectrum_figure(result, payload, meta=meta)
-    return fig.to_html(
-        include_plotlyjs="cdn", full_html=True, div_id="prism-spectrum"
-    )
+    return fig.to_html(include_plotlyjs="cdn", full_html=True, div_id="prism-spectrum")
 
 
-def render_spectrum_figure_json(result: AnalysisResult, payload: dict, *,
-                                meta: dict[str, Any]) -> str:
+def render_spectrum_figure_json(
+    result: AnalysisResult, payload: dict, *, meta: dict[str, Any]
+) -> str:
     """Render the same annotated spectrum as a Plotly figure JSON spec.
 
     Suitable for fetching and rendering inline in a host UI (e.g. via
@@ -367,12 +437,11 @@ def render_spectrum_figure_json(result: AnalysisResult, payload: dict, *,
     fig = _build_spectrum_figure(result, payload, meta=meta)
     return fig.to_json()
 
+
 # ---------- END: contents from render.py ----------
 
 
 # ---------- IQRenderer wrapper ----------
-
-from pytest_prism import RenderContext, RenderResult
 
 
 class IQRenderer:
@@ -394,7 +463,8 @@ class IQRenderer:
 
         iq_buf = io.BytesIO()
         np.savez_compressed(
-            iq_buf, iq=np.asarray(payload["iq"]),
+            iq_buf,
+            iq=np.asarray(payload["iq"]),
             fs=np.float64(payload["fs"]),
             expected_tones=np.array(payload.get("expected_tones") or []),
             domain=np.array(payload.get("domain", "complex")),
@@ -402,14 +472,17 @@ class IQRenderer:
         (ctx.case_dir / "iq.npz").write_bytes(iq_buf.getvalue())
 
         metrics = {
-            "sfdr_dbc": result.sfdr_dbc, "snr_db": result.snr_db,
-            "sinad_db": result.sinad_db, "thd_dbc": result.thd_dbc,
+            "sfdr_dbc": result.sfdr_dbc,
+            "snr_db": result.snr_db,
+            "sinad_db": result.sinad_db,
+            "thd_dbc": result.thd_dbc,
             "nsd_dbfs_per_hz": result.nsd_dbfs_per_hz,
             "test_metrics": payload.get("metrics", {}),
         }
         return RenderResult(
             files=[Path("spectrum.html"), Path("spectrum.json"), Path("iq.npz")],
-            metrics={k: float(v) for k, v in metrics.items()
-                     if isinstance(v, (int, float))},
+            metrics={
+                k: float(v) for k, v in metrics.items() if isinstance(v, (int, float))
+            },
             primary_artifact="spectrum.html",
         )
