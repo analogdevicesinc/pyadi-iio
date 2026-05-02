@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-REPO_ROOT = Path(__file__).resolve().parents[5]
+REPO_ROOT = Path(__file__).resolve().parents[4]
 THRESHOLDS = yaml.safe_load(
     (Path(__file__).parent / "thresholds.yaml").read_text()
 )
