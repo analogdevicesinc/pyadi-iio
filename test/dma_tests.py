@@ -337,15 +337,18 @@ def dds_loopback(
     print(s)
 
     if do_html_log and _prism_attach is not None:
-        _prism_attach("adi.iq", {
-            "iq": data,
-            "fs": RXFS,
-            "domain": "complex",
-            "expected_tones": [frequency],
-            "metrics": {"peak_min": peak_min},
-            "params": param_set,
-            "classname": classname,
-        })
+        _prism_attach(
+            "adi.iq",
+            {
+                "iq": data,
+                "fs": RXFS,
+                "domain": "complex",
+                "expected_tones": [frequency],
+                "metrics": {"peak_min": peak_min},
+                "params": param_set,
+                "classname": classname,
+            },
+        )
 
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
@@ -431,15 +434,18 @@ def dds_two_tone(
     print(s2)
 
     if do_html_log and _prism_attach is not None:
-        _prism_attach("adi.iq", {
-            "iq": data,
-            "fs": RXFS,
-            "domain": "complex",
-            "expected_tones": [frequency1, frequency2],
-            "metrics": {"peak_min1": peak_min1, "peak_min2": peak_min2},
-            "params": param_set,
-            "classname": classname,
-        })
+        _prism_attach(
+            "adi.iq",
+            {
+                "iq": data,
+                "fs": RXFS,
+                "domain": "complex",
+                "expected_tones": [frequency1, frequency2],
+                "metrics": {"peak_min1": peak_min1, "peak_min2": peak_min2},
+                "params": param_set,
+                "classname": classname,
+            },
+        )
 
     if (abs(frequency1 - tone_freqs[indx[0]]) <= (frequency1 * 0.01)) and (
         abs(frequency2 - tone_freqs[indx[1]]) <= (frequency2 * 0.01)
@@ -523,15 +529,18 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
     print(s)
     if do_html_log and _prism_attach is not None:
-        _prism_attach("adi.iq", {
-            "iq": data,
-            "fs": RXFS,
-            "domain": "complex",
-            "expected_tones": [frequency],
-            "metrics": {"peak_min": peak_min},
-            "params": param_set,
-            "classname": classname,
-        })
+        _prism_attach(
+            "adi.iq",
+            {
+                "iq": data,
+                "fs": RXFS,
+                "domain": "complex",
+                "expected_tones": [frequency],
+                "metrics": {"peak_min": peak_min},
+                "params": param_set,
+                "classname": classname,
+            },
+        )
 
     assert (frequency * 0.01) > diff
     assert tone_peaks[indx] > peak_min
@@ -645,15 +654,18 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     print(s)
 
     if do_html_log and _prism_attach is not None:
-        _prism_attach("adi.iq", {
-            "iq": data,
-            "fs": RXFS,
-            "domain": "complex",
-            "expected_tones": [fc],
-            "metrics": {},  # cw_loopback's pass/fail isn't dB-numeric
-            "params": param_set,
-            "classname": classname,
-        })
+        _prism_attach(
+            "adi.iq",
+            {
+                "iq": data,
+                "fs": RXFS,
+                "domain": "complex",
+                "expected_tones": [fc],
+                "metrics": {},  # cw_loopback's pass/fail isn't dB-numeric
+                "params": param_set,
+                "classname": classname,
+            },
+        )
 
     assert (fc * 0.01) > diff
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
@@ -730,15 +742,18 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     del sdr
     val, amp, freqs = spec.sfdr(data, fs=RXFS, plot=False)
     if do_html_log and _prism_attach is not None:
-        _prism_attach("adi.iq", {
-            "iq": data,
-            "fs": RXFS,
-            "domain": "complex",
-            "expected_tones": [fc],
-            "metrics": {"sfdr_dbc": val, "sfdr_min": sfdr_min},
-            "params": param_set,
-            "classname": classname,
-        })
+        _prism_attach(
+            "adi.iq",
+            {
+                "iq": data,
+                "fs": RXFS,
+                "domain": "complex",
+                "expected_tones": [fc],
+                "metrics": {"sfdr_dbc": val, "sfdr_min": sfdr_min},
+                "params": param_set,
+                "classname": classname,
+            },
+        )
     print("SFDR:", val, "dB")
     assert val > sfdr_min
 

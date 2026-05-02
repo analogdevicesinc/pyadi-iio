@@ -22,7 +22,6 @@ import pytest
 
 import adi
 
-
 # Register pytester here; pytest 9.x rejects `pytest_plugins` in non-rootdir
 # conftests. pytest-prism is now installed as an external package via entry point.
 pytest_plugins = ["pytester"]
