@@ -250,6 +250,21 @@ cn0579:
       - data_devices:
           - iio:device1
 
+swiot1l:
+  - swiot
+  - max14906
+  - adt75
+  - ad74413r
+  - pyadi_iio_class_support:
+      - swiot1l
+  - emulate:
+      - filename: swiot1l.xml
+      - data_devices:
+          - iio:device0
+          - iio:device1
+          - iio:device2
+          - iio:device3
+
 # SOMS
 adrv9361:
   - ad7291
@@ -824,6 +839,24 @@ adl8113:
       - adl8113
   - emulate:
       - filename: adl8113.xml
+
+ad74413r:
+    - ad74413r
+    - pyadi_iio_class_support:
+      - ad74413r
+    - emulate:
+      - filename: swiot1l.xml
+      - data_devices:
+          - iio:device3
+
+max14906:
+    - max14906
+    - pyadi_iio_class_support:
+      - max14906
+    - emulate:
+      - filename: swiot1l.xml
+      - data_devices:
+          - iio:device1
 
 ad7490:
   - ad7490

@@ -60,6 +60,7 @@ from adi.ad9434 import ad9434
 from adi.ad9467 import ad9467
 from adi.ad9625 import ad9625
 from adi.ad9680 import ad9680
+from adi.ad74413r import ad74413r
 from adi.ada4355 import ada4355
 from adi.ada4356_lidar import ada4356_lidar
 from adi.ada4961 import ada4961
@@ -139,10 +140,12 @@ from adi.ltc2983 import ltc2983
 from adi.max9611 import max9611
 from adi.max11205 import max11205
 from adi.max14001 import max14001
+from adi.max14906 import max14906
 from adi.max31855 import max31855
 from adi.max31865 import max31865
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
+from adi.swiot1l import swiot1l
 from adi.tdd import tdd
 from adi.tddn import tddn
 
