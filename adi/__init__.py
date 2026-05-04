@@ -111,6 +111,7 @@ from adi.fmcomms5 import FMComms5
 from adi.fmcomms11 import FMComms11
 from adi.gen_mux import genmux
 from adi.hmcad15xx import hmcad15xx
+from adi.trigger_detection import trigger_detection
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2387 import ltc2387
