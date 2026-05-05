@@ -149,6 +149,7 @@ Supported Devices
    adi.max31855
    adi.max31865
    adi.max9611
+   adi.tmc5240
 
    adi.one_bit_adc_dac
    adi.tdd
