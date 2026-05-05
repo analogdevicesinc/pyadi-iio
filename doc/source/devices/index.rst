@@ -98,6 +98,7 @@ Supported Devices
    adi.adl5240
    adi.adl5960
    adi.adl8113
+   adi.admt4000
    adi.admv8818
    adi.adpd1080
    adi.adpd188
