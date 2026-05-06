@@ -347,7 +347,7 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.admt4000.admt4000">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.admt4000.</span></span><span class="sig-name descname"><span class="pre">admt4000</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.admt4000.admt4000" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
-<p>ADMT4000 True power-on multiturn sensor</p>
+<p>ADMT4000 True power-on multiturn sensor.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.admt4000.admt4000.angle_filter_enable">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">angle_filter_enable</span></span><a class="headerlink" href="#adi.admt4000.admt4000.angle_filter_enable" title="Link to this definition"></a></dt>
@@ -403,8 +403,7 @@ Content on this topic
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.admt4000.admt4000.harmonics">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">harmonics</span></span><a class="headerlink" href="#adi.admt4000.admt4000.harmonics" title="Link to this definition"></a></dt>
-<dd><p>ADMT4000 1st, 2nd, 3rd, and 8th harmonic correction values.</p>
-<p>Passed as list of tuples of (magnitude, phase).</p>
+<dd><p>ADMT4000 1st, 2nd, 3rd, and 8th harmonic correction values. Passed as list of tuples of (magnitude, phase).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -462,7 +461,7 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.admt4000.admt4000ard2z">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.admt4000.</span></span><span class="sig-name descname"><span class="pre">admt4000ard2z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_dc_dc_after_reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_dc_charge_time_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_pulse_time_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.admt4000.admt4000ard2z" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.admt4000.admt_evb" title="adi.admt4000.admt_evb"><code class="xref py py-class docutils literal notranslate"><span class="pre">admt_evb</span></code></a></p>
-<p>ADMT4000ARD2Z ADMT4000 kit</p>
+<p>ADMT4000ARD2Z ADMT4000 kit.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.admt4000.admt4000ard2z.magnetic_reset">
 <span class="sig-name descname"><span class="pre">magnetic_reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.admt4000.admt4000ard2z.magnetic_reset" title="Link to this definition"></a></dt>
@@ -475,7 +474,7 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.admt4000.admt_evb">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.admt4000.</span></span><span class="sig-name descname"><span class="pre">admt_evb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.admt4000.admt_evb" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.shared_def" title="adi.rx_tx.shared_def"><code class="xref py py-class docutils literal notranslate"><span class="pre">shared_def</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
-<p>ADMTxxxx ARDUINO-Based Evaluation Board</p>
+<p>ADMTxxxx ARDUINO-Based Evaluation Board.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.admt4000.admt_evb.coil_reset">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coil_reset</span></span><a class="headerlink" href="#adi.admt4000.admt_evb.coil_reset" title="Link to this definition"></a></dt>
