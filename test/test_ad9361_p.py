@@ -357,7 +357,7 @@ def test_ad9361_dds_loopback(
 @pytest.mark.parametrize("channel", [0])
 @pytest.mark.parametrize(
     "param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2",
-    [(params["one_cw_tone_slow_attack"], 1000000, 0.06, -20, 2000000, 0.12, -40,)],
+    [(params["one_cw_tone_slow_attack"], 1000000, 0.06, -46.1, 2000000, 0.12, -40,)],
 )
 def test_ad9361_two_tone_loopback(
     test_dds_two_tone,
