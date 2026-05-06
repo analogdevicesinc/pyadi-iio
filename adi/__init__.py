@@ -92,6 +92,7 @@ from adi.adis16550 import adis16550
 from adi.adl5240 import adl5240
 from adi.adl5960 import adl5960
 from adi.adl8113 import adl8113
+from adi.admt4000 import admt4000, admt4000ard1z, admt4000ard2z
 from adi.admv8818 import admv8818
 from adi.adpd188 import adpd188
 from adi.adpd410x import adpd410x
@@ -145,6 +146,7 @@ from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.tdd import tdd
 from adi.tddn import tddn
+from adi.tmc5240 import tmc5240
 
 try:
     from adi.jesd import jesd

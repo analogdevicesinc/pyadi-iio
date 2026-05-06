@@ -877,3 +877,32 @@ ad7405:
       - filename: ad7405.xml
       - data_devices:
           - iio:device0
+
+admt4000:
+  - admt4000
+  - pyadi_iio_class_support:
+      - admt4000
+  - emulate:
+      - filename: admt4000.xml
+      - data_devices:
+          - iio:device1
+
+admt4000ard1z:
+  - admt4000
+  - tmc5240
+  - pyadi_iio_class_support:
+      - admt4000ard1z
+  - emulate:
+      - filename: admt4000.xml
+      - data_devices:
+          - iio:device1
+          - iio:device2
+
+admt4000ard2z:
+  - admt4000
+  - pyadi_iio_class_support:
+      - admt4000ard2z
+  - emulate:
+      - filename: admt4000.xml
+      - data_devices:
+          - iio:device1
