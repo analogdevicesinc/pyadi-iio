@@ -905,3 +905,12 @@ admt4000:
       - filename: admt4000.xml
       - data_devices:
           - iio:device0
+
+tmc5240:
+  - tmc5240
+  - pyadi_iio_class_support:
+      - tmc5240
+  - emulate:
+      - filename: tmc5240.xml
+      - data_devices:
+          - iio:device0
