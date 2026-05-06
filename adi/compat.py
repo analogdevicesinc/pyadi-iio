@@ -174,6 +174,12 @@ class compat_libiio_v0_tx:
     """Compatibility class for libiio v0.X TX."""
 
     def _tx_init_channels(self):
+        for m in dev._tx_channel_names:
+            v = dev._txdac.find_channel(m, True)
+            if not v:
+                raise Exception(f"Channel {m} not found")
+            v.enabled = False
+
         if self._complex_data:
             for m in self.tx_enabled_channels:
                 v = self._txdac.find_channel(self._tx_channel_names[m * 2], True)
