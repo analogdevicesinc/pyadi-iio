@@ -8,7 +8,7 @@ from adi.rx_tx import rx_tx
 
 try:
     import ad9361 as libad9361
-except ImportError:
+except (ImportError, AttributeError):
     libad9361 = None
 
 

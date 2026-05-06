@@ -48,8 +48,8 @@ def main():
     parser.add_argument(
         "--device_name",
         type=str,
-        choices=["ad3530r"],
-        help="The device name (Supported devices are ad3530r)",
+        choices=["ad3530r", "ad3531r"],
+        help="The device name (Supported devices are ad3530r, ad3531r)",
         default="ad3530r",
     )
 

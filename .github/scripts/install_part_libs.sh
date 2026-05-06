@@ -6,6 +6,7 @@ if [ -z "$LIBIIO_BRANCH" ]; then
 fi
 
 if [ "$LIBIIO_BRANCH" = "main" ]; then
+    echo "Using main branch of libiio, skipping libad9361-iio and libad9166-iio installation as they are unsupported on main."
     exit 0
 fi
 
@@ -43,4 +44,4 @@ sudo ldconfig
 cd ..
 rm -rf libad9166-iio
 
-pip install pylibiio==0.23.1
+pip install pylibiio>=0.23.1

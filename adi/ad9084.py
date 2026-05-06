@@ -8,7 +8,7 @@ from adi.adrv9002 import rx1, rx2, tx1, tx2
 from adi.context_manager import context_manager
 from adi.obs import obs, remap, tx_two
 from adi.rx_tx import rx_tx
-from adi.sync_start import sync_start
+from adi.sync_start import sync_start, sync_start_b
 
 
 def _map_to_dict(paths, ch):
@@ -56,7 +56,7 @@ def _sortconv(chans_names, noq=False, dds=False):
     return chans_names_out
 
 
-class ad9084(rx_tx, context_manager, sync_start):
+class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     """AD9084 Mixed-Signal Front End (MxFE)"""
 
     _complex_data = True
@@ -112,13 +112,9 @@ class ad9084(rx_tx, context_manager, sync_start):
         self._txdac = self._ctx.find_device(tx1_device_name)
         self._rxadc2 = self._ctx.find_device(rx2_device_name)
         self._txdac2 = self._ctx.find_device(tx2_device_name)
-        # Checks
-        for dev, name in zip(
-            [self._rxadc, self._txdac, self._rxadc2, self._txdac2],
-            [rx1_device_name, tx1_device_name, rx2_device_name, tx2_device_name],
-        ):
-            if dev is None:
-                raise Exception(f"No device found with name {name}")
+        if self._rxadc is None or self._txdac is None:
+            raise Exception("No AD9084 device found")
+        single_link = self._rxadc2 is None or self._txdac2 is None
 
         # Get DDC and DUC mappings
         paths = {}
@@ -132,27 +128,29 @@ class ad9084(rx_tx, context_manager, sync_start):
         for ch in self._rxadc.channels:
             if ch.scan_element and not ch.output:
                 self._rx_channel_names.append(ch._id)
-        for ch in self._rxadc2.channels:
-            if ch.scan_element and not ch.output:
-                self._rx2_channel_names.append(ch._id)
         for ch in self._txdac.channels:
             if ch.scan_element:
                 self._tx_channel_names.append(ch._id)
             else:
                 self._dds_channel_names.append(ch._id)
-        for ch in self._txdac2.channels:
-            if ch.scan_element:
-                self._tx2_channel_names.append(ch._id)
-            else:
-                self._dds2_channel_names.append(ch._id)
+        if not single_link:
+            for ch in self._rxadc2.channels:
+                if ch.scan_element and not ch.output:
+                    self._rx2_channel_names.append(ch._id)
+            for ch in self._txdac2.channels:
+                if ch.scan_element:
+                    self._tx2_channel_names.append(ch._id)
+                else:
+                    self._dds2_channel_names.append(ch._id)
 
         # Sort channel names
         self._rx_channel_names = _sortconv(self._rx_channel_names)
-        self._rx2_channel_names = _sortconv(self._rx2_channel_names)
         self._tx_channel_names = _sortconv(self._tx_channel_names)
-        self._tx2_channel_names = _sortconv(self._tx2_channel_names)
         self._dds_channel_names = _sortconv(self._dds_channel_names, dds=True)
-        self._dds2_channel_names = _sortconv(self._dds2_channel_names, dds=True)
+        if not single_link:
+            self._rx2_channel_names = _sortconv(self._rx2_channel_names)
+            self._tx2_channel_names = _sortconv(self._tx2_channel_names)
+            self._dds2_channel_names = _sortconv(self._dds2_channel_names, dds=True)
 
         # Map unique attributes to channel properties
         self._rx_fine_ddc_channel_names = []
@@ -175,19 +173,23 @@ class ad9084(rx_tx, context_manager, sync_start):
                         self._tx_fine_duc_channel_names += channels
 
         # Setup second DMA path
-        self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
-        setattr(ad9084, "rx1", rx1)
-        setattr(ad9084, "rx2", rx2)
-        remap(self._rx2, "rx_", "rx2_", type(self))
+        if not single_link:
+            self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
+            setattr(ad9084, "rx1", rx1)
+            setattr(ad9084, "rx2", rx2)
+            remap(self._rx2, "rx_", "rx2_", type(self))
 
-        self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
-        setattr(ad9084, "tx1", tx1)
-        setattr(ad9084, "tx2", tx2)
-        remap(self._tx2, "tx_", "tx2_", type(self))
-        remap(self._tx2, "dds_", "dds2_", type(self))
+            self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
+            setattr(ad9084, "tx1", tx1)
+            setattr(ad9084, "tx2", tx2)
+            remap(self._tx2, "tx_", "tx2_", type(self))
+            remap(self._tx2, "dds_", "dds2_", type(self))
 
         rx_tx.__init__(self)
         sync_start.__init__(self)
+        if not single_link:
+            sync_start_b.__init__(self)
+
         self.rx_buffer_size = 2 ** 16
 
     def _get_iio_attr_str_single(self, channel_name, attr, output):
@@ -279,6 +281,22 @@ class ad9084(rx_tx, context_manager, sync_start):
     def rx_main_nco_phases(self, value):
         self._set_iio_attr_int_vec(
             self._rx_coarse_ddc_channel_names, "main_nco_phase", False, value,
+        )
+
+    @property
+    def rx_main_tb1_6db_digital_gain_en(self):
+        """main_tb1_6db_digital_gain_en: Receive path coarse DDC NCO phases"""
+        return self._get_iio_attr_vec(
+            self._rx_coarse_ddc_channel_names, "main_tb1_6db_digital_gain_en", False
+        )
+
+    @rx_main_tb1_6db_digital_gain_en.setter
+    def rx_main_tb1_6db_digital_gain_en(self, value):
+        self._set_iio_attr_int_vec(
+            self._rx_coarse_ddc_channel_names,
+            "main_tb1_6db_digital_gain_en",
+            False,
+            value,
         )
 
     @property
@@ -458,6 +476,21 @@ class ad9084(rx_tx, context_manager, sync_start):
     @tx_ddr_offload.setter
     def tx_ddr_offload(self, value):
         self._set_iio_debug_attr_str("pl_ddr_fifo_enable", str(value * 1), self._txdac)
+
+    @property
+    def tx_b_ddr_offload(self):
+        """tx_b_ddr_offload: Enable DDR offload
+
+        When true the DMA will pass buffers into the BRAM FIFO for data repeating.
+        This is necessary when operating at high DAC sample rates. This can reduce
+        the maximum buffer size but data passed to DACs in cyclic mode will not
+        underflow due to memory bottlenecks.
+        """
+        return self._get_iio_debug_attr("pl_ddr_fifo_enable", self._txdac2)
+
+    @tx_b_ddr_offload.setter
+    def tx_b_ddr_offload(self, value):
+        self._set_iio_debug_attr_str("pl_ddr_fifo_enable", str(value * 1), self._txdac2)
 
     @property
     def rx_sample_rate(self):

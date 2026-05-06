@@ -50,7 +50,9 @@ extensions = [
     "ext_pyadi_iio",
 ]
 
-needs_extensions = {"adi_doctools": "0.3.36"}
+needs_extensions = {"adi_doctools": "0.4.21"}
+
+autodoc_mock_imports = ["fastmcp"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -65,6 +67,12 @@ coverage_show_missing_items = True
 coverage_ignore_classes = ["phy"]
 coverage_ignore_modules = ["test.dma_tests", "test.generics"]
 
+# Link check configuration
+linkcheck_ignore = [
+    r"_static/logos.*",
+    r"https://ez.analog.com.*",
+    r"https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_.*",
+]
 
 # -- External docs configuration ----------------------------------------------
 

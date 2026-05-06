@@ -16,7 +16,7 @@ classname = "adi.ad4000"
             1,
             1,
             0,
-            "_channel",
+            "voltage0",
         ),
     ],
 )

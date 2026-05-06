@@ -3,36 +3,69 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.rx_tx import rx_def
 
 # TODO: add support for events when libiio gains support for it
 
 
-class ad2s1210(rx, context_manager):
+class ad2s1210_position_channel(attribute):
+    """AD2S1210 position channel"""
+
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
+
+    @property
+    def raw(self) -> int:
+        """AD2S1210 position channel raw value"""
+        return self._get_iio_attr(self.name, "raw", False)
+
+    @property
+    def scale(self) -> float:
+        """AD2S1210 position channel scale"""
+        return float(self._get_iio_attr(self.name, "scale", False))
+
+
+class ad2s1210_velocity_channel(attribute):
+    """AD2S1210 velocity channel"""
+
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
+
+    @property
+    def raw(self) -> int:
+        """AD2S1210 velocity channel raw value"""
+        return self._get_iio_attr(self.name, "raw", False)
+
+    @property
+    def scale(self) -> float:
+        """AD2S1210 velocity channel scale"""
+        return float(self._get_iio_attr(self.name, "scale", False))
+
+
+class ad2s1210(rx_def):
     """
     AD2S1210 resolver to digital converter.
     """
 
-    _device_name = "ad2s1210"
+    compatible_parts = ["ad2s1210"]
+    _rx_data_device_name = "ad2s1210"
+    _control_device_name = "ad2s1210"
+    _complex_data = False
 
-    def __init__(self, uri=""):
-        context_manager.__init__(self, uri, self._device_name)
+    def __post_init__(self):
+        """Create custom position and velocity channel objects"""
 
-        self._rxadc = self._ctrl = self._ctx.find_device(self._device_name)
-        self._rx_channel_names = []
+        chan = self._ctrl.find_channel("angl0", False)
+        if chan is None:
+            raise Exception("angl0 channel not found")
+        self.position = ad2s1210_position_channel(self._ctrl, "angl0")
+        chan = self._ctrl.find_channel("anglvel0", False)
 
-        for ch in self._ctrl.channels:
-            name = ch.id
-
-            if name == "angl0":
-                self._rx_channel_names.append(name)
-                self.position = self._position_channel(self._ctrl, name)
-            elif name == "anglvel0":
-                self._rx_channel_names.append(name)
-                self.velocity = self._velocity_channel(self._ctrl, name)
-
-        rx.__init__(self)
+        if chan is None:
+            raise Exception("anglvel0 channel not found")
+        self.velocity = ad2s1210_velocity_channel(self._ctrl, "anglvel0")
 
     @property
     def excitation_frequency(self) -> int:
@@ -63,37 +96,3 @@ class ad2s1210(rx, context_manager):
         # `avail` will be a list of two int values.
         avail = self._get_iio_attr("angl0", "hysteresis_available", False)
         self._set_iio_attr("angl0", "hysteresis", False, avail[bool(value)])
-
-    class _position_channel(attribute):
-        """AD2S1210 channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self) -> int:
-            """AD2S1210 position channel raw value"""
-            return self._get_iio_attr(self.name, "raw", False)
-
-        @property
-        def scale(self) -> float:
-            """AD2S1210 position channel scale"""
-            return float(self._get_iio_attr(self.name, "scale", False))
-
-    class _velocity_channel(attribute):
-        """AD2S1210 channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self) -> int:
-            """AD2S1210 velocity channel raw value"""
-            return self._get_iio_attr(self.name, "raw", False)
-
-        @property
-        def scale(self) -> float:
-            """AD2S1210 velocity channel scale"""
-            return float(self._get_iio_attr(self.name, "scale", False))

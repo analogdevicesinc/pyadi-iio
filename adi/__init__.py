@@ -6,6 +6,7 @@ from adi.ad2s1210 import ad2s1210
 from adi.ad353xr import ad353xr
 from adi.ad405x import ad405x
 from adi.ad469x import ad469x
+from adi.ad514x import ad514x
 from adi.ad579x import ad579x
 from adi.ad717x import ad717x
 from adi.ad719x import ad719x
@@ -16,6 +17,7 @@ from adi.ad937x import ad9371, ad9375
 from adi.ad3552r import ad3552r
 from adi.ad3552r_hs import ad3552r_hs
 from adi.ad4020 import ad4000, ad4001, ad4002, ad4003, ad4020
+from adi.ad4080 import ad4080
 from adi.ad4110 import ad4110
 from adi.ad4130 import ad4130
 from adi.ad4170 import ad4170
@@ -23,6 +25,8 @@ from adi.ad4630 import ad4630, adaq42xx
 from adi.ad4858 import ad4858
 from adi.ad5592r import ad5592r
 from adi.ad5686 import ad5686
+from adi.ad5706r import ad5706r
+from adi.ad5710r import ad5710r
 from adi.ad5754r import ad5754r
 from adi.ad5940 import ad5940
 from adi.ad6676 import ad6676
@@ -30,6 +34,8 @@ from adi.ad7091rx import ad7091rx
 from adi.ad7124 import ad7124
 from adi.ad7134 import ad7134
 from adi.ad7291 import ad7291
+from adi.ad7405 import ad7405
+from adi.ad7490 import ad7490
 from adi.ad7606 import ad7606
 from adi.ad7689 import ad7689
 from adi.ad7746 import ad7746
@@ -54,13 +60,19 @@ from adi.ad9434 import ad9434
 from adi.ad9467 import ad9467
 from adi.ad9625 import ad9625
 from adi.ad9680 import ad9680
+from adi.ada4355 import ada4355
+from adi.ada4356_lidar import ada4356_lidar
 from adi.ada4961 import ada4961
 from adi.adaq8092 import adaq8092
 from adi.adar1000 import adar1000, adar1000_array
+from adi.adf4030 import adf4030
 from adi.adf4159 import adf4159
 from adi.adf4355 import adf4355
 from adi.adf4371 import adf4371
+from adi.adf4377 import adf4377
+from adi.adf4382 import adf4382
 from adi.adf5610 import adf5610
+from adi.adf5611 import adf5611
 from adi.adg2128 import adg2128
 from adi.adis16460 import adis16460
 from adi.adis16475 import adis16475
@@ -79,6 +91,7 @@ from adi.adis16507 import adis16507
 from adi.adis16550 import adis16550
 from adi.adl5240 import adl5240
 from adi.adl5960 import adl5960
+from adi.adl8113 import adl8113
 from adi.admv8818 import admv8818
 from adi.adpd188 import adpd188
 from adi.adpd410x import adpd410x
@@ -95,6 +108,7 @@ from adi.adxl345 import adxl345
 from adi.adxl355 import adxl355
 from adi.adxl380 import adxl380
 from adi.adxrs290 import adxrs290
+from adi.axi_aion_trig import axi_aion_trig
 from adi.cn0511 import cn0511
 from adi.cn0532 import cn0532
 from adi.cn0554 import cn0554
@@ -112,8 +126,10 @@ from adi.fmclidar1 import fmclidar1
 from adi.fmcomms5 import FMComms5
 from adi.fmcomms11 import FMComms11
 from adi.gen_mux import genmux
+from adi.hmc7044 import hmc7044
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
+from adi.ltc2378 import ltc2378
 from adi.ltc2387 import ltc2387
 from adi.ltc2499 import ltc2499
 from adi.ltc2664 import ltc2664
@@ -135,5 +151,5 @@ try:
 except ImportError:
     pass
 
-__version__ = "0.0.20"
+__version__ = "0.0.21"
 name = "Analog Devices Hardware Interfaces"

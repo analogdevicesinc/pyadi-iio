@@ -1,9 +1,14 @@
+import random
 import time
 from os import listdir
 from os.path import dirname, join, realpath
-from random import randint
 
 import pytest
+
+# Fixed seed so that pytest-xdist workers generate identical parametrize values
+# during collection, avoiding "Different tests were collected" errors.
+random.seed(42)
+randint = random.randint
 from numpy import floor
 
 hardware = "adrv9002"
@@ -297,8 +302,6 @@ def test_adrv9002_stream_profile_write_both(iio_uri):
 
 
 #########################################
-# It depends on test_adrv9002_nco_write_profile to be run first.
-# Maybe we should think in adding something like pytest-dependency
 @pytest.mark.lvds_test
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -314,6 +317,13 @@ def test_adrv9002_stream_profile_write_both(iio_uri):
 def test_adrv9002_nco(
     test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
 ):
+    import adi
+
+    # Load the NCO profile+stream so this test is self-contained
+    # and does not depend on test_adrv9002_nco_write_profile running first
+    sdr = adi.adrv9002(iio_uri)
+    sdr.write_stream_profile(nco_test_stream, nco_test_profile)
+    del sdr
     test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)
 
 

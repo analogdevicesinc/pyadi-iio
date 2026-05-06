@@ -41,9 +41,16 @@ include = ["adi"]
 exclude = ["test*"]
 namespaces = true
 
+[project.scripts]
+pyadi-iio-mcp = "adi.mcp_server:main"
+
 [project.optional-dependencies]
 jesd = [
     "paramiko"
+]
+mcp = [
+    "fastmcp",
+    "numpy",
 ]
 
 [project.urls]

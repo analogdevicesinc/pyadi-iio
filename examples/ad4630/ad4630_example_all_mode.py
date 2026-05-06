@@ -17,24 +17,34 @@ N = 65536  # Length of rx buffer
 
 
 def main():
-    """ Instantiate the device and set th parameters."""
+    """
+    Instantiate the device and set the parameters.
+
+    Supports all AD4630/AD4632 variants: 16-bit, 20-bit, and 24-bit.
+    Automatically detects and handles different output data modes:
+    - 20bit_diff, 24bit_diff: Pure differential modes
+    - 20bit_diff_8bit_cm, 24bit_diff_8bit_cm: Differential + common mode
+    - 16bit_diff_8bit_cm: 16-bit differential + common mode
+    - 30bit_avg: Averaged mode (all variants)
+    - 32bit_test_pattern: Test pattern mode
+    """
     adc = adi.ad4630(
         uri="ip:192.168.10.171", device_name=device_name
     )  # To connect via ip address
     adc.rx_buffer_size = N
     adc.sample_rate = fs
 
-    """sample_averaging is only supported by 30bit mode. and in this mode it cannot be OFF."""
+    """oversampling_ratio is only supported by 30bit mode. and in this mode it cannot be OFF."""
     if adc.output_data_mode == "30bit_avg":
-        adc.sample_averaging = 16
+        adc.chan0.oversampling_ratio = 16
 
     """ Prints Current output data mode"""
-    print(adc.output_data_mode)
+    print(f"Device: {device_name}, Output mode: {adc.output_data_mode}")
 
     """ Differential Channel attributes"""
     adc.chan0.calibscale = 1
     adc.chan0.calibbias = 2
-    if device_name == "ad4630-24":
+    if device_name in ["ad4630-24", "ad4630-20", "ad4632-20"]:
         adc.chan1.calibscale = 1
         adc.chan1.calibbias = 2
 
@@ -54,19 +64,22 @@ def main():
         diff_bits = 30
     elif adc.output_data_mode == "16bit_diff_8bit_cm":
         diff_bits = 16
+    elif adc.output_data_mode in ["20bit_diff", "20bit_diff_8bit_cm"]:
+        diff_bits = 20
     else:
         diff_bits = 24
 
     if adc.output_data_mode == "32bit_test_pattern":
-        test_pattern_analysis(data[0])
-        if device_name == "ad4630-24":
-            test_pattern_analysis(data[1])
+        test_pattern_analysis(data[0], "CHA")
+        if device_name in ["ad4630-24", "ad4630-20", "ad4632-20"]:
+            test_pattern_analysis(data[1], "CHB")
     else:
         analysis(diff_bits, data[0])
-        if device_name == "ad4630-24":
+        if device_name in ["ad4630-24", "ad4630-20", "ad4632-20"]:
             if (
                 adc.output_data_mode == "16bit_diff_8bit_cm"
                 or adc.output_data_mode == "24bit_diff_8bit_cm"
+                or adc.output_data_mode == "20bit_diff_8bit_cm"
             ):
                 analysis(diff_bits, data[2])
             else:
@@ -75,6 +88,7 @@ def main():
 
 def analysis(bits, op_data):
     """Does the SNR Analysis and plots FFT"""
+    print(f"\n=== Analysis using {bits}-bit resolution ===")
 
     adc_amplitude_adj = 2 ** (bits - 1)  # x**y is same as x^y
     adc_amplitude_peak = max(op_data) - min(op_data)
@@ -116,11 +130,10 @@ def analysis(bits, op_data):
     print("Lent of each captured array =", len(op_data))
 
 
-def test_pattern_analysis(data_op):
+def test_pattern_analysis(data_op, channel_name=""):
     """Perform analysis in 32bit test pattern output data mode."""
 
-    print("32 bit pattern data from CHA = " + hex(data_op[int(N / 2)]))
-    print("32 bit pattern data from CHB = " + hex(data_op[int(N / 2)]))
+    print(f"32 bit pattern data from {channel_name} = " + hex(data_op[int(N / 2)]))
     custom_pattern_data = 0xFADB02EC
     custom_pattern_data_hex = hex(custom_pattern_data)
     custom_pattern_data_hex_3 = "0x" + custom_pattern_data_hex[2:4]

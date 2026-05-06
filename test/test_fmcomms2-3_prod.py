@@ -6,7 +6,7 @@ import adi
 
 from .conftest import disable_prod_tests
 
-hardware = ["packrf", "adrv9361", "fmcomms3", "ad9361"]
+hardware = ["packrf", "adrv9361", "fmcomms2-3", "ad9361"]
 classname = "adi.ad9361"
 
 ##################################

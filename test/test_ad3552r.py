@@ -4,7 +4,7 @@ hardware = ["ad3552r", "ad3542r"]
 classname = "adi.ad3552r"
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats, sub_channel",

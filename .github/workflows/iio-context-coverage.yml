@@ -1,0 +1,89 @@
+name: IIO Context Coverage
+
+on:
+  pull_request_target:
+    branches: [main]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  detect-new-classes:
+    runs-on: ubuntu-22.04
+    # Fork PRs are gated by the `external-pr` GitHub environment, which
+    # requires a maintainer to manually review and approve every run before
+    # any code from the PR head is checked out or executed. Do not remove
+    # the environment gate below without re-evaluating this suppression.
+    # codeql[actions/unsafe-checkout]
+    environment:
+      name: ${{ github.event.pull_request.head.repo.fork && 'external-pr' || 'internal-pr' }}
+    outputs:
+      has_new_classes: ${{ steps.detect.outputs.has_new_classes }}
+      hardware_names: ${{ steps.detect.outputs.hardware_names }}
+      new_classes: ${{ steps.detect.outputs.new_classes }}
+    steps:
+      # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 0
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install PyYAML
+        run: pip install pyyaml
+      - name: Detect new device classes
+        id: detect
+        run: python .github/scripts/detect_new_classes.py
+
+  context-coverage:
+    runs-on: ubuntu-22.04
+    needs: detect-new-classes
+    if: needs.detect-new-classes.outputs.has_new_classes == 'true'
+    # Fork PRs are gated by the `external-pr` GitHub environment, which
+    # requires a maintainer to manually review and approve every run before
+    # any code from the PR head is checked out or executed. Do not remove
+    # the environment gate below without re-evaluating this suppression.
+    # codeql[actions/unsafe-checkout]
+    environment:
+      name: ${{ github.event.pull_request.head.repo.fork && 'external-pr' || 'internal-pr' }}
+    steps:
+      # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          bash ./.github/scripts/install_pydeps.sh
+          bash ./.github/scripts/install_libiio.sh
+          bash ./.github/scripts/install_part_libs.sh
+          bash ./.github/scripts/install_iioemu.sh
+          sudo apt install -y python3-tk
+      - name: Run emulated tests with IIO coverage
+        run: |
+          pip uninstall -y paramiko
+          pytest -vs --emu --iio-coverage --cov=adi -k 'not prod' --skip-scan
+      - name: Generate filtered coverage report
+        run: |
+          python .github/scripts/format_coverage_report.py \
+            --hardware-names '${{ needs.detect-new-classes.outputs.hardware_names }}' \
+            --new-classes '${{ needs.detect-new-classes.outputs.new_classes }}' \
+            --coverage-folder iio_coverage_results \
+            --output coverage_pr_comment.md
+      - name: Post coverage report as PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: iio-context-coverage
+          message-path: coverage_pr_comment.md
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue: ${{ github.event.pull_request.number }}

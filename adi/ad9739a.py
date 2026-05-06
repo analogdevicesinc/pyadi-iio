@@ -2,24 +2,17 @@
 #
 # SPDX short identifier: ADIBSD
 
-from adi.context_manager import context_manager
-from adi.rx_tx import tx
+from adi.rx_tx import tx_def
 
 
-class ad9739a(tx, context_manager):
+class ad9739a(tx_def):
     """ AD9739A 14-Bit, 2.5 GSPS, RF Digital-to-Analog Converter """
 
+    compatible_parts = ["ad9739a"]
+    _tx_data_device_name = "axi-ad9739a-hpc"
+    _control_device_name = "axi-ad9739a-hpc"
     _complex_data = False
     _tx_channel_names = ["voltage0"]
-    _device_name = ""
-
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._txdac = self._ctx.find_device("axi-ad9739a-hpc")
-
-        tx.__init__(self)
 
     @property
     def sample_rate(self):

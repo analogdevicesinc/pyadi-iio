@@ -16,7 +16,7 @@ classname = "adi.ad4002"
             1,
             1,
             0,
-            "_channel",
+            "voltage0",
         ),
     ],
 )

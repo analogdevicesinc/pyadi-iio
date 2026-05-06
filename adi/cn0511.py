@@ -8,7 +8,7 @@ from adi.context_manager import context_manager
 
 try:
     import ad9166 as libad9166  # helper library for calibration function
-except ImportError:
+except (ImportError, AttributeError):
     libad9166 = None
 
 

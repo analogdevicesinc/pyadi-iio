@@ -3,28 +3,15 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
+from adi.device_base import rx_chan_comp_no_buff
 
 
-class ltc2314_14(attribute, context_manager):
-    """LTC2314-14 14-Bit, 4.5Msps Serial Sampling ADC
+class ltc2314_14_channel(attribute):
+    """LTC2314-14 Channel"""
 
-    parameters:
-        uri: type=string
-            URI of IIO context with LTC2314-14
-    """
-
-    _device_name = ""
-
-    def __init__(self, uri=""):
-        context_manager.__init__(self, uri, self._device_name)
-
-        # Find the main and trigger devices
-        self._ctrl = self._ctx.find_device("ltc2314-14")
-
-        # Raise an exception if the device isn't found
-        if not self._ctrl:
-            raise Exception("LTC2314-14 device not found")
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
 
     @property
     def lsb_mv(self):
@@ -36,3 +23,17 @@ class ltc2314_14(attribute, context_manager):
         """ Get the voltage reading from the ADC """
         code = self._get_iio_attr("voltage0", "raw", False, self._ctrl)
         return code * self.lsb_mv / 1000
+
+
+class ltc2314_14(rx_chan_comp_no_buff):
+    """LTC2314-14 14-Bit, 4.5Msps Serial Sampling ADC
+
+    parameters:
+        uri: type=string
+            URI of IIO context with LTC2314-14
+    """
+
+    compatible_parts = ["ltc2314-14"]
+    _device_name = ""
+    _complex_data = False
+    _channel_def = ltc2314_14_channel

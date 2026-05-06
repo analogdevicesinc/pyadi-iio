@@ -3,63 +3,84 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import tx
+from adi.device_base import tx_chan_comp
 
 
-class ad353xr(tx, context_manager):
+class ad353xr_channel(attribute):
+    """AD353xr channel"""
+
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
+
+    @property
+    def input_register(self):
+        """AD353xr channel input register value"""
+        return self._get_iio_attr(self.name, "input_register", True)
+
+    @input_register.setter
+    def input_register(self, value):
+        self._set_iio_attr(self.name, "input_register", True, str(int(value)))
+
+    @property
+    def raw(self):
+        """AD353xr channel raw value"""
+        return self._get_iio_attr(self.name, "raw", True)
+
+    @raw.setter
+    def raw(self, value):
+        self._set_iio_attr(self.name, "raw", True, str(int(value)))
+
+    @property
+    def offset(self):
+        """AD353xr channel offset"""
+        return self._get_iio_attr(self.name, "offset", True)
+
+    @property
+    def scale(self):
+        """AD353xr channel scale"""
+        return self._get_iio_attr(self.name, "scale", True)
+
+    @property
+    def operating_mode_avail(self):
+        """AD353xr channel operating mode settings"""
+        return self._get_iio_attr_str(self.name, "operating_mode_available", True)
+
+    @property
+    def operating_mode(self):
+        """AD353xr channel operating mode"""
+        return self._get_iio_attr_str(self.name, "operating_mode", True)
+
+    @operating_mode.setter
+    def operating_mode(self, value):
+        if value in self.operating_mode_avail:
+            self._set_iio_attr(self.name, "operating_mode", True, value)
+        else:
+            raise ValueError(
+                "Error: Operating mode not supported \nUse one of: "
+                + str(self.operating_mode_avail)
+            )
+
+
+class ad353xr(tx_chan_comp):
     """ AD353xr DAC """
 
-    _complex_data = False
     channel = []  # type: ignore
+    compatible_parts = ["ad3530r", "ad3531r"]
     _device_name = ""
+    _complex_data = False
+    _channel_def = ad353xr_channel
 
-    def __init__(self, uri="", device_name=""):
-        """Constructor for AD353xr class."""
-        context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = ["ad3530r"]
-
-        self._ctrl = None
-
-        if not device_name:
-            device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception(
-                    f"Not a compatible device: {device_name}. Supported device names "
-                    f"are: {','.join(compatible_parts)}"
-                )
-
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._txdac = device
-                break
-
-        if not self._ctrl:
-            raise Exception("Error in selecting matching device")
-
-        if not self._txdac:
-            raise Exception("Error in selecting matching device")
-
+    def __post_init__(self):
+        """Post-initialization to populate output_bits list."""
         self._output_bits = []
         for ch in self._ctrl.channels:
-            name = ch.id
             self._output_bits.append(ch.data_format.bits)
-            self._tx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-            setattr(self, name, self._channel(self._ctrl, name))
-
-        tx.__init__(self)
 
     @property
     def output_bits(self):
         """AD353xr channel-wise number of output bits list"""
         return self._output_bits
-
-    ### Add device attributes here ###
 
     @property
     def sampling_frequency(self):
@@ -207,63 +228,3 @@ class ad353xr(tx, context_manager):
                 "Error: Mux output option not supported \nUse one of: "
                 + str(self.mux_out_select_avail)
             )
-
-    ############################################################################
-
-    class _channel(attribute):
-        """AD353xr channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        ### Add channel attributes here ###
-        @property
-        def input_register(self):
-            """AD353xr channel input register value"""
-            return self._get_iio_attr(self.name, "input_register", True)
-
-        @input_register.setter
-        def input_register(self, value):
-            self._set_iio_attr(self.name, "input_register", True, str(int(value)))
-
-        @property
-        def raw(self):
-            """AD353xr channel raw value"""
-            return self._get_iio_attr(self.name, "raw", True)
-
-        @raw.setter
-        def raw(self, value):
-            self._set_iio_attr(self.name, "raw", True, str(int(value)))
-
-        @property
-        def offset(self):
-            """AD353xr channel offset"""
-            return self._get_iio_attr(self.name, "offset", True)
-
-        @property
-        def scale(self):
-            """AD353xr channel scale"""
-            return self._get_iio_attr(self.name, "scale", True)
-
-        @property
-        def operating_mode_avail(self):
-            """AD353xr channel operating mode settings"""
-            return self._get_iio_attr_str(self.name, "operating_mode_available", True)
-
-        @property
-        def operating_mode(self):
-            """AD353xr channel operating mode"""
-            return self._get_iio_attr_str(self.name, "operating_mode", True)
-
-        @operating_mode.setter
-        def operating_mode(self, value):
-            if value in self.operating_mode_avail:
-                self._set_iio_attr(self.name, "operating_mode", True, value)
-            else:
-                raise ValueError(
-                    "Error: Operating mode not supported \nUse one of: "
-                    + str(self.operating_mode_avail)
-                )
-
-        #####################################################################

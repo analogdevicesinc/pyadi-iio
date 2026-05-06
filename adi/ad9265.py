@@ -2,25 +2,18 @@
 #
 # SPDX short identifier: ADIBSD
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
-class ad9265(rx, context_manager):
+class ad9265(rx_def):
 
     """AD9265 High-Speed ADC"""
 
+    compatible_parts = ["axi-ad9265-core-lpc"]
     _complex_data = False
     _rx_channel_names = ["voltage0"]
-    _device_name = ""
-
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._rxadc = self._ctx.find_device("axi-ad9265-core-lpc")
-
-        rx.__init__(self)
+    _rx_data_device_name = "axi-ad9265-core-lpc"
+    _control_device_name = "axi-ad9265-core-lpc"
 
     @property
     def test_mode(self):

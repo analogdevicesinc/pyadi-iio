@@ -1,7 +1,7 @@
 Quick Start
 ===============
 
-Before installing pyadi-iio make sure you have `libiio <https://github.com/analogdevicesinc/libiio>`_ and `its python bindings <https://github.com/analogdevicesinc/libiio/blob/master/bindings/python/iio.py>`_ installed. Since libiio v0.21, the libiio python bindings have been available on pypi and conda. The conda package includes the built library but the pypi install will require that it is installed beforehand. If you install pyadi-iio directly from pypi or conda they will automatically install the python bindings for libiio (pylibiio).
+Before installing pyadi-iio make sure you have `libiio <https://github.com/analogdevicesinc/libiio>`_ and `its python bindings <https://github.com/analogdevicesinc/libiio/blob/main/bindings/python/README.md>`_ installed. Since libiio v0.21, the libiio python bindings have been available on pypi and conda. The conda package includes the built library but the pypi install will require that it is installed beforehand. If you install pyadi-iio directly from pypi or conda they will automatically install the python bindings for libiio (pylibiio).
 
 .. note::
 
@@ -38,6 +38,8 @@ Note that this is only needed for the ADRV9009-ZU11EG multi-SOM configuration.
 
     export PYTHONPATH=$PYTHONPATH:/usr/lib/python{PYTHON VERSION}/site-packages
 
+  Python packages under the exported path are also inherited by virtual environments.
+
 Using Virtual Environments
 --------------------------
 
@@ -46,6 +48,10 @@ It is recommended to use virtual environments when installing pyadi-iio. This wi
 .. code-block:: bash
 
   python3 -m venv /path/to/new/virtual/environment
+
+.. note::
+
+  To inherit system packages, such as libiio python binding, either set ``PYTHONPATH`` described earlier, or use ``--system-site-packages`` if ``iio`` is already on path.
 
 To activate the virtual environment run:
 
@@ -84,7 +90,7 @@ For those who use the Anaconda or Conda environments, it is possible to install 
 Install Checks
 --------------
 
-For check for libiio with the following from a command prompt or terminal:
+Check for libiio with the following from a command prompt or terminal:
 
 .. code-block:: bash
 
@@ -110,3 +116,6 @@ If that worked, try the follow to see if pyadi-iio is there:
   '0.0.5'
   >>> adi.name
   'Analog Devices Hardware Interfaces'
+
+When using virtual environments, ``iio`` can be imported from outside but not from inside by default because virtual environments do not inherit system packages.
+Either install the python environment with ``--system-site-packages`` to inherit all system packages or set ``PYTHONPATH`` environment variable to inherit from some paths.

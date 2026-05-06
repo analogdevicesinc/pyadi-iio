@@ -39,6 +39,10 @@ class lm75(context_manager, attribute):
                 else:
                     index += 1
 
+        self._ch_name = self._ctrl.channels[
+            0
+        ]._id  # handle minor discrepancies in channel name
+
     @property
     def update_interval(self):
         """Update Interval"""
@@ -55,27 +59,27 @@ class lm75(context_manager, attribute):
     @property
     def input(self):
         """LM75 temperature input value"""
-        return self._get_iio_attr("temp1", "input", False)
+        return self._get_iio_attr(self._ch_name, "input", False)
 
     @property
     def max(self):
         """LM75 temperature max value"""
-        return self._get_iio_attr("temp1", "max", False)
+        return self._get_iio_attr(self._ch_name, "max", False)
 
     @max.setter
     def max(self, value):
         """LM75 temperature max value"""
-        return self._set_iio_attr("temp1", "max", False, value)
+        return self._set_iio_attr(self._ch_name, "max", False, value)
 
     @property
     def max_hyst(self):
         """LM75 max_hyst value"""
-        return self._get_iio_attr("temp1", "max_hyst", False)
+        return self._get_iio_attr(self._ch_name, "max_hyst", False)
 
     @max_hyst.setter
     def max_hyst(self, value):
         """LM75 max_hyst value"""
-        return self._set_iio_attr("temp1", "max_hyst", False, value)
+        return self._set_iio_attr(self._ch_name, "max_hyst", False, value)
 
     def __call__(self):
         """Utility function, returns deg. C"""

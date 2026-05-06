@@ -27,7 +27,6 @@ class ad5592r(rx, context_manager):
 
     _device_name = ""
     _complex_data = False
-    channel = []
 
     def __repr__(self):
         retstr = f"""
@@ -62,32 +61,35 @@ ad5592r(uri="{self.uri}, device_name={self._device_name})"
                 self._rxadc = device
                 buffers_avail = any([c.scan_element for c in self._rxadc.channels])
                 if not buffers_avail:
-                    delattr(self, "rx")
+                    self.rx = None
                 break
 
         self.channel = []
-        self._rx_channel_names = []
+        if buffers_avail:
+            self._rx_channel_names = []
 
         # Dynamically get channels after the index
         for ch in self._ctrl.channels:
             name = ch._id
             output = ch._output
             if name == "temp":
-                setattr(self, name, self.channel_temp(self._ctrl, name, output))
+                setattr(self, name, self._channel_temp(self._ctrl, name, output))
             else:
-                if output is True:
+                if output is True and "voltage" in name:
                     setattr(
-                        self, name + "_dac", self.channel_dac(self._ctrl, name, output)
+                        self, name + "_dac", self._channel_dac(self._ctrl, name, output)
                     )
-                else:
-                    self._rx_channel_names.append(name)
-                    self.channel.append(self.channel_adc(self._ctrl, name, output))
+                if output is False and "voltage" in name:
+                    if buffers_avail:
+                        self._rx_channel_names.append(name)
+                    self.channel.append(self._channel_adc(self._ctrl, name, output))
                     setattr(
-                        self, name + "_adc", self.channel_adc(self._ctrl, name, output)
+                        self, name + "_adc", self._channel_adc(self._ctrl, name, output)
                     )
-        rx.__init__(self)
+        if buffers_avail:
+            rx.__init__(self)
 
-    class channel_adc(attribute):
+    class _channel_adc(attribute):
         """AD5592R Input Voltage Channels"""
 
         # AD559XR ADC channel
@@ -131,7 +133,7 @@ ad5592r(uri="{self.uri}, device_name={self._device_name})"
                 self.raw = int(float(mV) / float(self.scale))
             return self.raw * self.scale
 
-    class channel_dac(channel_adc):
+    class _channel_dac(_channel_adc):
         """AD5592R Output Voltage Channels
         (Add setter to raw property)"""
 
@@ -148,7 +150,7 @@ ad5592r(uri="{self.uri}, device_name={self._device_name})"
         def raw(self, value):
             self._set_iio_attr(self.name, "raw", self._output, value)
 
-    class channel_temp(attribute):
+    class _channel_temp(attribute):
         """AD5592R Temperature Channel"""
 
         # AD559XR voltage channel

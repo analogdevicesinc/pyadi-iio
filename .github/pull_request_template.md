@@ -1,41 +1,50 @@
 # Description
 
-Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
+Summarize the change and the motivation. Link the issue this fixes.
 
 Fixes # (issue)
 
 ## Type of change
 
-Please delete options that are not relevant.
-
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+- [ ] Bug fix
+- [ ] New device class interface
+- [ ] New feature on an existing class
+- [ ] Breaking change
+- [ ] Documentation only
+- [ ] Test or CI only
 
 # How has this been tested?
 
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
+State explicitly whether this was tested against **real hardware**, an **emulated context** (iio-emu), or **not run**. Name the part(s) and the context URI or board used.
 
-- [ ] Test A
-- [ ] Test B
+- Hardware / emulation:
+- Commands run (e.g. `python3 -m pytest -k ad4080 --adi-hw-map`):
+- Result:
 
-**Test Configuration**:
-* Hardware:
+**Test configuration**
+* Kernel / libiio version:
 * OS:
+* FPGA carrier (if applicable):
 
 # Documentation
 
-If this is a new feature or example please mention or link any documentation. All new hardware interface classes require documentation.
+- [ ] No documentation change needed
+- [ ] Updated existing docs under `doc/source/`
+- [ ] Added a new device page and linked it from the relevant toctree
 
-# Checklist:
+# New device class interfaces
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have signed off all commits and they contain "Signed-off by: <insert name>"
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published in downstream modules
+Skip this section if the PR does not add a new device class.
+
+- [ ] Class extends one of the common base classes in `adi.device_base` (`rx_chan_comp`, `tx_chan_comp`, or a `_no_buff` variant). If not, explain why in the description. See the [Device Base Classes](https://analogdevicesinc.github.io/pyadi-iio/dev/device_base.html) developer doc page.
+- [ ] `compatible_parts` lists every part number this class supports
+- [ ] Part numbers added to `supported_parts.md` (verify with `invoke checkparts`)
+- [ ] Emulation context (xml_gen, not iio_genxml) added under `test/emu/` and referenced from a test
+- [ ] Tests added that run against the emulation context in CI
+
+# Checklist
+
+- [ ] `invoke precommit` passes locally
+- [ ] All commits are signed off (`Signed-off-by: Name <email>`)
+- [ ] No new warnings from the build or doc generation
+- [ ] Dependent changes in libiio, kernel, or HDL are merged and referenced

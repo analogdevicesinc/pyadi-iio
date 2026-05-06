@@ -259,6 +259,7 @@ def checkemulation(c):
         "adar1000",
         "adf4159",
         "adf4355",
+        "adf4382",
         "adf4371",
         "adf5610",
         "adg2128",
