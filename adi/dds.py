@@ -131,9 +131,11 @@ class dds(attribute):
             else:
                 A = "I"
                 B = "Q"
+            chan_name = f"TX{channel+1}_{A}_F1"
             chan = self._txdac.find_channel(
-                "TX" + str(channel + 1) + "_" + A + "_F1", True
+                chan_name, True
             )
+            assert chan, f"{chan_name} not found"
             if not chan and self._split_cores:
                 chan = self._txdac_chip_b.find_channel(
                     "TX"
@@ -164,7 +166,12 @@ class dds(attribute):
         else:
             if frequency < 0:
                 Exception("Frequency must be positive")
-            chan = self._txdac.find_channel(str(channel + 1) + "A", True)
+            chan_name = str(channel + 1) + "A"
+            chan = self._txdac.find_channel(chan_name, True)
+            if not chan:
+                chan_name = f"TX{channel+1}_I_F1"
+                chan = self._txdac.find_channel(chan_name, True)
+            assert chan, f"{chan_name} not found"
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale)

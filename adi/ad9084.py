@@ -187,16 +187,18 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
 
         # Setup second DMA path
         if not single_link:
-            self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names)
+            self._rx2 = obs(self._ctx, self._rxadc2, self._rx2_channel_names, complex_data = not noq)
             setattr(ad9084, "rx1", rx1)
             setattr(ad9084, "rx2", rx2)
             remap(self._rx2, "rx_", "rx2_", type(self))
 
-            self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names)
+            self._tx2 = tx_two(self._ctx, self._txdac2, self._tx2_channel_names, complex_data = not noq)
             setattr(ad9084, "tx1", tx1)
             setattr(ad9084, "tx2", tx2)
             remap(self._tx2, "tx_", "tx2_", type(self))
             remap(self._tx2, "dds_", "dds2_", type(self))
+
+
 
         rx_tx.__init__(self)
         sync_start.__init__(self)
