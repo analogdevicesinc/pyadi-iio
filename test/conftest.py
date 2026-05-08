@@ -99,18 +99,28 @@ if _LABGRID_MODE:
     def labgrid_iio_uri(strategy, target):
         # `strategy` and `target` come from labgrid.pytestplugin (auto-
         # loaded via the pytest11 entry point when LG_ENV is set).
-        # BootFPGASoC, BootFPGASoCTFTP, and BootFabric all define
-        # Status.booted; transition() accepts the string form.
-        strategy.transition("booted")
-        net = target.get_resource("NetworkService")
-        if not net.address:
-            pytest.fail("labgrid NetworkService.address empty after boot")
-        uri = f"ip:{net.address}"
+        # `Status.shell` is preferred over `Status.booted` because
+        # BootFabric's shell transition runs `udhcpc -i eth0` and
+        # updates NetworkService.address to the real DHCP-assigned IP.
+        # BootFPGASoC's shell just activates the shell driver; the
+        # exporter's static NetworkService.address can be stale, so we
+        # always re-read the IP from the booted board's `ip addr`.
+        strategy.transition("shell")
 
-        # Strategies declare boot complete on the serial 'login:' marker,
-        # but the network stack (DHCP, link-up) lags by several seconds.
-        # Poll the IIO endpoint until it answers or 60s elapses so the
-        # first test doesn't race the boot.
+        shell = target.get_driver("CommandProtocol")
+        # `ip route get` returns the source IP for the default route —
+        # the address the board uses for outbound traffic, which is the
+        # correct one for the runner-to-board IIO connection.
+        out, _, rc = shell.run(
+            "ip -4 -o route get 1.1.1.1 | awk '{for(i=1;i<=NF;i++) if($i==\"src\") print $(i+1); exit}'"
+        )
+        ip = (out[0].strip() if out else "") if rc == 0 else ""
+        if not ip:
+            pytest.fail(f"could not extract IP from board (rc={rc} out={out!r})")
+        uri = f"ip:{ip}"
+
+        # Even with the right IP, IIO daemon on the board may need a
+        # few seconds after shell-up before it accepts connections.
         import time as _t
         import iio as _iio
         deadline = _t.time() + 60
