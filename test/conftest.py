@@ -84,6 +84,48 @@ def pytest_make_parametrize_id(val, argname):
 
 
 #########################################
+# Labgrid hardware-CI integration.
+#
+# Active only when LG_ENV is set (CI hardware runs).  When unset,
+# pytest-libiio's iio_uri fixture wins and the existing emu/scan path
+# is untouched.  See .github/workflows/hardware-test.yml.
+import os as _os
+
+_LABGRID_MODE = bool(_os.environ.get("LG_ENV"))
+
+if _LABGRID_MODE:
+
+    @pytest.fixture(scope="session")
+    def labgrid_iio_uri(strategy, target):
+        # `strategy` and `target` come from labgrid.pytestplugin (auto-
+        # loaded via the pytest11 entry point when LG_ENV is set).
+        # BootFPGASoC and BootFPGASoCTFTP both define Status.booted;
+        # transition() accepts the string form.
+        strategy.transition("booted")
+        net = target.get_resource("NetworkService")
+        if not net.address:
+            pytest.fail("labgrid NetworkService.address empty after boot")
+        yield f"ip:{net.address}"
+
+    @pytest.fixture(scope="function")
+    def iio_uri(request, labgrid_iio_uri):
+        # Skip when @iio_hardware names disjoint from the labgrid
+        # target's `features:` list — the labgrid env yaml is the
+        # source of truth for what's physically on the board.
+        marker = request.node.get_closest_marker("iio_hardware")
+        if marker and marker.args:
+            wanted = marker.args[0]
+            wanted = [wanted] if isinstance(wanted, str) else list(wanted)
+            features = request.getfixturevalue("target").features
+            if not (set(wanted) & set(features)):
+                pytest.skip(
+                    f"labgrid features {sorted(features)} disjoint from "
+                    f"@iio_hardware({wanted})"
+                )
+        return labgrid_iio_uri
+
+
+#########################################
 
 
 #########################################

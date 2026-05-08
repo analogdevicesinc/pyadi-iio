@@ -1,0 +1,182 @@
+name: Hardware Tests
+
+permissions:
+  contents: read
+  # `dorny/test-reporter` needs to create Check Runs for the per-leg
+  # test reports; these show as individual PR checks.
+  checks: write
+  pull-requests: write
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  COORDINATOR: 10.0.0.41:20408
+
+concurrency:
+  group: hw-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    # All hardware-test legs share a single self-hosted runner that
+    # talks to the coordinator over the private lab network and drives
+    # every place via labgrid RemotePlace + acquire/release.  Unlike
+    # pyadi-dt (which needs Vivado on each per-board runner), pyadi-iio
+    # tests are pure network IIO and don't care which physical host
+    # they execute from.
+    runs-on: [self-hosted, hw-pyadi-iio]
+    timeout-minutes: 3
+    outputs:
+      available_nodes: ${{ steps.probe.outputs.available_nodes }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap uv
+        run: bash .github/scripts/bootstrap-uv.sh
+
+      - id: probe
+        timeout-minutes: 2
+        env:
+          LABGRID_PIP: 'labgrid @ git+https://github.com/tfcollins/labgrid.git@tfcollins/plugin-support'
+        run: |
+          set -euo pipefail
+          MANIFEST=.github/hw-nodes.json
+          HOST="${COORDINATOR%%:*}"
+          PORT="${COORDINATOR##*:}"
+          if ! timeout 10 bash -c "</dev/tcp/$HOST/$PORT" 2>/dev/null; then
+            echo "Coordinator $COORDINATOR unreachable — marking all nodes unavailable." >&2
+            echo 'available_nodes=[]' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          export PATH="$HOME/.local/bin:$PATH"
+          # uv-managed persistent venv for labgrid-client.  Fresh hosts
+          # build it once (~10 s); subsequent runs skip straight to
+          # the probe.
+          VENV="$HOME/.cache/pyadi-iio-ci/labgrid-venv"
+          if [[ ! -x "$VENV/bin/labgrid-client" ]]; then
+            echo "Creating labgrid venv at $VENV" >&2
+            uv venv --quiet "$VENV"
+            uv pip install --quiet --python "$VENV/bin/python" "$LABGRID_PIP"
+          fi
+          LGCLIENT="$VENV/bin/labgrid-client"
+          echo "Using labgrid-client: $LGCLIENT" >&2
+          echo "--- places output ---" >&2
+          PLACES_OUT=$(timeout 30 "$LGCLIENT" -x "$COORDINATOR" places 2>&1 || true)
+          echo "$PLACES_OUT" >&2
+          echo "--- end places output ---" >&2
+          python3 - "$MANIFEST" "$PLACES_OUT" >> "$GITHUB_OUTPUT" <<'PY'
+          import json, sys
+          manifest = json.load(open(sys.argv[1]))
+          # `labgrid-client places` prints one place name per line.
+          # Filter out non-identifier lines (error banners, blanks).
+          raw = sys.argv[2]
+          places = {
+              line.strip()
+              for line in raw.splitlines()
+              if line.strip() and all(c.isalnum() or c in "-_" for c in line.strip())
+          }
+          avail = [n for n in manifest if n["place"] in places]
+          print("available_nodes=" + json.dumps(avail))
+          PY
+
+  hw-coord:
+    needs: preflight
+    if: needs.preflight.outputs.available_nodes != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ${{ fromJSON(needs.preflight.outputs.available_nodes) }}
+    name: hw-coord (${{ matrix.node.place }})
+    runs-on: [self-hosted, hw-pyadi-iio]
+    # Fork PRs are gated by the `external-pr` GitHub environment, which
+    # requires a maintainer to manually review and approve every run
+    # before any PR-head code is checked out or executed against lab
+    # hardware.  Internal PRs use `internal-pr` (no approval barrier).
+    environment:
+      name: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork && 'external-pr' || 'internal-pr' }}
+    timeout-minutes: 40
+    concurrency:
+      group: hw-coord-${{ matrix.node.place }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap uv
+        run: bash .github/scripts/bootstrap-uv.sh
+
+      - name: Install pyadi-iio into host venv
+        run: bash .github/scripts/install-pyadi-iio-venv.sh
+
+      - name: Acquire coordinator place
+        env:
+          LG_COORDINATOR: ${{ env.COORDINATOR }}
+        run: |
+          set -euo pipefail
+          LGCLIENT="$HOME/.cache/pyadi-iio-ci/venv/bin/labgrid-client"
+          "$LGCLIENT" -x "$LG_COORDINATOR" -p "${{ matrix.node.place }}" acquire
+
+      - name: Run coordinator-mode tests
+        env:
+          LG_COORDINATOR: ${{ env.COORDINATOR }}
+          LG_ENV: ${{ github.workspace }}/${{ matrix.node.env_remote }}
+        run: |
+          set -euo pipefail
+          # --skip-scan: pytest-libiio must not auto-scan the lab
+          #   network in coordinator mode; the iio_uri override in
+          #   test/conftest.py provides the URI after labgrid boot.
+          # -p no:cacheprovider: avoid cache writes into the runner's
+          #   shared workspace.
+          "$HOME/.cache/pyadi-iio-ci/venv/bin/pytest" \
+            -v -s --skip-scan -p no:cacheprovider \
+            -m "${{ matrix.node.marker }}" \
+            --junitxml=junit-hw-coord-${{ matrix.node.place }}.xml
+
+      - name: Release coordinator place
+        if: always()
+        env:
+          LG_COORDINATOR: ${{ env.COORDINATOR }}
+        run: |
+          set -euo pipefail
+          LGCLIENT="$HOME/.cache/pyadi-iio-ci/venv/bin/labgrid-client"
+          "$LGCLIENT" -x "$LG_COORDINATOR" -p "${{ matrix.node.place }}" release || true
+
+      - name: Publish hw-coord test results to PR
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Tests (hw-coord ${{ matrix.node.place }})
+          path: junit-hw-coord-${{ matrix.node.place }}.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Upload JUnit XML (standalone for PR comment aggregation)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-hw-coord-${{ matrix.node.place }}
+          path: junit-hw-coord-${{ matrix.node.place }}.xml
+          retention-days: 14
+          if-no-files-found: warn
+
+  publish-pr-test-summary:
+    name: PR Test Summary
+    needs: [hw-coord]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: junit-hw-*
+          path: junit
+          merge-multiple: true
+
+      - uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: 'junit/**/*.xml'
+          check_name: 'Hardware Test Results'
+          comment_mode: always
+          report_individual_runs: true
