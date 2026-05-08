@@ -11,10 +11,12 @@ set -euo pipefail
 
 VENV="$HOME/.cache/pyadi-iio-ci/venv"
 
-# Pinned to the tfcollins fork because it carries the plugin-support
-# patches the adi_lg_plugins strategies depend on.  Revisit when
-# upstream merges them.
-LABGRID_PIP='labgrid @ git+https://github.com/tfcollins/labgrid.git@tfcollins/plugin-support'
+# adi-labgrid-plugins registers custom resource classes (KuiperRelease,
+# VesyncPowerDriver, KuiperDLDriver, etc.) that the coordinator forwards
+# from the exporter when a place is acquired — without these, labgrid
+# fails place-resolution with InvalidConfigError.  It transitively pulls
+# in the tfcollins/plugin-support labgrid fork the strategies need.
+ADI_LG_PLUGINS_PIP='adi-labgrid-plugins @ git+https://github.com/analogdevicesinc/adi-labgrid-plugins.git'
 
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -28,4 +30,4 @@ fi
 uv pip install --quiet --python "$VENV/bin/python" \
     -e ".[jesd]" \
     -r requirements_dev.txt \
-    "$LABGRID_PIP"
+    "$ADI_LG_PLUGINS_PIP"
