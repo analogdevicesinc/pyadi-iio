@@ -23,7 +23,10 @@ targets:
       TFTPServerResource:
         address: 'auto'
         port: 3069
-        root: /var/lib/tftpboot
+        # Runner-writable location; TFTPServerDriver runs on the runner
+        # host and embeds 'auto' → runner IP into u-boot so the bq
+        # board fetches from <runner>:3069 regardless of path.
+        root: /tmp/pyadi-iio-tftpboot
     drivers:
       TFTPServerDriver: {}
       KuiperDLDriver: {}
