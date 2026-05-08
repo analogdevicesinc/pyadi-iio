@@ -16,7 +16,7 @@ VENV="$HOME/.cache/pyadi-iio-ci/venv"
 # from the exporter when a place is acquired — without these, labgrid
 # fails place-resolution with InvalidConfigError.  It transitively pulls
 # in the tfcollins/plugin-support labgrid fork the strategies need.
-ADI_LG_PLUGINS_PIP='adi-labgrid-plugins @ git+https://github.com/analogdevicesinc/adi-labgrid-plugins.git'
+ADI_LG_PLUGINS_PIP='adi-labgrid-plugins @ git+https://github.com/tfcollins/labgrid-plugins.git'
 
 export PATH="$HOME/.local/bin:$PATH"
 
