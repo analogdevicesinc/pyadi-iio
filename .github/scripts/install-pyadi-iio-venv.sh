@@ -16,7 +16,10 @@ VENV="$HOME/.cache/pyadi-iio-ci/venv"
 # from the exporter when a place is acquired — without these, labgrid
 # fails place-resolution with InvalidConfigError.  It transitively pulls
 # in the tfcollins/plugin-support labgrid fork the strategies need.
-ADI_LG_PLUGINS_PIP='adi-labgrid-plugins @ git+https://github.com/tfcollins/labgrid-plugins.git'
+# [kuiper] extra pulls in pytsk3 for ImageExtractor / KuiperDLDriver,
+# which BootFPGASoC[TFTP] strategies invoke during target construction.
+# pytsk3 has manylinux wheels so no libtsk-dev is needed at install time.
+ADI_LG_PLUGINS_PIP='adi-labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git'
 
 export PATH="$HOME/.local/bin:$PATH"
 
