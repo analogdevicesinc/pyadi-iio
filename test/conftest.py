@@ -108,20 +108,10 @@ if _LABGRID_MODE:
         yield f"ip:{net.address}"
 
     @pytest.fixture(scope="function")
-    def iio_uri(request, labgrid_iio_uri):
-        # Skip when @iio_hardware names disjoint from the labgrid
-        # target's `features:` list — the labgrid env yaml is the
-        # source of truth for what's physically on the board.
-        marker = request.node.get_closest_marker("iio_hardware")
-        if marker and marker.args:
-            wanted = marker.args[0]
-            wanted = [wanted] if isinstance(wanted, str) else list(wanted)
-            features = request.getfixturevalue("target").features
-            if not (set(wanted) & set(features)):
-                pytest.skip(
-                    f"labgrid features {sorted(features)} disjoint from "
-                    f"@iio_hardware({wanted})"
-                )
+    def iio_uri(labgrid_iio_uri):
+        # Per-board test selection is already handled by the workflow's
+        # `pytest -m <marker>` filter against the place's manifest entry,
+        # so no additional skip-logic is needed here.
         return labgrid_iio_uri
 
 
