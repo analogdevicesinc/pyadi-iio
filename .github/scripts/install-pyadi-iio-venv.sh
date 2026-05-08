@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Install pyadi-iio (editable) plus the labgrid coordinator client and
-# pytest plugins into a persistent uv-managed venv at
+# Install pyadi-iio (editable) plus dev/test requirements and the
+# labgrid coordinator client into a persistent uv-managed venv at
 # ~/.cache/pyadi-iio-ci/venv on the current runner host.
 #
 # Reused across runs so dependency resolution is paid once per host.
@@ -23,8 +23,9 @@ if [[ ! -x "$VENV/bin/python" ]]; then
     uv venv --quiet "$VENV"
 fi
 
+# requirements_dev.txt covers scipy/scapy/matplotlib/etc. that
+# test/conftest.py + test/rf/spec transitively import on collection.
 uv pip install --quiet --python "$VENV/bin/python" \
     -e ".[jesd]" \
-    "$LABGRID_PIP" \
-    pytest-libiio \
-    pytest-xdist
+    -r requirements_dev.txt \
+    "$LABGRID_PIP"
