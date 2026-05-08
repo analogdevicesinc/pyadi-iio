@@ -108,21 +108,38 @@ if _LABGRID_MODE:
         strategy.transition("shell")
 
         shell = target.get_driver("CommandProtocol")
-        # `ip route get` returns the source IP for the default route —
-        # the address the board uses for outbound traffic, which is the
-        # correct one for the runner-to-board IIO connection.
-        out, _, rc = shell.run(
-            "ip -4 -o route get 1.1.1.1 | awk '{for(i=1;i<=NF;i++) if($i==\"src\") print $(i+1); exit}'"
-        )
-        ip = (out[0].strip() if out else "") if rc == 0 else ""
+
+        # Poll the board for its actual DHCP-assigned IP. shell.run
+        # captures both stdout and stderr from the serial console, so
+        # transient errors like "RTNETLINK answers: Network is
+        # unreachable" can land in the output before the link is up;
+        # validate the line is dotted-quad before accepting it.
+        import re as _re
+        import time as _t
+        import iio as _iio
+
+        ipv4_re = _re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}$")
+        ip = ""
+        deadline = _t.time() + 60
+        while _t.time() < deadline:
+            out, _, _ = shell.run(
+                "ip -4 -o route get 1.1.1.1 2>/dev/null "
+                "| awk '{for(i=1;i<=NF;i++) if($i==\"src\") print $(i+1); exit}'"
+            )
+            for line in out or []:
+                line = line.strip()
+                if ipv4_re.match(line):
+                    ip = line
+                    break
+            if ip:
+                break
+            _t.sleep(2)
         if not ip:
-            pytest.fail(f"could not extract IP from board (rc={rc} out={out!r})")
+            pytest.fail("could not extract a valid IPv4 from board within 60s")
         uri = f"ip:{ip}"
 
         # Even with the right IP, IIO daemon on the board may need a
         # few seconds after shell-up before it accepts connections.
-        import time as _t
-        import iio as _iio
         deadline = _t.time() + 60
         last_err = None
         while _t.time() < deadline:

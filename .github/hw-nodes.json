@@ -1,10 +1,5 @@
 [
   {
-    "place": "bq",
-    "env_remote": "test/hw/env/bq.yaml",
-    "marker": "zynq_zc706_adv7511_adrv9371"
-  },
-  {
     "place": "mini2",
     "env_remote": "test/hw/env/mini2.yaml",
     "marker": "zynqmp_zcu102_rev10_ad9081_m8_l4_vcxo122p88"
