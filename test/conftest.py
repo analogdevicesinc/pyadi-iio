@@ -99,13 +99,33 @@ if _LABGRID_MODE:
     def labgrid_iio_uri(strategy, target):
         # `strategy` and `target` come from labgrid.pytestplugin (auto-
         # loaded via the pytest11 entry point when LG_ENV is set).
-        # BootFPGASoC and BootFPGASoCTFTP both define Status.booted;
-        # transition() accepts the string form.
+        # BootFPGASoC, BootFPGASoCTFTP, and BootFabric all define
+        # Status.booted; transition() accepts the string form.
         strategy.transition("booted")
         net = target.get_resource("NetworkService")
         if not net.address:
             pytest.fail("labgrid NetworkService.address empty after boot")
-        yield f"ip:{net.address}"
+        uri = f"ip:{net.address}"
+
+        # Strategies declare boot complete on the serial 'login:' marker,
+        # but the network stack (DHCP, link-up) lags by several seconds.
+        # Poll the IIO endpoint until it answers or 60s elapses so the
+        # first test doesn't race the boot.
+        import time as _t
+        import iio as _iio
+        deadline = _t.time() + 60
+        last_err = None
+        while _t.time() < deadline:
+            try:
+                _iio.Context(uri)
+                break
+            except Exception as e:
+                last_err = e
+                _t.sleep(2)
+        else:
+            pytest.fail(f"IIO context at {uri} unreachable within 60s: {last_err!r}")
+
+        yield uri
 
     @pytest.fixture(scope="function")
     def iio_uri(labgrid_iio_uri):
