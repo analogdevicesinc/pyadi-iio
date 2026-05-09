@@ -152,7 +152,19 @@ if _LABGRID_MODE:
         else:
             pytest.fail(f"IIO context at {uri} unreachable within 60s: {last_err!r}")
 
-        yield uri
+        try:
+            yield uri
+        finally:
+            # Power the board off so the lab doesn't sit on hot DUTs
+            # between CI sessions.  All three strategies in use
+            # (BootFPGASoC, BootFPGASoCTFTP, BootFabric) define
+            # Status.powered_off; swallow any cleanup error so it
+            # can't mask a real test failure.
+            try:
+                strategy.transition("powered_off")
+            except Exception as _e:
+                import warnings as _w
+                _w.warn(f"strategy power-off failed: {_e}")
 
     @pytest.fixture(scope="function")
     def iio_uri(labgrid_iio_uri):
