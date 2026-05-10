@@ -125,14 +125,18 @@ jobs:
           LG_ENV: ${{ github.workspace }}/${{ matrix.node.env_remote }}
         run: |
           set -euo pipefail
-          # --skip-scan: pytest-libiio must not auto-scan the lab
-          #   network in coordinator mode; the iio_uri override in
-          #   test/conftest.py provides the URI after labgrid boot.
+          # Discovery-driven selection: test/conftest.py's
+          # pytest_configure boots via labgrid, polls for IP/IIO
+          # readiness, and sets config.option.uri before pytest-libiio
+          # runs.  pytest-libiio's _contexts fixture then scans that
+          # URI, identifies the hardware against
+          # test/emu/hardware_map.yml, and skips any test whose
+          # @iio_hardware(...) decorator doesn't match.  No -m filter
+          # and no --skip-scan needed here.
           # -p no:cacheprovider: avoid cache writes into the runner's
           #   shared workspace.
           "$HOME/.cache/pyadi-iio-ci/venv/bin/pytest" \
-            -v -s --skip-scan -p no:cacheprovider \
-            -m "${{ matrix.node.marker }}" \
+            -v -s -p no:cacheprovider \
             --junitxml=junit-hw-coord-${{ matrix.node.place }}.xml
 
       - name: Release coordinator place

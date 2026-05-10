@@ -86,92 +86,118 @@ def pytest_make_parametrize_id(val, argname):
 #########################################
 # Labgrid hardware-CI integration.
 #
-# Active only when LG_ENV is set (CI hardware runs).  When unset,
-# pytest-libiio's iio_uri fixture wins and the existing emu/scan path
-# is untouched.  See .github/workflows/hardware-test.yml.
+# Active only when LG_ENV is set (CI hardware runs).  When unset, this
+# block is a no-op and the existing emu/unit-test path is untouched.
+#
+# Flow: pytest_configure boots the board via labgrid, polls for the
+# DHCP-assigned IP and the IIO daemon coming up, then sets
+# config.option.uri.  pytest-libiio's _contexts fixture (session-scope,
+# runs after pytest_configure) reads --uri, builds an iio.Context,
+# matches its devices against test/emu/hardware_map.yml, and skips any
+# test whose @iio_hardware(...) doesn't match the discovered hardware.
+# pytest_sessionfinish powers the board off after the last test.
 import os as _os
 
-_LABGRID_MODE = bool(_os.environ.get("LG_ENV"))
+_LG_ENV = _os.environ.get("LG_ENV")
+_lg_strategy = None  # captured in pytest_configure for sessionfinish teardown
 
-if _LABGRID_MODE:
 
-    @pytest.fixture(scope="session")
-    def labgrid_iio_uri(strategy, target):
-        # `strategy` and `target` come from labgrid.pytestplugin (auto-
-        # loaded via the pytest11 entry point when LG_ENV is set).
-        # `Status.shell` is preferred over `Status.booted` because
-        # BootFabric's shell transition runs `udhcpc -i eth0` and
-        # updates NetworkService.address to the real DHCP-assigned IP.
-        # BootFPGASoC's shell just activates the shell driver; the
-        # exporter's static NetworkService.address can be stale, so we
-        # always re-read the IP from the booted board's `ip addr`.
-        strategy.transition("shell")
+def _wait_for_ipv4(shell, timeout=60):
+    """Poll the booted board for a valid DHCP-assigned IPv4 address.
 
-        shell = target.get_driver("CommandProtocol")
+    shell.run() captures both stdout and stderr from the serial console,
+    so transient errors like "RTNETLINK answers: Network is unreachable"
+    can land in the output before the link is up — validate the line is
+    dotted-quad before accepting it.
+    """
+    import re
+    import time
 
-        # Poll the board for its actual DHCP-assigned IP. shell.run
-        # captures both stdout and stderr from the serial console, so
-        # transient errors like "RTNETLINK answers: Network is
-        # unreachable" can land in the output before the link is up;
-        # validate the line is dotted-quad before accepting it.
-        import re as _re
-        import time as _t
-        import iio as _iio
+    ipv4_re = re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}$")
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        out, _, _ = shell.run(
+            "ip -4 -o route get 1.1.1.1 2>/dev/null "
+            "| awk '{for(i=1;i<=NF;i++) if($i==\"src\") print $(i+1); exit}'"
+        )
+        for line in out or []:
+            line = line.strip()
+            if ipv4_re.match(line):
+                return line
+        time.sleep(2)
+    return ""
 
-        ipv4_re = _re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}$")
-        ip = ""
-        deadline = _t.time() + 60
-        while _t.time() < deadline:
-            out, _, _ = shell.run(
-                "ip -4 -o route get 1.1.1.1 2>/dev/null "
-                "| awk '{for(i=1;i<=NF;i++) if($i==\"src\") print $(i+1); exit}'"
-            )
-            for line in out or []:
-                line = line.strip()
-                if ipv4_re.match(line):
-                    ip = line
-                    break
-            if ip:
-                break
-            _t.sleep(2)
-        if not ip:
-            pytest.fail("could not extract a valid IPv4 from board within 60s")
-        uri = f"ip:{ip}"
 
-        # Even with the right IP, IIO daemon on the board may need a
-        # few seconds after shell-up before it accepts connections.
-        deadline = _t.time() + 60
-        last_err = None
-        while _t.time() < deadline:
-            try:
-                _iio.Context(uri)
-                break
-            except Exception as e:
-                last_err = e
-                _t.sleep(2)
-        else:
-            pytest.fail(f"IIO context at {uri} unreachable within 60s: {last_err!r}")
+def _wait_for_iio(uri, timeout=60):
+    """Poll iio.Context(uri) until it succeeds or the deadline elapses."""
+    import time
 
+    import iio
+
+    deadline = time.time() + timeout
+    last_err = None
+    while time.time() < deadline:
         try:
-            yield uri
-        finally:
-            # Power the board off so the lab doesn't sit on hot DUTs
-            # between CI sessions.  All three strategies in use
-            # (BootFPGASoC, BootFPGASoCTFTP, BootFabric) define
-            # Status.powered_off; swallow any cleanup error so it
-            # can't mask a real test failure.
-            try:
-                strategy.transition("powered_off")
-            except Exception as _e:
-                import warnings as _w
-                _w.warn(f"strategy power-off failed: {_e}")
+            iio.Context(uri)
+            return None
+        except Exception as e:
+            last_err = e
+            time.sleep(2)
+    return last_err
 
-    @pytest.fixture(scope="function")
-    def iio_uri(labgrid_iio_uri):
-        # Per-board test selection is already handled by the workflow's
-        # `pytest -m <marker>` filter against the place's manifest entry,
-        # so no additional skip-logic is needed here.
-        return labgrid_iio_uri
+
+def pytest_configure(config):
+    """When LG_ENV is set, boot the lab board and point pytest-libiio at it.
+
+    pytest-libiio reads --uri at session-fixture time (after
+    pytest_configure), so setting config.option.uri here is observed
+    by its _contexts fixture which then drives discovery-based test
+    selection.
+    """
+    global _lg_strategy
+    if not _LG_ENV:
+        return
+
+    from labgrid import Environment
+
+    env = Environment(_LG_ENV)
+    target = env.get_target("main")
+    _lg_strategy = target.get_driver("Strategy")
+
+    # `Status.shell` (rather than `Status.booted`) ensures BootFabric's
+    # udhcpc fixup_networking runs and BootFPGASoC's shell driver is
+    # active — both required so we can read the real DHCP IP below.
+    _lg_strategy.transition("shell")
+
+    shell = target.get_driver("CommandProtocol")
+    ip = _wait_for_ipv4(shell, timeout=60)
+    if not ip:
+        pytest.fail("could not extract a valid IPv4 from board within 60s")
+    uri = f"ip:{ip}"
+
+    err = _wait_for_iio(uri, timeout=60)
+    if err is not None:
+        pytest.fail(f"IIO context at {uri} unreachable within 60s: {err!r}")
+
+    config.option.uri = uri
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """Power the board off after the last test, regardless of pass/fail.
+
+    All three strategies in use (BootFPGASoC, BootFPGASoCTFTP,
+    BootFabric) define Status.powered_off so the same string transition
+    works across legs.  Cleanup errors are warned, never re-raised, so
+    a flaky power-off can't mask a real test failure.
+    """
+    if _lg_strategy is None:
+        return
+    try:
+        _lg_strategy.transition("powered_off")
+    except Exception as e:
+        import warnings
+
+        warnings.warn(f"strategy power-off failed: {e}")
 
 
 #########################################
