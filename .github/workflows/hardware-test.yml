@@ -178,10 +178,18 @@ jobs:
           # test/emu/hardware_map.yml, and skips any test whose
           # @iio_hardware(...) decorator doesn't match.  No -m filter
           # and no --skip-scan needed here.
+          #
           # -p no:cacheprovider: avoid cache writes into the runner's
           #   shared workspace.
+          # --reruns 2 --only-rerun "BrokenPipeError": Microblaze IIO
+          #   daemon on nuc occasionally drops connections under load,
+          #   surfacing as BrokenPipeError in iio.Context() / attr
+          #   reads.  Retry only that exact failure mode so transient
+          #   daemon hiccups don't fail the leg, but real assertion
+          #   failures stay visible.
           "$HOME/.cache/pyadi-iio-ci/venv/bin/pytest" \
             -v -s -p no:cacheprovider \
+            --reruns 2 --reruns-delay 5 --only-rerun "BrokenPipeError" \
             --junitxml=junit-hw-coord-${{ matrix.node.place }}.xml
 
       - name: Release coordinator place

@@ -30,7 +30,11 @@ fi
 
 # requirements_dev.txt covers scipy/scapy/matplotlib/etc. that
 # test/conftest.py + test/rf/spec transitively import on collection.
+# pytest-rerunfailures lets the workflow retry tests that fail with
+# Microblaze-IIO-daemon BrokenPipe drops on nuc without masking real
+# failures (filtered via --only-rerun in hardware-test.yml).
 uv pip install --quiet --python "$VENV/bin/python" \
     -e ".[jesd]" \
     -r requirements_dev.txt \
-    "$ADI_LG_PLUGINS_PIP"
+    "$ADI_LG_PLUGINS_PIP" \
+    pytest-rerunfailures
