@@ -146,18 +146,9 @@ def _wait_for_iio(uri, timeout=60):
     return last_err
 
 
-def pytest_configure(config):
-    """When LG_ENV is set, boot the lab board and point pytest-libiio at it.
-
-    pytest-libiio reads --uri at session-fixture time (after
-    pytest_configure), so setting config.option.uri here is observed
-    by its _contexts fixture which then drives discovery-based test
-    selection.
-    """
+def _do_labgrid_boot(config):
+    """One attempt at full labgrid boot + IP-readiness + URI publish."""
     global _lg_strategy
-    if not _LG_ENV:
-        return
-
     from labgrid import Environment
 
     env = Environment(_LG_ENV)
@@ -172,14 +163,46 @@ def pytest_configure(config):
     shell = target.get_driver("CommandProtocol")
     ip = _wait_for_ipv4(shell, timeout=60)
     if not ip:
-        pytest.fail("could not extract a valid IPv4 from board within 60s")
+        raise RuntimeError("could not extract a valid IPv4 from board within 60s")
     uri = f"ip:{ip}"
 
     err = _wait_for_iio(uri, timeout=60)
     if err is not None:
-        pytest.fail(f"IIO context at {uri} unreachable within 60s: {err!r}")
+        raise RuntimeError(f"IIO context at {uri} unreachable within 60s: {err!r}")
 
     config.option.uri = uri
+
+
+def pytest_configure(config):
+    """When LG_ENV is set, boot the lab board and point pytest-libiio at it.
+
+    pytest-libiio reads --uri at session-fixture time (after
+    pytest_configure), so setting config.option.uri here is observed
+    by its _contexts fixture which then drives discovery-based test
+    selection.
+
+    Wrapped in a small retry loop because the lab-side path is flaky:
+    mDNS resolution of `mini2`/`nuc` for the rfc2217 serial URL,
+    SSH ControlMaster bring-up to the exporter, etc. all surface as
+    transient socket.gaierror / connection errors that succeed on a
+    second try.
+    """
+    if not _LG_ENV:
+        return
+
+    import time as _t
+
+    attempts = 3
+    last_err = None
+    for i in range(1, attempts + 1):
+        try:
+            _do_labgrid_boot(config)
+            return
+        except Exception as e:
+            last_err = e
+            if i < attempts:
+                _t.sleep(10)
+    pytest.fail(f"labgrid boot failed after {attempts} attempts: {last_err!r}")
 
 
 def pytest_sessionfinish(session, exitstatus):
