@@ -33,8 +33,12 @@ fi
 # pytest-rerunfailures lets the workflow retry tests that fail with
 # Microblaze-IIO-daemon BrokenPipe drops on nuc without masking real
 # failures (filtered via --only-rerun in hardware-test.yml).
+# Pinned to <16 because v16+'s subprocess-based "rerun server"
+# segfaults inside pytest_runtest_protocol when the test session has
+# loaded the libiio C extension (and likely the labgrid pytest plugin).
+# v15 uses the simpler in-process rerun loop which works.
 uv pip install --quiet --python "$VENV/bin/python" \
     -e ".[jesd]" \
     -r requirements_dev.txt \
     "$ADI_LG_PLUGINS_PIP" \
-    pytest-rerunfailures
+    'pytest-rerunfailures<16'
