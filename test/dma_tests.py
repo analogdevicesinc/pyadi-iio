@@ -149,8 +149,16 @@ def dma_dac_zeros(uri, classname, channel):
     sdr = eval(classname + "(uri='" + uri + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
         sdr.loopback_chip_b = 1
-    else:
+    elif hasattr(sdr, "loopback"):
         sdr.loopback = 1
+    else:
+        # No TX->RX digital loopback on this device (e.g. AD9081 has
+        # RX->TX `loopback_mode`, which is different semantics).
+        # hasattr() before any assignment is reliable: Python's default
+        # __setattr__ would silently create an instance attribute on a
+        # bare assignment, so a post-write check would be a tautology.
+        del sdr
+        pytest.skip(f"{classname} does not support TX->RX digital loopback")
     sdr.tx_cyclic_buffer = True
     # Create a ramp signal with different values for I and Q
     sdr.tx_enabled_channels = None
@@ -193,8 +201,13 @@ def dma_loopback(uri, classname, channel):
     sdr = eval(classname + "(uri='" + uri + "')")
     if classname == "adi.FMComms5" and (channel in [2, 3]):
         sdr.loopback_chip_b = 1
-    else:
+    elif hasattr(sdr, "loopback"):
         sdr.loopback = 1
+    else:
+        # No TX->RX digital loopback on this device (e.g. AD9081 has
+        # RX->TX `loopback_mode`, which is different semantics).
+        del sdr
+        pytest.skip(f"{classname} does not support TX->RX digital loopback")
     sdr.tx_cyclic_buffer = True
     # Create a ramp signal with different values for I and Q
     start = 0

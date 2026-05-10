@@ -91,7 +91,7 @@ def test_ad9081_str_attr_err(
         ("tx_channel_nco_phases", -180000, 180000, 1, 1, 10),
         ("tx_main_nco_test_tone_scales", 0.0, 1.0, 0.01, 0.01, 10),
         ("tx_channel_nco_test_tone_scales", 0.0, 1.0, 0.01, 0.01, 10),
-        ("tx_main_ffh_index", 1, 31, 1, 0, 10),
+        ("tx_main_ffh_index", 0, 30, 1, 0, 10),
         ("tx_main_ffh_frequency", -6000000000, 6000000000, 1, 1, 10),
         ("tx_channel_nco_gain_scales", 0.0, 0.5, 0.01, 0.01, 10),
     ],
