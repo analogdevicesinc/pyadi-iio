@@ -110,13 +110,21 @@
 </li>
 <li><a class="reference internal" href="#dynamic-attributes">Dynamic Attributes</a><ul>
 <li><a class="reference internal" href="#adi.ad469x.ad469x_channel"><code class="docutils literal notranslate"><span class="pre">ad469x_channel</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad469x.ad469x_channel.calibbias"><code class="docutils literal notranslate"><span class="pre">ad469x_channel.calibbias</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad469x.ad469x_channel.calibscale"><code class="docutils literal notranslate"><span class="pre">ad469x_channel.calibscale</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad469x.ad469x_channel.offset"><code class="docutils literal notranslate"><span class="pre">ad469x_channel.offset</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad469x.ad469x_channel.oversampling_ratio"><code class="docutils literal notranslate"><span class="pre">ad469x_channel.oversampling_ratio</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad469x.ad469x_channel.raw"><code class="docutils literal notranslate"><span class="pre">ad469x_channel.raw</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad469x.ad469x_channel.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad469x_channel.sampling_frequency</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad469x.ad469x_channel.scale"><code class="docutils literal notranslate"><span class="pre">ad469x_channel.scale</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad469x.ad4695_channel"><code class="docutils literal notranslate"><span class="pre">ad4695_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad469x.ad4695_channel.calibbias"><code class="docutils literal notranslate"><span class="pre">ad4695_channel.calibbias</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad469x.ad4695_channel.calibscale"><code class="docutils literal notranslate"><span class="pre">ad4695_channel.calibscale</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad469x.ad4695_channel.offset"><code class="docutils literal notranslate"><span class="pre">ad4695_channel.offset</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad469x.ad4691_channel"><code class="docutils literal notranslate"><span class="pre">ad4691_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad469x.ad4691_channel.oversampling_ratio"><code class="docutils literal notranslate"><span class="pre">ad4691_channel.oversampling_ratio</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad469x.ad4691_channel.oversampling_ratio_available"><code class="docutils literal notranslate"><span class="pre">ad4691_channel.oversampling_ratio_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad469x.ad4691_channel.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad4691_channel.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad469x.ad4691_channel.scale"><code class="docutils literal notranslate"><span class="pre">ad4691_channel.scale</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -345,15 +353,11 @@ Content on this topic
 <h2>Class API<a class="headerlink" href="#class-api" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad469x">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.</span></span><span class="sig-name descname"><span class="pre">ad469x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad469x" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.</span></span><span class="sig-name descname"><span class="pre">ad469x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad469x" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
 <p>AD469x ADC.</p>
 <p>Supports the ad4695.c Linux driver family (ad4695/96/97/98) and the
-ad4691.c Linux driver family (ad4691/92/93/94). Both families share
-the same IIO interface for raw reads and buffered captures; optional
-per-channel attributes (offset, oversampling_ratio, sampling_frequency,
-calibscale, calibbias) are exposed where the underlying driver supports
-them and return safe defaults otherwise.</p>
+ad4691.c Linux driver family (ad4691/92/93/94).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.ad469x.channel">
 <span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad469x.channel" title="Link to this definition"></a></dt>
@@ -373,53 +377,22 @@ them and return safe defaults otherwise.</p>
 <p>The ad469x class supports a variable number of channels depending on the
 hardware configuration. Channel attributes are dynamically generated and
 available on an initiated object as attributes with names voltage0,
-voltage1, etc. They will be instances of the ad469x_channel class.</p>
-<p>Attributes that are not exposed by the underlying Linux driver are handled
-gracefully: reads return a safe default (<code class="docutils literal notranslate"><span class="pre">'0'</span></code> for offset, <code class="docutils literal notranslate"><span class="pre">None</span></code> for
-oversampling_ratio, sampling_frequency, calibscale, and calibbias) and
-writes are silently ignored.</p>
+voltage1, etc.</p>
+<p>The channel class is selected automatically based on the device name:</p>
+<ul class="simple">
+<li><p><strong>ad4695.c family</strong> (ad4695/96/97/98): channels are instances of
+<code class="docutils literal notranslate"><span class="pre">ad4695_channel</span></code>, which adds <code class="docutils literal notranslate"><span class="pre">offset</span></code>, <code class="docutils literal notranslate"><span class="pre">calibscale</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">calibbias</span></code> on top of the base attributes.</p></li>
+<li><p><strong>ad4691.c family</strong> (ad4691/92/93/94): channels are instances of
+<code class="docutils literal notranslate"><span class="pre">ad4691_channel</span></code>, which adds <code class="docutils literal notranslate"><span class="pre">oversampling_ratio</span></code>,
+<code class="docutils literal notranslate"><span class="pre">oversampling_ratio_available</span></code>, and <code class="docutils literal notranslate"><span class="pre">sampling_frequency</span></code> on top
+of the base attributes.</p></li>
+</ul>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad469x.ad469x_channel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad469x.</span></span><span class="sig-name descname"><span class="pre">ad469x_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad469x.ad469x_channel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
-<p>AD469x channel</p>
-<p>Supports both the ad4695.c family (ad4695/96/97/98) and the ad4691.c
-family (ad4691/92/93/94). Attributes that are not exposed by a given
-Linux driver are handled gracefully: reads return a sensible default
-and writes are silently ignored.</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad469x.ad469x_channel.calibbias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calibbias</span></span><a class="headerlink" href="#adi.ad469x.ad469x_channel.calibbias" title="Link to this definition"></a></dt>
-<dd><p>AD469x channel calibration bias (ad4695.c family only).</p>
-<p>Returns None for devices whose Linux driver does not expose this
-attribute (ad4691.c family: ad4691/92/93/94).</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad469x.ad469x_channel.calibscale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calibscale</span></span><a class="headerlink" href="#adi.ad469x.ad469x_channel.calibscale" title="Link to this definition"></a></dt>
-<dd><p>AD469x channel calibration scale (ad4695.c family only).</p>
-<p>Returns None for devices whose Linux driver does not expose this
-attribute (ad4691.c family: ad4691/92/93/94).</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad469x.ad469x_channel.offset">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.ad469x.ad469x_channel.offset" title="Link to this definition"></a></dt>
-<dd><p>AD469x channel offset.</p>
-<p>Returns 0 for devices whose Linux driver does not expose offset
-(ad4691.c family: ad4691/92/93/94).</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad469x.ad469x_channel.oversampling_ratio">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio</span></span><a class="headerlink" href="#adi.ad469x.ad469x_channel.oversampling_ratio" title="Link to this definition"></a></dt>
-<dd><p>AD469x channel oversampling ratio.</p>
-<p>Available in CNV burst mode (ad4691.c) or PWM-triggered mode
-(ad4695.c). Returns None when the current operating mode does
-not support oversampling.</p>
-</dd></dl>
-
+<p>AD469x base channel with attributes common to all parts.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad469x.ad469x_channel.raw">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad469x.ad469x_channel.raw" title="Link to this definition"></a></dt>
@@ -427,15 +400,65 @@ not support oversampling.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad469x.ad469x_channel.sampling_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad469x.ad469x_channel.sampling_frequency" title="Link to this definition"></a></dt>
-<dd><p>AD469x channel sampling frequency in Hz.</p>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="adi.ad469x.ad469x_channel.scale">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad469x.ad469x_channel.scale" title="Link to this definition"></a></dt>
 <dd><p>AD469x channel scale.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad469x.ad4695_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad469x.</span></span><span class="sig-name descname"><span class="pre">ad4695_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad469x.ad4695_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad469x.ad469x_channel" title="adi.ad469x.ad469x_channel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad469x_channel</span></code></a></p>
+<p>AD4695 channel with offset and calibration attributes (ad4695.c family).</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad469x.ad4695_channel.calibbias">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calibbias</span></span><a class="headerlink" href="#adi.ad469x.ad4695_channel.calibbias" title="Link to this definition"></a></dt>
+<dd><p>AD469x channel calibration bias.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad469x.ad4695_channel.calibscale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calibscale</span></span><a class="headerlink" href="#adi.ad469x.ad4695_channel.calibscale" title="Link to this definition"></a></dt>
+<dd><p>AD469x channel calibration scale.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad469x.ad4695_channel.offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.ad469x.ad4695_channel.offset" title="Link to this definition"></a></dt>
+<dd><p>AD469x channel offset.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad469x.ad4691_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad469x.</span></span><span class="sig-name descname"><span class="pre">ad4691_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad469x.ad4691_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adi.ad469x.ad469x_channel" title="adi.ad469x.ad469x_channel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad469x_channel</span></code></a></p>
+<p>AD4691 channel with oversampling and sampling frequency (ad4691.c family).</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad469x.ad4691_channel.oversampling_ratio">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio</span></span><a class="headerlink" href="#adi.ad469x.ad4691_channel.oversampling_ratio" title="Link to this definition"></a></dt>
+<dd><p>AD4691 channel oversampling ratio.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad469x.ad4691_channel.oversampling_ratio_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oversampling_ratio_available</span></span><a class="headerlink" href="#adi.ad469x.ad4691_channel.oversampling_ratio_available" title="Link to this definition"></a></dt>
+<dd><p>List of available oversampling ratios.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad469x.ad4691_channel.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad469x.ad4691_channel.sampling_frequency" title="Link to this definition"></a></dt>
+<dd><p>AD4691 channel sampling frequency in Hz.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad469x.ad4691_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad469x.ad4691_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>AD4691 channel scale (device-level, shared by all channels).</p>
 </dd></dl>
 
 </dd></dl>

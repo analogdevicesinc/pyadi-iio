@@ -25,14 +25,30 @@ Dynamic Attributes
 The ad469x class supports a variable number of channels depending on the
 hardware configuration. Channel attributes are dynamically generated and
 available on an initiated object as attributes with names voltage0,
-voltage1, etc. They will be instances of the ad469x_channel class.
+voltage1, etc.
 
-Attributes that are not exposed by the underlying Linux driver are handled
-gracefully: reads return a safe default (``'0'`` for offset, ``None`` for
-oversampling_ratio, sampling_frequency, calibscale, and calibbias) and
-writes are silently ignored.
+The channel class is selected automatically based on the device name:
+
+- **ad4695.c family** (ad4695/96/97/98): channels are instances of
+  ``ad4695_channel``, which adds ``offset``, ``calibscale``, and
+  ``calibbias`` on top of the base attributes.
+
+- **ad4691.c family** (ad4691/92/93/94): channels are instances of
+  ``ad4691_channel``, which adds ``oversampling_ratio``,
+  ``oversampling_ratio_available``, and ``sampling_frequency`` on top
+  of the base attributes.
 
 .. autoclass:: adi.ad469x.ad469x_channel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: adi.ad469x.ad4695_channel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: adi.ad469x.ad4691_channel
    :members:
    :undoc-members:
    :show-inheritance:
