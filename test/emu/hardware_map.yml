@@ -774,6 +774,15 @@ ad4170:
      - data_devices:
          - iio:device0
 
+ad4692:
+ - ad4692
+ - pyadi_iio_class_support:
+     - ad469x
+ - emulate:
+     - filename: ad4692.xml
+     - data_devices:
+         - iio:device0
+
 ad738x:
   - ad738x
   - pyadi_iio_class_support:
