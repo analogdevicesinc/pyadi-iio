@@ -1,0 +1,239 @@
+name: Hardware Tests
+
+permissions:
+  contents: read
+  # `dorny/test-reporter` needs to create Check Runs for the per-leg
+  # test reports; these show as individual PR checks.
+  checks: write
+  pull-requests: write
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  COORDINATOR: 10.0.0.41:20408
+
+concurrency:
+  group: hw-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    # All hardware-test legs share a single self-hosted runner that
+    # talks to the coordinator over the private lab network and drives
+    # every place via labgrid RemotePlace + acquire/release.  Unlike
+    # pyadi-dt (which needs Vivado on each per-board runner), pyadi-iio
+    # tests are pure network IIO and don't care which physical host
+    # they execute from.
+    runs-on: [self-hosted, hw-pyadi-iio]
+    timeout-minutes: 3
+    outputs:
+      available_nodes: ${{ steps.probe.outputs.available_nodes }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap uv
+        run: bash .github/scripts/bootstrap-uv.sh
+
+      - id: probe
+        timeout-minutes: 2
+        env:
+          LABGRID_PIP: 'labgrid @ git+https://github.com/tfcollins/labgrid.git@tfcollins/plugin-support'
+        run: |
+          set -euo pipefail
+          MANIFEST=.github/hw-nodes.json
+          HOST="${COORDINATOR%%:*}"
+          PORT="${COORDINATOR##*:}"
+          if ! timeout 10 bash -c "</dev/tcp/$HOST/$PORT" 2>/dev/null; then
+            echo "Coordinator $COORDINATOR unreachable — marking all nodes unavailable." >&2
+            echo 'available_nodes=[]' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          export PATH="$HOME/.local/bin:$PATH"
+          # uv-managed persistent venv for labgrid-client.  Fresh hosts
+          # build it once (~10 s); subsequent runs skip straight to
+          # the probe.
+          VENV="$HOME/.cache/pyadi-iio-ci/labgrid-venv"
+          if [[ ! -x "$VENV/bin/labgrid-client" ]]; then
+            echo "Creating labgrid venv at $VENV" >&2
+            uv venv --quiet "$VENV"
+            uv pip install --quiet --python "$VENV/bin/python" "$LABGRID_PIP"
+          fi
+          LGCLIENT="$VENV/bin/labgrid-client"
+          echo "Using labgrid-client: $LGCLIENT" >&2
+          echo "--- places -v output ---" >&2
+          PLACES_OUT=$(timeout 30 "$LGCLIENT" -x "$COORDINATOR" -v places 2>&1 || true)
+          echo "$PLACES_OUT" >&2
+          echo "--- end places -v output ---" >&2
+          python3 - "$MANIFEST" "$PLACES_OUT" >> "$GITHUB_OUTPUT" <<'PY'
+          import json, os, re, sys
+          # Discovery-driven matrix:
+          #
+          # 1. Coordinator publishes places, each optionally tagged with
+          #    carrier=<X>, daughter-board=<Y>. Tags are the source of
+          #    truth for "which lab boards exist."
+          # 2. Per-place env yamls live at test/hw/env/<place>.yaml. A
+          #    place is auto-included when its yaml exists in the repo.
+          # 3. The optional manifest at .github/hw-nodes.json acts as an
+          #    override layer: if a place is listed, its env_remote is
+          #    used verbatim (lets us pin a non-default yaml or include
+          #    a place that has no carrier/daughter-board tags yet).
+          manifest_path = sys.argv[1]
+          manifest = (
+              json.load(open(manifest_path)) if os.path.exists(manifest_path) else []
+          )
+          overrides = {m["place"]: m for m in manifest}
+
+          # Parse `labgrid-client -v places` output into {place: {tags}}.
+          place_re = re.compile(r"^Place '(?P<name>[^']+)':")
+          tags_re = re.compile(r"^\s+tags:\s+(?P<tags>.*)$")
+          places = {}
+          current = None
+          for line in sys.argv[2].splitlines():
+              m = place_re.match(line)
+              if m:
+                  current = m.group("name")
+                  places[current] = {}
+                  continue
+              if current is None:
+                  continue
+              m = tags_re.match(line)
+              if m:
+                  for kv in m.group("tags").split(","):
+                      kv = kv.strip()
+                      if "=" in kv:
+                          k, v = kv.split("=", 1)
+                          places[current][k.strip()] = v.strip()
+
+          repo_root = os.path.dirname(os.path.dirname(manifest_path))  # '.github/..'
+          avail = []
+          for name, tags in sorted(places.items()):
+              ovr = overrides.get(name)
+              if ovr:
+                  avail.append({"place": name, "env_remote": ovr["env_remote"]})
+                  continue
+              # Auto-discover: place is testable if test/hw/env/<place>.yaml exists.
+              env_yaml = f"test/hw/env/{name}.yaml"
+              if os.path.exists(os.path.join(repo_root, env_yaml)):
+                  avail.append({"place": name, "env_remote": env_yaml})
+              else:
+                  print(
+                      f"skip: place {name!r} (tags={tags}) — no manifest entry "
+                      f"and {env_yaml} not in repo",
+                      file=sys.stderr,
+                  )
+          print("available_nodes=" + json.dumps(avail))
+          PY
+
+  hw-coord:
+    needs: preflight
+    if: needs.preflight.outputs.available_nodes != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ${{ fromJSON(needs.preflight.outputs.available_nodes) }}
+    name: hw-coord (${{ matrix.node.place }})
+    runs-on: [self-hosted, hw-pyadi-iio]
+    # Fork PRs are gated by the `external-pr` GitHub environment, which
+    # requires a maintainer to manually review and approve every run
+    # before any PR-head code is checked out or executed against lab
+    # hardware.  Internal PRs use `internal-pr` (no approval barrier).
+    environment:
+      name: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork && 'external-pr' || 'internal-pr' }}
+    timeout-minutes: 40
+    concurrency:
+      group: hw-coord-${{ matrix.node.place }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap uv
+        run: bash .github/scripts/bootstrap-uv.sh
+
+      - name: Install pyadi-iio into host venv
+        run: bash .github/scripts/install-pyadi-iio-venv.sh
+
+      - name: Acquire coordinator place
+        env:
+          LG_COORDINATOR: ${{ env.COORDINATOR }}
+        run: |
+          set -euo pipefail
+          LGCLIENT="$HOME/.cache/pyadi-iio-ci/venv/bin/labgrid-client"
+          "$LGCLIENT" -x "$LG_COORDINATOR" -p "${{ matrix.node.place }}" acquire
+
+      - name: Run coordinator-mode tests
+        env:
+          LG_COORDINATOR: ${{ env.COORDINATOR }}
+          LG_ENV: ${{ github.workspace }}/${{ matrix.node.env_remote }}
+        run: |
+          set -euo pipefail
+          # Discovery-driven selection: test/conftest.py's
+          # pytest_configure boots via labgrid, polls for IP/IIO
+          # readiness, and sets config.option.uri before pytest-libiio
+          # runs.  pytest-libiio's _contexts fixture then scans that
+          # URI, identifies the hardware against
+          # test/emu/hardware_map.yml, and skips any test whose
+          # @iio_hardware(...) decorator doesn't match.  No -m filter
+          # and no --skip-scan needed here.
+          #
+          # -p no:cacheprovider: avoid cache writes into the runner's
+          #   shared workspace.
+          # --reruns 2 --only-rerun "BrokenPipeError": Microblaze IIO
+          #   daemon on nuc occasionally drops connections under load,
+          #   surfacing as BrokenPipeError in iio.Context() / attr
+          #   reads.  Retry only that exact failure mode so transient
+          #   daemon hiccups don't fail the leg, but real assertion
+          #   failures stay visible.
+          "$HOME/.cache/pyadi-iio-ci/venv/bin/pytest" \
+            -v -s -p no:cacheprovider \
+            --reruns 2 --reruns-delay 5 --only-rerun "BrokenPipeError" \
+            --junitxml=junit-hw-coord-${{ matrix.node.place }}.xml
+
+      - name: Release coordinator place
+        if: always()
+        env:
+          LG_COORDINATOR: ${{ env.COORDINATOR }}
+        run: |
+          set -euo pipefail
+          LGCLIENT="$HOME/.cache/pyadi-iio-ci/venv/bin/labgrid-client"
+          "$LGCLIENT" -x "$LG_COORDINATOR" -p "${{ matrix.node.place }}" release || true
+
+      - name: Publish hw-coord test results to PR
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Tests (hw-coord ${{ matrix.node.place }})
+          path: junit-hw-coord-${{ matrix.node.place }}.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Upload JUnit XML (standalone for PR comment aggregation)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-hw-coord-${{ matrix.node.place }}
+          path: junit-hw-coord-${{ matrix.node.place }}.xml
+          retention-days: 14
+          if-no-files-found: warn
+
+  publish-pr-test-summary:
+    name: PR Test Summary
+    needs: [hw-coord]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: junit-hw-*
+          path: junit
+          merge-multiple: true
+
+      - uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: 'junit/**/*.xml'
+          check_name: 'Hardware Test Results'
+          comment_mode: always
+          report_individual_runs: true

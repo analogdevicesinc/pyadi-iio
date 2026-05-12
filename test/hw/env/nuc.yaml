@@ -1,0 +1,39 @@
+## pyadi-iio hardware-CI env for FMCDAQ3 + VCU118 via the `nuc` remote
+## place on the labgrid coordinator (MicroBlaze JTAG boot).
+##
+## Run locally:
+##   labgrid-client -x 10.0.0.41:20408 -p nuc acquire
+##   LG_COORDINATOR=10.0.0.41:20408 LG_ENV=test/hw/env/nuc.yaml \
+##     pytest -vs --skip-scan -p no:cacheprovider \
+##            -m vcu118_fmcdaq3
+##   labgrid-client -x 10.0.0.41:20408 -p nuc release
+##
+## `daq3` is in features so test/conftest.py's labgrid iio_uri override
+## intersects with @pytest.mark.iio_hardware("daq3") (the test_map key
+## that defines `vcu118_fmcdaq3` as a marker).
+
+targets:
+  main:
+    features:
+      - fmcdaq3
+      - daq3
+      - vcu118
+    resources:
+      RemotePlace:
+        name: nuc
+    drivers:
+      SerialDriver: {}
+      ADIShellDriver:
+        prompt: '#.*'
+        login_prompt: 'buildroot login: '
+        username: 'root'
+        password: 'analog'
+      XilinxJTAGDriver: {}
+      SSHDriver: {}
+      VesyncPowerDriver: {}
+      BootFabric:
+        reached_boot_marker: 'login:'
+        trigger_dhcp_reset: true
+        wait_for_boot_timeout: 700
+        debug_write_boot_log: true
+        power_off_delay: 30

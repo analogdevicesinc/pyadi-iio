@@ -48,6 +48,14 @@ def pytest_collection_modifyitems(items):
     for item in items:
         if "iio_hardware" in item.keywords:
             hardware_list = item.keywords["iio_hardware"].args[0]
+            # Normalize to a list so the `in` check below is element
+            # membership, not string-substring match.  Without this,
+            # @iio_hardware("ad9081_full_bw") would erroneously match
+            # the test_map["ad9081"] key (substring) and pick up every
+            # ad9081 board marker, causing it to be selected by any
+            # -m <ad9081-board-marker> filter.
+            if isinstance(hardware_list, str):
+                hardware_list = [hardware_list]
             for key in test_map_keys:
                 if key in hardware_list:
                     for marker in test_map[key]:
