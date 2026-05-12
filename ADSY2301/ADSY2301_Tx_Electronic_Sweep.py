@@ -77,7 +77,7 @@ from Drivers import E36233A_Driver as E36233A  # Keysight E36233A DC power suppl
 # ──────────────────────────────────────────────────────────────────────────
 SWEEP_MIN    = -60        # Start angle (degrees)
 SWEEP_MAX    = 60         # End angle (degrees)
-SWEEP_STEP   = 1          # Step size (degrees) — smaller = finer resolution
+SWEEP_STEP   = 5          # Step size (degrees) — smaller = finer resolution
 SWEEP_AXIS   = "azimuth"  # "azimuth" (horizontal) or "elevation" (vertical)
 TEST_FREQ_GHZ = 10        # TX frequency in GHz (also sets spectrum analyser centre)
 
