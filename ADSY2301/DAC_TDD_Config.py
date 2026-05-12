@@ -29,7 +29,7 @@ talise_uri = "ip:192.168.1.1"  # IP address of the ADRV9009-ZU11EG SoM
 ## Pulse Parameters ##
 PRI_ms = 0.1       # Pulse repetition interval (ms)
 DAC_duty_cycle = 1.0   # Duty cycle for DAC pulses (0.0 to 1.0)
-
+TXRX_Bit = 1       # Set to 1 for Tx, 0 for Rx (controls TDD channel for TXRX0-3 channels on the XUD1A)
 ## Initialize Talise SOM DACs ##
 # The loop runs twice to ensure a clean init (first pass may fail after
 # a cold boot; second pass confirms settings are applied).
@@ -240,10 +240,11 @@ for i in range(2):
         tddn.channel[chan].enable   = 1
 
     # --- Group 1b: ADSY2301 phased-array enable (always on) ---
+
     for chan in [TDD_ADSY2301_EN]:
         tddn.channel[chan].on_ms   = 0
         tddn.channel[chan].off_ms  = 0
-        tddn.channel[chan].polarity = 1
+        tddn.channel[chan].polarity = TXRX_Bit
         tddn.channel[chan].enable   = 1
 
     # --- Group 2: TX/RX offload sync (raw sample counts) ---

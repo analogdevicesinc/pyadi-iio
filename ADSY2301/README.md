@@ -31,15 +31,113 @@ beamformer and ADRV9009-ZU11EG transceiver SoM.
 | `ADF4371_Internal_LO.py` | Programs the on-board ADF4371 LO PLL frequency. |
 | `requirements.txt` | Python dependencies for this folder. |
 
-## Quick Start
+## Prerequisites
 
-### 1. Install Dependencies
+### Python Requirements
 
-```bash
+**Python 3.12.10** is required. Download it from the official
+[Python 3.12 releases page](https://www.python.org/downloads/).
+
+> The commands below use a Windows command prompt as an example. For
+> development, it is recommended to use your preferred IDE (VSCode / PyCharm)
+> and set up its corresponding environment accordingly.
+
+### Software Prerequisites — Genalyzer
+
+[Genalyzer](https://github.com/analogdevicesinc/genalyzer) is a C++ library
+that facilitates the computation of commonly used data-converter RF
+performance metrics in a standards-compliant manner. It supports waveform
+generation for characterizing data-converters as well as computation of
+performance metrics from time- or frequency-domain data.
+
+Follow the
+[Genalyzer C++ download instructions](https://analogdevicesinc.github.io/genalyzer/main/quick_start.html)
+for your platform (Mac/Linux/Windows). Once the main C++ library is
+installed, the Python bindings are installed in the steps below.
+
+---
+
+## Installing
+
+> **Note:** If you left *"Create venv and install python package dependencies
+> (recommended)"* checked during installation, steps 1–5 below will likely
+> have already been completed automatically. There is no harm in running them
+> again if you are unsure.
+
+### 1. Navigate to this package
+
+Open a command prompt and `cd` to the directory containing this file and
+`requirements.txt`. Your path may differ depending on where the package was
+installed.
+
+```cmd
+cd "C:\Analog Devices\cots-adsy2301-test"
+```
+
+### 2. Create & activate a virtual environment
+
+```cmd
+python3.12 -m venv adsy2301_python_venv
+.\adsy2301_python_venv\Scripts\activate
+```
+
+After activation you should see the venv name in the prompt:
+
+```
+(adsy2301_python_venv) C:\Analog Devices\cots-adsy2301-test>
+```
+
+### 3. Upgrade pip
+
+Make sure pip is at least version 24.0.0:
+
+```cmd
+python -m pip install --upgrade pip
+```
+
+> If this gives a permissions error, re-open the command prompt as an
+> administrator, reactivate the venv, and try again.
+
+### 4. Install Python dependencies
+
+```cmd
 pip install -r requirements.txt
 ```
 
-### 2. Bootstrap the ADAR1000 Tiles
+### 5. Install Genalyzer Python bindings
+
+```cmd
+pip install "genalyzer @ git+https://github.com/analogdevicesinc/genalyzer.git#subdirectory=bindings/python"
+```
+
+> In future versions this will be included in `requirements.txt`.
+
+Installing dependencies may take a few minutes depending on your internet
+connection.
+
+### Notes
+
+- Packages installed within the venv do **not** affect your global Python
+  environment.
+- To exit the venv run `deactivate`. Reactivate it at any time with
+  `.\adsy2301_python_venv\Scripts\activate`.
+- All ADSY2301 scripts expect to be run from within the venv.
+- To verify installed packages run `pip list`.
+
+### VSCode setup (optional, recommended)
+
+1. Install the **Python** extension (by Microsoft) from the VSCode
+   marketplace.
+2. Press `Ctrl+Shift+P` → *"Python: Select Interpreter"* → choose the
+   interpreter labelled **Python (adsy2301_python_venv)**.
+3. You should now be able to run and debug the ADSY2301 examples directly
+   from VSCode.
+
+---
+
+## Quick Start
+
+### 1. Bootstrap the ADAR1000 Tiles
 
 ```bash
 python ADSY2301_bootstrap_tiles.py
@@ -48,7 +146,7 @@ python ADSY2301_bootstrap_tiles.py
 This connects to the SoM via SSH and runs the ADAR1000 initialisation script
 (~4-5 minutes on first boot).
 
-### 3. Run RX Calibration
+### 2. Run RX Calibration
 
 ```bash
 python ADSY2301_Rx_Cal.py
@@ -57,7 +155,7 @@ python ADSY2301_Rx_Cal.py
 Place an RF source at boresight, press Enter when prompted, and the script
 will calibrate gain + phase across all 64 elements.
 
-### 4. Run Beam Steering Demo
+### 3. Run Beam Steering Demo
 
 ```bash
 python ADSY2301_Rx_Steering_Example.py
@@ -66,7 +164,7 @@ python ADSY2301_Rx_Steering_Example.py
 After calibration, the script steers the beam to a configurable angle
 (default: 30°) and prints the measured signal drop relative to boresight.
 
-### 5. Run RX Electronic Beam Sweep
+### 4. Run RX Electronic Beam Sweep
 
 ```bash
 python ADSY2301_Rx_Electronic_Sweep.py
@@ -76,7 +174,7 @@ Sweeps the receive beam from -60° to +60° in 5° steps (configurable).
 A live plot displays combined magnitude vs. steering angle. Results are
 saved as a `.png` image and `.mat` data file under the output directory.
 
-### 6. Run TX Calibration
+### 5. Run TX Calibration
 
 ```bash
 python ADSY2301_Tx_Cal.py
@@ -92,7 +190,7 @@ automatically loaded by the TX sweep script.
 > Search for `*** INSTRUMENT ***` in the script to find the sections that
 > need to be adapted for your own equipment.
 
-### 7. Run TX Electronic Beam Sweep
+### 6. Run TX Electronic Beam Sweep
 
 ```bash
 python ADSY2301_Tx_Electronic_Sweep.py

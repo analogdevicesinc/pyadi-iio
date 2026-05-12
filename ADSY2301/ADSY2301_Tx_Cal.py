@@ -74,7 +74,7 @@ talise_uri = "ip:" + talise_ip
 # Set these flags to control which parts of the calibration run.
 bootstrap_needed         = False    # True = run ADAR1000 tile bootstrap via SSH
 config                   = True     # True = configure ADAR1000 gain/phase/bias defaults
-DAC_config               = True     # True = programme the ADRV9009 DACs and TDD engine
+DAC_config               = False     # True = programme the ADRV9009 DACs and TDD engine
 Gain_calibration         = True     # True = run per-element gain equalisation
 Digi_Phase_calibration   = False    # True = run DAC-channel digital phase alignment
 Analog_Phase_calibration = True     # True = run ADAR1000 analog phase null-search
