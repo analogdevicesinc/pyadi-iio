@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Analog Devices, Inc.
+# Copyright (C) 2025-2026 Analog Devices, Inc.
 #
 # All rights reserved.
 #
@@ -48,8 +48,8 @@ def main():
     parser.add_argument(
         "--device_name",
         type=str,
-        choices=["ad3530r", "ad3531r"],
-        help="The device name (Supported devices are ad3530r, ad3531r)",
+        choices=["ad3530r", "ad3531r", "ad3532r"],
+        help="The device name (Supported devices are ad3530r, ad3531r, ad3532r)",
         default="ad3530r",
     )
 
