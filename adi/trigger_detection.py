@@ -16,23 +16,32 @@ class trigger_detection:
 
     FRAME_SIZE_SAMPLES = 16
 
-    _LOWER_THRESHOLD     = 0x00
-    _UPPER_THRESHOLD     = 0x04
-    _TRIGGER_LEVEL       = 0x08
-    _NUM_FRAMES_PER_TRIG = 0x0C
-    _NUM_CONTEXT_FRAMES  = 0x10
-    _TRIGGER_MODE        = 0x14
-    _SINGLE_TRIGGER      = 0x18
-    _TRIGGER_ENABLE      = 0x1C
-    _FORCE_TRIGGER       = 0x20
-    _TRIGGER_RESET       = 0x24
-    _TRIGGER_STATUS      = 0x28
-    _TRIGGER_ARM         = 0x2C
+    _LOWER_THRESHOLD    = 0x00
+    _UPPER_THRESHOLD    = 0x04
+    _TRIGGER_LEVEL      = 0x08  # reserved
+    _NUM_TRIGGER_FRAMES = 0x0C
+    _NUM_CONTEXT_FRAMES = 0x10
+    _TRIGGER_MODE       = 0x14
+    _SINGLE_TRIGGER     = 0x18
+    _TRIGGER_ENABLE     = 0x1C
+    _FORCE_TRIGGER      = 0x20  # SC
+    _TRIGGER_RESET      = 0x24  # SC
+    _TRIGGER_STATUS     = 0x28  # W1C
+    _ARM_TRIGGER        = 0x2C  # SC
+    _TRIGGER_POS        = 0x30  # RO
+    _FSM_STATUS         = 0x34  # RO
 
-    MODE_OUT_OF_BOUNDS = 0
-    MODE_RISING        = 1
-    MODE_FALLING       = 2
-    MODE_FORCE         = 3
+    # Trigger modes
+    MODE_THRESHOLD = 0
+    MODE_RISING    = 1
+    MODE_FALLING   = 2
+
+    # FSM states (read via fsm_status)
+    STATE_BYPASS           = 0
+    STATE_IDLE             = 1
+    STATE_ARMED            = 2
+    STATE_TRIGGERED        = 3
+    STATE_CAPTURE_COMPLETE = 4
 
     def __init__(self, uri, base_address, username="root", password="analog"):
         self._base = base_address
@@ -78,12 +87,12 @@ class trigger_detection:
         self.reg_write(self._TRIGGER_LEVEL, v & 0xFF)
 
     @property
-    def num_frames_per_trigger(self):
-        return self.reg_read(self._NUM_FRAMES_PER_TRIG) & 0xFFFF
+    def num_trigger_frames(self):
+        return self.reg_read(self._NUM_TRIGGER_FRAMES) & 0xFFFF
 
-    @num_frames_per_trigger.setter
-    def num_frames_per_trigger(self, v):
-        self.reg_write(self._NUM_FRAMES_PER_TRIG, v & 0xFFFF)
+    @num_trigger_frames.setter
+    def num_trigger_frames(self, v):
+        self.reg_write(self._NUM_TRIGGER_FRAMES, v & 0xFFFF)
 
     @property
     def num_context_frames(self):
@@ -115,52 +124,57 @@ class trigger_detection:
 
     @trigger_enable.setter
     def trigger_enable(self, v):
-        if not v:
-            self.disarm()
         self.reg_write(self._TRIGGER_ENABLE, 1 if v else 0)
 
     @property
-    def force_trigger(self):
-        return bool(self.reg_read(self._FORCE_TRIGGER) & 0x1)
-
-    @force_trigger.setter
-    def force_trigger(self, v):
-        self.reg_write(self._FORCE_TRIGGER, 1 if v else 0)
-
-    @property
     def triggered(self):
+        """Sticky trigger_detected bit (W1C). Use clear_trigger_detected() to clear."""
         return bool(self.reg_read(self._TRIGGER_STATUS) & 0x1)
 
     @property
-    def trigger_arm(self):
-        return bool(self.reg_read(self._TRIGGER_ARM) & 0x1)
+    def trigger_pos(self):
+        """(frame_idx, sample_offset) of the most recent trigger event."""
+        v = self.reg_read(self._TRIGGER_POS)
+        return v & 0x7FF, (v >> 16) & 0xF
 
-    @trigger_arm.setter
-    def trigger_arm(self, v):
-        self.reg_write(self._TRIGGER_ARM, 1 if v else 0)
+    @property
+    def fsm_status(self):
+        return self.reg_read(self._FSM_STATUS) & 0x7
+
+    @property
+    def armed(self):
+        return self.fsm_status == self.STATE_ARMED
+
+    def clear_trigger_detected(self):
+        """Write 1 to clear the sticky trigger_detected bit."""
+        self.reg_write(self._TRIGGER_STATUS, 1)
+
+    def force_trigger(self):
+        """Pulse force_trigger. Only effective when FSM is in ARMED."""
+        self.reg_write(self._FORCE_TRIGGER, 1)
 
     def reset(self):
+        """Pulse trigger_reset. FSM -> BYPASS (re-IDLEs if trigger_enable still 1)."""
         self.reg_write(self._TRIGGER_RESET, 1)
-        self.reg_write(self._TRIGGER_RESET, 0)
 
     def arm(self):
-        """Start trigger comparison. Auto-disarms on trigger event.
-        Caller must have already set trigger_enable=True and created the iio buffer."""
-        self.trigger_arm = True
+        """Pulse arm_trigger. FSM transitions IDLE -> ARMED.
+        Caller must have set trigger_enable=True and created the iio buffer."""
+        self.reg_write(self._ARM_TRIGGER, 1)
 
     def disarm(self):
-        """Cancel arm before a trigger event."""
-        self.trigger_arm = False
+        """Reset FSM (-> BYPASS); auto-IDLEs if trigger_enable still 1."""
+        self.reset()
 
     def wait_for_trigger(self, poll_interval=0.05, timeout=None):
-        """Poll trigger_arm until it self-clears (event fired). Ctrl-C-able.
-        Returns True on trigger, False on timeout."""
+        """Poll trigger_detected until set. Ctrl-C-able between polls.
+        Returns True on trigger, False on timeout (timeout=None waits forever)."""
         deadline = None if timeout is None else time.monotonic() + timeout
-        while self.trigger_arm:
+        while not self.triggered:
             if deadline is not None and time.monotonic() >= deadline:
                 return False
             time.sleep(poll_interval)
         return True
 
     def compute_rx_buffer_size(self):
-        return (self.num_context_frames + self.num_frames_per_trigger) * self.FRAME_SIZE_SAMPLES
+        return (self.num_context_frames + self.num_trigger_frames) * self.FRAME_SIZE_SAMPLES

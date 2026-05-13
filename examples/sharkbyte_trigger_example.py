@@ -68,24 +68,25 @@ DEFAULT_PARAMS = {
     'lower_threshold':        130,
     'upper_threshold':        150,
     'num_context_frames':     50,
-    'num_frames_per_trigger': 1024,
+    'num_trigger_frames': 1024,
     'trigger_mode':           0,
     'single_trigger':         True,
 }
 ENTRY_TYPES  = ['bypass', 'single_trigger']
 PARAM_FIELDS = ['lower_threshold', 'upper_threshold',
-                'num_context_frames', 'num_frames_per_trigger', 'trigger_mode']
+                'num_context_frames', 'num_trigger_frames', 'trigger_mode']
 PARAM_LABELS = {
     'lower_threshold':        'lower',
     'upper_threshold':        'upper',
     'num_context_frames':     'ctx',
-    'num_frames_per_trigger': 'frames',
+    'num_trigger_frames': 'frames',
     'trigger_mode':           'mode',
 }
 
 state = {
-    'data':    {i + 1: {} for i in range(len(adcs))},
-    'timeout': 5.0,
+    'data':     {i + 1: {} for i in range(len(adcs))},
+    'trig_idx': {i + 1: {} for i in range(len(adcs))},  # actual trigger sample index per entry
+    'timeout':  5.0,
 }
 
 for trig in triggers:
@@ -104,6 +105,7 @@ def capture_bypass(idx):
 
 def capture_single(idx):
     adc, trig = adcs[idx], triggers[idx]
+    trig.clear_trigger_detected()
     trig.trigger_enable = True
     adc.rx_buffer_size = trig.compute_rx_buffer_size()
     adc._rx_init_channels()
@@ -114,8 +116,11 @@ def capture_single(idx):
         if not ok:
             print(f"ADC {idx+1}: TRIGGER TIMEOUT after {state['timeout']}s")
             trig.disarm()
-            return None
-        return np.asarray(adc.rx())
+            return None, None
+        frame, off = trig.trigger_pos
+        tidx = frame * trig.FRAME_SIZE_SAMPLES + off
+        print(f"ADC {idx+1}: trigger @ frame={frame} samp={off} idx={tidx}")
+        return np.asarray(adc.rx()), tidx
     finally:
         adc.rx_destroy_buffer()
         trig.trigger_enable = False
@@ -132,6 +137,7 @@ def capture_threshold_test(idx, direction):
     adc.hmcad15xx_register_write(0x26, safe_reg)
     adc.hmcad15xx_register_write(0x25, 0x10)        # enable single custom pattern
 
+    trig.clear_trigger_detected()
     trig.trigger_enable = True
     adc.rx_buffer_size = trig.compute_rx_buffer_size()
     adc._rx_init_channels()
@@ -144,8 +150,11 @@ def capture_threshold_test(idx, direction):
         if not ok:
             print(f"ADC {idx+1}: {direction}-test TIMEOUT")
             trig.disarm()
-            return None
-        return np.asarray(adc.rx())
+            return None, None
+        frame, off = trig.trigger_pos
+        tidx = frame * trig.FRAME_SIZE_SAMPLES + off
+        print(f"ADC {idx+1} {direction}-test: trigger @ frame={frame} samp={off} idx={tidx}")
+        return np.asarray(adc.rx()), tidx
     finally:
         adc.rx_destroy_buffer()
         trig.trigger_enable = False
@@ -181,7 +190,6 @@ for row, entry in enumerate(ENTRY_TYPES):
 def redraw():
     adc_id = state['current_adc']
     trig = triggers[adc_id - 1]
-    trigger_idx = trig.num_context_frames * trig.FRAME_SIZE_SAMPLES
     for row, entry in enumerate(ENTRY_TYPES):
         ax = plot_axes[entry]
         ax.clear()
@@ -194,14 +202,15 @@ def redraw():
                     ha='center', va='center', color='red',
                     fontsize=22, fontweight='bold')
         else:
-            code = d[entry].view(np.uint8)[0::2]
+            code = d[entry].view(np.uint8)   # int8 (kernel) -> uint8 (chip offset binary)
             ax.plot(code, color=f'C{row}')
         ax.set_ylim(-5, 260)
         ax.axhline(trig.lower_threshold, color=UPPER_THRESHOLD_COLOR, linestyle='--', alpha=0.7)
         ax.axhline(trig.upper_threshold, color=LOWER_THRESHOLD_COLOR, linestyle='--', alpha=0.7)
-        if entry != 'bypass':
-            ax.axvline(trigger_idx, color=TRIGGER_COLOR, linestyle='--', alpha=0.8,
-                       label=f"expected trigger @ {trigger_idx}")
+        tidx = state['trig_idx'][adc_id].get(entry)
+        if tidx is not None:
+            ax.axvline(tidx, color=TRIGGER_COLOR, linestyle='--', alpha=0.9,
+                       linewidth=1.4, label=f"trigger @ {tidx}")
             ax.legend(loc='upper right', fontsize=8)
         ax.set_ylabel(f"{entry}\n(ADC Code)")
         if row == 0:
@@ -255,7 +264,7 @@ def apply_params():
         trig.lower_threshold        = int(textboxes['lower_threshold'].text)
         trig.upper_threshold        = int(textboxes['upper_threshold'].text)
         trig.num_context_frames     = int(textboxes['num_context_frames'].text)
-        trig.num_frames_per_trigger = int(textboxes['num_frames_per_trigger'].text)
+        trig.num_trigger_frames = int(textboxes['num_trigger_frames'].text)
         trig.trigger_mode           = int(textboxes['trigger_mode'].text)
     except ValueError as e:
         print(f"ADC {idx+1}: invalid value -- {e}")
@@ -266,8 +275,10 @@ def on_full(_=None):
     if not apply_params(): return
     idx = state['current_adc'] - 1
     adc_id = idx + 1
-    state['data'][adc_id]['bypass']         = capture_bypass(idx)
-    state['data'][adc_id]['single_trigger'] = capture_single(idx)
+    state['data'][adc_id]['bypass'] = capture_bypass(idx)
+    data, tidx = capture_single(idx)
+    state['data'][adc_id]['single_trigger']     = data
+    state['trig_idx'][adc_id]['single_trigger'] = tidx
     redraw()
 
 def on_bypass(_=None):
@@ -280,13 +291,19 @@ def on_bypass(_=None):
 def on_test_upper(_=None):
     if not apply_params(): return
     idx = state['current_adc'] - 1
-    state['data'][idx + 1]['single_trigger'] = capture_threshold_test(idx, 'upper')
+    adc_id = idx + 1
+    data, tidx = capture_threshold_test(idx, 'upper')
+    state['data'][adc_id]['single_trigger']     = data
+    state['trig_idx'][adc_id]['single_trigger'] = tidx
     redraw()
 
 def on_test_lower(_=None):
     if not apply_params(): return
     idx = state['current_adc'] - 1
-    state['data'][idx + 1]['single_trigger'] = capture_threshold_test(idx, 'lower')
+    adc_id = idx + 1
+    data, tidx = capture_threshold_test(idx, 'lower')
+    state['data'][adc_id]['single_trigger']     = data
+    state['trig_idx'][adc_id]['single_trigger'] = tidx
     redraw()
 
 # === Top control strip ===
