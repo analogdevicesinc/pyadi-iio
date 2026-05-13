@@ -128,7 +128,7 @@ if ARRAY_MODE == "rx":
         element.rx_phase = 0 # Set all phases to 0
     sray.latch_rx_settings()
  
-# Point beam at boresight
+# Point array at boresight
 sray.steer_rx(azimuth=0, elevation=0)
  
 # Configure ADXUD1AEBZ PLL and gain mode

@@ -422,76 +422,37 @@ if DAC_config == True:
         #######################
         ## Setup DAC outputs ##
         #######################
-        # Calculate samples for TX pulse duration
-        pulse0_duration_ms = pulse0_stop_ms - pulse0_start_ms
-        pulse0_duration_seconds = pulse0_duration_ms * 1e-3
-        pulse0_samples = int(fs * pulse0_duration_seconds)
-        pulse0_start_sample = int(fs * pulse0_start_ms * 1e-3)
-        pulse1_duration_ms = pulse1_stop_ms - pulse1_start_ms
-        pulse1_duration_seconds = pulse1_duration_ms * 1e-3
-        pulse1_samples = int(fs * pulse1_duration_seconds)
-        pulse1_start_sample = int(fs * pulse1_start_ms * 1e-3)
-        pulse2_duration_ms = pulse2_stop_ms - pulse2_start_ms
-        pulse2_duration_seconds = pulse2_duration_ms * 1e-3
-        pulse2_samples = int(fs * pulse2_duration_seconds)
-        pulse2_start_sample = int(fs * pulse2_start_ms * 1e-3)
-        pulse3_duration_ms = pulse3_stop_ms - pulse3_start_ms
-        pulse3_duration_seconds = pulse3_duration_ms * 1e-3
-        pulse3_samples = int(fs * pulse3_duration_seconds)
-        pulse3_start_sample = int(fs * pulse3_start_ms * 1e-3)
+        # Pulse start/stop times for each of the 4 DAC channels
+        pulse_starts_ms = [pulse0_start_ms, pulse1_start_ms, pulse2_start_ms, pulse3_start_ms]
+        pulse_stops_ms  = [pulse0_stop_ms,  pulse1_stop_ms,  pulse2_stop_ms,  pulse3_stop_ms]
 
         # Create full time vector for entire frame
         t = np.arange(0, N * ts, ts)
 
-        # Create full frame with zeros
-        pulse0_i = np.zeros(N)
-        pulse0_q = np.zeros(N)
-        pulse1_i = np.zeros(N)
-        pulse1_q = np.zeros(N)
-        pulse2_i = np.zeros(N)
-        pulse2_q = np.zeros(N)
-        pulse3_i = np.zeros(N)
-        pulse3_q = np.zeros(N)
+        # Generate IQ waveform for each pulse using vectorized NumPy
+        pulse_data = []
+        for start_ms, stop_ms in zip(pulse_starts_ms, pulse_stops_ms):
+            duration_samples = int(fs * (stop_ms - start_ms) * 1e-3)
+            start_sample = int(fs * start_ms * 1e-3)
+            end_sample = min(start_sample + duration_samples, N)
+            samples = np.arange(start_sample, end_sample)
+            t_samples = samples * ts
+            iq = np.zeros(N, dtype=complex)
+            iq[start_sample:end_sample] = np.cos(2 * np.pi * fc * t_samples) + 1j * np.sin(2 * np.pi * fc * t_samples)
+            pulse_data.append(iq)
 
-        for n in range(pulse0_start_sample, min(pulse0_start_sample + pulse0_samples, N)):
-            t_sample = n * ts
-            pulse0_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-            pulse0_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-        for n in range(pulse1_start_sample, min(pulse1_start_sample + pulse1_samples, N)):
-            t_sample = n * ts
-            pulse1_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-            pulse1_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-        for n in range(pulse2_start_sample, min(pulse2_start_sample + pulse2_samples, N)):
-            t_sample = n * ts
-            pulse2_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-            pulse2_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-        for n in range(pulse3_start_sample, min(pulse3_start_sample + pulse3_samples, N)):
-            t_sample = n * ts
-            pulse3_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-            pulse3_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-
-        pulse0_data = pulse0_i + 1j * pulse0_q
-        pulse1_data = pulse1_i + 1j * pulse1_q
-        pulse2_data = pulse2_i + 1j * pulse2_q
-        pulse3_data = pulse3_i + 1j * pulse3_q
+        pulse0_data, pulse1_data, pulse2_data, pulse3_data = pulse_data
 
         sdr.tx_destroy_buffer()
 
-        # scaling for 16-bit DAC
-        # use most of the dynamic range but avoid clipping
+        # Scale to 16-bit DAC range (avoid clipping)
         scale_factor = 2**15 - 1
-        pulse0_iq_real = np.int16(np.real(pulse0_data) * scale_factor)
-        pulse0_iq_imag = np.int16(np.imag(pulse0_data) * scale_factor)
-        pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
-        pulse1_iq_real = np.int16(np.real(pulse1_data) * scale_factor)
-        pulse1_iq_imag = np.int16(np.imag(pulse1_data) * scale_factor)
-        pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
-        pulse2_iq_real = np.int16(np.real(pulse2_data) * scale_factor)
-        pulse2_iq_imag = np.int16(np.imag(pulse2_data) * scale_factor)
-        pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
-        pulse3_iq_real = np.int16(np.real(pulse3_data) * scale_factor)
-        pulse3_iq_imag = np.int16(np.imag(pulse3_data) * scale_factor)
-        pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
+        pulse_iq = []
+        for pd in pulse_data:
+            iq_scaled = np.int16(np.real(pd) * scale_factor) + 1j * np.int16(np.imag(pd) * scale_factor)
+            pulse_iq.append(iq_scaled)
+
+        pulse0_iq, pulse1_iq, pulse2_iq, pulse3_iq = pulse_iq
 
         # Configure TX data offload mode to cyclic
         sdr._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
@@ -542,8 +503,8 @@ if DAC_config == True:
         TDD_ADRV9009_RX_EN = 3
         TDD_ADRV9009_TX_EN = 4
         TDD_MANTARAY_EN = 5
-        TDD_CHANNEL6     = 6  ## PA_ON_0, PA_ON_1
-        TDD_CHANNEL7     = 7  ## TR Pulse
+        TDD_PA_ON     = 6  ## PA_ON_0, PA_ON_1
+        TDD_TR_PULSE    = 7  ## TR Pulse
 
         #Configure TDD engine
         tddn.enable = 0  ## Set to 0 to make config changes
@@ -554,7 +515,7 @@ if DAC_config == True:
         ## 3 Separate groups of TDD channels.
 
         ## Always on channels
-        for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN,TDD_MANTARAY_EN, TDD_CHANNEL6]:
+        for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN,TDD_MANTARAY_EN, TDD_PA_ON]:
             tddn.channel[chan].on_ms   = 0
             tddn.channel[chan].off_ms  = 0
             tddn.channel[chan].polarity = 1
@@ -568,7 +529,7 @@ if DAC_config == True:
             tddn.channel[chan].enable   = 1
 
         ## TR pulse channel
-        for chan in [TDD_CHANNEL7]:
+        for chan in [TDD_TR_PULSE]:
             tddn.channel[chan].on_ms   = 0
             tddn.channel[chan].off_ms  = 0.005 ## For 100 us PRI, 5 us TR pulse for 5% duty cycle
             tddn.channel[chan].polarity = 0 # polarity inverted
@@ -700,14 +661,12 @@ if Gain_calibration == True:
     mr.disable_pa_bias_channel(dev)
 
     # *** INSTRUMENT — Spectrum Analyser Configuration ***
-    # Narrow span + resolution BW for accurate CW power reading.
+    # Narrow span + resolution BW for accurate power reading.
     # Adjust these if your analyser has different capabilities.
     SpecAn.set_to_spec_an_mode()
     ## Set span to 5 kHz for spectrum analyzer mode ##
     SpecAn.write("SENS:FREQ:SPAN 5E3")
-    # SpecAn.set_resolution_bandwidth(9e-3)
     SpecAn.set_resolution_bandwidth(100e-6)
-    # SpecAn.write("SENS:SWE:TIME 75E-3")
     SpecAn.set_continuous_peak_search(1,1)
     SpecAn.set_attenuation(0)
     SpecAn.set_reference_level(-50)
@@ -1040,76 +999,37 @@ if Digi_Phase_calibration == True:
         #######################
         ## Setup DAC outputs ##
         #######################
-        # Calculate samples for TX pulse duration
-        pulse0_duration_ms = pulse0_stop_ms - pulse0_start_ms
-        pulse0_duration_seconds = pulse0_duration_ms * 1e-3
-        pulse0_samples = int(fs * pulse0_duration_seconds)
-        pulse0_start_sample = int(fs * pulse0_start_ms * 1e-3)
-        pulse1_duration_ms = pulse1_stop_ms - pulse1_start_ms
-        pulse1_duration_seconds = pulse1_duration_ms * 1e-3
-        pulse1_samples = int(fs * pulse1_duration_seconds)
-        pulse1_start_sample = int(fs * pulse1_start_ms * 1e-3)
-        pulse2_duration_ms = pulse2_stop_ms - pulse2_start_ms
-        pulse2_duration_seconds = pulse2_duration_ms * 1e-3
-        pulse2_samples = int(fs * pulse2_duration_seconds)
-        pulse2_start_sample = int(fs * pulse2_start_ms * 1e-3)
-        pulse3_duration_ms = pulse3_stop_ms - pulse3_start_ms
-        pulse3_duration_seconds = pulse3_duration_ms * 1e-3
-        pulse3_samples = int(fs * pulse3_duration_seconds)
-        pulse3_start_sample = int(fs * pulse3_start_ms * 1e-3)
+        # Pulse start/stop times for each of the 4 DAC channels
+        pulse_starts_ms = [pulse0_start_ms, pulse1_start_ms, pulse2_start_ms, pulse3_start_ms]
+        pulse_stops_ms  = [pulse0_stop_ms,  pulse1_stop_ms,  pulse2_stop_ms,  pulse3_stop_ms]
 
         # Create full time vector for entire frame
         t = np.arange(0, N * ts, ts)
 
-        # Create full frame with zeros
-        pulse0_i = np.zeros(N)
-        pulse0_q = np.zeros(N)
-        pulse1_i = np.zeros(N)
-        pulse1_q = np.zeros(N)
-        pulse2_i = np.zeros(N)
-        pulse2_q = np.zeros(N)
-        pulse3_i = np.zeros(N)
-        pulse3_q = np.zeros(N)
+        # Generate IQ waveform for each pulse using vectorized NumPy
+        pulse_data = []
+        for start_ms, stop_ms in zip(pulse_starts_ms, pulse_stops_ms):
+            duration_samples = int(fs * (stop_ms - start_ms) * 1e-3)
+            start_sample = int(fs * start_ms * 1e-3)
+            end_sample = min(start_sample + duration_samples, N)
+            samples = np.arange(start_sample, end_sample)
+            t_samples = samples * ts
+            iq = np.zeros(N, dtype=complex)
+            iq[start_sample:end_sample] = np.cos(2 * np.pi * fc * t_samples) + 1j * np.sin(2 * np.pi * fc * t_samples)
+            pulse_data.append(iq)
 
-        for n in range(pulse0_start_sample, min(pulse0_start_sample + pulse0_samples, N)):
-            t_sample = n * ts
-            pulse0_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-            pulse0_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-        for n in range(pulse1_start_sample, min(pulse1_start_sample + pulse1_samples, N)):
-            t_sample = n * ts
-            pulse1_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-            pulse1_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-        for n in range(pulse2_start_sample, min(pulse2_start_sample + pulse2_samples, N)):
-            t_sample = n * ts
-            pulse2_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-            pulse2_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-        for n in range(pulse3_start_sample, min(pulse3_start_sample + pulse3_samples, N)):
-            t_sample = n * ts
-            pulse3_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-            pulse3_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-
-        pulse0_data = pulse0_i + 1j * pulse0_q
-        pulse1_data = pulse1_i + 1j * pulse1_q
-        pulse2_data = pulse2_i + 1j * pulse2_q
-        pulse3_data = pulse3_i + 1j * pulse3_q
+        pulse0_data, pulse1_data, pulse2_data, pulse3_data = pulse_data
 
         sdr.tx_destroy_buffer()
 
-        # scaling for 16-bit DAC
-        # use most of the dynamic range but avoid clipping
+        # Scale to 16-bit DAC range (avoid clipping)
         scale_factor = 2**15 - 1
-        pulse0_iq_real = np.int16(np.real(pulse0_data) * scale_factor)
-        pulse0_iq_imag = np.int16(np.imag(pulse0_data) * scale_factor)
-        pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
-        pulse1_iq_real = np.int16(np.real(pulse1_data) * scale_factor)
-        pulse1_iq_imag = np.int16(np.imag(pulse1_data) * scale_factor)
-        pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
-        pulse2_iq_real = np.int16(np.real(pulse2_data) * scale_factor)
-        pulse2_iq_imag = np.int16(np.imag(pulse2_data) * scale_factor)
-        pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
-        pulse3_iq_real = np.int16(np.real(pulse3_data) * scale_factor)
-        pulse3_iq_imag = np.int16(np.imag(pulse3_data) * scale_factor)
-        pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
+        pulse_iq = []
+        for pd in pulse_data:
+            iq_scaled = np.int16(np.real(pd) * scale_factor) + 1j * np.int16(np.imag(pd) * scale_factor)
+            pulse_iq.append(iq_scaled)
+
+        pulse0_iq, pulse1_iq, pulse2_iq, pulse3_iq = pulse_iq
 
         # Configure TX data offload mode to cyclic
         sdr._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
@@ -1580,7 +1500,8 @@ cal_data = {
     "atten_dict": {str(k): v for k, v in atten_dict_save.items()},
 }
 
-cal_save_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tx_cal_values.json")
+cal_filename = f"tx_cal_values_{test_freq_GHz}GHz.json"
+cal_save_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), cal_filename)
 with open(cal_save_path, "w") as f:
     _json.dump(cal_data, f, indent=2)
 print(f"\nSaved TX cal values to: {cal_save_path}")
