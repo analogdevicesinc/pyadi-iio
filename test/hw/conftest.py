@@ -36,18 +36,19 @@ def pytest_addoption(parser):
 
 
 def _labgrid_show(coord: str, place: str):
-    """Run `python -m labgrid.remote.client -p PLACE show` and return stdout."""
+    """Run `labgrid-client -p PLACE show` and return the CompletedProcess.
+
+    Prefer the venv's installed `labgrid-client` binary over
+    `python -m labgrid.remote.client` — the latter routes async output
+    through a different code path that occasionally swallows stdout in
+    the fork we pin to.
+    """
+    venv_bin = os.path.dirname(sys.executable)
+    lgclient = os.path.join(venv_bin, "labgrid-client")
+    if not os.path.isfile(lgclient):
+        lgclient = "labgrid-client"  # fall back to PATH
     return subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "labgrid.remote.client",
-            "-x",
-            coord,
-            "-p",
-            place,
-            "show",
-        ],
+        [lgclient, "-x", coord, "-p", place, "show"],
         capture_output=True,
         text=True,
         check=False,
@@ -83,10 +84,18 @@ def iio_uri(request) -> str:
         pytest.skip("labgrid not importable; pass --iio-uri-override instead")
 
     show = _labgrid_show(coord, place)
+    # Always print the raw show output so debugging a CI skip doesn't
+    # require yet another roundtrip.
+    print(
+        f"[iio_uri] labgrid-client show {place} on {coord}:\n"
+        f"--- stdout ---\n{show.stdout}\n--- stderr ---\n{show.stderr}\n"
+        f"--- rc={show.returncode}",
+        file=sys.stderr,
+    )
     if show.returncode != 0 or "Place" not in show.stdout:
-        pytest.skip(
-            f"labgrid place {place!r} unavailable at {coord}: "
-            f"{show.stdout.strip()} {show.stderr.strip()}"
+        pytest.fail(
+            f"labgrid place {place!r} unavailable at {coord} "
+            f"(rc={show.returncode}); see stderr for raw output"
         )
 
     address = None
@@ -96,7 +105,7 @@ def iio_uri(request) -> str:
             address = s.split(":", 1)[1].strip()
             break
     if not address:
-        pytest.skip(
+        pytest.fail(
             f"labgrid place {place!r} has no NetworkService address — "
             "verify the exporter publishes one"
         )
