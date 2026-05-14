@@ -38,7 +38,16 @@ def pytest_addoption(parser):
 def _labgrid_show(coord: str, place: str):
     """Run `python -m labgrid.remote.client -p PLACE show` and return stdout."""
     return subprocess.run(
-        [sys.executable, "-m", "labgrid.remote.client", "-x", coord, "-p", place, "show"],
+        [
+            sys.executable,
+            "-m",
+            "labgrid.remote.client",
+            "-x",
+            coord,
+            "-p",
+            place,
+            "show",
+        ],
         capture_output=True,
         text=True,
         check=False,
