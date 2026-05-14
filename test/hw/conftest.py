@@ -20,6 +20,7 @@ under test/hw/.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 
@@ -98,12 +99,15 @@ def iio_uri(request) -> str:
             f"(rc={show.returncode}); see stderr for raw output"
         )
 
+    # Handle both the flat 'address: 10.0.0.23' format and the Python-repr
+    # 'address': '10.0.0.23' style emitted by the labgrid fork.
     address = None
-    for line in show.stdout.splitlines():
-        s = line.strip()
-        if s.startswith(("address:", "host:", "ipaddr:")):
-            address = s.split(":", 1)[1].strip()
-            break
+    m = re.search(
+        r"""['"]?(?:address|host|ipaddr)['"]?\s*[:=]\s*['"]?([0-9a-zA-Z.\-]+)""",
+        show.stdout,
+    )
+    if m:
+        address = m.group(1)
     if not address:
         pytest.fail(
             f"labgrid place {place!r} has no NetworkService address — "
