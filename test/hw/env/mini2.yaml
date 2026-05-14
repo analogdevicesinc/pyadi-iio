@@ -1,8 +1,0 @@
-# Coord-mode env for mini2 (ZCU102 + AD9081). Minimal: just RemotePlace so
-# labgrid resolves the place; the conftest reads LG_PLACE / LG_COORDINATOR
-# directly to extract the IIO URI without invoking labgrid drivers.
-targets:
-  main:
-    resources:
-      RemotePlace:
-        name: mini2
