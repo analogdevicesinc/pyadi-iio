@@ -1,0 +1,6 @@
+# Coord-mode env for bq (ZC706 + ADRV9371). See mini2.yaml for the pattern.
+targets:
+  main:
+    resources:
+      RemotePlace:
+        name: bq
