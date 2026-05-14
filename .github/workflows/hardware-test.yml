@@ -51,7 +51,7 @@ jobs:
       pytest_cmd_template: >-
         "$VENV_DIR/bin/pytest" -v test/hw
         -m "$MARKER_FILTER"
-        --lg-config "$LG_ENV"
+        --lg-env "$LG_ENV"
         --junitxml="$JUNIT"
       artifact_glob: |
         junit-hw-*.xml
