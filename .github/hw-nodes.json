@@ -1,0 +1,16 @@
+[
+  {
+    "place": "pluto",
+    "runner_label": "lab-pluto",
+    "env_remote": "test/hw/env/pluto.yaml",
+    "tests": ["test/hw/test_pluto_smoke.py"],
+    "legs": ["coord"]
+  },
+  {
+    "place": "fmcomms2-zcu102",
+    "runner_label": "lab-fmcomms2",
+    "env_remote": "test/hw/env/fmcomms2_zcu102.yaml",
+    "tests": ["test/hw/test_ad9361_smoke.py"],
+    "legs": ["coord"]
+  }
+]

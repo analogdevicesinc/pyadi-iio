@@ -1,0 +1,7 @@
+# Coordinator-mode labgrid env for the 'fmcomms2-zcu102' place.
+# See test/hw/env/pluto.yaml for the contract.
+targets:
+  main:
+    resources:
+      RemotePlace:
+        name: fmcomms2-zcu102

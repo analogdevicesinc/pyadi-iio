@@ -1,0 +1,12 @@
+# Coordinator-mode labgrid env for the 'pluto' place.
+#
+# Consumed by the HW workflow (hw-matrix) via LG_ENV; the workflow itself
+# only relies on the place name (LG_PLACE) and coordinator (LG_COORDINATOR)
+# being exported, and on the acquire-place composite holding the place
+# before pytest starts. test/hw/conftest.py extracts the libiio URI from
+# the held place at session scope.
+targets:
+  main:
+    resources:
+      RemotePlace:
+        name: pluto
