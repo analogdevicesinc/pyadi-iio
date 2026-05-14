@@ -46,8 +46,10 @@ jobs:
         # adi-labgrid-plugins supplies BOTH the iio_hardware/iio_carrier
         # marker plugin (auto-registered via pytest11 entry point) AND
         # the adi-lg-hw-ci CLI the reusable workflow shells out to.
+        # `[kuiper]` pulls in pytsk3, required by KuiperDLDriver
+        # for extracting boot files at strategy init time.
         uv pip install --quiet --python "$VENV_DIR/bin/python" \
-          "adi-labgrid-plugins @ git+https://github.com/tfcollins/labgrid-plugins.git@feature/hw-matrix-v2-discovery"
+          "adi-labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git@feature/hw-matrix-v2-discovery"
       pytest_cmd_template: >-
         "$VENV_DIR/bin/pytest" -v test/hw
         -m "$MARKER_FILTER"
