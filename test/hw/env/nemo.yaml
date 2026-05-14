@@ -1,6 +1,0 @@
-# Coord-mode env for nemo (ZC706 + ADRV9009). See mini2.yaml for the pattern.
-targets:
-  main:
-    resources:
-      RemotePlace:
-        name: nemo

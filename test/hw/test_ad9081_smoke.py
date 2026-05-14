@@ -1,14 +1,19 @@
-"""Smoke test: open an AD9081 (mini2 = ZCU102 + AD9081) over IIO and read its context.
+"""Smoke test: open an AD9081 over IIO and read its context.
 
-Run under the GH Actions HW workflow (places mini2 by manifest) or locally:
+Discovered by labgrid-plugins hw-matrix.yml@v2 — any coordinator place
+tagged ``daughter-board=ad9081`` will fan a shard of this file out.
+
+Local manual run:
     pytest -v test/hw/test_ad9081_smoke.py --iio-uri-override ip:10.0.0.23
 """
 
 from __future__ import annotations
 
 import adi
+import pytest
 
 
+@pytest.mark.iio_hardware(["ad9081"])
 def test_context_attrs(iio_uri):
     """The AD9081 driver enumerates context attrs (hw_model, etc.)."""
     sdr = adi.ad9081(uri=iio_uri)
@@ -19,6 +24,7 @@ def test_context_attrs(iio_uri):
         del sdr
 
 
+@pytest.mark.iio_hardware(["ad9081"])
 def test_rx_buffer(iio_uri):
     """Capture one small RX buffer end-to-end."""
     sdr = adi.ad9081(uri=iio_uri)

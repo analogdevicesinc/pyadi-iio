@@ -1,15 +1,17 @@
 name: Hardware Tests (GHA)
 
-# Net-new GHA HW pipeline running alongside JenkinsfileHW during migration.
-# Calls the shared HW-CI workflow in tfcollins/labgrid-plugins.
+# Discovery-driven HW pipeline (v2). Lab coordinator advertises live
+# places via `tags:` (carrier, daughter-board, boot-strategy); this
+# repo's tests carry `@pytest.mark.iio_hardware([…])` markers; the
+# reusable workflow intersects the two and builds the matrix.
+#
+# No `.github/hw-nodes.json`, no `test/hw/env/*.yaml`. The env yaml is
+# rendered per-shard from the place tags by adi-labgrid-plugins.
 #
 # Triggered by:
 #   * workflow_dispatch (manual)
 #   * PRs labeled `hw-test` — keeps every push from burning lab time
 #   * Nightly cron at 08:00 UTC
-#
-# Initial scope: `pluto` and `fmcomms2-zcu102` places (coord leg only).
-# Add boards by extending .github/hw-nodes.json and test/hw/.
 
 permissions:
   contents: read
@@ -28,20 +30,34 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       contains(github.event.pull_request.labels.*.name, 'hw-test')
-    uses: tfcollins/labgrid-plugins/.github/workflows/hw-matrix.yml@v1
+    # TODO: change ref to @v2 after tfcollins/labgrid-plugins#16 merges
+    # and the v2 tag is cut. Pinned to the feature branch for now so
+    # the discovery-driven flow can be exercised end-to-end before tag.
+    uses: tfcollins/labgrid-plugins/.github/workflows/hw-matrix-v2.yml@feature/hw-matrix-v2-discovery
     with:
-      manifest_path: .github/hw-nodes.json
+      marker_filter: iio_hardware
+      test_root: test/hw
       venv_install_cmd: |
         uv pip install --quiet --python "$VENV_DIR/bin/python" \
           -r requirements_dev.txt
         uv pip install --quiet --python "$VENV_DIR/bin/python" -e .
         uv pip install --quiet --python "$VENV_DIR/bin/python" \
           "labgrid @ git+https://github.com/tfcollins/labgrid.git@81c35eda6436af63d3acf7f8b98893abae0bbbca"
+        # adi-labgrid-plugins supplies BOTH the iio_hardware/iio_carrier
+        # marker plugin (auto-registered via pytest11 entry point) AND
+        # the adi-lg-hw-ci CLI the reusable workflow shells out to.
+        # `[kuiper]` pulls in pytsk3, required by KuiperDLDriver
+        # for extracting boot files at strategy init time.
+        uv pip install --quiet --python "$VENV_DIR/bin/python" \
+          "adi-labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git@feature/hw-matrix-v2-discovery"
       pytest_cmd_template: >-
-        "$VENV_DIR/bin/pytest" -v $TESTS --junitxml="$JUNIT"
+        "$VENV_DIR/bin/pytest" -v test/hw
+        -m "$MARKER_FILTER"
+        --lg-env "$LG_ENV"
+        --iio-uri-override "$IIO_URI_OVERRIDE"
+        --junitxml="$JUNIT"
       artifact_glob: |
         junit-hw-*.xml
         **/*.log
-      legs: coord
       prism_project: pyadi-iio
     secrets: inherit

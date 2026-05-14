@@ -1,28 +1,24 @@
 """HW-test conftest.
 
-Bridges the labgrid place held by the calling workflow (or a manually-set
-LG_PLACE / LG_COORDINATOR pair) into a libiio URI usable by ``adi``
-device classes.
+Resolves a libiio URI for tests under ``test/hw/``. The URI is **always**
+supplied explicitly via ``--iio-uri-override``; there is no implicit
+labgrid/coordinator lookup. The caller (CI workflow or local user) is
+responsible for naming the exact board to talk to — this avoids any
+chance of pytest connecting to a stray board that happens to be on the
+network.
 
-Used by the new GH Actions hardware-test workflow (which calls
-labgrid-plugins' hw-matrix reusable workflow). Tests under ``test/hw/``
-take an ``iio_uri`` fixture and instantiate the device class with it.
+Used by the GH Actions hardware-test workflow, which acquires the
+place, boots it, reads eth0's IP from the live serial console, and
+passes ``--iio-uri-override ip:<real-ip>`` to pytest.
 
-When LG_ENV / LG_PLACE / LG_COORDINATOR are unset, the suite falls back
-to a single ``--iio-uri-override`` CLI option (or the IIO_URI_OVERRIDE
-env var) so local manual runs without labgrid still work.
-
-Sibling test/conftest.py (the historic libiio-plugin-driven suite under
-test/) is untouched; this conftest only applies to tests collected
-under test/hw/.
+Sibling ``test/conftest.py`` (the historic libiio-plugin-driven suite
+under ``test/``) is untouched; this conftest only applies to tests
+collected under ``test/hw/``.
 """
 
 from __future__ import annotations
 
 import os
-import re
-import subprocess
-import sys
 
 import pytest
 
@@ -31,86 +27,29 @@ def pytest_addoption(parser):
     g = parser.getgroup("hw")
     g.addoption(
         "--iio-uri-override",
-        default=os.environ.get("IIO_URI_OVERRIDE"),
-        help="Bypass labgrid; libiio URI to point tests at (e.g. ip:10.0.0.132).",
-    )
-
-
-def _labgrid_show(coord: str, place: str):
-    """Run `labgrid-client -p PLACE show` and return the CompletedProcess.
-
-    Prefer the venv's installed `labgrid-client` binary over
-    `python -m labgrid.remote.client` — the latter routes async output
-    through a different code path that occasionally swallows stdout in
-    the fork we pin to.
-    """
-    venv_bin = os.path.dirname(sys.executable)
-    lgclient = os.path.join(venv_bin, "labgrid-client")
-    if not os.path.isfile(lgclient):
-        lgclient = "labgrid-client"  # fall back to PATH
-    return subprocess.run(
-        [lgclient, "-x", coord, "-p", place, "show"],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=15,
+        default=os.environ.get("IIO_URI_OVERRIDE", ""),
+        help=(
+            "libiio URI for the DUT (e.g. ip:10.0.0.211). Required for tests "
+            "under test/hw/. Defaults to the IIO_URI_OVERRIDE env var when "
+            "unset on the CLI."
+        ),
     )
 
 
 @pytest.fixture(scope="session")
 def iio_uri(request) -> str:
-    """Return an `ip:...` URI to a real-iiod we can talk to.
+    """Return the explicitly-named DUT URI.
 
-    Resolution order:
-      1. ``--iio-uri-override <uri>`` or ``IIO_URI_OVERRIDE`` env var
-      2. The labgrid place named by ``LG_PLACE`` on ``LG_COORDINATOR``
-         (set by the reusable HW workflow before pytest runs; the
-         place is already acquired at workflow level).
+    Tests are skipped if no URI was passed — the conftest deliberately
+    refuses to auto-discover, so an unrelated board on the LAN can't be
+    poked by accident.
     """
-    override = request.config.getoption("--iio-uri-override")
-    if override:
-        return override
-
-    coord = os.environ.get("LG_COORDINATOR")
-    place = os.environ.get("LG_PLACE")
-    if not (coord and place):
+    uri = (request.config.getoption("--iio-uri-override") or "").strip()
+    if not uri:
         pytest.skip(
-            "no IIO URI source: set --iio-uri-override, or run under the "
-            "HW workflow which exports LG_COORDINATOR + LG_PLACE"
+            "no DUT URI provided. Pass --iio-uri-override ip:<host> on the "
+            "pytest CLI (the reusable hw-matrix-v2 workflow does this "
+            "automatically after reading eth0 from the booted board's "
+            "serial console)."
         )
-
-    try:
-        import labgrid  # noqa: F401
-    except ImportError:
-        pytest.skip("labgrid not importable; pass --iio-uri-override instead")
-
-    show = _labgrid_show(coord, place)
-    # Always print the raw show output so debugging a CI skip doesn't
-    # require yet another roundtrip.
-    print(
-        f"[iio_uri] labgrid-client show {place} on {coord}:\n"
-        f"--- stdout ---\n{show.stdout}\n--- stderr ---\n{show.stderr}\n"
-        f"--- rc={show.returncode}",
-        file=sys.stderr,
-    )
-    if show.returncode != 0 or "Place" not in show.stdout:
-        pytest.fail(
-            f"labgrid place {place!r} unavailable at {coord} "
-            f"(rc={show.returncode}); see stderr for raw output"
-        )
-
-    # Handle both the flat 'address: 10.0.0.23' format and the Python-repr
-    # 'address': '10.0.0.23' style emitted by the labgrid fork.
-    address = None
-    m = re.search(
-        r"""['"]?(?:address|host|ipaddr)['"]?\s*[:=]\s*['"]?([0-9a-zA-Z.\-]+)""",
-        show.stdout,
-    )
-    if m:
-        address = m.group(1)
-    if not address:
-        pytest.fail(
-            f"labgrid place {place!r} has no NetworkService address — "
-            "verify the exporter publishes one"
-        )
-    return f"ip:{address}"
+    return uri
