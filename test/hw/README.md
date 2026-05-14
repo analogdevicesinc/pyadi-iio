@@ -42,15 +42,17 @@ yaml on the fly from each place's `boot-strategy` tag.
 
 ## How a test resolves a URI
 
-`conftest.py::iio_uri` (session-scoped) returns an `ip:...` URI by:
+`conftest.py::iio_uri` (session-scoped) requires the URI to be passed
+**explicitly** via `--iio-uri-override <uri>` (the `IIO_URI_OVERRIDE`
+env var is honoured as a default). The conftest deliberately refuses
+to discover a URI from labgrid or the coordinator — making the URI
+explicit means CI can never accidentally talk to a stray board that
+happens to be on the lab LAN.
 
-1. **`--iio-uri-override <uri>`** or **`IIO_URI_OVERRIDE` env var** —
-   bypass labgrid entirely (for laptop runs against a known-good DUT).
-2. **`LG_COORDINATOR` + `LG_PLACE`** — set by the HW workflow before
-   pytest starts. Conftest queries the coordinator and extracts the
-   place's `NetworkService.address`.
-
-If neither source is set, every test under `test/hw/` is skipped.
+The CI workflow handles URI resolution itself: it acquires the place,
+boots the board, captures the live serial console, parses eth0's
+DHCP-assigned address, and passes `--iio-uri-override ip:<real-ip>`
+to pytest. Tests skip cleanly when no URI is provided.
 
 ## Running locally
 

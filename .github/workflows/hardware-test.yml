@@ -54,6 +54,7 @@ jobs:
         "$VENV_DIR/bin/pytest" -v test/hw
         -m "$MARKER_FILTER"
         --lg-env "$LG_ENV"
+        --iio-uri-override "$IIO_URI_OVERRIDE"
         --junitxml="$JUNIT"
       artifact_glob: |
         junit-hw-*.xml
