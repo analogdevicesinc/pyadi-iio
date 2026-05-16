@@ -263,6 +263,8 @@ def update_devs():
         ]
 
         categorized_count = 0
+        classes_not_modules_stems = [s.replace(".rst", "") for s in classes_not_modules]
+
         for category, parts in CATEGORIES.items():
             output_lines.append(category)
             output_lines.append("-" * len(category))
@@ -272,14 +274,14 @@ def update_devs():
 
             category_parts = []
             for part in parts:
-                if part in actual_devices:
+                if part in actual_devices or part in classes_not_modules_stems:
                     category_parts.append("   " + part)
-                    actual_devices.remove(part)
+                    if part in actual_devices:
+                        actual_devices.remove(part)
                     categorized_count += 1
 
             output_lines.extend(category_parts)
             output_lines.append("")
-
         # Add any remaining devices to 'Other' if not already there, or a new 'Uncategorized' section
         if actual_devices:
             output_lines.append("Uncategorized")
