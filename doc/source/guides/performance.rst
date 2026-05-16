@@ -16,7 +16,7 @@ The `rx_buffer_size` attribute (defaulting to 1024 or similar depending on the d
 .. code-block:: python
 
     sdr = adi.ad9361()
-    sdr.rx_buffer_size = 2**18 # Increase for high-speed streaming
+    sdr.rx_buffer_size = 2 ** 18  # Increase for high-speed streaming
 
 **Cyclic Buffers**
 
@@ -25,7 +25,7 @@ For transmit (TX), use `tx_cyclic_buffer = True` if you want to repeat the same 
 .. code-block:: python
 
     sdr.tx_cyclic_buffer = True
-    sdr.tx(my_waveform) # Uploads once and repeats hardware-side
+    sdr.tx(my_waveform)  # Uploads once and repeats hardware-side
 
 Data Handling
 -------------

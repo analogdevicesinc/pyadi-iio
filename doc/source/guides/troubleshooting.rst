@@ -11,8 +11,8 @@ Connectivity Issues
 * **Check Physical Connection**: Ensure the device is powered and connected via the intended interface (USB, Ethernet, etc.).
 * **Verify URI**: If using a remote connection, ensure the IP address or USB URI is correct. Use `iio_info -s` to list available devices and their URIs.
 * **Firewall/Network**: For network connections (IP backend), ensure port 30431 (default IIO port) is open on the target.
-* **USB Permissions (Linux)**: If a USB device is not detected without `sudo`, you likely need to install udev rules. 
-  
+* **USB Permissions (Linux)**: If a USB device is not detected without `sudo`, you likely need to install udev rules.
+
   .. code-block:: bash
 
     # Example udev rule for PlutoSDR (/etc/udev/rules.d/53-adi-plutosdr-usb.rules)
@@ -44,6 +44,7 @@ Library and Dependency Issues
 
     import iio
     import adi
+
     print(iio.version)
     print(adi.__version__)
 

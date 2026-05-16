@@ -111,18 +111,10 @@ Sensors and Health
    adi.adxl355
    adi.adxl380
    adi.adxrs290
-   adi.adis16375
    adi.adis16460
    adi.adis16475
    adi.adis16480
-   adi.adis16485
-   adi.adis16488
-   adi.adis16490
-   adi.adis16495
-   adi.adis16497
    adi.adis16507
-   adi.adis16545
-   adi.adis16547
    adi.adis16550
    adi.ad5940
    adi.max31855
