@@ -299,7 +299,7 @@ def update_devs():
         output_lines.append("   :show-inheritance:")
 
         with open(os.path.join("source", "devices", "index.rst"), "w") as f:
-            f.write("\n".join(output_lines))
+            f.write("\n".join(output_lines) + "\n")
 
         os.remove(adi_rst_path)
 
