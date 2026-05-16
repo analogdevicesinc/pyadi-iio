@@ -245,7 +245,7 @@ def update_devs():
                 if os.path.exists(s_path):
                     os.remove(s_path)
                 lines = [l for l in lines if s not in l]
-        
+
         # Collect remaining devices from adi.rst to see what is not categorized
         actual_devices = []
         for line in lines:
@@ -269,14 +269,14 @@ def update_devs():
             output_lines.append(".. toctree::")
             output_lines.append("   :maxdepth: 1")
             output_lines.append("")
-            
+
             category_parts = []
             for part in parts:
                 if part in actual_devices:
                     category_parts.append("   " + part)
                     actual_devices.remove(part)
                     categorized_count += 1
-            
+
             output_lines.extend(category_parts)
             output_lines.append("")
 
@@ -302,7 +302,7 @@ def update_devs():
             f.write("\n".join(output_lines))
 
         os.remove(adi_rst_path)
-    
+
     os.chdir(original_cwd)
 
 
