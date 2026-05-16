@@ -1,4 +1,4 @@
-Examples
+Basic Examples
 ===================
 
 Here is a collection of small examples which demonstrate how to interface with different devices in different ways.
@@ -69,6 +69,3 @@ Using URIs to access specific devices over USB
   # Create device from specific uri address
   sdr = adi.Pluto(uri="usb:1.24.5")
   data = sdr.rx()
-
-
-Other complex examples are available in the `source repository <https://github.com/analogdevicesinc/pyadi-iio/tree/master/examples>`_
