@@ -1,7 +1,7 @@
-adi.fmcomms11 module
+fmcomms11
 ====================
 
 .. automodule:: adi.fmcomms11
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

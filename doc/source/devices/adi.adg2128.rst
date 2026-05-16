@@ -1,7 +1,7 @@
-adi.adg2128 module
+adg2128
 ==================
 
 .. automodule:: adi.adg2128
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

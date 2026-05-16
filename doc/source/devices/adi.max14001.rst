@@ -1,7 +1,7 @@
-adi.max14001 module
+max14001
 ===================
 
 .. automodule:: adi.max14001
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

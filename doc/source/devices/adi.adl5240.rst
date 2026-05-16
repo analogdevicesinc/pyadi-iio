@@ -1,7 +1,7 @@
-adi.adl5240 module
+adl5240
 ==================
 
 .. automodule:: adi.adl5240
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

@@ -1,7 +1,7 @@
-adi.ada4961 module
+ada4961
 ==================
 
 .. automodule:: adi.ada4961
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

@@ -1,7 +1,7 @@
-adi.ltc2499 module
+ltc2499
 ==================
 
 .. automodule:: adi.ltc2499
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

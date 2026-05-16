@@ -1,7 +1,7 @@
-adi.ad3552r_hs module
-=====================
+ad3552r\_hs
+======================
 
 .. automodule:: adi.ad3552r_hs
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

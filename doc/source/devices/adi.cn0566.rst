@@ -1,7 +1,7 @@
-adi.cn0566 module
+cn0566
 =================
 
 .. automodule:: adi.cn0566
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

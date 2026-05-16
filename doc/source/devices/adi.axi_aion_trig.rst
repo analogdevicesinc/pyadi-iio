@@ -1,4 +1,4 @@
-adi.axi\_aion\_trig module
+axi\_aion\_trig
 ==========================
 
 .. automodule:: adi.axi_aion_trig

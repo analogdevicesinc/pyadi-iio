@@ -1,7 +1,7 @@
-adi.fmcjesdadc1 module
+fmcjesdadc1
 ======================
 
 .. automodule:: adi.fmcjesdadc1
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
