@@ -1,0 +1,104 @@
+name: Hardware Recovery (GHA)
+
+# Manual hardware recovery for a single labgrid place.
+#
+# When a DUT is quarantined via `disabled=<reason>` on the coordinator
+# (see hw-matrix dynamic_mode), the operator can run this workflow to
+# reach the corresponding recovery strategy. Today only ZC706-class
+# boards (BootZynq7000JTAGRecovery) have a wired recovery path; the
+# dispatcher prints "no recovery defined" for any other board and
+# exits 0 — the scaffold is here so new strategies plug in by adding
+# an entry to .github/scripts/recover-place.py:HANDLERS.
+#
+# Prerequisites the operator must stage before triggering this for
+# a ZC706 board (see labgrid-plugins/examples/zynq7000_recovery/
+# lg_zc706_recovery.yaml for the canonical reference):
+#   * Vivado/xsdb on PATH on the recovery runner.
+#   * Digilent JTAG drivers + udev rule unbinding ftdi_sio from
+#     the FT232H so xsdb can claim it.
+#   * ps7_init.tcl / u-boot.elf / FPGA bitstream extracted from a
+#     known-good BOOT.BIN (`bootgen -arch zynq -read BOOT.BIN`).
+#   * TFTP root populated with uImage, devicetree.dtb, and either a
+#     pre-built uInitrd.recovery or the busybox source for the
+#     auto-build path.
+#   * The Kuiper SD image at the path referenced by recovery-config.yml.
+#   * A per-place block in .github/recovery-config.yml with the
+#     synthesized labgrid env yaml. Leave the block missing to
+#     dry-run / skip cleanly.
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      place:
+        description: 'Labgrid place to recover (e.g. bq)'
+        required: true
+        type: string
+      target_state:
+        description: 'Recovery strategy state to drive to'
+        required: false
+        default: 'sd_boot_verified'
+        type: choice
+        options:
+          - powered_off
+          - powered_on
+          - jtag_bootstrap
+          - uboot_prompt
+          - tftp_recovery_kernel
+          - linux_recovery
+          - sd_flash_done
+          - sd_boot_verified
+
+jobs:
+  recover:
+    runs-on: [self-hosted, hw-coordinator]
+    timeout-minutes: 45
+    env:
+      LG_COORDINATOR: ${{ vars.ADI_LG_COORDINATOR }}
+      VENV_DIR: $HOME/.cache/hw-ci/recovery-venv
+    concurrency:
+      group: hw-place-${{ vars.ADI_LG_COORDINATOR }}-${{ inputs.place }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup uv venv
+        uses: tfcollins/labgrid-plugins/.github/actions/setup-uv-venv@main
+        with:
+          venv_dir: ${{ env.VENV_DIR }}
+          install_cmd: |
+            set -euo pipefail
+            uv pip install --quiet --python "$VENV_DIR/bin/python" PyYAML
+            uv pip install --quiet --python "$VENV_DIR/bin/python" \
+              "adi-labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git"
+
+      - name: Acquire place
+        uses: tfcollins/labgrid-plugins/.github/actions/acquire-place@main
+        with:
+          coordinator: ${{ vars.ADI_LG_COORDINATOR }}
+          place: ${{ inputs.place }}
+          labgrid_client: ${{ env.VENV_DIR }}/bin/labgrid-client
+          wait_minutes: 30
+
+      - name: Dispatch recovery
+        env:
+          LG_COORDINATOR: ${{ vars.ADI_LG_COORDINATOR }}
+          PLACE: ${{ inputs.place }}
+          TARGET_STATE: ${{ inputs.target_state }}
+        run: |
+          set -euo pipefail
+          "$VENV_DIR/bin/python" .github/scripts/recover-place.py "$PLACE" "$TARGET_STATE"
+
+      - name: Release place
+        if: always()
+        env:
+          LG_COORDINATOR: ${{ vars.ADI_LG_COORDINATOR }}
+        run: |
+          set -euo pipefail
+          LGCLIENT="$VENV_DIR/bin/labgrid-client"
+          if [[ -x "$LGCLIENT" ]]; then
+            "$LGCLIENT" -x "$LG_COORDINATOR" -p "${{ inputs.place }}" release || true
+            "$LGCLIENT" -x "$LG_COORDINATOR" cancel-reservation --all 2>/dev/null || true
+          fi
