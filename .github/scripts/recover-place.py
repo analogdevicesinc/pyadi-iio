@@ -30,7 +30,9 @@ RECOVERY_CONFIG = REPO_ROOT / ".github" / "recovery-config.yml"
 def _coord_api_base() -> str:
     coord = os.environ.get("LG_COORDINATOR") or os.environ.get("ADI_LG_COORDINATOR", "")
     if not coord:
-        raise SystemExit("LG_COORDINATOR not set (expected host:port for the gRPC coord)")
+        raise SystemExit(
+            "LG_COORDINATOR not set (expected host:port for the gRPC coord)"
+        )
     host = coord.split(":")[0]
     return f"http://{host}:8000"
 
@@ -45,6 +47,7 @@ def _load_recovery_config() -> dict:
     if not RECOVERY_CONFIG.exists():
         return {}
     import yaml
+
     return yaml.safe_load(RECOVERY_CONFIG.read_text()) or {}
 
 
@@ -57,7 +60,9 @@ def _no_recovery(place_name: str, board: str | None) -> int:
     return 0
 
 
-def _zc706_recovery(place_name: str, board: str, target_state: str, config: dict) -> int:
+def _zc706_recovery(
+    place_name: str, board: str, target_state: str, config: dict
+) -> int:
     """Run BootZynq7000JTAGRecovery against the place.
 
     The strategy needs a *full* labgrid env with explicit JTAG/TFTP
@@ -106,7 +111,9 @@ def _zc706_recovery(place_name: str, board: str, target_state: str, config: dict
     env = Environment(env_path)
     target = env.get_target("main")
     strategy = target.get_driver(Strategy)
-    print(f"[recover-place] running {type(strategy).__name__}.transition({target_state!r})...")
+    print(
+        f"[recover-place] running {type(strategy).__name__}.transition({target_state!r})..."
+    )
     strategy.transition(target_state)
     print(f"[recover-place] {place_name!r}: recovery complete ({target_state}).")
     return 0
