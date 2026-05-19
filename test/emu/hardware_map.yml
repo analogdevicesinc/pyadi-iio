@@ -363,6 +363,14 @@ adrv9375:
           - iio:device4
           - iio:device5
           - iio:device6
+adrv9025:
+- adrv9025-phy
+- emulate:
+    - filename: adrv9025.xml
+    - data_devices:
+        - iio:device3
+        - iio:device4
+
 adxl345:
   - adxl345
   - pyadi_iio_class_support:
