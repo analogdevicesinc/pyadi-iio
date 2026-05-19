@@ -330,3 +330,25 @@ def test_ad9084_tx_data_split_buffers(
     test_dma_tx, iio_uri, classname, channel, use_tx2
 ):
     test_dma_tx(iio_uri, classname, channel, use_tx2)
+
+
+#########################################
+@pytest.mark.iio_hardware("adsy1100")
+def test_pfilt(iio_uri):
+    import adi
+
+    dev = adi.ad9084(uri=iio_uri)
+    this_dir = dirname(realpath(__file__))
+    pfilt_config = join(this_dir, "pfilt_hp_rx.txt")
+    dev.write_pfilt_config(pfilt_config)
+
+
+#########################################
+@pytest.mark.iio_hardware("adsy1100")
+def test_cfilt(iio_uri):
+    import adi
+
+    dev = adi.ad9084(uri=iio_uri)
+    this_dir = dirname(realpath(__file__))
+    cfilt_config = join(this_dir, "cfir_lp_rx.txt")
+    dev.write_cfilt_config(cfilt_config)
