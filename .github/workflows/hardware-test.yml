@@ -67,6 +67,11 @@ jobs:
       # pytest-libiio from running its crashing avahi scan at collection.
       pytest_cmd_template: |
         set -euo pipefail
+        # Power the DUT down once tests finish — on pass, on pytest failure
+        # (set -e exit), or if boot/discovery never completed. Runs while the
+        # place is still acquired (the Release step is separate). Best-effort:
+        # power-off-dut.py never fails the leg, and `|| true` guards the trap.
+        trap '"$VENV_DIR/bin/python" .github/scripts/power-off-dut.py || true' EXIT
         # tail -1: boot-and-discover-uri.py prints `ip:<addr>` as its last line,
         # but adi_lg_plugins/drivers/shelldriver.py:_run_uboot leaks debug
         # prints to stdout while the BootZynq7000JTAGRecovery strategy issues
