@@ -1,0 +1,28 @@
+## ZCU102 + AD9081 on the mini2 lab host (SD-mux boot).
+## Mirrors pyadi-dt/test/hw/env/mini2.yaml — conftest.py transitions the
+## Strategy to ``shell``, then reads the DUT eth0 IP via ADIShellDriver.
+
+targets:
+  main:
+    features:
+      - ad9081
+      - zcu102
+    resources:
+      RemotePlace:
+        name: mini2
+    drivers:
+      VesyncPowerDriver: {}
+      USBSDMuxDriver: {}
+      SerialDriver: {}
+      ADIShellDriver:
+        prompt: 'root@.*'
+        login_prompt: 'analog login: '
+        username: 'root'
+        password: 'analog'
+      KuiperDLDriver: {}
+      MassStorageDriver:
+        partition: '/dev/disk/by-partuuid/a22286d2-01'
+      BootFPGASoC:
+        reached_linux_marker: 'analog'
+        wait_for_linux_prompt_timeout: 180
+        debug_write_boot_log: true
