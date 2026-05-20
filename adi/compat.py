@@ -146,7 +146,25 @@ class compat_libiio_v0_rx:
         """
         if not self._rxbuf:
             self._rx_init_channels()
-        self._rxbuf.refill()
+        try:
+            self._rxbuf.refill()
+        except Exception:
+            # libiio 0.x's `iio_buffer_destroy` calls `network_close` which
+            # reads `iio_device_get_id(dev)` to build the "CLOSE <dev>" iiod
+            # command. If the owning iio.Context is finalized before the
+            # iio.Buffer — which can happen under Python's cycle collector
+            # when refs form cycles (pytest fixtures, traceback locals,
+            # etc.) — that id pointer dangles and the command is built
+            # from freed memory. We've caught it as a SIGSEGV in the
+            # buffer destructor; see iiod-client.c:651 +
+            # network.c:network_close + buffer.c:106.
+            #
+            # The fix is to destroy the buffer NOW, while the device is
+            # still alive, instead of letting it ride along to gc time
+            # where ordering is undefined.
+            del self._rxbuf
+            self._rxbuf = None
+            raise
 
         data_channel_interleaved = []
         ecn = []
