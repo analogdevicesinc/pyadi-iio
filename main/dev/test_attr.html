@@ -116,6 +116,7 @@
 <li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str_device_channel"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str_device_channel()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.attribute_write_only_str_with_depends"><code class="docutils literal notranslate"><span class="pre">attribute_write_only_str_with_depends()</span></code></a></li>
+<li><a class="reference internal" href="#test.attr_tests.attribute_write_profile"><code class="docutils literal notranslate"><span class="pre">attribute_write_profile()</span></code></a></li>
 <li><a class="reference internal" href="#test.attr_tests.floor_step_size"><code class="docutils literal notranslate"><span class="pre">floor_step_size()</span></code></a></li>
 </ul>
 </li>
@@ -832,6 +833,33 @@ are properties and values are values to be written</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.attr_tests.attribute_write_profile">
+<span class="sig-prename descclassname"><span class="pre">test.attr_tests.</span></span><span class="sig-name descname"><span class="pre">attribute_write_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.attr_tests.attribute_write_profile" title="Link to this definition"></a></dt>
+<dd><p>Load a profile file via the driver’s <code class="docutils literal notranslate"><span class="pre">profile</span></code> setter and verify the
+chip is still operationally responsive afterwards.</p>
+<p>Goes around the generic <code class="docutils literal notranslate"><span class="pre">attribute_write_only_str</span></code> helper for two
+reasons specific to the Talise / ADRV9009-style <code class="docutils literal notranslate"><span class="pre">profile</span></code> attribute:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">setattr(sdr,</span> <span class="pre">&quot;profile&quot;,</span> <span class="pre">path)</span></code> indirects through the descriptor
+which re-opens the file and writes the entire XML to
+<code class="docutils literal notranslate"><span class="pre">profile_config</span></code> on every <code class="docutils literal notranslate"><span class="pre">_ctrl</span></code> phy. The descriptor path masks
+failure modes (e.g. iiod connection drop mid-write) by re-raising a
+generic <code class="docutils literal notranslate"><span class="pre">Exception(e)</span></code> that loses error type information.</p></li>
+<li><p>The kernel rejects a profile write if the resulting JESD lane rate
+isn’t a configuration the loaded HDL can lock to — surfaces as
+EINVAL <strong>or</strong> as an iiod <code class="docutils literal notranslate"><span class="pre">Broken</span> <span class="pre">pipe</span></code> when the driver tears down
+the link mid-write and the next request races a recovering iiod.
+Either way, we still want to assert the chip is healthy after.</p></li>
+</ol>
+<p>Pass criteria: open the profile path explicitly (so a missing file is a
+clear FileNotFoundError, not a buried setter error), invoke the
+property setter once, then confirm the chip can still answer a basic
+read (<code class="docutils literal notranslate"><span class="pre">ensm_mode</span></code>). If the setter raised an OSError that’s specific
+to the HDL/profile lane-rate mismatch, re-raise unchanged so the test
+surfaces the real driver complaint instead of a wrapped Exception.</p>
 </dd></dl>
 
 <dl class="py function">
