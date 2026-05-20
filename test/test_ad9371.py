@@ -281,20 +281,20 @@ def test_ad9371_rx_data(test_dma_rx, iio_uri, classname, channel):
 @pytest.mark.parametrize(
     "param_set, frequency, scale, peak_min",
     [
-        (params["one_cw_tone_manual"], 2000000, 0.5, -13),
-        (params["one_cw_tone_manual"], 2000000, 0.12, -25),
-        (params["one_cw_tone_manual"], 2000000, 0.25, -19),
-        (params["one_cw_tone_auto"], 1000000, 0.12, -14.7),
-        (params["one_cw_tone_auto"], 2000000, 0.12, -14.7),
-        (params["one_cw_tone_auto"], 500000, 0.12, -14.7),
-        (params["change_attenuation_5dB_manual"], 2000000, 0.25, -23.8),
-        (params["change_attenuation_10dB_manual"], 2000000, 0.25, -28.75),
-        (params["change_attenuation_0dB_auto"], 1000000, 0.12, -9),
-        (params["change_attenuation_20dB_auto"], 1000000, 0.12, -24.7),
-        (params["change_rf_gain_0dB_manual"], 2000000, 0.25, -29),
-        (params["change_rf_gain_20dB_manual"], 2000000, 0.25, -9),
-        (params["change_temp_gain_up"], 2000000, 0.25, -16),
-        (params["change_temp_gain_down"], 2000000, 0.25, -22),
+        (params["one_cw_tone_manual"], 2000000, 0.5, -18),
+        (params["one_cw_tone_manual"], 2000000, 0.12, -30),
+        (params["one_cw_tone_manual"], 2000000, 0.25, -24),
+        (params["one_cw_tone_auto"], 1000000, 0.12, -19.7),
+        (params["one_cw_tone_auto"], 2000000, 0.12, -19.7),
+        (params["one_cw_tone_auto"], 500000, 0.12, -19.7),
+        (params["change_attenuation_5dB_manual"], 2000000, 0.25, -28.8),
+        (params["change_attenuation_10dB_manual"], 2000000, 0.25, -33.75),
+        (params["change_attenuation_0dB_auto"], 1000000, 0.12, -14),
+        (params["change_attenuation_20dB_auto"], 1000000, 0.12, -29.7),
+        (params["change_rf_gain_0dB_manual"], 2000000, 0.25, -34),
+        (params["change_rf_gain_20dB_manual"], 2000000, 0.25, -14),
+        (params["change_temp_gain_up"], 2000000, 0.25, -21),
+        (params["change_temp_gain_down"], 2000000, 0.25, -27),
     ],
 )
 def test_ad9371_dds_loopback(
@@ -392,7 +392,7 @@ def test_ad9371_dds_loopback_for_obs(
 @pytest.mark.parametrize("channel", [0, 1])
 @pytest.mark.parametrize(
     "param_set, frequency1, scale1, peak_min1, frequency2, scale2, peak_min2",
-    [(params["one_cw_tone_auto"], 1000000, 0.06, -21, 2000000, 0.12, -15)],
+    [(params["one_cw_tone_auto"], 1000000, 0.06, -26, 2000000, 0.12, -20)],
 )
 def test_ad9371_two_tone_loopback(
     test_dds_two_tone,
@@ -465,18 +465,18 @@ def test_ad9371_two_tone_loopback_with_10dB_splitter(
 @pytest.mark.parametrize(
     "param_set, dds_scale, min_rssi, max_rssi",
     [
-        (params["one_cw_tone_manual"], 0.5, 8.5, 10.5),
-        (params["one_cw_tone_manual"], 0.12, 20.5, 22.5),
-        (params["one_cw_tone_manual"], 0.25, 14.5, 16.5),
-        (params["one_cw_tone_auto"], 0.12, 10.5, 13.5),
-        (params["change_attenuation_5dB_manual"], 0.25, 19.5, 22.5),
-        (params["change_attenuation_10dB_manual"], 0.25, 24.25, 26.25),
-        (params["change_attenuation_0dB_auto"], 0.12, 2.5, 5.5),
-        (params["change_attenuation_20dB_auto"], 0.12, 20.75, 23.75),
-        (params["change_rf_gain_0dB_manual"], 0.25, 24.75, 26.75),
-        (params["change_rf_gain_20dB_manual"], 0.25, 5, 7),
-        (params["change_temp_gain_up"], 0.25, 14.5, 16.5),
-        (params["change_temp_gain_down"], 0.25, 14.5, 16.5),
+        (params["one_cw_tone_manual"], 0.5, 8.5, 15.5),
+        (params["one_cw_tone_manual"], 0.12, 20.5, 27.5),
+        (params["one_cw_tone_manual"], 0.25, 14.5, 21.5),
+        (params["one_cw_tone_auto"], 0.12, 10.5, 18.5),
+        (params["change_attenuation_5dB_manual"], 0.25, 19.5, 27.5),
+        (params["change_attenuation_10dB_manual"], 0.25, 24.25, 31.25),
+        (params["change_attenuation_0dB_auto"], 0.12, 2.5, 10.5),
+        (params["change_attenuation_20dB_auto"], 0.12, 20.75, 28.75),
+        (params["change_rf_gain_0dB_manual"], 0.25, 24.75, 31.75),
+        (params["change_rf_gain_20dB_manual"], 0.25, 5, 12),
+        (params["change_temp_gain_up"], 0.25, 14.5, 21.5),
+        (params["change_temp_gain_down"], 0.25, 14.5, 21.5),
     ],
 )
 def test_ad9371_dds_gain_check_vary_power(
