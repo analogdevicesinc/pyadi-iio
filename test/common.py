@@ -35,7 +35,7 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "production_test: mark tests for production")
 
 
-def pytest_collection_modifyitems(items):
+def pytest_collection_modifyitems(config, items):
     # Map HDL project names to tests as markers
     from test import test_map as tm
 
@@ -54,8 +54,45 @@ def pytest_collection_modifyitems(items):
                         item.add_marker(marker.replace("-", "_"))
                     break
 
+    # --board=<tag>: deselect iio_hardware-marked tests whose marker arg list
+    # does not include <tag>. Set by hw-matrix dynamic_mode legs so a single
+    # matrix entry runs only the tests for its board. Items without an
+    # iio_hardware marker are left alone — they aren't board-scoped.
+    board = config.getoption("--board") if hasattr(config, "getoption") else None
+    if board:
+        kept, dropped = [], []
+        for item in items:
+            mark = item.get_closest_marker("iio_hardware")
+            if mark is None:
+                kept.append(item)
+                continue
+            hw_arg = mark.args[0] if mark.args else []
+            # Normalize: many tests pass a bare string like
+            # @pytest.mark.iio_hardware("ad9081_full_bw"); `board in str`
+            # would substring-match and falsely include unrelated firmware
+            # variants. Wrap to a single-element list so we get exact
+            # membership semantics, matching how pytest-libiio's fixture
+            # internals normalize the marker arg.
+            hardware_list = hw_arg if isinstance(hw_arg, list) else [hw_arg]
+            if board in hardware_list:
+                kept.append(item)
+            else:
+                dropped.append(item)
+        if dropped:
+            config.hook.pytest_deselected(items=dropped)
+            items[:] = kept
+
 
 def pytest_addoption(parser):
+    parser.addoption(
+        "--board",
+        default="",
+        help=(
+            "Restrict collection to tests whose @pytest.mark.iio_hardware "
+            "marker includes the given board tag. Used by hw-matrix "
+            "dynamic_mode to scope a matrix leg to a single board."
+        ),
+    )
     parser.addoption(
         "--production-tests", action="store_true", help="Run production tests",
     )

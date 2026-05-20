@@ -1,0 +1,38 @@
+## ADRV9009 + ZC706 on the nemo lab host (TFTP boot).
+## Mirrors pyadi-dt/test/hw/env/nemo.yaml — conftest.py transitions the
+## Strategy to ``shell``, then reads the DUT eth0 IP via ADIShellDriver.
+## Must run on the nemo host (TFTPServerDriver consumes the local root).
+
+targets:
+  main:
+    features:
+      - adrv9009
+      - zc706
+    resources:
+      RemotePlace:
+        name: nemo
+      TFTPServerResource:
+        address: 'auto'
+        port: 3069
+        root: /var/lib/tftpboot
+    drivers:
+      TFTPServerDriver: {}
+      KuiperDLDriver: {}
+      SerialDriver: {}
+      HomeAssistantPowerDriver: {}
+      SSHDriver: {}
+      ADIShellDriver:
+        prompt: 'root@.*'
+        login_prompt: 'analog login: '
+        username: 'root'
+        password: 'analog'
+      BootFPGASoCTFTP:
+        wait_for_linux_prompt_timeout: 120
+        reached_linux_marker: '@analog'
+        uboot_prompt: 'Zynq>.*'
+        kernel_image_name: 'uImage'
+        dtb_image_name: 'devicetree.dtb'
+        boot_cmd: 'bootm'
+        kernel_addr: '0x3000000'
+        dtb_addr: '0x2A00000'
+        bootargs: 'console=ttyPS0,115200 root=/dev/mmcblk0p2 rw earlycon rootfstype=ext4 rootwait clk_ignore_unused cpuidle.off=1'

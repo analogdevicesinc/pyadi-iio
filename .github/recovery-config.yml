@@ -1,0 +1,94 @@
+# Per-place recovery configuration for the hardware-recover workflow.
+#
+# The recover-place.py dispatcher reads this file. Each entry under
+# `places:` is keyed by the labgrid place name and contains the
+# synthesized labgrid env yaml that the place's recovery strategy needs.
+#
+# Boards without a recovery strategy don't appear here — the dispatcher
+# will print "no recovery defined" and exit cleanly. Boards whose
+# strategy is wired but whose artifacts aren't staged yet can leave
+# their block empty (the dispatcher logs a clear skip-with-reason).
+#
+# Reference: labgrid-plugins/examples/zynq7000_recovery/lg_zc706_recovery.yaml
+# Strategy:  adi_lg_plugins.strategies.BootZynq7000JTAGRecovery
+#
+# Once you populate a place block, run:
+#   gh workflow run hardware-recover.yml -f place=<name>
+
+places:
+  # nemo: zc706 + adrv9009, BootFPGASoCSSH. Recovery is a repeated hard
+  # power-cycle to a Linux shell. The boot env is auto-fetched from the
+  # coordinator (/api/places/nemo/env-yaml?tier=boot) — the same yaml CI
+  # uses — so no env_yaml is needed here. Set `retries` to how many extra
+  # power-cycles to attempt (each reconstructs a fresh Strategy). Add an
+  # explicit `env_yaml:` block only to recover without coordinator access.
+  nemo:
+    retries: 3
+
+# Worked example (commented out — uncomment and fill in to enable bq recovery).
+# Operator must first stage artifacts on the runner host:
+#   /tmp/recovery/{ps7_init.tcl, u-boot.elf}
+#   /tmp/bootgen_extract/system_top.bit
+#   /var/lib/tftpboot/{uImage, devicetree.dtb, uInitrd.recovery}
+#   /tmp/kuiper_cache/2025-03-18-ADI-Kuiper-full.img
+#
+# places:
+#   bq:
+#     env_yaml: |
+#       targets:
+#         main:
+#           features: [adrv9371, zc706, jtag-recovery]
+#           resources:
+#             HomeAssistantOutlet:
+#               url: 'http://10.0.0.24:8123'
+#               token: 'REPLACE_WITH_TOKEN'
+#               entity_id: 'switch.board_0_socket_1'
+#             RawSerialPort:
+#               port: /dev/serial/by-id/usb-Silicon_Labs_CP2103_USB_to_UART_Bridge_Controller_0001-if00-port0
+#               speed: 115200
+#             NetworkService:
+#               address: 10.0.0.23
+#               username: root
+#               password: analog
+#             TFTPServerResource:
+#               address: '10.0.0.41'
+#               port: 3069
+#               root: /var/lib/tftpboot
+#             XilinxDeviceJTAG:
+#               root_target: 1
+#             XilinxVivadoTool:
+#               vivado_path: /opt/Xilinx/Vivado/2023.2
+#               xsdb_path: /opt/Xilinx/Vivado/2023.2/bin/xsdb
+#               version: '2023.2'
+#           drivers:
+#             HomeAssistantPowerDriver: {}
+#             SerialDriver: {}
+#             TFTPServerDriver: {}
+#             XilinxJTAGDriver: {}
+#             ADIShellDriver:
+#               prompt: 'root@.*[#$]'
+#               login_prompt: '(analog|recovery) login: ?'
+#               username: 'root'
+#               password: 'analog'
+#             BootZynq7000JTAGRecovery:
+#               ps7_init_tcl: /tmp/recovery/ps7_init.tcl
+#               uboot_elf: /tmp/recovery/u-boot.elf
+#               bitstream_path: /tmp/bootgen_extract/system_top.bit
+#               a9_target_name: '*Cortex-A9 MPCore #0'
+#               recovery_kernel: 'uImage'
+#               recovery_dtb: 'devicetree.dtb'
+#               recovery_initramfs: 'uInitrd.recovery'
+#               recovery_login_marker: 'recovery login:'
+#               sd_image_path: '/tmp/kuiper_cache/2025-03-18-ADI-Kuiper-full.img'
+#               sd_device: '/dev/mmcblk0'
+#               download_cmd_template: 'wget -q -O - "{url}"'
+#               board_variant: 'zynq-zc706-adv7511-adrv937x'
+#               uboot_prompt: 'Zynq>.*'
+#               kernel_addr: '0x3000000'
+#               dtb_addr: '0x2A00000'
+#               initramfs_addr: '0x10000000'
+#               bootargs: 'console=ttyPS0,115200 earlyprintk loglevel=8 rdinit=/init'
+#               jtag_bootstrap_retries: 1
+#               wait_for_uboot_prompt_timeout: 90
+#               wait_for_recovery_linux_timeout: 240
+#               wait_for_sd_flash_timeout: 1800

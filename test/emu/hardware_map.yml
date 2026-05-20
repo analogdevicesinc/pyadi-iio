@@ -318,7 +318,15 @@ adrv9002:
           - iio:device2
           - iio:device4
 adrv9009:
+  # Full adrv9009 chip: PHY + main TX + main RX + RX observation.
+  # Listing all four lets pytest-libiio's lookup_hw_from_map score this
+  # entry highest for a real adrv9009 DUT — otherwise adrv9008-2 wins
+  # the tie since its entry has three drivers and an adrv9009 DUT has all
+  # of them (plus the extra axi-adrv9009-rx-hpc that distinguishes it).
   - adrv9009-phy
+  - axi-adrv9009-tx-hpc
+  - axi-adrv9009-rx-hpc
+  - axi-adrv9009-rx-obs-hpc
   - pyadi_iio_class_support:
       - adrv9009
 adrv9009-dual:
@@ -350,6 +358,8 @@ adrv9008-2:
           - iio:device5
 adrv9371:
   - ad9371-phy
+  - pyadi_iio_class_support:
+      - ad9371
   - emulate:
       - filename: ad9371.xml
       - data_devices:

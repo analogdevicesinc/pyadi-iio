@@ -241,6 +241,11 @@ def test_attribute_write_only_str(request):
 
 
 @pytest.fixture
+def test_attribute_write_profile(request):
+    yield attribute_write_profile
+
+
+@pytest.fixture
 def test_attribute_check_range_readonly_with_depends(request):
     yield attribute_check_range_readonly_with_depends
 

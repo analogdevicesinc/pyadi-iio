@@ -351,6 +351,51 @@ def attribute_write_only_str(uri, classname, attr, value):
         raise Exception(e)
 
 
+def attribute_write_profile(uri, classname, profile_path):
+    """Load a profile file via the driver's ``profile`` setter and verify the
+    chip is still operationally responsive afterwards.
+
+    Goes around the generic ``attribute_write_only_str`` helper for two
+    reasons specific to the Talise / ADRV9009-style ``profile`` attribute:
+
+    1. ``setattr(sdr, "profile", path)`` indirects through the descriptor
+       which re-opens the file and writes the entire XML to
+       ``profile_config`` on every ``_ctrl`` phy. The descriptor path masks
+       failure modes (e.g. iiod connection drop mid-write) by re-raising a
+       generic ``Exception(e)`` that loses error type information.
+    2. The kernel rejects a profile write if the resulting JESD lane rate
+       isn't a configuration the loaded HDL can lock to — surfaces as
+       EINVAL **or** as an iiod ``Broken pipe`` when the driver tears down
+       the link mid-write and the next request races a recovering iiod.
+       Either way, we still want to assert the chip is healthy after.
+
+    Pass criteria: open the profile path explicitly (so a missing file is a
+    clear FileNotFoundError, not a buried setter error), invoke the
+    property setter once, then confirm the chip can still answer a basic
+    read (``ensm_mode``). If the setter raised an OSError that's specific
+    to the HDL/profile lane-rate mismatch, re-raise unchanged so the test
+    surfaces the real driver complaint instead of a wrapped Exception.
+    """
+    import os
+
+    if not os.path.isfile(profile_path):
+        raise FileNotFoundError(f"profile file not found: {profile_path}")
+
+    sdr = eval(classname + "(uri='" + uri + "')")
+    try:
+        if not hasattr(sdr, "profile"):
+            raise AttributeError(f"{classname} has no 'profile' attribute")
+        # Use the property setter directly (not setattr) so the call site
+        # is grep-visible and the error path doesn't wrap exceptions.
+        sdr.profile = profile_path
+        # Verify the chip is still talking after the write. A successful
+        # sysfs write that left the chip wedged would otherwise count as
+        # a passing test under the previous helper.
+        _ = sdr.ensm_mode
+    finally:
+        del sdr
+
+
 def attribute_write_only_str_with_depends(uri, classname, attr, value, depends):
     """attribute_write_only_str_with_depends: Write only string class
     property with dependent write only properties
