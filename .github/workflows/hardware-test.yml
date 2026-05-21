@@ -27,7 +27,7 @@ on:
     - cron: "0 8 * * *"
 
 jobs:
-  hw:
+  hardware:
     if: >-
       github.event_name != 'pull_request' ||
       contains(github.event.pull_request.labels.*.name, 'hw-test')
