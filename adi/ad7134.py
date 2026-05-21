@@ -92,8 +92,8 @@ class ad7134(rx, context_manager):
         self._set_iio_dev_attr_str("filter_type", ftype)
 
     def sync(self):
-        """Reset AD7134 digital interface (write to ad7134_sync)"""
-        self._set_iio_dev_attr_str("ad7134_sync", "enable")
+        """Reset AD7134 digital interface (broadcast DIG_IF_RESET via cs_gpio)"""
+        self._set_iio_dev_attr_str("ad4134_sync", "enable")
 
     def reg_read(self, reg):
         """Direct register access via debugfs"""
@@ -106,18 +106,14 @@ class ad7134(rx, context_manager):
             "direct_reg_access", f"{reg} {value}", self._ctrl
         )
 
-    def pdn_reset(self):
-        """Full power-down reset via PDN GPIO (handled by kernel driver)"""
-        self._set_iio_dev_attr_str("ad7134_pdn_reset", "1")
-
     @property
     def odr_set_freq(self):
-        """AD7134 ODR frequency setting"""
-        return self._get_iio_dev_attr("odr_set_freq")
+        """AD7134 ODR frequency (alias for device-level sampling_frequency)"""
+        return self._get_iio_dev_attr("sampling_frequency")
 
     @odr_set_freq.setter
     def odr_set_freq(self, freq):
-        self._set_iio_dev_attr_str("odr_set_freq", str(int(freq)))
+        self._set_iio_dev_attr_str("sampling_frequency", str(int(freq)))
 
     def to_volts(self, index, val):
         """Converts raw value to SI"""
