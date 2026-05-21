@@ -99,4 +99,14 @@ jobs:
       # reusable-workflow level. Upload step is continue-on-error so a
       # Prism outage / missing URL won't redden a HW run.
       prism_upload: ${{ vars.PRISM_UPLOAD_ENABLED == 'true' }}
+      # Run the vendored tfcollins/prism uploader (stdlib-only; no pip/clone
+      # of the private Prism repo needed). The reusable workflow exports
+      # PRISM_URL / PRISM_EMAIL / PRISM_PASSWORD / PRISM_PROJECT / PRISM_JUNIT
+      # / PRISM_RUN_NAME / PRISM_BOARD / PRISM_CARRIER / PRISM_PLACE / VENV_DIR.
+      prism_upload_cmd: >-
+        "$VENV_DIR/bin/python" .github/scripts/prism_upload_run.py "$PRISM_JUNIT"
+        --url "$PRISM_URL" --project "$PRISM_PROJECT" --run-name "$PRISM_RUN_NAME"
+        --auto-create-project
+        --tag "board=$PRISM_BOARD" --tag "carrier=$PRISM_CARRIER"
+        --tag "place=$PRISM_PLACE" --tag "sha=$GITHUB_SHA"
     secrets: inherit
