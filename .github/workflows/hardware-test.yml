@@ -109,4 +109,9 @@ jobs:
         --auto-create-project
         --tag "board=$PRISM_BOARD" --tag "carrier=$PRISM_CARRIER"
         --tag "place=$PRISM_PLACE" --tag "sha=$GITHUB_SHA"
-    secrets: inherit
+    # Pass Prism creds explicitly: `secrets: inherit` does not deliver them
+    # across orgs (this repo is analogdevicesinc; the reusable workflow is
+    # tfcollins), so they arrive empty. Explicit secrets resolve caller-side.
+    secrets:
+      PRISM_EMAIL: ${{ secrets.PRISM_EMAIL }}
+      PRISM_PASSWORD: ${{ secrets.PRISM_PASSWORD }}
