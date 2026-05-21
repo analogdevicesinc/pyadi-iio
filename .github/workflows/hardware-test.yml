@@ -104,7 +104,7 @@ jobs:
       # PRISM_URL / PRISM_EMAIL / PRISM_PASSWORD / PRISM_PROJECT / PRISM_JUNIT
       # / PRISM_RUN_NAME / PRISM_BOARD / PRISM_CARRIER / PRISM_PLACE / VENV_DIR.
       prism_upload_cmd: >-
-        "$VENV_DIR/bin/python" .github/scripts/prism_upload_run.py "$PRISM_JUNIT"
+        python3 .github/scripts/prism_upload_run.py "$PRISM_JUNIT"
         --url "$PRISM_URL" --project "$PRISM_PROJECT" --run-name "$PRISM_RUN_NAME"
         --auto-create-project
         --tag "board=$PRISM_BOARD" --tag "carrier=$PRISM_CARRIER"
