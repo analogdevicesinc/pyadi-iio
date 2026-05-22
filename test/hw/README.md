@@ -16,12 +16,14 @@ existing suite stays on Jenkins during the migration.
 test/hw/
 ├── conftest.py             # iio_uri fixture: boot board → ip:URI
 ├── env/
-│   ├── mini2.yaml          # ZCU102 + AD9081 (SD-mux boot)
+│   ├── mini2.yaml          # ZCU102 + AD9081  (SD-mux boot)
 │   ├── bq.yaml             # ZC706 + ADRV9371 (TFTP boot)
-│   └── nemo.yaml           # ZC706 + ADRV9009 (TFTP boot)
+│   ├── nemo.yaml           # ZC706 + ADRV9009 (TFTP boot)
+│   └── nuc.yaml            # VCU118 + FMCDAQ3 (JTAG fabric boot)
 ├── test_ad9081_smoke.py
 ├── test_ad9371_smoke.py
-└── test_adrv9009_smoke.py
+├── test_adrv9009_smoke.py
+└── test_daq3_smoke.py      # FMCDAQ3 (daq3): context, RX, DAC→ADC loopback tone
 ```
 
 ## How a test resolves a URI
@@ -77,8 +79,12 @@ the local path — the CI workflow's `venv_install_cmd` does this.
 
 ## Adding a new board
 
-1. Add an entry to `.github/hw-nodes.json` (place + runner_label + the
-   test files to run for that place; `legs: coord` for now).
+1. Ensure the board tag is listed in `.github/supported-boards.yml`.
+   The workflow runs in `dynamic_mode`: the matrix is discovered from
+   the coordinator's live places at preflight and kept only if the
+   place's `daughter-board` tag appears in that file. (The static
+   `.github/hw-nodes.json` is **not** consulted for test selection in
+   dynamic mode — it survives for runner registration / docs.)
 2. Create `test/hw/env/<place>.yaml` declaring `RemotePlace`, the
    driver stack, and the right boot Strategy for that carrier
    (BootFPGASoC for ZCU102/SD-mux, BootFPGASoCTFTP for ZC706/TFTP,
@@ -92,6 +98,30 @@ the local path — the CI workflow's `venv_install_cmd` does this.
    (e.g. `ad9081`, `adrv9371`, `adrv9009`). CI's hw-matrix legs run
    `-m iio_hardware --board=<tag>` and deselect unmarked tests; without
    the marker your smoke test will silently never run in CI.
+
+## Prism results upload
+
+Each matrix leg can post its JUnit XML to a [Prism](https://github.com/tfcollins/prism)
+results dashboard after pytest finishes. The upload is **opt-in** and
+runs `continue-on-error` — a Prism outage or missing config never
+reddens a HW run. No workflow edit is needed; it is gated purely by
+repo/org configuration:
+
+```bash
+gh variable set PRISM_UPLOAD_ENABLED --repo analogdevicesinc/pyadi-iio --body true
+gh variable set PRISM_URL --repo analogdevicesinc/pyadi-iio --body 'http://10.0.0.113:8088'
+gh secret   set PRISM_EMAIL    --repo analogdevicesinc/pyadi-iio --body 'ci@example.com'
+gh secret   set PRISM_PASSWORD --repo analogdevicesinc/pyadi-iio --body '...'
+```
+
+`PRISM_EMAIL` / `PRISM_PASSWORD` must be set on **this** repo: the
+reusable workflow lives in `tfcollins/labgrid-plugins` (a different
+org) and `secrets: inherit` does not cross orgs, so the workflow passes
+them explicitly caller-side. The upload runs the vendored stdlib-only
+`.github/scripts/prism_upload_run.py` and tags each run with
+`board`/`carrier`/`place`/`sha`. See
+`labgrid-plugins/docs/source/user-guide/hardware-ci.rst` for the
+cross-repo results-sink design.
 
 ## Running alongside Jenkins
 

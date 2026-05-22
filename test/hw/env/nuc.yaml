@@ -1,0 +1,37 @@
+## VCU118 + FMCDAQ3 (daq3) on the nuc lab host (MicroBlaze JTAG / fabric boot).
+## Mirrors pyadi-dt/test/hw/env/nuc.yaml. Unlike the SD (mini2) and TFTP (bq/nemo)
+## boards, VCU118 has no PS/U-Boot/SD path: labgrid drives the boot through
+## BootFabric + XilinxJTAGDriver (bitstream + simpleImage kernel over JTAG).
+## conftest.py / boot-and-discover-uri.py transition the Strategy to ``shell``
+## (BootFabric runs udhcpc on eth0 in its fixup_networking state), then read the
+## DUT eth0 IP via ADIShellDriver.
+##
+## NOTE: in dynamic_mode CI this file is NOT used — the coordinator generates the
+## LG_ENV per leg. This file is for local/manual dry runs:
+##   LG_COORDINATOR=10.0.0.41:20408 LG_ENV=test/hw/env/nuc.yaml \
+##   pytest -v test/hw/test_daq3_smoke.py --board=daq3 -m iio_hardware
+
+targets:
+  main:
+    features:
+      - daq3
+      - vcu118
+    resources:
+      RemotePlace:
+        name: nuc
+    drivers:
+      SerialDriver: {}
+      ADIShellDriver:
+        prompt: '#.*'
+        login_prompt: 'buildroot login: '
+        username: 'root'
+        password: 'analog'
+      XilinxJTAGDriver: {}
+      SSHDriver: {}
+      VesyncPowerDriver: {}
+      BootFabric:
+        reached_boot_marker: 'login:'
+        trigger_dhcp_reset: true
+        wait_for_boot_timeout: 700
+        debug_write_boot_log: true
+        power_off_delay: 30
