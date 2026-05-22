@@ -74,13 +74,18 @@ jobs:
           pip uninstall -y paramiko
           pytest -vs --emu --iio-coverage --cov=adi -k 'not prod' --skip-scan
       - name: Generate filtered coverage report
+        id: coverage-report
         run: |
           python .github/scripts/format_coverage_report.py \
             --hardware-names '${{ needs.detect-new-classes.outputs.hardware_names }}' \
             --new-classes '${{ needs.detect-new-classes.outputs.new_classes }}' \
             --coverage-folder iio_coverage_results \
+            --fail-under 75 \
             --output coverage_pr_comment.md
       - name: Post coverage report as PR comment
+        # Always post the report, even when the coverage threshold check fails,
+        # so reviewers can see which attributes are untested.
+        if: always() && hashFiles('coverage_pr_comment.md') != ''
         uses: mshick/add-pr-comment@v2
         with:
           message-id: iio-context-coverage
