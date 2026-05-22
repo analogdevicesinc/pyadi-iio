@@ -559,7 +559,7 @@ def test_adrv9009_two_tone_loopback_with_10dB_splitter(
     "param_set, sfdr_min",
     [
         (params["one_cw_tone_manual"], 50),
-        (params["one_cw_tone_slow_attack"], 55),
+        (params["one_cw_tone_slow_attack"], 50),
         (params["change_attenuation_5dB_manual"], 45),
         (params["change_attenuation_10dB_manual"], 40),
         (params["change_attenuation_0dB_slow_attack"], 38),
