@@ -91,7 +91,8 @@ def format_untested_details(data):
 
 
 def generate_report(hardware_names, new_classes, coverage_folder, fail_under):
-    """Generate the full markdown report.
+    """
+    Generate the full markdown report.
 
     Returns a tuple of (report_markdown, below_threshold) where
     ``below_threshold`` is the list of hardware entries whose total coverage
