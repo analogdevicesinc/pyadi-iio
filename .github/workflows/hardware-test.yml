@@ -115,3 +115,9 @@ jobs:
     secrets:
       PRISM_EMAIL: ${{ secrets.PRISM_EMAIL }}
       PRISM_PASSWORD: ${{ secrets.PRISM_PASSWORD }}
+      # PAT (Administration:read) the reusable workflow uses in dynamic_mode
+      # to list self-hosted runners and skip places with no online runner —
+      # otherwise a place tagged for a runner this repo lacks (e.g. hw-nuc)
+      # queues forever. Resolves empty if the secret is unset, which simply
+      # disables the filter (safe). Kept separate from any clone credential.
+      RUNNER_QUERY_TOKEN: ${{ secrets.RUNNER_QUERY_TOKEN }}
