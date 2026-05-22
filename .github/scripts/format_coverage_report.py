@@ -91,13 +91,7 @@ def format_untested_details(data):
 
 
 def generate_report(hardware_names, new_classes, coverage_folder, fail_under):
-    """
-    Generate the full markdown report.
-
-    Returns a tuple of (report_markdown, below_threshold) where
-    ``below_threshold`` is the list of hardware entries whose total coverage
-    fell below ``fail_under`` percent.
-    """
+    """Generate the report; return (markdown, parts_below_threshold)."""
     lines = []
     lines.append("# IIO Context Coverage Report")
     lines.append("")
