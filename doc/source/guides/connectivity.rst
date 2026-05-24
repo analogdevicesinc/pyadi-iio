@@ -26,7 +26,7 @@ Devices that are connected over USB or are on a system with IIO devices like a Z
   # Read back properties from hardware
   print(sdr.tx_rf_bandwidth)
 
-Whoever if you have multiple USB device connected an want to pick one specifically, the set the USB URI similar to IP:
+However, if you have multiple USB device connected an want to pick one specifically, the set the USB URI similar to IP:
 
 .. code-block:: python
 
