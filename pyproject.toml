@@ -52,6 +52,10 @@ mcp = [
     "fastmcp",
     "numpy",
 ]
+prism_report = [
+    "plotly >= 5.0",
+    "pyyaml >= 5.4",
+]
 
 [project.urls]
 homepage = "https://analogdevicesinc.github.io/pyadi-iio/"
