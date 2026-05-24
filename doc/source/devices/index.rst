@@ -104,6 +104,7 @@ Supported Devices
    adi.adpd410x
    adi.adrf5720
    adi.adrv9002
+   adi.adrv9002_multi
    adi.adrv9009
    adi.adrv9009_zu11eg
    adi.adrv9009_zu11eg_fmcomms8
