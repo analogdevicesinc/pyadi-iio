@@ -77,6 +77,7 @@ Sections
    :maxdepth: 1
 
    guides/quick
+   concepts
    attr/index
    guides/examples
    guides/connectivity

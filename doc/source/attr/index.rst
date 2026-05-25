@@ -20,3 +20,6 @@ If more detail is required about a specific property it can be directly inspecte
   :language: none
 
 For complete documentation about class properties reference the :doc:`supported devices</devices/index>` classes.
+
+.. seealso::
+   :doc:`Concepts: properties and attributes <../concepts>`

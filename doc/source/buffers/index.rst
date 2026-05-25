@@ -1,6 +1,10 @@
 Buffers
 ==================
 
+.. seealso::
+   :doc:`Concepts: the rx() and tx() methods <../concepts>` for the data
+   shape contract before reading the mechanics below.
+
 Using buffers or transmitting and receiving data is done through interacting with two methods.
 
 For receivers this is the **rx** method. How data is captured and therefore produced by this method is dependent on two main properties:
