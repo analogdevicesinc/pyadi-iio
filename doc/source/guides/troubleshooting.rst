@@ -91,8 +91,8 @@ what the class binds to. If you're using a multi-class module (e.g.,
 Multi-chip / _mc class doesn't find all devices
 -----------------------------------------------
 
-**Symptom:** ``adi.ad9081_mc(uri=..., phy_dev_names=[...])`` fails to
-discover all the chips, or only sees a subset.
+**Symptom:** ``adi.ad9081_mc(uri=..., phy_dev_name="ad9081-phy")`` fails
+to discover all the chips, or only sees a subset.
 
 **Cause:** The context doesn't expose every expected device, usually
 because the FPGA design is misconfigured or only one chip is up.
