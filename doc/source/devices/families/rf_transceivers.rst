@@ -38,7 +38,7 @@ Mental model
 ------------
 
 Every part in this family is a complex transceiver. ``rx()`` returns a
-``complex64`` ndarray (or list of them, one per enabled MIMO channel),
+``complex128`` ndarray (or list of them, one per enabled MIMO channel),
 and ``tx()`` takes the same shape. ``rx_enabled_channels = [0]`` means
 "enable channel 0," which is the full I/Q pair — never just I or just Q.
 
@@ -61,7 +61,7 @@ Minimal example
    sdr.gain_control_mode_chan0 = "slow_attack"
    sdr.rx_buffer_size = 4096
 
-   data = sdr.rx()      # complex64, length 4096
+   data = sdr.rx()      # complex128, length 4096
 
 Common properties
 -----------------
