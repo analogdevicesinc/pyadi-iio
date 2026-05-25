@@ -20,6 +20,11 @@ jobs:
           bash ./.github/scripts/install_pydeps.sh
           pip install -r requirements_doc.txt
 
+      - name: Verify every per-part doc is assigned to a family
+        run: |
+          pip install invoke
+          invoke checkdocs
+
       - name: Check doc build
         run: |
           cd doc
