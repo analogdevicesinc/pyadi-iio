@@ -10,7 +10,7 @@ For shorter snippets covering one feature at a time, see the
 :doc:`concepts page <../concepts>` and the :doc:`buffers page <../buffers/index>`.
 For longer scripts (including FPGA-board-specific demos), see the
 ``examples/`` directory in the
-`source repository <https://github.com/analogdevicesinc/pyadi-iio/tree/master/examples>`_.
+`source repository <https://github.com/analogdevicesinc/pyadi-iio/tree/main/examples>`_.
 
 Capture and plot
 ----------------
@@ -28,7 +28,7 @@ buffer, and plot the magnitude spectrum.
    sdr.sample_rate = 2_000_000
    sdr.rx_lo = 2_400_000_000
    sdr.rx_rf_bandwidth = 2_000_000
-   sdr.gain_control_mode = "slow_attack"
+   sdr.gain_control_mode_chan0 = "slow_attack"
    sdr.rx_buffer_size = 4096
 
    data = sdr.rx()  # complex128 ndarray, length 4096
@@ -119,7 +119,7 @@ name.
 
    imu = adi.adis16495(uri="serial:/dev/ttyUSB0,115200")
    imu.rx_buffer_size = 16
-   imu.rx_enabled_channels = [0, 3]  # accel_x and anglvel_x
+   imu.rx_enabled_channels = [3, 0]  # accel_x and anglvel_x
    imu.rx_annotated = True
 
    data = imu.rx()
@@ -135,4 +135,4 @@ See also
 * :doc:`Concepts <../concepts>`
 * :doc:`Buffers <../buffers/index>`
 * :doc:`FPGA features (DDS, DMA sync) <../fpga/index>`
-* Longer scripts in the `examples/` directory of the repo.
+* Longer scripts in the ``examples/`` directory of the repo.
