@@ -66,7 +66,8 @@ For parts with a capture buffer, ``rx()`` returns a NumPy array:
 * **Single enabled channel:** a single ndarray.
 * **Multiple enabled channels:** a list of ndarrays, one per channel.
 * **Complex parts** (transceivers, AD9081, etc.): the dtype is
-  ``complex64``; I and Q are already combined.
+  ``complex128`` (NumPy promotes the underlying ``int16`` I and Q into
+  a 128-bit complex); I and Q are already combined.
 * **Real parts** (precision ADCs, IMUs): the native dtype — typically
   ``int16`` or ``int32``.
 
@@ -121,7 +122,7 @@ process — you can't realistically refill the buffer in time otherwise.
 
 The catch: once a cyclic buffer is loaded, you must call
 ``tx_destroy_buffer()`` before pushing a new one. Forgetting this is
-the most common cause of "my second tx() call hangs or errors."
+the most common cause of "my second tx() call fails with a clear exception."
 
 Raw vs. SI units
 ----------------
