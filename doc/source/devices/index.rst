@@ -1,158 +1,56 @@
 Supported Devices
 =================
 
+pyadi-iio supports ~150 ADI parts. Devices are grouped into families that
+share usage patterns. Pick the family that matches your part to read the
+shared usage notes, then drill into the per-part API reference under it.
 
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
 
+   * - Family
+     - Description
+   * - :doc:`RF Transceivers <families/rf_transceivers>`
+     - Integrated wide-tuning RF transceivers (Pluto, AD9361, ADRV9002/9009).
+   * - :doc:`High-Speed / JESD ADCs <families/jesd_adcs>`
+     - GSPS-class ADCs with JESD204 data paths (AD9081, AD9084, AD9680, ...).
+   * - :doc:`High-Speed / JESD DACs <families/jesd_dacs>`
+     - GSPS-class DACs with JESD204 data paths (AD9136, AD9162, AD9172, ...).
+   * - :doc:`Precision ADCs <families/precision_adcs>`
+     - SAR / sigma-delta / integrated-signal-chain ADCs.
+   * - :doc:`Precision DACs <families/precision_dacs>`
+     - SPI/I2C DACs and DAC+ADC combos.
+   * - :doc:`IMUs & Motion Sensors <families/imus_motion>`
+     - ADIS16xxx IMUs, ADXL accelerometers, ADXRS gyroscopes.
+   * - :doc:`Clocks, PLLs & Synthesizers <families/clocks_plls>`
+     - ADF synthesizers and HMC clock generators.
+   * - :doc:`RF Front-End <families/rf_frontend>`
+     - Discrete amplifiers, attenuators, mixers, switches, tunable filters.
+   * - :doc:`Beamformers & Phased Array <families/beamformers>`
+     - ADAR1000, CN0566.
+   * - :doc:`Sensors & Specialty <families/sensors_specialty>`
+     - Temperature, capacitance, isolated, resolver, optical, lidar.
+   * - :doc:`Multi-Chip / Eval Systems <families/eval_systems>`
+     - FMC/DAQ daughter cards, CN0xxx reference designs, multi-SOM systems.
+   * - :doc:`Utility / Infrastructure <families/utility>`
+     - JESD debug, gen_mux, tdd, tddn, switches, helpers.
 
 .. toctree::
-   :maxdepth: 2
+   :hidden:
 
-   adi.QuadMxFE_multi
-   adi.ad2s1210
-   adi.ad353xr
-   adi.ad3552r
-   adi.ad3552r_hs
-   adi.ad4020
-   adi.ad405x
-   adi.ad4080
-   adi.ad4110
-   adi.ad4130
-   adi.ad4170
-   adi.ad4630
-   adi.ad469x
-   adi.ad514x
-   adi.ad5592r
-   adi.ad5627
-   adi.ad5686
-   adi.ad5706r
-   adi.ad5710r
-   adi.ad579x
-   adi.ad5754r
-   adi.ad5940
-   adi.ad6676
-   adi.ad7091rx
-   adi.ad7124
-   adi.ad7134
-   adi.ad717x
-   adi.ad719x
-   adi.ad7291
-   adi.ad738x
-   adi.ad7405
-   adi.ad7490
-   adi.ad7606
-   adi.ad7689
-   adi.ad7746
-   adi.ad7768
-   adi.ad777x
-   adi.ad7799
-   adi.ad9081
-   adi.ad9081_mc
-   adi.ad9083
-   adi.ad9084
-   adi.ad9084_mc
-   adi.ad9094
-   adi.ad9136
-   adi.ad9144
-   adi.ad9152
-   adi.ad9162
-   adi.ad9166
-   adi.ad9172
-   adi.ad9213
-   adi.ad9250
-   adi.ad9265
-   adi.ad936x
-   adi.ad937x
-   adi.ad9434
-   adi.ad9467
-   adi.ad9625
-   adi.ad9680
-   adi.ad4858
-   adi.ad9739a
-   adi.ada4355
-   adi.ada4356_lidar
-   adi.ada4961
-   adi.adaq8092
-   adi.adar1000
-   adi.adf4030
-   adi.adf4159
-   adi.adf4355
-   adi.adf4371
-   adi.adf4382
-   adi.adf4377
-   adi.adf5610
-   adi.adf5611
-   adi.adg2128
-   adi.adis16375
-   adi.adis16460
-   adi.adis16475
-   adi.adis16480
-   adi.adis16485
-   adi.adis16488
-   adi.adis16490
-   adi.adis16495
-   adi.adis16497
-   adi.adis16507
-   adi.adis16545
-   adi.adis16547
-   adi.adis16550
-   adi.adl5240
-   adi.adl5960
-   adi.adl8113
-   adi.admv8818
-   adi.adpd1080
-   adi.adpd188
-   adi.adpd410x
-   adi.adrf5720
-   adi.adrv9002
-   adi.adrv9009
-   adi.adrv9009_zu11eg
-   adi.adrv9009_zu11eg_fmcomms8
-   adi.adrv9009_zu11eg_multi
-   adi.adt7420
-   adi.adxl313
-   adi.adxl345
-   adi.adxl355
-   adi.adxl380
-   adi.adxrs290
-   adi.axi_aion_trig
-   adi.cn0511
-   adi.cn0532
-   adi.cn0540
-   adi.cn0554
-   adi.cn0556
-   adi.cn0565
-   adi.cn0566
-   adi.cn0575
-   adi.cn0579
-   adi.daq2
-   adi.daq3
-   adi.fmc_vna
-   adi.fmcadc3
-   adi.fmcjesdadc1
-   adi.fmclidar1
-   adi.fmcomms5
-   adi.fmcomms11
-   adi.gen_mux
-   adi.hmc7044
-   adi.jesd
-   adi.lm75
-   adi.ltc2314_14
-   adi.ltc2378
-   adi.ltc2387
-   adi.ltc2499
-   adi.ltc2664
-   adi.ltc2688
-   adi.ltc2672
-   adi.ltc2983
-   adi.max11205
-   adi.max14001
-   adi.max31855
-   adi.max31865
-   adi.max9611
-
-   adi.one_bit_adc_dac
-   adi.tdd
-   adi.tddn
+   families/rf_transceivers
+   families/jesd_adcs
+   families/jesd_dacs
+   families/precision_adcs
+   families/precision_dacs
+   families/imus_motion
+   families/clocks_plls
+   families/rf_frontend
+   families/beamformers
+   families/sensors_specialty
+   families/eval_systems
+   families/utility
 
 -----
 
