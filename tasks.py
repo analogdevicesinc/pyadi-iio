@@ -3,6 +3,7 @@
 import glob
 import os
 import pathlib
+import re
 import sys
 
 import yaml
@@ -339,7 +340,7 @@ def checkdocs(c):
 
     # Every adi.*.rst file in devices/ must be reachable from a family.
     per_part = sorted(
-        os.path.basename(p).removesuffix(".rst")
+        os.path.splitext(os.path.basename(p))[0]
         for p in glob.glob(os.path.join(devices_dir, "adi.*.rst"))
     )
 
@@ -353,10 +354,11 @@ def checkdocs(c):
         with open(ff) as fh:
             content = fh.read()
         for name in per_part:
-            # Family pages reference per-part pages via toctree entries
-            # like "../adi.ad9361" — anchor on the "../" prefix so a
-            # substring match in prose can't satisfy coverage.
-            if f"../{name}" in content:
+            # Anchor on line start + whitespace so a substring match
+            # like "../adi.tdd" inside "../adi.tddn" cannot satisfy
+            # coverage. A toctree entry is a line of the form
+            # "   ../adi.<name>" — match exactly that shape.
+            if re.search(rf"^\s*\.\./{re.escape(name)}\s*$", content, re.M):
                 referenced.add(name)
 
     missing = [n for n in per_part if n not in referenced]
