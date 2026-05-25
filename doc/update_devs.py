@@ -78,30 +78,19 @@ def update_devs():
         "device_base",
         "mcp_server",
     ]
+    # Remove excluded-class rst files that sphinx-apidoc generated.
+    # Note: we deliberately do NOT regenerate index.rst here — it is
+    # hand-authored as the family landing page. See Task 1 of the
+    # doc-improvements plan.
+    for s in to_skip:
+        excluded = os.path.join(root, "source", "devices", "adi.{}.rst".format(s))
+        if os.path.exists(excluded):
+            os.remove(excluded)
+
+    # Clean up the temporary adi.rst that sphinx-apidoc produced.
     adi_rst_path = os.path.join(root, "source", "devices", "adi.rst")
-    with open(adi_rst_path, "r") as f:
-        lines = f.readlines()
-        for s in to_skip:
-            os.remove(os.path.join(root, "source", "devices", "adi.{}.rst".format(s)))
-            lines = [l for l in lines if s not in l]
-        txt = "".join(lines)
-    with open(adi_rst_path, "w") as f:
-        f.write(txt)
-
-    # Remove extra text
-    with open(adi_rst_path, "r") as f:
-        lines = f.readlines()
-        lines = [l for l in lines if "Module" not in l]
-        lines = [l.replace("adi package", "Supported Devices") for l in lines]
-        lines = [l.replace("Submodules", "") for l in lines]
-        lines = [l.replace("----------", "") for l in lines]
-        lines = [l.replace("===========", "=================") for l in lines]
-        txt = "".join(lines)
-
-    with open(os.path.join(root, "source", "devices", "index.rst"), "w") as f:
-        f.write(txt)
-
-    os.remove(adi_rst_path)
+    if os.path.exists(adi_rst_path):
+        os.remove(adi_rst_path)
 
 
 if __name__ == "__main__":
