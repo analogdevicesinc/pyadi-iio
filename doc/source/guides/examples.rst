@@ -31,7 +31,7 @@ buffer, and plot the magnitude spectrum.
    sdr.gain_control_mode = "slow_attack"
    sdr.rx_buffer_size = 4096
 
-   data = sdr.rx()  # complex64 ndarray, length 4096
+   data = sdr.rx()  # complex128 ndarray, length 4096
 
    fft = np.fft.fftshift(np.fft.fft(data))
    psd = 20 * np.log10(np.abs(fft) + 1e-12)
@@ -42,7 +42,7 @@ buffer, and plot the magnitude spectrum.
    plt.ylabel("Magnitude (dB)")
    plt.show()
 
-The data shape is ``complex64`` because the Pluto is a complex part. The
+The data shape is ``complex128`` because the Pluto is a complex part. The
 :doc:`concepts page <../concepts>` covers the data shape contract for
 both complex and real parts.
 
@@ -70,7 +70,7 @@ the buffer mechanics on the :doc:`buffers page <../buffers/index>`.
    iq = (np.cos(2 * np.pi * fc * t) + 1j * np.sin(2 * np.pi * fc * t)) * 2**14
 
    sdr.tx_cyclic_buffer = True
-   sdr.tx(iq.astype(np.complex64))
+   sdr.tx(iq)
 
    # The buffer is now repeating in hardware. Leave it running, or...
    sdr.tx_destroy_buffer()  # required before re-arming with new data
