@@ -1,5 +1,6 @@
 # type:ignore
 # flake8: noqa
+import glob
 import os
 import pathlib
 import sys
@@ -328,7 +329,54 @@ def checkemulation(c):
     sys.exit(count)
 
 
-@task(checkparts)
+@task
+def checkdocs(c):
+    """Check every per-part doc page is referenced from a family page"""
+    print("Running per-part doc coverage check")
+    path = pathlib.Path(__file__).parent.absolute()
+    devices_dir = os.path.join(path, "doc", "source", "devices")
+    families_dir = os.path.join(devices_dir, "families")
+
+    # Every adi.*.rst file in devices/ must be reachable from a family.
+    per_part = sorted(
+        os.path.basename(p).removesuffix(".rst")
+        for p in glob.glob(os.path.join(devices_dir, "adi.*.rst"))
+    )
+
+    # Read all family files; record which per-part refs they mention.
+    referenced = set()
+    family_files = sorted(glob.glob(os.path.join(families_dir, "*.rst")))
+    if not family_files:
+        print("No family files found under doc/source/devices/families/")
+        sys.exit(1)
+    for ff in family_files:
+        with open(ff) as fh:
+            content = fh.read()
+        for name in per_part:
+            # Family pages reference per-part pages via toctree entries
+            # like "../adi.ad9361" — anchor on the "../" prefix so a
+            # substring match in prose can't satisfy coverage.
+            if f"../{name}" in content:
+                referenced.add(name)
+
+    missing = [n for n in per_part if n not in referenced]
+    if missing:
+        print(
+            "The following per-part doc pages are not referenced from "
+            "any family file under doc/source/devices/families/:"
+        )
+        for n in missing:
+            print(f"  {n}")
+        print(
+            "Add each one to the appropriate family page's toctree. "
+            "See doc/source/devices/index.rst for the family list."
+        )
+        sys.exit(len(missing))
+
+    print(f"All {len(per_part)} per-part doc pages are assigned to a family")
+
+
+@task(checkparts, checkemulation, checkdocs)
 def precommit(c):
     """Run precommit checks"""
     c.run("pre-commit run --all-files")
