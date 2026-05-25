@@ -6,7 +6,17 @@ import os
 
 def update_devs():
     root = os.path.dirname(os.path.abspath(__file__))
+    # Guard: this script only manages per-part adi.*.rst files. It must
+    # never touch the family landing pages or the supported-devices index.
     devices = glob.glob(os.path.join(root, "source", "devices", "adi.*.rst"))
+    forbidden = {
+        os.path.join(root, "source", "devices", "index.rst"),
+    }
+    forbidden.update(
+        glob.glob(os.path.join(root, "source", "devices", "families", "*.rst"))
+    )
+    for d in devices:
+        assert d not in forbidden, f"update_devs would touch family file: {d}"
 
     skip = ["adi.ad9081_mc.rst"]
     devices = [d for d in devices if os.path.basename(d) not in skip]
