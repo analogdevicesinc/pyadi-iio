@@ -46,7 +46,8 @@ pyadi-iio-mcp = "adi.mcp_server:main"
 
 [project.optional-dependencies]
 jesd = [
-    "paramiko"
+    "paramiko",
+    "cryptography>=48.0.0", # paramiko dependency
 ]
 mcp = [
     "fastmcp",
