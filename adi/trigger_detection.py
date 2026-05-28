@@ -30,6 +30,8 @@ class trigger_detection:
     _ARM_TRIGGER        = 0x2C  # SC
     _TRIGGER_POS        = 0x30  # RO
     _FSM_STATUS         = 0x34  # RO
+    _DEPENDENT_TRIG_CFG = 0x38  # RW (master/slave)
+    _MAX_NUM_CTX_FRAMES = 0x3C  # RO (hardware-reported limit)
 
     # Trigger modes
     MODE_THRESHOLD = 0
@@ -144,6 +146,29 @@ class trigger_detection:
     @property
     def armed(self):
         return self.fsm_status == self.STATE_ARMED
+
+    @property
+    def dependent_trigger_config(self):
+        """Raw value of the dependent-trigger config register (bits[1:0])."""
+        return self.reg_read(self._DEPENDENT_TRIG_CFG) & 0x3
+
+    @dependent_trigger_config.setter
+    def dependent_trigger_config(self, v):
+        self.reg_write(self._DEPENDENT_TRIG_CFG, v & 0x3)
+
+    @property
+    def is_slave(self):
+        """True when this instance is listening for the master's trigger event."""
+        return (self.reg_read(self._DEPENDENT_TRIG_CFG) & 0x3) == 0x3
+
+    @is_slave.setter
+    def is_slave(self, v):
+        self.reg_write(self._DEPENDENT_TRIG_CFG, 0x3 if v else 0x0)
+
+    @property
+    def max_num_context_frames(self):
+        """Hardware-reported maximum allowed num_context_frames."""
+        return self.reg_read(self._MAX_NUM_CTX_FRAMES) & 0x3FF
 
     def clear_trigger_detected(self):
         """Write 1 to clear the sticky trigger_detected bit."""
