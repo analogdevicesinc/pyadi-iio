@@ -29,27 +29,31 @@ import adi
 
 
 def reload_driver(uri):
-    """rmmod + modprobe ad4134 to get a clean synchronized startup.
+    """Reload the ad4134 kernel driver for a clean, synchronised startup.
 
-    For ip: URIs the commands run on the remote board via SSH.
-    modprobe blocks until the full driver init (reset + PDN + PLL) completes
-    (~12 s), so no extra sleep is needed beyond a short iiod settle.
+    Uncomment the modprobe block below when ad4134 is built as a loadable
+    kernel module (.ko).  With a built-in driver this function is a no-op.
     """
-    t0 = time.monotonic()
-    if uri.startswith("ip:"):
-        host = uri[3:]
-        print(f"Reloading ad4134 driver on {host} ...")
-        subprocess.run(
-            ["ssh", f"root@{host}", "rmmod ad4134 2>/dev/null; modprobe ad4134"],
-            check=True,
-        )
-    else:
-        print("Reloading ad4134 driver locally ...")
-        subprocess.run(["rmmod", "ad4134"], check=False)
-        subprocess.run(["modprobe", "ad4134"], check=True)
-    time.sleep(2)  # let iiod enumerate the new IIO devices
-    elapsed = time.monotonic() - t0
-    print(f"Driver reloaded in {elapsed:.1f} s (rmmod + modprobe + iiod settle).")
+    # ── loadable-module version (rmmod + modprobe) ──────────────────────────
+    # modprobe blocks until the full init sequence completes (~12 s):
+    # hardware reset → ODR start → simultaneous PDN cycle → PLL lock wait.
+    #
+    # t0 = time.monotonic()
+    # if uri.startswith("ip:"):
+    #     host = uri[3:]
+    #     print(f"Reloading ad4134 driver on {host} ...")
+    #     subprocess.run(
+    #         ["ssh", f"root@{host}", "rmmod ad4134 2>/dev/null; modprobe ad4134"],
+    #         check=True,
+    #     )
+    # else:
+    #     print("Reloading ad4134 driver locally ...")
+    #     subprocess.run(["rmmod", "ad4134"], check=False)
+    #     subprocess.run(["modprobe", "ad4134"], check=True)
+    # time.sleep(2)  # let iiod enumerate the new IIO devices
+    # elapsed = time.monotonic() - t0
+    # print(f"Driver reloaded in {elapsed:.1f} s (rmmod + modprobe + iiod settle).")
+    # ────────────────────────────────────────────────────────────────────────
 
 
 def compute_signal_quality(x, Fs, n_harmonics=5):

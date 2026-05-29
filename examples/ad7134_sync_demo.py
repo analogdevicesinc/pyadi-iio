@@ -5,15 +5,17 @@
 # AD7134 phase-sync demo.
 #
 # Demonstrates inter-chip synchronisation on two AD4134 ADCs:
-#   1. Reload driver (rmmod + modprobe) for a clean hardware startup
-#   2. Capture 5 frames BEFORE sync  → shows random boot-time misalignment
-#   3. Issue DIG_IF_RESET broadcast  → aligns both chips' frame counters
-#   4. Capture 5 frames AFTER sync   → shows residual delay after alignment
-#   5. Print before/after comparison table and save a plot
+#   1. Capture 5 frames BEFORE sync  → shows boot-time misalignment
+#   2. Issue DIG_IF_RESET broadcast  → aligns both chips' frame counters
+#   3. Capture 5 frames AFTER sync   → shows residual delay after alignment
+#   4. Print before/after comparison table and save a plot
+#
+# Note: to simulate random misalignment on each run, enable the
+# rmmod + modprobe block inside reload_driver() (requires loadable module).
 
-import subprocess
 import sys
-import time
+# import subprocess  # needed only with loadable-module driver (see reload_driver)
+# import time        # needed only with loadable-module driver (see reload_driver)
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -24,24 +26,29 @@ import adi
 def reload_driver(uri):
     """Reload the ad4134 kernel driver for a clean, synchronised startup.
 
-    modprobe blocks until the full init sequence completes (~12 s):
-    hardware reset → ODR start → simultaneous PDN cycle → PLL lock wait.
+    Uncomment the modprobe block below when ad4134 is built as a loadable
+    kernel module (.ko).  With a built-in driver this function is a no-op.
     """
-    t0 = time.monotonic()
-    if uri.startswith("ip:"):
-        host = uri[3:]
-        print(f"Reloading ad4134 driver on {host} ...")
-        subprocess.run(
-            ["ssh", f"root@{host}", "rmmod ad4134 2>/dev/null; modprobe ad4134"],
-            check=True,
-        )
-    else:
-        print("Reloading ad4134 driver locally ...")
-        subprocess.run(["rmmod", "ad4134"], check=False)
-        subprocess.run(["modprobe", "ad4134"], check=True)
-    time.sleep(2)  # let iiod enumerate the new IIO devices
-    elapsed = time.monotonic() - t0
-    print(f"Driver reloaded in {elapsed:.1f} s.")
+    # ── loadable-module version (rmmod + modprobe) ──────────────────────────
+    # modprobe blocks until the full init sequence completes (~12 s):
+    # hardware reset → ODR start → simultaneous PDN cycle → PLL lock wait.
+    #
+    # t0 = time.monotonic()
+    # if uri.startswith("ip:"):
+    #     host = uri[3:]
+    #     print(f"Reloading ad4134 driver on {host} ...")
+    #     subprocess.run(
+    #         ["ssh", f"root@{host}", "rmmod ad4134 2>/dev/null; modprobe ad4134"],
+    #         check=True,
+    #     )
+    # else:
+    #     print("Reloading ad4134 driver locally ...")
+    #     subprocess.run(["rmmod", "ad4134"], check=False)
+    #     subprocess.run(["modprobe", "ad4134"], check=True)
+    # time.sleep(2)  # let iiod enumerate the new IIO devices
+    # elapsed = time.monotonic() - t0
+    # print(f"Driver reloaded in {elapsed:.1f} s (rmmod + modprobe + iiod settle).")
+    # ────────────────────────────────────────────────────────────────────────
 
 
 def compute_phase_delay(x, y, Fs):
@@ -64,11 +71,11 @@ def compute_phase_delay(x, y, Fs):
 
 def main():
     my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
+    target_fs = int(sys.argv[2]) if len(sys.argv) >= 3 else 100000
     ch_a = 0        # reference  (adc_0, chip A)
     ch_b = 4        # compare    (adc_1, chip B)
     buffer_size = 65534
     n_captures = 5
-
     print("=" * 60)
     print("AD7134 Phase-Sync Demo")
     print("=" * 60)
@@ -80,9 +87,11 @@ def main():
     dev = adi.ad7134(uri=my_uri)
     dev.rx_enabled_channels = list(range(8))
     dev.rx_buffer_size = buffer_size
+    dev.sampling_frequency = target_fs
 
     Fs = float(dev.sampling_frequency)
-    print(f"\nFs       = {Fs:.6g} Hz ({Fs / 1e6:.3f} MSPS)")
+    print(f"\nFs (target) = {target_fs} Hz ({target_fs / 1e6:.3f} MSPS)")
+    print(f"Fs (actual) = {Fs:.6g} Hz ({Fs / 1e6:.3f} MSPS)")
     print(f"Filter   = {dev.filter_type}")
     print(f"Channels = ch{ch_a} (adc_0)  vs  ch{ch_b} (adc_1)\n")
 
@@ -162,7 +171,9 @@ def main():
     plt.tight_layout()
     plt.savefig("ad7134_sync_demo.png", dpi=150, bbox_inches="tight")
     print("\nPlot saved → ad7134_sync_demo.png")
-    plt.show()
+    plt.show(block=False)
+    plt.pause(5)
+    plt.close("all")
 
     del dev
 
