@@ -3,14 +3,59 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class adis16475(rx, context_manager):
+class adis16475_channel_with_offset(attribute):
+    """Channel with offset"""
+
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
+
+    @property
+    def calibbias(self):
+        """ADIS165x channel offset"""
+        return self._get_iio_attr(self.name, "calibbias", False)
+
+    @calibbias.setter
+    def calibbias(self, value):
+        self._set_iio_attr(self.name, "calibbias", False, value)
+
+    @property
+    def raw(self):
+        """ADIS165x channel raw value"""
+        return self._get_iio_attr(self.name, "raw", False)
+
+    @property
+    def scale(self):
+        """ADIS165x channel scale(gain)"""
+        return float(self._get_iio_attr_str(self.name, "scale", False))
+
+
+class adis16475_channel(attribute):
+    """Channel"""
+
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
+
+    @property
+    def raw(self):
+        """ADIS165x channel raw value"""
+        return self._get_iio_attr(self.name, "raw", False)
+
+    @property
+    def scale(self):
+        """ADIS165x channel scale(gain)"""
+        return float(self._get_iio_attr_str(self.name, "scale", False))
+
+
+class adis16475(rx_chan_comp):
     """ADIS16475 Compact, Precision, Six Degrees of Freedom Inertial Sensor"""
 
     _complex_data = False
+    _device_name = ""
     _rx_channel_names = [
         "anglvel_x",
         "anglvel_y",
@@ -26,89 +71,55 @@ class adis16475(rx, context_manager):
         "deltavelocity_y",
         "deltavelocity_z",
     ]
-    _device_name = ""
+    # timestamp has no scale attribute, keep it out of the channel list.
+    _ignore_channels = ["timestamp"]
+    compatible_parts = [
+        "adis16505-2",
+        "adis16470",
+        "adis16475-1",
+        "adis16475-2",
+        "adis16475-3",
+        "adis16477-1",
+        "adis16477-2",
+        "adis16477-3",
+        "adis16465-1",
+        "adis16465-2",
+        "adis16465-3",
+        "adis16467-1",
+        "adis16467-2",
+        "adis16467-3",
+        "adis16500",
+        "adis16501",
+        "adis16505-1",
+        "adis16505-3",
+        "adis16507-1",
+        "adis16507-2",
+        "adis16507-3",
+        "adis16575-2",
+        "adis16575-3",
+        "adis16576-2",
+        "adis16576-3",
+        "adis16577-2",
+        "adis16577-3",
+    ]
 
-    def __init__(self, uri="", device_name="adis16505-2"):
-        context_manager.__init__(self, uri, self._device_name)
+    def __init__(self, uri="", device_name="adis16505-2", device_index=0):
+        super().__init__(uri=uri, device_name=device_name, device_index=device_index)
 
-        compatible_parts = [
-            "adis16470",
-            "adis16475-1",
-            "adis16475-2",
-            "adis16475-3",
-            "adis16477-1",
-            "adis16477-2",
-            "adis16477-3",
-            "adis16465-1",
-            "adis16465-2",
-            "adis16465-3",
-            "adis16467-1",
-            "adis16467-2",
-            "adis16467-3",
-            "adis16500",
-            "adis16501",
-            "adis16505-1",
-            "adis16505-2",
-            "adis16505-3",
-            "adis16507-1",
-            "adis16507-2",
-            "adis16507-3",
-            "adis16575-2",
-            "adis16575-3",
-            "adis16576-2",
-            "adis16576-3",
-            "adis16577-2",
-            "adis16577-3",
-        ]
-
-        if device_name not in compatible_parts:
-            raise Exception(
-                "Not a compatible device:"
-                + str(device_name)
-                + ".Please select from:"
-                + str(compatible_parts)
-            )
-        else:
-            self._ctrl = self._ctx.find_device(device_name)
-            self._rxadc = self._ctx.find_device(device_name)
-            trigger_name = device_name + "-dev0"
-
-        if self._ctrl is None:
-            print(
-                "No device found with device_name = "
-                + device_name
-                + ". Searching for a device found in the compatible list."
-            )
-            for i in compatible_parts:
-                self._ctrl = self._ctx.find_device(i)
-                self._rxadc = self._ctx.find_device(i)
-                if self._ctrl is not None:
-                    print("Fond device = " + i + ". Will use this device instead.")
-                    trigger_name = i + "-dev0"
-                    break
-            if self._ctrl is None:
-                raise Exception("No compatible device found")
-
+    def __post_init__(self):
         # Set default trigger
+        trigger_name = self._ctrl.name + "-dev0"
         self._trigger = self._ctx.find_device(trigger_name)
         self._rxadc._set_trigger(self._trigger)
-
-        self.anglvel_x = self._channel_with_offset(self._ctrl, "anglvel_x")
-        self.anglvel_y = self._channel_with_offset(self._ctrl, "anglvel_y")
-        self.anglvel_z = self._channel_with_offset(self._ctrl, "anglvel_z")
-        self.accel_x = self._channel_with_offset(self._ctrl, "accel_x")
-        self.accel_y = self._channel_with_offset(self._ctrl, "accel_y")
-        self.accel_z = self._channel_with_offset(self._ctrl, "accel_z")
-        self.temp = self._channel(self._ctrl, "temp0")
-        self.deltaangl_x = self._channel(self._ctrl, "deltaangl_x")
-        self.deltaangl_y = self._channel(self._ctrl, "deltaangl_y")
-        self.deltaangl_z = self._channel(self._ctrl, "deltaangl_z")
-        self.deltavelocity_x = self._channel(self._ctrl, "deltavelocity_x")
-        self.deltavelocity_y = self._channel(self._ctrl, "deltavelocity_y")
-        self.deltavelocity_z = self._channel(self._ctrl, "deltavelocity_z")
-
-        rx.__init__(self)
+        # The temperature channel uses the "temp0" IIO id but is exposed as
+        # ``temp`` for backwards compatibility.
+        self.temp = adis16475_channel(self._ctrl, "temp0")
         self.rx_buffer_size = 16  # Make default buffer smaller
+
+    def _channel_def(self, ctrl, name):
+        if name.startswith("anglvel") or name.startswith("accel"):
+            return adis16475_channel_with_offset(ctrl, name)
+        return adis16475_channel(ctrl, name)
 
     def __get_scaled_sensor(self, channel_name: str) -> float:
         raw = self._get_iio_attr(channel_name, "raw", False)
@@ -291,49 +302,6 @@ class adis16475(rx, context_manager):
     def flash_count(self):
         """flash_counter: flash memory write count"""
         return self._get_iio_debug_attr("flash_count")
-
-    class _channel_with_offset(attribute):
-        """Channel with offset"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def calibbias(self):
-            """ADIS165x channel offset"""
-            return self._get_iio_attr(self.name, "calibbias", False)
-
-        @calibbias.setter
-        def calibbias(self, value):
-            self._set_iio_attr(self.name, "calibbias", False, value)
-
-        @property
-        def raw(self):
-            """ADIS165x channel raw value"""
-            return self._get_iio_attr(self.name, "raw", False)
-
-        @property
-        def scale(self):
-            """ADIS165x channel scale(gain)"""
-            return float(self._get_iio_attr_str(self.name, "scale", False))
-
-    class _channel(attribute):
-        """Channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            """ADIS165x channel raw value"""
-            return self._get_iio_attr(self.name, "raw", False)
-
-        @property
-        def scale(self):
-            """ADIS165x channel scale(gain)"""
-            return float(self._get_iio_attr_str(self.name, "scale", False))
 
     def reg_read(self, reg):
         """Direct Register Access via debugfs"""
