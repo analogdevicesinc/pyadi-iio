@@ -17,11 +17,11 @@
 
 import time
 import importlib
-# import genalyzer as gn
 import adi
 from adi.sshfs import sshfs
 import matplotlib.pyplot as plt
 import numpy as np
+import genalyzer as gn
 
 # import adar_functions
 import re
