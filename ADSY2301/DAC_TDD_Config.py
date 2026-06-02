@@ -55,10 +55,12 @@ for i in range(2):
 
     # Configure TX/RX hardware gains (0 dB)
     sdr.tx_enabled_channels = [0, 1, 2, 3]
-    sdr.tx_hardwaregain_chan0 = 0
-    sdr.tx_hardwaregain_chan1 = 0
-    sdr.tx_hardwaregain_chan0_chip_b= 0
-    sdr.tx_hardwaregain_chan1_chip_b = 0
+    sdr.trx_lo = 4500000000
+    sdr.trx_lo_chip_b = 4500000000
+    sdr.tx_hardwaregain_chan0 = -14
+    sdr.tx_hardwaregain_chan1 = -14
+    sdr.tx_hardwaregain_chan0_chip_b= -14
+    sdr.tx_hardwaregain_chan1_chip_b = -14
     sdr.rx_hardwaregain_chan0 = 0
     sdr.rx_hardwaregain_chan1 = 0
     sdr.rx_hardwaregain_chan0_chip_b= 0
