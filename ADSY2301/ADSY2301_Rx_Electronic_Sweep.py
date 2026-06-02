@@ -273,7 +273,7 @@ for i, angle in enumerate(sweep_angles):
     steer_data = np.array(steer_data).T
 
     combined_data = np.sum(steer_data, axis=1)       # Coherent sum across channels
-    sweep_mags[i] = mr.get_analog_mag(combined_data, conv)
+    sweep_mags[i] = mr.get_analog_mag(combined_data)
  
     print(f"  {SWEEP_AXIS.capitalize()} = {angle:+4d} deg  ->  {sweep_mags[i]:.2f} dBm")
  
