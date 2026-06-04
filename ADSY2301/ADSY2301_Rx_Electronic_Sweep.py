@@ -174,7 +174,9 @@ print("Hardware initialization complete.\n")
 # the FPGA-based TDD timing engine (pulse timing, duty cycle, TR switching).
 print("Running DAC_TDD_Config.py...")
 dac_tdd_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "DAC_TDD_Config.py")
-subprocess.run([sys.executable, dac_tdd_script], check=True)
+env = os.environ.copy()
+env["TXRX_BIT"] = "0"  # Force Rx mode for this sweep
+subprocess.run([sys.executable, dac_tdd_script], check=True, env=env)
 print("DAC/TDD configuration complete.\n")
  
 # ==========================================================================
