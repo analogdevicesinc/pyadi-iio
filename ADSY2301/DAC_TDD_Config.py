@@ -17,6 +17,7 @@
 # SPDX short identifier: ADIBSD
 # ==========================================================================
 
+import os
 import adi
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,7 +30,7 @@ talise_uri = "ip:192.168.1.1"  # IP address of the ADRV9009-ZU11EG SoM
 ## Pulse Parameters ##
 PRI_ms = 0.1       # Pulse repetition interval (ms)
 DAC_duty_cycle = 1.0   # Duty cycle for DAC pulses (0.0 to 1.0)
-TXRX_Bit = 1       # Set to 1 for Tx, 0 for Rx (controls TDD channel for TXRX0-3 channels on the XUD1A)
+TXRX_Bit = int(os.environ.get("TXRX_BIT", 1))  # Set to 1 for Tx, 0 for Rx (controls TDD channel for TXRX0-3 channels on the XUD1A)
 ## Initialize Talise SOM DACs ##
 # The loop runs twice to ensure a clean init (first pass may fail after
 # a cold boot; second pass confirms settings are applied).
@@ -296,8 +297,14 @@ for i in range(2):
 
     sdr.tx_destroy_buffer()
 
-    # Send the same waveform on all 4 TX channels
-    sdr.tx([pulse0_iq, pulse0_iq, pulse0_iq, pulse0_iq])
+    if TXRX_Bit == 1:
+        sdr.tx_enabled_channels = [0, 1, 2, 3]
+        sdr.tx([pulse0_iq, pulse0_iq, pulse0_iq, pulse0_iq])
+ 
+    if TXRX_Bit == 0:
+        sdr.tx_enabled_channels = []
+        sdr.tx([])
+
     sdr.tx_cyclic_buffer
 
     # Trigger TDD synchronization
