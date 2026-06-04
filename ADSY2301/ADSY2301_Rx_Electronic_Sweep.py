@@ -60,6 +60,7 @@ SWEEP_MAX  = 60           # End angle (degrees)
 SWEEP_STEP = 5            # Step size (degrees) — smaller = finer resolution
 SWEEP_AXIS = "azimuth"    # "azimuth" (horizontal) or "elevation" (vertical)
 url = "ip:192.168.1.1"    # IP address of the ADSY2301 system
+ARRAY_MODE = "rx"
 
 # Output folder — .png and .mat files will be saved here
 base_out_dir = "/home/snuc/Desktop/rx_electronic_sweep"
@@ -194,6 +195,19 @@ mr.enable_stingray_channel(sray, subarray)
 
 print("\n[CAL] Running gain calibration...")
 mr.disable_stingray_channel(sray)
+
+# Set all elements to RX mode with max gain and zero phase offset
+if ARRAY_MODE == "rx":
+    print("ARRAY_MODE =",ARRAY_MODE,"Setting all devices to rx mode")
+    for element in sray.elements.values():
+        element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
+        element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
+        element.rx_phase = 0 # Set all phases to 0
+    sray.latch_rx_settings()
+ 
+# Point array at boresight
+sray.steer_rx(azimuth=0, elevation=0)
+
 gain_dict, atten_dict, mag_pre_cal, mag_post_cal = mr.rx_gain(
     sray, conv, subarray, adc_map, sray.element_map
 )
@@ -259,12 +273,17 @@ for i, angle in enumerate(sweep_angles):
     time.sleep(0.3)
 
     # 4c. Re-apply per-element calibration phase corrections
-    #     The correction compensates for the phase that the steer command
-    #     added, ensuring the array still sums coherently.
+    #     Compute steering phase analytically (avoids negative-phase clipping
+    #     when reading back from hardware) and ADD calibration correction.
+    azimuth_phi, elevation_phi = sray.calculate_phi(
+        angle if SWEEP_AXIS == "azimuth" else 0,
+        angle if SWEEP_AXIS == "elevation" else 0
+    )
     for element in sray.elements.values():
         str_channel = str(element)
         value = int(mr.strip_to_last_two_digits(str_channel))
-        element.rx_phase = (analog_phase_dict[value] - element.rx_phase) % 360
+        steering_phase = element.column * azimuth_phi + element.row * elevation_phi
+        element.rx_phase = int(round((steering_phase + analog_phase_dict[value]) % 360))
     sray.latch_rx_settings()
     time.sleep(0.2)
  

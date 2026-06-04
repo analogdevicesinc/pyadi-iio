@@ -22,7 +22,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import paramiko
 import ADSY2301 as mr
- 
+import subprocess
+import sys
+
  
  
 # ==========================================================================
@@ -52,6 +54,16 @@ conv.rx_enabled_channels = [0, 1, 2, 3]
 conv.rx_nyquist_zone     = ["odd"] * 4
 conv.rx_buffer_size = 2 ** 12  # 4096 samples per capture
 conv.dds_phases = []
+
+
+# Run the companion script that programs the ADRV9009 transmit DACs and
+# the FPGA-based TDD timing engine (pulse timing, duty cycle, TR switching).
+print("Running DAC_TDD_Config.py...")
+dac_tdd_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "DAC_TDD_Config.py")
+env = os.environ.copy()
+env["TXRX_BIT"] = "0" # Force Rx mode for this sweep
+subprocess.run([sys.executable, dac_tdd_script], check=True, env=env)
+print("DAC/TDD configuration complete.\n")
  
 # ==========================================================================
 # STEP 2 — Define Subarrays, Reference Channels, and ADC Maps
