@@ -136,11 +136,11 @@ def main():
         print(f"Error connecting to DAC: {e}")
         sys.exit(1)
 
-    # Configure DDS
+    # Configure DDS (altvoltage0 for tone, voltage0 for data_source)
     try:
-        dac.channel[0].data_source = 'dds'
-        dac.channel[0].frequency0 = int(args.frequency)
-        dac.channel[0].scale0 = args.scale
+        dac.altvoltage0.frequency0 = int(args.frequency)
+        dac.altvoltage0.scale0 = args.scale
+        dac.voltage0.data_source = 'dds'
 
         freq_str = f"{args.frequency/1e6:.3f} MHz" if args.frequency >= 1e6 else f"{args.frequency/1e3:.3f} kHz"
         print(f"DDS configured: {freq_str} at scale {args.scale:.2f}")

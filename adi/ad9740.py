@@ -10,51 +10,39 @@ from adi.rx_tx import tx
 
 
 class ad9740(tx, context_manager):
-    """AD9740/AD9742/AD9744/AD9748 10/12/14/8-bit, 210 MSPS DAC with DDS support"""
+    """AD9740/AD9742/AD9744/AD9748 10/12/14/8-bit, 210 MSPS DAC
+
+    Two IIO channels:
+      altvoltage0: DDS tone generator (frequency, scale, phase)
+      voltage0:    DMA data output (data_source, buffer)
+    """
 
     _complex_data = False
     _device_name = "AD9740"
 
     def disable_dds(self):
-        """Override DDS disable to use data_source attribute instead.
-
-        AD9740 uses data_source control, not the standard DDS raw attribute.
-        When switching to DMA mode, set data_source to 'normal'.
-        """
-        # Set data source to normal (DMA mode)
-        if hasattr(self, 'channel') and len(self.channel) > 0:
-            try:
-                self.channel[0].data_source = "normal"
-            except (AttributeError, OSError):
-                # If data_source doesn't work, just pass
-                # (driver might already be in correct mode)
-                pass
+        """Switch to DMA mode by setting data_source to 'normal'."""
+        try:
+            self.voltage0.data_source = "normal"
+        except (AttributeError, OSError):
+            pass
 
     def __init__(self, uri="", device_name=""):
-        """Constructor for AD9740 driver class"""
-
         context_manager.__init__(self, uri, self._device_name)
 
-        compatible_parts = [
-            "ad9740",  # 10-bit DAC
-            "ad9742",  # 12-bit DAC
-            "ad9744",  # 14-bit DAC
-            "ad9748",  # 8-bit DAC
-        ]
+        compatible_parts = ["ad9740", "ad9742", "ad9744", "ad9748"]
+
+        if not device_name:
+            device_name = compatible_parts[0]
+        elif device_name not in compatible_parts:
+            raise Exception(
+                f"Not a compatible device: {device_name}. "
+                f"Supported: {','.join(compatible_parts)}"
+            )
 
         self._ctrl = None
         self._txdac = None
 
-        if not device_name:
-            device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception(
-                    f"Not a compatible device: {device_name}. Supported device names "
-                    f"are: {','.join(compatible_parts)}"
-                )
-
-        # Select the device matching device_name as working device
         for device in self._ctx.devices:
             if device.name == device_name:
                 self._ctrl = device
@@ -64,20 +52,21 @@ class ad9740(tx, context_manager):
         if not self._ctrl:
             raise Exception("Error in selecting matching device")
 
-        if not self._txdac:
-            raise Exception("Error in selecting matching device")
-
-        self.output_bits = []
         self.channel = []
+        self.output_bits = []
         self._tx_channel_names = []
+
         for ch in self._ctrl.channels:
             name = ch._id
             output = ch._output
             self.output_bits.append(ch.data_format.bits)
-            self._tx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name, output))
-            if output is True:
-                setattr(self, name, self._channel(self._ctrl, name, output))
+            chan_obj = self._channel(self._ctrl, name, output)
+            self.channel.append(chan_obj)
+            if output:
+                setattr(self, name, chan_obj)
+            # Only voltage channels are valid for DMA buffer
+            if name.startswith("voltage"):
+                self._tx_channel_names.append(name)
 
         tx.__init__(self)
 
@@ -89,45 +78,20 @@ class ad9740(tx, context_manager):
             self._ctrl = ctrl
             self._output = output
 
-        @property
-        def sample_rate(self):
-            """Sample rate of the DAC (from backend)
-            Note: AD9740 driver doesn't expose sampling_frequency attribute,
-            so we return a default value. Override if needed."""
+        def _has_attr(self, attr_name):
             try:
-                return self._get_iio_attr(self.name, "sampling_frequency", True)
-            except (KeyError, OSError):
-                # Attribute doesn't exist, return default (210 MHz from ADF4351)
-                return 210000000
-
-        @sample_rate.setter
-        def sample_rate(self, value):
-            """Set sample rate - may not be supported by all backends"""
-            try:
-                self._set_iio_attr(self.name, "sampling_frequency", True, value)
-            except (KeyError, OSError):
-                # Attribute doesn't exist, silently ignore
-                pass
-
-        @property
-        def raw(self):
-            """Get channel raw value
-            DAC code in the range 0-16383 (14-bit)"""
-            return self._get_iio_attr(self.name, "raw", True)
-
-        @raw.setter
-        def raw(self, value):
-            """Set channel raw value"""
-            self._set_iio_attr(self.name, "raw", True, str(int(value)))
+                ch = self._ctrl.find_channel(self.name, self._output)
+                return attr_name in ch.attrs
+            except Exception:
+                return False
 
         @property
         def data_source(self):
-            """Get/Set data source: normal, dds, or ramp"""
+            """Get data source: normal, dds, or ramp (voltage0 only)"""
             return self._get_iio_attr_str(self.name, "data_source", True)
 
         @data_source.setter
         def data_source(self, value):
-            """Set data source (normal, dds, ramp)"""
             self._set_iio_attr(self.name, "data_source", True, value)
 
         @property
@@ -135,10 +99,9 @@ class ad9740(tx, context_manager):
             """Available data sources"""
             return self._get_iio_attr_str(self.name, "data_source_available", True)
 
-        # DDS Tone 0 controls
         @property
         def frequency0(self):
-            """DDS Tone 0 frequency in Hz"""
+            """DDS Tone 0 frequency in Hz (altvoltage0 only)"""
             return int(self._get_iio_attr(self.name, "frequency0", True))
 
         @frequency0.setter
@@ -157,18 +120,14 @@ class ad9740(tx, context_manager):
         @property
         def phase0(self):
             """DDS Tone 0 phase in degrees"""
-            # Kernel returns phase in radians as a decimal string
             radians = float(self._get_iio_attr_str(self.name, "phase0", True))
-            return radians * 180.0 / 3.14159265359  # Convert to degrees
+            return radians * 180.0 / 3.14159265359
 
         @phase0.setter
         def phase0(self, value):
-            """Set phase in degrees"""
-            # Convert degrees to radians for kernel
             radians = float(value) * 3.14159265359 / 180.0
             self._set_iio_attr(self.name, "phase0", True, f"{radians:.5f}")
 
-        # DDS Tone 1 controls
         @property
         def frequency1(self):
             """DDS Tone 1 frequency in Hz"""
@@ -190,13 +149,10 @@ class ad9740(tx, context_manager):
         @property
         def phase1(self):
             """DDS Tone 1 phase in degrees"""
-            # Kernel returns phase in radians as a decimal string
             radians = float(self._get_iio_attr_str(self.name, "phase1", True))
-            return radians * 180.0 / 3.14159265359  # Convert to degrees
+            return radians * 180.0 / 3.14159265359
 
         @phase1.setter
         def phase1(self, value):
-            """Set phase in degrees"""
-            # Convert degrees to radians for kernel
             radians = float(value) * 3.14159265359 / 180.0
             self._set_iio_attr(self.name, "phase1", True, f"{radians:.5f}")
