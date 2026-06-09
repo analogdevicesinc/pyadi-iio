@@ -1,7 +1,7 @@
-adi.ad5940 module
+ad5940
 =================
 
 .. automodule:: adi.ad5940
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

@@ -1,7 +1,7 @@
-adi.ad9467 module
+ad9467
 =================
 
 .. automodule:: adi.ad9467
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

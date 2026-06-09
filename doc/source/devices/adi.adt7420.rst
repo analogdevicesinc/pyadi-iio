@@ -1,7 +1,7 @@
-adi.adt7420 module
+adt7420
 ==================
 
 .. automodule:: adi.adt7420
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

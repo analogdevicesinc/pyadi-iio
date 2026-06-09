@@ -76,10 +76,15 @@ Sections
 .. toctree::
    :maxdepth: 1
 
-   guides/quick
+   guides/installation
+   guides/verification
    attr/index
-   guides/examples
+   guides/basic_examples
+   guides/advanced_examples
    guides/connectivity
+   guides/architecture
+   guides/performance
+   guides/troubleshooting
    buffers/index
    fpga/index
    mcp/index

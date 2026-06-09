@@ -1,7 +1,7 @@
-adi.max31865 module
+max31865
 ===================
 
 .. automodule:: adi.max31865
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

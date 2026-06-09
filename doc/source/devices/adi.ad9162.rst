@@ -1,7 +1,7 @@
-adi.ad9162 module
+ad9162
 =================
 
 .. automodule:: adi.ad9162
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

@@ -1,7 +1,7 @@
-adi.ad9739a module
+ad9739a
 ==================
 
 .. automodule:: adi.ad9739a
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

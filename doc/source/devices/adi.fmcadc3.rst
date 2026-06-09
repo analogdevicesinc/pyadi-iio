@@ -1,7 +1,7 @@
-adi.fmcadc3 module
+fmcadc3
 ==================
 
 .. automodule:: adi.fmcadc3
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

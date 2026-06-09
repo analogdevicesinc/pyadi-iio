@@ -1,7 +1,7 @@
-adi.ad9625 module
+ad9625
 =================
 
 .. automodule:: adi.ad9625
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

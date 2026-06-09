@@ -1,7 +1,7 @@
-adi.max9611 module
+max9611
 ==================
 
 .. automodule:: adi.max9611
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

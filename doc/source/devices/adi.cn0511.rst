@@ -1,7 +1,7 @@
-adi.cn0511 module
+cn0511
 =================
 
 .. automodule:: adi.cn0511
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

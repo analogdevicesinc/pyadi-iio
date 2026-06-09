@@ -1,50 +1,27 @@
 Supported Devices
 =================
 
+This page lists the devices currently supported by **pyadi-iio**, categorized by their primary function.
 
-
-
+Transceivers
+------------
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   adi.QuadMxFE_multi
-   adi.ad2s1210
-   adi.ad353xr
-   adi.ad3552r
-   adi.ad3552r_hs
-   adi.ad4020
-   adi.ad405x
-   adi.ad4080
-   adi.ad4110
-   adi.ad4130
-   adi.ad4170
-   adi.ad4630
-   adi.ad469x
-   adi.ad514x
-   adi.ad5592r
-   adi.ad5627
-   adi.ad5686
-   adi.ad5706r
-   adi.ad5710r
-   adi.ad579x
-   adi.ad5754r
-   adi.ad5940
+   adi.ad936x
+   adi.ad937x
+   adi.adrv9002
+   adi.adrv9009
+   adi.adrv9009_zu11eg
+   adi.adrv9009_zu11eg_fmcomms8
+   adi.adrv9009_zu11eg_multi
+
+High-Speed Converters
+---------------------
+.. toctree::
+   :maxdepth: 1
+
    adi.ad6676
-   adi.ad7091rx
-   adi.ad7124
-   adi.ad7134
-   adi.ad717x
-   adi.ad719x
-   adi.ad7291
-   adi.ad738x
-   adi.ad7405
-   adi.ad7490
-   adi.ad7606
-   adi.ad7689
-   adi.ad7746
-   adi.ad7768
-   adi.ad777x
-   adi.ad7799
    adi.ad9081
    adi.ad9081_mc
    adi.ad9083
@@ -60,28 +37,80 @@ Supported Devices
    adi.ad9213
    adi.ad9250
    adi.ad9265
-   adi.ad936x
-   adi.ad937x
    adi.ad9434
    adi.ad9467
    adi.ad9625
    adi.ad9680
-   adi.ad4858
    adi.ad9739a
-   adi.ada4355
-   adi.ada4356_lidar
-   adi.ada4961
-   adi.adaq8092
-   adi.adar1000
-   adi.adf4030
-   adi.adf4159
-   adi.adf4355
-   adi.adf4371
-   adi.adf4382
-   adi.adf4377
-   adi.adf5610
-   adi.adf5611
-   adi.adg2128
+   adi.QuadMxFE_multi
+
+Precision ADCs
+--------------
+.. toctree::
+   :maxdepth: 1
+
+   adi.ad4020
+   adi.ad405x
+   adi.ad4080
+   adi.ad4110
+   adi.ad4130
+   adi.ad4170
+   adi.ad4630
+   adi.ad469x
+   adi.ad4858
+   adi.ad7124
+   adi.ad7134
+   adi.ad717x
+   adi.ad719x
+   adi.ad7291
+   adi.ad738x
+   adi.ad7405
+   adi.ad7490
+   adi.ad7606
+   adi.ad7689
+   adi.ad7768
+   adi.ad777x
+   adi.ad7799
+   adi.ltc2314_14
+   adi.ltc2378
+   adi.ltc2387
+   adi.ltc2499
+   adi.ltc2983
+   adi.max11205
+
+Precision DACs
+--------------
+.. toctree::
+   :maxdepth: 1
+
+   adi.ad353xr
+   adi.ad3552r
+   adi.ad3552r_hs
+   adi.ad5592r
+   adi.ad5627
+   adi.ad5686
+   adi.ad5706r
+   adi.ad5710r
+   adi.ad5754r
+   adi.ad579x
+   adi.ltc2664
+   adi.ltc2672
+   adi.ltc2688
+
+Sensors and Health
+------------------
+.. toctree::
+   :maxdepth: 1
+
+   adi.adpd1080
+   adi.adpd188
+   adi.adpd410x
+   adi.adt7420
+   adi.adxl313
+   adi.adxl345
+   adi.adxl355
+   adi.adxl380
+   adi.adxrs290
    adi.adis16375
    adi.adis16460
    adi.adis16475
@@ -95,27 +124,37 @@ Supported Devices
    adi.adis16545
    adi.adis16547
    adi.adis16550
+   adi.ad5940
+   adi.max31855
+   adi.max31865
+   adi.max9611
+
+RF and Microwave
+----------------
+.. toctree::
+   :maxdepth: 1
+
    adi.adl5240
    adi.adl5960
    adi.adl8113
    adi.admv8818
-   adi.adpd1080
-   adi.adpd188
-   adi.adpd410x
    adi.adrf5720
-   adi.adrv9002
-   adi.adrv9009
-   adi.adrv9009_zu11eg
-   adi.adrv9009_zu11eg_fmcomms8
-   adi.adrv9009_zu11eg_multi
-   adi.adt7420
-   adi.adxl313
-   adi.adxl345
-   adi.adxl355
-   adi.adxl380
-   adi.adxrs290
-   adi.axi_aion_trig
+   adi.adar1000
+   adi.adf4030
+   adi.adf4159
+   adi.adf4355
+   adi.adf4371
+   adi.adf4377
+   adi.adf4382
+   adi.adf5610
+   adi.adf5611
    adi.cn0511
+
+Development Systems and Modules
+-------------------------------
+.. toctree::
+   :maxdepth: 1
+
    adi.cn0532
    adi.cn0540
    adi.cn0554
@@ -130,26 +169,29 @@ Supported Devices
    adi.fmcadc3
    adi.fmcjesdadc1
    adi.fmclidar1
-   adi.fmcomms5
    adi.fmcomms11
+   adi.fmcomms5
+   adi.ada4355
+   adi.ada4356_lidar
+   adi.ada4961
+   adi.adaq8092
+
+Other
+-----
+.. toctree::
+   :maxdepth: 1
+
+   adi.ad2s1210
+   adi.ad514x
+   adi.ad7091rx
+   adi.ad7746
+   adi.adg2128
+   adi.axi_aion_trig
    adi.gen_mux
    adi.hmc7044
    adi.jesd
    adi.lm75
-   adi.ltc2314_14
-   adi.ltc2378
-   adi.ltc2387
-   adi.ltc2499
-   adi.ltc2664
-   adi.ltc2688
-   adi.ltc2672
-   adi.ltc2983
-   adi.max11205
    adi.max14001
-   adi.max31855
-   adi.max31865
-   adi.max9611
-
    adi.one_bit_adc_dac
    adi.tdd
    adi.tddn
