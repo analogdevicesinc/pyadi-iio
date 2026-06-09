@@ -77,9 +77,11 @@ Sections
    :maxdepth: 1
 
    guides/quick
+   concepts
    attr/index
    guides/examples
    guides/connectivity
+   guides/troubleshooting
    buffers/index
    fpga/index
    mcp/index

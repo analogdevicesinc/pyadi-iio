@@ -1,7 +1,9 @@
 # type:ignore
 # flake8: noqa
+import glob
 import os
 import pathlib
+import re
 import sys
 
 import yaml
@@ -328,7 +330,55 @@ def checkemulation(c):
     sys.exit(count)
 
 
-@task(checkparts)
+@task
+def checkdocs(c):
+    """Check every per-part doc page is referenced from a family page"""
+    print("Running per-part doc coverage check")
+    path = pathlib.Path(__file__).parent.absolute()
+    devices_dir = os.path.join(path, "doc", "source", "devices")
+    families_dir = os.path.join(devices_dir, "families")
+
+    # Every adi.*.rst file in devices/ must be reachable from a family.
+    per_part = sorted(
+        os.path.splitext(os.path.basename(p))[0]
+        for p in glob.glob(os.path.join(devices_dir, "adi.*.rst"))
+    )
+
+    # Read all family files; record which per-part refs they mention.
+    referenced = set()
+    family_files = sorted(glob.glob(os.path.join(families_dir, "*.rst")))
+    if not family_files:
+        print("No family files found under doc/source/devices/families/")
+        sys.exit(1)
+    for ff in family_files:
+        with open(ff) as fh:
+            content = fh.read()
+        for name in per_part:
+            # Anchor on line start + whitespace so a substring match
+            # like "../adi.tdd" inside "../adi.tddn" cannot satisfy
+            # coverage. A toctree entry is a line of the form
+            # "   ../adi.<name>" — match exactly that shape.
+            if re.search(rf"^\s*\.\./{re.escape(name)}\s*$", content, re.M):
+                referenced.add(name)
+
+    missing = [n for n in per_part if n not in referenced]
+    if missing:
+        print(
+            "The following per-part doc pages are not referenced from "
+            "any family file under doc/source/devices/families/:"
+        )
+        for n in missing:
+            print(f"  {n}")
+        print(
+            "Add each one to the appropriate family page's toctree. "
+            "See doc/source/devices/index.rst for the family list."
+        )
+        sys.exit(len(missing))
+
+    print(f"All {len(per_part)} per-part doc pages are assigned to a family")
+
+
+@task(checkparts, checkemulation, checkdocs)
 def precommit(c):
     """Run precommit checks"""
     c.run("pre-commit run --all-files")

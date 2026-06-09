@@ -68,3 +68,7 @@ jobs:
       - name: Check if emulation support exists
         run: |
           invoke checkemulation
+
+      - name: Check per-part doc coverage
+        run: |
+          invoke checkdocs

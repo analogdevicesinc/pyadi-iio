@@ -65,18 +65,13 @@ To deactivate the virtual environment run:
 
   deactivate
 
+.. note::
+
+   For development work on pyadi-iio itself (not just using it), run
+   ``make dev`` from the repo root. It creates ``venv/``, activates it,
+   and installs the dev requirements in one step.
+
 Once the virtual environment is activated, you can install pyadi-iio as normal with pip.
-
-Here is a full example of a virtual environment setup and install of pyadi-iio:
-
-.. code-block:: bash
-
-  dave@hal:~$ python3 -m venv /home/dave/venv/pyadi-iio
-  dave@hal:~$ source /home/dave/venv/pyadi-iio/bin/activate
-  (pyadi-iio) dave@hal:~$ pip install pyadi-iio
-  Collecting pyadi-iio
-    Downloading ...
-
 
 Conda Install
 -------------
@@ -94,28 +89,35 @@ Check for libiio with the following from a command prompt or terminal:
 
 .. code-block:: bash
 
-  dave@hal:~$ python3
-  Python 3.6.8 (default, Jan 14 2019, 11:02:34)
-  [GCC 8.0.1 20180414 (experimental) [trunk revision 259383]] on linux
+  $ python3
+  Python 3.10.12 (main, Sep 12 2023, 09:00:00) [GCC 11.4.0] on linux
   Type "help", "copyright", "credits" or "license" for more information.
   >>> import iio
   >>> iio.version
-  (0, 18, 'eec5616')
+  (1, 0, 'release')
 
-
-If that worked, try the follow to see if pyadi-iio is there:
+If that worked, check that pyadi-iio is there:
 
 .. code-block:: bash
 
-  dave@hal:~$ python3
-  Python 3.6.8 (default, Jan 14 2019, 11:02:34)
-  [GCC 8.0.1 20180414 (experimental) [trunk revision 259383]] on linux
+  $ python3
+  Python 3.10.12 (main, Sep 12 2023, 09:00:00) [GCC 11.4.0] on linux
   Type "help", "copyright", "credits" or "license" for more information.
   >>> import adi
   >>> adi.__version__
-  '0.0.5'
+  '0.0.21'
   >>> adi.name
   'Analog Devices Hardware Interfaces'
 
+pyadi-iio supports libiio v0.x and v1.x; the version above is illustrative
+and the library handles both transparently through ``adi.compat``.
+
 When using virtual environments, ``iio`` can be imported from outside but not from inside by default because virtual environments do not inherit system packages.
 Either install the python environment with ``--system-site-packages`` to inherit all system packages or set ``PYTHONPATH`` environment variable to inherit from some paths.
+
+What next
+---------
+
+* :doc:`Concepts <../concepts>` — the rx/tx/attribute/URI mental model.
+* :doc:`Supported devices <../devices/index>` — find your part by family.
+* :doc:`Troubleshooting <troubleshooting>` — common errors during install or first connection.
