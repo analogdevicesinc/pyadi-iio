@@ -18,7 +18,7 @@ def test_max31865_rx_data(test_dma_rx, iio_uri, classname, channel):
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats, sub_channel",
-    [("notch", 50, 60, 1, 1, 2, "_channel_filt"),],
+    [("notch", 50, 60, 1, 1, 2, "filter"),],
 )
 def test_max31865_attrs(
     test_attribute_single_value,

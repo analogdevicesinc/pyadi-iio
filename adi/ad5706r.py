@@ -6,56 +6,232 @@
 from decimal import Decimal
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import tx
+from adi.device_base import tx_chan_comp
 
 
-class ad5706r(tx, context_manager):
+class ad5706r_channel(attribute):
+    """ad5706r channel"""
+
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
+
+    @property
+    def raw(self):
+        """ad5706r channel raw value"""
+        return self._get_iio_attr(self.name, "raw", True)
+
+    @raw.setter
+    def raw(self, value):
+        self._set_iio_attr(self.name, "raw", True, str(int(value)))
+
+    @property
+    def offset(self):
+        """ad5706r channel offset"""
+        return self._get_iio_attr(self.name, "offset", True)
+
+    @offset.setter
+    def offset(self, value):
+        self._set_iio_attr(self.name, "offset", True, str(Decimal(value).real))
+
+    @property
+    def scale(self):
+        """ad5706r channel scale"""
+        return self._get_iio_attr(self.name, "scale", True)
+
+    @scale.setter
+    def scale(self, value):
+        self._set_iio_attr(self.name, "scale", True, str(Decimal(value).real))
+
+    @property
+    def input_register_a(self):
+        """ad5706r channel Input Register A value"""
+        return int(self._get_iio_attr_str(self.name, "input_register_a", True))
+
+    @input_register_a.setter
+    def input_register_a(self, value):
+        """Set the ad5706r channel Input Register A value"""
+        self._set_iio_attr(self.name, "input_register_a", True, value)
+
+    @property
+    def input_register_b(self):
+        """ad5706r channel Input Register B value"""
+        return int(self._get_iio_attr_str(self.name, "input_register_b", True))
+
+    @input_register_b.setter
+    def input_register_b(self, value):
+        """Set the ad5706r channel Input Register B value"""
+        self._set_iio_attr(self.name, "input_register_b", True, value)
+
+    @property
+    def hw_active_edge(self):
+        """ad5706r channel HW active edge"""
+        return self._get_iio_attr_str(self.name, "hw_active_edge", True)
+
+    @property
+    def hw_active_edge_available(self):
+        """ad5706r channel HW active edge options. Options are:
+        rising_edge, falling_edge, any_edge"""
+        return self._get_iio_attr_str(self.name, "hw_active_edge_available", True)
+
+    @hw_active_edge.setter
+    def hw_active_edge(self, value):
+        """Set the HW active edge for the channel."""
+        if value in self.hw_active_edge_available:
+            self._set_iio_attr(self.name, "hw_active_edge", True, value)
+        else:
+            raise ValueError(
+                "Error: Attribute value not supported \nUse one of: "
+                + str(self.hw_active_edge_available)
+            )
+
+    @property
+    def multi_dac_sel_ch(self):
+        """ad5706r Multi DAC channel select"""
+        return self._get_iio_attr_str(self.name, "multi_dac_sel_ch", True)
+
+    @property
+    def multi_dac_sel_ch_available(self):
+        """ad5706r Multi DAC Channel Select options. Options are:
+        exclude, include"""
+        return self._get_iio_attr_str(self.name, "multi_dac_sel_ch_available", True)
+
+    @multi_dac_sel_ch.setter
+    def multi_dac_sel_ch(self, value):
+        """Set the Multi DAC Channel."""
+        if value in self.multi_dac_sel_ch_available:
+            self._set_iio_attr(self.name, "multi_dac_sel_ch", True, value)
+        else:
+            raise ValueError(
+                "Error: Attribute value not supported \nUse one of: "
+                + str(self.multi_dac_sel_ch_available)
+            )
+
+    @property
+    def range_sel(self):
+        """ad5706r channel range selection"""
+        return self._get_iio_attr_str(self.name, "range_sel", True)
+
+    @property
+    def range_sel_available(self):
+        """ad5706r channel range options. Options are:
+        50mA, 150mA, 200mA, 300mA"""
+        return self._get_iio_attr_str(self.name, "range_sel_available", True)
+
+    @range_sel.setter
+    def range_sel(self, value):
+        """Set the range for the channel."""
+        if value in self.range_sel_available:
+            self._set_iio_attr(self.name, "range_sel", True, value)
+        else:
+            raise ValueError(
+                "Error: Attribute value not supported \nUse one of: "
+                + str(self.range_sel_available)
+            )
+
+    @property
+    def ldac_trigger_chn(self):
+        """ad5706r LDAC Trigger Chn setting"""
+        return self._get_iio_attr_str(self.name, "ldac_trigger_chn", True)
+
+    @property
+    def ldac_trigger_chn_available(self):
+        """ad5706r channel LDAC trigger options. Options are:
+        None, sw_ldac, hw_ldac"""
+        return self._get_iio_attr_str(self.name, "ldac_trigger_chn_available", True)
+
+    @ldac_trigger_chn.setter
+    def ldac_trigger_chn(self, value):
+        """Trigger LDAC for the channel."""
+        if value in self.ldac_trigger_chn_available:
+            self._set_iio_attr(self.name, "ldac_trigger_chn", True, value)
+        else:
+            raise ValueError(
+                "Error: Attribute value not supported \nUse one of: "
+                + str(self.ldac_trigger_chn_available)
+            )
+
+    @property
+    def toggle_trigger_chn(self):
+        """ad5706r Toggle Trigger Chn setting"""
+        return self._get_iio_attr_str(self.name, "toggle_trigger_chn", True)
+
+    @property
+    def toggle_trigger_chn_available(self):
+        """ad5706r channel Toggle trigger options. Options are:
+        None, sw_toggle, hw_toggle"""
+        return self._get_iio_attr_str(self.name, "toggle_trigger_chn_available", True)
+
+    @toggle_trigger_chn.setter
+    def toggle_trigger_chn(self, value):
+        """Trigger Toggle for the channel."""
+        if value in self.toggle_trigger_chn_available:
+            self._set_iio_attr(self.name, "toggle_trigger_chn", True, value)
+        else:
+            raise ValueError(
+                "Error: Attribute value not supported \nUse one of: "
+                + str(self.toggle_trigger_chn_available)
+            )
+
+    @property
+    def hw_func_sel(self):
+        """ad5706r HW function setting"""
+        return self._get_iio_attr_str(self.name, "hw_func_sel", True)
+
+    @property
+    def hw_func_sel_available(self):
+        """ad5706r channel HW function options. Options are:
+        None, LDAC, Toggle, Dither"""
+        return self._get_iio_attr_str(self.name, "hw_func_sel_available", True)
+
+    @hw_func_sel.setter
+    def hw_func_sel(self, value):
+        """Set HW function for the channel."""
+        if value in self.hw_func_sel_available:
+            self._set_iio_attr(self.name, "hw_func_sel", True, value)
+        else:
+            raise ValueError(
+                "Error: Attribute value not supported \nUse one of: "
+                + str(self.hw_func_sel_available)
+            )
+
+    @property
+    def output_state(self):
+        """ad5706r channel output state setting"""
+        return self._get_iio_attr_str(self.name, "output_state", True)
+
+    @property
+    def output_state_available(self):
+        """ad5706r channel output state options. Options are:
+        shutdown_to_tristate_sw, shutdown_to_gnd_sw, normal_sw,
+        shutdown_to_tristate_hw, shutdown_to_gnd_hw, normal_hw"""
+        return self._get_iio_attr_str(self.name, "output_state_available", True)
+
+    @output_state.setter
+    def output_state(self, value):
+        """Set output state for the channel."""
+        if value in self.output_state_available:
+            self._set_iio_attr(self.name, "output_state", True, value)
+        else:
+            raise ValueError(
+                "Error: Attribute value not supported \nUse one of: "
+                + str(self.output_state_available)
+            )
+
+
+class ad5706r(tx_chan_comp):
     """ ad5706r DAC """
 
     _complex_data = False
     _device_name = ""
+    compatible_parts = ["ad5706r"]
+    _channel_def = ad5706r_channel
 
-    def __init__(self, uri="", device_name=""):
-        """Constructor for ad5706r class."""
-        context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = ["ad5706r"]
-
-        self._ctrl = None
-
-        if not device_name:
-            device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception(
-                    f"Not a compatible device: {device_name}. Supported device names "
-                    f"are: {','.join(compatible_parts)}"
-                )
-
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._txdac = device
-                break
-
-        if not self._ctrl:
-            raise Exception("Error in selecting matching device")
-
-        if not self._txdac:
-            raise Exception("Error in selecting matching device")
-
-        self.channel = []  # type: ignore
+    def __post_init__(self):
+        """Populate the channel-wise output_bits list."""
         self._output_bits = []
         for ch in self._ctrl.channels:
-            name = ch.id
             self._output_bits.append(ch.data_format.bits)
-            self._tx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-            setattr(self, name, self._channel(self._ctrl, name))
-
-        tx.__init__(self)
 
     @property
     def output_bits(self):
@@ -278,214 +454,3 @@ class ad5706r(tx, context_manager):
     def multi_dac_input_a(self, value):
         """Set the ad5706r Multi DAC Input Register A value"""
         self._set_iio_dev_attr_str("multi_dac_input_a", value)
-
-    class _channel(attribute):
-        """ad5706r channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            """ad5706r channel raw value"""
-            return self._get_iio_attr(self.name, "raw", True)
-
-        @raw.setter
-        def raw(self, value):
-            self._set_iio_attr(self.name, "raw", True, str(int(value)))
-
-        @property
-        def offset(self):
-            """ad5706r channel offset"""
-            return self._get_iio_attr(self.name, "offset", True)
-
-        @offset.setter
-        def offset(self, value):
-            self._set_iio_attr(self.name, "offset", True, str(Decimal(value).real))
-
-        @property
-        def scale(self):
-            """ad5706r channel scale"""
-            return self._get_iio_attr(self.name, "scale", True)
-
-        @scale.setter
-        def scale(self, value):
-            self._set_iio_attr(self.name, "scale", True, str(Decimal(value).real))
-
-        @property
-        def input_register_a(self):
-            """ad5706r channel Input Register A value"""
-            return int(self._get_iio_attr_str(self.name, "input_register_a", True))
-
-        @input_register_a.setter
-        def input_register_a(self, value):
-            """Set the ad5706r channel Input Register A value"""
-            self._set_iio_attr(self.name, "input_register_a", True, value)
-
-        @property
-        def input_register_b(self):
-            """ad5706r channel Input Register B value"""
-            return int(self._get_iio_attr_str(self.name, "input_register_b", True))
-
-        @input_register_b.setter
-        def input_register_b(self, value):
-            """Set the ad5706r channel Input Register B value"""
-            self._set_iio_attr(self.name, "input_register_b", True, value)
-
-        @property
-        def hw_active_edge(self):
-            """ad5706r channel HW active edge"""
-            return self._get_iio_attr_str(self.name, "hw_active_edge", True)
-
-        @property
-        def hw_active_edge_available(self):
-            """ad5706r channel HW active edge options. Options are:
-            rising_edge, falling_edge, any_edge"""
-            return self._get_iio_attr_str(self.name, "hw_active_edge_available", True)
-
-        @hw_active_edge.setter
-        def hw_active_edge(self, value):
-            """Set the HW active edge for the channel."""
-            if value in self.hw_active_edge_available:
-                self._set_iio_attr(self.name, "hw_active_edge", True, value)
-            else:
-                raise ValueError(
-                    "Error: Attribute value not supported \nUse one of: "
-                    + str(self.hw_active_edge_available)
-                )
-
-        @property
-        def multi_dac_sel_ch(self):
-            """ad5706r Multi DAC channel select"""
-            return self._get_iio_attr_str(self.name, "multi_dac_sel_ch", True)
-
-        @property
-        def multi_dac_sel_ch_available(self):
-            """ad5706r Multi DAC Channel Select options. Options are:
-            exclude, include"""
-            return self._get_iio_attr_str(self.name, "multi_dac_sel_ch_available", True)
-
-        @multi_dac_sel_ch.setter
-        def multi_dac_sel_ch(self, value):
-            """Set the Multi DAC Channel."""
-            if value in self.multi_dac_sel_ch_available:
-                self._set_iio_attr(self.name, "multi_dac_sel_ch", True, value)
-            else:
-                raise ValueError(
-                    "Error: Attribute value not supported \nUse one of: "
-                    + str(self.multi_dac_sel_ch_available)
-                )
-
-        @property
-        def range_sel(self):
-            """ad5706r channel range selection"""
-            return self._get_iio_attr_str(self.name, "range_sel", True)
-
-        @property
-        def range_sel_available(self):
-            """ad5706r channel range options. Options are:
-            50mA, 150mA, 200mA, 300mA"""
-            return self._get_iio_attr_str(self.name, "range_sel_available", True)
-
-        @range_sel.setter
-        def range_sel(self, value):
-            """Set the range for the channel."""
-            if value in self.range_sel_available:
-                self._set_iio_attr(self.name, "range_sel", True, value)
-            else:
-                raise ValueError(
-                    "Error: Attribute value not supported \nUse one of: "
-                    + str(self.range_sel_available)
-                )
-
-        @property
-        def ldac_trigger_chn(self):
-            """ad5706r LDAC Trigger Chn setting"""
-            return self._get_iio_attr_str(self.name, "ldac_trigger_chn", True)
-
-        @property
-        def ldac_trigger_chn_available(self):
-            """ad5706r channel LDAC trigger options. Options are:
-            None, sw_ldac, hw_ldac"""
-            return self._get_iio_attr_str(self.name, "ldac_trigger_chn_available", True)
-
-        @ldac_trigger_chn.setter
-        def ldac_trigger_chn(self, value):
-            """Trigger LDAC for the channel."""
-            if value in self.ldac_trigger_chn_available:
-                self._set_iio_attr(self.name, "ldac_trigger_chn", True, value)
-            else:
-                raise ValueError(
-                    "Error: Attribute value not supported \nUse one of: "
-                    + str(self.ldac_trigger_chn_available)
-                )
-
-        @property
-        def toggle_trigger_chn(self):
-            """ad5706r Toggle Trigger Chn setting"""
-            return self._get_iio_attr_str(self.name, "toggle_trigger_chn", True)
-
-        @property
-        def toggle_trigger_chn_available(self):
-            """ad5706r channel Toggle trigger options. Options are:
-            None, sw_toggle, hw_toggle"""
-            return self._get_iio_attr_str(
-                self.name, "toggle_trigger_chn_available", True
-            )
-
-        @toggle_trigger_chn.setter
-        def toggle_trigger_chn(self, value):
-            """Trigger Toggle for the channel."""
-            if value in self.toggle_trigger_chn_available:
-                self._set_iio_attr(self.name, "toggle_trigger_chn", True, value)
-            else:
-                raise ValueError(
-                    "Error: Attribute value not supported \nUse one of: "
-                    + str(self.toggle_trigger_chn_available)
-                )
-
-        @property
-        def hw_func_sel(self):
-            """ad5706r HW function setting"""
-            return self._get_iio_attr_str(self.name, "hw_func_sel", True)
-
-        @property
-        def hw_func_sel_available(self):
-            """ad5706r channel HW function options. Options are:
-            None, LDAC, Toggle, Dither"""
-            return self._get_iio_attr_str(self.name, "hw_func_sel_available", True)
-
-        @hw_func_sel.setter
-        def hw_func_sel(self, value):
-            """Set HW function for the channel."""
-            if value in self.hw_func_sel_available:
-                self._set_iio_attr(self.name, "hw_func_sel", True, value)
-            else:
-                raise ValueError(
-                    "Error: Attribute value not supported \nUse one of: "
-                    + str(self.hw_func_sel_available)
-                )
-
-        @property
-        def output_state(self):
-            """ad5706r channel output state setting"""
-            return self._get_iio_attr_str(self.name, "output_state", True)
-
-        @property
-        def output_state_available(self):
-            """ad5706r channel output state options. Options are:
-            shutdown_to_tristate_sw, shutdown_to_gnd_sw, normal_sw,
-            shutdown_to_tristate_hw, shutdown_to_gnd_hw, normal_hw"""
-            return self._get_iio_attr_str(self.name, "output_state_available", True)
-
-        @output_state.setter
-        def output_state(self, value):
-            """Set output state for the channel."""
-            if value in self.output_state_available:
-                self._set_iio_attr(self.name, "output_state", True, value)
-            else:
-                raise ValueError(
-                    "Error: Attribute value not supported \nUse one of: "
-                    + str(self.output_state_available)
-                )

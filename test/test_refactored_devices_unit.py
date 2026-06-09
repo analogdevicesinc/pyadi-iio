@@ -23,6 +23,12 @@ def channel_definitions(device_class, iio_uri):
             assert hasattr(
                 ch, "scale"
             ), f"{device_class} channel {ch.name} missing scale property"
+            # device_base exposes each channel as a named attribute on the
+            # device (the documented ``device.<channel>.<attr>`` contract).
+            assert getattr(dev, ch.name, None) is ch, (
+                f"{device_class} channel {ch.name} not accessible as a named "
+                "attribute on the device"
+            )
 
 
 @pytest.fixture()
@@ -131,4 +137,68 @@ def test_ad5686_channel_definitions(test_channel_definitions, iio_uri, device_cl
 @pytest.mark.iio_hardware("ad7291", True)
 @pytest.mark.parametrize("device_class", ["ad7291"])
 def test_ad7291_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ltc2378-20")
+@pytest.mark.parametrize("device_class", ["ltc2378"])
+def test_ltc2378_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("max14001")
+@pytest.mark.parametrize("device_class", ["max14001"])
+def test_max14001_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ada4355")
+@pytest.mark.parametrize("device_class", ["ada4355"])
+def test_ada4355_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("adxrs290")
+@pytest.mark.parametrize("device_class", ["adxrs290"])
+def test_adxrs290_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("adxl380")
+@pytest.mark.parametrize("device_class", ["adxl380"])
+def test_adxl380_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ad5706r")
+@pytest.mark.parametrize("device_class", ["ad5706r"])
+def test_ad5706r_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ad3552r_hs")
+@pytest.mark.parametrize("device_class", ["ad3552r_hs"])
+def test_ad3552r_hs_channel_definitions(
+    test_channel_definitions, iio_uri, device_class
+):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("max31865")
+@pytest.mark.parametrize("device_class", ["max31865"])
+def test_max31865_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("max9611")
+@pytest.mark.parametrize("device_class", ["max9611"])
+def test_max9611_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware(
+    "adis16475", True
+)  # iio-emu does not support trigger assignment used in device init
+@pytest.mark.parametrize("device_class", ["adis16475"])
+def test_adis16475_channel_definitions(test_channel_definitions, iio_uri, device_class):
     test_channel_definitions(device_class, iio_uri)
