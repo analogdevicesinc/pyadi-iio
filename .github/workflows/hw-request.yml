@@ -1,0 +1,59 @@
+name: Hardware Tests (hw-request v3)
+
+# Successor to hardware-test.yml (hw-matrix dynamic mode), running
+# side-by-side during the migration window — staggered cron so the two
+# never contend for the same boards. Discovery harvests
+# @pytest.mark.iio_hardware markers (module-level variables resolve) and
+# intersects with live coordinator boards; adi-lg request boots + verifies
+# iiod + exports IIO_URI/HW_DAUGHTER (consumed by test/conftest.py's shim).
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    types: [labeled, opened, synchronize, reopened]
+  schedule:
+    - cron: "0 4 * * *"   # old workflow runs at 08:00; stagger to avoid board contention
+
+jobs:
+  hardware:
+    if: >-
+      github.event_name != 'pull_request' ||
+      contains(github.event.pull_request.labels.*.name, 'hw-test')
+    uses: tfcollins/labgrid-plugins/.github/workflows/hw-request.yml@v3
+    with:
+      coordinator: ${{ vars.LG_COORDINATOR }}
+      test-root: "test"
+      runner-label: ${{ vars.HW_REQUEST_RUNNER }}
+      preflight-runner-label: ${{ vars.HW_PREFLIGHT_RUNNER }}
+      # Whitespace-split verbatim; no shell quoting. --forked contains the
+      # known libiio-0.26 teardown heap corruption to the offending test's
+      # subprocess; --skip-scan stops pytest-libiio's crashing avahi scan.
+      pytest-args: "-v -rs --forked --skip-scan"
+      install-cmd: |
+        set -euo pipefail
+        uv pip install --quiet --python "$VENV_DIR/bin/python" -r requirements_dev.txt
+        # [jesd] pulls in paramiko so adi.jesd / adi.sshfs import cleanly.
+        uv pip install --quiet --python "$VENV_DIR/bin/python" -e ".[jesd]"
+        uv pip install --quiet --python "$VENV_DIR/bin/python" \
+          "adi-labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git@v3"
+        uv pip install --quiet --python "$VENV_DIR/bin/python" pytest-forked
+      prism-upload: ${{ vars.PRISM_UPLOAD_ENABLED == 'true' }}
+      prism-project: pyadi-iio
+      # Vendored stdlib-only uploader (private Prism repo; can't pip-install).
+      prism-upload-cmd: >-
+        python3 .github/scripts/prism_upload_run.py "$PRISM_JUNIT"
+        --url "$PRISM_URL" --project "$PRISM_PROJECT" --run-name "$PRISM_RUN_NAME"
+        --auto-create-project
+        --tag "board=$PRISM_BOARD" --tag "carrier=$PRISM_CARRIER"
+        --tag "place=$PRISM_PLACE" --tag "sha=$GITHUB_SHA"
+    # Explicit: cross-org `secrets: inherit` does not work.
+    secrets:
+      PRISM_EMAIL: ${{ secrets.PRISM_EMAIL }}
+      PRISM_PASSWORD: ${{ secrets.PRISM_PASSWORD }}
