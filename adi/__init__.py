@@ -7,6 +7,7 @@ from adi.ad353xr import ad353xr
 from adi.ad405x import ad405x
 from adi.ad469x import ad469x
 from adi.ad514x import ad514x
+from adi.ad552xr import ad552xr
 from adi.ad579x import ad579x
 from adi.ad717x import ad717x
 from adi.ad719x import ad719x

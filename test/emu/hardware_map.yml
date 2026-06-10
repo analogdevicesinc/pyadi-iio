@@ -503,6 +503,14 @@ ad4020:
       - filename: ad4020.xml
       - data_devices:
           - iio:device0
+ad5529r:
+  - ad5529r
+  - pyadi_iio_class_support:
+      - ad552xr
+  - emulate:
+      - filename: ad5529r.xml
+      - data_devices:
+          - iio:device0
 adaq4224:
   - adaq4224
   - pyadi_iio_class_support:
