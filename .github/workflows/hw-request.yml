@@ -1,4 +1,4 @@
-name: Hardware Tests (hw-request v3.4)
+name: Hardware Tests (hw-request v3.5)
 
 # Successor to hardware-test.yml (hw-matrix dynamic mode), running
 # side-by-side during the migration window — staggered cron so the two
@@ -26,7 +26,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       contains(github.event.pull_request.labels.*.name, 'hw-test')
-    uses: tfcollins/labgrid-plugins/.github/workflows/hw-request.yml@v3.4
+    uses: tfcollins/labgrid-plugins/.github/workflows/hw-request.yml@v3.5
     with:
       coordinator: ${{ vars.LG_COORDINATOR }}
       test-root: "test"
@@ -42,7 +42,7 @@ jobs:
         # [jesd] pulls in paramiko so adi.jesd / adi.sshfs import cleanly.
         uv pip install --quiet --python "$VENV_DIR/bin/python" -e ".[jesd]"
         uv pip install --quiet --python "$VENV_DIR/bin/python" \
-          "adi-labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git@v3.4"
+          "adi-labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git@v3.5"
         uv pip install --quiet --python "$VENV_DIR/bin/python" pytest-forked
       prism-upload: ${{ vars.PRISM_UPLOAD_ENABLED == 'true' }}
       prism-project: pyadi-iio
