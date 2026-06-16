@@ -8,7 +8,7 @@ body {
     --is-light-theme: 1;
     --display-dark: none;
     --display-light: inline-block;
-    
+
     /* Premium Light Theme Colors (Slate & ADI Blue) */
     --bg-color1: #ffffff;
     --bg-color2: #f8fafc;        /* Soft slate-50 gray */
@@ -23,10 +23,10 @@ body {
     --accent-color-code: #0369a1; /* Sky-700 for inline code */
     --bg-banner: #00305b;
     --text-color-banner: #ffffff;
-    
+
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    
+
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     font-size: 16px;
     line-height: 1.6;
@@ -38,7 +38,7 @@ body.dark {
     --is-light-theme: 0;
     --display-dark: inline-block;
     --display-light: none;
-    
+
     /* Premium Dark Theme Colors (Deep Navy Slate) */
     --bg-color1: #0b0f19;        /* Slate-950 base */
     --bg-color2: #161f30;        /* Slate-900 container */
@@ -53,7 +53,7 @@ body.dark {
     --accent-color-code: #7dd3fc; /* Sky-300 inline code */
     --bg-banner: #1e293b;
     --text-color-banner: #cbd5e1;
-    
+
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
 }
@@ -64,7 +64,7 @@ body.dark {
         --is-light-theme: 0;
         --display-dark: inline-block;
         --display-light: none;
-        
+
         --bg-color1: #0b0f19;
         --bg-color2: #161f30;
         --bg-color3: #222f47;
@@ -78,7 +78,7 @@ body.dark {
         --accent-color-code: #7dd3fc;
         --bg-banner: #1e293b;
         --text-color-banner: #cbd5e1;
-        
+
         --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
         --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
     }
