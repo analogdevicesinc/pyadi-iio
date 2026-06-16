@@ -1,23 +1,21 @@
 ad4130
-=================
+======
 
 Supported Drivers
 -----------------
 
 The class **adi.ad4130** supports the following IIO drivers:
 
-.. autoattribute:: adi.ad4130.compatible_parts
-
+.. autoattribute:: adi.ad4130.ad4130.compatible_parts
 
 Class API
------------------
+---------
 
-.. autoclass:: adi.ad4130
+.. autoclass:: adi.ad4130.ad4130
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: compatible_parts
-
 
 Dynamic Attributes
 ------------------

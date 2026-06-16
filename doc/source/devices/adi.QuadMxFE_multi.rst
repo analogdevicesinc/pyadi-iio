@@ -1,7 +1,10 @@
-QuadMxFE\_multi
-==========================
+QuadMxFE_multi
+==============
 
-.. automodule:: adi.QuadMxFE_multi
+Class API
+---------
+
+.. autoclass:: adi.QuadMxFE_multi.QuadMxFE_multi
    :members:
    :undoc-members:
    :show-inheritance:

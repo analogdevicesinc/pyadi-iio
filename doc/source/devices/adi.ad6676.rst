@@ -1,7 +1,10 @@
-adi.ad6676 module
-=================
+ad6676
+======
 
-.. automodule:: adi.ad6676
+Class API
+---------
+
+.. autoclass:: adi.ad6676.ad6676
    :members:
    :undoc-members:
    :show-inheritance:

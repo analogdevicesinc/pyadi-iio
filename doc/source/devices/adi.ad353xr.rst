@@ -1,23 +1,21 @@
 ad353xr
-=================
+=======
 
 Supported Drivers
 -----------------
 
 The class **adi.ad353xr** supports the following IIO drivers:
 
-.. autoattribute:: adi.ad353xr.compatible_parts
-
+.. autoattribute:: adi.ad353xr.ad353xr.compatible_parts
 
 Class API
------------------
+---------
 
-.. autoclass:: adi.ad353xr
+.. autoclass:: adi.ad353xr.ad353xr
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: compatible_parts
-
 
 Dynamic Attributes
 ------------------

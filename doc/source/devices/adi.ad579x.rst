@@ -1,23 +1,21 @@
 ad579x
-=================
+======
 
 Supported Drivers
 -----------------
 
 The class **adi.ad579x** supports the following IIO drivers:
 
-.. autoattribute:: adi.ad579x.compatible_parts
-
+.. autoattribute:: adi.ad579x.ad579x.compatible_parts
 
 Class API
------------------
+---------
 
-.. autoclass:: adi.ad579x
+.. autoclass:: adi.ad579x.ad579x
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: compatible_parts
-
 
 Dynamic Attributes
 ------------------

@@ -1,7 +1,10 @@
-adi.hmc7044 module
-==================
+hmc7044
+=======
 
-.. automodule:: adi.hmc7044
+Class API
+---------
+
+.. autoclass:: adi.hmc7044.hmc7044
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:

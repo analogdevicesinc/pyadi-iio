@@ -1,7 +1,10 @@
-adi.adf4030 module
-==================
+adf4030
+=======
 
-.. automodule:: adi.adf4030
+Class API
+---------
+
+.. autoclass:: adi.adf4030.adf4030
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:

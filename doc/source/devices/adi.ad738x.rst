@@ -1,23 +1,21 @@
 ad738x
-=================
+======
 
 Supported Drivers
 -----------------
 
 The class **adi.ad738x** supports the following IIO drivers:
 
-.. autoattribute:: adi.ad738x.compatible_parts
-
+.. autoattribute:: adi.ad738x.ad738x.compatible_parts
 
 Class API
------------------
+---------
 
-.. autoclass:: adi.ad738x
+.. autoclass:: adi.ad738x.ad738x
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: compatible_parts
-
 
 Dynamic Attributes
 ------------------
