@@ -46,6 +46,7 @@ extensions = [
     "sphinx.ext.githubpages",
     "myst_parser",
     "sphinxcontrib.mermaid",
+    "sphinx_copybutton",
     "adi_doctools",
     "ext_pyadi_iio",
 ]
@@ -82,6 +83,12 @@ interref_repos = ["doctools"]
 
 hide_collapsible_content = True
 
+# sphinx-copybutton configuration
+copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d+\]: | {2,5}\.\.\.: | {2,5}\+ "
+copybutton_prompt_is_regexp = True
+copybutton_only_copy_prompt_lines = True
+copybutton_remove_prompts = True
+
 # -- Options for PDF output --------------------------------------------------
 if os.path.exists(os.path.join("_themes", "pdf_theme")):
     extensions.append("sphinx_simplepdf")
@@ -92,6 +99,7 @@ if os.path.exists(os.path.join("_themes", "pdf_theme")):
 
 html_theme = "cosmic"
 html_favicon = os.path.join("_static", "favicon.png")
+html_permalinks_icon = "<span>#</span>"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

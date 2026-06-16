@@ -4,3 +4,4 @@ https://github.com/analogdevicesinc/doctools/releases/download/latest/adi-doctoo
 sphinxcontrib-mermaid
 sphinx-simplepdf
 pillow
+sphinx-copybutton

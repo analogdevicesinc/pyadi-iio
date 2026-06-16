@@ -71,22 +71,40 @@ Requirements
 * `(Optional) libad9166 for the CN0511 raspberry pi based DDS  <http://github.com/analogdevicesinc/libad9166-iio/>`_
 * `(Optional) libadrv9002 for ADRV9002 specific devices <http://github.com/analogdevicesinc/libadrv9002-iio/>`_
 
-Sections
+Getting Started
 ==================
 .. toctree::
    :maxdepth: 1
 
    guides/quick
-   attr/index
-   guides/examples
    guides/connectivity
+
+Core Concepts
+==================
+.. toctree::
+   :maxdepth: 1
+
+   attr/index
    buffers/index
    fpga/index
+   guides/examples
+
+APIs & Integrations
+===================
+.. toctree::
+   :maxdepth: 1
+
    mcp/index
    libiio
-   support
-   dev/index
    devices/index
+
+Developer & Support
+===================
+.. toctree::
+   :maxdepth: 1
+
+   dev/index
+   support
 
 Indices and tables
 ==================
