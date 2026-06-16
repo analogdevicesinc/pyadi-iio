@@ -1,7 +1,10 @@
-adi.ad9625 module
-=================
+ad9625
+======
 
-.. automodule:: adi.ad9625
+Class API
+---------
+
+.. autoclass:: adi.ad9625.ad9625
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,7 +1,10 @@
-adi.fmcadc3 module
-==================
+fmcadc3
+=======
 
-.. automodule:: adi.fmcadc3
+Class API
+---------
+
+.. autoclass:: adi.fmcadc3.fmcadc3
    :members:
    :undoc-members:
    :show-inheritance:

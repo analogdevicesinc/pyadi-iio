@@ -1,7 +1,10 @@
-fmc\_vna
-===================
+fmc_vna
+=======
 
-.. automodule:: adi.fmc_vna
+Class API
+---------
+
+.. autoclass:: adi.fmc_vna.fmcvna
    :members:
    :undoc-members:
    :show-inheritance:

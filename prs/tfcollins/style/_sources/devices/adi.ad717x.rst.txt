@@ -1,23 +1,21 @@
 ad717x
-=================
+======
 
 Supported Drivers
 -----------------
 
 The class **adi.ad717x** supports the following IIO drivers:
 
-.. autoattribute:: adi.ad717x.compatible_parts
-
+.. autoattribute:: adi.ad717x.ad717x.compatible_parts
 
 Class API
------------------
+---------
 
-.. autoclass:: adi.ad717x
+.. autoclass:: adi.ad717x.ad717x
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: compatible_parts
-
 
 Dynamic Attributes
 ------------------

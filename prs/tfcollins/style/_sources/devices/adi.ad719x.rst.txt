@@ -1,23 +1,21 @@
 ad719x
-=================
+======
 
 Supported Drivers
 -----------------
 
 The class **adi.ad719x** supports the following IIO drivers:
 
-.. autoattribute:: adi.ad719x.compatible_parts
-
+.. autoattribute:: adi.ad719x.ad719x.compatible_parts
 
 Class API
------------------
+---------
 
-.. autoclass:: adi.ad719x
+.. autoclass:: adi.ad719x.ad719x
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: compatible_parts
-
 
 Dynamic Attributes
 ------------------

@@ -3,7 +3,6 @@ Supported Devices
 
 
 
-
 .. toctree::
    :maxdepth: 2
 
@@ -20,6 +19,7 @@ Supported Devices
    adi.ad4170
    adi.ad4630
    adi.ad469x
+   adi.ad4858
    adi.ad514x
    adi.ad552xr
    adi.ad5592r
@@ -27,8 +27,8 @@ Supported Devices
    adi.ad5686
    adi.ad5706r
    adi.ad5710r
-   adi.ad579x
    adi.ad5754r
+   adi.ad579x
    adi.ad5940
    adi.ad6676
    adi.ad7091rx
@@ -67,7 +67,6 @@ Supported Devices
    adi.ad9467
    adi.ad9625
    adi.ad9680
-   adi.ad4858
    adi.ad9739a
    adi.ada4355
    adi.ada4356_lidar
@@ -78,23 +77,15 @@ Supported Devices
    adi.adf4159
    adi.adf4355
    adi.adf4371
-   adi.adf4382
    adi.adf4377
+   adi.adf4382
    adi.adf5610
    adi.adf5611
    adi.adg2128
-   adi.adis16375
    adi.adis16460
    adi.adis16475
    adi.adis16480
-   adi.adis16485
-   adi.adis16488
-   adi.adis16490
-   adi.adis16495
-   adi.adis16497
    adi.adis16507
-   adi.adis16545
-   adi.adis16547
    adi.adis16550
    adi.adl5240
    adi.adl5960
@@ -131,26 +122,24 @@ Supported Devices
    adi.fmcadc3
    adi.fmcjesdadc1
    adi.fmclidar1
-   adi.fmcomms5
    adi.fmcomms11
+   adi.fmcomms5
    adi.gen_mux
    adi.hmc7044
-   adi.jesd
    adi.lm75
    adi.ltc2314_14
    adi.ltc2378
    adi.ltc2387
    adi.ltc2499
    adi.ltc2664
-   adi.ltc2688
    adi.ltc2672
+   adi.ltc2688
    adi.ltc2983
    adi.max11205
    adi.max14001
    adi.max31855
    adi.max31865
    adi.max9611
-
    adi.one_bit_adc_dac
    adi.tdd
    adi.tddn

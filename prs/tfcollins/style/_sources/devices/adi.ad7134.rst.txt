@@ -1,23 +1,21 @@
 ad7134
-=================
+======
 
 Supported Drivers
 -----------------
 
 The class **adi.ad7134** supports the following IIO drivers:
 
-.. autoattribute:: adi.ad7134.compatible_parts
-
+.. autoattribute:: adi.ad7134.ad7134.compatible_parts
 
 Class API
------------------
+---------
 
-.. autoclass:: adi.ad7134
+.. autoclass:: adi.ad7134.ad7134
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: compatible_parts
-
 
 Dynamic Attributes
 ------------------

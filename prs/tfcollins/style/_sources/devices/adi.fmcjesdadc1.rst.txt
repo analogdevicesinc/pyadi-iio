@@ -1,7 +1,10 @@
-adi.fmcjesdadc1 module
-======================
+fmcjesdadc1
+===========
 
-.. automodule:: adi.fmcjesdadc1
+Class API
+---------
+
+.. autoclass:: adi.fmcjesdadc1.fmcjesdadc1
    :members:
    :undoc-members:
    :show-inheritance:

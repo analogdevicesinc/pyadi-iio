@@ -1,7 +1,10 @@
-gen\_mux
-===================
+gen_mux
+=======
 
-.. automodule:: adi.gen_mux
+Class API
+---------
+
+.. autoclass:: adi.gen_mux.genmux
    :members:
    :undoc-members:
    :show-inheritance:

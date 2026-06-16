@@ -1,23 +1,21 @@
 ad4080
-=================
+======
 
 Supported Drivers
 -----------------
 
 The class **adi.ad4080** supports the following IIO drivers:
 
-.. autoattribute:: adi.ad4080.compatible_parts
-
+.. autoattribute:: adi.ad4080.ad4080.compatible_parts
 
 Class API
------------------
+---------
 
-.. autoclass:: adi.ad4080
+.. autoclass:: adi.ad4080.ad4080
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: compatible_parts
-
 
 Dynamic Attributes
 ------------------
