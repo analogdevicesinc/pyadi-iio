@@ -8,15 +8,16 @@
 
     <title>adf4151x &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=ac863bf0" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a8f9a170" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../_static/app.umd.js?v=09b0c6bc"></script>
+    <script async="async" src="../_static/app.umd.js?v=26d0298f"></script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="adf4159" href="adi.adf4159.html" />
     <link rel="prev" title="adi.adf4030 module" href="adi.adf4030.html" />
    
+  
   
   
   <meta name="repository" content="pyadi-iio">
@@ -136,6 +137,7 @@
 </li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.frequency"><code class="docutils literal notranslate"><span class="pre">adf4151x.frequency</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.frequency_resolution"><code class="docutils literal notranslate"><span class="pre">adf4151x.frequency_resolution</span></code></a></li>
+<li><a class="reference internal" href="#adi.adf4151x.adf4151x.phase"><code class="docutils literal notranslate"><span class="pre">adf4151x.phase</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.powerdown"><code class="docutils literal notranslate"><span class="pre">adf4151x.powerdown</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.locked"><code class="docutils literal notranslate"><span class="pre">adf4151x.locked</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.muxout_select"><code class="docutils literal notranslate"><span class="pre">adf4151x.muxout_select</span></code></a></li>
@@ -546,6 +548,14 @@ respect to the input frequency reference.</p>
 <p>This value represents the desired frequency resolution of the output
 frequency, used to derive modulus and fraction values for fractional-N
 operation.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.phase">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phase</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.phase" title="Link to this definition"></a></dt>
+<dd><p>Get/Set the phase adjust value in radians</p>
+<p>Phase adjust increases the phase of the output relative to the current
+phase.</p>
 </dd></dl>
 
 <dl class="py property">
