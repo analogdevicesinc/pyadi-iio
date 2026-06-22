@@ -20,74 +20,135 @@
 import os
 import adi
 import numpy as np
-import matplotlib.pyplot as plt
+from ..BFC import ADSY2301 as mr
 
-# ==========================================================================
-# USER CONFIGURATION
-# ==========================================================================
-talise_uri = "ip:192.168.1.1"  # IP address of the ADRV9009-ZU11EG SoM
 
-## Pulse Parameters ##
-PRI_ms = 0.1       # Pulse repetition interval (ms)
-DAC_duty_cycle = 1.0   # Duty cycle for DAC pulses (0.0 to 1.0)
-TXRX_Bit = int(os.environ.get("TXRX_BIT", 1))  # Set to 1 for Tx, 0 for Rx (controls TDD channel for TXRX0-3 channels on the XUD1A)
-## Initialize Talise SOM DACs ##
-# The loop runs twice to ensure a clean init (first pass may fail after
-# a cold boot; second pass confirms settings are applied).
-for i in range(2):
+def sdr_init():
+     ######## LOAD JSON PROFILE ########
+    ADSY2301_profile = mr.load_json_profile()
+    fpga_ip = ADSY2301_profile["ip_address"]
+    fpga_uri = "ip:" + fpga_ip
+
     # Create radio and initialize TDD engine
-    sdr  = adi.adrv9009_zu11eg(talise_uri)
-    ctx = sdr._ctrl.ctx
-    tddn = adi.tddn(talise_uri)
-
-    # Setup ADXUD1AEBZ
-    xud = ctx.find_device("xud_control")
-
-    ## Updated XUD settings, PLLselect and RxGainMode ##
-    PLLselect = xud.find_channel("voltage1", True)
-    rxgainmode = xud.find_channel("voltage0", True)
-
-    # XUD1A settings for Tx/Rx synchronization
-    # 0 for rx, 1 for tx
-
-    PLLselect.attrs["raw"].value = "1"
-    rxgainmode.attrs["raw"].value = "0"
-
+    sdr  = adi.adrv9009_zu11eg(fpga_uri)
 
     # Configure TX/RX hardware gains (0 dB)
     sdr.tx_enabled_channels = [0, 1, 2, 3]
+    sdr.rx_enabled_channels = [0, 1, 2, 3]
+    print("TX channels enabled ", sdr.tx_enabled_channels)
+    print("RX channels enabled ", sdr.rx_enabled_channels)
+
     sdr.trx_lo = 4500000000
+    print("Side A TRX LO frequency set to ", sdr.trx_lo)
+
     sdr.trx_lo_chip_b = 4500000000
+    print("Side B TRX LO frequency set to ", sdr.trx_lo_chip_b)
+
     sdr.tx_hardwaregain_chan0 = -14
     sdr.tx_hardwaregain_chan1 = -14
     sdr.tx_hardwaregain_chan0_chip_b= -14
     sdr.tx_hardwaregain_chan1_chip_b = -14
+    print("Side A TX hardware gain for channel 0 set to ", sdr.tx_hardwaregain_chan0)
+    print("Side A TX hardware gain for channel 1 set to ", sdr.tx_hardwaregain_chan1)
+    print("Side B TX hardware gain for channel 0 set to ", sdr.tx_hardwaregain_chan0_chip_b)
+    print("Side B TX hardware gain for channel 1 set to ", sdr.tx_hardwaregain_chan1_chip_b)
+
     sdr.rx_hardwaregain_chan0 = 0
     sdr.rx_hardwaregain_chan1 = 0
     sdr.rx_hardwaregain_chan0_chip_b= 0
     sdr.rx_hardwaregain_chan1_chip_b = 0
+    print("Side A RX hardware gain for channel 0 set to ", sdr.rx_hardwaregain_chan0)
+    print("Side A RX hardware gain for channel 1 set to ", sdr.rx_hardwaregain_chan1)
+    print("Side B RX hardware gain for channel 0 set to ", sdr.rx_hardwaregain_chan0_chip_b)
+    print("Side B RX hardware gain for channel 1 set to ", sdr.rx_hardwaregain_chan1_chip_b)
+
     sdr.gain_control_mode_chan0 = "manual"
     sdr.gain_control_mode_chan1 = "manual"
     sdr.gain_control_mode_chan0_chip_b = "manual"
     sdr.gain_control_mode_chan1_chip_b = "manual"
-    sdr.gain_control_mode_chan0 = "slow_attack"
-    sdr.gain_control_mode_chan1 = "slow_attack"
-    sdr.gain_control_mode_chan0_chip_b = "slow_attack"
-    sdr.gain_control_mode_chan1_chip_b = "slow_attack"
+    print("Side A Gain control mode for channel 0 set to ", sdr.gain_control_mode_chan0)
+    print("Side A Gain control mode for channel 1 set to ", sdr.gain_control_mode_chan1)
+    print("Side B Gain control mode for channel 0 set to ", sdr.gain_control_mode_chan0_chip_b)
+    print("Side B Gain control mode for channel 1 set to ", sdr.gain_control_mode_chan1_chip_b)
 
-    # Number of frame pulses to plot in the pulse train
-    # (will be used to calculate the RX buffer size)
-    frame_pulses_to_plot = 5
+    sdr._rxadc.set_kernel_buffers_count(1)
+    sdr.rx_main_nco_frequencies = [450000000] * 4
+    sdr.rx_main_nco_phases = [0] * 4
+    sdr.rx_channel_nco_frequencies = [0] * 4
+    sdr.rx_channel_nco_phases = [0] * 4
+    sdr.rx_enabled_channels = [0, 1, 2, 3]
+    sdr.rx_nyquist_zone     = ["odd"] * 4
+    sdr.rx_buffer_size = 2 ** 12  # 4096 samples per capture
+    sdr.dds_phases = []
 
-    ## RX frame and pulse timing (in milliseconds)
+    print("SDR initialized.")
+
+def tdd_init():
+    ######## LOAD JSON PROFILE ########
+    ADSY2301_profile = mr.load_json_profile()
+    fpga_ip = ADSY2301_profile["ip_address"]
+    fpga_uri = "ip:" + fpga_ip
+
+    sdr  = adi.adrv9009_zu11eg(fpga_uri)
+    tddn = adi.tddn(fpga_uri)
+
+    ## Pulse Parameters ##
+    PRI_ms = 0.1 # Pulse repetition interval (ms)
     frame_length_ms = 0.1    # 100 us frame
-    tx_pulse_start_ms = 0.00001  # 10 ns offset
-    tx_pulse_stop_ms = 0.100     # 100 us pulse width
+    DAC_duty_cycle = 1.0   # Duty cycle for DAC pulses (0.0 to 1.0)
+    frame_pulses_to_plot = 5  # (will be used to calculate the RX buffer size)
+    TXRX_Bit = int(os.environ.get("TXRX_BIT", 1))  # Set to 1 for Tx, 0 for Rx (controls TDD channel for TXRX0-3 channels on the XUD1A)
 
+    ###########################
+    # TDD Engine Configuration
+    ###########################
 
-    # Pulse parameters
-    PRI_ms = 0.1                    # 100 us pulse repetition interval
-    DAC_duty_cycle = 1                  # 100% duty cycle (CW mode)
+    TDD_TX_OFFLOAD_SYNC = 0
+    TDD_RX_OFFLOAD_SYNC = 1
+    TDD_ENABLE      = 2
+    TDD_ADRV9009_RX_EN = 3
+    TDD_ADRV9009_TX_EN = 4
+    TDD_ADSY2301_EN = 5
+    TDD_CHANNEL6     = 6  # PA_ON_0, PA_ON_1
+    TDD_CHANNEL7     = 7  # TR Pulse
+
+    # Configure TDD engine (disable during changes)
+    tddn.enable = False
+    tddn.frame_length_ms = frame_length_ms  # frame_length_ms = PRI_ms
+
+    # --- Group 1: Always-on channels ---
+    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_CHANNEL6]:
+        tddn.channel[chan].on_ms   = 0
+        tddn.channel[chan].off_ms  = 0
+        tddn.channel[chan].polarity = 1
+        tddn.channel[chan].enable   = True
+
+    # --- Group 1b: ADSY2301 phased-array enable (always on) ---
+
+    for chan in [TDD_ADSY2301_EN]:
+        tddn.channel[chan].on_ms   = 0
+        tddn.channel[chan].off_ms  = 0
+        tddn.channel[chan].polarity = TXRX_Bit
+        tddn.channel[chan].enable   = True
+
+    # --- Group 2: TX/RX offload sync (raw sample counts) ---
+    for chan in [TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
+        tddn.channel[chan].on_raw   = 0
+        tddn.channel[chan].off_raw  = 10 
+        tddn.channel[chan].polarity = 0
+        tddn.channel[chan].enable   = True
+
+    # --- Group 3: TR pulse ---
+    for chan in [TDD_CHANNEL7]:
+        tddn.channel[chan].on_ms   = 0
+        tddn.channel[chan].off_ms  = 0.005  # 5 us TR pulse (5% duty cycle at 100 us PRI)
+        tddn.channel[chan].polarity = 0      # polarity inverted
+        tddn.channel[chan].enable   = True
+
+    # --- Enable TDD engine and trigger sync ---
+    tddn.enable = True
+    tddn.sync_soft  = True
+
     pulse_spacing_ms = 0.002        # 2 us spacing between pulse start times
     pulse_start_buffer_ms = 0.00001 # 10 ns guard
     pulse0_start_ms = pulse_start_buffer_ms
@@ -117,21 +178,21 @@ for i in range(2):
     pulse0_duration_seconds = pulse0_duration_ms * 1e-3
     pulse0_samples = int(fs * pulse0_duration_seconds)
     pulse0_start_sample = int(fs * pulse0_start_ms * 1e-3)
+
     pulse1_duration_ms = pulse1_stop_ms - pulse1_start_ms
     pulse1_duration_seconds = pulse1_duration_ms * 1e-3
     pulse1_samples = int(fs * pulse1_duration_seconds)
     pulse1_start_sample = int(fs * pulse1_start_ms * 1e-3)
+
     pulse2_duration_ms = pulse2_stop_ms - pulse2_start_ms
     pulse2_duration_seconds = pulse2_duration_ms * 1e-3
     pulse2_samples = int(fs * pulse2_duration_seconds)
     pulse2_start_sample = int(fs * pulse2_start_ms * 1e-3)
+
     pulse3_duration_ms = pulse3_stop_ms - pulse3_start_ms
     pulse3_duration_seconds = pulse3_duration_ms * 1e-3
     pulse3_samples = int(fs * pulse3_duration_seconds)
     pulse3_start_sample = int(fs * pulse3_start_ms * 1e-3)
-
-    # Create full time vector for entire frame
-    t = np.arange(0, N * ts, ts)
 
     # Create full frame with zeros
     pulse0_i = np.zeros(N)
@@ -173,12 +234,15 @@ for i in range(2):
     pulse0_iq_real = np.int16(np.real(pulse0_data) * scale_factor)
     pulse0_iq_imag = np.int16(np.imag(pulse0_data) * scale_factor)
     pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
+
     pulse1_iq_real = np.int16(np.real(pulse1_data) * scale_factor)
     pulse1_iq_imag = np.int16(np.imag(pulse1_data) * scale_factor)
     pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
+
     pulse2_iq_real = np.int16(np.real(pulse2_data) * scale_factor)
     pulse2_iq_imag = np.int16(np.imag(pulse2_data) * scale_factor)
     pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
+
     pulse3_iq_real = np.int16(np.real(pulse3_data) * scale_factor)
     pulse3_iq_imag = np.int16(np.imag(pulse3_data) * scale_factor)
     pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
@@ -187,9 +251,6 @@ for i in range(2):
     sdr._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
     sdr.tx_cyclic_buffer = True
 
-    # Configure RX parameters
-    sdr.rx_enabled_channels = [0, 1, 2, 3]
-
     # Calculate RX buffer size to match TX duration
     rx_fs = int(sdr.rx_sample_rate)
 
@@ -197,99 +258,6 @@ for i in range(2):
     desired_rx_duration = frame_pulses_to_plot * len(pulse0_iq) / fs * 1000  # ms
     rx_buffer_samples = int(rx_fs * (desired_rx_duration * 1e-3))
     sdr.rx_buffer_size = rx_buffer_samples
-
-    # Create time vector for plotting
-    rx_ts = 1 / float(rx_fs)
-    rx_t = np.arange(0, rx_buffer_samples * rx_ts, rx_ts)
-
-    # Create pulse train for the entire RX buffer duration
-    pulse_train = np.zeros(rx_buffer_samples)
-
-    # Calculate samples per frame and pulse
-    samples_per_frame = int(frame_length_ms * 1e-3 / rx_ts)
-    pulse_start_offset = int(tx_pulse_start_ms * 1e-3 / rx_ts)
-    pulse_stop_offset = int(tx_pulse_stop_ms * 1e-3 / rx_ts)
-
-    num_frames = len(rx_t) // samples_per_frame
-
-    for frame in range(num_frames):
-        frame_start = frame * samples_per_frame
-        pulse_start = frame_start + pulse_start_offset
-        pulse_stop = frame_start + pulse_stop_offset
-        pulse_train[pulse_start:pulse_stop] = 1
-
-    ###########################
-    # TDD Engine Configuration
-    ###########################
-
-    TDD_TX_OFFLOAD_SYNC = 0
-    TDD_RX_OFFLOAD_SYNC = 1
-    TDD_ENABLE      = 2
-    TDD_ADRV9009_RX_EN = 3
-    TDD_ADRV9009_TX_EN = 4
-    TDD_ADSY2301_EN = 5
-    TDD_CHANNEL6     = 6  # PA_ON_0, PA_ON_1
-    TDD_CHANNEL7     = 7  # TR Pulse
-
-    # Configure TDD engine (disable during changes)
-    tddn.enable = 0
-    tddn.frame_length_ms = frame_length_ms  # frame_length_ms = PRI_ms
-
-    # --- Group 1: Always-on channels ---
-    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_CHANNEL6]:
-        tddn.channel[chan].on_ms   = 0
-        tddn.channel[chan].off_ms  = 0
-        tddn.channel[chan].polarity = 1
-        tddn.channel[chan].enable   = 1
-
-    # --- Group 1b: ADSY2301 phased-array enable (always on) ---
-
-    for chan in [TDD_ADSY2301_EN]:
-        tddn.channel[chan].on_ms   = 0
-        tddn.channel[chan].off_ms  = 0
-        tddn.channel[chan].polarity = TXRX_Bit
-        tddn.channel[chan].enable   = 1
-
-    # --- Group 2: TX/RX offload sync (raw sample counts) ---
-    for chan in [TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
-        tddn.channel[chan].on_raw   = 0
-        tddn.channel[chan].off_raw  = 10 
-        tddn.channel[chan].polarity = 0
-        tddn.channel[chan].enable   = 1
-
-    # --- Group 3: TR pulse ---
-    for chan in [TDD_CHANNEL7]:
-        tddn.channel[chan].on_ms   = 0
-        tddn.channel[chan].off_ms  = 0.005  # 5 us TR pulse (5% duty cycle at 100 us PRI)
-        tddn.channel[chan].polarity = 0      # polarity inverted
-        tddn.channel[chan].enable   = 1
-
-    # --- Enable TDD engine and trigger sync ---
-    tddn.enable = 1
-    tddn.sync_soft  = 1
-
-    tdd_tx_offload_frame_length_ms = frame_length_ms
-    tdd_tx_offload_pulse_start_ms = 0.00001 # 10 ns
-
-    # off_raw is in samples, so convert to time for offset calculation
-    off_raw_samples = tddn.channel[TDD_TX_OFFLOAD_SYNC].off_raw
-
-    # Create pulse train for the entire RX buffer duration
-    tdd_tx_offload_pulse_train = np.zeros(rx_buffer_samples)
-
-    # Calculate samples per frame and pulse
-    tdd_tx_offload_samples_per_frame = int(frame_length_ms * 1e-3 / rx_ts)
-    tdd_tx_offload_pulse_start_offset = int(tdd_tx_offload_pulse_start_ms * 1e-3 / rx_ts)
-    # Pulse stays high for off_raw_samples
-    tdd_tx_offload_pulse_stop_offset = tdd_tx_offload_pulse_start_offset + off_raw_samples
-
-    # Only plot as many pulses as requested
-    for frame in range(frame_pulses_to_plot):
-        tdd_tx_offload_frame_start = frame * tdd_tx_offload_samples_per_frame
-        tdd_tx_offload_pulse_start = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_start_offset
-        tdd_tx_offload_pulse_stop = tdd_tx_offload_frame_start + tdd_tx_offload_pulse_stop_offset
-        tdd_tx_offload_pulse_train[tdd_tx_offload_pulse_start:tdd_tx_offload_pulse_stop] = 1
-
 
     ##############################################
     ## Step 3: Send TX Data
@@ -305,7 +273,8 @@ for i in range(2):
         sdr.tx_enabled_channels = []
         sdr.tx([])
 
-    sdr.tx_cyclic_buffer
+    sdr.tx_cyclic_buffer = True
 
     # Trigger TDD synchronization
-    tddn.sync_soft  = 1
+    tddn.sync_soft  = True
+

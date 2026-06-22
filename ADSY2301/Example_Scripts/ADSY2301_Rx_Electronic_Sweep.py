@@ -39,6 +39,10 @@
 # ==========================================================================
  
 import os
+import sys
+
+# Add parent directory to path so MR package can be found
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ['QT_QPA_PLATFORM'] = 'wayland'  # Use Wayland back-end for Qt (Linux)
 import subprocess
 import sys
@@ -50,7 +54,7 @@ from adi.sshfs import sshfs      # SSH helper for remote SoM access
 import matplotlib.pyplot as plt  # Live plotting
 import numpy as np
 from scipy.io import savemat     # Export data in MATLAB .mat format
-import ADSY2301 as mr            # ADSY2301 helper module (calibration, capture, etc.)
+import MR.BFC.ADSY2301 as mr           # ADSY2301 helper module (calibration, capture, etc.)
  
 # ──────────────────────────────────────────────────────────────────────────
 # USER CONFIGURATION  — Adjust these parameters for your test

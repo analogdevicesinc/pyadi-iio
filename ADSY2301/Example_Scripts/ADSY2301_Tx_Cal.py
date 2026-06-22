@@ -39,8 +39,11 @@
 # Copyright (C) 2025 Analog Devices, Inc.
 # SPDX short identifier: ADIBSD
 # ==========================================================================
-
 import os
+import sys
+
+# Add parent directory to path so MR package can be found
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'  # Use offscreen back-end to avoid X11/Wayland issues
 import sys
 import time
@@ -54,7 +57,7 @@ matplotlib.use('Agg')               # Non-interactive back-end (no display neede
 import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 import paramiko                     # SSH for remote SoM access
-import ADSY2301 as mr               # ADSY2301 helper module (calibration, capture, etc.)
+import MR.BFC.ADSY2301 as mr               # ADSY2301 helper module (calibration, capture, etc.)
 
 # *** INSTRUMENT DRIVERS ***
 # The imports below are specific to the lab instruments used in this setup.

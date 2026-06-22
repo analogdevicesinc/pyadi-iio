@@ -22,17 +22,28 @@ from adi.sshfs import sshfs
 import matplotlib.pyplot as plt
 import numpy as np
 import genalyzer as gn
-
-# import adar_functions
 import re
 import json
 import os
 
+def load_json_profile(file_path="ADSY2301.json"):
 
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, file_path)
+    
+    """Load and return JSON data from a file with error handling."""
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File '{file_path}' does not exist. Please ensure the file is in the local directory.")
 
-def enable_stingray_channel(obj, elements=None, man_input=False):
+    with open(file_path, 'r') as file:
+            data = json.load(file)
+
+    return data
+    
+        
+def enable_mantaray_channel(obj, elements=None, man_input=False):
     """
-    Enables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Enables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
         user_input = input("Enter a comma-separated list of channels to turn on (1-64): ")
@@ -107,7 +118,7 @@ def data_capture(adc):
 
 def disable_pa_bias_channel(obj, elements=None):
     """
-    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
     """
 
     if elements is None:
@@ -145,7 +156,7 @@ def disable_pa_bias_channel(obj, elements=None):
  
 def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -2.0):
     """
-    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Enables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
     """
 
     if elements is None:
@@ -208,7 +219,7 @@ def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bi
 
 def manta_power_detector(obj, elements, man_input=False):
     """
-    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
         user_input = input("Enter a comma-separated list of channels to turn off (1-64): ")
@@ -248,7 +259,7 @@ def manta_power_detector(obj, elements, man_input=False):
                             print(f"Element number {channel}")
                     return(channel.detector_power)
 
-def disable_stingray_channel(obj, elements=None, man_input=False):
+def disable_mantaray_channel(obj, elements=None, man_input=False):
     """
     Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
@@ -497,7 +508,7 @@ def find_phase_delay_sliding_ref(obj, adc, subarray_ref, adc_map, delay_phases):
         null_index = np.where(peak_sum==null_val)
 
     # Disable the Stingray reference channels
-    disable_stingray_channel(obj,subarray_ref)
+    disable_mantaray_channel(obj,subarray_ref)
     return cal_ant
 
 def find_phase_delay_fixed_ref(obj, adc, subarray_ref, adc_ref, delay_phases):
@@ -539,7 +550,7 @@ def find_phase_delay_fixed_ref(obj, adc, subarray_ref, adc_ref, delay_phases):
         cal_ant.append(cal_value[0].item())
 
     # Disable the Stingray reference channels
-    disable_stingray_channel(obj,subarray_ref)
+    disable_mantaray_channel(obj,subarray_ref)
     cal_ant = cal_ant[1:]
     # Roll the calibration values to align with the reference antenna
     # This is done because data[adc_ref] corresponds to subarray 4
@@ -600,7 +611,7 @@ def find_phase_delay_fixed_ref_tx(obj, SpecAn, subarray_ref, adc_ref, delay_phas
         cal_ant.append(cal_value[0].item())
 
     # Disable the Stingray reference channels
-    disable_stingray_channel(obj,subarray_ref)
+    disable_mantaray_channel(obj,subarray_ref)
     cal_ant = cal_ant[1:]
     # Roll the calibration values to align with the reference antenna
     # This is done because data[adc_ref] corresponds to subarray 4
@@ -625,7 +636,7 @@ def phase_digital(obj, adc, adc_ref, subarray_ref):
     digital_phase_cal = (np.mod(phase_compare - phase_compare[adc_ref] + 180, 360) - 180) * 1e3
 
     # Disable analog array_reference channels
-    disable_stingray_channel(obj, subarray_ref)
+    disable_mantaray_channel(obj, subarray_ref)
 
     # write NCO phases to AD9081
     adc.rx_main_nco_phases = (np.round(digital_phase_cal).astype(int)).tolist()
@@ -776,13 +787,13 @@ def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_tar
 
             if ii == 0:
                 # Disable the target channel in subarray 1
-                disable_stingray_channel(sray_obj, tmp_targ[jj])
+                disable_mantaray_channel(sray_obj, tmp_targ[jj])
             else:
                 # Disable the target channels in subarrays 2, 3, and 4
-                disable_stingray_channel(sray_obj, tmp_targ[:, jj])
+                disable_mantaray_channel(sray_obj, tmp_targ[:, jj])
 
         # Disable the reference channel being used for calibration
-        disable_stingray_channel(sray_obj, tmp_array_ref)
+        disable_mantaray_channel(sray_obj, tmp_array_ref)
                       
     analog_phase_flatten = np.concatenate((analog_phase[0,0:4], analog_phase[3,0:4], analog_phase[0,4:8], analog_phase[3,4:8], analog_phase[0,8:12], analog_phase[3,8:12], analog_phase[0,12:16], analog_phase[3,12:16], analog_phase[1,0:4], analog_phase[2,0:4], analog_phase[1,4:8], analog_phase[2,4:8], analog_phase[1,8:12], analog_phase[2,8:12], analog_phase[1,12:16], analog_phase[2,12:16]))
     analog_phase_dict = create_dict(element_map,analog_phase_flatten)
@@ -876,13 +887,13 @@ def phase_analog_tx(adsy2301_obj, SpecAn_obj, adc_map, adc_ref, subarray_ref, su
 
             if ii == 0:
                 # Disable the target channel in subarray 1
-                mr.disable_stingray_channel(adsy2301_obj, tmp_targ[jj])
+                mr.disable_mantaray_channel(adsy2301_obj, tmp_targ[jj])
             else:
                 # Disable the target channels in subarrays 2, 3, and 4
-                mr.disable_stingray_channel(adsy2301_obj, tmp_targ[:, jj])
+                mr.disable_mantaray_channel(adsy2301_obj, tmp_targ[:, jj])
 
         # Disable the reference channel being used for calibration
-        mr.disable_stingray_channel(adsy2301_obj, tmp_array_ref)
+        mr.disable_mantaray_channel(adsy2301_obj, tmp_array_ref)
                       
     analog_phase_flatten = np.concatenate((analog_phase[0,0:4], analog_phase[3,0:4], analog_phase[0,4:8], analog_phase[3,4:8], analog_phase[0,8:12], analog_phase[3,8:12], analog_phase[0,12:16], analog_phase[3,12:16], analog_phase[1,0:4], analog_phase[2,0:4], analog_phase[1,4:8], analog_phase[2,4:8], analog_phase[1,8:12], analog_phase[2,8:12], analog_phase[1,12:16], analog_phase[2,12:16]))
     analog_phase_dict = create_dict(element_map,analog_phase_flatten)
@@ -903,7 +914,7 @@ def rx_single_channel_data(obj, adc, array, adc_map):
         Captures single channel Rx data on a 1 channel per subarray basis.
         Returns raw ADC codes in a 64x4096 matrix.
         """
-        disable_stingray_channel(obj,array)
+        disable_mantaray_channel(obj,array)
         rx_data = np.zeros((np.size(array),4096), dtype = complex)  # Allocate memory
         for a in range(np.size(array,1)):
             
@@ -933,7 +944,7 @@ def rx_single_channel_data(obj, adc, array, adc_map):
                 rx_data[row - 1,:] = new_data[index,:]
 
             # Disable target channels
-            disable_stingray_channel(obj, array[:,a])
+            disable_mantaray_channel(obj, array[:,a])
         return rx_data
  
 def get_analog_mag(data):

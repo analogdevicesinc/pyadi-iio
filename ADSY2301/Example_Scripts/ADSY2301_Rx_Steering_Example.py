@@ -27,11 +27,15 @@
 # Copyright (C) 2025 Analog Devices, Inc.
 # SPDX short identifier: ADIBSD
 # ==========================================================================
- 
+import os
+import sys
+
+# Add parent directory to path so MR package can be found
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import adi
 from adi.sshfs import sshfs
 import numpy as np
-import ADSY2301 as mr
+import MR.BFC.ADSY2301 as mr
 
 # ──────────────────────────────────────────────────────────────────────────
 # USER CONFIGURATION  — Adjust these parameters for your test

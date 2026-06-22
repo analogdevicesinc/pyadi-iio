@@ -47,8 +47,11 @@
 # Copyright (C) 2025 Analog Devices, Inc.
 # SPDX short identifier: ADIBSD
 # ==========================================================================
-
 import os
+import sys
+
+# Add parent directory to path so MR package can be found
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ['QT_QPA_PLATFORM'] = 'wayland'  # Use Wayland back-end for Qt (Linux)
 import subprocess
 import sys
@@ -61,7 +64,7 @@ import matplotlib.pyplot as plt  # Live plotting
 import numpy as np
 from scipy.io import savemat     # Export data in MATLAB .mat format
 import pyvisa                    # VISA instrument communication
-import ADSY2301 as mr            # ADSY2301 helper module (calibration, capture, etc.)
+import MR.BFC.ADSY2301 as mr           # ADSY2301 helper module (calibration, capture, etc.)
 
 # *** INSTRUMENT DRIVERS ***
 # The imports below are specific to the lab instruments used in this setup.

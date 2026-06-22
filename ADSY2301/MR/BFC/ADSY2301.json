@@ -1,0 +1,7 @@
+{
+    "type": "quad-tile",
+    "ip_address": "192.168.0.1",
+    "use_calibration_LUT": false,
+    "calibration_LUT_location": "/tx_cal_values.json"
+    
+}

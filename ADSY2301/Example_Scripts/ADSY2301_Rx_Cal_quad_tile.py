@@ -13,60 +13,29 @@
 # Copyright (C) 2025 Analog Devices, Inc.
 # SPDX short identifier: ADIBSD
 # ==========================================================================
-
 import os
-os.environ['QT_QPA_PLATFORM'] = 'wayland'
-import adi
-from adi.sshfs import sshfs
-import matplotlib.pyplot as plt
-import numpy as np
-import paramiko
-import ADSY2301 as mr
-import subprocess
 import sys
 
- 
- 
-# ==========================================================================
-# STEP 0 — SSH Connection & Hardware Initialization
-# ==========================================================================
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
- 
-SELF_BIASED_LNAs = True
+# Add parent directory to path so MR package can be found
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import adi
+import adi
+import matplotlib.pyplot as plt
+import numpy as np
+import MR.BFC.ADSY2301 as mr
+
+
+## Load the ADSY2301 JSON profile
+ADSY2301_profile = mr.load_json_profile()
+fpga_ip = ADSY2301_profile["ip_address"]
+fpga_uri = "ip:" + fpga_ip
 ARRAY_MODE = "rx"
-url = "ip:192.168.1.1"
-print("Connecting to", url ,"...")
+    
+## Initialize the SDR ##
+conv = adi.adrv9009_zu11eg(uri = fpga_uri)
  
 # ==========================================================================
-# STEP 1 — Configure ADRV9009 Transceiver
-# ==========================================================================
-tddn = adi.tddn(uri = url)
-fs_RxIQ = 245.76e6  # RX IQ sample rate (Hz)
-conv = adi.adrv9009_zu11eg(uri = url)
-conv._rxadc.set_kernel_buffers_count(1)
-conv.rx_main_nco_frequencies = [450000000] * 4
-conv.rx_main_nco_phases = [0] * 4
-conv.rx_channel_nco_frequencies = [0] * 4
-conv.rx_channel_nco_phases = [0] * 4
-conv.rx_enabled_channels = [0, 1, 2, 3]
-conv.rx_nyquist_zone     = ["odd"] * 4
-conv.rx_buffer_size = 2 ** 12  # 4096 samples per capture
-conv.dds_phases = []
-
-
-# Run the companion script that programs the ADRV9009 transmit DACs and
-# the FPGA-based TDD timing engine (pulse timing, duty cycle, TR switching).
-print("Running DAC_TDD_Config.py...")
-dac_tdd_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "DAC_TDD_Config.py")
-env = os.environ.copy()
-env["TXRX_BIT"] = "0" # Force Rx mode for this sweep
-subprocess.run([sys.executable, dac_tdd_script], check=True, env=env)
-print("DAC/TDD configuration complete.\n")
- 
-# ==========================================================================
-# STEP 2 — Define Subarrays, Reference Channels, and ADC Maps
+#  Define Subarrays, Reference Channels, and ADC Maps
 # ==========================================================================
 # The 64 elements are divided into 4 subarrays of 16 elements each.
 # Each subarray feeds one ADC channel on the transceiver.
@@ -81,10 +50,10 @@ adc_map      = np.array([0, 1, 2, 3])      # ADC channel index for each subarray
 adc_ref      = 0                            # ADC channel used as the phase reference
  
 # ==========================================================================
-# STEP 3 — Initialize ADAR1000 Array
+# Initialize ADAR1000 Array
 # ==========================================================================
-sray = adi.adar1000_array(
-    uri = url,
+ADSY2301_OBJ = adi.adar1000_array(
+    uri = fpga_uri,
    
     chip_ids = ["adar1000_csb_0_1_2", "adar1000_csb_0_1_1", "adar1000_csb_0_2_2", "adar1000_csb_0_2_1",
                 "adar1000_csb_0_1_3", "adar1000_csb_0_1_4", "adar1000_csb_0_2_3", "adar1000_csb_0_2_4",
@@ -123,8 +92,8 @@ sray = adi.adar1000_array(
 delay_phases = np.arange(-180,181,1)
 
 # Disable all channels before configuring
-mr.disable_stingray_channel(sray)
-sray.latch_rx_settings()
+mr.disable_mantaray_channel(ADSY2301_OBJ)
+ADSY2301_OBJ.latch_rx_settings()
  
 # Identify non-reference elements (these are the ones we calibrate against the reference)
 d = ~np.isin(subarray, subarray_ref)
@@ -133,53 +102,48 @@ subarray_targ = np.reshape(subarray_targ, (subarray.shape[0],-1))
  
 # Set all elements to RX mode with max gain and zero phase offset
 if ARRAY_MODE == "rx":
+    for device in ADSY2301_OBJ.devices.values():
+        device.mode = "rx"
+
     print("ARRAY_MODE =",ARRAY_MODE,"Setting all devices to rx mode")
-    for element in sray.elements.values():
+    for element in ADSY2301_OBJ.elements.values():
         element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
         element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
         element.rx_phase = 0 # Set all phases to 0
-    sray.latch_rx_settings()
+    ADSY2301_OBJ.latch_rx_settings()
  
 # Point array at boresight
-sray.steer_rx(azimuth=0, elevation=0)
- 
-# Configure ADXUD1AEBZ PLL and gain mode
-ctx = conv._ctrl.ctx
-xud = ctx.find_device("xud_control")
-PLLselect = xud.find_channel("voltage1", True)
-rxgainmode = xud.find_channel("voltage0", True)
-cal_ant = mr.find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
-PLLselect.attrs["raw"].value = "1"
-rxgainmode.attrs["raw"].value = "1"
- 
+ADSY2301_OBJ.steer_rx(azimuth=0, elevation=0)
+
+
 # ==========================================================================
-# STEP 4 — Calibration (Gain + Phase)
+# Calibration (Gain + Phase)
 # ==========================================================================
  
 input("Make sure RF is on! Press Enter to continue...")
  
 # Enable subarray reference
-mr.enable_stingray_channel(sray,subarray)
+mr.enable_mantaray_channel(ADSY2301_OBJ,subarray)
  
 # Pre-calibration data capture
 no_cal_data = np.transpose(np.array(mr.data_capture(conv)))
  
 # --- Gain calibration ---
-mr.disable_stingray_channel(sray)
-gain_dict, atten_dict, mag_pre_cal, mag_post_cal = mr.rx_gain(sray, conv, subarray, adc_map, sray.element_map)
+mr.disable_mantaray_channel(ADSY2301_OBJ)
+gain_dict, atten_dict, mag_pre_cal, mag_post_cal = mr.rx_gain(ADSY2301_OBJ, conv, subarray, adc_map, ADSY2301_OBJ.element_map)
  
 # --- Phase calibration ---
 print("Calibrating Phase... Please wait...")
-cal_ant = mr.find_phase_delay_fixed_ref(sray, conv, subarray_ref, adc_ref, delay_phases)
-analog_phase, analog_phase_dict = mr.phase_analog(sray, conv, adc_map, adc_ref, subarray_ref, subarray_targ, cal_ant)
+cal_ant = mr.find_phase_delay_fixed_ref(ADSY2301_OBJ, conv, subarray_ref, adc_ref, delay_phases)
+analog_phase, analog_phase_dict = mr.phase_analog(ADSY2301_OBJ, conv, adc_map, adc_ref, subarray_ref, subarray_targ, cal_ant)
  
 # Post-calibration data capture
-mr.enable_stingray_channel(sray)
+mr.enable_mantaray_channel(ADSY2301_OBJ)
 calibrated_data = np.transpose(np.array(mr.data_capture(conv)))
 calibrated_data = np.array(calibrated_data).T
 calibrated_data = mr.cal_data(calibrated_data, cal_ant)
 calibrated_data = np.array(calibrated_data).T
-mr.disable_stingray_channel(sray)
+mr.disable_mantaray_channel(ADSY2301_OBJ)
  
 # ==========================================================================
 # STEP 5 — Plot Results
