@@ -49,9 +49,10 @@ from time import sleep
 
 import matplotlib.pyplot as plt
 import numpy as np
+from phaser_functions import load_hb100_cal, spec_est
+
 from adi import ad9361
 from adi.cn0566 import CN0566
-from phaser_functions import load_hb100_cal, spec_est
 
 # First try to connect to a locally connected CN0566. On success, connect,
 # on failure, connect to remote CN0566

@@ -6,6 +6,7 @@ import sys
 from time import sleep
 
 import matplotlib.pyplot as plt
+
 from adi import ad7768
 
 # Optionally pass URI as command line argument,

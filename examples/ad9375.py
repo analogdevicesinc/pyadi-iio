@@ -4,10 +4,11 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Create radio
 sdr = adi.ad9375(uri="ip:192.168.10.231")

@@ -4,10 +4,11 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Create radio
 tx = adi.ad9172(uri="ip:localhost")

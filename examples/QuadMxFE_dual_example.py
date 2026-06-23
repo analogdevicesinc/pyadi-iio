@@ -5,10 +5,11 @@
 import time
 from datetime import datetime
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 
 def measure_phase_and_delay(chan0, chan1, window=None):

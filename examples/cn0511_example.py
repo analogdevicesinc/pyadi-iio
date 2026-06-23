@@ -4,8 +4,9 @@
 import sys
 import time
 
-import adi
 import numpy as np
+
+import adi
 
 # Set up CN0511. Replace URI with the actual uri of your CN0511 for remote access.
 uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"

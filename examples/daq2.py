@@ -4,10 +4,11 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Set up DAQ2
 daq = adi.DAQ2(uri="ip:192.168.86.44")

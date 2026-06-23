@@ -6,6 +6,7 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
+
 from adi import adaq8092
 
 # Optionally pass URI as command line argument,

@@ -5,9 +5,10 @@
 
 import sys
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
+
+import adi
 
 # Optionally pass URI as command line argument,
 # else use default context manager search
@@ -21,7 +22,7 @@ adc.rx_buffer_size = 500
 adc.sample_rate = 2000000
 
 try:
-    adc.sample_averaging = 16
+    adc.chan0.oversampling_ratio = 16
 except:
     print("Sample average not supported in this mode")
 

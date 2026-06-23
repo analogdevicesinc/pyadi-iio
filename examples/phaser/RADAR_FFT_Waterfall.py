@@ -5,13 +5,14 @@
 import sys
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 import pyqtgraph as pg
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from pyqtgraph.Qt import QtCore, QtGui
+
+import adi
 
 # Instantiate all the Devices
 rpi_ip = "ip:phaser.local"  # IP address of the Raspberry Pi

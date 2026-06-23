@@ -5,8 +5,9 @@
 import sys
 from time import sleep
 
-import adi
 import matplotlib.pyplot as plt
+
+import adi
 
 
 def display_settings(power_mode, sampling_frequency, filter_type, rx_enabled_channels):

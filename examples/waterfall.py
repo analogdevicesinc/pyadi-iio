@@ -1,11 +1,12 @@
 # Waterfall Plot with PlutoSDR
 # Original code: https://hackaday.io/project/165403/logs
 
-import adi
 import numpy as np
 import pygame
 from matplotlib import mlab as mlab
 from PIL import Image
+
+import adi
 
 DISPLAY_WIDTH = 256
 DISPLAY_HEIGHT = 200

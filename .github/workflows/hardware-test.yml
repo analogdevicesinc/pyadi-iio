@@ -1,0 +1,123 @@
+name: Hardware Tests (GHA)
+
+# Net-new GHA HW pipeline running alongside JenkinsfileHW during migration.
+# Calls the shared HW-CI workflow in tfcollins/labgrid-plugins in dynamic_mode:
+# the matrix is built at preflight from coordinator places whose `board` tag
+# is listed in .github/supported-boards.yml (synced from
+# test/emu/hardware_map.yml by .github/scripts/sync-supported-boards.py).
+#
+# Triggered by:
+#   * workflow_dispatch (manual)
+#   * push to `main` — validate hardware on every landed change
+#   * PRs labeled `hw-test` — keeps every push from burning lab time
+#   * Nightly cron at 08:00 UTC
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    types: [labeled, opened, synchronize, reopened]
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  hardware:
+    if: >-
+      github.event_name != 'pull_request' ||
+      contains(github.event.pull_request.labels.*.name, 'hw-test')
+    # Dynamic-mode hw-matrix landed on main via tfcollins/labgrid-plugins#17.
+    uses: tfcollins/labgrid-plugins/.github/workflows/hw-matrix.yml@main
+    with:
+      dynamic_mode: true
+      supported_boards_path: .github/supported-boards.yml
+      venv_install_cmd: |
+        uv pip install --quiet --python "$VENV_DIR/bin/python" \
+          -r requirements_dev.txt
+        # `[jesd]` pulls in paramiko so adi.jesd / adi.sshfs import cleanly;
+        # without it test/test_adrv9009_p.py::test_adrv9009_jesd skip guard
+        # at module import time still selects the test, then fails at
+        # runtime with `'adrv9009' object has no attribute '_jesd'` because
+        # the conditional import in adi/jesd.py set jesd=None.
+        uv pip install --quiet --python "$VENV_DIR/bin/python" -e ".[jesd]"
+        # adi-labgrid-plugins brings in the pinned labgrid fork + drivers/strategies
+        # used by the LG_ENV generated per-leg by the coordinator API. The
+        # BootFPGASoCSSH hard power-cycle fix (tfcollins/labgrid-plugins#23) is
+        # now on main; without it BootFPGASoCSSH would leave the chip's JESD/PLL
+        # wedged because shell.run("reboot") doesn't reset FPGA + AD9528 + ADRV9009.
+        uv pip install --quiet --python "$VENV_DIR/bin/python" \
+          "adi-labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git@main"
+        # pytest-forked runs each test in its own subprocess (serial — no
+        # xdist parallelism). Some libiio 0.26 / pyadi-iio RX teardown
+        # paths corrupt heap when iio_buffer_refill times out (e.g.
+        # adrv9009 without an LO configured); the corruption only
+        # manifests at gc time across test boundaries, taking down the
+        # whole pytest. With --forked, a crash is contained to the
+        # offending test's subprocess and the session completes with a
+        # real failure count instead of exit-139.
+        uv pip install --quiet --python "$VENV_DIR/bin/python" pytest-forked
+      # $BOARD is the matched place's `board` tag. --board scopes pytest to
+      # tests whose @pytest.mark.iio_hardware marker lists that board; the
+      # filter lives in test/common.py:pytest_collection_modifyitems.
+      # Prologue: boot the DUT via labgrid Strategy and DHCP-poll for the
+      # live eth0 IP. The exporter's NetworkService.address is stale every
+      # reboot, so this is the only reliable URI source. --skip-scan stops
+      # pytest-libiio from running its crashing avahi scan at collection.
+      pytest_cmd_template: |
+        set -euo pipefail
+        # Power the DUT down once tests finish — on pass, on pytest failure
+        # (set -e exit), or if boot/discovery never completed. Runs while the
+        # place is still acquired (the Release step is separate). Best-effort:
+        # power-off-dut.py never fails the leg, and `|| true` guards the trap.
+        trap '"$VENV_DIR/bin/python" .github/scripts/power-off-dut.py || true' EXIT
+        # tail -1: boot-and-discover-uri.py prints `ip:<addr>` as its last line,
+        # but adi_lg_plugins/drivers/shelldriver.py:_run_uboot leaks debug
+        # prints to stdout while the BootZynq7000JTAGRecovery strategy issues
+        # mmc/fatload/setenv U-Boot commands. tail -1 keeps just the URI.
+        DUT_URI=$("$VENV_DIR/bin/python" .github/scripts/boot-and-discover-uri.py | tail -1)
+        echo "Live DUT URI: $DUT_URI" >&2
+        # --hw=$BOARD bypasses pytest-libiio's lookup_hw_from_map: the
+        # heuristic ranks board entries by matching iio device count and
+        # ties go to whichever entry comes first in the YAML. Nemo's DUT
+        # for example matches both `adrv9009` and `adrv9008-2` because the
+        # adrv9008-2 map entry lists 3 axi-adrv9009-* devices while the
+        # adrv9009 entry lists only adrv9009-phy — and adrv9008-2 wins.
+        # The labgrid `daughter-board` tag is authoritative, so feed it
+        # straight in and skip the guessing.
+        "$VENV_DIR/bin/pytest" -v -rs --forked --uri="$DUT_URI" --skip-scan --hw="$BOARD" \
+          --board="$BOARD" -m iio_hardware --junitxml="$JUNIT" test/
+      artifact_glob: |
+        junit-hw-*.xml
+        **/*.log
+      prism_project: pyadi-iio
+      # Opt-in via org/repo var. PRISM_URL also resolves from vars at the
+      # reusable-workflow level. Upload step is continue-on-error so a
+      # Prism outage / missing URL won't redden a HW run.
+      prism_upload: ${{ vars.PRISM_UPLOAD_ENABLED == 'true' }}
+      # Run the vendored tfcollins/prism uploader (stdlib-only; no pip/clone
+      # of the private Prism repo needed). The reusable workflow exports
+      # PRISM_URL / PRISM_EMAIL / PRISM_PASSWORD / PRISM_PROJECT / PRISM_JUNIT
+      # / PRISM_RUN_NAME / PRISM_BOARD / PRISM_CARRIER / PRISM_PLACE / VENV_DIR.
+      prism_upload_cmd: >-
+        python3 .github/scripts/prism_upload_run.py "$PRISM_JUNIT"
+        --url "$PRISM_URL" --project "$PRISM_PROJECT" --run-name "$PRISM_RUN_NAME"
+        --auto-create-project
+        --tag "board=$PRISM_BOARD" --tag "carrier=$PRISM_CARRIER"
+        --tag "place=$PRISM_PLACE" --tag "sha=$GITHUB_SHA"
+    # Pass Prism creds explicitly: `secrets: inherit` does not deliver them
+    # across orgs (this repo is analogdevicesinc; the reusable workflow is
+    # tfcollins), so they arrive empty. Explicit secrets resolve caller-side.
+    secrets:
+      PRISM_EMAIL: ${{ secrets.PRISM_EMAIL }}
+      PRISM_PASSWORD: ${{ secrets.PRISM_PASSWORD }}
+      # PAT (Administration:read) the reusable workflow uses in dynamic_mode
+      # to list self-hosted runners and skip places with no online runner —
+      # otherwise a place tagged for a runner this repo lacks (e.g. hw-nuc)
+      # queues forever. Resolves empty if the secret is unset, which simply
+      # disables the filter (safe). Kept separate from any clone credential.
+      RUNNER_QUERY_TOKEN: ${{ secrets.RUNNER_QUERY_TOKEN }}

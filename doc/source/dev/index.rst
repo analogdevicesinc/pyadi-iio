@@ -94,6 +94,20 @@ pyadi-iio has a large set of parameterizable fixtures for testing different devi
    test_attr
    test_dma
    test_generics
+   test_jesd
+
+
+New Device Class Interfaces
+---------------------------
+
+New device-specific classes should build on the common base classes in
+``adi.device_base`` rather than reimplementing the device discovery and channel
+initialization pattern. See:
+
+.. toctree::
+   :maxdepth: 2
+
+   device_base
 
 
 Set Up Isolated Environment

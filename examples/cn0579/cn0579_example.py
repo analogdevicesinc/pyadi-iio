@@ -8,6 +8,7 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
+
 from adi import cn0579
 
 # Lets try to reuse the ./examples/ad4630/sin_params.py file instead of having

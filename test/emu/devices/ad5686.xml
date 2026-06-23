@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE context [
+<!ELEMENT context (device | context-attribute)*>
+<!ELEMENT context-attribute EMPTY>
+<!ELEMENT device (channel | attribute | debug-attribute | buffer-attribute)*>
+<!ELEMENT channel (scan-element?, attribute*)>
+<!ELEMENT attribute EMPTY>
+<!ELEMENT scan-element EMPTY>
+<!ELEMENT debug-attribute EMPTY>
+<!ELEMENT buffer-attribute EMPTY>
+<!ATTLIST context name CDATA #REQUIRED description CDATA #IMPLIED>
+<!ATTLIST context-attribute name CDATA #REQUIRED value CDATA #REQUIRED>
+<!ATTLIST device id CDATA #REQUIRED name CDATA #IMPLIED>
+<!ATTLIST channel id CDATA #REQUIRED type (input|output) #REQUIRED name CDATA #IMPLIED>
+<!ATTLIST scan-element index CDATA #REQUIRED format CDATA #REQUIRED scale CDATA #IMPLIED>
+<!ATTLIST attribute name CDATA #REQUIRED filename CDATA #IMPLIED value CDATA #IMPLIED>
+<!ATTLIST debug-attribute name CDATA #REQUIRED value CDATA #IMPLIED>
+<!ATTLIST buffer-attribute name CDATA #REQUIRED value CDATA #IMPLIED>
+]>
+<context name="local" description="Emulated Context">
+    <device id="iio:device0" name="ad5686">
+        <channel id="voltage0" type="output">
+            <attribute name="raw" value="32768" />
+            <attribute name="scale" value="0.038146" />
+            <attribute name="powerdown" value="0" />
+            <attribute name="powerdown_mode" value="1kohm_to_gnd" />
+            <attribute name="powerdown_mode_available" value="1kohm_to_gnd 100kohm_to_gnd three_state" />
+        </channel>
+        <channel id="voltage1" type="output">
+            <attribute name="raw" value="32768" />
+            <attribute name="scale" value="0.038146" />
+            <attribute name="powerdown" value="0" />
+            <attribute name="powerdown_mode" value="1kohm_to_gnd" />
+            <attribute name="powerdown_mode_available" value="1kohm_to_gnd 100kohm_to_gnd three_state" />
+        </channel>
+        <channel id="voltage2" type="output">
+            <attribute name="raw" value="32768" />
+            <attribute name="scale" value="0.038146" />
+            <attribute name="powerdown" value="0" />
+            <attribute name="powerdown_mode" value="1kohm_to_gnd" />
+            <attribute name="powerdown_mode_available" value="1kohm_to_gnd 100kohm_to_gnd three_state" />
+        </channel>
+        <channel id="voltage3" type="output">
+            <attribute name="raw" value="32768" />
+            <attribute name="scale" value="0.038146" />
+            <attribute name="powerdown" value="0" />
+            <attribute name="powerdown_mode" value="1kohm_to_gnd" />
+            <attribute name="powerdown_mode_available" value="1kohm_to_gnd 100kohm_to_gnd three_state" />
+        </channel>
+    </device>
+</context>

@@ -3,9 +3,9 @@ from test.common import pytest_collection_modifyitems, pytest_configure
 from test.globals import *
 
 import iio
-
 import numpy as np
 import pytest
+
 from adi.context_manager import context_manager
 from adi.rx_tx import rx
 

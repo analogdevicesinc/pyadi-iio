@@ -1,5 +1,6 @@
-import adi
 import pytest
+
+import adi
 
 hardware = "cn0556"
 classname = "adi.cn0556"

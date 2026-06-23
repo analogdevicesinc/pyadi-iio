@@ -3,10 +3,11 @@ import csv
 import sys
 import time
 
-import adi
 import numpy as np
 import serial.tools.list_ports
 from EitSerialReaderProtocol import EIT, EIT_Interface
+
+import adi
 
 
 def main():

@@ -1,5 +1,6 @@
-import adi
 import pytest
+
+import adi
 
 hardware = ["ad9371", "ad9144"]
 classname = "adi.sshfs.sshfs"

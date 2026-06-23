@@ -11,11 +11,12 @@ import pyeit.eit.greit as greit
 import pyeit.eit.jac as jac
 import pyeit.eit.protocol as protocol
 import pyeit.mesh as mesh
-from adi import cn0565
 from pyeit.eit.fem import EITForward
 from pyeit.eit.interp2d import sim2pts
 from pyeit.mesh.shape import thorax
 from pyeit.mesh.wrapper import PyEITAnomaly_Circle
+
+from adi import cn0565
 
 print(" 1. build mesh, protocol and setup board ")
 value_type = "re"  # re, im, others -> magnitude

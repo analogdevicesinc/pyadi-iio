@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2024 Analog Devices, Inc.
+# Copyright (C) 2019-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -6,9 +6,9 @@ from abc import ABCMeta, abstractmethod
 from typing import List, Union
 
 import iio
+import numpy as np
 
 import adi.compat as cl
-import numpy as np
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 from adi.dds import dds
@@ -21,6 +21,20 @@ else:
     from adi.compat import compat_libiio_v0_tx as ctx
 
 
+def are_channels_complex(channels: Union[List[str], List[iio.Channel]]) -> bool:
+    """Check if channels are complex or not
+
+    Args:
+        channels: List of channel names or iio.Channel objects
+    """
+    for channel in channels:
+        if isinstance(channel, iio.Channel):
+            channel = channel.id
+        if channel.endswith("_i") or channel.endswith("_q"):
+            return True
+    return False
+
+
 class phy(attribute):
     _ctrl: iio.Device = []
 
@@ -31,6 +45,8 @@ class phy(attribute):
 class rx_tx_common(attribute):
     """Common functions for RX and TX"""
 
+    _complex_data = False
+
     def _annotate(self, data, cnames: List[str], echans: List[int]):
         return {cnames[ec]: data[i] for i, ec in enumerate(echans)}
 
@@ -40,7 +56,8 @@ class rx_core(rx_tx_common, metaclass=ABCMeta):
 
     _rxadc: iio.Device = []
     _rx_channel_names: List[str] = []
-    _complex_data = False
+    # Set to True if complex data for RX only, overrides _complex_data
+    _rx_complex_data = None
     _rx_data_type = np.int16
     _rx_data_si_type = np.int16
     _rx_shift = 0
@@ -58,6 +75,16 @@ class rx_core(rx_tx_common, metaclass=ABCMeta):
         self._num_rx_channels = len(self._rx_channel_names)
         self.rx_enabled_channels = rx_enabled_channels
         self.rx_buffer_size = rx_buffer_size
+
+    @property
+    def _complex_data(self) -> bool:
+        """Data to/from device is quadrature (Complex).
+        When True ADC channel pairs are used together and the
+        rx method will generate complex data types.
+        """
+        if self._rx_complex_data is None:
+            return super()._complex_data
+        return self._rx_complex_data
 
     @property
     def rx_channel_names(self) -> List[str]:
@@ -271,7 +298,8 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
     _tx_buffer_size = 1024
     _txdac: iio.Device = []
     _tx_channel_names: List[str] = []
-    _complex_data = False
+    # Set to True if complex data for TX only, overrides _complex_data
+    _tx_complex_data = None
     _tx_data_type = None
     _txbuf = None
     _output_byte_filename = "out.bin"
@@ -293,6 +321,16 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
                 v = self._txdac.find_channel(m)
                 v.enabled = False
         self._txdac = []
+
+    @property
+    def _complex_data(self):
+        """Data to device is quadrature (Complex).
+        When True DAC channel pairs are used together and the
+        tx method will assume complex samples.
+        """
+        if self._tx_complex_data is None:
+            return super()._complex_data
+        return self._tx_complex_data
 
     @property
     def tx_cyclic_buffer(self):
@@ -578,26 +616,33 @@ class shared_def(context_manager, metaclass=ABCMeta):
 
         # Set up devices
         if self._control_device_name:
-            self._ctrl = self._ctx.find_device(self._control_device_name)
-            if not self._ctrl:
-                raise Exception(
-                    f"No device found with name {self._control_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._ctrl = None
+                for device in self._ctx.devices:
+                    if device.name == self._control_device_name:
+                        if index == self._device_index:
+                            self._ctrl = device
+                            break
+                        else:
+                            index += 1
+                if not self._ctrl:
+                    raise Exception(
+                        f"No device found with name {self._control_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._ctrl = self._ctx.find_device(self._control_device_name)
+                if not self._ctrl:
+                    raise Exception(
+                        f"No device found with name {self._control_device_name}"
+                    )
 
     def __post_init__(self):
         pass
 
 
-class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
-    """Template metaclass for rx only device specific interfaces."""
-
-    """Names of rx data channels.
-    List of strings with names of channels.
-    If not defined all channels with scan elements will
-    be populated as available channels.
-    """
-    _rx_channel_names = None
-
+class rx_def_no_buff(shared_def, rx, context_manager, metaclass=ABCMeta):
     @property
     @abstractmethod
     def _rx_data_device_name(self) -> None:
@@ -615,12 +660,46 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
         shared_def.__init__(self, *args, **kwargs)
 
         if self._rx_data_device_name:
-            self._rxadc = self._ctx.find_device(self._rx_data_device_name)
-            if not self._rxadc:
-                raise Exception(
-                    f"No device found with name {self._rx_data_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._rxadc = None
+                for device in self._ctx.devices:
+                    if device.name == self._rx_data_device_name:
+                        if index == self._device_index:
+                            self._rxadc = device
+                            break
+                        else:
+                            index += 1
+                if not self._rxadc:
+                    raise Exception(
+                        f"No device found with name {self._rx_data_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._rxadc = self._ctx.find_device(self._rx_data_device_name)
+                if not self._rxadc:
+                    raise Exception(
+                        f"No device found with name {self._rx_data_device_name}"
+                    )
 
+        if not self._rxadc:
+            raise Exception("RX device not found")
+
+
+class rx_def(rx_def_no_buff):
+    """Template metaclass for rx only device specific interfaces."""
+
+    """Names of rx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _rx_channel_names = None
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+        rx_def_no_buff.__init__(self, *args, **kwargs)
         # Set up channels
         if self._rxadc and self._rx_channel_names is None:
             self._rx_channel_names = [
@@ -630,22 +709,16 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
             if not self._rx_channel_names:
                 raise Exception(f"No scan elements found for device {self._rxadc.name}")
 
+        if self._rx_channel_names is None:
+            raise AssertionError("RX channel names must be defined")
+
         rx.__init__(self)
 
         if self.__run_rx_post_init__:
             self.__post_init__()
 
 
-class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
-    """Template metaclass for rx only device specific interfaces."""
-
-    """Names of tx data channels.
-    List of strings with names of channels.
-    If not defined all channels with scan elements will
-    be populated as available channels.
-    """
-    _tx_channel_names = None
-
+class tx_def_no_buff(shared_def, tx, context_manager, metaclass=ABCMeta):
     @property
     @abstractmethod
     def _tx_data_device_name(self) -> None:
@@ -663,20 +736,57 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
         shared_def.__init__(self, *args, **kwargs)
 
         if self._tx_data_device_name:
-            self._txdac = self._ctx.find_device(self._tx_data_device_name)
-            if not self._txdac:
-                raise Exception(
-                    f"No device found with name {self._tx_data_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._txdac = None
+                for device in self._ctx.devices:
+                    if device.name == self._tx_data_device_name:
+                        if index == self._device_index:
+                            self._txdac = device
+                            break
+                        else:
+                            index += 1
+                if not self._txdac:
+                    raise Exception(
+                        f"No device found with name {self._tx_data_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._txdac = self._ctx.find_device(self._tx_data_device_name)
+                if not self._txdac:
+                    raise Exception(
+                        f"No device found with name {self._tx_data_device_name}"
+                    )
 
+        if not self._txdac:
+            raise Exception("TX device not found")
+
+
+class tx_def(tx_def_no_buff):
+    """Template metaclass for tx only device specific interfaces."""
+
+    """Names of tx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _tx_channel_names = None
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+        tx_def_no_buff.__init__(self, *args, **kwargs)
         # Set up channels
         if self._txdac and self._tx_channel_names is None:
             self._tx_channel_names = [
-                chan.id for chan in self._rxadc.channels if chan.scan_element
+                chan.id for chan in self._txdac.channels if chan.scan_element
             ]
 
             if not self._tx_channel_names:
-                raise Exception(f"No scan elements found for device {self._rxadc.name}")
+                raise Exception(f"No scan elements found for device {self._txdac.name}")
+
+        if self._tx_channel_names is None:
+            raise AssertionError("TX channel names must be defined")
 
         tx.__init__(self)
 

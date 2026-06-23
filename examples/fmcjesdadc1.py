@@ -8,10 +8,11 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Create radio
 rx = adi.fmcjesdadc1(uri="ip:analog")

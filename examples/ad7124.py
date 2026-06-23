@@ -4,10 +4,11 @@
 
 import argparse
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 # Set up AD7124
 # Optionally pass URI as command line argument with -u option,

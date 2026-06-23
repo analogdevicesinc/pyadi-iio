@@ -1,5 +1,6 @@
-import adi
 import pytest
+
+import adi
 from adi.ltc2672 import *
 
 hardware = "ltc2672"

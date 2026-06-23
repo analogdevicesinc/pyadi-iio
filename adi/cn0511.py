@@ -1,13 +1,14 @@
-# Copyright (C) 2019-2024 Analog Devices, Inc.
+# Copyright (C) 2019-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 import numpy as np
+
 from adi.ad9166 import ad9166 as ad9166_adi  # pyadi-iio library
 from adi.context_manager import context_manager
 
 try:
     import ad9166 as libad9166  # helper library for calibration function
-except ImportError:
+except (ImportError, AttributeError):
     libad9166 = None
 
 

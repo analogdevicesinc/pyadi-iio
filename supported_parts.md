@@ -3,7 +3,7 @@
 ![PyADI-IIO Logo](images/PyADI-IIO_Logo_72.png)
 
 [![Build Status](https://travis-ci.org/analogdevicesinc/pyadi-iio.svg?branch=master)](https://travis-ci.org/analogdevicesinc/pyadi-iio)
-[![PyPI version](https://badge.fury.io/py/pyadi-iio.svg)](https://badge.fury.io/py/pyadi-iio) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4bd027bfc5774029a30a9e1cedf5a434)](https://www.codacy.com/app/travis.collins/pyadi-iio?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade) [![](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/download/releases/3.7.0/)
+[![PyPI version](https://badge.fury.io/py/pyadi-iio.svg)](https://badge.fury.io/py/pyadi-iio) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4bd027bfc5774029a30a9e1cedf5a434)](https://www.codacy.com/app/travis.collins/pyadi-iio?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=analogdevicesinc/pyadi-iio&amp;utm_campaign=Badge_Grade) [![](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/download/releases/3.8.0/)
 
 [[Docs](http://analogdevicesinc.github.io/pyadi-iio/)]
 [[Support](http://ez.analog.com)]
@@ -11,24 +11,45 @@
 
 ### Currently supported hardware
 - AD2S1210
+- AD353XR (AD3530R, AD3531R, AD3532R)
+- AD3552r (AD3542r)
+- AD3552r-hs (AD3551r, AD3541r, AD3542r)
 - AD4000 (AD4004, AD4008)
 - AD4001 (AD4005)
 - AD4002 (AD4006, AD4010)
 - AD4003 (AD4007, AD4011)
 - AD4020
+- AD405x (AD4050, AD4052, AD4060, AD4062)
+- AD4080
+- AD4081
+- AD4083
+- AD4084
+- AD4086
+- AD4087
 - AD4130
 - AD4110
 - AD4111
 - AD4112
+- AD4113
 - AD4114
 - AD4115
 - AD4116
+- AD4134
+- AD4170
+- AD4190
 - AD4630
+- AD4691
+- AD4692
+- AD4693
+- AD4694
+- AD4695
 - AD4696
 - AD4697
 - AD4698
+- AD514x (AD5141, AD5142, AD5142A, AD5143, AD5144)
 - AD5310R
 - AD5311R
+- AD552XR (AD5529R)
 - AD5592R
 - AD5593R
 - AD5627
@@ -60,6 +81,8 @@
 - AD5695R
 - AD5696
 - AD5696R
+- AD5706R
+- AD5710R
 - AD5760
 - AD5780
 - AD5781
@@ -68,7 +91,9 @@
 - AD5754R
 - AD5940
 - AD6676
+- AD7091RX (AD7091R-2, AD7091R-4, AD7091R-8)
 - AD7124
+- AD7134
 - AD7172-2
 - AD7172-4
 - AD7173-8
@@ -77,11 +102,14 @@
 - AD7176-2
 - AD7177-2
 - AD7190
+- AD7191
 - AD7192
 - AD7193
 - AD7194
 - AD7195
 - AD7291
+- AD7405
+- AD7490
 - AD7768
 - AD7768-4
 - AD7770
@@ -98,6 +126,7 @@
 - AD9162
 - AD9166
 - AD9172
+- AD9213
 - AD9250
 - AD9265
 - AD936X (Pluto, FMComms2/3/4/5, ADRV936X)
@@ -109,16 +138,22 @@
 - AD9680
 - AD4858
 - AD9739A
+- ADA4355
+- ADA4356-LiDAR
 - ADA4961
 - ADAQ4216
 - ADAQ4220
 - ADAQ4224
 - ADAQ8092
 - ADAR1000
+- ADF4030
 - ADF4159
 - ADF4355
 - ADF4371
+- ADF4382
+- ADF4377
 - ADF5610
+- ADF5611
 - ADG2128
 - ADIS16375
 - ADIS16460
@@ -135,21 +170,31 @@
 - ADIS16497-2
 - ADIS16497-3
 - ADIS16507
+- ADIS16545
+- ADIS16547
+- ADIS16550
 - ADL5240
 - ADL5960
+- ADL8113
 - ADMV8818
 - ADPD410x
 - ADRF5720
 - ADRV9002
-- ADRV9008-1/2
+- ADRV9008-1
+- ADRV9008-2
 - ADRV9009
 - ADRV9009-ZU11EG
 - ADT7420
+- ADUM7701
+- ADUM7702
+- ADUM7703
 - ADXL312
 - ADXL313
 - ADXL314
 - ADXL345
 - ADXL355
+- ADXL380
+- ADXL382
 - ADXL1002
 - ADXRS290
 - CN0511
@@ -169,7 +214,28 @@
 - FMCLIDAR1
 - FMComms8
 - FMComms11
+- HMC7044
 - LTC2314-14
+- LTC2338-18
+- LTC2364-16
+- LTC2364-18
+- LTC2367-16
+- LTC2367-18
+- LTC2368-16
+- LTC2368-18
+- LTC2369-18
+- LTC2370-16
+- LTC2376-16
+- LTC2376-18
+- LTC2376-20
+- LTC2377-16
+- LTC2377-18
+- LTC2377-20
+- LTC2378-16
+- LTC2378-18
+- LTC2378-20
+- LTC2379-18
+- LTC2380-16
 - LTC2387-18
 - LTC2499
 - LTC2664
@@ -195,3 +261,4 @@
 - MAX31865
 - MAX9611
 - AD7690
+- AD738x (AD7380, AD7380-4, AD7381, AD7381-4, AD7389-4, AD7383, AD7384, AD7385, AD7386, AD7387, AD7388, AD4680, AD4681, AD4682, AD4683)

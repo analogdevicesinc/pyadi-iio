@@ -1,5 +1,6 @@
-import adi
 import pytest
+
+import adi
 
 hardware = ["max31865"]
 classname = "adi.max31865"

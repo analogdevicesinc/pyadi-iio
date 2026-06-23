@@ -1,5 +1,6 @@
-import adi
 import pytest
+
+import adi
 
 
 @pytest.mark.iio_hardware("daq2")

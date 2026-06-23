@@ -1,7 +1,7 @@
 import iio
+import pytest
 
 import adi
-import pytest
 
 hardware = ["pluto", "adrv9361", "fmcomms2"]
 classname = ""

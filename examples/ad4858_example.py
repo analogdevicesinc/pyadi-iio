@@ -35,6 +35,7 @@ import sys
 from time import sleep
 
 import matplotlib.pyplot as plt
+
 from adi import ad4858
 
 # Optionally pass URI as command line argument,

@@ -5,10 +5,11 @@
 
 import sys
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+
+import adi
 
 device_name = "ad4020"
 vref = 5.0  # Manually entered, consult eval board manual

@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2024 Analog Devices, Inc.
+# Copyright (C) 2019-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -36,3 +36,16 @@ class context_manager(object):
                 self._ctx = iio.Context(self.uri)
         except BaseException:
             raise Exception("No device found")
+
+    def close(self):
+        """Close the IIO context"""
+        if self._ctx:
+            del self._ctx
+            self._ctx = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+        return False

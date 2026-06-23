@@ -4,7 +4,6 @@
 
 import time
 
-import adi
 import matplotlib.pyplot as plt
 from numpy import (
     absolute,
@@ -23,6 +22,8 @@ from numpy import (
 from numpy.fft import fft, fftfreq, fftshift
 from scipy import signal
 from scipy.signal import find_peaks
+
+import adi
 
 
 def spec_est(x, fs, ref=2 ** 15, plot=False, title=""):

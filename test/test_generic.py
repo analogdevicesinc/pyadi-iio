@@ -1,7 +1,6 @@
 from test.generics import compare_states, get_states, iio_buffer_check
 
 import iio
-
 import pytest
 
 hardware = ["pluto", "adrv9361", "fmcomms2"]

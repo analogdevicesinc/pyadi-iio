@@ -4,13 +4,13 @@ from tkinter.font import BOLD
 from weakref import finalize
 
 import iio
-
-import adi
 import numpy as np
 import paramiko
 import pytest
 import pyvisa
 from pyvisa import constants
+
+import adi
 
 supported_instruments = ["HAMEG Instruments,HM8123,5.12"]
 

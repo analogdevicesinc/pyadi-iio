@@ -5,12 +5,13 @@
 import time
 from datetime import datetime
 
-import adi
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import signal
+
+import adi
 from adi.gen_mux import genmux
 from adi.one_bit_adc_dac import one_bit_adc_dac
-from scipy import signal
 
 
 def measure_phase_and_delay(chan0, chan1, window=None):
