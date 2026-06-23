@@ -332,6 +332,16 @@ ad9434:
       - filename: ad9434.xml
       - data_devices:
           - iio:device2
+ad9213:
+  - ad9213
+  - hmc7044
+  - adf4371
+  - pyadi_iio_class_support:
+      - ad9213
+  - emulate:
+      - filename: ad9213.xml
+      - data_devices:
+          - iio:device0
 ad9265:
   - axi-ad9265-core-lpc
   - ad9517-4
