@@ -31,15 +31,10 @@ class device_base(shared_def):
         if self.compatible_parts is None:
             raise Exception("compatible_parts must be defined in subclass")
 
-        # Validate and set device name
+        # device_name may be a part name or a device label
+        # labels are resolved by find_device and validated against compatible_parts post-discovery
         if not device_name:
             device_name = self.compatible_parts[0]
-        else:
-            if device_name not in self.compatible_parts:
-                raise Exception(
-                    f"Not a compatible device: {device_name}. Supported device names "
-                    f"are: {','.join(self.compatible_parts)}"
-                )
 
         # Store device_index for use in device discovery
         self._device_index = device_index
@@ -52,6 +47,16 @@ class device_base(shared_def):
             self._tx_data_device_name = device_name
 
         return device_name
+
+    def _validate_compatible(self):
+        dev = getattr(self, "_ctrl", None) or getattr(self, "_rxadc", None) or getattr(
+            self, "_txdac", None
+        )
+        if dev is not None and dev.name not in self.compatible_parts:
+            raise Exception(
+                f"Not a compatible device: {dev.name}. Supported device names "
+                f"are: {','.join(self.compatible_parts)}"
+            )
 
     def _add_channel_instances(self):
         """Initiate channel objects for each channel in the device."""
@@ -85,6 +90,7 @@ class tx_chan_comp(tx_def, device_base):
         """
         device_base.__init__(self, device_name=device_name, device_index=device_index)
         tx_def.__init__(self, uri=uri)
+        self._validate_compatible()
         self._add_channel_instances()
 
 
@@ -106,6 +112,7 @@ class rx_chan_comp(rx_def, device_base):
         """
         device_base.__init__(self, device_name=device_name, device_index=device_index)
         rx_def.__init__(self, uri=uri)
+        self._validate_compatible()
         self._add_channel_instances()
 
 
@@ -127,6 +134,7 @@ class tx_chan_comp_no_buff(tx_def_no_buff, device_base):
         """
         device_base.__init__(self, device_name=device_name, device_index=device_index)
         tx_def_no_buff.__init__(self, uri=uri)
+        self._validate_compatible()
         self._add_channel_instances()
 
 
@@ -148,4 +156,5 @@ class rx_chan_comp_no_buff(rx_def_no_buff, device_base):
         """
         device_base.__init__(self, device_name=device_name, device_index=device_index)
         rx_def_no_buff.__init__(self, uri=uri)
+        self._validate_compatible()
         self._add_channel_instances()

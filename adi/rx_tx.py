@@ -608,6 +608,7 @@ class shared_def(context_manager, metaclass=ABCMeta):
             for c in contexts:
                 ctx = iio.Context(c)
                 devs = [dev.name for dev in ctx.devices]
+                devs += [dev.label for dev in ctx.devices if dev.label]
                 if all(dev in devs for dev in required_devices):
                     self._ctx = iio.Context(c)
                     break
