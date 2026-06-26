@@ -716,11 +716,13 @@ if Gain_calibration == True:
     gain_codes_cal, atten_cal, gain_cal_diff = mr.gain_codes(dev,np.array(detect),mode="tx")
     print(gain_codes_cal)
 
-    gain_dict_ref = subarray.transpose().flatten()
+    # gain_dict_ref = subarray.transpose().flatten()
+    gain_dict_ref = dev.element_map
     gain_dict = mr.create_dict(gain_dict_ref, gain_codes_cal)
     print("gain_dict:", gain_dict)
 
     atten_dict_ref = subarray.transpose().flatten()
+    atten_dict_ref = dev.element_map
     atten_dict = mr.create_dict(atten_dict_ref, atten_cal)
 
     # Write the gain corrections into the ADAR1000 registers
@@ -790,7 +792,8 @@ if Gain_calibration == True:
     # Refine the gain codes using the residual error from pass 1
     result = np.array(detect) + gain_cal_diff
     gain_codes_cal, atten_cal, gain_ref = mr.gain_codes(dev,np.array(result) ,mode="tx")
-    gain_dict_ref = subarray.transpose().flatten()
+    # gain_dict_ref = subarray.transpose().flatten()
+    gain_dict_ref = dev.element_map
     gain_dict = mr.create_dict(gain_dict_ref, gain_codes_cal)
 
     # Write the refined gain corrections into the ADAR1000 registers
@@ -798,6 +801,9 @@ if Gain_calibration == True:
         str_channel = str(element)
         print(element)
         value = int(mr.strip_to_last_two_digits(str_channel))
+        # atten_dict_ref = subarray.transpose().flatten()
+        atten_dict_ref = dev.element_map
+        atten_dict = mr.create_dict(atten_dict_ref, atten_cal)
         # element.tx_attenuator = atten_dict[value]
         element.tx_attenuator = 1
         element.tx_gain = gain_dict[value]

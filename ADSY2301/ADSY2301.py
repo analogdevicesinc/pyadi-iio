@@ -416,21 +416,28 @@ def create_dict(new_keys, array):
     Convert a flattened array (1x64) into 8x8 and create a dictionary 
     where each key from new_keys (8x8) maps to its corresponding 8-value row.
     """
+    # Type Checker
+    if not isinstance(new_keys, np.ndarray):
+        raise TypeError("new_keys must be a numpy array")
+    if not isinstance(array, np.ndarray):
+        raise TypeError("array must be a numpy array")
+
+    array_shape = np.shape(new_keys)
+    key_flat = new_keys.transpose().flatten()
+    array_flat = array.transpose().flatten()
+
     result_dict = {}
-    print(array)
-    print(new_keys)
+
     # Reshape new_keys and array into 8x8
-    reshaped_keys = new_keys.reshape(8, 8,order='F')
-    reshaped_array = array.reshape(8, 8,order='F')
+    reshaped_keys = key_flat.reshape(array_shape,order='F')
+    reshaped_array = array_flat.reshape(array_shape,order='F')
 
     # Map each key in reshaped_keys to the corresponding row in reshaped_array
 
-
-            
-    for i in range(8):
-        for j in range(8):
+    for i in range(array_shape[0]):
+        for j in range(array_shape[0]):
             result_dict[reshaped_keys[i][j]] = reshaped_array[i][j]
-    
+    print("Dictionary created successfully of size:", array_shape)
     return result_dict
 
 def wrap_to_360(angle):
