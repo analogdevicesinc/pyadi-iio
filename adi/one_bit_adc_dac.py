@@ -52,13 +52,15 @@ class one_bit_adc_dac(attribute, context_manager):
         self._ctrl = None
 
         for dev in self._ctx.devices:
+            if dev.label == name:
+                self._ctrl = dev
+                break
             if "label" in dev.attrs and dev.attrs["label"].value == name:
                 self._ctrl = dev
                 break
-            else:
-                if dev.name == name:
-                    self._ctrl = dev
-                    break
+            if dev.name == name:
+                self._ctrl = dev
+                break
 
         if not self._ctrl:
             raise Exception(f"No device found for {name}")
