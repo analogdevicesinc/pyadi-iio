@@ -18,13 +18,14 @@ import adi
 import numpy as np
 import json
 import os
-import ADSY2301 as mr
+from . import ADSY2301 as mr
 
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
 talise_ip = "192.168.1.1"
 talise_uri = "ip:" + talise_ip
+MANUAL = False
 
 dev = adi.adar1000_array(
     uri=talise_uri,
@@ -65,71 +66,89 @@ print("ADAR1000 array object created.")
 ##############################################
 ## Step 2: Configure TR Source & PA Bias ##
 ##############################################
+
+    
+if MANUAL:
+    tries = 10
+    for device in dev.devices.values():
+        for channel in device.channels:
+            channel.pa_bias_on = -4.8
+            if round(channel.pa_bias_on, 1) != -4.8:
+                for _ in range(tries):
+                    if round(channel.pa_bias_on, 1) == -4.8:
+                        break
+                else:
+                    print(f"Not set properly: {channel.pa_bias_on=}  Element: {channel}")
+
+            channel.pa_bias_off = -4.8
+            if round(channel.pa_bias_off, 1) != -4.8:
+                for _ in range(tries):
+                    if round(channel.pa_bias_off, 1) == -4.8:
+                        break
+                else:
+                    print(f"Not set properly: {channel.pa_bias_off=}  Element: {channel}")
+        dev.latch_tx_settings()
+
+    dev.latch_tx_settings()
+    print("PA bias configured.")
+
+else:
+    dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+
 for device in dev.devices.values():
+    device.mode = "rx"
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
-tries = 10
-for device in dev.devices.values():
-    for channel in device.channels:
-        channel.pa_bias_on = -4.8
-        if round(channel.pa_bias_on, 1) != -4.8:
-            for _ in range(tries):
-                if round(channel.pa_bias_on, 1) == -4.8:
-                    break
-            else:
-                print(f"Not set properly: {channel.pa_bias_on=}  Element: {channel}")
-
-        channel.pa_bias_off = -4.8
-        if round(channel.pa_bias_off, 1) != -4.8:
-            for _ in range(tries):
-                if round(channel.pa_bias_off, 1) == -4.8:
-                    break
-            else:
-                print(f"Not set properly: {channel.pa_bias_off=}  Element: {channel}")
-    dev.latch_tx_settings()
-
-dev.latch_tx_settings()
-print("PA bias configured.")
-
 mr.disable_pa_bias_channel(dev)
 
-##############################################
-## Step 3: Load Saved Cal Values (if available) ##
-##############################################
-cal_json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tx_cal_values.json")
+print("Setting all devices to rx mode")
+for element in dev.elements.values():
+    element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
+    element.tx_attenuator = 0
+    element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
+    element.tx_gain = 0 #Lowest gain
+    element.rx_phase = 0 # Set all phases to 0
+    element.tx_phase = 0
+dev.latch_rx_settings()
+dev.latch_tx_settings()
 
-phase_dict = {}
-gain_dict = {}
-atten_dict = {}
+# ##############################################
+# ## Step 3: Load Saved Cal Values (if available) ##
+# ##############################################
+# cal_json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tx_cal_values.json")
 
-if os.path.exists(cal_json_path):
-    with open(cal_json_path, "r") as f:
-        cal_data = json.load(f)
+# phase_dict = {}
+# gain_dict = {}
+# atten_dict = {}
 
-    phase_dict = {int(k): v for k, v in cal_data["phase_dict"].items()}
-    gain_dict  = {int(k): v for k, v in cal_data["gain_dict"].items()}
-    atten_dict = {int(k): v for k, v in cal_data["atten_dict"].items()}
+# if os.path.exists(cal_json_path):
+#     with open(cal_json_path, "r") as f:
+#         cal_data = json.load(f)
 
-    # Apply cal values to hardware
-    for element in dev.elements.values():
-        str_channel = str(element)
-        value = int(mr.strip_to_last_two_digits(str_channel))
-        element.tx_phase = phase_dict.get(value, 0)
-        element.tx_gain = gain_dict.get(value, 127)
-        element.tx_attenuator = atten_dict.get(value, 1)
-    dev.latch_tx_settings()
-    print(f"Loaded and applied cal values from: {cal_json_path}")
-    print(f"  phase_dict: {len(phase_dict)} elements")
-    print(f"  gain_dict:  {len(gain_dict)} elements")
-    print(f"  atten_dict: {len(atten_dict)} elements")
-else:
-    print(f"No cal file found at {cal_json_path} — using defaults (gain=127, phase=0, atten=1).")
-    for element in dev.elements.values():
-        element.tx_attenuator = 1
-        element.tx_gain = 127
-        element.tx_phase = 0
-    dev.latch_tx_settings()
+#     phase_dict = {int(k): v for k, v in cal_data["phase_dict"].items()}
+#     gain_dict  = {int(k): v for k, v in cal_data["gain_dict"].items()}
+#     atten_dict = {int(k): v for k, v in cal_data["atten_dict"].items()}
+
+#     # Apply cal values to hardware
+#     for element in dev.elements.values():
+#         str_channel = str(element)
+#         value = int(mr.strip_to_last_two_digits(str_channel))
+#         element.tx_phase = phase_dict.get(value, 0)
+#         element.tx_gain = gain_dict.get(value, 127)
+#         element.tx_attenuator = atten_dict.get(value, 1)
+#     dev.latch_tx_settings()
+#     print(f"Loaded and applied cal values from: {cal_json_path}")
+#     print(f"  phase_dict: {len(phase_dict)} elements")
+#     print(f"  gain_dict:  {len(gain_dict)} elements")
+#     print(f"  atten_dict: {len(atten_dict)} elements")
+# else:
+#     print(f"No cal file found at {cal_json_path} — using defaults (gain=127, phase=0, atten=1).")
+#     for element in dev.elements.values():
+#         element.tx_attenuator = 1
+#         element.tx_gain = 127
+#         element.tx_phase = 0
+#     dev.latch_tx_settings()
 
 ##############################################
 ## Step 4: Array Shape Definitions ##
@@ -157,12 +176,12 @@ subarray = np.array([
 active_array = np.array(array_shapes["8x8"])
 
 print("\n=== ADSY2301 Init Complete ===")
-print("Available objects: dev, mr, phase_dict, gain_dict, atten_dict, array_shapes, subarray, active_array")
-print("Set a breakpoint below or use the debug console to interact with the hardware.\n")
+# print("Available objects: dev, mr, phase_dict, gain_dict, atten_dict, array_shapes, subarray, active_array")
+# print("Set a breakpoint below or use the debug console to interact with the hardware.\n")
 
 
-for device in dev.devices.values():
-    device.tr_source = "external"
-    device.bias_dac_mode = "toggle"
-# --- Set breakpoint here to start debugging ---
-pass
+# for device in dev.devices.values():
+#     device.tr_source = "external"
+#     device.bias_dac_mode = "toggle"
+# # --- Set breakpoint here to start debugging ---
+# pass
