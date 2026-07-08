@@ -591,6 +591,9 @@ class shared_def(context_manager, metaclass=ABCMeta):
         self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
     ) -> None:
 
+        if self._ctx and self._ctrl:
+            return  # Already initialized
+
         # Handle Older API and Newer APIs
         uri_ctx = self.__handle_init_args(args, kwargs)
 
