@@ -23,7 +23,7 @@ import ADSY2301 as mr
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
-talise_ip = "10.75.161.99"
+talise_ip = "10.75.161.108"
 talise_uri = "ip:" + talise_ip
 
 MANUAL = False
@@ -33,8 +33,8 @@ dev = adi.adar1000_array(
     uri=talise_uri,
 
     chip_ids=[
-        "adar1000_csb_1_1_3", "adar1000_csb_1_1_2", 
         "adar1000_csb_1_1_1", "adar1000_csb_1_1_4", 
+        "adar1000_csb_1_1_3", "adar1000_csb_1_1_2", 
     ],
 
     device_map=[[1, 3, 2, 4]],
