@@ -18,12 +18,12 @@ import adi
 import numpy as np
 import json
 import os
-from . import ADSY2301 as mr
+import ADSY2301 as mr
 
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
-talise_ip = "192.168.1.1"
+talise_ip = "10.75.161.99"
 talise_uri = "ip:" + talise_ip
 MANUAL = False
 
