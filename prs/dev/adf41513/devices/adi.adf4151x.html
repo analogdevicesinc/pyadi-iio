@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: attribute, compatible" name="description" />
+<meta content="Bases: attribute, device_base" name="description" />
 
     <title>adf4151x &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a8f9a170" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=d3f78147" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script async="async" src="../_static/app.umd.js?v=26d0298f"></script>
     <link rel="icon" href="../_static/favicon.png"/>
@@ -142,12 +142,6 @@
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.locked"><code class="docutils literal notranslate"><span class="pre">adf4151x.locked</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.muxout_select"><code class="docutils literal notranslate"><span class="pre">adf4151x.muxout_select</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.charge_pump_index"><code class="docutils literal notranslate"><span class="pre">adf4151x.charge_pump_index</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.operating_mode"><code class="docutils literal notranslate"><span class="pre">adf4151x.operating_mode</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.INT"><code class="docutils literal notranslate"><span class="pre">adf4151x.INT</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.FRAC1"><code class="docutils literal notranslate"><span class="pre">adf4151x.FRAC1</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.FRAC2"><code class="docutils literal notranslate"><span class="pre">adf4151x.FRAC2</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.MOD2"><code class="docutils literal notranslate"><span class="pre">adf4151x.MOD2</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.N"><code class="docutils literal notranslate"><span class="pre">adf4151x.N</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.reg_read"><code class="docutils literal notranslate"><span class="pre">adf4151x.reg_read()</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.reg_write"><code class="docutils literal notranslate"><span class="pre">adf4151x.reg_write()</span></code></a></li>
 </ul>
@@ -370,7 +364,7 @@ Content on this topic
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf4151x.</span></span><span class="sig-name descname"><span class="pre">adf4151x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">compatible</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">device_base</span></code></p>
 <p>Driver for ADF41513 26.5 GHz Integer-N/Fractional-N PLL Frequency Synthesizer</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.mode">
@@ -587,55 +581,6 @@ debugging and testing purposes. The charge pump current value depends on
 the R_SET resistor value and the charge pump index value. The current
 charge pump current and resistor value can be set in the device-tree for
 production use-cases.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.operating_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">operating_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#adi.adf4151x.adf4151x.mode" title="adi.adf4151x.adf4151x.mode"><span class="pre">mode</span></a></em><a class="headerlink" href="#adi.adf4151x.adf4151x.operating_mode" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the ADF41513 mode of operation</p>
-<p>This property uses register access, so it is mostly intended for
-debugging and testing purposes. The mode of operation is automatically
-determined based on frequency_resolution and frequency values.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.INT">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">INT</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.INT" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the INT value in R0</p>
-<p>This property uses register access, so it is mostly intended for
-debugging and testing purposes.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.FRAC1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FRAC1</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.FRAC1" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the FRAC1 value in R1</p>
-<p>This property uses register access, so it is mostly intended for
-debugging and testing purposes.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.FRAC2">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FRAC2</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.FRAC2" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the FRAC2 value in R3</p>
-<p>This property uses register access, so it is mostly intended for
-debugging and testing purposes.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.MOD2">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MOD2</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.MOD2" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the MOD2 value in R4</p>
-<p>This property uses register access, so it is mostly intended for
-debugging and testing purposes.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.N">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">N</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.N" title="Link to this definition"></a></dt>
-<dd><p>Get the N divider value</p>
-<p>This property uses register access, so it is mostly intended for
-debugging and testing purposes.</p>
 </dd></dl>
 
 <dl class="py method">
