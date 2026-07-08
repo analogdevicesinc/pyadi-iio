@@ -12,6 +12,15 @@
 #
 # Note: to simulate random misalignment on each run, enable the
 # rmmod + modprobe block inside reload_driver() (requires loadable module).
+#
+# Usage:
+#   python3 ad7134_sync_demo.py <uri> [target_fs] [--filter F]
+#
+# Filter F (case-insensitive): WIDEBAND, SINC6, SINC3, SINC3_REJECTION
+#
+# Examples:
+#   python3 ad7134_sync_demo.py ip:10.48.65.218 363000
+#   python3 ad7134_sync_demo.py ip:10.48.65.218 363000 --filter wideband
 
 import sys
 # import subprocess  # needed only with loadable-module driver (see reload_driver)
@@ -70,8 +79,15 @@ def compute_phase_delay(x, y, Fs):
 
 
 def main():
-    my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
-    target_fs = int(sys.argv[2]) if len(sys.argv) >= 3 else 100000
+    argv = sys.argv[1:]
+    target_filter = None
+    if "--filter" in argv:
+        i = argv.index("--filter")
+        target_filter = argv[i + 1].upper()
+        del argv[i:i + 2]
+
+    my_uri = argv[0] if len(argv) >= 1 else "ip:analog.local"
+    target_fs = int(argv[1]) if len(argv) >= 2 else 100000
     ch_a = 0        # reference  (adc_0, chip A)
     ch_b = 4        # compare    (adc_1, chip B)
     buffer_size = 65534
@@ -87,12 +103,23 @@ def main():
     dev = adi.ad7134(uri=my_uri)
     dev.rx_enabled_channels = list(range(8))
     dev.rx_buffer_size = buffer_size
+
+    # ── optional: select digital filter before setting the ODR ──────
+    # (filter choice changes the valid ODR range, so apply it first)
+    avail = dev.filter_type_available
+    if target_filter is not None:
+        if target_filter not in avail.split():
+            print(f"ERROR: filter '{target_filter}' not available. "
+                  f"Choose one of: {avail}")
+            sys.exit(1)
+        dev.filter_type = target_filter
+
     dev.sampling_frequency = target_fs
 
     Fs = float(dev.sampling_frequency)
     print(f"\nFs (target) = {target_fs} Hz ({target_fs / 1e6:.3f} MSPS)")
     print(f"Fs (actual) = {Fs:.6g} Hz ({Fs / 1e6:.3f} MSPS)")
-    print(f"Filter   = {dev.filter_type}")
+    print(f"Filter   = {dev.filter_type}   (available: {avail})")
     print(f"Channels = ch{ch_a} (adc_0)  vs  ch{ch_b} (adc_1)\n")
 
     # ── Step 2: captures BEFORE sync ────────────────────────────────
