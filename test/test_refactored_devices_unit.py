@@ -8,11 +8,58 @@ import pytest
 
 import adi
 from adi.device_base import rx_chan_comp
+from adi.rx_tx import shared_def
+
+
+class _SharedDefTestDevice(shared_def):
+    """Concrete shared_def used to test context selection."""
+
+    @property
+    def _complex_data(self):  # type: ignore[override]
+        return False
+
+    @property
+    def _control_device_name(self):  # type: ignore[override]
+        return "test-device"
+
+    @property
+    def _rx_data_device_name(self):
+        return "test-device"
+
+
+def test_shared_def_falls_back_to_ip_analog(monkeypatch):
+    """URI-less construction retains the legacy ip:analog fallback."""
+    device = MagicMock()
+    device.name = "test-device"
+    context = MagicMock()
+    context.devices = [device]
+    context.find_device.return_value = device
+
+    class FakeContext:
+        calls = []
+
+        def __new__(cls, uri):
+            cls.calls.append(uri)
+            return context
+
+    monkeypatch.setattr("adi.rx_tx.iio.scan_contexts", lambda: {})
+    monkeypatch.setattr("adi.context_manager.iio.Context", FakeContext)
+
+    dev = _SharedDefTestDevice()
+
+    assert FakeContext.calls == ["ip:analog"]
+    assert dev.ctx is context
+    assert dev._ctrl is device
 
 
 def test_ltc2378_preserves_all_compatible_parts():
     """The common-parent migration must not drop a supported device name."""
     assert "ltc2377-20" in adi.ltc2378.compatible_parts
+
+
+def test_max9611_preserves_legacy_rx_channel_order():
+    """Integer RX indices and returned array order remain backwards compatible."""
+    assert adi.max9611._rx_channel_names == ["temp", "voltage1"]
 
 
 @pytest.mark.parametrize(

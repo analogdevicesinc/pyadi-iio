@@ -107,7 +107,7 @@ class max9611(rx_chan_comp):
     _complex_data = False
     _device_name = ""
     _rx_unbuffered_data = True
-    _rx_channel_names = ["voltage1", "temp"]
+    _rx_channel_names = ["temp", "voltage1"]
     # voltage0 (sense), power and current have no scale attribute, so keep them
     # out of the auto-populated channel list and attach them manually below.
     _ignore_channels = ["voltage0", "power", "current"]
