@@ -12,6 +12,7 @@ class adxrs290_channel(attribute):
     """ADXRS290 channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize an ADXRS290 channel."""
         self.name = channel_name
         self._ctrl = ctrl
 

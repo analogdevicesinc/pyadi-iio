@@ -14,6 +14,7 @@ class max14001_channel(attribute):
     """MAX14001 channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a MAX14001 channel."""
         self.name = channel_name
         self._ctrl = ctrl
 

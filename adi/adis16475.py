@@ -10,6 +10,7 @@ class adis16475_channel_with_offset(attribute):
     """Channel with offset"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a channel with calibration-bias support."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -37,6 +38,7 @@ class adis16475_channel(attribute):
     """Channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize an ADIS16475 channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -104,9 +106,34 @@ class adis16475(rx_chan_comp):
     ]
 
     def __init__(self, uri="", device_name="adis16505-2", device_index=0):
-        super().__init__(uri=uri, device_name=device_name, device_index=device_index)
+        """Initialize the first available compatible IMU device."""
+        if device_name not in self.compatible_parts:
+            raise Exception(
+                f"Not a compatible device: {device_name}. Supported device names "
+                f"are: {','.join(self.compatible_parts)}"
+            )
+
+        # These drivers may identify compatible hardware by a different part
+        # name. Preserve the legacy behavior of trying the requested part first
+        # and then probing the remaining compatible names.
+        parts = [device_name] + [
+            part for part in self.compatible_parts if part != device_name
+        ]
+        last_exception = None
+        for part in parts:
+            self.__dict__["_control_device_name"] = None
+            self.__dict__["_rx_data_device_name"] = None
+            try:
+                super().__init__(uri=uri, device_name=part, device_index=device_index)
+                return
+            except Exception as exc:  # noqa: BLE001
+                last_exception = exc
+        if last_exception is not None:
+            raise last_exception
+        raise Exception("No compatible device found")  # pragma: no cover
 
     def __post_init__(self):
+        """Configure the trigger, temperature channel, and buffer size."""
         # Set default trigger
         trigger_name = self._ctrl.name + "-dev0"
         self._trigger = self._ctx.find_device(trigger_name)

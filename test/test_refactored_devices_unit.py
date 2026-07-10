@@ -7,6 +7,37 @@ from unittest.mock import MagicMock, Mock, patch
 import pytest
 
 import adi
+from adi.device_base import rx_chan_comp
+
+
+def test_ltc2378_preserves_all_compatible_parts():
+    """The common-parent migration must not drop a supported device name."""
+    assert "ltc2377-20" in adi.ltc2378.compatible_parts
+
+
+@pytest.mark.parametrize(
+    "device_class,requested_device",
+    [(adi.adxl380, "adxl380"), (adi.adis16475, "adis16505-2"),],
+)
+def test_compatible_device_fallback(monkeypatch, device_class, requested_device):
+    """Classes that historically probed compatible parts must keep doing so."""
+    attempts = []
+
+    def init_with_first_device_missing(self, uri="", device_name="", device_index=0):
+        attempts.append(device_name)
+        if len(attempts) == 1:
+            raise Exception(f"No device found with name {device_name}")
+
+    monkeypatch.setattr(rx_chan_comp, "__init__", init_with_first_device_missing)
+
+    device_class(uri="local:", device_name=requested_device)
+
+    assert attempts == [
+        requested_device,
+        next(
+            part for part in device_class.compatible_parts if part != requested_device
+        ),
+    ]
 
 
 def channel_definitions(device_class, iio_uri):

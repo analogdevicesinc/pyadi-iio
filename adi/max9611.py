@@ -10,6 +10,7 @@ class max9611_channel_voltage_sense(attribute):
     """MAX9611 Voltage Sense Channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a MAX9611 voltage-sense channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -23,6 +24,7 @@ class max9611_channel_voltage_input(attribute):
     """MAX9611 Voltage Input Channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a MAX9611 voltage-input channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -46,6 +48,7 @@ class max9611_channel_power(attribute):
     """MAX9611 Power Channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a MAX9611 power channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -64,6 +67,7 @@ class max9611_channel_current(attribute):
     """MAX9611 Current Channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a MAX9611 current channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -82,6 +86,7 @@ class max9611_channel_temp(attribute):
     """MAX9611 Temperature Channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a MAX9611 temperature channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -109,6 +114,7 @@ class max9611(rx_chan_comp):
     compatible_parts = ["max9611", "max9612"]
 
     def __post_init__(self):
+        """Attach channels that have no scale attribute."""
         self.voltage0 = max9611_channel_voltage_sense(self._ctrl, "voltage0")
         self.power = max9611_channel_power(self._ctrl, "power")
         self.current = max9611_channel_current(self._ctrl, "current")

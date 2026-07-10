@@ -12,6 +12,7 @@ class ad3552r_hs_channel(attribute):
     """AD3552R_HS channel"""
 
     def __init__(self, ctrl, channel_name, output):
+        """Initialize an AD3552R_HS channel."""
         self.name = channel_name
         self._ctrl = ctrl
         self._output = output

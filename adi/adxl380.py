@@ -12,6 +12,7 @@ class adxl380_temp_channel(attribute):
     """adxl380 temperature channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize an ADXL380 temperature channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -35,6 +36,7 @@ class adxl380_channel(attribute):
     """adxl380 acceleration channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize an ADXL380 acceleration channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -119,21 +121,34 @@ class adxl380(rx_chan_comp):
     compatible_parts = ["adxl380", "adxl382"]
 
     def __init__(self, uri="", device_name=None, device_index=0):
+        """Initialize the first available compatible accelerometer."""
         # The device may report as any of the compatible parts. Try each in
         # turn so the class works whether an adxl380 or adxl382 is present.
-        parts = [device_name] if device_name else list(self.compatible_parts)
+        if device_name and device_name not in self.compatible_parts:
+            raise Exception(
+                f"Not a compatible device: {device_name}. Supported device names "
+                f"are: {','.join(self.compatible_parts)}"
+            )
+
+        requested_part = device_name or self.compatible_parts[0]
+        parts = [requested_part] + [
+            part for part in self.compatible_parts if part != requested_part
+        ]
         last_exception = None
         for part in parts:
-            self._control_device_name = None
-            self._rx_data_device_name = None
+            self.__dict__["_control_device_name"] = None
+            self.__dict__["_rx_data_device_name"] = None
             try:
                 super().__init__(uri=uri, device_name=part, device_index=device_index)
                 return
             except Exception as exc:  # noqa: BLE001
                 last_exception = exc
-        raise last_exception
+        if last_exception is not None:
+            raise last_exception
+        raise Exception("No compatible device found")  # pragma: no cover
 
     def __post_init__(self):
+        """Set a small default receive-buffer size."""
         self.rx_buffer_size = 16  # Make default buffer smaller
 
     def _channel_def(self, ctrl, name):

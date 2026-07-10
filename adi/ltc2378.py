@@ -12,6 +12,7 @@ class ltc2378_channel(attribute):
     """LTC2378 channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize an LTC2378 channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -37,6 +38,7 @@ class ltc2378_channel(attribute):
 
 
 class ltc2378(rx_chan_comp):
+
     """ LTC2378 ADC """
 
     _complex_data = False
@@ -58,6 +60,7 @@ class ltc2378(rx_chan_comp):
         "ltc2376-20",
         "ltc2377-16",
         "ltc2377-18",
+        "ltc2377-20",
         "ltc2378-16",
         "ltc2378-18",
         "ltc2379-18",

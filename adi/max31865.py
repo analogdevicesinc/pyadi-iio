@@ -11,6 +11,7 @@ class max31865_channel_temp(attribute):
     """MAX31865 temp channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a MAX31865 temperature channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -29,6 +30,7 @@ class max31865_channel_filt(attribute):
     """MAX31865 filter channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize a MAX31865 filter channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
@@ -58,6 +60,7 @@ class max31865(rx_chan_comp):
     compatible_parts = ["max31865"]
 
     def __post_init__(self):
+        """Attach the non-scan-element filter channel."""
         self.filter = max31865_channel_filt(self._ctrl, "filter")
 
     def _channel_def(self, ctrl, name):

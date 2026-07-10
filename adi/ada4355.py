@@ -13,6 +13,7 @@ class ada4355_channel(attribute):
     """ ada4355 channel """
 
     def __init__(self, ctrl, channel_name):
+        """Initialize an ADA4355 channel."""
         self.name = channel_name
         self._ctrl = ctrl
 

@@ -13,6 +13,7 @@ class ad5706r_channel(attribute):
     """ad5706r channel"""
 
     def __init__(self, ctrl, channel_name):
+        """Initialize an AD5706R channel."""
         self.name = channel_name
         self._ctrl = ctrl
 
