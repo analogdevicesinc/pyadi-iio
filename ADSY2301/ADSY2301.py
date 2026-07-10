@@ -50,7 +50,6 @@ def enable_stingray_channel(obj, elements=None, man_input=False):
                 # time.sleep(0.01)
                 if device.mode == "rx":
                     for channel in device.channels:
-
                         str_channel = str(channel)
                         value = int(strip_to_last_two_digits(str_channel))
 
@@ -60,42 +59,14 @@ def enable_stingray_channel(obj, elements=None, man_input=False):
                             if elem == value:
                                 # print("Turning on element:",elem)
                                 channel.rx_enable = True
-
-                if device.mode == "tx":
-                    for channel in device.channels:
-
-                        str_channel = str(channel)
-                        value = int(strip_to_last_two_digits(str_channel))
-
-                        # Check if the channel is in the list of elements to disable
-                        # If it is, disable the channel
-                        tries = 10
-                        for elem in elements:
-                            if elem == value:
-                                channel.tx_enable = True
-                                print(f"setting channel: {channel}")
-                                channel.pa_bias_on = -2.05
-                                if round(channel.pa_bias_on,1) != -2.05:
-                                    found = False
-                                    for _ in range(tries):
-                                        if round(channel.pa_bias_on,1) != -2.05:
-                                            pass
-                                        else:
-                                            found = True
-                                            break
-                                    if not found:
-                                        print(f"Not set properly: {channel.pa_bias_on=}")
-                                        print(f"Element number {channel}")
                                         
-                # else:
-                #     raise ValueError('Mode of operation must be either "rx" or "tx"')
+                else:
+                    raise ValueError('Mode of operation must be either "rx"')
             break
         except:
             print("retrying")
-            time.sleep(2)
-    else:
-        raise ValueError('Mode of operation must be either "rx" or "tx"')
- 
+            time.sleep(0.5)
+
 # Receive data on ADRV9009
 def data_capture(adc):
     adc.rx_destroy_buffer() # clear previous data
