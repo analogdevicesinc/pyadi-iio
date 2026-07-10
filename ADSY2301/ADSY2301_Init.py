@@ -23,7 +23,7 @@ import ADSY2301 as mr
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
-talise_ip = "10.75.161.99"
+talise_ip = "10.75.161.108"
 talise_uri = "ip:" + talise_ip
 MANUAL = False
 
@@ -66,10 +66,10 @@ dev = adi.adar1000_array(
     uri=talise_uri,
 
     chip_ids=[
-        "adar1000_csb_1_1_2", "adar1000_csb_1_1_1", "adar1000_csb_1_2_2", "adar1000_csb_1_2_1",
-        "adar1000_csb_1_1_3", "adar1000_csb_1_1_4", "adar1000_csb_1_2_3", "adar1000_csb_1_2_4",
-        "adar1000_csb_0_1_2", "adar1000_csb_0_1_1", "adar1000_csb_0_2_2", "adar1000_csb_0_2_1",
-        "adar1000_csb_0_1_3", "adar1000_csb_0_1_4", "adar1000_csb_0_2_3", "adar1000_csb_0_2_4",
+        "adar1000_csb_1_1_1", "adar1000_csb_1_1_4", "adar1000_csb_1_2_1", "adar1000_csb_1_2_4",
+        "adar1000_csb_1_1_3", "adar1000_csb_1_1_2", "adar1000_csb_1_2_3", "adar1000_csb_1_2_2",
+        "adar1000_csb_0_1_1", "adar1000_csb_0_1_4", "adar1000_csb_0_2_1", "adar1000_csb_0_2_4",
+        "adar1000_csb_0_1_3", "adar1000_csb_0_1_2", "adar1000_csb_0_2_3", "adar1000_csb_0_2_2",
     ],
 
     device_map=[[1, 5, 2, 6], [3, 7, 4, 8], [9, 13, 10, 14], [11, 15, 12, 16]],
@@ -100,17 +100,19 @@ print("ADAR1000 array object created.")
 ##############################################
 ## Step 2: Configure TR Source & PA Bias ##
 ##############################################
-    
+print("Initializing device settings...")
 dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+
+print("Setting all devices to rx SPI mode")
 
 for device in dev.devices.values():
     device.mode = "rx"
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
-mr.disable_pa_bias_channel(dev)
+# mr.disable_pa_bias_channel(dev)
 
-print("Setting all devices to rx mode")
+print("Setting gain,attenuation, and phase for all elements to default values")
 for element in dev.elements.values():
     element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
     element.tx_attenuator = 0
