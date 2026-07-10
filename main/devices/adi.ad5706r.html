@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: tx, context_manager" name="description" />
+<meta content="Bases: tx_chan_comp" name="description" />
 
     <title>ad5706r &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
@@ -100,6 +100,7 @@
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r"><code class="docutils literal notranslate"><span class="pre">ad5706r</span></code></a><ul>
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r.addr_ascension"><code class="docutils literal notranslate"><span class="pre">ad5706r.addr_ascension</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r.addr_ascension_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.addr_ascension_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad5706r.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r.dev_addr"><code class="docutils literal notranslate"><span class="pre">ad5706r.dev_addr</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r.hw_ldac_tg_pwm"><code class="docutils literal notranslate"><span class="pre">ad5706r.hw_ldac_tg_pwm</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r.hw_ldac_tg_pwm_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.hw_ldac_tg_pwm_available</span></code></a></li>
@@ -119,6 +120,28 @@
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad5706r.sampling_frequency</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r.single_instr"><code class="docutils literal notranslate"><span class="pre">ad5706r.single_instr</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5706r.ad5706r.single_instr_available"><code class="docutils literal notranslate"><span class="pre">ad5706r.single_instr_available</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.hw_active_edge"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.hw_active_edge</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.hw_active_edge_available"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.hw_active_edge_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.hw_func_sel"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.hw_func_sel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.hw_func_sel_available"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.hw_func_sel_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.input_register_a"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.input_register_a</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.input_register_b"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.input_register_b</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.ldac_trigger_chn"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.ldac_trigger_chn</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.ldac_trigger_chn_available"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.ldac_trigger_chn_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.multi_dac_sel_ch"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.multi_dac_sel_ch</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.multi_dac_sel_ch_available"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.multi_dac_sel_ch_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.offset"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.offset</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.output_state"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.output_state</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.output_state_available"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.output_state_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.range_sel"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.range_sel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.range_sel_available"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.range_sel_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.raw"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.scale"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.scale</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.toggle_trigger_chn"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.toggle_trigger_chn</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5706r.ad5706r_channel.toggle_trigger_chn_available"><code class="docutils literal notranslate"><span class="pre">ad5706r_channel.toggle_trigger_chn_available</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -335,8 +358,8 @@ Content on this topic
 <span id="ad5706r"></span><h1>ad5706r<a class="headerlink" href="#module-adi.ad5706r" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad5706r.ad5706r">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5706r.</span></span><span class="sig-name descname"><span class="pre">ad5706r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5706r.ad5706r" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5706r.</span></span><span class="sig-name descname"><span class="pre">ad5706r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5706r.ad5706r" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tx_chan_comp</span></code></p>
 <p>ad5706r DAC</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5706r.ad5706r.addr_ascension">
@@ -350,6 +373,11 @@ Content on this topic
 <dd><p>addr_ascension_available: Options are:
 descending, ascending</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad5706r']</span></em><a class="headerlink" href="#adi.ad5706r.ad5706r.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5706r.ad5706r.dev_addr">
@@ -472,6 +500,135 @@ internal, external</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">single_instr_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r.single_instr_available" title="Link to this definition"></a></dt>
 <dd><p>single_instr_available: Options are:
 single_instruction, streaming</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5706r.</span></span><span class="sig-name descname"><span class="pre">ad5706r_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>ad5706r channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.hw_active_edge">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_active_edge</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.hw_active_edge" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel HW active edge</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.hw_active_edge_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_active_edge_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.hw_active_edge_available" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel HW active edge options. Options are:
+rising_edge, falling_edge, any_edge</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.hw_func_sel">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_func_sel</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.hw_func_sel" title="Link to this definition"></a></dt>
+<dd><p>ad5706r HW function setting</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.hw_func_sel_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hw_func_sel_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.hw_func_sel_available" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel HW function options. Options are:
+None, LDAC, Toggle, Dither</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.input_register_a">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_register_a</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.input_register_a" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel Input Register A value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.input_register_b">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_register_b</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.input_register_b" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel Input Register B value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.ldac_trigger_chn">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ldac_trigger_chn</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.ldac_trigger_chn" title="Link to this definition"></a></dt>
+<dd><p>ad5706r LDAC Trigger Chn setting</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.ldac_trigger_chn_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ldac_trigger_chn_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.ldac_trigger_chn_available" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel LDAC trigger options. Options are:
+None, sw_ldac, hw_ldac</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.multi_dac_sel_ch">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multi_dac_sel_ch</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.multi_dac_sel_ch" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Multi DAC channel select</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.multi_dac_sel_ch_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multi_dac_sel_ch_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.multi_dac_sel_ch_available" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Multi DAC Channel Select options. Options are:
+exclude, include</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.offset" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel offset</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.output_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_state</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.output_state" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel output state setting</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.output_state_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_state_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.output_state_available" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel output state options. Options are:
+shutdown_to_tristate_sw, shutdown_to_gnd_sw, normal_sw,
+shutdown_to_tristate_hw, shutdown_to_gnd_hw, normal_hw</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.range_sel">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range_sel</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.range_sel" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel range selection</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.range_sel_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range_sel_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.range_sel_available" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel range options. Options are:
+50mA, 150mA, 200mA, 300mA</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.raw" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel scale</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.toggle_trigger_chn">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">toggle_trigger_chn</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.toggle_trigger_chn" title="Link to this definition"></a></dt>
+<dd><p>ad5706r Toggle Trigger Chn setting</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad5706r.ad5706r_channel.toggle_trigger_chn_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">toggle_trigger_chn_available</span></span><a class="headerlink" href="#adi.ad5706r.ad5706r_channel.toggle_trigger_chn_available" title="Link to this definition"></a></dt>
+<dd><p>ad5706r channel Toggle trigger options. Options are:
+None, sw_toggle, hw_toggle</p>
 </dd></dl>
 
 </dd></dl>

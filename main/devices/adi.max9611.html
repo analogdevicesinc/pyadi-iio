@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager" name="description" />
+<meta content="Bases: rx_chan_comp" name="description" />
 
     <title>adi.max9611 module &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
@@ -98,7 +98,32 @@
           <ul>
 <li><a class="reference internal" href="#">adi.max9611 module</a><ul>
 <li><a class="reference internal" href="#adi.max9611.max9611"><code class="docutils literal notranslate"><span class="pre">max9611</span></code></a><ul>
-<li><a class="reference internal" href="#adi.max9611.max9611.channel"><code class="docutils literal notranslate"><span class="pre">max9611.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.max9611.max9611.compatible_parts"><code class="docutils literal notranslate"><span class="pre">max9611.compatible_parts</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_current"><code class="docutils literal notranslate"><span class="pre">max9611_channel_current</span></code></a><ul>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_current.input"><code class="docutils literal notranslate"><span class="pre">max9611_channel_current.input</span></code></a></li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_current.shunt_resistor"><code class="docutils literal notranslate"><span class="pre">max9611_channel_current.shunt_resistor</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_power"><code class="docutils literal notranslate"><span class="pre">max9611_channel_power</span></code></a><ul>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_power.input"><code class="docutils literal notranslate"><span class="pre">max9611_channel_power.input</span></code></a></li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_power.shunt_resistor"><code class="docutils literal notranslate"><span class="pre">max9611_channel_power.shunt_resistor</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_temp"><code class="docutils literal notranslate"><span class="pre">max9611_channel_temp</span></code></a><ul>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_temp.raw"><code class="docutils literal notranslate"><span class="pre">max9611_channel_temp.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_temp.scale"><code class="docutils literal notranslate"><span class="pre">max9611_channel_temp.scale</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_voltage_input"><code class="docutils literal notranslate"><span class="pre">max9611_channel_voltage_input</span></code></a><ul>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_voltage_input.offset"><code class="docutils literal notranslate"><span class="pre">max9611_channel_voltage_input.offset</span></code></a></li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_voltage_input.raw"><code class="docutils literal notranslate"><span class="pre">max9611_channel_voltage_input.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_voltage_input.scale"><code class="docutils literal notranslate"><span class="pre">max9611_channel_voltage_input.scale</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_voltage_sense"><code class="docutils literal notranslate"><span class="pre">max9611_channel_voltage_sense</span></code></a><ul>
+<li><a class="reference internal" href="#adi.max9611.max9611_channel_voltage_sense.input"><code class="docutils literal notranslate"><span class="pre">max9611_channel_voltage_sense.input</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -315,13 +340,108 @@ Content on this topic
 <span id="adi-max9611-module"></span><h1>adi.max9611 module<a class="headerlink" href="#module-adi.max9611" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.max9611.max9611">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max9611.</span></span><span class="sig-name descname"><span class="pre">max9611</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max9611.max9611" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max9611.</span></span><span class="sig-name descname"><span class="pre">max9611</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max9611.max9611" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
 <p>AD611 Current-sense Amplifier with ADC</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.max9611.max9611.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.max9611.max9611.channel" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.max9611.max9611.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['max9611',</span> <span class="pre">'max9612']</span></em><a class="headerlink" href="#adi.max9611.max9611.compatible_parts" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_current">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max9611.</span></span><span class="sig-name descname"><span class="pre">max9611_channel_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max9611.max9611_channel_current" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>MAX9611 Current Channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_current.input">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_current.input" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Current Channel input value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_current.shunt_resistor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shunt_resistor</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_current.shunt_resistor" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Current Channel shunt resistor.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_power">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max9611.</span></span><span class="sig-name descname"><span class="pre">max9611_channel_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max9611.max9611_channel_power" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>MAX9611 Power Channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_power.input">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_power.input" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Power Channel input value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_power.shunt_resistor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shunt_resistor</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_power.shunt_resistor" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Power Channel shunt resistor.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_temp">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max9611.</span></span><span class="sig-name descname"><span class="pre">max9611_channel_temp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max9611.max9611_channel_temp" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>MAX9611 Temperature Channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_temp.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_temp.raw" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Temperature Channel raw value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_temp.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_temp.scale" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Temperature Channel scale.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_voltage_input">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max9611.</span></span><span class="sig-name descname"><span class="pre">max9611_channel_voltage_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max9611.max9611_channel_voltage_input" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>MAX9611 Voltage Input Channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_voltage_input.offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_voltage_input.offset" title="Link to this definition"></a></dt>
+<dd><p>Voltage Input Channel offset.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_voltage_input.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_voltage_input.raw" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Voltage Input Channel raw value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_voltage_input.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_voltage_input.scale" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Voltage Input Channel scale.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_voltage_sense">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.max9611.</span></span><span class="sig-name descname"><span class="pre">max9611_channel_voltage_sense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.max9611.max9611_channel_voltage_sense" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>MAX9611 Voltage Sense Channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.max9611.max9611_channel_voltage_sense.input">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input</span></span><a class="headerlink" href="#adi.max9611.max9611_channel_voltage_sense.input" title="Link to this definition"></a></dt>
+<dd><p>MAX9611 Voltage Sense Channel input value.</p>
+</dd></dl>
 
 </dd></dl>
 

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager" name="description" />
+<meta content="Bases: rx_chan_comp" name="description" />
 
     <title>ltc2378 &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
@@ -98,8 +98,13 @@
           <ul>
 <li><a class="reference internal" href="#">ltc2378</a><ul>
 <li><a class="reference internal" href="#adi.ltc2378.ltc2378"><code class="docutils literal notranslate"><span class="pre">ltc2378</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ltc2378.ltc2378.channel"><code class="docutils literal notranslate"><span class="pre">ltc2378.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.ltc2378.ltc2378.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ltc2378.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.ltc2378.ltc2378.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ltc2378.sampling_frequency</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ltc2378.ltc2378_channel"><code class="docutils literal notranslate"><span class="pre">ltc2378_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ltc2378.ltc2378_channel.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ltc2378_channel.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.ltc2378.ltc2378_channel.scale"><code class="docutils literal notranslate"><span class="pre">ltc2378_channel.scale</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -316,18 +321,37 @@ Content on this topic
 <span id="ltc2378"></span><h1>ltc2378<a class="headerlink" href="#module-adi.ltc2378" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ltc2378.ltc2378">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ltc2378.</span></span><span class="sig-name descname"><span class="pre">ltc2378</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ltc2378-20'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ltc2378.ltc2378" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ltc2378.</span></span><span class="sig-name descname"><span class="pre">ltc2378</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ltc2378.ltc2378" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
 <p>LTC2378 ADC</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ltc2378.ltc2378.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ltc2378.ltc2378.channel" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.ltc2378.ltc2378.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ltc2378-20',</span> <span class="pre">'ltc2338-18',</span> <span class="pre">'ltc2364-16',</span> <span class="pre">'ltc2364-18',</span> <span class="pre">'ltc2367-16',</span> <span class="pre">'ltc2367-18',</span> <span class="pre">'ltc2368-16',</span> <span class="pre">'ltc2368-18',</span> <span class="pre">'ltc2369-18',</span> <span class="pre">'ltc2370-16',</span> <span class="pre">'ltc2376-16',</span> <span class="pre">'ltc2376-18',</span> <span class="pre">'ltc2376-20',</span> <span class="pre">'ltc2377-16',</span> <span class="pre">'ltc2377-18',</span> <span class="pre">'ltc2377-20',</span> <span class="pre">'ltc2378-16',</span> <span class="pre">'ltc2378-18',</span> <span class="pre">'ltc2379-18',</span> <span class="pre">'ltc2380-16']</span></em><a class="headerlink" href="#adi.ltc2378.ltc2378.compatible_parts" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ltc2378.ltc2378.sampling_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ltc2378.ltc2378.sampling_frequency" title="Link to this definition"></a></dt>
 <dd><p>Get sampling frequency</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ltc2378.ltc2378_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ltc2378.</span></span><span class="sig-name descname"><span class="pre">ltc2378_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ltc2378.ltc2378_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>LTC2378 channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ltc2378.ltc2378_channel.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ltc2378.ltc2378_channel.sampling_frequency" title="Link to this definition"></a></dt>
+<dd><p>Get sampling frequency</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ltc2378.ltc2378_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ltc2378.ltc2378_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>Get scale value</p>
 </dd></dl>
 
 </dd></dl>

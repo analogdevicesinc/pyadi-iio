@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager, attribute" name="description" />
+<meta content="Bases: rx_chan_comp" name="description" />
 
     <title>adxrs290 &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
@@ -98,10 +98,16 @@
           <ul>
 <li><a class="reference internal" href="#">adxrs290</a><ul>
 <li><a class="reference internal" href="#adi.adxrs290.adxrs290"><code class="docutils literal notranslate"><span class="pre">adxrs290</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adxrs290.adxrs290.compatible_parts"><code class="docutils literal notranslate"><span class="pre">adxrs290.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxrs290.adxrs290.hpf_3db_frequency"><code class="docutils literal notranslate"><span class="pre">adxrs290.hpf_3db_frequency</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxrs290.adxrs290.hpf_3db_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxrs290.hpf_3db_frequency_available</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxrs290.adxrs290.lpf_3db_frequency"><code class="docutils literal notranslate"><span class="pre">adxrs290.lpf_3db_frequency</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxrs290.adxrs290.lpf_3db_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxrs290.lpf_3db_frequency_available</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.adxrs290.adxrs290_channel"><code class="docutils literal notranslate"><span class="pre">adxrs290_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adxrs290.adxrs290_channel.raw"><code class="docutils literal notranslate"><span class="pre">adxrs290_channel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxrs290.adxrs290_channel.scale"><code class="docutils literal notranslate"><span class="pre">adxrs290_channel.scale</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -318,9 +324,14 @@ Content on this topic
 <span id="adxrs290"></span><h1>adxrs290<a class="headerlink" href="#module-adi.adxrs290" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adxrs290.adxrs290">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxrs290.</span></span><span class="sig-name descname"><span class="pre">adxrs290</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxrs290.adxrs290" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxrs290.</span></span><span class="sig-name descname"><span class="pre">adxrs290</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxrs290.adxrs290" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
 <p>ADI ADXRS290 Gyroscope</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.adxrs290.adxrs290.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['adxrs290']</span></em><a class="headerlink" href="#adi.adxrs290.adxrs290.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adxrs290.adxrs290.hpf_3db_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hpf_3db_frequency</span></span><a class="headerlink" href="#adi.adxrs290.adxrs290.hpf_3db_frequency" title="Link to this definition"></a></dt>
@@ -343,6 +354,25 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.adxrs290.adxrs290.lpf_3db_frequency_available">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lpf_3db_frequency_available</span></span><a class="headerlink" href="#adi.adxrs290.adxrs290.lpf_3db_frequency_available" title="Link to this definition"></a></dt>
 <dd><p>Provides all available low pass filter 3dB frequency settings for the ADXRS290 channels</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.adxrs290.adxrs290_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxrs290.</span></span><span class="sig-name descname"><span class="pre">adxrs290_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxrs290.adxrs290_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>ADXRS290 channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxrs290.adxrs290_channel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.adxrs290.adxrs290_channel.raw" title="Link to this definition"></a></dt>
+<dd><p>ADXRS290 channel raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxrs290.adxrs290_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.adxrs290.adxrs290_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>ADXRS290 channel scale(gain)</p>
 </dd></dl>
 
 </dd></dl>

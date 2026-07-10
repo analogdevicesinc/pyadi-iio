@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager, attribute" name="description" />
+<meta content="Bases: rx_chan_comp" name="description" />
 
     <title>adxl380 &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
@@ -98,10 +98,28 @@
           <ul>
 <li><a class="reference internal" href="#">adxl380</a><ul>
 <li><a class="reference internal" href="#adi.adxl380.adxl380"><code class="docutils literal notranslate"><span class="pre">adxl380</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adxl380.adxl380.compatible_parts"><code class="docutils literal notranslate"><span class="pre">adxl380.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxl380.adxl380.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">adxl380.sampling_frequency</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxl380.adxl380.sampling_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxl380.sampling_frequency_available</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxl380.adxl380.to_degrees"><code class="docutils literal notranslate"><span class="pre">adxl380.to_degrees()</span></code></a></li>
 <li><a class="reference internal" href="#adi.adxl380.adxl380.waiting_for_supplier"><code class="docutils literal notranslate"><span class="pre">adxl380.waiting_for_supplier</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel"><code class="docutils literal notranslate"><span class="pre">adxl380_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel.calibbias"><code class="docutils literal notranslate"><span class="pre">adxl380_channel.calibbias</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel.filter_high_pass_3db_frequency"><code class="docutils literal notranslate"><span class="pre">adxl380_channel.filter_high_pass_3db_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel.filter_high_pass_3db_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxl380_channel.filter_high_pass_3db_frequency_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel.filter_low_pass_3db_frequency"><code class="docutils literal notranslate"><span class="pre">adxl380_channel.filter_low_pass_3db_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel.filter_low_pass_3db_frequency_available"><code class="docutils literal notranslate"><span class="pre">adxl380_channel.filter_low_pass_3db_frequency_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel.raw"><code class="docutils literal notranslate"><span class="pre">adxl380_channel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel.scale"><code class="docutils literal notranslate"><span class="pre">adxl380_channel.scale</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_channel.scale_available"><code class="docutils literal notranslate"><span class="pre">adxl380_channel.scale_available</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_temp_channel"><code class="docutils literal notranslate"><span class="pre">adxl380_temp_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_temp_channel.offset"><code class="docutils literal notranslate"><span class="pre">adxl380_temp_channel.offset</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_temp_channel.raw"><code class="docutils literal notranslate"><span class="pre">adxl380_temp_channel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.adxl380.adxl380_temp_channel.scale"><code class="docutils literal notranslate"><span class="pre">adxl380_temp_channel.scale</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -318,9 +336,14 @@ Content on this topic
 <span id="adxl380"></span><h1>adxl380<a class="headerlink" href="#module-adi.adxl380" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adxl380.adxl380">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxl380.</span></span><span class="sig-name descname"><span class="pre">adxl380</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl380.adxl380" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxl380.</span></span><span class="sig-name descname"><span class="pre">adxl380</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl380.adxl380" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
 <p>adxl380 3-axis accelerometer</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['adxl380',</span> <span class="pre">'adxl382']</span></em><a class="headerlink" href="#adi.adxl380.adxl380.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adxl380.adxl380.sampling_frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.adxl380.adxl380.sampling_frequency" title="Link to this definition"></a></dt>
@@ -343,6 +366,86 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.adxl380.adxl380.waiting_for_supplier">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">waiting_for_supplier</span></span><a class="headerlink" href="#adi.adxl380.adxl380.waiting_for_supplier" title="Link to this definition"></a></dt>
 <dd><p>Device waiting for supplier</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxl380.</span></span><span class="sig-name descname"><span class="pre">adxl380_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl380.adxl380_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>adxl380 acceleration channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel.calibbias">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calibbias</span></span><a class="headerlink" href="#adi.adxl380.adxl380_channel.calibbias" title="Link to this definition"></a></dt>
+<dd><p>adxl380 channel offset</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel.filter_high_pass_3db_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_high_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adxl380.adxl380_channel.filter_high_pass_3db_frequency" title="Link to this definition"></a></dt>
+<dd><p>adxl380 highpass filter cutoff frequency</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel.filter_high_pass_3db_frequency_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_high_pass_3db_frequency_available</span></span><a class="headerlink" href="#adi.adxl380.adxl380_channel.filter_high_pass_3db_frequency_available" title="Link to this definition"></a></dt>
+<dd><p>Provides all available highpass filter cutoff frequency settings for the adxl380 channels</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel.filter_low_pass_3db_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_low_pass_3db_frequency</span></span><a class="headerlink" href="#adi.adxl380.adxl380_channel.filter_low_pass_3db_frequency" title="Link to this definition"></a></dt>
+<dd><p>adxl380 lowpass filter cutoff frequency</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel.filter_low_pass_3db_frequency_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_low_pass_3db_frequency_available</span></span><a class="headerlink" href="#adi.adxl380.adxl380_channel.filter_low_pass_3db_frequency_available" title="Link to this definition"></a></dt>
+<dd><p>Provides all available lowpass filter cutoff frequency settings for the adxl380 channels</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.adxl380.adxl380_channel.raw" title="Link to this definition"></a></dt>
+<dd><p>adxl380 channel raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.adxl380.adxl380_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>adxl380 channel scale(gain)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_channel.scale_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale_available</span></span><a class="headerlink" href="#adi.adxl380.adxl380_channel.scale_available" title="Link to this definition"></a></dt>
+<dd><p>Provides all available scale settings for the adxl380 channels</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_temp_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adxl380.</span></span><span class="sig-name descname"><span class="pre">adxl380_temp_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adxl380.adxl380_temp_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>adxl380 temperature channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_temp_channel.offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.adxl380.adxl380_temp_channel.offset" title="Link to this definition"></a></dt>
+<dd><p>adxl380 temperature offset value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_temp_channel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.adxl380.adxl380_temp_channel.raw" title="Link to this definition"></a></dt>
+<dd><p>adxl380 temperature raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.adxl380.adxl380_temp_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.adxl380.adxl380_temp_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>adxl380 channel scale value</p>
 </dd></dl>
 
 </dd></dl>

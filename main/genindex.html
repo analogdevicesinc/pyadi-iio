@@ -229,6 +229,25 @@ let darkTheme = isDarkTheme();
 let modal = null;
 let modalContent = null;
 let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
 
 const runMermaid = async (rerun) => {
     console.log("Running mermaid diagrams, rerun =", rerun);
@@ -236,7 +255,15 @@ const runMermaid = async (rerun) => {
     let all_mermaids = document.querySelectorAll(".mermaid");
 
     if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
         all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
             if(!el.hasAttribute("data-original-code")) {
                 // store original code
                 // console.log(`Storing original code for first run: `, el.innerHTML);
@@ -253,35 +280,89 @@ const runMermaid = async (rerun) => {
                 el.setAttribute('data-original-code', el.innerHTML);
             }
         });
-        await mermaid.run();
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if ("False" === "True") {
+                                        addZoomToSvgs(d3.selectAll(""));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
     }
 
     all_mermaids = document.querySelectorAll(".mermaid");
-    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
 
     if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        const mermaids_to_add_zoom = -1 === -1 ? mermaids_active.length : -1;
         if(mermaids_to_add_zoom > 0) {
             var svgs = d3.selectAll("");
-            if(all_mermaids.length !== mermaids_processed.length) {
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
                 setTimeout(() => runMermaid(false), 200);
                 return;
-            } else if(svgs.size() !== mermaids_to_add_zoom) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else {
-                svgs.each(function() {
-                    var svg = d3.select(this);
-                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
-                    });
-                    svg.call(zoom);
-                });
             }
+            addZoomToSvgs(svgs);
         }
-    } else if(all_mermaids.length !== mermaids_processed.length) {
+    } else if(mermaids_active.length !== mermaids_processed.length) {
         // Wait for mermaid to process all diagrams
         setTimeout(() => runMermaid(false), 200);
         return;
@@ -767,7 +848,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.accel_x_calibbias">accel_x_calibbias (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.accel_x_calibbias">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.accel_x_calibbias">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.accel_x_calibbias">(adi.adis16480 property)</a>
 </li>
@@ -813,7 +894,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.accel_x_conv">accel_x_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.accel_x_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.accel_x_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.accel_x_conv">(adi.adis16480 property)</a>
 </li>
@@ -859,7 +940,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.accel_y_calibbias">accel_y_calibbias (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.accel_y_calibbias">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.accel_y_calibbias">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.accel_y_calibbias">(adi.adis16480 property)</a>
 </li>
@@ -905,7 +986,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.accel_y_conv">accel_y_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.accel_y_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.accel_y_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.accel_y_conv">(adi.adis16480 property)</a>
 </li>
@@ -951,7 +1032,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.accel_z_calibbias">accel_z_calibbias (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.accel_z_calibbias">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.accel_z_calibbias">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.accel_z_calibbias">(adi.adis16480 property)</a>
 </li>
@@ -997,7 +1078,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.accel_z_conv">accel_z_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.accel_z_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.accel_z_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.accel_z_conv">(adi.adis16480 property)</a>
 </li>
@@ -1056,6 +1137,8 @@ Content on this topic
 </li>
       <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs">ad3552r_hs (class in adi.ad3552r_hs)</a>
 </li>
+      <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs_channel">ad3552r_hs_channel (class in adi.ad3552r_hs)</a>
+</li>
       <li><a href="devices/adi.ad4020.html#adi.ad4020">ad4020 (class in adi)</a>
 </li>
       <li><a href="devices/adi.ad4020.html#adi.ad4020.ad4020_channel">ad4020_channel (class in adi.ad4020)</a>
@@ -1107,6 +1190,8 @@ Content on this topic
       <li><a href="devices/adi.ad5686.html#adi.ad5686.ad5686_channel">ad5686_channel (class in adi.ad5686)</a>
 </li>
       <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r">ad5706r (class in adi.ad5706r)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel">ad5706r_channel (class in adi.ad5706r)</a>
 </li>
       <li><a href="devices/adi.ad5710r.html#adi.ad5710r.ad5710r">ad5710r (class in adi.ad5710r)</a>
 </li>
@@ -1233,6 +1318,8 @@ Content on this topic
       <li><a href="devices/adi.ad9739a.html#adi.ad9739a.ad9739a">ad9739a (class in adi.ad9739a)</a>
 </li>
       <li><a href="devices/adi.ada4355.html#adi.ada4355.ada4355">ada4355 (class in adi.ada4355)</a>
+</li>
+      <li><a href="devices/adi.ada4355.html#adi.ada4355.ada4355_channel">ada4355_channel (class in adi.ada4355)</a>
 </li>
       <li><a href="devices/adi.ada4355.html#adi.ada4355.ada4355.ada4355_register_read">ada4355_register_read() (adi.ada4355.ada4355 method)</a>
 </li>
@@ -1703,8 +1790,6 @@ Content on this topic
         <li><a href="devices/adi.adf4382.html#module-adi.adf4382">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adf5610
 
@@ -1712,6 +1797,8 @@ Content on this topic
         <li><a href="devices/adi.adf5610.html#module-adi.adf5610">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     adi.adf5611
 
@@ -1724,6 +1811,13 @@ Content on this topic
 
       <ul>
         <li><a href="devices/adi.adg2128.html#module-adi.adg2128">module</a>
+</li>
+      </ul></li>
+      <li>
+    adi.adis16475
+
+      <ul>
+        <li><a href="devices/adi.adis16475.html#module-adi.adis16475">module</a>
 </li>
       </ul></li>
       <li>
@@ -2171,7 +2265,11 @@ Content on this topic
 </li>
       <li><a href="devices/adi.adis16460.html#adi.adis16460">adis16460 (class in adi)</a>
 </li>
-      <li><a href="devices/adi.adis16475.html#adi.adis16475">adis16475 (class in adi)</a>
+      <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475">adis16475 (class in adi.adis16475)</a>
+</li>
+      <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475_channel">adis16475_channel (class in adi.adis16475)</a>
+</li>
+      <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475_channel_with_offset">adis16475_channel_with_offset (class in adi.adis16475)</a>
 </li>
       <li><a href="devices/adi.adis16480.html#adi.adis16480">adis16480 (class in adi)</a>
 </li>
@@ -2241,7 +2339,13 @@ Content on this topic
 </li>
       <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380">adxl380 (class in adi.adxl380)</a>
 </li>
+      <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel">adxl380_channel (class in adi.adxl380)</a>
+</li>
+      <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_temp_channel">adxl380_temp_channel (class in adi.adxl380)</a>
+</li>
       <li><a href="devices/adi.adxrs290.html#adi.adxrs290.adxrs290">adxrs290 (class in adi.adxrs290)</a>
+</li>
+      <li><a href="devices/adi.adxrs290.html#adi.adxrs290.adxrs290_channel">adxrs290_channel (class in adi.adxrs290)</a>
 </li>
       <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.agc_tracking_en_chan0">agc_tracking_en_chan0 (adi.adrv9002.adrv9002 property)</a>
 </li>
@@ -2326,7 +2430,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.anglvel_x_calibbias">anglvel_x_calibbias (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.anglvel_x_calibbias">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.anglvel_x_calibbias">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.anglvel_x_calibbias">(adi.adis16480 property)</a>
 </li>
@@ -2372,7 +2476,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.anglvel_x_conv">anglvel_x_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.anglvel_x_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.anglvel_x_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.anglvel_x_conv">(adi.adis16480 property)</a>
 </li>
@@ -2418,7 +2522,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.anglvel_y_calibbias">anglvel_y_calibbias (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.anglvel_y_calibbias">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.anglvel_y_calibbias">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.anglvel_y_calibbias">(adi.adis16480 property)</a>
 </li>
@@ -2464,7 +2568,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.anglvel_y_conv">anglvel_y_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.anglvel_y_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.anglvel_y_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.anglvel_y_conv">(adi.adis16480 property)</a>
 </li>
@@ -2510,7 +2614,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.anglvel_z_calibbias">anglvel_z_calibbias (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.anglvel_z_calibbias">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.anglvel_z_calibbias">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.anglvel_z_calibbias">(adi.adis16480 property)</a>
 </li>
@@ -2556,7 +2660,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.anglvel_z_conv">anglvel_z_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.anglvel_z_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.anglvel_z_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.anglvel_z_conv">(adi.adis16480 property)</a>
 </li>
@@ -2772,9 +2876,13 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.ad4858.html#adi.ad4858.ad4858_channel.calibbias">(adi.ad4858.ad4858_channel property)</a>
 </li>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475_channel_with_offset.calibbias">(adi.adis16475.adis16475_channel_with_offset property)</a>
+</li>
         <li><a href="devices/adi.adxl345.html#adi.adxl345.adxl345_channel.calibbias">(adi.adxl345.adxl345_channel property)</a>
 </li>
         <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355_channel.calibbias">(adi.adxl355.adxl355_channel property)</a>
+</li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel.calibbias">(adi.adxl380.adxl380_channel property)</a>
 </li>
       </ul></li>
       <li><a href="devices/adi.ad4858.html#adi.ad4858.ad4858_channel.calibphase">calibphase (adi.ad4858.ad4858_channel property)</a>
@@ -2888,8 +2996,6 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ad9166.html#adi.ad9166.ad9166.channel">(adi.ad9166.ad9166 attribute)</a>
 </li>
-        <li><a href="devices/adi.ada4355.html#adi.ada4355.ada4355.channel">(adi.ada4355.ada4355 attribute)</a>
-</li>
         <li><a href="devices/adi.adpd1080.html#adi.adpd1080.adpd1080.channel">(adi.adpd1080.adpd1080 attribute)</a>
 </li>
         <li><a href="devices/adi.adpd188.html#adi.adpd188.adpd188.channel">(adi.adpd188.adpd188 attribute)</a>
@@ -2898,17 +3004,11 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adrf5720.html#adi.adrf5720.adrf5720.channel">(adi.adrf5720.adrf5720 attribute)</a>
 </li>
-        <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378.channel">(adi.ltc2378.ltc2378 attribute)</a>
-</li>
         <li><a href="devices/adi.ltc2499.html#adi.ltc2499.ltc2499.channel">(adi.ltc2499.ltc2499 attribute)</a>
 </li>
         <li><a href="devices/adi.ltc2983.html#adi.ltc2983.ltc2983.channel">(adi.ltc2983.ltc2983 attribute)</a>
 </li>
         <li><a href="devices/adi.max11205.html#adi.max11205.max11205.channel">(adi.max11205.max11205 attribute)</a>
-</li>
-        <li><a href="devices/adi.max14001.html#adi.max14001.max14001.channel">(adi.max14001.max14001 attribute)</a>
-</li>
-        <li><a href="devices/adi.max9611.html#adi.max9611.max9611.channel">(adi.max9611.max9611 attribute)</a>
 </li>
         <li><a href="devices/adi.tddn.html#adi.tddn.tddn.channel">(adi.tddn.tddn attribute)</a>
 </li>
@@ -2972,7 +3072,7 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.close">(adi.adis16460 method)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.close">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.close">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.close">(adi.adis16480 method)</a>
 </li>
@@ -2993,10 +3093,10 @@ Content on this topic
         <li><a href="devices/adi.adis16550.html#adi.adis16550.close">(adi.adis16550 method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan0">close_loop_gain_tracking_en_chan0 (adi.adrv9002.adrv9002 property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.adrv9002.html#adi.adrv9002.adrv9002.close_loop_gain_tracking_en_chan1">close_loop_gain_tracking_en_chan1 (adi.adrv9002.adrv9002 property)</a>
 </li>
       <li><a href="devices/adi.cn0511.html#adi.cn0511.cn0511">cn0511 (class in adi.cn0511)</a>
@@ -3032,6 +3132,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ad3552r.html#adi.ad3552r.ad3552r.compatible_parts">(adi.ad3552r.ad3552r attribute)</a>
 </li>
+        <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs.compatible_parts">(adi.ad3552r_hs.ad3552r_hs attribute)</a>
+</li>
         <li><a href="devices/adi.ad4020.html#adi.ad4020.compatible_parts">(adi.ad4020 attribute)</a>
 </li>
         <li><a href="devices/adi.ad405x.html#adi.ad405x.ad405x.compatible_parts">(adi.ad405x.ad405x attribute)</a>
@@ -3051,6 +3153,8 @@ Content on this topic
         <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x.compatible_parts">(adi.ad514x.ad514x attribute)</a>
 </li>
         <li><a href="devices/adi.ad5686.html#adi.ad5686.ad5686.compatible_parts">(adi.ad5686.ad5686 attribute)</a>
+</li>
+        <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r.compatible_parts">(adi.ad5706r.ad5706r attribute)</a>
 </li>
         <li><a href="devices/adi.ad5754r.html#adi.ad5754r.compatible_parts">(adi.ad5754r attribute)</a>
 </li>
@@ -3092,9 +3196,13 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ad9739a.html#adi.ad9739a.ad9739a.compatible_parts">(adi.ad9739a.ad9739a attribute)</a>
 </li>
+        <li><a href="devices/adi.ada4355.html#adi.ada4355.ada4355.compatible_parts">(adi.ada4355.ada4355 attribute)</a>
+</li>
         <li><a href="devices/adi.adaq8092.html#adi.adaq8092.adaq8092.compatible_parts">(adi.adaq8092.adaq8092 attribute)</a>
 </li>
         <li><a href="devices/adi.adis16375.html#adi.adis16375.compatible_parts">(adi.adis16375 attribute)</a>
+</li>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.compatible_parts">(adi.adis16475.adis16475 attribute)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.compatible_parts">(adi.adis16480 attribute)</a>
 </li>
@@ -3116,9 +3224,21 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355.compatible_parts">(adi.adxl355.adxl355 attribute)</a>
 </li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380.compatible_parts">(adi.adxl380.adxl380 attribute)</a>
+</li>
+        <li><a href="devices/adi.adxrs290.html#adi.adxrs290.adxrs290.compatible_parts">(adi.adxrs290.adxrs290 attribute)</a>
+</li>
         <li><a href="devices/adi.ltc2314_14.html#adi.ltc2314_14.ltc2314_14.compatible_parts">(adi.ltc2314_14.ltc2314_14 attribute)</a>
 </li>
+        <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378.compatible_parts">(adi.ltc2378.ltc2378 attribute)</a>
+</li>
         <li><a href="devices/adi.ltc2387.html#adi.ltc2387.ltc2387.compatible_parts">(adi.ltc2387.ltc2387 attribute)</a>
+</li>
+        <li><a href="devices/adi.max14001.html#adi.max14001.max14001.compatible_parts">(adi.max14001.max14001 attribute)</a>
+</li>
+        <li><a href="devices/adi.max31865.html#adi.max31865.max31865.compatible_parts">(adi.max31865.max31865 attribute)</a>
+</li>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611.compatible_parts">(adi.max9611.max9611 attribute)</a>
 </li>
       </ul></li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.configure">configure() (adi.cn0566.CN0566 method)</a>
@@ -3138,7 +3258,7 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.ctx">(adi.adis16460 property)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.ctx">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.ctx">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.ctx">(adi.adis16480 property)</a>
 </li>
@@ -3240,7 +3360,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.deltaangl_x_conv">deltaangl_x_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.deltaangl_x_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.deltaangl_x_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.deltaangl_x_conv">(adi.adis16480 property)</a>
 </li>
@@ -3264,7 +3384,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.deltaangl_y_conv">deltaangl_y_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.deltaangl_y_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.deltaangl_y_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.deltaangl_y_conv">(adi.adis16480 property)</a>
 </li>
@@ -3288,7 +3408,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.deltaangl_z_conv">deltaangl_z_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.deltaangl_z_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.deltaangl_z_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.deltaangl_z_conv">(adi.adis16480 property)</a>
 </li>
@@ -3312,7 +3432,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.deltavelocity_x_conv">deltavelocity_x_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.deltavelocity_x_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.deltavelocity_x_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.deltavelocity_x_conv">(adi.adis16480 property)</a>
 </li>
@@ -3338,7 +3458,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.deltavelocity_y_conv">deltavelocity_y_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.deltavelocity_y_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.deltavelocity_y_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.deltavelocity_y_conv">(adi.adis16480 property)</a>
 </li>
@@ -3362,7 +3482,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.deltavelocity_z_conv">deltavelocity_z_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.deltavelocity_z_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.deltavelocity_z_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.deltavelocity_z_conv">(adi.adis16480 property)</a>
 </li>
@@ -3528,15 +3648,27 @@ Content on this topic
 </li>
       </ul></li>
       <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355_channel.filter_high_pass_3db_frequency">filter_high_pass_3db_frequency (adi.adxl355.adxl355_channel property)</a>
+
+      <ul>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel.filter_high_pass_3db_frequency">(adi.adxl380.adxl380_channel property)</a>
 </li>
+      </ul></li>
       <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355_channel.filter_high_pass_3db_frequency_available">filter_high_pass_3db_frequency_available (adi.adxl355.adxl355_channel property)</a>
+
+      <ul>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel.filter_high_pass_3db_frequency_available">(adi.adxl380.adxl380_channel property)</a>
 </li>
-      <li><a href="devices/adi.adis16475.html#adi.adis16475.filter_low_pass_3db_frequency">filter_low_pass_3db_frequency (adi.adis16475 property)</a>
+      </ul></li>
+      <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.filter_low_pass_3db_frequency">filter_low_pass_3db_frequency (adi.adis16475.adis16475 property)</a>
 
       <ul>
         <li><a href="devices/adi.adis16507.html#adi.adis16507.adis16507.filter_low_pass_3db_frequency">(adi.adis16507.adis16507 property)</a>
 </li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel.filter_low_pass_3db_frequency">(adi.adxl380.adxl380_channel property)</a>
+</li>
       </ul></li>
+      <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel.filter_low_pass_3db_frequency_available">filter_low_pass_3db_frequency_available (adi.adxl380.adxl380_channel property)</a>
+</li>
       <li><a href="devices/adi.ad4080.html#adi.ad4080.filter_type">filter_type (adi.ad4080 property)</a>
 
       <ul>
@@ -3554,7 +3686,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.firmware_date">firmware_date (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.firmware_date">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.firmware_date">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.firmware_date">(adi.adis16480 property)</a>
 </li>
@@ -3578,7 +3710,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.firmware_revision">firmware_revision (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.firmware_revision">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.firmware_revision">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.firmware_revision">(adi.adis16480 property)</a>
 </li>
@@ -3604,7 +3736,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.flash_count">flash_count (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.flash_count">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.flash_count">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.flash_count">(adi.adis16480 property)</a>
 </li>
@@ -3756,7 +3888,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_accel_x">get_accel_x() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_accel_x">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_accel_x">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_accel_x">(adi.adis16480 method)</a>
 </li>
@@ -3780,7 +3912,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_accel_y">get_accel_y() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_accel_y">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_accel_y">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_accel_y">(adi.adis16480 method)</a>
 </li>
@@ -3804,7 +3936,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_accel_z">get_accel_z() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_accel_z">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_accel_z">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_accel_z">(adi.adis16480 method)</a>
 </li>
@@ -3828,7 +3960,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_anglvel_x">get_anglvel_x() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_anglvel_x">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_anglvel_x">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_anglvel_x">(adi.adis16480 method)</a>
 </li>
@@ -3852,7 +3984,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_anglvel_y">get_anglvel_y() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_anglvel_y">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_anglvel_y">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_anglvel_y">(adi.adis16480 method)</a>
 </li>
@@ -3876,7 +4008,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_anglvel_z">get_anglvel_z() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_anglvel_z">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_anglvel_z">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_anglvel_z">(adi.adis16480 method)</a>
 </li>
@@ -3902,7 +4034,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_deltaangl_x">get_deltaangl_x() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_deltaangl_x">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_deltaangl_x">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_deltaangl_x">(adi.adis16480 method)</a>
 </li>
@@ -3926,7 +4058,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_deltaangl_y">get_deltaangl_y() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_deltaangl_y">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_deltaangl_y">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_deltaangl_y">(adi.adis16480 method)</a>
 </li>
@@ -3950,7 +4082,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_deltaangl_z">get_deltaangl_z() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_deltaangl_z">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_deltaangl_z">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_deltaangl_z">(adi.adis16480 method)</a>
 </li>
@@ -3974,7 +4106,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_deltavelocity_x">get_deltavelocity_x() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_deltavelocity_x">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_deltavelocity_x">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_deltavelocity_x">(adi.adis16480 method)</a>
 </li>
@@ -3998,7 +4130,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_deltavelocity_y">get_deltavelocity_y() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_deltavelocity_y">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_deltavelocity_y">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_deltavelocity_y">(adi.adis16480 method)</a>
 </li>
@@ -4022,7 +4154,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_deltavelocity_z">get_deltavelocity_z() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_deltavelocity_z">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_deltavelocity_z">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_deltavelocity_z">(adi.adis16480 method)</a>
 </li>
@@ -4072,7 +4204,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.get_temp">get_temp() (adi.adis16375 method)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.get_temp">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.get_temp">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.get_temp">(adi.adis16480 method)</a>
 </li>
@@ -4143,19 +4275,27 @@ Content on this topic
         <li><a href="devices/adi.QuadMxFE_multi.html#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_ext_output_delay">(adi.QuadMxFE_multi.QuadMxFE_multi method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.adrv9009_zu11eg_multi.html#adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi.hmc7044_set_cap_sel">hmc7044_set_cap_sel() (adi.adrv9009_zu11eg_multi.adrv9009_zu11eg_multi method)</a>
 
       <ul>
         <li><a href="devices/adi.QuadMxFE_multi.html#adi.QuadMxFE_multi.QuadMxFE_multi.hmc7044_set_cap_sel">(adi.QuadMxFE_multi.QuadMxFE_multi method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.adxrs290.html#adi.adxrs290.adxrs290.hpf_3db_frequency">hpf_3db_frequency (adi.adxrs290.adxrs290 property)</a>
 </li>
       <li><a href="devices/adi.adxrs290.html#adi.adxrs290.adxrs290.hpf_3db_frequency_available">hpf_3db_frequency_available (adi.adxrs290.adxrs290 property)</a>
 </li>
       <li><a href="devices/adi.ad9084_mc.html#adi.ad9084_mc.Triton.hpf_ctrl">hpf_ctrl (adi.ad9084_mc.Triton property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.hw_active_edge">hw_active_edge (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.hw_active_edge_available">hw_active_edge_available (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.hw_func_sel">hw_func_sel (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.hw_func_sel_available">hw_func_sel_available (adi.ad5706r.ad5706r_channel property)</a>
 </li>
       <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r.hw_ldac_tg_pwm">hw_ldac_tg_pwm (adi.ad5706r.ad5706r property)</a>
 </li>
@@ -4215,11 +4355,23 @@ Content on this topic
 </li>
       <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000_array.initialize_devices">initialize_devices() (adi.adar1000.adar1000_array method)</a>
 </li>
+      <li><a href="devices/adi.lm75.html#adi.lm75.lm75.input">input (adi.lm75.lm75 property)</a>
+
+      <ul>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_current.input">(adi.max9611.max9611_channel_current property)</a>
+</li>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_power.input">(adi.max9611.max9611_channel_power property)</a>
+</li>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_voltage_sense.input">(adi.max9611.max9611_channel_voltage_sense property)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="devices/adi.lm75.html#adi.lm75.lm75.input">input (adi.lm75.lm75 property)</a>
-</li>
       <li><a href="devices/adi.ad353xr.html#adi.ad353xr.ad353xr_channel.input_register">input_register (adi.ad353xr.ad353xr_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.input_register_a">input_register_a (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.input_register_b">input_register_b (adi.ad5706r.ad5706r_channel property)</a>
 </li>
       <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs.input_source">input_source (adi.ad3552r_hs.ad3552r_hs property)</a>
 </li>
@@ -4343,6 +4495,10 @@ Content on this topic
         <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000_array.latch_tx_settings">(adi.adar1000.adar1000_array method)</a>
 </li>
       </ul></li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.ldac_trigger_chn">ldac_trigger_chn (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.ldac_trigger_chn_available">ldac_trigger_chn_available (adi.ad5706r.ad5706r_channel property)</a>
+</li>
       <li><a href="devices/adi.cn0575.html#adi.cn0575.cn0575.led">led (adi.cn0575.cn0575 property)</a>
 </li>
       <li><a href="mcp/index.html#adi.mcp_server.list_device_classes">list_device_classes() (in module adi.mcp_server)</a>
@@ -4367,10 +4523,10 @@ Content on this topic
 </li>
       <li><a href="devices/adi.adl5960.html#adi.adl5960.adl5960.lo_mode_available">lo_mode_available (adi.adl5960.adl5960 property)</a>
 </li>
-      <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.load_channel_cal">load_channel_cal() (adi.cn0566.CN0566 method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.load_channel_cal">load_channel_cal() (adi.cn0566.CN0566 method)</a>
+</li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.load_gain_cal">load_gain_cal() (adi.cn0566.CN0566 method)</a>
 </li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.load_phase_cal">load_phase_cal() (adi.cn0566.CN0566 method)</a>
@@ -4404,6 +4560,8 @@ Content on this topic
       <li><a href="devices/adi.ltc2314_14.html#adi.ltc2314_14.ltc2314_14_channel">ltc2314_14_channel (class in adi.ltc2314_14)</a>
 </li>
       <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378">ltc2378 (class in adi.ltc2378)</a>
+</li>
+      <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378_channel">ltc2378_channel (class in adi.ltc2378)</a>
 </li>
       <li><a href="devices/adi.ltc2387.html#adi.ltc2387.ltc2387">ltc2387 (class in adi.ltc2387)</a>
 </li>
@@ -4485,11 +4643,27 @@ Content on this topic
 </li>
       <li><a href="devices/adi.max14001.html#adi.max14001.max14001">max14001 (class in adi.max14001)</a>
 </li>
+      <li><a href="devices/adi.max14001.html#adi.max14001.max14001_channel">max14001_channel (class in adi.max14001)</a>
+</li>
       <li><a href="devices/adi.max31855.html#adi.max31855.max31855">max31855 (class in adi.max31855)</a>
 </li>
       <li><a href="devices/adi.max31865.html#adi.max31865.max31865">max31865 (class in adi.max31865)</a>
 </li>
+      <li><a href="devices/adi.max31865.html#adi.max31865.max31865_channel_filt">max31865_channel_filt (class in adi.max31865)</a>
+</li>
+      <li><a href="devices/adi.max31865.html#adi.max31865.max31865_channel_temp">max31865_channel_temp (class in adi.max31865)</a>
+</li>
       <li><a href="devices/adi.max9611.html#adi.max9611.max9611">max9611 (class in adi.max9611)</a>
+</li>
+      <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_current">max9611_channel_current (class in adi.max9611)</a>
+</li>
+      <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_power">max9611_channel_power (class in adi.max9611)</a>
+</li>
+      <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_temp">max9611_channel_temp (class in adi.max9611)</a>
+</li>
+      <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_voltage_input">max9611_channel_voltage_input (class in adi.max9611)</a>
+</li>
+      <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_voltage_sense">max9611_channel_voltage_sense (class in adi.max9611)</a>
 </li>
       <li><a href="devices/adi.lm75.html#adi.lm75.lm75.max_hyst">max_hyst (adi.lm75.lm75 property)</a>
 </li>
@@ -4639,6 +4813,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adg2128.html#module-adi.adg2128">adi.adg2128</a>
 </li>
+        <li><a href="devices/adi.adis16475.html#module-adi.adis16475">adi.adis16475</a>
+</li>
         <li><a href="devices/adi.adis16507.html#module-adi.adis16507">adi.adis16507</a>
 </li>
         <li><a href="devices/adi.adl5240.html#module-adi.adl5240">adi.adl5240</a>
@@ -4780,6 +4956,10 @@ Content on this topic
 </li>
       <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r.multi_dac_input_a">multi_dac_input_a (adi.ad5706r.ad5706r property)</a>
 </li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.multi_dac_sel_ch">multi_dac_sel_ch (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.multi_dac_sel_ch_available">multi_dac_sel_ch_available (adi.ad5706r.ad5706r_channel property)</a>
+</li>
       <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r.multi_dac_sw_ldac_trigger">multi_dac_sw_ldac_trigger (adi.ad5706r.ad5706r property)</a>
 </li>
       <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r.multi_dac_sw_ldac_trigger_available">multi_dac_sw_ldac_trigger_available (adi.ad5706r.ad5706r property)</a>
@@ -4827,6 +5007,8 @@ Content on this topic
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dev/test_dma.html#test.dma_tests.nco_loopback">nco_loopback() (in module test.dma_tests)</a>
+</li>
+      <li><a href="devices/adi.max31865.html#adi.max31865.max31865_channel_filt.notch">notch (adi.max31865.max31865_channel_filt property)</a>
 </li>
       <li><a href="devices/adi.cn0566.html#adi.cn0566.CN0566.num_elements">num_elements (adi.cn0566.CN0566 attribute)</a>
 </li>
@@ -4883,6 +5065,8 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.ad3552r.html#adi.ad3552r.ad3552r_channel.offset">(adi.ad3552r.ad3552r_channel property)</a>
 </li>
+        <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs_channel.offset">(adi.ad3552r_hs.ad3552r_hs_channel property)</a>
+</li>
         <li><a href="devices/adi.ad405x.html#adi.ad405x.ad405x_channel.offset">(adi.ad405x.ad405x_channel property)</a>
 </li>
         <li><a href="devices/adi.ad4110.html#adi.ad4110.ad4110_channel.offset">(adi.ad4110.ad4110_channel property)</a>
@@ -4894,6 +5078,8 @@ Content on this topic
         <li><a href="devices/adi.ad469x.html#adi.ad469x.ad4695_channel.offset">(adi.ad469x.ad4695_channel property)</a>
 </li>
         <li><a href="devices/adi.ad4858.html#adi.ad4858.ad4858_channel.offset">(adi.ad4858.ad4858_channel property)</a>
+</li>
+        <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.offset">(adi.ad5706r.ad5706r_channel property)</a>
 </li>
         <li><a href="devices/adi.ad5754r.html#adi.ad5754r.ad5754r_channel.offset">(adi.ad5754r.ad5754r_channel property)</a>
 </li>
@@ -4914,6 +5100,12 @@ Content on this topic
         <li><a href="devices/adi.ad777x.html#adi.ad777x.ad777x_channel.offset">(adi.ad777x.ad777x_channel property)</a>
 </li>
         <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355_tempchannel.offset">(adi.adxl355.adxl355_tempchannel property)</a>
+</li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_temp_channel.offset">(adi.adxl380.adxl380_temp_channel property)</a>
+</li>
+        <li><a href="devices/adi.max14001.html#adi.max14001.max14001_channel.offset">(adi.max14001.max14001_channel property)</a>
+</li>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_voltage_input.offset">(adi.max9611.max9611_channel_voltage_input property)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -4967,6 +5159,10 @@ Content on this topic
       <li><a href="devices/adi.ad4630.html#adi.ad4630.ad4630.output_data_mode">output_data_mode (adi.ad4630.ad4630 property)</a>
 </li>
       <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs.output_range">output_range (adi.ad3552r_hs.ad3552r_hs property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.output_state">output_state (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.output_state_available">output_state_available (adi.ad5706r.ad5706r_channel property)</a>
 </li>
       <li><a href="devices/adi.ad4080.html#adi.ad4080.oversampling_ratio">oversampling_ratio (adi.ad4080 property)</a>
 
@@ -5085,7 +5281,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.product_id">product_id (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.product_id">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.product_id">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.product_id">(adi.adis16480 property)</a>
 </li>
@@ -5180,6 +5376,10 @@ Content on this topic
         <li><a href="devices/adi.ad7606.html#adi.ad7606.ad7606.range_available">(adi.ad7606.ad7606 property)</a>
 </li>
       </ul></li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.range_sel">range_sel (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.range_sel_available">range_sel_available (adi.ad5706r.ad5706r_channel property)</a>
+</li>
       <li><a href="devices/adi.ad2s1210.html#adi.ad2s1210.ad2s1210_position_channel.raw">raw (adi.ad2s1210.ad2s1210_position_channel property)</a>
 
       <ul>
@@ -5188,6 +5388,8 @@ Content on this topic
         <li><a href="devices/adi.ad353xr.html#adi.ad353xr.ad353xr_channel.raw">(adi.ad353xr.ad353xr_channel property)</a>
 </li>
         <li><a href="devices/adi.ad3552r.html#adi.ad3552r.ad3552r_channel.raw">(adi.ad3552r.ad3552r_channel property)</a>
+</li>
+        <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs_channel.raw">(adi.ad3552r_hs.ad3552r_hs_channel property)</a>
 </li>
         <li><a href="devices/adi.ad4020.html#adi.ad4020.ad4020_channel.raw">(adi.ad4020.ad4020_channel property)</a>
 </li>
@@ -5204,6 +5406,8 @@ Content on this topic
         <li><a href="devices/adi.ad4858.html#adi.ad4858.ad4858_channel.raw">(adi.ad4858.ad4858_channel property)</a>
 </li>
         <li><a href="devices/adi.ad5686.html#adi.ad5686.ad5686_channel.raw">(adi.ad5686.ad5686_channel property)</a>
+</li>
+        <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.raw">(adi.ad5706r.ad5706r_channel property)</a>
 </li>
         <li><a href="devices/adi.ad5754r.html#adi.ad5754r.ad5754r_channel.raw">(adi.ad5754r.ad5754r_channel property)</a>
 </li>
@@ -5233,11 +5437,31 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ad9166.html#adi.ad9166.ad9166.raw">(adi.ad9166.ad9166 property)</a>
 </li>
+        <li><a href="devices/adi.ada4355.html#adi.ada4355.ada4355_channel.raw">(adi.ada4355.ada4355_channel property)</a>
+</li>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475_channel.raw">(adi.adis16475.adis16475_channel property)</a>
+</li>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475_channel_with_offset.raw">(adi.adis16475.adis16475_channel_with_offset property)</a>
+</li>
         <li><a href="devices/adi.adxl345.html#adi.adxl345.adxl345_channel.raw">(adi.adxl345.adxl345_channel property)</a>
 </li>
         <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355_channel.raw">(adi.adxl355.adxl355_channel property)</a>
 </li>
         <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355_tempchannel.raw">(adi.adxl355.adxl355_tempchannel property)</a>
+</li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel.raw">(adi.adxl380.adxl380_channel property)</a>
+</li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_temp_channel.raw">(adi.adxl380.adxl380_temp_channel property)</a>
+</li>
+        <li><a href="devices/adi.adxrs290.html#adi.adxrs290.adxrs290_channel.raw">(adi.adxrs290.adxrs290_channel property)</a>
+</li>
+        <li><a href="devices/adi.max14001.html#adi.max14001.max14001_channel.raw">(adi.max14001.max14001_channel property)</a>
+</li>
+        <li><a href="devices/adi.max31865.html#adi.max31865.max31865_channel_temp.raw">(adi.max31865.max31865_channel_temp property)</a>
+</li>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_temp.raw">(adi.max9611.max9611_channel_temp property)</a>
+</li>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_voltage_input.raw">(adi.max9611.max9611_channel_voltage_input property)</a>
 </li>
       </ul></li>
       <li><a href="devices/adi.ad514x.html#adi.ad514x.ad514x.rdac_wp">rdac_wp (adi.ad514x.ad514x property)</a>
@@ -5303,7 +5527,7 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adf5611.html#adi.adf5611.adf5611.reg_read">(adi.adf5611.adf5611 method)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.reg_read">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.reg_read">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adl5960.html#adi.adl5960.adl5960.reg_read">(adi.adl5960.adl5960 method)</a>
 </li>
@@ -5323,7 +5547,7 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adf5611.html#adi.adf5611.adf5611.reg_write">(adi.adf5611.adf5611 method)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.reg_write">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.reg_write">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adl5960.html#adi.adl5960.adl5960.reg_write">(adi.adl5960.adl5960 method)</a>
 </li>
@@ -5389,7 +5613,7 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.rx">(adi.adis16460 method)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.rx">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.rx">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.rx">(adi.adis16480 method)</a>
 </li>
@@ -5455,7 +5679,7 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.rx_annotated">(adi.adis16460 property)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.rx_annotated">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.rx_annotated">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.rx_annotated">(adi.adis16480 property)</a>
 </li>
@@ -5497,7 +5721,7 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.rx_buffer_size">(adi.adis16460 property)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.rx_buffer_size">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.rx_buffer_size">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.rx_buffer_size">(adi.adis16480 property)</a>
 </li>
@@ -5535,7 +5759,7 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.rx_channel_names">(adi.adis16460 property)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.rx_channel_names">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.rx_channel_names">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.rx_channel_names">(adi.adis16480 property)</a>
 </li>
@@ -5581,7 +5805,7 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.rx_destroy_buffer">(adi.adis16460 method)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.rx_destroy_buffer">(adi.adis16475 method)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.rx_destroy_buffer">(adi.adis16475.adis16475 method)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.rx_destroy_buffer">(adi.adis16480 method)</a>
 </li>
@@ -5633,7 +5857,7 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.rx_enabled_channels">(adi.adis16460 property)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.rx_enabled_channels">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.rx_enabled_channels">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.rx_enabled_channels">(adi.adis16480 property)</a>
 </li>
@@ -5753,7 +5977,7 @@ Content on this topic
       <ul>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.rx_output_type">(adi.adis16460 property)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.rx_output_type">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.rx_output_type">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.rx_output_type">(adi.adis16480 property)</a>
 </li>
@@ -5900,9 +6124,11 @@ Content on this topic
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="devices/adi.max31865.html#adi.max31865.max31865.samp_available">samp_available (adi.max31865.max31865 property)</a>
 </li>
-      <li><a href="devices/adi.ad4630.html#adi.ad4630.ad4630.sample_rate">sample_rate (adi.ad4630.ad4630 property)</a>
+      <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs_channel.sample_rate">sample_rate (adi.ad3552r_hs.ad3552r_hs_channel property)</a>
 
       <ul>
+        <li><a href="devices/adi.ad4630.html#adi.ad4630.ad4630.sample_rate">(adi.ad4630.ad4630 property)</a>
+</li>
         <li><a href="devices/adi.ad7124.html#adi.ad7124.sample_rate">(adi.ad7124 property)</a>
 </li>
         <li><a href="devices/adi.ad9136.html#adi.ad9136.ad9136.sample_rate">(adi.ad9136.ad9136 property)</a>
@@ -5925,7 +6151,7 @@ Content on this topic
 </li>
         <li><a href="devices/adi.adis16460.html#adi.adis16460.sample_rate">(adi.adis16460 property)</a>
 </li>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.sample_rate">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.sample_rate">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.sample_rate">(adi.adis16480 property)</a>
 </li>
@@ -6001,6 +6227,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378.sampling_frequency">(adi.ltc2378.ltc2378 property)</a>
 </li>
+        <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378_channel.sampling_frequency">(adi.ltc2378.ltc2378_channel property)</a>
+</li>
         <li><a href="devices/adi.ltc2387.html#adi.ltc2387.ltc2387.sampling_frequency">(adi.ltc2387.ltc2387 property)</a>
 </li>
       </ul></li>
@@ -6037,6 +6265,8 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ad3552r.html#adi.ad3552r.ad3552r_channel.scale">(adi.ad3552r.ad3552r_channel property)</a>
 </li>
+        <li><a href="devices/adi.ad3552r_hs.html#adi.ad3552r_hs.ad3552r_hs_channel.scale">(adi.ad3552r_hs.ad3552r_hs_channel property)</a>
+</li>
         <li><a href="devices/adi.ad4020.html#adi.ad4020.ad4020_channel.scale">(adi.ad4020.ad4020_channel property)</a>
 </li>
         <li><a href="devices/adi.ad405x.html#adi.ad405x.ad405x_channel.scale">(adi.ad405x.ad405x_channel property)</a>
@@ -6056,6 +6286,8 @@ Content on this topic
         <li><a href="devices/adi.ad4858.html#adi.ad4858.ad4858_channel.scale">(adi.ad4858.ad4858_channel property)</a>
 </li>
         <li><a href="devices/adi.ad5686.html#adi.ad5686.ad5686_channel.scale">(adi.ad5686.ad5686_channel property)</a>
+</li>
+        <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.scale">(adi.ad5706r.ad5706r_channel property)</a>
 </li>
         <li><a href="devices/adi.ad5754r.html#adi.ad5754r.ad5754r_channel.scale">(adi.ad5754r.ad5754r_channel property)</a>
 </li>
@@ -6091,11 +6323,33 @@ Content on this topic
 </li>
         <li><a href="devices/adi.ad9625.html#adi.ad9625.ad9625.scale">(adi.ad9625.ad9625 property)</a>
 </li>
+        <li><a href="devices/adi.ada4355.html#adi.ada4355.ada4355_channel.scale">(adi.ada4355.ada4355_channel property)</a>
+</li>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475_channel.scale">(adi.adis16475.adis16475_channel property)</a>
+</li>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475_channel_with_offset.scale">(adi.adis16475.adis16475_channel_with_offset property)</a>
+</li>
         <li><a href="devices/adi.adxl345.html#adi.adxl345.adxl345_channel.scale">(adi.adxl345.adxl345_channel property)</a>
 </li>
         <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355_channel.scale">(adi.adxl355.adxl355_channel property)</a>
 </li>
         <li><a href="devices/adi.adxl355.html#adi.adxl355.adxl355_tempchannel.scale">(adi.adxl355.adxl355_tempchannel property)</a>
+</li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel.scale">(adi.adxl380.adxl380_channel property)</a>
+</li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_temp_channel.scale">(adi.adxl380.adxl380_temp_channel property)</a>
+</li>
+        <li><a href="devices/adi.adxrs290.html#adi.adxrs290.adxrs290_channel.scale">(adi.adxrs290.adxrs290_channel property)</a>
+</li>
+        <li><a href="devices/adi.ltc2378.html#adi.ltc2378.ltc2378_channel.scale">(adi.ltc2378.ltc2378_channel property)</a>
+</li>
+        <li><a href="devices/adi.max14001.html#adi.max14001.max14001_channel.scale">(adi.max14001.max14001_channel property)</a>
+</li>
+        <li><a href="devices/adi.max31865.html#adi.max31865.max31865_channel_temp.scale">(adi.max31865.max31865_channel_temp property)</a>
+</li>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_temp.scale">(adi.max9611.max9611_channel_temp property)</a>
+</li>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_voltage_input.scale">(adi.max9611.max9611_channel_voltage_input property)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -6106,6 +6360,8 @@ Content on this topic
         <li><a href="devices/adi.ad7606.html#adi.ad7606.ad7606.scale_available">(adi.ad7606.ad7606 property)</a>
 </li>
         <li><a href="devices/adi.ad9625.html#adi.ad9625.ad9625.scale_available">(adi.ad9625.ad9625 property)</a>
+</li>
+        <li><a href="devices/adi.adxl380.html#adi.adxl380.adxl380_channel.scale_available">(adi.adxl380.adxl380_channel property)</a>
 </li>
       </ul></li>
       <li><a href="devices/adi.ad5754r.html#adi.ad5754r.sdo_disable">sdo_disable (adi.ad5754r property)</a>
@@ -6137,7 +6393,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.serial_number">serial_number (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.serial_number">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.serial_number">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.serial_number">(adi.adis16480 property)</a>
 </li>
@@ -6200,6 +6456,12 @@ Content on this topic
 </li>
       <li><a href="devices/adi.ad6676.html#adi.ad6676.ad6676.shuffler_thresh">shuffler_thresh (adi.ad6676.ad6676 property)</a>
 </li>
+      <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_current.shunt_resistor">shunt_resistor (adi.max9611.max9611_channel_current property)</a>
+
+      <ul>
+        <li><a href="devices/adi.max9611.html#adi.max9611.max9611_channel_power.shunt_resistor">(adi.max9611.max9611_channel_power property)</a>
+</li>
+      </ul></li>
       <li><a href="devices/adi.adf4159.html#adi.adf4159.adf4159.sing_ful_tri">sing_ful_tri (adi.adf4159.adf4159 property)</a>
 </li>
       <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r.single_instr">single_instr (adi.ad5706r.ad5706r property)</a>
@@ -6313,7 +6575,7 @@ Content on this topic
       <li><a href="devices/adi.adis16375.html#adi.adis16375.temp_conv">temp_conv (adi.adis16375 property)</a>
 
       <ul>
-        <li><a href="devices/adi.adis16475.html#adi.adis16475.temp_conv">(adi.adis16475 property)</a>
+        <li><a href="devices/adi.adis16475.html#adi.adis16475.adis16475.temp_conv">(adi.adis16475.adis16475 property)</a>
 </li>
         <li><a href="devices/adi.adis16480.html#adi.adis16480.temp_conv">(adi.adis16480 property)</a>
 </li>
@@ -6462,6 +6724,10 @@ Content on this topic
         <li><a href="devices/adi.max14001.html#adi.max14001.max14001.to_volts">(adi.max14001.max14001 method)</a>
 </li>
       </ul></li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.toggle_trigger_chn">toggle_trigger_chn (adi.ad5706r.ad5706r_channel property)</a>
+</li>
+      <li><a href="devices/adi.ad5706r.html#adi.ad5706r.ad5706r_channel.toggle_trigger_chn_available">toggle_trigger_chn_available (adi.ad5706r.ad5706r_channel property)</a>
+</li>
       <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.tr_source">tr_source (adi.adar1000.adar1000 property)</a>
 </li>
       <li><a href="devices/adi.adar1000.html#adi.adar1000.adar1000.tr_spi">tr_spi (adi.adar1000.adar1000 property)</a>
@@ -6596,10 +6862,10 @@ Content on this topic
 </li>
       <li><a href="devices/adi.ad937x.html#adi.ad937x.ad9375.tx_clgc_tx_rms_chan0">tx_clgc_tx_rms_chan0 (adi.ad937x.ad9375 property)</a>
 </li>
-      <li><a href="devices/adi.ad937x.html#adi.ad937x.ad9375.tx_clgc_tx_rms_chan1">tx_clgc_tx_rms_chan1 (adi.ad937x.ad9375 property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="devices/adi.ad937x.html#adi.ad937x.ad9375.tx_clgc_tx_rms_chan1">tx_clgc_tx_rms_chan1 (adi.ad937x.ad9375 property)</a>
+</li>
       <li><a href="buffers/index.html#adi.rx_tx.tx_core">tx_core (class in adi.rx_tx)</a>
 </li>
       <li><a href="buffers/index.html#adi.rx_tx.tx_core.tx_cyclic_buffer">tx_cyclic_buffer (adi.rx_tx.tx_core property)</a>
