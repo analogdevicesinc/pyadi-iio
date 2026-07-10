@@ -7,6 +7,84 @@ from unittest.mock import MagicMock, Mock, patch
 import pytest
 
 import adi
+from adi.device_base import rx_chan_comp
+from adi.rx_tx import shared_def
+
+
+class _SharedDefTestDevice(shared_def):
+    """Concrete shared_def used to test context selection."""
+
+    @property
+    def _complex_data(self):  # type: ignore[override]
+        return False
+
+    @property
+    def _control_device_name(self):  # type: ignore[override]
+        return "test-device"
+
+    @property
+    def _rx_data_device_name(self):
+        return "test-device"
+
+
+def test_shared_def_falls_back_to_ip_analog(monkeypatch):
+    """URI-less construction retains the legacy ip:analog fallback."""
+    device = MagicMock()
+    device.name = "test-device"
+    context = MagicMock()
+    context.devices = [device]
+    context.find_device.return_value = device
+
+    class FakeContext:
+        calls = []
+
+        def __new__(cls, uri):
+            cls.calls.append(uri)
+            return context
+
+    monkeypatch.setattr("adi.rx_tx.iio.scan_contexts", lambda: {})
+    monkeypatch.setattr("adi.context_manager.iio.Context", FakeContext)
+
+    dev = _SharedDefTestDevice()
+
+    assert FakeContext.calls == ["ip:analog"]
+    assert dev.ctx is context
+    assert dev._ctrl is device
+
+
+def test_ltc2378_preserves_all_compatible_parts():
+    """The common-parent migration must not drop a supported device name."""
+    assert "ltc2377-20" in adi.ltc2378.compatible_parts
+
+
+def test_max9611_preserves_legacy_rx_channel_order():
+    """Integer RX indices and returned array order remain backwards compatible."""
+    assert adi.max9611._rx_channel_names == ["temp", "voltage1"]
+
+
+@pytest.mark.parametrize(
+    "device_class,requested_device",
+    [(adi.adxl380, "adxl380"), (adi.adis16475, "adis16505-2"),],
+)
+def test_compatible_device_fallback(monkeypatch, device_class, requested_device):
+    """Classes that historically probed compatible parts must keep doing so."""
+    attempts = []
+
+    def init_with_first_device_missing(self, uri="", device_name="", device_index=0):
+        attempts.append(device_name)
+        if len(attempts) == 1:
+            raise Exception(f"No device found with name {device_name}")
+
+    monkeypatch.setattr(rx_chan_comp, "__init__", init_with_first_device_missing)
+
+    device_class(uri="local:", device_name=requested_device)
+
+    assert attempts == [
+        requested_device,
+        next(
+            part for part in device_class.compatible_parts if part != requested_device
+        ),
+    ]
 
 
 def channel_definitions(device_class, iio_uri):
@@ -23,6 +101,12 @@ def channel_definitions(device_class, iio_uri):
             assert hasattr(
                 ch, "scale"
             ), f"{device_class} channel {ch.name} missing scale property"
+            # device_base exposes each channel as a named attribute on the
+            # device (the documented ``device.<channel>.<attr>`` contract).
+            assert getattr(dev, ch.name, None) is ch, (
+                f"{device_class} channel {ch.name} not accessible as a named "
+                "attribute on the device"
+            )
 
 
 @pytest.fixture()
@@ -131,4 +215,68 @@ def test_ad5686_channel_definitions(test_channel_definitions, iio_uri, device_cl
 @pytest.mark.iio_hardware("ad7291", True)
 @pytest.mark.parametrize("device_class", ["ad7291"])
 def test_ad7291_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ltc2378-20")
+@pytest.mark.parametrize("device_class", ["ltc2378"])
+def test_ltc2378_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("max14001")
+@pytest.mark.parametrize("device_class", ["max14001"])
+def test_max14001_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ada4355")
+@pytest.mark.parametrize("device_class", ["ada4355"])
+def test_ada4355_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("adxrs290")
+@pytest.mark.parametrize("device_class", ["adxrs290"])
+def test_adxrs290_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("adxl380")
+@pytest.mark.parametrize("device_class", ["adxl380"])
+def test_adxl380_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ad5706r")
+@pytest.mark.parametrize("device_class", ["ad5706r"])
+def test_ad5706r_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ad3552r_hs")
+@pytest.mark.parametrize("device_class", ["ad3552r_hs"])
+def test_ad3552r_hs_channel_definitions(
+    test_channel_definitions, iio_uri, device_class
+):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("max31865")
+@pytest.mark.parametrize("device_class", ["max31865"])
+def test_max31865_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("max9611")
+@pytest.mark.parametrize("device_class", ["max9611"])
+def test_max9611_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware(
+    "adis16475", True
+)  # iio-emu does not support trigger assignment used in device init
+@pytest.mark.parametrize("device_class", ["adis16475"])
+def test_adis16475_channel_definitions(test_channel_definitions, iio_uri, device_class):
     test_channel_definitions(device_class, iio_uri)

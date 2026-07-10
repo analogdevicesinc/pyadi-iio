@@ -611,6 +611,13 @@ class shared_def(context_manager, metaclass=ABCMeta):
                 if all(dev in devs for dev in required_devices):
                     self._ctx = iio.Context(c)
                     break
+            # Preserve context_manager's legacy fallback for environments where
+            # network discovery is unavailable but ip:analog is reachable.
+            if not self._ctx and self._uri_auto != "":
+                try:
+                    self._ctx = iio.Context(self._uri_auto)
+                except Exception:  # noqa: BLE001
+                    self._ctx = None
             if not self._ctx:
                 raise Exception("No context could be found for class")
 
