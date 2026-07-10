@@ -101,32 +101,7 @@ print("ADAR1000 array object created.")
 ## Step 2: Configure TR Source & PA Bias ##
 ##############################################
     
-if MANUAL:
-    tries = 10
-    for device in dev.devices.values():
-        for channel in device.channels:
-            channel.pa_bias_on = -4.8
-            if round(channel.pa_bias_on, 1) != -4.8:
-                for _ in range(tries):
-                    if round(channel.pa_bias_on, 1) == -4.8:
-                        break
-                else:
-                    print(f"Not set properly: {channel.pa_bias_on=}  Element: {channel}")
-
-            channel.pa_bias_off = -4.8
-            if round(channel.pa_bias_off, 1) != -4.8:
-                for _ in range(tries):
-                    if round(channel.pa_bias_off, 1) == -4.8:
-                        break
-                else:
-                    print(f"Not set properly: {channel.pa_bias_off=}  Element: {channel}")
-        dev.latch_tx_settings()
-
-    dev.latch_tx_settings()
-    print("PA bias configured.")
-
-else:
-    dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
 for device in dev.devices.values():
     device.mode = "rx"
