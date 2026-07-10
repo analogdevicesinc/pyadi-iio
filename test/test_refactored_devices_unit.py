@@ -280,3 +280,35 @@ def test_max9611_channel_definitions(test_channel_definitions, iio_uri, device_c
 @pytest.mark.parametrize("device_class", ["adis16475"])
 def test_adis16475_channel_definitions(test_channel_definitions, iio_uri, device_class):
     test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ad5710r")
+@pytest.mark.parametrize("device_class", ["ad5710r"])
+def test_ad5710r_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+    with adi.ad5710r(uri=iio_uri) as dev:
+        expected_names = [ch.id for ch in dev._ctrl.channels]
+        assert dev.tx_enabled_channels == list(range(8))
+        assert dev._tx_channel_names == expected_names
+        assert dev.output_bits == [16] * 8
+        assert [ch.name for ch in dev.channel] == expected_names
+        assert all(
+            getattr(dev, name) is dev.channel[i]
+            for i, name in enumerate(expected_names)
+        )
+
+
+@pytest.mark.iio_hardware("ad5529r")
+@pytest.mark.parametrize("device_class", ["ad552xr"])
+def test_ad552xr_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+    with adi.ad552xr(uri=iio_uri) as dev:
+        expected_names = [ch.id for ch in dev._ctrl.channels]
+        assert dev.tx_enabled_channels == list(range(16))
+        assert dev._tx_channel_names == expected_names
+        assert dev.output_bits == [16] * 16
+        assert [ch.name for ch in dev.channel] == expected_names
+        assert all(
+            getattr(dev, name) is dev.channel[i]
+            for i, name in enumerate(expected_names)
+        )
