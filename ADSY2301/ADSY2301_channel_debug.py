@@ -63,8 +63,8 @@ for device in dev.devices.values():
     device.mode = "rx"
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
-    # device.lna_bias_on = -0.9412 #On bias for LNA
-    device.lna_bias_on = -4.7 #pinchoff
+    device.lna_bias_on = -0.9412 #On bias for LNA
+    #device.lna_bias_on = -4.7 #pinchoff
 
 
 #enable all RX channels
