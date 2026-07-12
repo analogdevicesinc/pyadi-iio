@@ -103,6 +103,7 @@ def _mock_context(monkeypatch, device_name, channel_names, scan_elements=None):
     device = MagicMock()
     device.name = device_name
     device.channels = channels
+    device._channels = channels
 
     class FakeContext:
         def __init__(self):
@@ -164,6 +165,73 @@ def test_ltc2499_common_parent_preserves_ordered_all_channel_api(monkeypatch):
         assert isinstance(dev.channel, OrderedDict)
         assert list(dev.channel) == ["voltage0", "voltage1", "timestamp"]
         assert [channel.name for channel in dev.channel.values()] == list(dev.channel)
+
+
+def _mock_indexed_context(monkeypatch, device_name, channel_names):
+    """Install a context containing two same-name devices."""
+    devices = []
+    for suffix in ("first", "second"):
+        channels = []
+        for name in channel_names:
+            channel = MagicMock()
+            channel.id = name
+            channel._id = f"{name}_{suffix}"
+            channel.scan_element = True
+            channels.append(channel)
+        device = MagicMock()
+        device.name = device_name
+        device.channels = channels
+        device._channels = channels
+        devices.append(device)
+
+    class FakeContext:
+        def __init__(self):
+            self.devices = devices
+
+        def find_device(self, name):
+            return next((device for device in devices if device.name == name), None)
+
+    context = FakeContext()
+    monkeypatch.setattr("adi.rx_tx.iio.Context", FakeContext)
+
+    def init_context(self, uri="", device_name=""):
+        self._ctx = context
+        self.uri = uri
+
+    monkeypatch.setattr("adi.rx_tx.context_manager.__init__", init_context)
+    return devices
+
+
+@pytest.mark.parametrize(
+    "device_class,device_name", [(adi.adpd188, "adpd188"), (adi.adpd1080, "adpd1080")],
+)
+def test_adpd_common_parent_preserves_index_and_private_channel_order(
+    monkeypatch, device_class, device_name
+):
+    """ADPD migrations retain indexed discovery and private channel traversal."""
+    devices = _mock_indexed_context(monkeypatch, device_name, ["red", "blue"])
+
+    with device_class(uri="local:", device_index=1) as dev:
+        assert dev._ctrl is dev._rxadc is devices[1]
+        assert dev._rx_channel_names == ["red_second", "blue_second"]
+        assert dev.rx_enabled_channels == [0, 1]
+        assert dev.rx_buffer_size == 16
+        assert [channel.name for channel in dev.channel] == dev._rx_channel_names
+        assert dev.red_second is dev.channel[0]
+        assert dev.blue_second is dev.channel[1]
+
+
+@pytest.mark.parametrize(
+    "device_class,device_name", [(adi.adpd188, "adpd188"), (adi.adpd1080, "adpd1080")],
+)
+def test_adpd_common_parent_rejects_missing_device_index(
+    monkeypatch, device_class, device_name
+):
+    """Out-of-range indexed discovery raises a deterministic error."""
+    _mock_indexed_context(monkeypatch, device_name, ["red"])
+
+    with pytest.raises(Exception, match=f"{device_name} at index 2"):
+        device_class(uri="local:", device_index=2)
 
 
 def test_adis16460_common_parent_preserves_rx_contract(monkeypatch):
