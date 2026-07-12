@@ -103,11 +103,16 @@ def _mock_context(monkeypatch, device_name, channel_names, scan_elements=None):
     device = MagicMock()
     device.name = device_name
     device.channels = channels
-    context = MagicMock()
-    context.devices = [device]
-    context.find_device.side_effect = (
-        lambda name: device if name == device_name else None
-    )
+
+    class FakeContext:
+        def __init__(self):
+            self.devices = [device]
+            self.find_device = MagicMock(
+                side_effect=lambda name: device if name == device_name else None
+            )
+
+    context = FakeContext()
+    monkeypatch.setattr("adi.rx_tx.iio.Context", FakeContext)
 
     def init_context(self, uri="", device_name=""):
         self._ctx = context
@@ -182,6 +187,63 @@ def test_max11205_default_does_not_fallback_to_variant_b(monkeypatch):
 
     with pytest.raises(Exception, match="max11205a"):
         adi.max11205(uri="local:")
+
+
+@pytest.mark.parametrize("selected_name", ["ADXL312", "ADXL313", "ADXL314"])
+def test_adxl313_common_parent_preserves_family_discovery(monkeypatch, selected_name):
+    """ADXL313 selects any supported family member and retains channel aliases."""
+    _mock_context(monkeypatch, selected_name, ["accel_x", "accel_y", "accel_z"])
+
+    with adi.adxl313(uri="local:") as dev:
+        assert dev._device_name == selected_name
+        assert dev._ctrl is dev._rxadc
+        assert dev._rx_channel_names == ["accel_x", "accel_y", "accel_z"]
+        assert dev.rx_enabled_channels == [0, 1, 2]
+        assert [channel.name for channel in dev.channel] == dev._rx_channel_names
+        assert dev.accel_x is dev.channel[0]
+        assert dev.accel_y is dev.channel[1]
+        assert dev.accel_z is dev.channel[2]
+
+
+def test_adxl313_preserves_first_compatible_context_order(monkeypatch):
+    """Family discovery remains context-ordered rather than model-prioritized."""
+    channels = ["accel_x", "accel_y", "accel_z"]
+    first = _mock_context(monkeypatch, "ADXL314", channels)
+    second = MagicMock()
+    second.name = "ADXL312"
+    second.channels = first.channels
+
+    # Expose a second compatible device in the same context.
+    with patch("adi.rx_tx.context_manager.__init__") as init:
+
+        class FakeContext:
+            def __init__(self):
+                self.devices = [first, second]
+
+            def find_device(self, name):
+                return next(
+                    (device for device in self.devices if device.name == name), None
+                )
+
+        context = FakeContext()
+        monkeypatch.setattr("adi.rx_tx.iio.Context", FakeContext)
+
+        def set_context(instance, uri="", device_name=""):
+            instance._ctx = context
+            instance.uri = uri
+
+        init.side_effect = set_context
+        with adi.adxl313(uri="local:") as dev:
+            assert dev._device_name == "ADXL314"
+            assert dev._ctrl is first
+
+
+def test_adxl313_rejects_context_without_compatible_device(monkeypatch):
+    """Contexts without an ADXL312/313/314 retain the legacy error."""
+    _mock_context(monkeypatch, "other-device", ["accel_x"])
+
+    with pytest.raises(Exception, match="No compatible device found"):
+        adi.adxl313(uri="local:")
 
 
 @pytest.mark.parametrize(
