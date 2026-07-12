@@ -2,7 +2,7 @@
 Unit tests for refactored device classes using device_base pattern.
 These tests verify the refactoring maintains correct structure and interfaces.
 """
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
 
@@ -60,6 +60,32 @@ def test_ltc2378_preserves_all_compatible_parts():
 def test_max9611_preserves_legacy_rx_channel_order():
     """Integer RX indices and returned array order remain backwards compatible."""
     assert adi.max9611._rx_channel_names == ["temp", "voltage1"]
+
+
+def test_ad5710r_preserved_device_properties():
+    """Exercise preserved AD5710R device-level getter and setter contracts."""
+    dev = object.__new__(adi.ad5710r)
+    dev._get_iio_dev_attr_str = Mock(return_value="value")
+    dev._set_iio_dev_attr_str = Mock()
+
+    assert dev.sampling_frequency == "value"
+    assert dev.all_ch_input_registers == "value"
+    assert dev.all_ch_raw == "value"
+
+    dev.sampling_frequency = 1000
+    dev.all_ch_input_registers = 42
+    dev.all_ch_raw = 7
+
+    assert dev._get_iio_dev_attr_str.call_args_list == [
+        call("sampling_frequency"),
+        call("all_ch_input_registers"),
+        call("all_ch_raw"),
+    ]
+    assert dev._set_iio_dev_attr_str.call_args_list == [
+        call("sampling_frequency", 1000),
+        call("all_ch_input_registers", 42),
+        call("all_ch_raw", 7),
+    ]
 
 
 @pytest.mark.parametrize(
