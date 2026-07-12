@@ -98,6 +98,7 @@
           <ul>
 <li><a class="reference internal" href="#">ad552xr</a><ul>
 <li><a class="reference internal" href="#adi.ad552xr.ad552xr"><code class="docutils literal notranslate"><span class="pre">ad552xr</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad552xr.ad552xr.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad552xr.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad552xr.ad552xr.output_bits"><code class="docutils literal notranslate"><span class="pre">ad552xr.output_bits</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad552xr.ad552xr.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ad552xr.sampling_frequency</span></code></a></li>
 </ul>
@@ -317,9 +318,14 @@ Content on this topic
 <p>AD552XR DAC driver.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad552xr.ad552xr">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad552xr.</span></span><span class="sig-name descname"><span class="pre">ad552xr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad552xr.ad552xr" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad552xr.</span></span><span class="sig-name descname"><span class="pre">ad552xr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad552xr.ad552xr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tx_chan_comp</span></code></p>
 <p>ad552xr DAC.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad552xr.ad552xr.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad5529r']</span></em><a class="headerlink" href="#adi.ad552xr.ad552xr.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad552xr.ad552xr.output_bits">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_bits</span></span><a class="headerlink" href="#adi.ad552xr.ad552xr.output_bits" title="Link to this definition"></a></dt>

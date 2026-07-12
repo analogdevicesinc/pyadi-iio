@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: tx, context_manager" name="description" />
+<meta content="Bases: tx_chan_comp" name="description" />
 
     <title>ad5710r &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
@@ -102,6 +102,7 @@
 <li><a class="reference internal" href="#adi.ad5710r.ad5710r.all_ch_operating_mode"><code class="docutils literal notranslate"><span class="pre">ad5710r.all_ch_operating_mode</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5710r.ad5710r.all_ch_operating_mode_avail"><code class="docutils literal notranslate"><span class="pre">ad5710r.all_ch_operating_mode_avail</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5710r.ad5710r.all_ch_raw"><code class="docutils literal notranslate"><span class="pre">ad5710r.all_ch_raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad5710r.ad5710r.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad5710r.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5710r.ad5710r.hw_ldac_trigger"><code class="docutils literal notranslate"><span class="pre">ad5710r.hw_ldac_trigger</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5710r.ad5710r.hw_ldac_trigger_avail"><code class="docutils literal notranslate"><span class="pre">ad5710r.hw_ldac_trigger_avail</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad5710r.ad5710r.mux_out_select"><code class="docutils literal notranslate"><span class="pre">ad5710r.mux_out_select</span></code></a></li>
@@ -330,8 +331,8 @@ Content on this topic
 <span id="ad5710r"></span><h1>ad5710r<a class="headerlink" href="#module-adi.ad5710r" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ad5710r.ad5710r">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5710r.</span></span><span class="sig-name descname"><span class="pre">ad5710r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5710r.ad5710r" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.tx" title="adi.rx_tx.tx"><code class="xref py py-class docutils literal notranslate"><span class="pre">tx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad5710r.</span></span><span class="sig-name descname"><span class="pre">ad5710r</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5710r.ad5710r" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tx_chan_comp</span></code></p>
 <p>AD5710r DAC</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5710r.ad5710r.all_ch_input_registers">
@@ -356,6 +357,11 @@ Content on this topic
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_ch_raw</span></span><a class="headerlink" href="#adi.ad5710r.ad5710r.all_ch_raw" title="Link to this definition"></a></dt>
 <dd><p>AD5710r all dac registers config</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.ad5710r.ad5710r.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad5710r']</span></em><a class="headerlink" href="#adi.ad5710r.ad5710r.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad5710r.ad5710r.hw_ldac_trigger">
