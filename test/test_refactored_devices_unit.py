@@ -97,6 +97,7 @@ def _mock_context(monkeypatch, device_name, channel_names, scan_elements=None):
     for name, scan_element in zip(channel_names, scan_elements):
         channel = MagicMock()
         channel.id = name
+        channel._id = name
         channel.scan_element = scan_element
         channels.append(channel)
     device = MagicMock()
@@ -140,6 +141,47 @@ def test_ltc2983_common_parent_preserves_ordered_all_channel_api(monkeypatch):
         assert isinstance(dev.channel, OrderedDict)
         assert list(dev.channel) == ["voltage0", "temp1", "status"]
         assert [channel.name for channel in dev.channel.values()] == list(dev.channel)
+
+
+def test_adis16460_common_parent_preserves_rx_contract(monkeypatch):
+    """ADIS16460 keeps channel order and its smaller default RX buffer."""
+    names = [
+        "anglvel_x",
+        "anglvel_y",
+        "anglvel_z",
+        "accel_x",
+        "accel_y",
+        "accel_z",
+    ]
+    _mock_context(monkeypatch, "adis16460", names)
+
+    with adi.adis16460(uri="local:") as dev:
+        assert dev._ctrl is dev._rxadc
+        assert dev._rx_channel_names == names
+        assert dev.rx_enabled_channels == list(range(6))
+        assert dev.rx_buffer_size == 16
+
+
+@pytest.mark.parametrize("device_name", ["max11205a", "max11205b"])
+def test_max11205_common_parent_preserves_exact_selection(monkeypatch, device_name):
+    """MAX11205 keeps explicit model selection and private-ID channel ordering."""
+    _mock_context(monkeypatch, device_name, ["voltage0", "voltage1"])
+
+    with adi.max11205(uri="local:", device_name=device_name) as dev:
+        assert dev._ctrl is dev._rxadc
+        assert dev._rx_channel_names == ["voltage0", "voltage1"]
+        assert dev.rx_enabled_channels == [0, 1]
+        assert [channel.name for channel in dev.channel] == ["voltage0", "voltage1"]
+        assert dev.voltage0 is dev.channel[0]
+        assert dev.voltage1 is dev.channel[1]
+
+
+def test_max11205_default_does_not_fallback_to_variant_b(monkeypatch):
+    """The default remains max11205a rather than probing compatible variants."""
+    _mock_context(monkeypatch, "max11205b", ["voltage0"])
+
+    with pytest.raises(Exception, match="max11205a"):
+        adi.max11205(uri="local:")
 
 
 @pytest.mark.parametrize(

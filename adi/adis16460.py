@@ -4,11 +4,10 @@
 
 import numpy as np
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
-class adis16460(rx, context_manager):
+class adis16460(rx_def):
     """ ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor """
 
     _complex_data = False
@@ -21,15 +20,17 @@ class adis16460(rx, context_manager):
         "accel_z",
     ]
     _device_name = ""
+    _control_device_name = "adis16460"
+    _rx_data_device_name = "adis16460"
+    compatible_parts = ["adis16460"]
 
     def __init__(self, uri=""):
+        """Initialize the ADIS16460 while preserving its URI-only API."""
+        super().__init__(uri=uri)
 
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._ctrl = self._ctx.find_device("adis16460")
-        self._rxadc = self._ctx.find_device("adis16460")
-        rx.__init__(self)
-        self.rx_buffer_size = 16  # Make default buffer smaller
+    def __post_init__(self):
+        """Use the legacy smaller default RX buffer."""
+        self.rx_buffer_size = 16
 
     @property
     def sample_rate(self):

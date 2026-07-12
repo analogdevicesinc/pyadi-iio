@@ -6,62 +6,41 @@
 import numpy as np
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class max11205(rx, context_manager):
+class max11205(rx_chan_comp):
 
     """MAX11205 ADC"""
 
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
+    compatible_parts = ["max11205a", "max11205b"]
 
     def __init__(self, uri="", device_name=""):
         """Constructor for MAX11205 class."""
-        context_manager.__init__(self, uri, self._device_name)
+        super().__init__(uri=uri, device_name=device_name)
 
-        compatible_parts = [
-            "max11205a",
-            "max11205b",
-        ]
+    def __post_init__(self):
+        """Preserve channel traversal and the legacy private-ID lookup."""
+        self._rx_channel_names = [ch._id for ch in self._ctrl.channels]
 
-        self._ctrl = None
-
-        if not device_name:
-            device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception(f"Not a compatible device: {device_name}")
-
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._rxadc = device
-                break
-
-        if not self._ctrl:
-            raise Exception("Error in selecting matching device")
-
-        if not self._rxadc:
-            raise Exception("Error in selecting matching device")
-
-        self._rx_channel_names = []
+    def _add_channel_instances(self):
+        """Build wrappers from the same private channel IDs as the legacy class."""
         self.channel = []
         for ch in self._ctrl.channels:
             name = ch._id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-
-        rx.__init__(self)
+            wrapper = self._channel_def(self._ctrl, name)
+            self.channel.append(wrapper)
+            setattr(self, name, wrapper)
 
     class _channel(attribute):
 
         """MAX11205 channel"""
 
         def __init__(self, ctrl, channel_name):
+            """Initialize a MAX11205 channel wrapper."""
             self.name = channel_name
             self._ctrl = ctrl
 
@@ -91,3 +70,5 @@ class max11205(rx, context_manager):
             raise Exception("Error in converting to actual voltage")
 
         return ret
+
+    _channel_def = _channel
