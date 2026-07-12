@@ -2,6 +2,7 @@
 Unit tests for refactored device classes using device_base pattern.
 These tests verify the refactoring maintains correct structure and interfaces.
 """
+from collections import OrderedDict
 from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
@@ -86,6 +87,59 @@ def test_ad5710r_preserved_device_properties():
         call("all_ch_input_registers", 42),
         call("all_ch_raw", 7),
     ]
+
+
+def _mock_context(monkeypatch, device_name, channel_names, scan_elements=None):
+    """Install a minimal IIO context for common-parent unit tests."""
+    if scan_elements is None:
+        scan_elements = [True] * len(channel_names)
+    channels = []
+    for name, scan_element in zip(channel_names, scan_elements):
+        channel = MagicMock()
+        channel.id = name
+        channel.scan_element = scan_element
+        channels.append(channel)
+    device = MagicMock()
+    device.name = device_name
+    device.channels = channels
+    context = MagicMock()
+    context.devices = [device]
+    context.find_device.side_effect = (
+        lambda name: device if name == device_name else None
+    )
+
+    def init_context(self, uri="", device_name=""):
+        self._ctx = context
+        self.uri = uri
+
+    monkeypatch.setattr("adi.rx_tx.context_manager.__init__", init_context)
+    return device
+
+
+def test_max31855_common_parent_preserves_aliases_and_order(monkeypatch):
+    """MAX31855 keeps its driver-name mapping and public temperature aliases."""
+    _mock_context(monkeypatch, "maxim_thermocouple", ["t_temp", "i_temp"])
+
+    with adi.max31855(uri="local:") as dev:
+        assert dev._ctrl is dev._rxadc
+        assert dev._rx_channel_names == ["t_temp", "i_temp"]
+        assert [channel.name for channel in dev.channel] == ["t_temp", "i_temp"]
+        assert dev.temp_t is dev.t_temp is dev.channel[0]
+        assert dev.temp_i is dev.i_temp is dev.channel[1]
+
+
+def test_ltc2983_common_parent_preserves_ordered_all_channel_api(monkeypatch):
+    """LTC2983 retains OrderedDict access and includes non-scan channels."""
+    _mock_context(
+        monkeypatch, "ltc2983", ["voltage0", "temp1", "status"], [True, True, False],
+    )
+
+    with adi.ltc2983(uri="local:") as dev:
+        assert dev._ctrl is dev._rxadc
+        assert dev._rx_channel_names == ["voltage0", "temp1", "status"]
+        assert isinstance(dev.channel, OrderedDict)
+        assert list(dev.channel) == ["voltage0", "temp1", "status"]
+        assert [channel.name for channel in dev.channel.values()] == list(dev.channel)
 
 
 @pytest.mark.parametrize(
