@@ -2,7 +2,7 @@
 Unit tests for refactored device classes using device_base pattern.
 These tests verify the refactoring maintains correct structure and interfaces.
 """
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
 
@@ -60,6 +60,32 @@ def test_ltc2378_preserves_all_compatible_parts():
 def test_max9611_preserves_legacy_rx_channel_order():
     """Integer RX indices and returned array order remain backwards compatible."""
     assert adi.max9611._rx_channel_names == ["temp", "voltage1"]
+
+
+def test_ad5710r_preserved_device_properties():
+    """Exercise preserved AD5710R device-level getter and setter contracts."""
+    dev = object.__new__(adi.ad5710r)
+    dev._get_iio_dev_attr_str = Mock(return_value="value")
+    dev._set_iio_dev_attr_str = Mock()
+
+    assert dev.sampling_frequency == "value"
+    assert dev.all_ch_input_registers == "value"
+    assert dev.all_ch_raw == "value"
+
+    dev.sampling_frequency = 1000
+    dev.all_ch_input_registers = 42
+    dev.all_ch_raw = 7
+
+    assert dev._get_iio_dev_attr_str.call_args_list == [
+        call("sampling_frequency"),
+        call("all_ch_input_registers"),
+        call("all_ch_raw"),
+    ]
+    assert dev._set_iio_dev_attr_str.call_args_list == [
+        call("sampling_frequency", 1000),
+        call("all_ch_input_registers", 42),
+        call("all_ch_raw", 7),
+    ]
 
 
 @pytest.mark.parametrize(
@@ -280,3 +306,35 @@ def test_max9611_channel_definitions(test_channel_definitions, iio_uri, device_c
 @pytest.mark.parametrize("device_class", ["adis16475"])
 def test_adis16475_channel_definitions(test_channel_definitions, iio_uri, device_class):
     test_channel_definitions(device_class, iio_uri)
+
+
+@pytest.mark.iio_hardware("ad5710r")
+@pytest.mark.parametrize("device_class", ["ad5710r"])
+def test_ad5710r_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+    with adi.ad5710r(uri=iio_uri) as dev:
+        expected_names = [ch.id for ch in dev._ctrl.channels]
+        assert dev.tx_enabled_channels == list(range(8))
+        assert dev._tx_channel_names == expected_names
+        assert dev.output_bits == [16] * 8
+        assert [ch.name for ch in dev.channel] == expected_names
+        assert all(
+            getattr(dev, name) is dev.channel[i]
+            for i, name in enumerate(expected_names)
+        )
+
+
+@pytest.mark.iio_hardware("ad5529r")
+@pytest.mark.parametrize("device_class", ["ad552xr"])
+def test_ad552xr_channel_definitions(test_channel_definitions, iio_uri, device_class):
+    test_channel_definitions(device_class, iio_uri)
+    with adi.ad552xr(uri=iio_uri) as dev:
+        expected_names = [ch.id for ch in dev._ctrl.channels]
+        assert dev.tx_enabled_channels == list(range(16))
+        assert dev._tx_channel_names == expected_names
+        assert dev.output_bits == [16] * 16
+        assert [ch.name for ch in dev.channel] == expected_names
+        assert all(
+            getattr(dev, name) is dev.channel[i]
+            for i, name in enumerate(expected_names)
+        )
