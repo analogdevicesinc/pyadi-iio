@@ -148,6 +148,24 @@ def test_ltc2983_common_parent_preserves_ordered_all_channel_api(monkeypatch):
         assert [channel.name for channel in dev.channel.values()] == list(dev.channel)
 
 
+def test_ltc2499_common_parent_preserves_ordered_all_channel_api(monkeypatch):
+    """LTC2499 retains OrderedDict access and includes non-scan channels."""
+    _mock_context(
+        monkeypatch,
+        "ltc2499",
+        ["voltage0", "voltage1", "timestamp"],
+        [True, True, False],
+    )
+
+    with adi.ltc2499(uri="local:") as dev:
+        assert dev._ctrl is dev._rxadc
+        assert dev._rx_channel_names == ["voltage0", "voltage1", "timestamp"]
+        assert dev.rx_enabled_channels == [0, 1]
+        assert isinstance(dev.channel, OrderedDict)
+        assert list(dev.channel) == ["voltage0", "voltage1", "timestamp"]
+        assert [channel.name for channel in dev.channel.values()] == list(dev.channel)
+
+
 def test_adis16460_common_parent_preserves_rx_contract(monkeypatch):
     """ADIS16460 keeps channel order and its smaller default RX buffer."""
     names = [
