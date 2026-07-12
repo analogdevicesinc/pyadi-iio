@@ -5,34 +5,33 @@
 import numpy as np
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class max31855(rx, context_manager, attribute):
+class max31855(rx_chan_comp, attribute):
     """MAX31855 thermocouple device"""
 
+    _complex_data = False
     _device_name = "max31855"
     _rx_data_type = np.int16
     _rx_unbuffered_data = True
     _rx_data_si_type = float
+    _control_device_name = "maxim_thermocouple"
+    _rx_data_device_name = "maxim_thermocouple"
+    _rx_channel_names = ["t_temp", "i_temp"]
+    compatible_parts = ["max31855"]
 
     def __init__(self, uri=""):
-        context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("maxim_thermocouple")
-
-        if self._ctrl is None:
-            raise Exception("No device found")
-
-        self.temp_i = self._channel(self._ctrl, "i_temp")
-        self.temp_t = self._channel(self._ctrl, "t_temp")
-        self._rx_channel_names = ["t_temp", "i_temp"]
-        rx.__init__(self)
+        """Initialize the MAX31855 and retain its public temperature aliases."""
+        super().__init__(uri=uri)
+        self.temp_t = self.t_temp
+        self.temp_i = self.i_temp
 
     class _channel(attribute):
         """MAX31855 channel"""
 
         def __init__(self, ctrl, channel_name):
+            """Initialize a MAX31855 channel wrapper."""
             self.name = channel_name
             self._ctrl = ctrl
 
@@ -45,3 +44,5 @@ class max31855(rx, context_manager, attribute):
         def scale(self):
             """MAX31855 channel scale value"""
             return self._get_iio_attr(self.name, "scale", False)
+
+    _channel_def = _channel

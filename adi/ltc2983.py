@@ -8,38 +8,39 @@ from collections.abc import Iterable
 import numpy as np
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class ltc2983(rx, context_manager):
+class ltc2983(rx_chan_comp):
     """ LTC2983 Multi-Sensor Temperature Measurement System """
 
     channel: OrderedDict = None
+    _complex_data = False
     _device_name = "ltc2983"
     _rx_unbuffered_data = True
     _rx_data_type = np.int32
     _rx_data_si_type = float
+    compatible_parts = ["ltc2983"]
 
     def __init__(self, uri=""):
-        context_manager.__init__(self, uri, self._device_name)
-        self._ctrl = self._ctx.find_device("ltc2983")
-        self._rxadc = self._ctx.find_device("ltc2983")
+        """Initialize the LTC2983 while preserving its URI-only API."""
+        super().__init__(uri=uri)
 
-        # dynamically get channels
-        _channels = []
-        self._rx_channel_names = []
-        for ch in self._ctrl.channels:
-            self._rx_channel_names.append(ch.id)
-            _channels.append((ch.id, self._channel(self._ctrl, ch.id)))
-        self.channel = OrderedDict(_channels)
+    def __post_init__(self):
+        """Preserve all-channel traversal rather than scan-only discovery."""
+        self._rx_channel_names = [ch.id for ch in self._ctrl.channels]
 
-        rx.__init__(self)
+    def _add_channel_instances(self):
+        """Preserve the public OrderedDict channel container."""
+        self.channel = OrderedDict(
+            (ch.id, self._channel_def(self._ctrl, ch.id)) for ch in self._ctrl.channels
+        )
 
     class _channel(attribute):
         """ LTC2983 channel """
 
         def __init__(self, ctrl, channel_name):
+            """Initialize an LTC2983 channel wrapper."""
             self._ctrl = ctrl
             self.name = channel_name
 
@@ -72,3 +73,5 @@ class ltc2983(rx, context_manager):
                 val = np.fromiter(val, np.int32)
 
         return val * self.channel[channel_name].scale
+
+    _channel_def = _channel
