@@ -41,13 +41,16 @@
 # Requires passwordless SSH to root@<host> (ssh-copy-id root@<host>).
 #
 # Usage:
-#   python3 ad7134_phase_8ch.py <uri> [target_fs] [n_captures] [--reboots N]
+#   python3 ad7134_phase_8ch.py <uri> [target_fs] [n_captures] [--reboots N] [--filter F]
+#
+# Filter F (case-insensitive): WIDEBAND, SINC6, SINC3, SINC3_REJECTION
 #
 # Examples:
 #   python3 ad7134_phase_8ch.py ip:10.48.65.161
 #   python3 ad7134_phase_8ch.py ip:10.48.65.161 1400000
 #   python3 ad7134_phase_8ch.py ip:10.48.65.161 1400000 10
 #   python3 ad7134_phase_8ch.py ip:10.48.65.161 1400000 5 --reboots 20
+#   python3 ad7134_phase_8ch.py ip:10.48.65.161 1400000 5 --reboots 5 --filter sinc6
 
 import subprocess
 import sys
@@ -62,6 +65,22 @@ import adi
 # SYNC_TOL_NS of SYNC_BASELINE_NS, else the boot is counted as a FAIL.
 SYNC_BASELINE_NS = 8.0
 SYNC_TOL_NS = 10.0
+
+
+def apply_filter(dev, target_filter):
+    """Validate and set the digital filter before the ODR is programmed.
+
+    Filter choice changes the valid ODR range, so callers must invoke this
+    before writing sampling_frequency.  No-op when target_filter is None.
+    """
+    if target_filter is None:
+        return
+    avail = dev.filter_type_available
+    if target_filter not in avail.split():
+        print(f"ERROR: filter '{target_filter}' not available. "
+              f"Choose one of: {avail}")
+        sys.exit(1)
+    dev.filter_type = target_filter
 
 
 def compute_phase_delay(x, y, Fs):
@@ -205,7 +224,7 @@ def print_comparison(d_before, d_after, ch_ref, f0_before, f0_after):
     return da_mean, da_std
 
 
-def run_single(my_uri, target_fs, n_captures):
+def run_single(my_uri, target_fs, n_captures, target_filter=None):
     """One capture session with full before/after tables and a plot."""
     ch_ref = 0
     buffer_size = 65534
@@ -213,6 +232,7 @@ def run_single(my_uri, target_fs, n_captures):
     dev = adi.ad7134(uri=my_uri)
     dev.rx_enabled_channels = list(range(8))
     dev.rx_buffer_size = buffer_size
+    apply_filter(dev, target_filter)     # set filter before ODR (affects range)
     dev.sampling_frequency = target_fs   # ODR change here triggers ASRC re-lock
     Fs = float(dev.sampling_frequency)
 
@@ -284,7 +304,7 @@ def run_single(my_uri, target_fs, n_captures):
     del dev
 
 
-def run_reboot_loop(my_uri, target_fs, n_captures, n_reboots):
+def run_reboot_loop(my_uri, target_fs, n_captures, n_reboots, target_filter=None):
     """Reboot the board n_reboots times; classify each boot pass/fail."""
     if not my_uri.startswith("ip:"):
         print("ERROR: --reboots requires an 'ip:' URI for SSH reboot support.")
@@ -299,6 +319,7 @@ def run_reboot_loop(my_uri, target_fs, n_captures, n_reboots):
     print(f"URI         : {my_uri}")
     print(f"Reboots     : {n_reboots}")
     print(f"Target ODR  : {target_fs} Hz ({target_fs / 1e6:.3f} MSPS)")
+    print(f"Filter      : {target_filter if target_filter else '(unchanged)'}")
     print(f"Captures    : {n_captures} before + {n_captures} after per boot")
     print(f"PASS window : inter-chip within {SYNC_BASELINE_NS:+.0f} +/- {SYNC_TOL_NS:.0f} ns")
     print("=" * 72)
@@ -315,9 +336,10 @@ def run_reboot_loop(my_uri, target_fs, n_captures, n_reboots):
         dev = adi.ad7134(uri=my_uri)
         dev.rx_enabled_channels = list(range(8))
         dev.rx_buffer_size = buffer_size
+        apply_filter(dev, target_filter)     # set filter before ODR (affects range)
         dev.sampling_frequency = target_fs   # 100k(probe) -> target = re-lock
         Fs = float(dev.sampling_frequency)
-        print(f"  Fs = {Fs:.6g} Hz")
+        print(f"  Fs = {Fs:.6g} Hz   Filter = {dev.filter_type}")
 
         d_before, d_after, _, _, last = capture_before_after(
             dev, ch_ref, Fs, n_captures)
@@ -383,14 +405,20 @@ def main():
         n_reboots = int(argv[i + 1])
         del argv[i:i + 2]
 
+    target_filter = None
+    if "--filter" in argv:
+        i = argv.index("--filter")
+        target_filter = argv[i + 1].upper()
+        del argv[i:i + 2]
+
     my_uri = argv[0] if len(argv) >= 1 else "ip:analog.local"
     target_fs = int(argv[1]) if len(argv) >= 2 else 1400000
     n_captures = int(argv[2]) if len(argv) >= 3 else 5
 
     if n_reboots > 0:
-        run_reboot_loop(my_uri, target_fs, n_captures, n_reboots)
+        run_reboot_loop(my_uri, target_fs, n_captures, n_reboots, target_filter)
     else:
-        run_single(my_uri, target_fs, n_captures)
+        run_single(my_uri, target_fs, n_captures, target_filter)
 
 
 if __name__ == "__main__":
