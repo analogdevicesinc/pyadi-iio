@@ -73,6 +73,50 @@ To help manage libiio contexts, filter tests based on those contexts, and map dr
 If you are working on a driver or board that is not in the hardware map, a custom one can be created as documentation in the `pytest-libiio CLI <https://pytest-libiio.readthedocs.io/en/latest/cli/#hardware-maps>`_.
 
 
+Hardware CI (labgrid)
+^^^^^^^^^^^^^^^^^^^^^
+
+pyadi-iio's hardware CI runs on real lab boards managed by `labgrid <https://labgrid.readthedocs.io/>`_
+via the ``hw-request@v3`` reusable workflow (``tfcollins/labgrid-plugins``).  The workflow is
+defined in ``.github/workflows/hw-request.yml`` and runs nightly (04:00 UTC) plus on any PR
+that carries the ``hw-test`` label.
+
+**Board discovery** — the preflight job statically harvests every
+``@pytest.mark.iio_hardware`` marker in ``test/``.  Module-level variables used as the
+marker argument (e.g. ``hardware = ["ad9361"]``) are resolved; computed values (e.g.
+``hardware = get_hw()``) are invisible and will not be discovered.
+
+**Environment contract** — ``adi-lg request`` boots the board out of band, verifies iiod,
+and exports two environment variables consumed by the conftest shim in ``test/conftest.py``:
+
+.. list-table::
+   :widths: 25 75
+
+   * - ``IIO_URI``
+     - libiio URI of the booted board (e.g. ``ip:192.168.1.100``).
+   * - ``HW_DAUGHTER``
+     - Hardware name used by pytest-libiio to select matching tests (e.g. ``ad9361``).
+
+The fixed CI pytest command is::
+
+    pytest test -m iio_hardware --junitxml=… -v -rs --forked --skip-scan
+
+No ``--uri`` or ``--hw`` flags are passed; the conftest shim reads the env vars and sets
+``config.option.uri`` / ``config.option.hw_select`` before any test is collected.
+
+**Triggering on a PR** — add the ``hw-test`` label to the pull request.  The workflow
+deselects itself on all other PR events.
+
+**Local reproduction from a lab-reachable machine** — if you have access to the lab
+coordinator, you can reproduce a CI run locally:
+
+.. code-block:: console
+
+        adi-lg request --part <board> --run "pytest test -m iio_hardware -v --skip-scan"
+
+This boots the board, exports ``IIO_URI``/``HW_DAUGHTER`` into the subprocess environment,
+and runs the command; the conftest shim picks up the env vars automatically.
+
 
 New Hardware Requirements
 ^^^^^^^^^^^^^^^^^^^^^^^^^
