@@ -28,7 +28,7 @@ classname = "adi.ltc2672"
                 "300mA",
             ],
         ),
-        ("all_chns_powerdown", ["powerdown"],),
+        ("powerdown_chip", ["powerdown"],),
     ],
 )
 def test_ltc2672_global_attr(
