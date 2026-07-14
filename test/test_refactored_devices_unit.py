@@ -234,6 +234,33 @@ def test_adpd_common_parent_rejects_missing_device_index(
         device_class(uri="local:", device_index=2)
 
 
+@pytest.mark.parametrize("device_name", ["ad7745", "ad7746", "ad7747"])
+def test_ad7746_common_parent_preserves_order_and_wrapper_subtypes(
+    monkeypatch, device_name
+):
+    """AD7746 family keeps ordered mapping and ID-specific wrapper types."""
+    names = ["voltage1", "capacitance1", "temp0", "status"]
+    _mock_context(monkeypatch, device_name, names, [True, True, True, False])
+
+    with adi.ad7746(uri="local:", device_name=device_name) as dev:
+        assert dev._ctrl is dev._rxadc
+        assert dev._rx_channel_names == names
+        assert dev.rx_enabled_channels == [0, 1, 2, 3]
+        assert isinstance(dev.channel, OrderedDict)
+        assert list(dev.channel) == names[:3]
+        assert isinstance(dev.channel["voltage1"], adi.ad7746._volt_channel)
+        assert isinstance(dev.channel["capacitance1"], adi.ad7746._cap_channel)
+        assert isinstance(dev.channel["temp0"], adi.ad7746._temp_channel)
+
+
+def test_ad7746_common_parent_preserves_empty_name_rejection(monkeypatch):
+    """The legacy constructor does not silently default an empty device name."""
+    _mock_context(monkeypatch, "ad7746", ["voltage0"])
+
+    with pytest.raises(Exception, match="Not a compatible device: $"):
+        adi.ad7746(uri="local:")
+
+
 def test_adis16460_common_parent_preserves_rx_contract(monkeypatch):
     """ADIS16460 keeps channel order and its smaller default RX buffer."""
     names = [
