@@ -261,6 +261,44 @@ def test_ad7746_common_parent_preserves_empty_name_rejection(monkeypatch):
         adi.ad7746(uri="local:")
 
 
+def test_ad7746_channel_subtypes_preserve_attribute_forwarding():
+    """Channel-specific wrappers retain their public attribute contracts."""
+    ctrl = MagicMock()
+    temp = adi.ad7746._temp_channel(ctrl, "temp0")
+    temp._get_iio_attr = Mock(return_value=23)
+    assert temp.input == 23
+
+    voltage = adi.ad7746._volt_channel(ctrl, "voltage0")
+    voltage._get_iio_attr = Mock(return_value=11)
+    voltage._get_iio_attr_str = Mock(
+        side_effect=lambda _name, attr, _output: {
+            "scale": "2.5",
+            "sampling_frequency": "50",
+            "sampling_frequency_available": "50 31 16 8",
+        }[attr]
+    )
+    voltage._set_iio_attr = Mock()
+    assert voltage.raw == 11
+    assert voltage.scale == 2.5
+    assert voltage.sampling_frequency == "50"
+    assert voltage.sampling_frequency_available == [50, 31, 16, 8]
+    voltage.sampling_frequency = 31
+    voltage.calibscale_calibration()
+
+    capacitance = adi.ad7746._cap_channel(ctrl, "capacitance0")
+    capacitance._get_iio_attr = Mock(side_effect=lambda _name, attr, _output: attr)
+    capacitance._get_iio_attr_str = Mock(return_value="100")
+    capacitance._set_iio_attr = Mock()
+    capacitance._set_iio_attr_float = Mock()
+    assert capacitance.offset == "100"
+    assert capacitance.calibscale == "calibscale"
+    assert capacitance.calibbias == "calibbias"
+    capacitance.offset = 101
+    capacitance.calibscale = 1.5
+    capacitance.calibbias = 2
+    capacitance.calibbias_calibration()
+
+
 def test_adis16460_common_parent_preserves_rx_contract(monkeypatch):
     """ADIS16460 keeps channel order and its smaller default RX buffer."""
     names = [
