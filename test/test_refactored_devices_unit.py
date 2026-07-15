@@ -2,13 +2,14 @@
 Unit tests for refactored device classes using device_base pattern.
 These tests verify the refactoring maintains correct structure and interfaces.
 """
+
 from collections import OrderedDict
 from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
 
 import adi
-from adi.device_base import rx_chan_comp
+from adi.device_base import device_base, rx_chan_comp
 from adi.rx_tx import shared_def
 
 
@@ -420,6 +421,132 @@ def test_compatible_device_fallback(monkeypatch, device_class, requested_device)
             part for part in device_class.compatible_parts if part != requested_device
         ),
     ]
+
+
+class _ConcreteChannelDefDevice(device_base):
+    """Concrete device_base used to exercise _add_channel_instances directly."""
+
+    @property
+    def _complex_data(self):  # type: ignore[override]
+        return False
+
+
+class _RecordingChannel:
+    """Minimal channel wrapper recording the ctrl/name it was built with."""
+
+    def __init__(self, ctrl, name):
+        self.ctrl = ctrl
+        self.name = name
+
+
+class _OtherChannel(_RecordingChannel):
+    """Second channel type used to verify id-based class selection."""
+
+
+def _channel_def_device(channel_ids, channel_def, ignore_channels=None):
+    """Build a device_base instance ready for _add_channel_instances().
+
+    Bypasses device discovery: only the pieces _add_channel_instances touches
+    (``_ctrl.channels``, ``_channel_def`` and ``_ignore_channels``) are wired up.
+    """
+    dev = object.__new__(_ConcreteChannelDefDevice)
+    ctrl = MagicMock()
+    channels = []
+    for cid in channel_ids:
+        channel = MagicMock()
+        channel.id = cid
+        channels.append(channel)
+    ctrl.channels = channels
+    dev._ctrl = ctrl
+    dev._channel_def = channel_def
+    dev._ignore_channels = ignore_channels if ignore_channels is not None else []
+    return dev
+
+
+def test_channel_def_dict_maps_ids_to_matching_classes():
+    """A dict _channel_def picks the class whose key is a substring of the id."""
+    dev = _channel_def_device(
+        ["voltage0", "voltage1", "temp0"],
+        {"voltage": _RecordingChannel, "temp": _OtherChannel},
+    )
+
+    dev._add_channel_instances()
+
+    assert [ch.name for ch in dev.channel] == ["voltage0", "voltage1", "temp0"]
+    assert isinstance(dev.voltage0, _RecordingChannel)
+    assert isinstance(dev.voltage1, _RecordingChannel)
+    assert isinstance(dev.temp0, _OtherChannel)
+    # Each channel is exposed as a named attribute pointing at the same object.
+    assert dev.voltage0 is dev.channel[0]
+    assert dev.temp0 is dev.channel[2]
+    # Wrapper classes are constructed with the shared ctrl and the channel id.
+    assert dev.voltage0.ctrl is dev._ctrl
+    assert dev.voltage0.name == "voltage0"
+
+
+def test_channel_def_dict_uses_first_matching_key():
+    """When several keys match an id, the first in insertion order wins."""
+    dev = _channel_def_device(
+        ["voltage0"],
+        OrderedDict([("voltage", _RecordingChannel), ("voltage0", _OtherChannel)]),
+    )
+
+    dev._add_channel_instances()
+
+    assert isinstance(dev.voltage0, _RecordingChannel)
+
+
+def test_channel_def_dict_skips_unmatched_channels():
+    """Channels with no matching key are left out of the channel list."""
+    dev = _channel_def_device(["voltage0", "current0"], {"voltage": _RecordingChannel},)
+
+    dev._add_channel_instances()
+
+    assert [ch.name for ch in dev.channel] == ["voltage0"]
+    assert not hasattr(dev, "current0")
+
+
+def test_channel_def_dict_honors_ignore_channels():
+    """Ignored channel ids are skipped before any class matching happens."""
+    dev = _channel_def_device(
+        ["voltage0", "voltage1"],
+        {"voltage": _RecordingChannel},
+        ignore_channels=["voltage1"],
+    )
+
+    dev._add_channel_instances()
+
+    assert [ch.name for ch in dev.channel] == ["voltage0"]
+    assert not hasattr(dev, "voltage1")
+
+
+def test_channel_def_dict_rejects_non_callable_value():
+    """A non-callable dict value raises a descriptive error."""
+    dev = _channel_def_device(["voltage0"], {"voltage": "not-callable"})
+
+    with pytest.raises(Exception, match="Channel definition must be a callable class"):
+        dev._add_channel_instances()
+
+
+def test_channel_def_callable_preserves_legacy_behavior():
+    """A single callable _channel_def still builds every non-ignored channel."""
+    dev = _channel_def_device(
+        ["voltage0", "voltage1", "temp0"], _RecordingChannel, ignore_channels=["temp0"],
+    )
+
+    dev._add_channel_instances()
+
+    assert [ch.name for ch in dev.channel] == ["voltage0", "voltage1"]
+    assert all(isinstance(ch, _RecordingChannel) for ch in dev.channel)
+    assert dev.voltage0 is dev.channel[0]
+
+
+def test_channel_def_callable_rejects_non_callable_value():
+    """The legacy branch still rejects a non-callable _channel_def."""
+    dev = _channel_def_device(["voltage0"], "not-callable")
+
+    with pytest.raises(Exception, match="_channel_def must be a callable class"):
+        dev._add_channel_instances()
 
 
 def channel_definitions(device_class, iio_uri):
