@@ -3,7 +3,6 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
 from adi.device_base import rx_chan_comp_no_buff
 
 
@@ -24,11 +23,6 @@ class adpd410x(rx_chan_comp_no_buff):
     ]
     _device_name = ""
     compatible_parts = ["adpd410x"]
-
-    def __init__(self, uri=""):
-        """Initialize without adding RX state absent from the legacy driver."""
-        context_manager.__init__(self, uri, self._device_name)
-        super().__init__(uri=self._ctx)
 
     @property
     def sampling_frequency(self):

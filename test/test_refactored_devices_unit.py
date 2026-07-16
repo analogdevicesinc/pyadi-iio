@@ -235,12 +235,13 @@ def test_adpd_common_parent_rejects_missing_device_index(
         device_class(uri="local:", device_index=2)
 
 
-def test_adpd410x_no_buffer_parent_preserves_legacy_constructor_state(monkeypatch):
-    """ADPD410x gains shared discovery without implicitly initializing RX state."""
+def test_adpd410x_inherited_constructor_preserves_no_buffer_state(monkeypatch):
+    """The inherited constructor discovers the device without initializing RX state."""
     names = [f"channel{index}" for index in range(8)]
     device = _mock_context(monkeypatch, "adpd410x", names)
 
     with adi.adpd410x(uri="local:") as dev:
+        assert "__init__" not in adi.adpd410x.__dict__
         assert dev._ctrl is dev._rxadc is device
         assert dev._rx_channel_names == names
         assert [channel.name for channel in dev.channel] == names
