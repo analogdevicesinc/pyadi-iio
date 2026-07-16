@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: rx, context_manager" name="description" />
+<meta content="Bases: rx_chan_comp_no_buff" name="description" />
 
     <title>adpd410x &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
@@ -99,6 +99,7 @@
 <li><a class="reference internal" href="#">adpd410x</a><ul>
 <li><a class="reference internal" href="#adi.adpd410x.adpd410x"><code class="docutils literal notranslate"><span class="pre">adpd410x</span></code></a><ul>
 <li><a class="reference internal" href="#adi.adpd410x.adpd410x.channel"><code class="docutils literal notranslate"><span class="pre">adpd410x.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.adpd410x.adpd410x.compatible_parts"><code class="docutils literal notranslate"><span class="pre">adpd410x.compatible_parts</span></code></a></li>
 <li><a class="reference internal" href="#adi.adpd410x.adpd410x.last_timeslot"><code class="docutils literal notranslate"><span class="pre">adpd410x.last_timeslot</span></code></a></li>
 <li><a class="reference internal" href="#adi.adpd410x.adpd410x.operation_mode"><code class="docutils literal notranslate"><span class="pre">adpd410x.operation_mode</span></code></a></li>
 <li><a class="reference internal" href="#adi.adpd410x.adpd410x.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">adpd410x.sampling_frequency</span></code></a></li>
@@ -318,12 +319,17 @@ Content on this topic
 <span id="adpd410x"></span><h1>adpd410x<a class="headerlink" href="#module-adi.adpd410x" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adpd410x.adpd410x">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adpd410x.</span></span><span class="sig-name descname"><span class="pre">adpd410x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adpd410x.adpd410x" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../buffers/index.html#adi.rx_tx.rx" title="adi.rx_tx.rx"><code class="xref py py-class docutils literal notranslate"><span class="pre">rx</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adpd410x.</span></span><span class="sig-name descname"><span class="pre">adpd410x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adpd410x.adpd410x" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp_no_buff</span></code></p>
 <p>adpd410x Multimodal Sensor Front End</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adpd410x.adpd410x.channel">
 <span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.adpd410x.adpd410x.channel" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.adpd410x.adpd410x.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['adpd410x']</span></em><a class="headerlink" href="#adi.adpd410x.adpd410x.compatible_parts" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
