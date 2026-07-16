@@ -271,6 +271,44 @@ def test_adpd410x_preserves_device_and_channel_attribute_forwarding():
     assert channel.raw == 17
 
 
+def test_ad5940_common_parent_preserves_bia_ordered_mapping(monkeypatch):
+    """AD5940 keeps all RX names but exposes only BIA wrappers in its mapping."""
+    device = _mock_context(
+        monkeypatch, "ad5940", ["voltage0", "timestamp"], scan_elements=[False, False],
+    )
+    device.channels[0].name = "bia"
+    device.channels[1].name = "timestamp"
+
+    with adi.ad5940(uri="local:") as dev:
+        assert isinstance(dev, rx_chan_comp)
+        assert dev._ctrl is dev._rxadc is device
+        assert dev._rx_channel_names == ["voltage0", "timestamp"]
+        assert dev.rx_enabled_channels == [0, 1]
+        assert isinstance(dev.channel, OrderedDict)
+        assert list(dev.channel) == ["voltage0"]
+        assert isinstance(dev.channel["voltage0"], adi.ad5940._bia_channel)
+        assert dev.channel["voltage0"]._parent is dev
+        assert dev.channel["voltage0"]._ctrl is device
+
+
+def test_ad5940_bia_wrapper_preserves_raw_conversions():
+    """BIA raw reads retain magnitude, complex-float, and integer conversion."""
+    parent = Mock()
+    channel = adi.ad5940._bia_channel(parent, Mock(), "voltage0")
+
+    channel._get_iio_attr = Mock(return_value=1069547520)
+    parent.impedance_mode = True
+    parent.magnitude_mode = True
+    assert channel.raw == 1.5
+
+    channel._get_iio_attr = Mock(return_value=[1065353216, 1073741824])
+    parent.magnitude_mode = False
+    assert channel.raw == complex(1.0, 2.0)
+
+    parent.impedance_mode = False
+    assert channel.raw == complex(1065353216, 1073741824)
+
+
 @pytest.mark.parametrize("device_name", ["ad7745", "ad7746", "ad7747"])
 def test_ad7746_common_parent_preserves_order_and_wrapper_subtypes(
     monkeypatch, device_name

@@ -8,40 +8,49 @@ from collections import OrderedDict
 
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class ad5940(rx, context_manager):
+class ad5940(rx_chan_comp):
     """ ad5940 CDC """
 
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
+    compatible_parts = ["ad5940"]
 
     def __init__(self, uri=""):
 
-        device_name = "ad5940"
+        device_name = self.compatible_parts[0]
         context_manager.__init__(self, uri, self._device_name)
 
-        self._ctrl = None
+        selected_device = None
 
         # Select the device matching device_name as working device
         for device in self._ctx.devices:
             if device.name == device_name:
-                self._ctrl = device
-                self._rxadc = device
+                selected_device = device
                 break
-        # dynamically get channels
-        _channels = []
-        self._rx_channel_names = []
-        for ch in self._ctrl.channels:
-            self._rx_channel_names.append(ch.id)
-            if ch.name == "bia":
-                _channels.append((ch.id, self._bia_channel(self, self._ctrl, ch.id)))
-                continue
-        self.channel = OrderedDict(_channels)
+        if selected_device is None:
+            raise Exception(device_name + " device not found")
 
-        rx.__init__(self)
+        # The no-OS device has no scan elements. Preserve the legacy behavior
+        # of enabling every IIO channel before the common RX initializer runs.
+        self._rx_channel_names = [ch.id for ch in selected_device.channels]
+        rx_chan_comp.__init__(self, uri=self._ctx, device_name=device_name)
+
+        # libiio may return a new Python wrapper from find_device(). Restore the
+        # exact context-traversal object used by the legacy implementation.
+        self._ctrl = self._rxadc = selected_device
+        self._add_channel_instances()
+
+    def _add_channel_instances(self):
+        """Preserve the public BIA-only OrderedDict channel container."""
+        self.channel = OrderedDict(
+            (ch.id, self._bia_channel(self, self._ctrl, ch.id),)
+            for ch in self._ctrl.channels
+            if ch.name == "bia"
+        )
 
     @property
     def impedance_mode(self):
