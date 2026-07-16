@@ -235,6 +235,42 @@ def test_adpd_common_parent_rejects_missing_device_index(
         device_class(uri="local:", device_index=2)
 
 
+def test_adpd410x_inherited_constructor_preserves_no_buffer_state(monkeypatch):
+    """The inherited constructor discovers the device without initializing RX state."""
+    names = [f"channel{index}" for index in range(8)]
+    device = _mock_context(monkeypatch, "adpd410x", names)
+
+    with adi.adpd410x(uri="local:") as dev:
+        assert "__init__" not in adi.adpd410x.__dict__
+        assert dev._ctrl is dev._rxadc is device
+        assert dev._rx_channel_names == names
+        assert [channel.name for channel in dev.channel] == names
+        assert all(
+            getattr(dev, name) is dev.channel[index] for index, name in enumerate(names)
+        )
+        assert "_rx_enabled_channels" not in dev.__dict__
+        assert "_rx__rxbuf" not in dev.__dict__
+
+
+def test_adpd410x_preserves_device_and_channel_attribute_forwarding():
+    """ADPD410x properties continue forwarding to the selected IIO device."""
+    dev = object.__new__(adi.adpd410x)
+    dev._rxadc = MagicMock()
+    dev._get_iio_dev_attr_str = Mock(return_value="value")
+    dev._set_iio_dev_attr_str = Mock()
+
+    assert dev.sampling_frequency == "value"
+    assert dev.last_timeslot == "value"
+    assert dev.operation_mode == "value"
+    dev.sampling_frequency = 100
+    dev.last_timeslot = 3
+    dev.operation_mode = "go"
+
+    channel = adi.adpd410x._channel(dev._rxadc, "channel0")
+    channel._get_iio_attr = Mock(return_value=17)
+    assert channel.raw == 17
+
+
 @pytest.mark.parametrize("device_name", ["ad7745", "ad7746", "ad7747"])
 def test_ad7746_common_parent_preserves_order_and_wrapper_subtypes(
     monkeypatch, device_name
