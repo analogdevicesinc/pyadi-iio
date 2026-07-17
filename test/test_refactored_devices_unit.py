@@ -9,8 +9,9 @@ from unittest.mock import MagicMock, Mock, call, patch
 import pytest
 
 import adi
-from adi.device_base import device_base, rx_chan_comp
+from adi.device_base import device_base, rx_chan_comp, rx_def, tx_def
 from adi.rx_tx import shared_def
+from adi.sync_start import sync_start
 
 
 class _SharedDefTestDevice(shared_def):
@@ -307,6 +308,94 @@ def test_ad5940_bia_wrapper_preserves_raw_conversions():
 
     parent.impedance_mode = False
     assert channel.raw == complex(1065353216, 1073741824)
+
+
+def test_ad9680_inherited_constructor_preserves_rx_and_sync_contract(monkeypatch):
+    """AD9680 uses shared RX setup without adding a control-device assignment."""
+    device = _mock_context(monkeypatch, "axi-ad9680-hpc", ["voltage0", "voltage1"])
+
+    with adi.ad9680(uri="local:") as dev:
+        assert "__init__" not in adi.ad9680.__dict__
+        assert isinstance(dev, rx_def)
+        assert isinstance(dev, sync_start)
+        assert dev._rxadc is device
+        assert dev._rx_channel_names == ["voltage0", "voltage1"]
+        assert dev.rx_enabled_channels == [0, 1]
+        assert "_ctrl" not in dev.__dict__
+
+
+@pytest.mark.parametrize("composite", [adi.DAQ2, adi.DAQ3])
+def test_ad9680_common_parent_keeps_composite_mro(composite):
+    """DAQ2 and DAQ3 retain a valid MRO with AD9680's shared RX parent."""
+    assert issubclass(composite, adi.ad9680)
+    assert composite.__mro__.count(rx_def) == 1
+
+
+@pytest.mark.parametrize(
+    "device_class,device_name",
+    [(adi.ad9144, "axi-ad9144-hpc"), (adi.ad9152, "axi-ad9152-hpc"),],
+)
+def test_daq_dac_classes_use_inherited_tx_initialization(
+    monkeypatch, device_class, device_name
+):
+    """DAQ DAC halves use shared TX setup without introducing `_ctrl`."""
+    device = _mock_context(monkeypatch, device_name, ["voltage0", "voltage1"])
+
+    with device_class(uri="local:") as dev:
+        assert "__init__" not in device_class.__dict__
+        assert isinstance(dev, tx_def)
+        assert isinstance(dev, sync_start)
+        assert dev._txdac is device
+        assert dev._tx_channel_names == ["voltage0", "voltage1"]
+        assert dev.tx_enabled_channels == [0, 1]
+        assert "_ctrl" not in dev.__dict__
+
+
+@pytest.mark.parametrize(
+    "composite,tx_name", [(adi.DAQ2, "axi-ad9144-hpc"), (adi.DAQ3, "axi-ad9152-hpc"),],
+)
+def test_daq_composites_preserve_both_converter_devices(
+    monkeypatch, composite, tx_name
+):
+    """The shared TX/RX parents initialize both halves of each DAQ board."""
+
+    def make_device(name):
+        device = MagicMock()
+        device.name = name
+        channels = []
+        for channel_name in ("voltage0", "voltage1"):
+            channel = MagicMock()
+            channel.id = channel_name
+            channel.scan_element = True
+            channels.append(channel)
+        device.channels = channels
+        return device
+
+    tx_device = make_device(tx_name)
+    rx_device = make_device("axi-ad9680-hpc")
+
+    class FakeContext:
+        devices = [tx_device, rx_device]
+
+        @staticmethod
+        def find_device(name):
+            return next(
+                (device for device in FakeContext.devices if device.name == name), None
+            )
+
+    context = FakeContext()
+
+    def init_context(self, uri="", device_name=""):
+        self._ctx = context
+        self.uri = uri
+
+    monkeypatch.setattr("adi.rx_tx.context_manager.__init__", init_context)
+
+    with composite(uri="local:") as dev:
+        assert dev._txdac is tx_device
+        assert dev._rxadc is rx_device
+        assert dev.tx_enabled_channels == [0, 1]
+        assert dev.rx_enabled_channels == [0, 1]
 
 
 @pytest.mark.parametrize("device_name", ["ad7745", "ad7746", "ad7747"])
