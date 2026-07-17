@@ -398,6 +398,36 @@ def test_daq_composites_preserve_both_converter_devices(
         assert dev.rx_enabled_channels == [0, 1]
 
 
+def test_daq_converter_properties_preserve_attribute_forwarding():
+    """Retained converter properties forward to the correct IIO devices."""
+    for device_class in (adi.ad9144, adi.ad9152):
+        dev = object.__new__(device_class)
+        dev._txdac = Mock()
+        dev._get_iio_attr = Mock(return_value=1_000_000)
+        dev._set_iio_attr = Mock()
+
+        assert dev.sample_rate == 1_000_000
+        dev.sample_rate = 2_000_000
+        dev._get_iio_attr.assert_called_once_with(
+            "voltage0", "sampling_frequency", True, dev._txdac
+        )
+        dev._set_iio_attr.assert_called_once_with(
+            "voltage0", "sampling_frequency", True, 2_000_000, dev._txdac
+        )
+
+    adc = object.__new__(adi.ad9680)
+    adc._rxadc = Mock()
+    adc._get_iio_attr = Mock(return_value="ramp")
+    adc._set_iio_attr = Mock()
+
+    assert adc.test_mode == "ramp"
+    adc.test_mode = "pn_long"
+    adc._get_iio_attr.assert_called_once_with("voltage0", "test_mode", False)
+    adc._set_iio_attr.assert_called_once_with(
+        "voltage0", "test_mode", False, "pn_long", adc._rxadc
+    )
+
+
 @pytest.mark.parametrize("device_name", ["ad7745", "ad7746", "ad7747"])
 def test_ad7746_common_parent_preserves_order_and_wrapper_subtypes(
     monkeypatch, device_name
