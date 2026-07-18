@@ -16,7 +16,8 @@ class cn0532(cn0540):
 
     @reset_buffer
     def calibrate(self):
-        """Tune the LTC2606 until the AD7768-1 ADC codes approach zero mean.
+        """
+        Tune the LTC2606 until the AD7768-1 ADC codes approach zero mean.
 
         Run calibration with the sensor connected and stationary. The method
         performs 20 correction iterations, clamps the DAC code to its valid

@@ -51,7 +51,8 @@ class cn0540(rx_def):
 
     @property
     def sample_rate(self):
-        """Sample rate in samples per second.
+        """
+        Sample rate in samples per second.
 
         Valid values are 256000, 128000, 64000, 32000, 16000, 8000, 4000,
         2000, and 1000.
