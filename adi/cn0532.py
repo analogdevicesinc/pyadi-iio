@@ -10,10 +10,6 @@ from adi.cn0540 import cn0540, reset_buffer
 class cn0532(cn0540):
     """CN0532: Custom board with ADXL1002 Low Noise, High Frequency +/-50g MEMS Accelerometer"""
 
-    def __init__(self, uri=""):
-
-        cn0540.__init__(self, uri=uri)
-
     @reset_buffer
     def calibrate(self):
         """Tune LTC2606 to make AD7768-1 ADC codes zero mean"""
