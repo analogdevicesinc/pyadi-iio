@@ -6,8 +6,7 @@ import time
 
 import numpy as np
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
 def reset_buffer(func):
@@ -23,13 +22,15 @@ def reset_buffer(func):
     return wrapper
 
 
-class cn0540(rx, context_manager):
+class cn0540(rx_def):
     """CN0540 CBM DAQ Board"""
 
     _rx_data_si_type = float
     _complex_data = False
     _rx_channel_names = ["voltage0"]
     _device_name = ""
+    _control_device_name = "ad7768-1"
+    _rx_data_device_name = "ad7768-1"
     _fda_mode_options = ["low-power", "full-power"]
     _dac_buffer_gain = 1.22
     _g = 0.3
@@ -37,17 +38,11 @@ class cn0540(rx, context_manager):
     _fda_vocm_mv = 2500
     _reset_on_spi_writes = True
 
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._rxadc = self._ctx.find_device("ad7768-1")
-        self._ctrl = self._ctx.find_device("ad7768-1")
+    def __post_init__(self):
+        """Discover the board's auxiliary converter and GPIO devices."""
         self._ltc2606 = self._ctx.find_device("ltc2606")
         self._gpio = self._ctx.find_device("one-bit-adc-dac")
         self._ltc2308 = self._ctx.find_device("ltc2308")
-
-        rx.__init__(self)
 
     @property
     def sample_rate(self):
