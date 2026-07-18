@@ -8,11 +8,15 @@ from adi.cn0540 import cn0540, reset_buffer
 
 
 class cn0532(cn0540):
-    """CN0532: Custom board with ADXL1002 Low Noise, High Frequency +/-50g MEMS Accelerometer"""
+    """CN0532 vibration sensor board with an ADXL1002 accelerometer.
+
+    This interface inherits CN0540 buffered acquisition and board controls and
+    adds automatic offset calibration for the ADXL1002 signal path.
+    """
 
     @reset_buffer
     def calibrate(self):
-        """Tune LTC2606 to make AD7768-1 ADC codes zero mean"""
+        """Tune the LTC2606 until the AD7768-1 ADC codes approach zero mean."""
         adc_chan = self._rxadc
         dac_chan = self._ltc2606
         adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
