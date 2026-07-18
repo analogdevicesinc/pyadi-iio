@@ -356,6 +356,8 @@ to a board over the network and captures one buffer of voltage samples:</p>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">rx()</span></code> returns the single AD7768-1 input channel as floating-point values.
+Valid sample rates are 256000, 128000, 64000, 32000, 16000, 8000, 4000, 2000,
+and 1000 samples per second.
 Use <a class="reference internal" href="#adi.cn0540.cn0540.rx_enabled_channels" title="adi.cn0540.cn0540.rx_enabled_channels"><code class="xref py py-attr docutils literal notranslate"><span class="pre">rx_enabled_channels</span></code></a> and
 <a class="reference internal" href="#adi.cn0540.cn0540.rx_buffer_size" title="adi.cn0540.cn0540.rx_buffer_size"><code class="xref py py-attr docutils literal notranslate"><span class="pre">rx_buffer_size</span></code></a> to inspect or configure the inherited
 receive-buffer settings.</p>
@@ -497,8 +499,6 @@ translated to channel numbers.</p>
 <dt class="sig sig-object py" id="adi.cn0540.cn0540.sample_rate">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.cn0540.cn0540.sample_rate" title="Link to this definition"></a></dt>
 <dd><p>Sample rate in samples per second.</p>
-<p>Valid values are 256000, 128000, 64000, 32000, 16000, 8000, 4000,
-2000, and 1000.</p>
 </dd></dl>
 
 <dl class="py property">

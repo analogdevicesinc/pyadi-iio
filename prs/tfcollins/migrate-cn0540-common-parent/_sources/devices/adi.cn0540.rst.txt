@@ -24,6 +24,8 @@ to a board over the network and captures one buffer of voltage samples:
    device.rx_destroy_buffer()
 
 ``rx()`` returns the single AD7768-1 input channel as floating-point values.
+Valid sample rates are 256000, 128000, 64000, 32000, 16000, 8000, 4000, 2000,
+and 1000 samples per second.
 Use :attr:`~adi.cn0540.cn0540.rx_enabled_channels` and
 :attr:`~adi.cn0540.cn0540.rx_buffer_size` to inspect or configure the inherited
 receive-buffer settings.
