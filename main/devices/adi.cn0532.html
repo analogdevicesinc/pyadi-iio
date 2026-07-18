@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: cn0540" name="description" />
+<meta content="The adi.cn0532.cn0532 interface extends the CN0540 data-acquisition interface for the CN0532 vibration sensor board and its ADXL1002 accelerometer. It inherits CN0540 buffered acquisition, sample-rate, bias-voltage, and GPIO controls and adds automatic offset calibration." name="description" />
 
-    <title>cn0532 &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
+    <title>CN0532 vibration sensor board &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=d3f78147" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,7 +14,7 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cn0540" href="adi.cn0540.html" />
+    <link rel="next" title="CN0540 condition-based monitoring board" href="adi.cn0540.html" />
     <link rel="prev" title="adi.cn0511 module" href="adi.cn0511.html" />
    
   
@@ -96,9 +96,33 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">cn0532</a><ul>
+<li><a class="reference internal" href="#">CN0532 vibration sensor board</a><ul>
+<li><a class="reference internal" href="#capture-vibration-data">Capture vibration data</a></li>
+<li><a class="reference internal" href="#offset-calibration">Offset calibration</a></li>
+<li><a class="reference internal" href="#inherited-board-controls">Inherited board controls</a></li>
+<li><a class="reference internal" href="#api-reference">API reference</a><ul>
 <li><a class="reference internal" href="#adi.cn0532.cn0532"><code class="docutils literal notranslate"><span class="pre">cn0532</span></code></a><ul>
-<li><a class="reference internal" href="#adi.cn0532.cn0532.calibrate"><code class="docutils literal notranslate"><span class="pre">cn0532.calibrate()</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.close"><code class="docutils literal notranslate"><span class="pre">cn0532.close()</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.ctx"><code class="docutils literal notranslate"><span class="pre">cn0532.ctx</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.fda_disable_status"><code class="docutils literal notranslate"><span class="pre">cn0532.fda_disable_status</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.fda_mode"><code class="docutils literal notranslate"><span class="pre">cn0532.fda_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.input_voltage"><code class="docutils literal notranslate"><span class="pre">cn0532.input_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.monitor_powerup"><code class="docutils literal notranslate"><span class="pre">cn0532.monitor_powerup</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.red_led_enable"><code class="docutils literal notranslate"><span class="pre">cn0532.red_led_enable</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.rx"><code class="docutils literal notranslate"><span class="pre">cn0532.rx()</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.rx_annotated"><code class="docutils literal notranslate"><span class="pre">cn0532.rx_annotated</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">cn0532.rx_buffer_size</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.rx_channel_names"><code class="docutils literal notranslate"><span class="pre">cn0532.rx_channel_names</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.rx_destroy_buffer"><code class="docutils literal notranslate"><span class="pre">cn0532.rx_destroy_buffer()</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.rx_enabled_channels"><code class="docutils literal notranslate"><span class="pre">cn0532.rx_enabled_channels</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.rx_output_type"><code class="docutils literal notranslate"><span class="pre">cn0532.rx_output_type</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.sample_rate"><code class="docutils literal notranslate"><span class="pre">cn0532.sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.sensor_voltage"><code class="docutils literal notranslate"><span class="pre">cn0532.sensor_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.shift_voltage"><code class="docutils literal notranslate"><span class="pre">cn0532.shift_voltage</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.sw_cc"><code class="docutils literal notranslate"><span class="pre">cn0532.sw_cc</span></code></a></li>
+<li><a class="reference internal" href="#adi.cn0532.cn0532.sw_ff_status"><code class="docutils literal notranslate"><span class="pre">cn0532.sw_ff_status</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -258,8 +282,8 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">cn0532</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CN0532 vibration sensor board</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">CN0540 condition-based monitoring board</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0554.html">cn0554</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0556.html">cn0556</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0565.html">cn0565</a></li>
@@ -311,20 +335,187 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.cn0532">
-<span id="cn0532"></span><h1>cn0532<a class="headerlink" href="#module-adi.cn0532" title="Link to this heading"></a></h1>
+  <section id="cn0532-vibration-sensor-board">
+<h1>CN0532 vibration sensor board<a class="headerlink" href="#cn0532-vibration-sensor-board" title="Link to this heading"></a></h1>
+<p>The <a class="reference internal" href="#adi.cn0532.cn0532" title="adi.cn0532.cn0532"><code class="xref py py-class docutils literal notranslate"><span class="pre">adi.cn0532.cn0532</span></code></a> interface extends the CN0540 data-acquisition
+interface for the CN0532 vibration sensor board and its ADXL1002 accelerometer.
+It inherits CN0540 buffered acquisition, sample-rate, bias-voltage, and GPIO
+controls and adds automatic offset calibration.</p>
+<section id="capture-vibration-data">
+<h2>Capture vibration data<a class="headerlink" href="#capture-vibration-data" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">adi</span>
+
+<span class="n">sensor</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">cn0532</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
+<span class="n">sensor</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="mi">256000</span>
+<span class="n">sensor</span><span class="o">.</span><span class="n">rx_buffer_size</span> <span class="o">=</span> <span class="mi">4096</span>
+
+<span class="n">acceleration_signal</span> <span class="o">=</span> <span class="n">sensor</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
+<span class="n">sensor</span><span class="o">.</span><span class="n">rx_destroy_buffer</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The returned array contains the board’s single AD7768-1 receive channel as
+floating-point samples. Convert the samples to application-specific vibration
+units using the sensor configuration and calibration for your setup.</p>
+</section>
+<section id="offset-calibration">
+<h2>Offset calibration<a class="headerlink" href="#offset-calibration" title="Link to this heading"></a></h2>
+<p>Call <code class="xref py py-meth docutils literal notranslate"><span class="pre">calibrate()</span></code> while the sensor is stationary and
+connected. Calibration adjusts the LTC2606 bias DAC over 20 iterations to make
+the AD7768-1 ADC codes approach zero mean:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sensor</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">cn0532</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
+<span class="n">sensor</span><span class="o">.</span><span class="n">calibrate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Calibration destroys an active RX buffer before changing the DAC. A subsequent
+<code class="docutils literal notranslate"><span class="pre">rx()</span></code> call creates a new buffer. If the required correction is outside the
+DAC range, the method clamps the setting and prints a warning that calibration
+may not converge.</p>
+</section>
+<section id="inherited-board-controls">
+<h2>Inherited board controls<a class="headerlink" href="#inherited-board-controls" title="Link to this heading"></a></h2>
+<p>CN0532 inherits the CN0540 controls, including
+<a class="reference internal" href="adi.cn0540.html#adi.cn0540.cn0540.shift_voltage" title="adi.cn0540.cn0540.shift_voltage"><code class="xref py py-attr docutils literal notranslate"><span class="pre">shift_voltage</span></code></a>,
+<a class="reference internal" href="adi.cn0540.html#adi.cn0540.cn0540.sensor_voltage" title="adi.cn0540.cn0540.sensor_voltage"><code class="xref py py-attr docutils literal notranslate"><span class="pre">sensor_voltage</span></code></a>,
+<a class="reference internal" href="adi.cn0540.html#adi.cn0540.cn0540.fda_mode" title="adi.cn0540.cn0540.fda_mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">fda_mode</span></code></a>, and
+<a class="reference internal" href="adi.cn0540.html#adi.cn0540.cn0540.monitor_powerup" title="adi.cn0540.cn0540.monitor_powerup"><code class="xref py py-attr docutils literal notranslate"><span class="pre">monitor_powerup</span></code></a>. See <a class="reference internal" href="adi.cn0540.html"><span class="doc">CN0540 condition-based monitoring board</span></a> for the full
+board-control overview.</p>
+</section>
+<section id="api-reference">
+<h2>API reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.cn0532.cn0532">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.cn0532.</span></span><span class="sig-name descname"><span class="pre">cn0532</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0532.cn0532" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="adi.cn0540.html#adi.cn0540.cn0540" title="adi.cn0540.cn0540"><code class="xref py py-class docutils literal notranslate"><span class="pre">cn0540</span></code></a></p>
-<p>CN0532: Custom board with ADXL1002 Low Noise, High Frequency +/-50g MEMS Accelerometer</p>
+<p>CN0532 vibration sensor board with an ADXL1002 accelerometer.</p>
+<p>This interface inherits CN0540 buffered acquisition and board controls and
+adds automatic offset calibration for the ADXL1002 signal path.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="adi.cn0532.cn0532.calibrate">
-<span class="sig-name descname"><span class="pre">calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0532.cn0532.calibrate" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0532.cn0532.close" title="Link to this definition"></a></dt>
+<dd><p>Close the IIO context</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.ctx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ctx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Context</span></em><a class="headerlink" href="#adi.cn0532.cn0532.ctx" title="Link to this definition"></a></dt>
+<dd><p>IIO Context</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.fda_disable_status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fda_disable_status</span></span><a class="headerlink" href="#adi.cn0532.cn0532.fda_disable_status" title="Link to this definition"></a></dt>
+<dd><p>Fully differential amplifier disable status.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.fda_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fda_mode</span></span><a class="headerlink" href="#adi.cn0532.cn0532.fda_mode" title="Link to this definition"></a></dt>
+<dd><p>Amplifier mode: <code class="docutils literal notranslate"><span class="pre">&quot;low-power&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;full-power&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.input_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_voltage</span></span><a class="headerlink" href="#adi.cn0532.cn0532.input_voltage" title="Link to this definition"></a></dt>
+<dd><p>Input voltage in mV before the shift voltage is applied.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.monitor_powerup">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">monitor_powerup</span></span><a class="headerlink" href="#adi.cn0532.cn0532.monitor_powerup" title="Link to this definition"></a></dt>
+<dd><p>Monitor power state; the shutdown pin uses active-low inputs.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.red_led_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">red_led_enable</span></span><a class="headerlink" href="#adi.cn0532.cn0532.red_led_enable" title="Link to this definition"></a></dt>
+<dd><p>Enable or disable the board’s red LED.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.rx">
+<span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0532.cn0532.rx" title="Link to this definition"></a></dt>
+<dd><p>Receive data from hardware buffers for each channel index in
+rx_enabled_channels.</p>
+<dl class="simple">
+<dt>returns: type=numpy.array or list of numpy.array</dt><dd><p>An array or list of arrays when more than one receive channel
+is enabled containing samples from a channel or set of channels.
+Data will be complex when using a complex data device.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.rx_annotated">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_annotated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#adi.cn0532.cn0532.rx_annotated" title="Link to this definition"></a></dt>
+<dd><p>rx_annotated: Set output data from rx() to be annotated</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.rx_buffer_size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.cn0532.cn0532.rx_buffer_size" title="Link to this definition"></a></dt>
+<dd><p>rx_buffer_size: Size of receive buffer in samples</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.rx_channel_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_channel_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.cn0532.cn0532.rx_channel_names" title="Link to this definition"></a></dt>
+<dd><p>rx_channel_names: List of RX channel names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.rx_destroy_buffer">
+<span class="sig-name descname"><span class="pre">rx_destroy_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.cn0532.cn0532.rx_destroy_buffer" title="Link to this definition"></a></dt>
+<dd><p>rx_destroy_buffer: Clears RX buffer</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.rx_enabled_channels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_enabled_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#adi.cn0532.cn0532.rx_enabled_channels" title="Link to this definition"></a></dt>
+<dd><p>rx_enabled_channels: List of enabled channels (channel 1 is 0)</p>
+<p>Either a list of channel numbers or channel names can be used to set
+rx_enabled_channels. When channel names are used, they will be
+translated to channel numbers.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.rx_output_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_output_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#adi.cn0532.cn0532.rx_output_type" title="Link to this definition"></a></dt>
+<dd><p>rx_output_type: Set output data type from rx()</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.sample_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.cn0532.cn0532.sample_rate" title="Link to this definition"></a></dt>
+<dd><p>Sample rate in samples per second.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.sensor_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sensor_voltage</span></span><a class="headerlink" href="#adi.cn0532.cn0532.sensor_voltage" title="Link to this definition"></a></dt>
+<dd><p>Calculated sensor voltage in mV after bias correction.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.shift_voltage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shift_voltage</span></span><a class="headerlink" href="#adi.cn0532.cn0532.shift_voltage" title="Link to this definition"></a></dt>
+<dd><p>LTC2606 shift voltage in mV used to bias the sensor data.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.sw_cc">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_cc</span></span><a class="headerlink" href="#adi.cn0532.cn0532.sw_cc" title="Link to this definition"></a></dt>
+<dd><p>Enable SW_CC and illuminate the blue LED.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.cn0532.cn0532.sw_ff_status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sw_ff_status</span></span><a class="headerlink" href="#adi.cn0532.cn0532.sw_ff_status" title="Link to this definition"></a></dt>
+<dd><p>Fault-flag status.</p>
+</dd></dl>
 
 </dd></dl>
 
+</section>
 </section>
 
 
@@ -332,7 +523,7 @@ Content on this topic
               <div class="related">
                 &nbsp;
     <a href="adi.cn0511.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adi.cn0511 module</a>
-    <a href="adi.cn0540.html" title="Next document (Alt+Shift+RightArrow)" class="next">cn0540</a>
+    <a href="adi.cn0540.html" title="Next document (Alt+Shift+RightArrow)" class="next">CN0540 condition-based monitoring board</a>
               </div>
           
         </div>
