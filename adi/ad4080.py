@@ -16,7 +16,7 @@ class ad4080_channel(attribute):
     @property
     def scale(self):
         """Get Scale value"""
-        return self._get_iio_attr("voltage0", "scale", False)
+        return self._get_iio_attr(self.name, "scale", False)
 
 
 class ad4080(rx_chan_comp):
