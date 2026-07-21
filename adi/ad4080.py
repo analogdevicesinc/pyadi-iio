@@ -18,6 +18,41 @@ class ad4080_channel(attribute):
         """Get Scale value"""
         return self._get_iio_attr(self.name, "scale", False)
 
+    @property
+    def sampling_frequency(self):
+        """Get Sampling frequency value"""
+        return self._get_iio_attr(self.name, "sampling_frequency", False)
+
+    @property
+    def oversampling_ratio_available(self):
+        """Get the oversampling ratio available values"""
+        return self._get_iio_attr(self.name, "oversampling_ratio_available", False)
+
+    @property
+    def oversampling_ratio(self):
+        """Get the oversampling ratio value"""
+        return self._get_iio_attr(self.name, "oversampling_ratio", False)
+
+    @oversampling_ratio.setter
+    def oversampling_ratio(self, value):
+        """Set the oversampling ratio value"""
+        self._set_iio_attr(self.name, "oversampling_ratio", False, value)
+
+    @property
+    def filter_type_available(self):
+        """Get the filter type available values"""
+        return self._get_iio_attr_str(self.name, "filter_type_available", False)
+
+    @property
+    def filter_type(self):
+        """Get the filter type value"""
+        return self._get_iio_attr_str(self.name, "filter_type", False)
+
+    @filter_type.setter
+    def filter_type(self, value):
+        """Set the filter type value"""
+        self._set_iio_attr(self.name, "filter_type", False, value)
+
 
 class ad4080(rx_chan_comp):
     """AD4080 ADC"""
@@ -33,6 +68,9 @@ class ad4080(rx_chan_comp):
         "ad4086",
         "ad4087",
         "ad4088",
+        "ad4880",
+        "ad4883",
+        "ad4884",
     ]
     _device_name = ""
     _complex_data = False
