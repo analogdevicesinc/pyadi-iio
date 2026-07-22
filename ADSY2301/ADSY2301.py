@@ -114,7 +114,7 @@ def disable_pa_bias_channel(obj, elements=None):
                     print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
                     print(f"Element number {value}")
  
-def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -2.0):
+def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -1.8):
     """
     Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
