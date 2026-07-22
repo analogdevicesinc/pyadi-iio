@@ -3,11 +3,10 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
-class adis16550(rx, context_manager):
+class adis16550(rx_def):
     _complex_data = False
 
     _rx_channel_names = [
@@ -27,13 +26,13 @@ class adis16550(rx, context_manager):
     ]
 
     _device_name = ""
+    _control_device_name = None
+    _rx_data_device_name = None
 
     """Disable mapping of trigger to RX device."""
     disable_trigger = False
 
     def __init__(self, uri="", device_name=None, trigger_name=None):
-        context_manager.__init__(self, uri, self._device_name)
-
         compatible_parts = ["adis16550"]
 
         if not device_name:
@@ -46,27 +45,17 @@ class adis16550(rx, context_manager):
                 + ".Please select from:"
                 + str(compatible_parts)
             )
-        else:
-            self._ctrl = self._ctx.find_device(device_name)
-            self._rxadc = self._ctx.find_device(device_name)
-            if not trigger_name:
-                trigger_name = device_name + "-dev0"
 
-        if self._ctrl is None:
-            print(
-                "No device found with device_name = "
-                + device_name
-                + ". Searching for a device found in the compatible list."
-            )
-            for i in compatible_parts:
-                self._ctrl = self._ctx.find_device(i)
-                self._rxadc = self._ctx.find_device(i)
-                if self._ctrl is not None:
-                    print("Found device = " + i + ". Will use this device instead.")
-                    break
-            if self._ctrl is None:
-                raise Exception("No compatible device found")
+        if not trigger_name:
+            trigger_name = device_name + "-dev0"
 
+        self._control_device_name = device_name
+        self._rx_data_device_name = device_name
+        self._trigger_name = trigger_name
+        super().__init__(uri=uri)
+
+    def __post_init__(self):
+        """Create channel wrappers and configure the trigger and RX buffer."""
         self.anglvel_x = self._anglvel_accel_channels(self._ctrl, "anglvel_x")
         self.anglvel_y = self._anglvel_accel_channels(self._ctrl, "anglvel_y")
         self.anglvel_z = self._anglvel_accel_channels(self._ctrl, "anglvel_z")
@@ -83,10 +72,9 @@ class adis16550(rx, context_manager):
 
         # Set default trigger
         if not self.disable_trigger:
-            self._trigger = self._ctx.find_device(trigger_name)
+            self._trigger = self._ctx.find_device(self._trigger_name)
             self._rxadc._set_trigger(self._trigger)
 
-        rx.__init__(self)
         self.rx_buffer_size = 16  # Make default buffer smaller
 
     def __get_scaled_sensor(self, channel_name: str) -> float:
