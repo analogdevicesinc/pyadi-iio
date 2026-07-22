@@ -7,6 +7,8 @@ from time import sleep
 
 import adi
 
+print(adi.__path__)
+
 # Optionally pass URI as command line argument,
 # else use default context manager search
 my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
