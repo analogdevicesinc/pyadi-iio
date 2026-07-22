@@ -59,6 +59,7 @@ def enable_stingray_channel(obj, elements=None, man_input=False):
                             if elem == value:
                                 # print("Turning on element:",elem)
                                 channel.rx_enable = True
+                                device.lna_bias_on = -0.9412
                                         
                 else:
                     raise ValueError('Mode of operation must be either "rx"')
@@ -274,6 +275,7 @@ def disable_stingray_channel(obj, elements=None, man_input=False):
                             if elem == value:
                                 # print("Turning off element:",elem)
                                 channel.rx_enable = False
+                                device.lna_bias_on = -4.8
                                 break
                 else:
                     raise ValueError('Mode of operation must be either "rx" or "tx"')
