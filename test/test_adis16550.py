@@ -1,7 +1,9 @@
 import iio
+import numpy as np
 import pytest
 
 import adi
+from adi.device_base import rx_def
 
 hardware = "adis16550"
 classname = "adi.adis16550"
@@ -78,3 +80,89 @@ def test_adis16550_attr_multiple_val(
 ):
     do_mock()
     test_attribute_multiple_values(iio_uri, classname, attr, values, tol, repeats)
+
+
+@pytest.mark.iio_hardware(hardware)
+def test_adis16550_common_parent_preserves_structure(iio_uri, monkeypatch):
+    """The shared RX parent retains device, channel, and trigger state."""
+    trigger_calls = []
+
+    def record_trigger(device, trigger):
+        trigger_calls.append((device, trigger))
+
+    monkeypatch.setattr(iio.Device, "_set_trigger", record_trigger)
+
+    with adi.adis16550(uri=iio_uri) as imu:
+        assert isinstance(imu, rx_def)
+        assert imu._rx_channel_names == [
+            "anglvel_x",
+            "anglvel_y",
+            "anglvel_z",
+            "accel_x",
+            "accel_y",
+            "accel_z",
+            "temp0",
+            "deltaangl_x",
+            "deltaangl_y",
+            "deltaangl_z",
+            "deltavelocity_x",
+            "deltavelocity_y",
+            "deltavelocity_z",
+        ]
+        assert imu.rx_enabled_channels == list(range(13))
+        assert imu.rx_buffer_size == 16
+        assert imu._ctrl.name == "adis16550"
+        assert imu._rxadc.name == "adis16550"
+        assert imu._ctrl is not imu._rxadc
+        assert imu._trigger.name == "adis16550-dev0"
+        assert trigger_calls == [(imu._rxadc, imu._trigger)]
+
+        expected_wrappers = {
+            "anglvel_x": adi.adis16550._anglvel_accel_channels,
+            "accel_z": adi.adis16550._anglvel_accel_channels,
+            "temp": adi.adis16550._temp_channel,
+            "deltaangl_y": adi.adis16550._delta_channels,
+            "deltavelocity_z": adi.adis16550._delta_channels,
+        }
+        for name, wrapper_type in expected_wrappers.items():
+            wrapper = getattr(imu, name)
+            assert isinstance(wrapper, wrapper_type)
+            assert wrapper._ctrl is imu._ctrl
+
+
+@pytest.mark.iio_hardware(hardware)
+def test_adis16550_custom_constructor_and_disabled_trigger(iio_uri, monkeypatch):
+    """Custom device selection and trigger disabling remain supported."""
+    trigger_calls = []
+    monkeypatch.setattr(
+        iio.Device,
+        "_set_trigger",
+        lambda device, trigger: trigger_calls.append((device, trigger)),
+    )
+    monkeypatch.setattr(adi.adis16550, "disable_trigger", True)
+
+    with adi.adis16550(
+        uri=iio_uri, device_name="adis16550", trigger_name="custom-trigger"
+    ) as imu:
+        assert imu._control_device_name == "adis16550"
+        assert imu._rx_data_device_name == "adis16550"
+        assert imu._trigger_name == "custom-trigger"
+        assert not hasattr(imu, "_trigger")
+        assert trigger_calls == []
+
+    with pytest.raises(Exception, match="Not a compatible device"):
+        adi.adis16550(uri=iio_uri, device_name="not-adis16550")
+
+
+@pytest.mark.iio_hardware(hardware)
+def test_adis16550_buffered_read_preserves_all_data_channels(iio_uri, monkeypatch):
+    """Buffered reads continue to return all 13 configured data channels."""
+    monkeypatch.setattr(iio.Device, "_set_trigger", lambda device, trigger: None)
+
+    with adi.adis16550(uri=iio_uri) as imu:
+        imu.rx_buffer_size = 8
+        data = imu.rx()
+        assert isinstance(data, list)
+        assert len(data) == 13
+        assert all(isinstance(channel, np.ndarray) for channel in data)
+        assert all(channel.shape == (8,) for channel in data)
