@@ -754,7 +754,7 @@ def channel_definitions(device_class, iio_uri):
             #     ch, "raw"
             # ), f"{device_class} channel {ch.name} missing raw property"
             assert hasattr(
-                ch, "scale"
+                type(ch), "scale"
             ), f"{device_class} channel {ch.name} missing scale property"
             # device_base exposes each channel as a named attribute on the
             # device (the documented ``device.<channel>.<attr>`` contract).
