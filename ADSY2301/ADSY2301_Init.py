@@ -28,8 +28,6 @@ talise_ip = "10.75.161.150"
 talise_uri = "ip:" + talise_ip
 MANUAL = False
 
-
-
 dev = adi.adar1000_array(
     uri=talise_uri,
 
@@ -40,7 +38,7 @@ dev = adi.adar1000_array(
         "adar1000_csb_0_1_3", "adar1000_csb_0_1_2", "adar1000_csb_0_2_3", "adar1000_csb_0_2_2",
     ],
 
-    device_map=[[1, 5, 2, 6], [3, 7, 4, 8], [9, 13, 10, 14], [11, 15, 12, 16]],
+    device_map=[[6, 1, 8, 3], [5, 2, 7, 4], [14, 9, 16, 11], [13, 10, 15, 12]],
 
     element_map=np.array([
         [1,  9,  17, 25, 33, 41, 49, 57],
@@ -54,18 +52,20 @@ dev = adi.adar1000_array(
     ]),
 
     device_element_map={
-        1:  [9, 10, 2, 1],     3:  [41, 42, 34, 33],
-        2:  [25, 26, 18, 17],  4:  [57, 58, 50, 49],
+        1:  [25, 26, 18, 17],  3:  [57, 58, 50, 49],
+        2:  [20, 19, 27, 28],  4:  [52, 51, 59, 60],
         5:  [4, 3, 11, 12],    7:  [36, 35, 43, 44],
-        6:  [20, 19, 27, 28],  8:  [52, 51, 59, 60],
-        9:  [13, 14, 6, 5],    11: [45, 46, 38, 37],
-        10: [29, 30, 22, 21],  12: [61, 62, 54, 53],
+        6:  [9, 10, 2, 1],     8:  [41, 42, 34, 33],
+        9:  [29, 30, 22, 21],  11: [61, 62, 54, 53],
+        10: [24, 23, 31, 32],  12: [56, 55, 63, 64],
         13: [8, 7, 15, 16],    15: [40, 39, 47, 48],
-        14: [24, 23, 31, 32],  16: [56, 55, 63, 64],
+        14: [13, 14, 6, 5],    16: [45, 46, 38, 37],
     },
 )
+ 
 
-dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-1)
+
+dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
 for device in dev.devices.values():
     device.mode = "rx"
@@ -86,4 +86,4 @@ for element in dev.elements.values():
 dev.latch_rx_settings()
 dev.latch_tx_settings()
 
-mr.enable_stingray_channel(dev,4)
+# mr.enable_stingray_channel(dev,4)
