@@ -20,7 +20,7 @@ class ltc2983(rx_chan_comp):
     _rx_unbuffered_data = True
     _rx_data_type = np.int32
     _rx_data_si_type = float
-    compatible_parts = ["ltc2983"]
+    compatible_parts = ["ltc2983", "ltc2984", "ltc2986", "ltm2985", "adt7604"]
 
     def __init__(self, uri=""):
         """Initialize the LTC2983 while preserving its URI-only API."""
@@ -75,3 +75,23 @@ class ltc2983(rx_chan_comp):
         return val * self.channel[channel_name].scale
 
     _channel_def = _channel
+
+
+class ltc2984(ltc2983):
+    """LTC2984 Multi-Sensor Temperature Measurement System"""
+
+    _device_name = "ltc2984"
+    compatible_parts = ["ltc2984"]
+
+    def __init__(self, uri=""):
+        super().__init__(uri=uri)
+
+
+class adt7604(ltc2983):
+    """ADT7604 Multi-Sensor Temperature Measurement System"""
+
+    _device_name = "adt7604"
+    compatible_parts = ["adt7604"]
+
+    def __init__(self, uri=""):
+        super().__init__(uri=uri)
