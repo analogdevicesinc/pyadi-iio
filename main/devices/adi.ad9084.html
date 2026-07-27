@@ -100,6 +100,7 @@
 <li><a class="reference internal" href="#adi.ad9084.ad9084"><code class="docutils literal notranslate"><span class="pre">ad9084</span></code></a><ul>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.adc_frequency"><code class="docutils literal notranslate"><span class="pre">ad9084.adc_frequency</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.api_version"><code class="docutils literal notranslate"><span class="pre">ad9084.api_version</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084.ad9084.cfir_config"><code class="docutils literal notranslate"><span class="pre">ad9084.cfir_config</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.chip_version"><code class="docutils literal notranslate"><span class="pre">ad9084.chip_version</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.dac_frequency"><code class="docutils literal notranslate"><span class="pre">ad9084.dac_frequency</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.jesd204_device_status"><code class="docutils literal notranslate"><span class="pre">ad9084.jesd204_device_status</span></code></a></li>
@@ -111,6 +112,7 @@
 <li><a class="reference internal" href="#adi.ad9084.ad9084.jesd204_fsm_state"><code class="docutils literal notranslate"><span class="pre">ad9084.jesd204_fsm_state</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.loopback_mode"><code class="docutils literal notranslate"><span class="pre">ad9084.loopback_mode</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.path_map"><code class="docutils literal notranslate"><span class="pre">ad9084.path_map</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084.ad9084.pfilt_config"><code class="docutils literal notranslate"><span class="pre">ad9084.pfilt_config</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_channel_nco_frequencies"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_channel_nco_frequencies</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_channel_nco_phases"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_channel_nco_phases</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.rx_main_nco_frequencies"><code class="docutils literal notranslate"><span class="pre">ad9084.rx_main_nco_frequencies</span></code></a></li>
@@ -131,6 +133,8 @@
 <li><a class="reference internal" href="#adi.ad9084.ad9084.tx_main_nco_test_tone_en"><code class="docutils literal notranslate"><span class="pre">ad9084.tx_main_nco_test_tone_en</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.tx_main_nco_test_tone_scales"><code class="docutils literal notranslate"><span class="pre">ad9084.tx_main_nco_test_tone_scales</span></code></a></li>
 <li><a class="reference internal" href="#adi.ad9084.ad9084.tx_sample_rate"><code class="docutils literal notranslate"><span class="pre">ad9084.tx_sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084.ad9084.write_cfir_config"><code class="docutils literal notranslate"><span class="pre">ad9084.write_cfir_config()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad9084.ad9084.write_pfilt_config"><code class="docutils literal notranslate"><span class="pre">ad9084.write_pfilt_config()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -367,6 +371,11 @@ Content on this topic
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084.ad9084.cfir_config">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cfir_config</span></span><a class="headerlink" href="#adi.ad9084.ad9084.cfir_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.chip_version">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chip_version</span></span><a class="headerlink" href="#adi.ad9084.ad9084.chip_version" title="Link to this definition"></a></dt>
 <dd><p>chip_version: Chip version information</p>
@@ -439,6 +448,11 @@ link.</p>
 <dd><p>path_map: Map of channelizers both coarse and fine to
 individual driver channel names</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad9084.ad9084.pfilt_config">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pfilt_config</span></span><a class="headerlink" href="#adi.ad9084.ad9084.pfilt_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.rx_channel_nco_frequencies">
@@ -566,6 +580,18 @@ underflow due to memory bottlenecks.</p>
 <dt class="sig sig-object py" id="adi.ad9084.ad9084.tx_sample_rate">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tx_sample_rate</span></span><a class="headerlink" href="#adi.ad9084.ad9084.tx_sample_rate" title="Link to this definition"></a></dt>
 <dd><p>tx_sampling_frequency: Sample rate before interpolation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad9084.ad9084.write_cfir_config">
+<span class="sig-name descname"><span class="pre">write_cfir_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084.ad9084.write_cfir_config" title="Link to this definition"></a></dt>
+<dd><p>Load a new CFIR (cfilt) configuration file from a given file path.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.ad9084.ad9084.write_pfilt_config">
+<span class="sig-name descname"><span class="pre">write_pfilt_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad9084.ad9084.write_pfilt_config" title="Link to this definition"></a></dt>
+<dd><p>Load a new PFILT configuration file from a given file path.</p>
 </dd></dl>
 
 </dd></dl>
