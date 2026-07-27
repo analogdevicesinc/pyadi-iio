@@ -330,3 +330,50 @@ def test_ad9084_tx_data_split_buffers(
     test_dma_tx, iio_uri, classname, channel, use_tx2
 ):
     test_dma_tx(iio_uri, classname, channel, use_tx2)
+
+
+#########################################
+PFILT_CONFIG = """# pfilt_coeffs_16_lp0.txt
+mode: real_n2 real_n2
+gain: 6 6 6 6
+scalar_gain: 63 63 63 63
+dest: rx pfilt_all bank_0
+hc_delay: 0
+mode_switch_en: 0
+mode_switch_add_en: 0
+real_data_mode_en: 1
+quad_mode_en: 0
+0x00F2
+0xFDE3
+0x0096
+0x04B8
+"""
+
+CFIR_CONFIG = """# cfir_coeffs_16_lp0.txt
+dest: rx cfir_all profile_2 datapath_all
+gain: 0
+complex_scalar: 32767 0
+enable: 1 profile_2
+selection_mode: direct_regmap
+coeff_transfer: 0
+bypass: 0
+242 242
+541 541
+151 151
+64329 64329
+"""
+
+
+@pytest.mark.iio_hardware(hardware)
+@pytest.mark.parametrize(
+    "attr, config",
+    [("pfilt_config", PFILT_CONFIG), ("cfir_config", CFIR_CONFIG)],
+    ids=["pfilt", "cfir"],
+)
+def test_ad9084_filter_config(iio_uri, tmp_path, attr, config):
+    import adi
+
+    dev = adi.ad9084(uri=iio_uri)
+    config_file = tmp_path / "{}.txt".format(attr)
+    config_file.write_text(config)
+    setattr(dev, attr, str(config_file))
