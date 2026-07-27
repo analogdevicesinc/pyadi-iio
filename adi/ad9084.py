@@ -232,13 +232,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
         return self._path_map
 
     def write_pfilt_config(self, value):
-        """Load a new PFILT configuration file
-
-        Input is path to PFILT configuration file. Please see
-        driver documentation about PFILT generation and limitations.
-        Example configuration files can be found here:
-        https://github.com/analogdevicesinc/iio-oscilloscope/tree/main/filters/ad9084
-        """
+        """Load a new PFILT configuration file from a given file path."""
+        # See driver documentation about PFILT generation and limitations.
+        # Example configuration files can be found here:
+        # https://github.com/analogdevicesinc/iio-oscilloscope/tree/main/filters/ad9084
         with open(value, "r") as file:
             data = file.read()
         self._set_iio_dev_attr_str("pfilt_config", data)
@@ -247,13 +244,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     pfilt_config = property(None, write_pfilt_config)
 
     def write_cfir_config(self, value):
-        """Load a new CFIR (cfilt) configuration file
-
-        Input is path to CFIR configuration file. Please see
-        driver documentation about CFIR generation and limitations.
-        Example configuration files can be found here:
-        https://github.com/analogdevicesinc/iio-oscilloscope/tree/main/filters/ad9084
-        """
+        """Load a new CFIR (cfilt) configuration file from a given file path."""
+        # See driver documentation about CFIR generation and limitations.
+        # Example configuration files can be found here:
+        # https://github.com/analogdevicesinc/iio-oscilloscope/tree/main/filters/ad9084
         with open(value, "r") as file:
             data = file.read()
         self._set_iio_dev_attr_str("cfir_config", data)
