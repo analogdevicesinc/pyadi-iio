@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Bases: attribute, context_manager" name="description" />
+<meta content="Bases: context_manager, attribute" name="description" />
 
     <title>adi.adg2128 module &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a8f9a170" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=d3f78147" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script async="async" src="../_static/app.umd.js?v=26d0298f"></script>
     <link rel="icon" href="../_static/favicon.png"/>
@@ -243,6 +243,8 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5240.html">adi.adl5240 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl5960.html">adl5960</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adl8113.html">adl8113</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.admt4000.html">admt4000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.admt4000ard1z.html">admt4000</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.admv8818.html">admv8818</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd1080.html">adpd1080</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.adpd188.html">adpd188</a></li>
@@ -261,8 +263,8 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.adxrs290.html">adxrs290</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.axi_aion_trig.html">adi.axi_aion_trig module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0511.html">adi.cn0511 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">cn0532</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0532.html">CN0532 vibration sensor board</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.cn0540.html">CN0540 condition-based monitoring board</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0554.html">cn0554</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0556.html">cn0556</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.cn0565.html">cn0565</a></li>
@@ -294,6 +296,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.max31855.html">adi.max31855 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max31865.html">adi.max31865 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.max9611.html">adi.max9611 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.tmc5240.html">tmc5240</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tddn.html">tddn</a></li>
@@ -319,7 +322,7 @@ Content on this topic
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adg2128.adg2128">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adg2128.</span></span><span class="sig-name descname"><span class="pre">adg2128</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adg2128.adg2128" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
 <p>ADG2128 cross point switch.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adg2128.adg2128.add">
