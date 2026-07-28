@@ -20,11 +20,11 @@ my_adc.rx_buffer_size = 2048
 
 print("Sampling frequency:", my_adc.sampling_frequency)
 
-print("CHIP_ID_LSB  :", my_adc.ad9213_register_read(0x4))
-print("CHIP_SCRATCH :", my_adc.ad9213_register_read(0xA))
+print("CHIP_ID_LSB  :", my_adc.register_read(0x4))
+print("CHIP_SCRATCH :", my_adc.register_read(0xA))
 print("Writing 0xAB to 0xA scratch register")
-my_adc.ad9213_register_write(0xA, 0xAB)
-print("CHIP_SCRATCH :", my_adc.ad9213_register_read(0xA))
+my_adc.register_write(0xA, 0xAB)
+print("CHIP_SCRATCH :", my_adc.register_read(0xA))
 
 # Collect RX data
 data = my_adc.rx()
