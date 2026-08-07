@@ -130,6 +130,7 @@ from adi.fmcomms5 import FMComms5
 from adi.fmcomms11 import FMComms11
 from adi.gen_mux import genmux
 from adi.hmc7044 import hmc7044
+from adi.hmcad15xx import hmcad15xx
 from adi.lm75 import lm75
 from adi.ltc2314_14 import ltc2314_14
 from adi.ltc2378 import ltc2378
@@ -152,6 +153,7 @@ from adi.tmc5240 import tmc5240
 
 try:
     from adi.jesd import jesd
+    from adi.sshfs import sshfs
 except ImportError:
     pass
 
