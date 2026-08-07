@@ -155,5 +155,15 @@ try:
 except ImportError:
     pass
 
+try:
+    from adi.adxcvr import adxcvr
+except ImportError:
+    pass
+
+try:
+    from adi.apollo_serdes import apollo_serdes
+except ImportError:
+    pass
+
 __version__ = "0.0.22"
 name = "Analog Devices Hardware Interfaces"
