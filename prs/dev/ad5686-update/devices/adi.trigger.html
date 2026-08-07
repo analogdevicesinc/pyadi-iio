@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta content="Each device class in this module supports multiple parts, as follows:" name="description" />
+<meta content="Bases: context_manager, attribute" name="description" />
 
-    <title>ad4020 &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
+    <title>Triggers &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=cae2157c" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,7 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ad405x" href="adi.ad405x.html" />
-    <link rel="prev" title="adi.ad3552r_hs module" href="adi.ad3552r_hs.html" />
+    <link rel="prev" title="tddn" href="adi.tddn.html" />
    
   
   
@@ -96,24 +95,15 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">ad4020</a><ul>
-<li><a class="reference internal" href="#supported-drivers">Supported Drivers</a><ul>
-<li><a class="reference internal" href="#adi.ad4020.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad4020.compatible_parts</span></code></a></li>
+<li><a class="reference internal" href="#">Triggers</a><ul>
+<li><a class="reference internal" href="#adi.trigger.hrtimer_trig"><code class="docutils literal notranslate"><span class="pre">hrtimer_trig</span></code></a><ul>
+<li><a class="reference internal" href="#adi.trigger.hrtimer_trig.name"><code class="docutils literal notranslate"><span class="pre">hrtimer_trig.name</span></code></a></li>
+<li><a class="reference internal" href="#adi.trigger.hrtimer_trig.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">hrtimer_trig.sampling_frequency</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#class-api">Class API</a><ul>
-<li><a class="reference internal" href="#adi.ad4020"><code class="docutils literal notranslate"><span class="pre">ad4020</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad4020.channel"><code class="docutils literal notranslate"><span class="pre">ad4020.channel</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#dynamic-attributes">Dynamic Attributes</a><ul>
-<li><a class="reference internal" href="#adi.ad4020.ad4020_channel"><code class="docutils literal notranslate"><span class="pre">ad4020_channel</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad4020.ad4020_channel.raw"><code class="docutils literal notranslate"><span class="pre">ad4020_channel.raw</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad4020.ad4020_channel.scale"><code class="docutils literal notranslate"><span class="pre">ad4020_channel.scale</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#adi.trigger.sysfs_trig"><code class="docutils literal notranslate"><span class="pre">sysfs_trig</span></code></a><ul>
+<li><a class="reference internal" href="#adi.trigger.sysfs_trig.name"><code class="docutils literal notranslate"><span class="pre">sysfs_trig.name</span></code></a></li>
+<li><a class="reference internal" href="#adi.trigger.sysfs_trig.trigger_now"><code class="docutils literal notranslate"><span class="pre">sysfs_trig.trigger_now()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -168,7 +158,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad353xr.html">ad353xr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r.html">ad3552r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad3552r_hs.html">adi.ad3552r_hs module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ad4020</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad4020.html">ad4020</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad405x.html">ad405x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4080.html">ad4080</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4110.html">ad4110</a></li>
@@ -312,7 +302,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.one_bit_adc_dac.html">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tddn.html">tddn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.trigger.html">Triggers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Triggers</a></li>
 </ul>
 </li>
 </ul>
@@ -330,80 +320,81 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="ad4020">
-<h1>ad4020<a class="headerlink" href="#ad4020" title="Link to this heading"></a></h1>
-<p>Each device class in this module supports multiple parts, as follows:</p>
-<p><strong>ad4020:</strong> ad4020, ad4021, ad4022</p>
-<p><strong>ad4000:</strong> ad4000, ad4004, ad4008</p>
-<p><strong>ad4001:</strong> ad4001, ad4005</p>
-<p><strong>ad4002:</strong> ad4002, ad4006, ad4010</p>
-<p><strong>ad4003:</strong> ad4003, ad4007, ad4011</p>
-<p>By default, the device_name parameter in the class constructor is the
-same as the class name (e.g. “ad4001” for the ad4001). To use the class
-with another supported model, the name must be given when instantiating
-the object. For example, if working with an ad4007 with a URI of
-“10.2.5.222”, use the ad4003 class, but specify the device_name
-parameter explicitly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>import<span class="w"> </span>adi
-<span class="nv">adc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.ad4003<span class="o">(</span><span class="nv">uri</span><span class="o">=</span><span class="s2">&quot;ip:10.2.5.222&quot;</span>,<span class="w"> </span><span class="nv">device_name</span><span class="o">=</span><span class="s2">&quot;ad4007&quot;</span><span class="o">)</span>
-...
-</pre></div>
-</div>
-<section id="supported-drivers">
-<h2>Supported Drivers<a class="headerlink" href="#supported-drivers" title="Link to this heading"></a></h2>
-<p>The class <strong>adi.ad4020</strong> supports the following IIO drivers:</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad4020.compatible_parts">
-<span class="sig-prename descclassname"><span class="pre">ad4020.</span></span><span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad4020',</span> <span class="pre">'ad4021',</span> <span class="pre">'ad4022']</span></em><a class="headerlink" href="#adi.ad4020.compatible_parts" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="class-api">
-<h2>Class API<a class="headerlink" href="#class-api" title="Link to this heading"></a></h2>
+  <section id="module-adi.trigger">
+<span id="triggers"></span><h1>Triggers<a class="headerlink" href="#module-adi.trigger" title="Link to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad4020">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.</span></span><span class="sig-name descname"><span class="pre">ad4020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4020" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
-<p>AD4020 device</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad4020.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad4020.channel" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="dynamic-attributes">
-<h2>Dynamic Attributes<a class="headerlink" href="#dynamic-attributes" title="Link to this heading"></a></h2>
-<p>The ad4020 class supports a variable number of channels depending on the hardware configuration. Therefore, the channel property interfaces are dynamically generated. They are available on an initiated object as attributes with names voltage0, voltage1, etc. They will be instances of the ad4020_channel class.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="adi.ad4020.ad4020_channel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad4020.</span></span><span class="sig-name descname"><span class="pre">ad4020_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad4020.ad4020_channel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
-<p>AD4020 channel</p>
+<dt class="sig sig-object py" id="adi.trigger.hrtimer_trig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.trigger.</span></span><span class="sig-name descname"><span class="pre">hrtimer_trig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'trigger0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.trigger.hrtimer_trig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>High-Resolution Timer Trigger</p>
+<p>This class provides an interface for controlling an IIO hrtimer trigger.
+The trigger must be created first:</p>
+<ul class="simple">
+<li><p>Ensure the <code class="docutils literal notranslate"><span class="pre">iio-trig-hrtimer</span></code> kernel module is loaded or built-in into the kernel</p></li>
+<li><p>Ensure configfs is mounted</p></li>
+<li><dl class="simple">
+<dt>Create the a new trigger with:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">/config/iio/triggers/hrtimer/mytrig</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Restart iiod service if relying on a remote iio context</p></li>
+</ul>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4020.ad4020_channel.raw">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad4020.ad4020_channel.raw" title="Link to this definition"></a></dt>
-<dd><p>AD4020 channel raw value</p>
+<dt class="sig sig-object py" id="adi.trigger.hrtimer_trig.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#adi.trigger.hrtimer_trig.name" title="Link to this definition"></a></dt>
+<dd><p>Get the name of the trigger</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad4020.ad4020_channel.scale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad4020.ad4020_channel.scale" title="Link to this definition"></a></dt>
-<dd><p>AD4020 channel scale</p>
+<dt class="sig sig-object py" id="adi.trigger.hrtimer_trig.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.trigger.hrtimer_trig.sampling_frequency" title="Link to this definition"></a></dt>
+<dd><p>Get/Set sampling frequency of the trigger</p>
 </dd></dl>
 
 </dd></dl>
 
-</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.trigger.sysfs_trig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.trigger.</span></span><span class="sig-name descname"><span class="pre">sysfs_trig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sysfstrig0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.trigger.sysfs_trig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>Sysfs Trigger</p>
+<p>This class provides an interface for controlling an IIO sysfs trigger.
+The trigger must be created first:</p>
+<ul class="simple">
+<li><p>Ensure the <code class="docutils literal notranslate"><span class="pre">iio-trig-sysfs</span></code> kernel module is loaded or built-in into the kernel</p></li>
+<li><dl class="simple">
+<dt>Create the a new trigger with:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">0</span> <span class="pre">&gt;</span> <span class="pre">/sys/bus/iio/devices/iio_sysfs_trigger/add_trigger</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Restart iiod service if relying on a remote iio context</p></li>
+</ul>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.trigger.sysfs_trig.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#adi.trigger.sysfs_trig.name" title="Link to this definition"></a></dt>
+<dd><p>Get the name of the trigger</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.trigger.sysfs_trig.trigger_now">
+<span class="sig-name descname"><span class="pre">trigger_now</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.trigger.sysfs_trig.trigger_now" title="Link to this definition"></a></dt>
+<dd><p>Trigger an immediate event</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.ad3552r_hs.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">adi.ad3552r_hs module</a>
-    <a href="adi.ad405x.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad405x</a>
+    <a href="adi.tddn.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">tddn</a>
+    <div></div>
               </div>
           
         </div>
