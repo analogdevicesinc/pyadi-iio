@@ -3,27 +3,41 @@ import adi
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
-# talise_ip = "10.175.161.150"
-talise_ip = "10.75.161.140"
+talise_ip = "10.175.161.150"
+#talise_ip = "10.75.161.140"
 talise_uri = "ip:" + talise_ip
  
 #Initialize the ADF4382 LO
-adf4382 = adi.adf4382(uri=talise_uri)
- 
+LO = adi.adf4382(uri=talise_uri)
+
+print("Current Settings:") 
+print("LO Frequency Channel 0: ", LO.altvolt0_frequency)
+print("LO Frequency Channel 1: ", LO.altvolt1_frequency)
+
+print("LO Phase Channel 0: ", LO.altvolt0_phase)
+print("LO Phase Channel 1: ", LO.altvolt1_phase)
+
+print("LO Channel 0 Enable: ", LO.altvolt0_en)
+print("LO Channel 1 Enable: ", LO.altvolt1_en)
+
+print("LO Channel 0 Bleed Polarity: ", LO.altvolt0_bleed_pol)
+print("LO Channel 1 Bleed Polarity: ", LO.altvolt1_bleed_pol)
+
+print("LO Channel 0 Auto Align: ", LO.altvolt0_en_auto_align)
+print("LO Channel 1 Auto Align: ", LO.altvolt1_en_auto_align)
+
+print("LO Channel 0 Hardware Gain: ", LO.altvolt0_hardwaregain)
+print("LO Channel 1 Hardware Gain: ", LO.altvolt1_hardwaregain)
+
+print("LO Channel 0 fine current: ", LO.altvolt0_fine_current)
+print("LO Channel 1 fine current: ", LO.altvolt1_fine_current)
+
+print("LO Channel 0 coarse current: ", LO.altvolt0_coarse_current)
+print("LO Channel 1 coarse current: ", LO.altvolt1_coarse_current)
+
 LO_Freq = int(14.9e9)
- 
-# # Configure pll attributes
-# adf4382.sw_sync_en = 0  # Disable sync
-# adf4382.reference_frequency = 122880000  # Input reference clock
-# adf4382.reference_doubler_en = 1  # Enable reference doubler
-# adf4382.reference_divider = 1  # Set reference divider
- 
-# adf4382.charge_pump_current = "11.100000"  # Set charge pump current in mA
- 
-adf4382.altvolt0_frequency = LO_Freq  # Output reference clock
-adf4382.altvolt0_en = 1  # Enable output channel 0
-# adf4382.altvolt0_output_power = 9  # Set output amplitude of ch. 0
- 
-adf4382.altvolt1_frequency = LO_Freq  # Output reference clock
-adf4382.altvolt1_en = 1  # Enable output channel 1
-# adf4382.altvolt1_output_power = 9  # Set output amplitude of ch. 1
+
+print("Setting LO Frequency to %2.2f GHz" % (LO_Freq//1e9))
+
+LO.altvolt0_frequency = LO_Freq
+LO.altvolt1_frequency = LO_Freq

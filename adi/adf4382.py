@@ -4,7 +4,7 @@
 
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-
+import iio 
 
 class adf4382(attribute, context_manager):
     """ADF4382 Microwave Wideband Synthesizer with Integrated VCO
@@ -35,7 +35,7 @@ class adf4382(attribute, context_manager):
     )
 
     def __init__(self, uri=""):
-        #self._ctx = iio.Context("ip:10.75.161.150")
+        #self._ctx = iio.Context(uri)
         context_manager.__init__(self, uri, self._device_name)
 
         # Find the device
@@ -43,7 +43,7 @@ class adf4382(attribute, context_manager):
 
         # Raise an exception if the device isn't found
         if not self._ctrl:
-            raise Exception("ADF4355 device not found")
+            raise Exception("ADF4382 device not found")
 
     @property
     def altvolt0_bleed_pol(self):
