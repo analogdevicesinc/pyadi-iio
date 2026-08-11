@@ -14,19 +14,23 @@
 # Copyright (C) 2025 Analog Devices, Inc.
 # SPDX short identifier: ADIBSD
 # ==========================================================================
-import adi
-import numpy as np
-import json
-import os
+
 import sys
 from pathlib import Path
 
 # Make the local ADSY2301 helper module importable when this script is run
 # from the repository root or the ADSY2301 directory.
-# if str(Path(__file__).resolve().parent) not in sys.path:
-#     sys.path.insert(0, str(Path(__file__).resolve().parent))
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+if str(Path(__file__).resolve().parent.parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import ADSY2301 as mr
+import adi
+import numpy as np
+import json
+import os
 
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
@@ -34,6 +38,7 @@ import ADSY2301 as mr
 talise_ip = "10.75.161.150"
 talise_uri = "ip:" + talise_ip
 
+tuner = adi.admv1320()
 dev = adi.adar1000_array(
     uri=talise_uri,
 
