@@ -10,6 +10,14 @@ from scipy import signal
 import adi
 
 try:
+    # Requires the genalyzer C library (libgenalyzer) to be installed as well
+    import genalyzer as gn
+
+    have_genalyzer = True
+except (ImportError, OSError):
+    have_genalyzer = False
+
+try:
     from .plot_logger import gen_line_plot_html
 
     do_html_log = True
@@ -653,12 +661,82 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
     # self.assertGreater(fc * 0.01, diff, "Frequency offset")
 
 
+def measure_sfdr(sdr, data, fs, use_obs=False, window=None):
+    """measure_sfdr: Measure SFDR of captured data with genalyzer.
+
+    The FFT is computed from the data format of the receive channel itself and
+    the fundamental is located at the largest tone in the spectrum since the
+    exact received tone frequency is not always known.
+
+    parameters:
+        sdr: type=adi.rx
+            pyadi interface class instance which captured the data
+        data: type=numpy.array
+            Captured data from a single receive channel
+        fs: type=float
+            Sample rate of the receive path in samples per second
+        use_obs: type=bool
+            Data was captured from the observation receiver of the device
+        window: type=genalyzer.Window
+            FFT window applied before analysis. Defaults to Blackman-Harris
+
+    returns:
+        sfdr: type=float
+            Measured SFDR in dBc
+        amp: type=numpy.array
+            FFT magnitudes in dBFS
+        freqs: type=numpy.array
+            Frequency axis of the FFT in Hz
+    """
+    if not have_genalyzer:
+        raise ImportError(
+            "genalyzer is required to measure SFDR. Install the genalyzer python"
+            " package and the genalyzer C library (libgenalyzer)"
+        )
+
+    if window is None:
+        window = gn.Window.BLACKMAN_HARRIS
+
+    rx_device = None
+    if use_obs:
+        rx_device = sdr.obs
+        if not hasattr(rx_device, "rx_sample_rate"):
+            # Observation receivers do not expose their own sample rate
+            rx_device.rx_sample_rate = fs
+
+    # Number of single side bins to cover the spectral leakage of the window
+    ssb_fund = 4
+    ssb_rest = 3
+    if window == gn.Window.NO_WINDOW:
+        ssb_fund = 0
+        ssb_rest = 0
+
+    fft_cplx, amp, freqs = gn.pai.fft(
+        sdr, data, navg=1, window=window, rx_device=rx_device
+    )
+
+    key = "sfdr"
+    gn.mgr_remove(key)
+    gn.fa_create(key)
+    gn.fa_max_tone(key, "A", gn.FaCompTag.SIGNAL, ssb_fund)
+    gn.fa_hd(key, 3)
+    gn.fa_ssb(key, gn.FaSsb.DEFAULT, ssb_rest)
+    gn.fa_ssb(key, gn.FaSsb.DC, -1)
+    gn.fa_ssb(key, gn.FaSsb.SIGNAL, -1)
+    gn.fa_ssb(key, gn.FaSsb.WO, -1)
+    gn.fa_fsample(key, fs)
+    gn.fa_fdata(key, fs)
+
+    results = gn.fft_analysis(key, fft_cplx, len(data), gn.FreqAxisType.DC_CENTER)
+    return results["sfdr"], amp, freqs
+
+
 def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_scale=0.9):
     """t_sfdr: Test SFDR loopback of tone with connected loopback cables.
     This test requires a devices with TX and RX onboard where the transmit
     signal can be recovered. Sinuoidal data is passed to DMAs which is then
-    estimated on the RX side. The peak and second peak are determined in
-    the received signal to determine the sfdr.
+    estimated on the RX side. The received signal is analyzed with genalyzer
+    to determine the sfdr.
 
     parameters:
         uri: type=string
@@ -721,8 +799,12 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     except Exception as e:
         del sdr
         raise Exception(e)
-    del sdr
-    val, amp, freqs = spec.sfdr(data, fs=RXFS, plot=False)
+
+    try:
+        val, amp, freqs = measure_sfdr(sdr, data, RXFS, use_obs=use_obs)
+    finally:
+        del sdr
+
     if do_html_log:
         pytest.data_log = {
             "html": gen_line_plot_html(
@@ -730,7 +812,7 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
                 amp,
                 "Frequency (Hz)",
                 "Amplitude (dBFS)",
-                "SDFR {} dBc ({})".format(val, classname),
+                "SFDR {} dBc ({})".format(val, classname),
             )
         }
     print("SFDR:", val, "dB")
