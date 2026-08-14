@@ -111,7 +111,6 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#adi.ad5686.ad5686.set_gain"><code class="docutils literal notranslate"><span class="pre">ad5686.set_gain()</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad5686.ad5686.tx_voltage"><code class="docutils literal notranslate"><span class="pre">ad5686.tx_voltage()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#adi.ad5686.ad5686_channel"><code class="docutils literal notranslate"><span class="pre">ad5686_channel</span></code></a><ul>
@@ -392,21 +391,12 @@ Content on this topic
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.ad5686.ad5686.set_gain">
 <span class="sig-name descname"><span class="pre">set_gain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#adi.ad5686.ad5686.gain" title="adi.ad5686.ad5686.gain"><span class="pre">gain</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5686.ad5686.set_gain" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ad5686.ad5686.tx_voltage">
-<span class="sig-name descname"><span class="pre">tx_voltage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voltage_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad5686.ad5686.tx_voltage" title="Link to this definition"></a></dt>
-<dd><p>Transmit voltage values through the DAC. The voltage is clipped to
-the valid range based on the current scale and resolution settings.</p>
+<dd><p>Set the DAC output gain.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
-<dt>voltage_np:</dt><dd><p>numpy.array of voltage values, list of numpy.array or dict of channel
-index to numpy.array.</p>
-</dd>
-<dt>channels:</dt><dd><p>Optional channel index or list of channel indices to transmit to.
-If not specified, tx_enabled_channels will not be modified and the
-current configuration will be used.</p>
+<dt>value:</dt><dd><p><a class="reference internal" href="#adi.ad5686.ad5686.gain" title="adi.ad5686.ad5686.gain"><code class="xref py py-class docutils literal notranslate"><span class="pre">ad5686.gain</span></code></a> member selecting the output gain
+(<code class="docutils literal notranslate"><span class="pre">NORMAL</span></code> or <code class="docutils literal notranslate"><span class="pre">DOUBLE</span></code>). Only supported on devices that
+expose two entries in <code class="docutils literal notranslate"><span class="pre">scale_available</span></code>.</p>
 </dd>
 </dl>
 </dd>
