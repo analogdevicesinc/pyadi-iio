@@ -64,7 +64,6 @@ dev = adi.adar1000_array(
 )
  
 
-
 dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
 for device in dev.devices.values():
@@ -86,4 +85,4 @@ for element in dev.elements.values():
 dev.latch_rx_settings()
 dev.latch_tx_settings()
 
-# mr.enable_stingray_channel(dev,4)
+mr.enable_stingray_channel(dev,4)
