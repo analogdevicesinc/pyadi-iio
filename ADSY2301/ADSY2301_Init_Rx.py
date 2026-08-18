@@ -72,6 +72,7 @@ for device in dev.devices.values():
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
+mr.disable_stingray_channel(dev)
 mr.disable_pa_bias_channel(dev)
 
 print("Setting all devices to rx mode")

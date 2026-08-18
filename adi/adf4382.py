@@ -14,7 +14,7 @@ class adf4382(attribute, context_manager):
             URI of IIO context with ADF4382
     """
 
-    _device_name = "adf4382"
+    _device_name = "adf4382a"
     _charge_pump_options = (
         "0.700000",
         "0.900000",
@@ -35,9 +35,9 @@ class adf4382(attribute, context_manager):
     )
 
     def __init__(self, uri=""):
-        #self._ctx = iio.Context(uri)
-        context_manager.__init__(self, uri, self._device_name)
-
+        self._ctx = iio.Context("ip:" + "10.75.161.150")
+        # context_manager.__init__(self, uri, self._device_name)
+        print(self._device_name)
         # Find the device
         self._ctrl = self._ctx.find_device(self._device_name)
 
