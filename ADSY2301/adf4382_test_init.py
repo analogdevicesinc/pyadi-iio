@@ -3,12 +3,12 @@ import adi
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
-talise_ip = "10.175.161.150"
+talise_ip = "10.75.161.151"
 #talise_ip = "10.75.161.140"
 talise_uri = "ip:" + talise_ip
  
 #Initialize the ADF4382 LO
-LO = adi.adf4382(uri=talise_uri)
+LO = adi.adf4382(uri=talise_uri,device_name="adf4382a")
 
 print("Current Settings:") 
 print("LO Frequency Channel 0: ", LO.altvolt0_frequency)
@@ -37,7 +37,7 @@ print("LO Channel 1 coarse current: ", LO.altvolt1_coarse_current)
 
 LO_Freq = int(14.9e9)
 
-print("Setting LO Frequency to %2.2f GHz" % (LO_Freq//1e9))
+print("Setting LO Frequency to %3.2f GHz" % (LO_Freq/1e9))
 
 LO.altvolt0_frequency = LO_Freq
 LO.altvolt1_frequency = LO_Freq
