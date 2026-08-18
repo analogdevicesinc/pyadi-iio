@@ -157,6 +157,7 @@ Supported Devices
    adi.one_bit_adc_dac
    adi.tdd
    adi.tddn
+   adi.trigger
 
 -----
 

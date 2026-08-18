@@ -149,6 +149,7 @@ from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.tdd import tdd
 from adi.tddn import tddn
 from adi.tmc5240 import tmc5240
+from adi.trigger import hrtimer_trig, sysfs_trig
 
 try:
     from adi.jesd import jesd
