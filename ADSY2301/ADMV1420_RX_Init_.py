@@ -35,7 +35,7 @@ rx_2 = adi.admv1420(uri=talise_uri, device_name="admv1420_rx_2")
 rx_3 = adi.admv1420(uri=talise_uri, device_name="admv1420_rx_3")
 
 READCURRENTSTATE = True
-WRITENEWSTATE = False
+WRITENEWSTATE = True
 WRITELUTTABLES = False
 
 if READCURRENTSTATE:
@@ -113,7 +113,7 @@ if WRITENEWSTATE:
         rx.rf_band = "3GHz_13GHz"
         rx.if_band = "3GHz_13GHz"
         rx.if_mode = "if"
-        rx.lo_sideband = "USB"
+        rx.lo_sideband = "LSB"
         rx.lo_x3_filter = "14GHz_18GHz"
 
         # Set DSA gains to 0 dB (no attenuation)
