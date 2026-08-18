@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE context [
+<!ELEMENT context (device | context-attribute)*>
+<!ELEMENT context-attribute EMPTY>
+<!ELEMENT device (channel | attribute | debug-attribute | buffer-attribute)*>
+<!ELEMENT channel (scan-element? , attribute*)>
+<!ELEMENT attribute EMPTY>
+<!ELEMENT scan-element EMPTY>
+<!ELEMENT debug-attribute EMPTY>
+<!ELEMENT buffer-attribute EMPTY>
+<!ATTLIST context name CDATA #REQUIRED>
+<!ATTLIST context description CDATA #IMPLIED>
+<!ATTLIST context-attribute name CDATA #REQUIRED>
+<!ATTLIST context-attribute value CDATA #REQUIRED>
+<!ATTLIST device id CDATA #REQUIRED>
+<!ATTLIST device name CDATA #IMPLIED>
+<!ATTLIST channel id CDATA #REQUIRED>
+<!ATTLIST channel type (input | output) #REQUIRED>
+<!ATTLIST channel name CDATA #IMPLIED>
+<!ATTLIST scan-element index CDATA #REQUIRED>
+<!ATTLIST scan-element format CDATA #REQUIRED>
+<!ATTLIST scan-element scale CDATA #IMPLIED>
+<!ATTLIST attribute name CDATA #REQUIRED>
+<!ATTLIST attribute filename CDATA #IMPLIED>
+<!ATTLIST attribute value CDATA #IMPLIED>
+<!ATTLIST debug-attribute name CDATA #REQUIRED>
+<!ATTLIST debug-attribute value CDATA #IMPLIED>
+<!ATTLIST buffer-attribute name CDATA #REQUIRED>
+<!ATTLIST buffer-attribute value CDATA #IMPLIED>
+]>
+<context name="network" description="10.48.65.159 Linux buildroot 6.12.0-26956-g8edd67c2e728 #916 Mon Nov 24 16:07:26 EET 2025 microblaze">
+  <context-attribute name="local,kernel" value="6.12.0-26956-g8edd67c2e728"/>
+  <context-attribute name="uri" value="ip:10.48.65.159"/>
+  <context-attribute name="ip,ip-addr" value="10.48.65.159"/>
+  <device id="iio:device0" name="ad9213">
+    <channel id="voltage0" type="input">
+      <scan-element index="0" format="le:s12/16&gt;&gt;4" scale="1.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage0_sampling_frequency" value="10000000000"/>
+    </channel>
+    <attribute name="jesd204_fsm_ctrl" filename="jesd204_fsm_ctrl" value="1"/>
+    <attribute name="jesd204_fsm_error" filename="jesd204_fsm_error" value="0"/>
+    <attribute name="jesd204_fsm_paused" filename="jesd204_fsm_paused" value="0"/>
+    <attribute name="jesd204_fsm_state" filename="jesd204_fsm_state" value="opt_post_running_stage"/>
+    <attribute name="waiting_for_supplier" filename="waiting_for_supplier" value="0"/>
+    <buffer-attribute name="data_available" value="0"/>
+    <buffer-attribute name="direction" value="in"/>
+    <buffer-attribute name="length_align_bytes" value="32"/>
+    <debug-attribute name="direct_reg_access" value="0x0"/>
+  </device>
+  <device id="iio:device1" name="hmc7044">
+    <channel id="altvoltage1" name="ADC_SYSREF" type="output">
+      <attribute name="frequency" filename="out_altvoltage1_ADC_SYSREF_frequency" value="19531250"/>
+      <attribute name="label" filename="out_altvoltage1_ADC_SYSREF_label" value="ADC_SYSREF"/>
+      <attribute name="phase" filename="out_altvoltage1_ADC_SYSREF_phase" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage3" name="FMC_SYSREF" type="output">
+      <attribute name="frequency" filename="out_altvoltage3_FMC_SYSREF_frequency" value="19531250"/>
+      <attribute name="label" filename="out_altvoltage3_FMC_SYSREF_label" value="FMC_SYSREF"/>
+      <attribute name="phase" filename="out_altvoltage3_FMC_SYSREF_phase" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage4" name="CLKOUT_MMCX" type="output">
+      <attribute name="frequency" filename="out_altvoltage4_CLKOUT_MMCX_frequency" value="312500000"/>
+      <attribute name="label" filename="out_altvoltage4_CLKOUT_MMCX_label" value="CLKOUT_MMCX"/>
+      <attribute name="phase" filename="out_altvoltage4_CLKOUT_MMCX_phase" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage5" name="FMC_CLK_COPY" type="output">
+      <attribute name="frequency" filename="out_altvoltage5_FMC_CLK_COPY_frequency" value="312500000"/>
+      <attribute name="label" filename="out_altvoltage5_FMC_CLK_COPY_label" value="FMC_CLK_COPY"/>
+      <attribute name="phase" filename="out_altvoltage5_FMC_CLK_COPY_phase" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage7" name="FMC_REFCLK" type="output">
+      <attribute name="frequency" filename="out_altvoltage7_FMC_REFCLK_frequency" value="625000000"/>
+      <attribute name="label" filename="out_altvoltage7_FMC_REFCLK_label" value="FMC_REFCLK"/>
+      <attribute name="phase" filename="out_altvoltage7_FMC_REFCLK_phase" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage9" name="FMC_REFCLK_COPY" type="output">
+      <attribute name="frequency" filename="out_altvoltage9_FMC_REFCLK_COPY_frequency" value="625000000"/>
+      <attribute name="label" filename="out_altvoltage9_FMC_REFCLK_COPY_label" value="FMC_REFCLK_COPY"/>
+      <attribute name="phase" filename="out_altvoltage9_FMC_REFCLK_COPY_phase" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage11" name="CORE_CLK" type="output">
+      <attribute name="frequency" filename="out_altvoltage11_CORE_CLK_frequency" value="312500000"/>
+      <attribute name="label" filename="out_altvoltage11_CORE_CLK_label" value="CORE_CLK"/>
+      <attribute name="phase" filename="out_altvoltage11_CORE_CLK_phase" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage14" name="ADF_CLK" type="output">
+      <attribute name="frequency" filename="out_altvoltage14_ADF_CLK_frequency" value="125000000"/>
+      <attribute name="label" filename="out_altvoltage14_ADF_CLK_label" value="ADF_CLK"/>
+      <attribute name="phase" filename="out_altvoltage14_ADF_CLK_phase" value="0.000000"/>
+    </channel>
+    <attribute name="mute_request" filename="mute_request" value="0"/>
+    <attribute name="reseed_request" filename="reseed_request" value="0"/>
+    <attribute name="reset_dividers_request" filename="reset_dividers_request" value="0"/>
+    <attribute name="sleep_request" filename="sleep_request" value="0"/>
+    <attribute name="sync_pin_mode" filename="sync_pin_mode" value="sync"/>
+    <attribute name="sync_pin_mode_available" filename="sync_pin_mode_available" value="disable sync sysref sync_else_sysref"/>
+    <attribute name="sysref_request" filename="sysref_request" value="0"/>
+    <attribute name="waiting_for_supplier" filename="waiting_for_supplier" value="0"/>
+    <debug-attribute name="direct_reg_access" value="0x0"/>
+  </device>
+  <device id="iio:device2" name="adf4371">
+    <channel id="altvoltage0" type="output">
+      <attribute name="frequency" filename="out_altvoltage0_frequency" value="5000000000"/>
+      <attribute name="muxout_mode_available" filename="out_altvoltage0_muxout_mode_available" value="tristate digital_lock charge_pump_up charge_pump_down RDIV2 N_div_out VCO_test high VCO_calib_R_band VCO_calib_N_band"/>
+      <attribute name="name" filename="out_altvoltage0_name" value="RF8x"/>
+      <attribute name="phase" filename="out_altvoltage0_phase" value="0"/>
+      <attribute name="powerdown" filename="out_altvoltage0_powerdown" value="1"/>
+    </channel>
+    <channel id="altvoltage1" type="output">
+      <attribute name="frequency" filename="out_altvoltage1_frequency" value="5000000000"/>
+      <attribute name="muxout_mode_available" filename="out_altvoltage1_muxout_mode_available" value="tristate digital_lock charge_pump_up charge_pump_down RDIV2 N_div_out VCO_test high VCO_calib_R_band VCO_calib_N_band"/>
+      <attribute name="name" filename="out_altvoltage1_name" value="RFAUX8x"/>
+      <attribute name="phase" filename="out_altvoltage1_phase" value="0"/>
+      <attribute name="powerdown" filename="out_altvoltage1_powerdown" value="1"/>
+      <attribute name="vco_output_enable" filename="out_altvoltage1_vco_output_enable" value="0"/>
+    </channel>
+    <channel id="altvoltage2" type="output">
+      <attribute name="frequency" filename="out_altvoltage2_frequency" value="10000000000"/>
+      <attribute name="muxout_mode_available" filename="out_altvoltage2_muxout_mode_available" value="tristate digital_lock charge_pump_up charge_pump_down RDIV2 N_div_out VCO_test high VCO_calib_R_band VCO_calib_N_band"/>
+      <attribute name="name" filename="out_altvoltage2_name" value="RF16x"/>
+      <attribute name="phase" filename="out_altvoltage2_phase" value="0"/>
+      <attribute name="powerdown" filename="out_altvoltage2_powerdown" value="0"/>
+    </channel>
+    <channel id="altvoltage3" type="output">
+      <attribute name="frequency" filename="out_altvoltage3_frequency" value="20000000000"/>
+      <attribute name="muxout_mode_available" filename="out_altvoltage3_muxout_mode_available" value="tristate digital_lock charge_pump_up charge_pump_down RDIV2 N_div_out VCO_test high VCO_calib_R_band VCO_calib_N_band"/>
+      <attribute name="name" filename="out_altvoltage3_name" value="RF32x"/>
+      <attribute name="phase" filename="out_altvoltage3_phase" value="0"/>
+      <attribute name="powerdown" filename="out_altvoltage3_powerdown" value="1"/>
+    </channel>
+    <channel id="temp0" type="input">
+      <attribute name="input" filename="in_temp0_input" value="95500"/>
+    </channel>
+    <attribute name="muxout_enable" filename="muxout_enable" value="1"/>
+    <attribute name="muxout_mode" filename="muxout_mode" value="digital_lock"/>
+    <attribute name="waiting_for_supplier" filename="waiting_for_supplier" value="0"/>
+    <debug-attribute name="direct_reg_access" value="0x0"/>
+  </device>
+  <device id="iio_sysfs_trigger">
+    <attribute name="add_trigger" value="ERROR"/>
+    <attribute name="remove_trigger" value="ERROR"/>
+  </device>
+</context>
