@@ -100,10 +100,16 @@ venv.bak/
 
 # mkdocs documentation
 /site
+MR/
+MR_VENV/
 
 # mypy
 .mypy_cache/
 
 # doc generation
 doc/source/_static/logos
+<<<<<<< HEAD
 ADSY2301/MR_VENV
+=======
+ADSY2301/#*
+>>>>>>> XBDK_V2_Experimental

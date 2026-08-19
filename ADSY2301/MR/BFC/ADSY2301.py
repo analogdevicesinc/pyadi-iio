@@ -61,7 +61,6 @@ def enable_mantaray_channel(obj, elements=None, man_input=False):
                 # time.sleep(0.01)
                 if device.mode == "rx":
                     for channel in device.channels:
-
                         str_channel = str(channel)
                         value = int(strip_to_last_two_digits(str_channel))
 
@@ -71,42 +70,15 @@ def enable_mantaray_channel(obj, elements=None, man_input=False):
                             if elem == value:
                                 # print("Turning on element:",elem)
                                 channel.rx_enable = True
-
-                if device.mode == "tx":
-                    for channel in device.channels:
-
-                        str_channel = str(channel)
-                        value = int(strip_to_last_two_digits(str_channel))
-
-                        # Check if the channel is in the list of elements to disable
-                        # If it is, disable the channel
-                        tries = 10
-                        for elem in elements:
-                            if elem == value:
-                                channel.tx_enable = True
-                                print(f"setting channel: {channel}")
-                                channel.pa_bias_on = -2.05
-                                if round(channel.pa_bias_on,1) != -2.05:
-                                    found = False
-                                    for _ in range(tries):
-                                        if round(channel.pa_bias_on,1) != -2.05:
-                                            pass
-                                        else:
-                                            found = True
-                                            break
-                                    if not found:
-                                        print(f"Not set properly: {channel.pa_bias_on=}")
-                                        print(f"Element number {channel}")
+                                device.lna_bias_on = -0.9412
                                         
-                # else:
-                #     raise ValueError('Mode of operation must be either "rx" or "tx"')
+                else:
+                    raise ValueError('Mode of operation must be either "rx"')
             break
         except:
             print("retrying")
-            time.sleep(2)
-    else:
-        raise ValueError('Mode of operation must be either "rx" or "tx"')
- 
+            time.sleep(0.5)
+
 # Receive data on ADRV9009
 def data_capture(adc):
     adc.rx_destroy_buffer() # clear previous data
@@ -154,7 +126,7 @@ def disable_pa_bias_channel(obj, elements=None):
                     print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
                     print(f"Element number {value}")
  
-def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -2.0):
+def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -1.8):
     """
     Enables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
     """
@@ -314,6 +286,7 @@ def disable_mantaray_channel(obj, elements=None, man_input=False):
                             if elem == value:
                                 # print("Turning off element:",elem)
                                 channel.rx_enable = False
+                                device.lna_bias_on = -4.8
                                 break
                 else:
                     raise ValueError('Mode of operation must be either "rx" or "tx"')
@@ -427,21 +400,28 @@ def create_dict(new_keys, array):
     Convert a flattened array (1x64) into 8x8 and create a dictionary 
     where each key from new_keys (8x8) maps to its corresponding 8-value row.
     """
+    # Type Checker
+    if not isinstance(new_keys, np.ndarray):
+        raise TypeError("new_keys must be a numpy array")
+    if not isinstance(array, np.ndarray):
+        raise TypeError("array must be a numpy array")
+
+    array_shape = np.shape(new_keys)
+    key_flat = new_keys.transpose().flatten()
+    array_flat = array.transpose().flatten()
+
     result_dict = {}
-    print(array)
-    print(new_keys)
+
     # Reshape new_keys and array into 8x8
-    reshaped_keys = new_keys.reshape(8, 8,order='F')
-    reshaped_array = array.reshape(8, 8,order='F')
+    reshaped_keys = key_flat.reshape(array_shape,order='F')
+    reshaped_array = array_flat.reshape(array_shape,order='F')
 
     # Map each key in reshaped_keys to the corresponding row in reshaped_array
 
-
-            
-    for i in range(8):
-        for j in range(8):
+    for i in range(array_shape[0]):
+        for j in range(array_shape[0]):
             result_dict[reshaped_keys[i][j]] = reshaped_array[i][j]
-    
+    print("Dictionary created successfully of size:", array_shape)
     return result_dict
 
 def wrap_to_360(angle):
