@@ -24,7 +24,7 @@ import ADSY2301 as mr
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
 # talise_ip = "10.75.161.115"
-talise_ip = "10.75.161.150"
+talise_ip = "10.75.161.151"
 talise_uri = "ip:" + talise_ip
 MANUAL = False
 
@@ -90,4 +90,4 @@ dev.latch_tx_settings()
 
 a=1
 
-mr.enable_stingray_channel(dev,4)
+# mr.enable_stingray_channel(dev,4)
