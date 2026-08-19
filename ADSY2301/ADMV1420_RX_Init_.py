@@ -110,7 +110,7 @@ if WRITENEWSTATE:
     for rx in [rx_0, rx_1, rx_2, rx_3]:
         # --- Configure for 3-13 GHz RF band with IF output ---
         print("\n=== Configuring for 3-13 GHz band ===")
-        rx.rf_band = "3GHz_13GHz"
+        rx.rf_band = "6GHz_20GHz"
         rx.if_band = "3GHz_13GHz"
         rx.if_mode = "if"
         rx.lo_sideband = "LSB"
@@ -125,7 +125,7 @@ if WRITENEWSTATE:
         # Set DSA offsets
         rx.rf_direct_dsa1_offset = 0
         rx.rf_direct_dsa2_offset = 0
-        rx.rf_direct_dsa3_offset = 0
+        rx.rf_direct_dsa3_offset = 5
 
         # Set LO phase
         rx.lo_direct_i_phase_val = 0

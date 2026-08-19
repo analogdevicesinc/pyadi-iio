@@ -34,11 +34,11 @@ class adf4382(attribute, context_manager):
         "11.100000",
     )
 
-    def __init__(self, uri=""):
-        self._ctx = iio.Context("ip:" + "10.75.161.150")
-        # context_manager.__init__(self, uri, self._device_name)
-        print(self._device_name)
-        # Find the device
+    def __init__(self, uri="", device_name=""):
+        context_manager.__init__(self, uri, self._device_name)
+
+        if device_name:
+            self._device_name = device_name
         self._ctrl = self._ctx.find_device(self._device_name)
 
         # Raise an exception if the device isn't found

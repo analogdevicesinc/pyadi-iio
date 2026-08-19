@@ -26,10 +26,12 @@ import ADSY2301 as mr
 # talise_ip = "10.75.161.115"
 talise_ip = "10.75.161.151"
 talise_uri = "ip:" + talise_ip
-MANUAL = False
 
-dev = adi.adar1000_array(
-    uri=talise_uri,
+
+## Initialization 
+dev = mr.adsy2301(uri=talise_uri)
+
+dev.init_BFC(
 
     chip_ids=[
         "adar1000_csb_1_1_1", "adar1000_csb_1_1_4", "adar1000_csb_1_2_1", "adar1000_csb_1_2_4",
@@ -62,10 +64,16 @@ dev = adi.adar1000_array(
         14: [13, 14, 6, 5],    16: [45, 46, 38, 37],
     },
 )
- 
 
+dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
-dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+dev.init_UDC()
+
+dev.init_ADRV9009()
+
+dev.udc.admv8913.set_filter_band1
+dev.udc.RX_UDC_Band_0()
+
 
 for device in dev.devices.values():
     device.mode = "rx"
