@@ -2,25 +2,21 @@
 #
 # SPDX short identifier: ADIBSD
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
-class ad6676(rx, context_manager):
+class ad6676(rx_def):
     """ AD6676 Wideband IF Receiver Subsystem """
 
     _complex_data = True
     _rx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
+    _control_device_name = "axi-ad6676-hpc"
+    _rx_data_device_name = "axi-ad6676-hpc"
 
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._rxadc = self._ctx.find_device("axi-ad6676-hpc")
+    def __post_init__(self):
+        """Preserve the legacy shared control and RX device identity."""
         self._ctrl = self._rxadc
-
-        rx.__init__(self)
 
     @property
     def adc_frequency(self):

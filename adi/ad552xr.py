@@ -5,56 +5,20 @@
 """AD552XR DAC driver."""
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import tx
+from adi.device_base import tx_chan_comp
 
 
-class ad552xr(tx, context_manager):
+class ad552xr(tx_chan_comp):
     """ad552xr DAC."""
 
     _complex_data = False
     _device_name = ""
 
-    def __init__(self, uri="", device_name=""):
-        """Initialize ad552xr class."""
-        context_manager.__init__(self, uri, self._device_name)
+    compatible_parts = ["ad5529r"]
 
-        compatible_parts = ["ad5529r"]
-
-        self._ctrl = None
-
-        if not device_name:
-            device_name = compatible_parts[0]
-        else:
-            if device_name not in compatible_parts:
-                raise Exception(
-                    f"Not a compatible device: {device_name}. Supported device names "
-                    f"are: {','.join(compatible_parts)}"
-                )
-
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name == device_name:
-                self._ctrl = device
-                self._txdac = device
-                break
-
-        if not self._ctrl:
-            raise Exception("Error in selecting matching device")
-
-        if not self._txdac:
-            raise Exception("Error in selecting matching device")
-
-        self._output_bits = []
-        self.channel = []
-        for ch in self._ctrl.channels:
-            name = ch.id
-            self._output_bits.append(ch.data_format.bits)
-            self._tx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-            setattr(self, name, self._channel(self._ctrl, name))
-
-        tx.__init__(self)
+    def __post_init__(self):
+        """Populate the channel-wise output-bit widths."""
+        self._output_bits = [ch.data_format.bits for ch in self._ctrl.channels]
 
     @property
     def output_bits(self):
@@ -74,6 +38,7 @@ class ad552xr(tx, context_manager):
         """ad552xr channel."""
 
         def __init__(self, ctrl, channel_name):
+            """Initialize a channel wrapper."""
             self.name = channel_name
             self._ctrl = ctrl
 
@@ -328,3 +293,5 @@ class ad552xr(tx, context_manager):
                     "Error: Attribute value not supported \nUse one of: "
                     + str(self.range_sel_available)
                 )
+
+    _channel_def = _channel

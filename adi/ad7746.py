@@ -7,60 +7,49 @@ from collections import OrderedDict
 
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class ad7746(rx, context_manager):
+class ad7746(rx_chan_comp):
     """ AD7746 CDC """
 
     _complex_data = False
     channel = []  # type: ignore
     _device_name = ""
+    compatible_parts = ["ad7745", "ad7746", "ad7747"]
 
     def __init__(self, uri="", device_name=""):
-
+        """Initialize a requested AD7745/AD7746/AD7747 device."""
         context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = [
-            "ad7745",
-            "ad7746",
-            "ad7747",
-        ]
-
-        self._ctrl = None
-
-        if device_name not in compatible_parts:
+        if device_name not in self.compatible_parts:
             raise Exception("Not a compatible device: " + device_name)
+        device = next(
+            (device for device in self._ctx.devices if device.name == device_name), None
+        )
+        if device is None:
+            raise Exception("No device found with name " + device_name)
+        self._rx_channel_names = [ch.id for ch in device.channels]
+        super().__init__(uri=self._ctx, device_name=device_name)
 
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            print("Found device {}".format(device.name))
-            if device.name == device_name:
-                self._ctrl = device
-                self._rxadc = device
-                break
-        # dynamically get channels
-        _channels = []
-        self._rx_channel_names = []
+    def _add_channel_instances(self):
+        """Build the legacy ordered mapping with channel-specific wrappers."""
+        channels = []
         for ch in self._ctrl.channels:
-            self._rx_channel_names.append(ch.id)
             if "capacitance" in ch.id:
-                _channels.append((ch.id, self._cap_channel(self._ctrl, ch.id)))
+                channels.append((ch.id, self._cap_channel(self._ctrl, ch.id)))
                 continue
             if "temp" in ch.id:
-                _channels.append((ch.id, self._temp_channel(self._ctrl, ch.id)))
+                channels.append((ch.id, self._temp_channel(self._ctrl, ch.id)))
                 continue
             if "voltage" in ch.id:
-                _channels.append((ch.id, self._volt_channel(self._ctrl, ch.id)))
-                continue
-        self.channel = OrderedDict(_channels)
-
-        rx.__init__(self)
+                channels.append((ch.id, self._volt_channel(self._ctrl, ch.id)))
+        self.channel = OrderedDict(channels)
 
     class _temp_channel(attribute):
         """AD7746 temperature channel."""
 
         def __init__(self, ctrl, channel_name):
+            """Initialize an AD7746 temperature channel wrapper."""
             self.name = channel_name
             self._ctrl = ctrl
 
@@ -73,6 +62,7 @@ class ad7746(rx, context_manager):
         """AD7746 voltage channel."""
 
         def __init__(self, ctrl, channel_name):
+            """Initialize an AD7746 voltage channel wrapper."""
             self.name = channel_name
             self._ctrl = ctrl
 

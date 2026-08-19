@@ -4,11 +4,10 @@
 
 import numpy as np
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
-class adis16507(rx, context_manager):
+class adis16507(rx_def):
     """ ADIS16507 Precision, Miniature MEMS IMU """
 
     _complex_data = False
@@ -21,20 +20,22 @@ class adis16507(rx, context_manager):
         "accel_z",
     ]
     _device_name = ""
+    _control_device_name = None
+    _rx_data_device_name = None
     _rx_data_si_type = float
 
     def __init__(
         self, uri="", imu_dev_name="adis16507-3", trigger_name="adis16507-3-dev0"
     ):
+        self._control_device_name = imu_dev_name
+        self._rx_data_device_name = imu_dev_name
+        self._trigger_name = trigger_name
+        super().__init__(uri=uri)
 
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._ctrl = self._ctx.find_device(imu_dev_name)
-        self._rxadc = self._ctx.find_device(imu_dev_name)
-        # Set default trigger
-        self._trigger = self._ctx.find_device(trigger_name)
+    def __post_init__(self):
+        """Set the requested trigger and the legacy default buffer size."""
+        self._trigger = self._ctx.find_device(self._trigger_name)
         self._rxadc._set_trigger(self._trigger)
-        rx.__init__(self)
         self.rx_buffer_size = 16  # Make default buffer smaller
 
     @property

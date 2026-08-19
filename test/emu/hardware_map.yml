@@ -448,6 +448,16 @@ ad9434:
       - filename: ad9434.xml
       - data_devices:
           - iio:device2
+ad9213:
+  - ad9213
+  - hmc7044
+  - adf4371
+  - pyadi_iio_class_support:
+      - ad9213
+  - emulate:
+      - filename: ad9213.xml
+      - data_devices:
+          - iio:device0
 ad9265:
   - axi-ad9265-core-lpc
   - ad9517-4
@@ -745,6 +755,15 @@ adis16550:
   - pyadi_iio_class_support:
       - adis16550
 
+adis16507-3:
+  - adis16507-3
+  - emulate:
+      - filename: adis16507.xml
+      - data_devices:
+        - iio:device0
+  - pyadi_iio_class_support:
+      - adis16507
+
 ad7124-8:
   - ad7124
   - pyadi_iio_class_support:
@@ -904,3 +923,44 @@ ad7405:
       - filename: ad7405.xml
       - data_devices:
           - iio:device0
+
+admt4000:
+  - admt4000
+  - pyadi_iio_class_support:
+      - admt4000
+  - emulate:
+      - filename: admt4000.xml
+      - data_devices:
+          - iio:device0
+
+tmc5240:
+  - tmc5240
+  - pyadi_iio_class_support:
+      - tmc5240
+  - emulate:
+      - filename: tmc5240.xml
+      - data_devices:
+          - iio:device0
+
+admt4000ard1z:
+  - admt4000
+  - tmc5240
+  - pyadi_iio_class_support:
+      - admt4000ard1z
+      - admt4000
+      - tmc5240
+  - emulate:
+      - filename: admt4000ard1z.xml
+      - data_devices:
+          - iio:device1
+          - iio:device2
+
+admt4000ard2z:
+  - admt4000
+  - pyadi_iio_class_support:
+      - admt4000ard2z
+      - admt4000
+  - emulate:
+      - filename: admt4000ard2z.xml
+      - data_devices:
+          - iio:device1

@@ -57,14 +57,28 @@ class device_base(shared_def):
         """Initiate channel objects for each channel in the device."""
         self.channel = []  # type: ignore
         if self._channel_def:
-            if not callable(self._channel_def):
-                raise Exception("_channel_def must be a callable class")
-            for ch in self._ctrl.channels:
-                if ch.id in self._ignore_channels:
-                    continue
-                name = ch.id
-                setattr(self, name, self._channel_def(self._ctrl, name))
-                self.channel.append(getattr(self, name))
+            if isinstance(self._channel_def, dict):
+                # Map channel definitions to channel objects based on channel id
+                for ch in self._ctrl.channels:
+                    if ch.id in self._ignore_channels:
+                        continue
+                    for ch_id, ch_def in self._channel_def.items():
+                        if not callable(ch_def):
+                            raise Exception(
+                                "Channel definition must be a callable class"
+                            )
+                        if ch_id in ch.id:
+                            setattr(self, ch.id, ch_def(self._ctrl, ch.id))
+                            self.channel.append(getattr(self, ch.id))
+                            break
+            else:
+                if not callable(self._channel_def):
+                    raise Exception("_channel_def must be a callable class")
+                for ch in self._ctrl.channels:
+                    if ch.id in self._ignore_channels:
+                        continue
+                    setattr(self, ch.id, self._channel_def(self._ctrl, ch.id))
+                    self.channel.append(getattr(self, ch.id))
 
 
 class tx_chan_comp(tx_def, device_base):

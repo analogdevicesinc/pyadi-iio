@@ -6,53 +6,43 @@ import numpy as np
 
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class adxl313(rx, context_manager, attribute):
+class adxl313(rx_chan_comp, attribute):
 
     """ADXL313 3-axis accelerometer"""
 
+    _complex_data = False
     _device_name = ""
     _rx_data_type = np.int32
     _rx_unbuffered_data = True
     _rx_data_si_type = float
+    _rx_channel_names = ["accel_x", "accel_y", "accel_z"]
+    compatible_parts = ["ADXL312", "ADXL313", "ADXL314"]
 
     def __init__(self, uri=""):
         """adxl313 class constructor."""
         context_manager.__init__(self, uri)
-
-        compatible_parts = [
-            "ADXL312",
-            "ADXL313",
-            "ADXL314",
-        ]
-
-        self._ctrl = None
-
-        # Select the device matching device_name as working device
-        for device in self._ctx.devices:
-            if device.name in compatible_parts:
-                print("Found device {}".format(device.name))
-                self._ctrl = device
-                self._rxadc = device
-                self._device_name = device.name
-                break
-
-        if self._ctrl is None:
+        device_name = next(
+            (
+                device.name
+                for device in self._ctx.devices
+                if device.name in self.compatible_parts
+            ),
+            None,
+        )
+        if device_name is None:
             raise Exception("No compatible device found")
-
-        self.accel_x = self._channel(self._ctrl, "accel_x")
-        self.accel_y = self._channel(self._ctrl, "accel_y")
-        self.accel_z = self._channel(self._ctrl, "accel_z")
-        self._rx_channel_names = ["accel_x", "accel_y", "accel_z"]
-        rx.__init__(self)
+        self._device_name = device_name
+        super().__init__(uri=self._ctx, device_name=device_name)
 
     class _channel(attribute):
 
         """ADXL313 acceleration channel"""
 
         def __init__(self, ctrl, channel_name):
+            """Initialize an ADXL313-family channel wrapper."""
             self.name = channel_name
             self._ctrl = ctrl
 
@@ -111,3 +101,5 @@ class adxl313(rx, context_manager, attribute):
         def scale_available(self):
             """Provides all available scale settings for the ADXL313 channels."""
             return self._get_iio_attr(self.name, "scale_available", False)
+
+    _channel_def = _channel

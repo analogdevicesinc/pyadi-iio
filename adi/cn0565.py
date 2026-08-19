@@ -10,7 +10,7 @@ from adi.adg2128 import adg2128
 from adi.context_manager import context_manager
 
 
-class cn0565(ad5940, adg2128, context_manager):
+class cn0565(ad5940, adg2128):
 
     """The CN0565 class inherits features from both the AD5940 (providing high
     precision in impedance and electrochemical frontend) and the ADG2128

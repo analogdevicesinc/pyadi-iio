@@ -26,10 +26,13 @@ class ad4080(rx_chan_comp):
     compatible_parts = [
         "ad4080",
         "ad4081",
+        "ad4082",
         "ad4083",
         "ad4084",
+        "ad4085",
         "ad4086",
         "ad4087",
+        "ad4088",
     ]
     _device_name = ""
     _complex_data = False

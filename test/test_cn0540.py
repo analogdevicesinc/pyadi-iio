@@ -5,9 +5,44 @@ import pytest
 
 import adi
 from adi.cn0540 import cn0540
+from adi.device_base import rx_def
 
 hardware = "cn0540"
 classname = "adi.cn0540.cn0540"
+
+
+@pytest.mark.iio_hardware(hardware)
+def test_cn0540_common_parent_preserves_composite_state(iio_uri):
+    """Common RX setup retains all four board-device references."""
+    with cn0540(uri=iio_uri) as device:
+        assert "__init__" not in cn0540.__dict__
+        assert isinstance(device, rx_def)
+        assert device._ctrl.name == "ad7768-1"
+        assert device._rxadc.name == "ad7768-1"
+        assert device._ctrl is not device._rxadc
+        assert device._ltc2606.name == "ltc2606"
+        assert device._gpio.name == "one-bit-adc-dac"
+        assert device._ltc2308.name == "ltc2308"
+        assert device._rx_channel_names == ["voltage0"]
+        assert device.rx_enabled_channels == [0]
+        assert device._num_rx_channels == 1
+        assert device.rx_buffer_size == 1024
+        assert device._complex_data is False
+        assert device._rx_data_si_type is float
+
+
+@pytest.mark.iio_hardware(hardware)
+def test_cn0532_inherits_cn0540_common_initialization(iio_uri):
+    """CN0532 keeps its board state without a forwarding constructor."""
+    with adi.cn0532(uri=iio_uri) as device:
+        assert "__init__" not in adi.cn0532.__dict__
+        assert isinstance(device, cn0540)
+        assert device._ctrl.name == "ad7768-1"
+        assert device._rxadc.name == "ad7768-1"
+        assert device._ltc2606.name == "ltc2606"
+        assert device._gpio.name == "one-bit-adc-dac"
+        assert device._ltc2308.name == "ltc2308"
+        assert device.rx_enabled_channels == [0]
 
 
 #########################################

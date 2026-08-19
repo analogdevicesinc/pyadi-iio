@@ -4,45 +4,41 @@
 
 from adi.attribute import attribute
 from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp
 
 
-class adpd188(rx, context_manager):
+class adpd188(rx_chan_comp):
 
     """ADPD188 photo-electronic device."""
 
     channel = []  # type: ignore
+    _complex_data = False
     _device_name = ""
+    compatible_parts = ["adpd188"]
 
     def __init__(self, uri="", device_index=0):
         """ADPD188 class constructor."""
         context_manager.__init__(self, uri, self._device_name)
+        devices = [device for device in self._ctx.devices if device.name == "adpd188"]
+        if device_index >= len(devices):
+            raise Exception(
+                f"No device found with name adpd188 at index {device_index}"
+            )
+        self._rx_channel_names = [ch._id for ch in devices[device_index]._channels]
+        super().__init__(uri=self._ctx, device_index=device_index)
 
-        compatible_parts = ["adpd188"]
+    def __post_init__(self):
+        """Use the legacy smaller default RX buffer."""
+        self.rx_buffer_size = 16
 
-        self._ctrl = None
-        index = 0
-
-        # Selecting the device_index-th device from the adpd188 family as working device.
-        for device in self._ctx.devices:
-            if device.name in compatible_parts:
-                if index == device_index:
-                    self._ctrl = device
-                    self._rxadc = device
-                    break
-                else:
-                    index += 1
-
-        # dynamically get channels and sorting them after the color
-        # self._ctrl.channels.sort(key=lambda x: str(x.id[14:]))
-        self._rx_channel_names = []
+    def _add_channel_instances(self):
+        """Build wrappers from private IIO channel traversal order."""
         self.channel = []
         for ch in self._ctrl._channels:
             name = ch._id
-            self._rx_channel_names.append(name)
-            self.channel.append(self._channel(self._ctrl, name))
-        rx.__init__(self)
-        self.rx_buffer_size = 16
+            wrapper = self._channel_def(self._ctrl, name)
+            self.channel.append(wrapper)
+            setattr(self, name, wrapper)
 
     @property
     def mode(self):
@@ -67,6 +63,7 @@ class adpd188(rx, context_manager):
         """ADPD188 channel."""
 
         def __init__(self, ctrl, channel_name):
+            """Initialize an ADPD188 channel wrapper."""
             self.name = channel_name
             self._ctrl = ctrl
 
@@ -90,3 +87,5 @@ class adpd188(rx, context_manager):
             return self._get_iio_attr_str(
                 self.name, "mode_available", False, self._rxadc
             )
+
+    _channel_def = _channel

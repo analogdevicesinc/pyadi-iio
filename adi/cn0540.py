@@ -6,8 +6,7 @@ import time
 
 import numpy as np
 
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_def
 
 
 def reset_buffer(func):
@@ -23,13 +22,20 @@ def reset_buffer(func):
     return wrapper
 
 
-class cn0540(rx, context_manager):
-    """CN0540 CBM DAQ Board"""
+class cn0540(rx_def):
+    """CN0540 condition-based monitoring data-acquisition board.
+
+    The interface combines buffered AD7768-1 acquisition with the board's
+    LTC2606 bias DAC, LTC2308 monitor ADC, and GPIO controls. Voltage
+    properties are reported in millivolts.
+    """
 
     _rx_data_si_type = float
     _complex_data = False
     _rx_channel_names = ["voltage0"]
     _device_name = ""
+    _control_device_name = "ad7768-1"
+    _rx_data_device_name = "ad7768-1"
     _fda_mode_options = ["low-power", "full-power"]
     _dac_buffer_gain = 1.22
     _g = 0.3
@@ -37,24 +43,52 @@ class cn0540(rx, context_manager):
     _fda_vocm_mv = 2500
     _reset_on_spi_writes = True
 
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._rxadc = self._ctx.find_device("ad7768-1")
-        self._ctrl = self._ctx.find_device("ad7768-1")
+    def __post_init__(self):
+        """Discover the board's auxiliary converter and GPIO devices."""
         self._ltc2606 = self._ctx.find_device("ltc2606")
         self._gpio = self._ctx.find_device("one-bit-adc-dac")
         self._ltc2308 = self._ctx.find_device("ltc2308")
 
-        rx.__init__(self)
+    @reset_buffer
+    def calibrate(self):
+        """Tune the LTC2606 until the AD7768-1 ADC codes approach zero mean."""
+        adc_chan = self._rxadc
+        dac_chan = self._ltc2606
+        adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
+        dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
+
+        for _ in range(20):
+            raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
+            adc_voltage = raw * adc_scale
+
+            raw = self._get_iio_attr("voltage0", "raw", True, dac_chan)
+            dac_voltage = (raw * dac_scale - adc_voltage) / dac_scale
+
+            e = int(dac_voltage * dac_scale)
+
+            if int(dac_voltage) > 2 ** 16 - 1:
+                print(
+                    "Warning: DAC voltage at upper limit, "
+                    + f"calibration may not converge (Error: {e - (2**16 - 1)} codes).\n"
+                    + "Make sure sensor is connected."
+                )
+                dac_voltage = 2 ** 16 - 1
+            elif int(dac_voltage) < 0:
+                print(
+                    "Warning: DAC voltage at lower limit, "
+                    + f"calibration may not converge (Error: {e} codes).\n"
+                    + "Make sure sensor is connected."
+                )
+                dac_voltage = 0
+
+            self._set_iio_attr_float(
+                "voltage0", "raw", True, int(dac_voltage), dac_chan
+            )
+            time.sleep(0.01)
 
     @property
     def sample_rate(self):
-        """sample_rate: Sample rate in samples per second.
-        Valid options are:
-        '256000','128000','64000','32000','16000','8000','4000','2000','1000'
-        """
+        """Sample rate in samples per second."""
         return self._get_iio_dev_attr("sampling_frequency")
 
     @sample_rate.setter
@@ -64,7 +98,7 @@ class cn0540(rx, context_manager):
 
     @property
     def input_voltage(self):
-        """input_voltage: Input voltage in mV from ADC before shift voltage applied"""
+        """Input voltage in mV before the shift voltage is applied."""
         adc_chan = self._rxadc
         adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
         raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
@@ -72,7 +106,7 @@ class cn0540(rx, context_manager):
 
     @property
     def shift_voltage(self):
-        """shift_voltage: Shift voltage in mV from LTC2606 to bias sensor data"""
+        """LTC2606 shift voltage in mV used to bias the sensor data."""
         dac_chan = self._ltc2606
         dac_scale = float(self._get_iio_attr("voltage0", "scale", True, dac_chan))
         raw = self._get_iio_attr("voltage0", "raw", True, dac_chan)
@@ -88,7 +122,7 @@ class cn0540(rx, context_manager):
 
     @property
     def sensor_voltage(self):
-        """sensor_voltage: Sensor voltage in mV read from ADC after biasing"""
+        """Calculated sensor voltage in mV after bias correction."""
         adc_chan = self._rxadc
         adc_scale = float(self._get_iio_attr("voltage0", "scale", False, adc_chan))
         raw = self._get_iio_attr("voltage0", "raw", False, adc_chan)
@@ -102,12 +136,12 @@ class cn0540(rx, context_manager):
 
     @property
     def sw_ff_status(self):
-        """sw_ff_status: Fault flag status"""
+        """Fault-flag status."""
         return self._get_iio_attr("voltage0", "raw", False, self._gpio)
 
     @property
     def monitor_powerup(self):
-        """monitor_powerup: Shutdown pin is tied to active-low inputs"""
+        """Monitor power state; the shutdown pin uses active-low inputs."""
         return self._get_iio_attr("voltage2", "raw", True, self._gpio)
 
     @monitor_powerup.setter
@@ -116,7 +150,7 @@ class cn0540(rx, context_manager):
 
     @property
     def fda_disable_status(self):
-        """fda_disable_status: Amplifier disable status"""
+        """Fully differential amplifier disable status."""
         return self._get_iio_attr("voltage5", "raw", True, self._gpio)
 
     @fda_disable_status.setter
@@ -126,7 +160,7 @@ class cn0540(rx, context_manager):
 
     @property
     def fda_mode(self):
-        """fda_mode: Amplifier mode. Options are low-power or full-power"""
+        """Amplifier mode: ``"low-power"`` or ``"full-power"``."""
         return self._fda_mode_options[
             int(self._get_iio_attr("voltage6", "raw", True, self._gpio))
         ]
@@ -141,7 +175,7 @@ class cn0540(rx, context_manager):
 
     @property
     def red_led_enable(self):
-        """red_led_enable: Enable red LED on board"""
+        """Enable or disable the board's red LED."""
         return self._get_iio_attr("voltage1", "raw", True, self._gpio)
 
     @red_led_enable.setter
@@ -150,7 +184,7 @@ class cn0540(rx, context_manager):
 
     @property
     def sw_cc(self):
-        """sw_cc: Enable SW_CC. This will also illuminate the blue LED."""
+        """Enable SW_CC and illuminate the blue LED."""
         return self._get_iio_attr("voltage0", "raw", True, self._gpio)
 
     @sw_cc.setter

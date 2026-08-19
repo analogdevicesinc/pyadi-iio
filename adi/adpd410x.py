@@ -3,11 +3,10 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
-from adi.rx_tx import rx
+from adi.device_base import rx_chan_comp_no_buff
 
 
-class adpd410x(rx, context_manager):
+class adpd410x(rx_chan_comp_no_buff):
     """ adpd410x Multimodal Sensor Front End """
 
     _complex_data = False
@@ -23,16 +22,7 @@ class adpd410x(rx, context_manager):
         "channel7",
     ]
     _device_name = ""
-
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._rxadc = self._ctx.find_device("adpd410x")
-
-        self.channel = []
-        for name in self._rx_channel_names:
-            self.channel.append(self._channel(self._rxadc, name))
+    compatible_parts = ["adpd410x"]
 
     @property
     def sampling_frequency(self):
@@ -68,6 +58,7 @@ class adpd410x(rx, context_manager):
         """adpd410x channel"""
 
         def __init__(self, ctrl, channel_name):
+            """Initialize an ADPD410x channel wrapper."""
             self.name = channel_name
             self._ctrl = ctrl
 
@@ -75,3 +66,5 @@ class adpd410x(rx, context_manager):
         def raw(self):
             """ adpd410x channel raw value"""
             return self._get_iio_attr(self.name, "raw", False, self._ctrl)
+
+    _channel_def = _channel

@@ -2,25 +2,19 @@
 #
 # SPDX short identifier: ADIBSD
 
-from adi.context_manager import context_manager
-from adi.rx_tx import tx
+from adi.device_base import tx_def
 from adi.sync_start import sync_start
 
 
-class ad9144(tx, context_manager, sync_start):
+class ad9144(tx_def, sync_start):
     """ AD9144 High-Speed DAC """
 
     _complex_data = False
     _tx_channel_names = ["voltage0", "voltage1"]
     _device_name = ""
-
-    def __init__(self, uri=""):
-
-        context_manager.__init__(self, uri, self._device_name)
-
-        self._txdac = self._ctx.find_device("axi-ad9144-hpc")
-
-        tx.__init__(self)
+    _control_device_name = None
+    _tx_data_device_name = "axi-ad9144-hpc"
+    compatible_parts = ["axi-ad9144-hpc"]
 
     @property
     def sample_rate(self):
