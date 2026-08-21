@@ -390,7 +390,7 @@ class adsy2301(adar1000_array,context_manager):
                 print(f"IF Band:        {rx.if_band}")
                 print(f"IF Mode:        {rx.if_mode}")
                 print(f"LO Sideband:    {rx.lo_sideband}")
-                # print(f"LO x3 Filter:  {rx.lo_x3_filter}") ISSUE HERE 
+                print(f"LO x3 Filter:  {rx.lo_x3_filter}")  
 
                 # --- Device-level attributes ---
                 print(f"\n=== LUT Configuration ===")

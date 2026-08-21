@@ -34,7 +34,7 @@ rx_1 = adi.admv1420(uri=talise_uri, device_name="admv1420_rx_1")
 rx_2 = adi.admv1420(uri=talise_uri, device_name="admv1420_rx_2")
 rx_3 = adi.admv1420(uri=talise_uri, device_name="admv1420_rx_3")
 
-READCURRENTSTATE = True
+READCURRENTSTATE = False
 WRITENEWSTATE = True
 WRITELUTTABLES = False
 

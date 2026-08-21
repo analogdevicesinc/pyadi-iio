@@ -64,27 +64,26 @@ dev.init_BFC(
         14: [13, 14, 6, 5],    16: [45, 46, 38, 37],
     },
 )
-
 dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
-
 dev.init_UDC()
-
 dev.init_ADRV9009()
 
-dev.udc.admv8913.set_filter_band1
 dev.udc.RX_UDC_Band_0()
+dev.udc.adrf5030.RX_SW_Enable()
+dev.udc.admv8913.set_filter_widest()
+dev.udc.adf4382.altvolt0_frequency = int(15e9)
+dev.udc.adf4382.altvolt1_frequency = int(15e9)
 
-
-for device in dev.devices.values():
+for device in dev.BFC.devices.values():
     device.mode = "rx"
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
-mr.disable_stingray_channel(dev)
-mr.disable_pa_bias_channel(dev)
+mr.disable_stingray_channel(dev.BFC)
+mr.disable_pa_bias_channel(dev.BFC)
 
 print("Setting all devices to rx mode")
-for element in dev.elements.values():
+for element in dev.BFC.elements.values():
     element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
     element.tx_attenuator = 0
     element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
@@ -92,10 +91,10 @@ for element in dev.elements.values():
     element.rx_phase = 0 # Set all phases to 0
     element.tx_phase = 0
 
-dev.latch_rx_settings()
-dev.latch_tx_settings()
+dev.BFC.latch_rx_settings()
+dev.BFC.latch_tx_settings()
 
 
 a=1
 
-# mr.enable_stingray_channel(dev,4)
+mr.enable_stingray_channel(dev.BFC,1)
