@@ -90,7 +90,10 @@ class adsy2301(adar1000_array,context_manager):
         context_manager.__init__(self, uri, self._device_name)
         self.udc = self.UDC(self.uri, self._ctx)
 
-    class UDC:
+    class BFC_Array(adar1000_array):
+        pass
+
+    class UDC():
         def __init__(self, uri, ctx):
             self.uri = uri
             self._ctx = ctx
@@ -406,13 +409,14 @@ class adsy2301(adar1000_array,context_manager):
 
     def init_BFC(self, chip_ids, device_map=None, element_map=None, device_element_map=None):
         try:
-            self.BFC = adar1000_array(
+            self.BFC = self.BFC_Array(
                 uri=self.uri,
                 chip_ids=chip_ids,
                 device_map=device_map,
                 element_map=element_map,
                 device_element_map=device_element_map,
             )
+            
             self._available.append("BFC")
             print("BFC initialized")
         except Exception as e:
