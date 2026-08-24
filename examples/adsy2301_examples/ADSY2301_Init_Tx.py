@@ -18,7 +18,7 @@ import adi
 import numpy as np
 import json
 import os
-import ADSY2301 as mr
+import adsy2301 as mr
 
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
@@ -28,9 +28,12 @@ talise_ip = "10.75.161.151"
 talise_uri = "ip:" + talise_ip
 
 
-## Initialization 
+## Initialization ## 
+
+#Create an ADSY2301 class instance
 dev = mr.adsy2301(uri=talise_uri)
 
+#Create Beamforming tile subclass
 dev.init_BFC(
 
     chip_ids=[
@@ -64,10 +67,17 @@ dev.init_BFC(
         14: [13, 14, 6, 5],    16: [45, 46, 38, 37],
     },
 )
-dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+
+#Create Up/Down Coverter subclass instance
 dev.init_UDC()
+
+#Create Converter subclass instance
 dev.init_ADRV9009()
 
+# Initialize beamforming subclass into known default state
+dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+
+## Set some default states
 dev.udc.RX_UDC_Band_0()
 dev.udc.adrf5030.RX_SW_Enable()
 dev.udc.admv8913.set_filter_widest()
@@ -79,22 +89,23 @@ for device in dev.BFC.devices.values():
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
-mr.disable_stingray_channel(dev.BFC)
-mr.disable_pa_bias_channel(dev.BFC)
+mr.disable_rx_channel(dev.BFC)
+mr.disable_tx_channel(dev.BFC)
 
 print("Setting all devices to rx mode")
 for element in dev.BFC.elements.values():
     element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
     element.tx_attenuator = 0
-    element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
-    element.tx_gain = 127 #Lowest gain
+    element.rx_gain = 0
+    element.tx_gain = 127
     element.rx_phase = 0 # Set all phases to 0
     element.tx_phase = 0
 
-dev.BFC.latch_rx_settings()
-dev.BFC.latch_tx_settings()
+dev.latch_rx_settings()
+dev.latch_tx_settings()
 
-
-a=1
-
-mr.enable_stingray_channel(dev.BFC,1)
+# Switch TR source to FPGA-controlled (external) and enable bias toggle
+# so the TDD engine gates the PA on/off each pulse.
+for device in dev.devices.values():
+        device.tr_source = "external"
+        device.bias_dac_mode = "toggle"

@@ -18,7 +18,7 @@ beamformer and ADRV9009-ZU11EG transceiver SoM.
 
 | File | Description |
 |---|---|
-| `ADSY2301.py` | Core helper module — channel enable/disable, gain & phase calibration, beam steering utilities, FFT analysis. Imported by the other scripts as `import ADSY2301 as mr`. |
+| `ADSY2301.py` | Core helper module — channel enable/disable, gain & phase calibration, beam steering utilities, FFT analysis. Imported by the other scripts as `import adsy2301 as mr`. |
 | `ADSY2301_bootstrap_tiles.py` | SSH-based bootstrap: initialises the 16 ADAR1000 tiles on the SoM. **Run once after every power cycle.** |
 | `ADSY2301_Init.py` | Standalone hardware init for interactive debugging. Creates the array object, sets PA bias, and loads saved TX cal values from `tx_cal_values.json`. |
 | `ADSY2301_Rx_Cal.py` | End-to-end RX calibration script: gain equalization → phase alignment → before/after comparison plot. |

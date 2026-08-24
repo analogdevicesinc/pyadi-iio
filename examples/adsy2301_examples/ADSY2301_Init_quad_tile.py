@@ -18,18 +18,23 @@ import adi
 import numpy as np
 import json
 import os
-import ADSY2301 as mr
+import adsy2301 as mr
 
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
 # talise_ip = "10.75.161.115"
-talise_ip = "10.75.161.150"
+talise_ip = "10.75.161.151"
 talise_uri = "ip:" + talise_ip
-MANUAL = False
 
-dev = adi.adar1000_array(
-    uri=talise_uri,
+
+## Initialization ## 
+
+#Create an ADSY2301 class instance
+dev = mr.adsy2301(uri=talise_uri)
+
+#Create Beamforming tile subclass
+dev.init_BFC(
 
     chip_ids=[
         "adar1000_csb_1_1_1", "adar1000_csb_1_1_4", "adar1000_csb_1_2_1", "adar1000_csb_1_2_4",
@@ -62,19 +67,33 @@ dev = adi.adar1000_array(
         14: [13, 14, 6, 5],    16: [45, 46, 38, 37],
     },
 )
- 
 
-dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+#Create Up/Down Coverter subclass instance
+dev.init_UDC()
 
-for device in dev.devices.values():
+#Create Converter subclass instance
+dev.init_ADRV9009()
+
+# Initialize beamforming subclass into known default state
+dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+
+## Set some default states
+dev.udc.RX_UDC_Band_0()
+dev.udc.adrf5030.RX_SW_Enable()
+dev.udc.admv8913.set_filter_widest()
+dev.udc.adf4382.altvolt0_frequency = int(15e9)
+dev.udc.adf4382.altvolt1_frequency = int(15e9)
+
+for device in dev.BFC.devices.values():
     device.mode = "rx"
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
-mr.disable_pa_bias_channel(dev)
+mr.disable_rx_channel(dev.BFC)
+mr.disable_tx_channel(dev.BFC)
 
 print("Setting all devices to rx mode")
-for element in dev.elements.values():
+for element in dev.BFC.elements.values():
     element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
     element.tx_attenuator = 0
     element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
@@ -82,7 +101,5 @@ for element in dev.elements.values():
     element.rx_phase = 0 # Set all phases to 0
     element.tx_phase = 0
 
-dev.latch_rx_settings()
-dev.latch_tx_settings()
-
-mr.enable_stingray_channel(dev,4)
+dev.BFC.latch_rx_settings()
+dev.BFC.latch_tx_settings()

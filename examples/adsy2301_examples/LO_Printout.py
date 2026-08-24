@@ -34,10 +34,3 @@ print("LO Channel 1 fine current: ", LO.altvolt1_fine_current)
 
 print("LO Channel 0 coarse current: ", LO.altvolt0_coarse_current)
 print("LO Channel 1 coarse current: ", LO.altvolt1_coarse_current)
-
-LO_Freq = int(14.9e9)
-
-print("Setting LO Frequency to %3.2f GHz" % (LO_Freq/1e9))
-
-LO.altvolt0_frequency = LO_Freq
-LO.altvolt1_frequency = LO_Freq

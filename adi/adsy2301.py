@@ -16,34 +16,436 @@
 # ==========================================================================
 
 import time
+import warnings
 import importlib
 import adi
-from adi.sshfs import sshfs
+from adi.adar1000 import adar1000_array
+from adi.adf4382 import adf4382
+from adi.admv1320 import admv1320
+from adi.admv1420 import admv1420
+from adi.adrv9009_zu11eg import adrv9009_zu11eg
 import matplotlib.pyplot as plt
 import numpy as np
 import genalyzer as gn
 import re
 import json
 import os
+from adi.attribute import attribute
+from adi.context_manager import context_manager
 
-def load_json_profile(file_path="ADSY2301.json"):
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(base_dir, file_path)
-    
-    """Load and return JSON data from a file with error handling."""
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"File '{file_path}' does not exist. Please ensure the file is in the local directory.")
 
-    with open(file_path, 'r') as file:
-            data = json.load(file)
+class adsy2301(adar1000_array,context_manager):
+    """ADSY2301 Beamforming System Interface
 
-    return data
-    
-        
-def enable_mantaray_channel(obj, elements=None, man_input=False):
+    This class is a generic interface for boards that utilizes ADAR1000 Array Class
+    along with a lot of other devices.
+
+    parameters:
+        uri: type=string
+            URI of IIO context with ADAR1000 array
+        chip_ids: type=list[string]
+            List of strings identifying desired chip select and hardware ID
+            for the ADAR1000. These strings are the labels coinciding with
+            each chip select and hardware address and are typically in the
+            form csbX_chipX. The csb line can be any number depending on how
+            many are used in the system. The chip number will typically be
+            1-4 because each CSB line can control up to four ADAR1000s. Note
+            that the order of the devices listed will correspond to the
+            device numbers in the array map directly.
+        device_map: type=list[list[int]]
+            List with the map of where the ADAR1000s are in the array. Each
+            entry in the map represents a row of ADAR1000s referenced by
+            device number. For example, a map:
+
+                | [[1, 3, 5, 7],
+                | [2, 4, 6, 8]]
+
+            represents an array of 8 ADAR1000s 4 wide and 2 tall.
+        element_map: type=list[list[int]]
+            List of lists with the map of where the array elements are in the
+            physical array. Each entry in the map represents a row of array
+            channels referenced by element number. For example, a map:
+
+                | [[1, 5, 9, 13],
+                | [2, 6, 10, 14],
+                | [3, 7, 11, 15],
+                | [4, 8, 12, 16]]
+
+            represents an array of 16 elements (4 ADAR1000s) in a square array.
+        device_element_map: type=dict[int, list[int]]
+            Dictionary with the map of ADAR1000 to array element references. Each
+            key in the map is a device number. The corresponding list of integers
+            represents the array element numbers connected to that ADAR1000, in
+            order of the ADAR1000's channels. For example, an entry of
+            {3: [10, 14, 13, 9]} connects ADAR1000 #3 to array elements 10, 14, 13,
+            and 9. Element #10 is on the ADAR1000's channel 1 while element #13 is
+            on the ADAR1000's channel 3.
     """
-    Enables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
+    _device_name = ""
+
+    def __init__(self, uri=""):
+        self.uri = uri
+        self._available = []
+        context_manager.__init__(self, uri, self._device_name)
+        self.udc = self.UDC(self.uri, self._ctx)
+
+    class UDC:
+        def __init__(self, uri, ctx):
+            self.uri = uri
+            self._ctx = ctx
+            self._available = []
+
+        class ADMV8913:
+            def __init__(self, ctx):
+                self._channels = {}
+                artix_control = ctx.find_device("mantaray_control")
+                labels = [
+                    "RF_FL_HPF0", "RF_FL_HPF1", "RF_FL_HPF2", "RF_FL_HPF3",
+                    "RF_FL_LPF0", "RF_FL_LPF1", "RF_FL_LPF2", "RF_FL_LPF3",
+                ]
+                for channel in artix_control.channels:
+                    label = channel.attrs["label"].value
+                    if label in labels:
+                        self._channels[label] = artix_control.find_channel(channel.id, True)
+
+            @property
+            def RF_FL_HPF0(self):
+                return int(self._channels["RF_FL_HPF0"].attrs["raw"].value)
+            @RF_FL_HPF0.setter
+            def RF_FL_HPF0(self, value):
+                self._channels["RF_FL_HPF0"].attrs["raw"].value = str(value)
+            @property
+            def RF_FL_HPF1(self):
+                return int(self._channels["RF_FL_HPF1"].attrs["raw"].value)
+            @RF_FL_HPF1.setter
+            def RF_FL_HPF1(self, value):
+                self._channels["RF_FL_HPF1"].attrs["raw"].value = str(value)
+            @property
+            def RF_FL_HPF2(self):
+                return int(self._channels["RF_FL_HPF2"].attrs["raw"].value)
+            @RF_FL_HPF2.setter
+            def RF_FL_HPF2(self, value):
+                self._channels["RF_FL_HPF2"].attrs["raw"].value = str(value)
+            @property
+            def RF_FL_HPF3(self):
+                return int(self._channels["RF_FL_HPF3"].attrs["raw"].value)
+            @RF_FL_HPF3.setter
+            def RF_FL_HPF3(self, value):
+                self._channels["RF_FL_HPF3"].attrs["raw"].value = str(value)
+            @property
+            def RF_FL_LPF0(self):
+                return int(self._channels["RF_FL_LPF0"].attrs["raw"].value)
+            @RF_FL_LPF0.setter
+            def RF_FL_LPF0(self, value):
+                self._channels["RF_FL_LPF0"].attrs["raw"].value = str(value)
+            @property
+            def RF_FL_LPF1(self):
+                return int(self._channels["RF_FL_LPF1"].attrs["raw"].value)
+            @RF_FL_LPF1.setter
+            def RF_FL_LPF1(self, value):
+                self._channels["RF_FL_LPF1"].attrs["raw"].value = str(value)
+            @property
+            def RF_FL_LPF2(self):
+                return int(self._channels["RF_FL_LPF2"].attrs["raw"].value)
+            @RF_FL_LPF2.setter
+            def RF_FL_LPF2(self, value):
+                self._channels["RF_FL_LPF2"].attrs["raw"].value = str(value)
+            @property
+            def RF_FL_LPF3(self):
+                return int(self._channels["RF_FL_LPF3"].attrs["raw"].value)
+            @RF_FL_LPF3.setter
+            def RF_FL_LPF3(self, value):
+                self._channels["RF_FL_LPF3"].attrs["raw"].value = str(value)
+
+            @property
+            def all_settings(self):
+                return {name: int(ch.attrs["raw"].value) for name, ch in self._channels.items()}
+
+            def set_filter_settings(self, hp_freq, lp_freq):
+
+                HPF_state = int((hp_freq/1e9 - 6.4) / 0.333 + 0.5)
+                LPF_state = int((lp_freq/1e9 - 7.2) / 0.34 + 0.5)
+                hpf_actual = 6.4 + HPF_state * 0.333
+                lpf_actual = 7.2 + LPF_state * 0.34
+
+                print(f"Requested: HPF = {hp_freq/1e9} GHz, LPF = {lp_freq/1e9} GHz")
+                print(f"Nearest: HPF = {hpf_actual:.1f} GHz (state {HPF_state}), "
+                    f"LPF = {lpf_actual:.1f} GHz (state {LPF_state})")
+                
+                hpf_bits = [(HPF_state >> i) & 1 for i in range(4)]
+                lpf_bits = [(LPF_state >> i) & 1 for i in range(4)]
+
+                print(f"Setting HPF bits: B3={hpf_bits[3]} B2={hpf_bits[2]} "
+                    f"B1={hpf_bits[1]} B0={hpf_bits[0]}")
+                
+                self.RF_FL_HPF0 = hpf_bits[0]
+                self.RF_FL_HPF1 = hpf_bits[1]
+                self.RF_FL_HPF2 = hpf_bits[2]
+                self.RF_FL_HPF3 = hpf_bits[3]
+
+                print(f"Setting LPF bits: B3={lpf_bits[3]} B2={lpf_bits[2]} "
+                    f"B1={lpf_bits[1]} B0={lpf_bits[0]}")
+                
+                self.RF_FL_LPF0 = lpf_bits[0]
+                self.RF_FL_LPF1 = lpf_bits[1]
+                self.RF_FL_LPF2 = lpf_bits[2]
+                self.RF_FL_LPF3 = lpf_bits[3]
+
+                print(f"Readback: HPF={self.RF_FL_HPF3}{self.RF_FL_HPF2}{self.RF_FL_HPF1}{self.RF_FL_HPF0} "
+                    f"LPF={self.RF_FL_LPF3}{self.RF_FL_LPF2}{self.RF_FL_LPF1}{self.RF_FL_LPF0}")
+
+            def set_filter_band1(self):
+                self.set_filter_settings(7.732e9, 9.58e9)
+
+            def set_filter_band2(self):
+                self.set_filter_settings(8.4e9, 10.26e9)
+
+            def set_filter_band3(self):
+                self.set_filter_settings(9.4e9, 11.28e9)
+
+            def set_filter_band4(self):
+                self.set_filter_settings(10.4e9, 11.96e9)
+
+            def set_filter_widest(self):
+                self.set_filter_settings(6.4e9, 12.3e9)
+
+        class ADRF5030:
+            def __init__(self, ctx):
+                self._channels = {}
+                switch = ctx.find_device("mantaray_txrx_control")
+                labels = [
+                    "ADRF5030_CTRL1", "ADRF5030_CTRL2", "ADRF5030_CTRL3", "ADRF5030_CTRL4",
+                    "ADRF5030_EN1", "ADRF5030_EN2", "ADRF5030_EN3", "ADRF5030_EN4",
+                ]
+                for channel in switch.channels:
+                    label = channel.attrs["label"].value
+                    if label in labels:
+                        self._channels[label] = switch.find_channel(channel.id, True)
+
+            @property
+            def ADRF5030_CTRL1(self):
+                return int(self._channels["ADRF5030_CTRL1"].attrs["raw"].value)
+            @ADRF5030_CTRL1.setter
+            def ADRF5030_CTRL1(self, value):
+                self._channels["ADRF5030_CTRL1"].attrs["raw"].value = str(value)
+
+            @property
+            def ADRF5030_CTRL2(self):
+                return int(self._channels["ADRF5030_CTRL2"].attrs["raw"].value)
+            @ADRF5030_CTRL2.setter
+            def ADRF5030_CTRL2(self, value):
+                self._channels["ADRF5030_CTRL2"].attrs["raw"].value = str(value)
+
+            @property
+            def ADRF5030_CTRL3(self):
+                return int(self._channels["ADRF5030_CTRL3"].attrs["raw"].value)
+            @ADRF5030_CTRL3.setter
+            def ADRF5030_CTRL3(self, value):
+                self._channels["ADRF5030_CTRL3"].attrs["raw"].value = str(value)
+
+            @property
+            def ADRF5030_CTRL4(self):
+                return int(self._channels["ADRF5030_CTRL4"].attrs["raw"].value)
+            @ADRF5030_CTRL4.setter
+            def ADRF5030_CTRL4(self, value):
+                self._channels["ADRF5030_CTRL4"].attrs["raw"].value = str(value)
+
+            @property
+            def ADRF5030_EN1(self):
+                return int(self._channels["ADRF5030_EN1"].attrs["raw"].value)
+            @ADRF5030_EN1.setter
+            def ADRF5030_EN1(self, value):
+                self._channels["ADRF5030_EN1"].attrs["raw"].value = str(value)
+
+            @property
+            def ADRF5030_EN2(self):
+                return int(self._channels["ADRF5030_EN2"].attrs["raw"].value)
+            @ADRF5030_EN2.setter
+            def ADRF5030_EN2(self, value):
+                self._channels["ADRF5030_EN2"].attrs["raw"].value = str(value)
+
+            @property
+            def ADRF5030_EN3(self):
+                return int(self._channels["ADRF5030_EN3"].attrs["raw"].value)
+            @ADRF5030_EN3.setter
+            def ADRF5030_EN3(self, value):
+                self._channels["ADRF5030_EN3"].attrs["raw"].value = str(value)
+
+            @property
+            def ADRF5030_EN4(self):
+                return int(self._channels["ADRF5030_EN4"].attrs["raw"].value)
+            @ADRF5030_EN4.setter
+            def ADRF5030_EN4(self, value):
+                self._channels["ADRF5030_EN4"].attrs["raw"].value = str(value)
+
+            @property
+            def all_settings(self):
+                return {name: int(ch.attrs["raw"].value) for name, ch in self._channels.items()}
+            
+            # --- TX Switch Functions ---
+            def TX_SW_Enable(self):
+                for i in range(1, 5):
+                    setattr(self, f"ADRF5030_EN{i}", 0)
+                    setattr(self, f"ADRF5030_CTRL{i}", 1)
+                print(f"TX_All: {self.all_settings}")
+
+            # --- RX Switch Functions ---
+
+            def RX_SW_Enable(self):
+                for i in range(1, 5):
+                    setattr(self, f"ADRF5030_EN{i}", 0)
+                    setattr(self, f"ADRF5030_CTRL{i}", 0)
+                print(f"RX_All: {self.all_settings}")
+
+        def init_ADMV1320(self,device_names=None):
+            uri = self.uri
+            device_names = device_names or [
+                "admv1320_tx_0",
+                "admv1320_tx_1",
+                "admv1320_tx_2",
+                "admv1320_tx_3",
+            ]
+            try:
+                self.admv1320 = [admv1320(uri=uri, device_name=name) for name in device_names]
+                self._available.append("ADMV130")
+                print(f"ADMV1320 initialized: {len(self.admv1320)} devices")
+            except Exception as e:
+                warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
+
+        def init_ADMV1420(self,device_names=None):
+            uri = self.uri
+            device_names = device_names or [
+                "admv1420_rx_0",
+                "admv1420_rx_1",
+                "admv1420_rx_2",
+                "admv1420_rx_3",
+            ]
+            try:
+                self.admv1420 = [admv1420(uri=uri, device_name=name) for name in device_names]
+                self._available.append("ADMV1420")
+                print(f"ADMV1420 initialized: {len(self.admv1420)} devices")
+            except Exception as e:
+                warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
+
+        def init_ADF4382(self,device_name=None):
+            uri = self.uri
+            device_name = device_name or "adf4382a"
+
+            try:
+                #initialize the ADF4382 LO class
+                self.adf4382 = adf4382(uri=uri, device_name=device_name)
+                self._available.append("ADF4382")
+                print(f"ADF4382 initialized")
+
+            except Exception as e:
+                warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
+
+        def init_ADMV8913(self):
+            try:
+                self.admv8913 = self.ADMV8913(self._ctx)
+                self._available.append("ADMV8913")
+                print("ADMV8913 initialized")
+            except Exception as e:
+                warnings.warn(f"ADMV8913: {e}", UserWarning)
+                self.admv8913 = None
+
+        def init_ADRF5030(self):
+            try:
+                self.adrf5030 = self.ADRF5030(self._ctx)
+                self._available.append("adrf5030")
+                print("ADRF5030 Switches initialized")
+            except Exception as e:
+                warnings.warn(f"ADRF5030: {e}", UserWarning)
+                self.admv8913 = None
+
+        def RX_UDC_Band_0(self):
+            print("\n=== Configuring for 3-13 GHz IF band ===")
+            for rx in self.admv1420:
+                # --- Configure for 3-13 GHz RF band with IF output ---
+                print(rx._device_name)
+                rx.rf_band = "6GHz_20GHz"
+                rx.if_band = "3GHz_13GHz"
+                rx.if_mode = "if"
+                rx.lo_sideband = "LSB"
+                rx.lo_x3_filter = "14GHz_18GHz"
+
+                # Set DSA gains to 0 dB (no attenuation)
+                rx.rf_direct_dsa1_gain = "0dB"
+                rx.rf_direct_dsa3_gain = "0dB"
+                rx.if_direct_dsa4_gain = "0dB"
+                rx.if_direct_dsa5_gain = "0dB"
+
+                # Set DSA offsets
+                rx.rf_direct_dsa1_offset = 0
+                rx.rf_direct_dsa2_offset = 0
+                rx.rf_direct_dsa3_offset = 5
+
+                # Set LO phase
+                rx.lo_direct_i_phase_val = 0
+                rx.lo_direct_q_phase_val = 0
+
+                # --- Read back configuration ---
+                print(f"RF Band:        {rx.rf_band}")
+                print(f"IF Band:        {rx.if_band}")
+                print(f"IF Mode:        {rx.if_mode}")
+                print(f"LO Sideband:    {rx.lo_sideband}")
+                print(f"LO x3 Filter:  {rx.lo_x3_filter}")  
+
+                # --- Device-level attributes ---
+                print(f"\n=== LUT Configuration ===")
+                print(f"Filter Table:   {rx.filter_table_en}")
+                print(f"Filter Load:    {rx.filter_load_en}")
+                print(f"Filter Sel:     {rx.filter_table_sel}")
+                print(f"Gain Table:     {rx.gain_table_en}")
+                print(f"Gain Load:      {rx.gain_load_en}")
+                print(f"Bypass Gain En: {rx.bypass_gain_table_en}")
+                print(f"GPO_F:          {rx.direct_gpo_f}")
+                print(f"GPO_G:          {rx.direct_gpo_g}")
+                print(f"Bypass GPO_G:   {rx.bypass_gpo_g}")
+
+    def init_BFC(self, chip_ids, device_map=None, element_map=None, device_element_map=None):
+        try:
+            self.BFC = adar1000_array(
+                uri=self.uri,
+                chip_ids=chip_ids,
+                device_map=device_map,
+                element_map=element_map,
+                device_element_map=device_element_map,
+            )
+            self._available.append("BFC")
+            print("BFC initialized")
+        except Exception as e:
+            warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
+            result = None
+
+    def init_ADRV9009(self):
+        try:
+            self.ADRV9009 = adrv9009_zu11eg(
+                uri=self.uri,
+            )
+            self._available.append("ADRV9009")
+            print("ADRV9009 initialized")
+        except Exception as e:
+            warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
+            result = None
+
+    def init_UDC(self):
+        try:
+            self.udc.init_ADMV8913()
+            self.udc.init_ADRF5030()
+            self.udc.init_ADF4382()
+            self.udc.init_ADMV1320()
+            self.udc.init_ADMV1420()
+
+        except Exception as e:
+            warnings.warn(f"Could not initalize one or more devices in UDC: {e}", UserWarning)
+            self.udc = None
+
+
+def enable_rx_channel(obj, elements=None, man_input=False):
+    """
+    Enables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
         user_input = input("Enter a comma-separated list of channels to turn on (1-64): ")
@@ -88,9 +490,9 @@ def data_capture(adc):
     
     return data
 
-def disable_pa_bias_channel(obj, elements=None):
+def disable_tx_channel(obj, elements=None):
     """
-    Disables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
 
     if elements is None:
@@ -126,9 +528,9 @@ def disable_pa_bias_channel(obj, elements=None):
                     print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
                     print(f"Element number {value}")
  
-def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -1.8):
+def enable_tx_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -1.8):
     """
-    Enables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
 
     if elements is None:
@@ -188,10 +590,9 @@ def enable_pa_bias_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bi
                         print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
                         print(f"Element number {value}")
 
-
 def manta_power_detector(obj, elements, man_input=False):
     """
-    Disables the specified Mantaray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
         user_input = input("Enter a comma-separated list of channels to turn off (1-64): ")
@@ -231,7 +632,7 @@ def manta_power_detector(obj, elements, man_input=False):
                             print(f"Element number {channel}")
                     return(channel.detector_power)
 
-def disable_mantaray_channel(obj, elements=None, man_input=False):
+def disable_rx_channel(obj, elements=None, man_input=False):
     """
     Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
     """
@@ -461,7 +862,7 @@ def find_phase_delay_sliding_ref(obj, adc, subarray_ref, adc_map, delay_phases):
     """
 
     # Enable the Stingray reference channels and capture data
-    enable_stingray_channel(obj,subarray_ref)
+    enable_rx_channel(obj,subarray_ref)
     data = np.array(data_capture(adc))
 
     # Create a list to store the calibration values for each antenna
@@ -488,7 +889,7 @@ def find_phase_delay_sliding_ref(obj, adc, subarray_ref, adc_map, delay_phases):
         null_index = np.where(peak_sum==null_val)
 
     # Disable the Stingray reference channels
-    disable_mantaray_channel(obj,subarray_ref)
+    disable_rx_channel(obj,subarray_ref)
     return cal_ant
 
 def find_phase_delay_fixed_ref(obj, adc, subarray_ref, adc_ref, delay_phases):
@@ -496,7 +897,7 @@ def find_phase_delay_fixed_ref(obj, adc, subarray_ref, adc_ref, delay_phases):
     Measures calibrated phase offsets for Stingray reference channels in units of degrees using fixed reference.
     """
     # Enable the Stingray reference channels and capture data
-    enable_stingray_channel(obj,subarray_ref)
+    enable_rx_channel(obj,subarray_ref)
     data = np.array(data_capture(adc))
 
     # Create a list to store the calibration values for each antenna
@@ -530,7 +931,7 @@ def find_phase_delay_fixed_ref(obj, adc, subarray_ref, adc_ref, delay_phases):
         cal_ant.append(cal_value[0].item())
 
     # Disable the Stingray reference channels
-    disable_mantaray_channel(obj,subarray_ref)
+    disable_rx_channel(obj,subarray_ref)
     cal_ant = cal_ant[1:]
     # Roll the calibration values to align with the reference antenna
     # This is done because data[adc_ref] corresponds to subarray 4
@@ -541,7 +942,7 @@ def find_phase_delay_fixed_ref_tx(obj, SpecAn, subarray_ref, adc_ref, delay_phas
     """
     Measures calibrated phase offsets for Stingray reference channels in units of degrees using fixed reference.
     """
-    import ADSY2301 as mr
+    import adsy2301 as mr
     import paramiko
     import time
 
@@ -555,8 +956,8 @@ def find_phase_delay_fixed_ref_tx(obj, SpecAn, subarray_ref, adc_ref, delay_phas
     time.sleep(1)
     ssh.close()
 
-    mr.enable_pa_bias_channel(obj, subarray_ref)
-    # enable_stingray_channel(obj,subarray_ref)
+    mr.enable_tx_channel(obj, subarray_ref)
+    # enable_rx_channel(obj,subarray_ref)
     # data = np.array(data_capture(adc))
     data = np.array(SpecAn.iq_complex_data())
 
@@ -591,7 +992,7 @@ def find_phase_delay_fixed_ref_tx(obj, SpecAn, subarray_ref, adc_ref, delay_phas
         cal_ant.append(cal_value[0].item())
 
     # Disable the Stingray reference channels
-    disable_mantaray_channel(obj,subarray_ref)
+    disable_rx_channel(obj,subarray_ref)
     cal_ant = cal_ant[1:]
     # Roll the calibration values to align with the reference antenna
     # This is done because data[adc_ref] corresponds to subarray 4
@@ -604,7 +1005,7 @@ def phase_digital(obj, adc, adc_ref, subarray_ref):
     Returns digital phase offsets in a 1x4 row vector
     """
     # Enable analog array_reference channels for NCO calibration
-    enable_stingray_channel(obj, subarray_ref)
+    enable_rx_channel(obj, subarray_ref)
 
     # Capture ADC data
     data = np.array(data_capture(adc))
@@ -616,7 +1017,7 @@ def phase_digital(obj, adc, adc_ref, subarray_ref):
     digital_phase_cal = (np.mod(phase_compare - phase_compare[adc_ref] + 180, 360) - 180) * 1e3
 
     # Disable analog array_reference channels
-    disable_mantaray_channel(obj, subarray_ref)
+    disable_rx_channel(obj, subarray_ref)
 
     # write NCO phases to AD9081
     adc.rx_main_nco_phases = (np.round(digital_phase_cal).astype(int)).tolist()
@@ -725,10 +1126,10 @@ def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_tar
                 tmp_targ = subarray_targ[0, :]
 
                 # Enable the reference channel in subarray 2
-                enable_stingray_channel(sray_obj, tmp_array_ref)
+                enable_rx_channel(sray_obj, tmp_array_ref)
 
                 # Iterate through subarray 1 and enable one channel at a time (excludes the reference channel)
-                enable_stingray_channel(sray_obj, tmp_targ[jj])
+                enable_rx_channel(sray_obj, tmp_targ[jj])
 
                 # Grab row and column indices for specific channel in subarray 1
                 row, col = ind2sub(dummy_array.shape, tmp_targ[jj] - 1)
@@ -742,10 +1143,10 @@ def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_tar
                 tmp_targ = subarray_targ[1:4]
 
                 # Enable the reference channel in subarray 1
-                enable_stingray_channel(sray_obj, tmp_array_ref)
+                enable_rx_channel(sray_obj, tmp_array_ref)
 
                 # Enable the target channels in subarray 2, 3, and 4
-                enable_stingray_channel(sray_obj, tmp_targ[:, jj])
+                enable_rx_channel(sray_obj, tmp_targ[:, jj])
 
                 # Grab row and column indices for specfic channel in subarray 2, 3, and 4
                 row, col = ind2sub(dummy_array.shape, tmp_targ[:, jj] - 1)
@@ -767,13 +1168,13 @@ def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_tar
 
             if ii == 0:
                 # Disable the target channel in subarray 1
-                disable_mantaray_channel(sray_obj, tmp_targ[jj])
+                disable_rx_channel(sray_obj, tmp_targ[jj])
             else:
                 # Disable the target channels in subarrays 2, 3, and 4
-                disable_mantaray_channel(sray_obj, tmp_targ[:, jj])
+                disable_rx_channel(sray_obj, tmp_targ[:, jj])
 
         # Disable the reference channel being used for calibration
-        disable_mantaray_channel(sray_obj, tmp_array_ref)
+        disable_rx_channel(sray_obj, tmp_array_ref)
                       
     analog_phase_flatten = np.concatenate((analog_phase[0,0:4], analog_phase[3,0:4], analog_phase[0,4:8], analog_phase[3,4:8], analog_phase[0,8:12], analog_phase[3,8:12], analog_phase[0,12:16], analog_phase[3,12:16], analog_phase[1,0:4], analog_phase[2,0:4], analog_phase[1,4:8], analog_phase[2,4:8], analog_phase[1,8:12], analog_phase[2,8:12], analog_phase[1,12:16], analog_phase[2,12:16]))
     analog_phase_dict = create_dict(element_map,analog_phase_flatten)
@@ -792,7 +1193,7 @@ def phase_analog(sray_obj, adc_obj, adc_map, adc_ref, subarray_ref, subarray_tar
 def phase_analog_tx(adsy2301_obj, SpecAn_obj, adc_map, adc_ref, subarray_ref, subarray_targ, dig_phase):
     """Calculate analog phase for each element in the subarray."""
 
-    import ADSY2301 as mr
+    import adsy2301 as mr
 
     analog_phase = np.zeros((4, 16))  # Initialize phase array
     element_map = np.array([
@@ -820,12 +1221,12 @@ def phase_analog_tx(adsy2301_obj, SpecAn_obj, adc_map, adc_ref, subarray_ref, su
                 tmp_targ = subarray_targ[0, :]
 
                 # Enable the reference channel in subarray 2
-                mr.enable_pa_bias_channel(adsy2301_obj, tmp_array_ref)
-                # enable_stingray_channel(sray_obj, tmp_array_ref)
+                mr.enable_tx_channel(adsy2301_obj, tmp_array_ref)
+                # enable_rx_channel(sray_obj, tmp_array_ref)
 
                 # Iterate through subarray 1 and enable one channel at a time (excludes the reference channel)
-                mr.enable_pa_bias_channel(adsy2301_obj, tmp_targ[jj])
-                # enable_stingray_channel(sray_obj, tmp_targ[jj])
+                mr.enable_tx_channel(adsy2301_obj, tmp_targ[jj])
+                # enable_rx_channel(sray_obj, tmp_targ[jj])
 
                 # Grab row and column indices for specific channel in subarray 1
                 row, col = ind2sub(dummy_array.shape, tmp_targ[jj] - 1)
@@ -839,12 +1240,12 @@ def phase_analog_tx(adsy2301_obj, SpecAn_obj, adc_map, adc_ref, subarray_ref, su
                 tmp_targ = subarray_targ[1:4]
 
                 # Enable the reference channel in subarray 1
-                mr.enable_pa_bias_channel(adsy2301_obj, tmp_array_ref)
-                # enable_stingray_channel(sray_obj, tmp_array_ref)
+                mr.enable_tx_channel(adsy2301_obj, tmp_array_ref)
+                # enable_rx_channel(sray_obj, tmp_array_ref)
 
                 # Enable the target channels in subarray 2, 3, and 4
-                mr.enable_pa_bias_channel(adsy2301_obj, tmp_targ[:, jj])
-                # enable_stingray_channel(sray_obj, tmp_targ[:, jj])
+                mr.enable_tx_channel(adsy2301_obj, tmp_targ[:, jj])
+                # enable_rx_channel(sray_obj, tmp_targ[:, jj])
 
                 # Grab row and column indices for specfic channel in subarray 2, 3, and 4
                 row, col = ind2sub(dummy_array.shape, tmp_targ[:, jj] - 1)
@@ -867,13 +1268,13 @@ def phase_analog_tx(adsy2301_obj, SpecAn_obj, adc_map, adc_ref, subarray_ref, su
 
             if ii == 0:
                 # Disable the target channel in subarray 1
-                mr.disable_mantaray_channel(adsy2301_obj, tmp_targ[jj])
+                mr.disable_rx_channel(adsy2301_obj, tmp_targ[jj])
             else:
                 # Disable the target channels in subarrays 2, 3, and 4
-                mr.disable_mantaray_channel(adsy2301_obj, tmp_targ[:, jj])
+                mr.disable_rx_channel(adsy2301_obj, tmp_targ[:, jj])
 
         # Disable the reference channel being used for calibration
-        mr.disable_mantaray_channel(adsy2301_obj, tmp_array_ref)
+        mr.disable_rx_channel(adsy2301_obj, tmp_array_ref)
                       
     analog_phase_flatten = np.concatenate((analog_phase[0,0:4], analog_phase[3,0:4], analog_phase[0,4:8], analog_phase[3,4:8], analog_phase[0,8:12], analog_phase[3,8:12], analog_phase[0,12:16], analog_phase[3,12:16], analog_phase[1,0:4], analog_phase[2,0:4], analog_phase[1,4:8], analog_phase[2,4:8], analog_phase[1,8:12], analog_phase[2,8:12], analog_phase[1,12:16], analog_phase[2,12:16]))
     analog_phase_dict = create_dict(element_map,analog_phase_flatten)
@@ -894,12 +1295,12 @@ def rx_single_channel_data(obj, adc, array, adc_map):
         Captures single channel Rx data on a 1 channel per subarray basis.
         Returns raw ADC codes in a 64x4096 matrix.
         """
-        disable_mantaray_channel(obj,array)
+        disable_rx_channel(obj,array)
         rx_data = np.zeros((np.size(array),4096), dtype = complex)  # Allocate memory
         for a in range(np.size(array,1)):
             
             # Enable one reference channel per subarray
-            enable_stingray_channel(obj, array[:,a])
+            enable_rx_channel(obj, array[:,a])
             time.sleep(1)
             # Pull data from ADC
             data = np.array(data_capture(adc))
@@ -924,7 +1325,7 @@ def rx_single_channel_data(obj, adc, array, adc_map):
                 rx_data[row - 1,:] = new_data[index,:]
 
             # Disable target channels
-            disable_mantaray_channel(obj, array[:,a])
+            disable_rx_channel(obj, array[:,a])
         return rx_data
  
 def get_analog_mag(data):
@@ -1074,7 +1475,6 @@ def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10, elec_s
     
     return mechanical_sweep, elec_steer_angle, azim_results, elev_results,  # Return the mechanical sweep angles and the pattern for the boresight angle
 
-
 def change_duty_cycle(talise_uri, PRI_ms, off_ms):
 
     tddn = adi.tddn(talise_uri)
@@ -1090,3 +1490,241 @@ def change_duty_cycle(talise_uri, PRI_ms, off_ms):
     tddn.enable = 1
     tddn.sync_soft  = 1
     
+def sdr_init(dev):
+
+    # Configure TX/RX hardware gains (0 dB)
+    dev.ADRV9009.tx_enabled_channels = [0, 1, 2, 3]
+    dev.ADRV9009.rx_enabled_channels = [0, 1, 2, 3]
+    print("TX channels enabled ", dev.ADRV9009.tx_enabled_channels)
+    print("RX channels enabled ", dev.ADRV9009.rx_enabled_channels)
+
+    dev.ADRV9009.trx_lo = 4500000000
+    print("Side A TRX LO frequency set to ", dev.ADRV9009.trx_lo)
+
+    dev.ADRV9009.trx_lo_chip_b = 4500000000
+    print("Side B TRX LO frequency set to ", dev.ADRV9009.trx_lo_chip_b)
+
+    dev.ADRV9009.tx_hardwaregain_chan0 = -14
+    dev.ADRV9009.tx_hardwaregain_chan1 = -14
+    dev.ADRV9009.tx_hardwaregain_chan0_chip_b= -14
+    dev.ADRV9009.tx_hardwaregain_chan1_chip_b = -14
+    print("Side A TX hardware gain for channel 0 set to ", dev.ADRV9009.tx_hardwaregain_chan0)
+    print("Side A TX hardware gain for channel 1 set to ", dev.ADRV9009.tx_hardwaregain_chan1)
+    print("Side B TX hardware gain for channel 0 set to ", dev.ADRV9009.tx_hardwaregain_chan0_chip_b)
+    print("Side B TX hardware gain for channel 1 set to ", dev.ADRV9009.tx_hardwaregain_chan1_chip_b)
+
+    dev.ADRV9009.rx_hardwaregain_chan0 = 0
+    dev.ADRV9009.rx_hardwaregain_chan1 = 0
+    dev.ADRV9009.rx_hardwaregain_chan0_chip_b= 0
+    dev.ADRV9009.rx_hardwaregain_chan1_chip_b = 0
+    print("Side A RX hardware gain for channel 0 set to ", dev.ADRV9009.rx_hardwaregain_chan0)
+    print("Side A RX hardware gain for channel 1 set to ", dev.ADRV9009.rx_hardwaregain_chan1)
+    print("Side B RX hardware gain for channel 0 set to ", dev.ADRV9009.rx_hardwaregain_chan0_chip_b)
+    print("Side B RX hardware gain for channel 1 set to ", dev.ADRV9009.rx_hardwaregain_chan1_chip_b)
+
+    dev.ADRV9009.gain_control_mode_chan0 = "manual"
+    dev.ADRV9009.gain_control_mode_chan1 = "manual"
+    dev.ADRV9009.gain_control_mode_chan0_chip_b = "manual"
+    dev.ADRV9009.gain_control_mode_chan1_chip_b = "manual"
+    print("Side A Gain control mode for channel 0 set to ", dev.ADRV9009.gain_control_mode_chan0)
+    print("Side A Gain control mode for channel 1 set to ", dev.ADRV9009.gain_control_mode_chan1)
+    print("Side B Gain control mode for channel 0 set to ", dev.ADRV9009.gain_control_mode_chan0_chip_b)
+    print("Side B Gain control mode for channel 1 set to ", dev.ADRV9009.gain_control_mode_chan1_chip_b)
+
+    dev.ADRV9009._rxadc.set_kernel_buffers_count(1)
+    dev.ADRV9009.rx_enabled_channels = [0, 1, 2, 3]
+    dev.ADRV9009.rx_buffer_size = 2 ** 12  # 4096 samples per capture
+    dev.ADRV9009.dds_phases = []
+    print("Sample Rate RX Channels: %.2fMSPS" %(dev.ADRV9009.rx_sample_rate_chip_b/1e6))
+
+    print("SDR initialized.")
+
+def tdd_init(dev,TXRX_Bit):
+
+    tddn = adi.tddn(dev.uri)
+
+    ## Pulse Parameters ##
+    PRI_ms = 0.1 # Pulse repetition interval (ms)
+    frame_length_ms = 0.1    # 100 us frame
+    DAC_duty_cycle = 1.0   # Duty cycle for DAC pulses (0.0 to 1.0)
+    frame_pulses_to_plot = 5  # (will be used to calculate the RX buffer size)
+
+    ###########################
+    # TDD Engine Configuration
+    ###########################
+
+    TDD_TX_OFFLOAD_SYNC = 0
+    TDD_RX_OFFLOAD_SYNC = 1
+    TDD_ENABLE      = 2
+    TDD_ADRV9009_RX_EN = 3
+    TDD_ADRV9009_TX_EN = 4
+    TDD_ADSY2301_EN = 5
+    TDD_CHANNEL6     = 6  # PA_ON_0, PA_ON_1
+    TDD_CHANNEL7     = 7  # TR Pulse
+
+    # Configure TDD engine (disable during changes)
+    tddn.enable = False
+    tddn.frame_length_ms = frame_length_ms  # frame_length_ms = PRI_ms
+
+    # --- Group 1: Always-on channels ---
+    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_CHANNEL6]:
+        tddn.channel[chan].on_ms   = 0
+        tddn.channel[chan].off_ms  = 0
+        tddn.channel[chan].polarity = 1
+        tddn.channel[chan].enable   = True
+
+    # --- Group 1b: ADSY2301 phased-array enable (always on) ---
+
+    for chan in [TDD_ADSY2301_EN]:
+        tddn.channel[chan].on_ms   = 0
+        tddn.channel[chan].off_ms  = 0
+        tddn.channel[chan].polarity = TXRX_Bit
+        tddn.channel[chan].enable   = True
+
+    # --- Group 2: TX/RX offload sync (raw sample counts) ---
+    for chan in [TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
+        tddn.channel[chan].on_raw   = 0
+        tddn.channel[chan].off_raw  = 10 
+        tddn.channel[chan].polarity = 0
+        tddn.channel[chan].enable   = True
+
+    # --- Group 3: TR pulse ---
+    for chan in [TDD_CHANNEL7]:
+        tddn.channel[chan].on_ms   = 0
+        tddn.channel[chan].off_ms  = 0.005  # 5 us TR pulse (5% duty cycle at 100 us PRI)
+        tddn.channel[chan].polarity = 0      # polarity inverted
+        tddn.channel[chan].enable   = True
+
+    # --- Enable TDD engine and trigger sync ---
+    tddn.enable = True
+    tddn.sync_soft  = True
+
+    pulse_spacing_ms = 0.002        # 2 us spacing between pulse start times
+    pulse_start_buffer_ms = 0.00001 # 10 ns guard
+    pulse0_start_ms = pulse_start_buffer_ms
+    pulse0_stop_ms = DAC_duty_cycle * PRI_ms + pulse_start_buffer_ms
+    pulse1_start_ms = pulse0_stop_ms + pulse_spacing_ms
+    pulse1_stop_ms = pulse1_start_ms + DAC_duty_cycle * PRI_ms
+    pulse2_start_ms = pulse1_stop_ms + pulse_spacing_ms
+    pulse2_stop_ms = pulse2_start_ms + DAC_duty_cycle * PRI_ms
+    pulse3_start_ms = pulse2_stop_ms + pulse_spacing_ms
+    pulse3_stop_ms = pulse3_start_ms + DAC_duty_cycle * PRI_ms
+
+    # Prepare TX data
+    fs = int(dev.ADRV9009.tx_sample_rate)
+    frame_length_seconds = PRI_ms * 1e-3
+    # TX carrier frequency (Hz)
+    fc = 1000e3
+    # calculate N for full frame duration: N = fs * frame_length_seconds
+    N = int(fs * frame_length_seconds)
+    ts = 1 / float(fs)
+    frame_length_ms = PRI_ms
+
+    #######################
+    ## Setup DAC outputs ##
+    #######################
+    # Calculate samples for TX pulse duration
+    pulse0_duration_ms = pulse0_stop_ms - pulse0_start_ms
+    pulse0_duration_seconds = pulse0_duration_ms * 1e-3
+    pulse0_samples = int(fs * pulse0_duration_seconds)
+    pulse0_start_sample = int(fs * pulse0_start_ms * 1e-3)
+
+    pulse1_duration_ms = pulse1_stop_ms - pulse1_start_ms
+    pulse1_duration_seconds = pulse1_duration_ms * 1e-3
+    pulse1_samples = int(fs * pulse1_duration_seconds)
+    pulse1_start_sample = int(fs * pulse1_start_ms * 1e-3)
+
+    pulse2_duration_ms = pulse2_stop_ms - pulse2_start_ms
+    pulse2_duration_seconds = pulse2_duration_ms * 1e-3
+    pulse2_samples = int(fs * pulse2_duration_seconds)
+    pulse2_start_sample = int(fs * pulse2_start_ms * 1e-3)
+
+    pulse3_duration_ms = pulse3_stop_ms - pulse3_start_ms
+    pulse3_duration_seconds = pulse3_duration_ms * 1e-3
+    pulse3_samples = int(fs * pulse3_duration_seconds)
+    pulse3_start_sample = int(fs * pulse3_start_ms * 1e-3)
+
+    # Create full frame with zeros
+    pulse0_i = np.zeros(N)
+    pulse0_q = np.zeros(N)
+    pulse1_i = np.zeros(N)
+    pulse1_q = np.zeros(N)
+    pulse2_i = np.zeros(N)
+    pulse2_q = np.zeros(N)
+    pulse3_i = np.zeros(N)
+    pulse3_q = np.zeros(N)
+
+    for n in range(pulse0_start_sample, min(pulse0_start_sample + pulse0_samples, N)):
+        t_sample = n * ts
+        pulse0_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+        pulse0_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+    for n in range(pulse1_start_sample, min(pulse1_start_sample + pulse1_samples, N)):
+        t_sample = n * ts
+        pulse1_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+        pulse1_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+    for n in range(pulse2_start_sample, min(pulse2_start_sample + pulse2_samples, N)):
+        t_sample = n * ts
+        pulse2_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+        pulse2_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+    for n in range(pulse3_start_sample, min(pulse3_start_sample + pulse3_samples, N)):
+        t_sample = n * ts
+        pulse3_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+        pulse3_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+
+    pulse0_data = pulse0_i + 1j * pulse0_q
+    pulse1_data = pulse1_i + 1j * pulse1_q
+    pulse2_data = pulse2_i + 1j * pulse2_q
+    pulse3_data = pulse3_i + 1j * pulse3_q
+
+    dev.ADRV9009.tx_destroy_buffer()
+
+    # scaling for 16-bit DAC
+    # use most of the dynamic range but avoid clipping
+    scale_factor = 2**15 - 1
+    pulse0_iq_real = np.int16(np.real(pulse0_data) * scale_factor)
+    pulse0_iq_imag = np.int16(np.imag(pulse0_data) * scale_factor)
+    pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
+
+    pulse1_iq_real = np.int16(np.real(pulse1_data) * scale_factor)
+    pulse1_iq_imag = np.int16(np.imag(pulse1_data) * scale_factor)
+    pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
+
+    pulse2_iq_real = np.int16(np.real(pulse2_data) * scale_factor)
+    pulse2_iq_imag = np.int16(np.imag(pulse2_data) * scale_factor)
+    pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
+
+    pulse3_iq_real = np.int16(np.real(pulse3_data) * scale_factor)
+    pulse3_iq_imag = np.int16(np.imag(pulse3_data) * scale_factor)
+    pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
+
+    # Configure TX data offload mode to cyclic
+    dev.ADRV9009._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
+    dev.ADRV9009.tx_cyclic_buffer = True
+
+    # Calculate RX buffer size to match TX duration
+    rx_fs = int(dev.ADRV9009.rx_sample_rate)
+
+    # Match RX buffer duration to TX duration
+    desired_rx_duration = frame_pulses_to_plot * len(pulse0_iq) / fs * 1000  # ms
+    rx_buffer_samples = int(rx_fs * (desired_rx_duration * 1e-3))
+    dev.ADRV9009.rx_buffer_size = rx_buffer_samples
+
+    ##############################################
+    ## Step 3: Send TX Data
+    ##############################################
+
+    dev.ADRV9009.tx_destroy_buffer()
+
+    if TXRX_Bit == 1:
+        dev.ADRV9009.tx_enabled_channels = [0, 1, 2, 3]
+        dev.ADRV9009.tx([pulse0_iq, pulse0_iq, pulse0_iq, pulse0_iq])
+ 
+    if TXRX_Bit == 0:
+        dev.ADRV9009.tx_enabled_channels = []
+        dev.ADRV9009.tx([])
+
+    dev.ADRV9009.tx_cyclic_buffer = True
+
+    # Trigger TDD synchronization
+    tddn.sync_soft  = True
+

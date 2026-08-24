@@ -18,24 +18,15 @@ import adi
 import numpy as np
 import json
 import os
-import ADSY2301 as mr
-from adi import adar1000
+import adsy2301 as mr
 
-
-##############################################
-## Step 1: Initialize ADAR1000 Array ##
-##############################################
-talise_ip = "10.75.161.150"
-# talise_ip = "192.168.1.1"
+talise_ip = "10.75.161.151"
 talise_uri = "ip:" + talise_ip
 
-dev = adi.adar1000_array(
-    uri=talise_uri,
+dev = mr.adsy2301(uri=talise_uri)
 
-    # chip_ids=[
-    #     "adar1000_csb_1_1_1", "adar1000_csb_1_1_4", 
-    #     "adar1000_csb_1_1_3", "adar1000_csb_1_1_2", 
-    # ],
+dev.init_BFC(
+    uri=talise_uri,
 
     chip_ids=[
         "adar1000_csb_0_1_1", "adar1000_csb_0_1_4", 
@@ -57,33 +48,26 @@ dev = adi.adar1000_array(
         2:  [4, 4, 7, 16],  4:  [12, 11, 15, 16],
     },
 )
-print("ADAR1000 array object created.")
 
 
-dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-1)
+dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
-# dev.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
-
-for device in dev.devices.values():
+for device in dev.BFC.devices.values():
     device.mode = "rx"
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
-mr.disable_pa_bias_channel(dev)
+mr.disable_rx_channel(dev.BFC)
+mr.disable_tx_channel(dev.BFC)
 
 print("Setting all devices to rx mode")
-for element in dev.elements.values():
+for element in dev.BFC.elements.values():
     element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
     element.tx_attenuator = 0
     element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
     element.tx_gain = 0 #Lowest gain
     element.rx_phase = 0 # Set all phases to 0
     element.tx_phase = 0
-    # device.lna_bias_on = -0.9412 #On bias for LNA
 
-dev.latch_rx_settings()
-dev.latch_tx_settings()
-
-mr.enable_stingray_channel(dev,1)
-dev.latch_rx_settings()
-dev.latch_tx_settings()
+dev.BFC.latch_rx_settings()
+dev.BFC.latch_tx_settings()
