@@ -91,7 +91,51 @@ class adsy2301(adar1000_array,context_manager):
         self.udc = self.UDC(self.uri, self._ctx)
 
     class BFC_Array(adar1000_array):
-        pass
+        def __init__(self, uri="", chip_ids=None, device_map=None,
+                    element_map=None, device_element_map=None):
+            adar1000_array.__init__(
+                self,
+                uri=uri,
+                chip_ids=chip_ids,
+                device_map=device_map,
+                element_map=element_map,
+                device_element_map=device_element_map,
+            )
+            self._pwr_channels = {}
+            artix_control = self._ctx.find_device("mantaray_power_control")
+            labels = [
+                "BF_PWR_EN_01", "BF_PWR_EN_02", "BF_PWR_EN_03", "BF_PWR_EN_04"
+            ]
+            for channel in artix_control.channels:
+                if "label" in channel.attrs:
+                    label = channel.attrs["label"].value
+                    if label in labels:
+                        self._pwr_channels[label] = artix_control.find_channel(channel.id, True)
+        @property
+        def BF_PWR_EN_01(self):
+            return int(self._pwr_channels["BF_PWR_EN_01"].attrs["raw"].value)
+        @BF_PWR_EN_01.setter
+        def BF_PWR_EN_01(self, value):
+            self._pwr_channels["BF_PWR_EN_01"].attrs["raw"].value = str(value)
+        @property
+        def BF_PWR_EN_02(self):
+            return int(self._pwr_channels["BF_PWR_EN_02"].attrs["raw"].value)
+        @BF_PWR_EN_02.setter
+        def BF_PWR_EN_02(self, value):
+            self._pwr_channels["BF_PWR_EN_02"].attrs["raw"].value = str(value)
+        @property
+        def BF_PWR_EN_03(self):
+            return int(self._pwr_channels["BF_PWR_EN_03"].attrs["raw"].value)
+        @BF_PWR_EN_03.setter
+        def BF_PWR_EN_03(self, value):
+            self._pwr_channels["BF_PWR_EN_03"].attrs["raw"].value = str(value)
+        @property
+        def BF_PWR_EN_04(self):
+            return int(self._pwr_channels["BF_PWR_EN_04"].attrs["raw"].value)
+        @BF_PWR_EN_04.setter
+        def BF_PWR_EN_04(self, value):
+            self._pwr_channels["BF_PWR_EN_04"].attrs["raw"].value = str(value)
+
 
     class UDC():
         def __init__(self, uri, ctx):
