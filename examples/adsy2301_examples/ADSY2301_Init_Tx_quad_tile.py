@@ -14,11 +14,11 @@
 # Copyright (C) 2025 Analog Devices, Inc.
 # SPDX short identifier: ADIBSD
 # ==========================================================================
-import adi
+import adi 
+from adi import adsy2301 as mr
 import numpy as np
 import json
 import os
-import adsy2301 as mr
 
 ##############################################
 ## Step 1: Initialize ADAR1000 Array ##
@@ -109,3 +109,4 @@ dev.latch_tx_settings()
 for device in dev.devices.values():
         device.tr_source = "external"
         device.bias_dac_mode = "toggle"
+

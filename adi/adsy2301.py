@@ -1550,7 +1550,7 @@ def tdd_init(dev,TXRX_Bit):
     frame_pulses_to_plot = 5  # (will be used to calculate the RX buffer size)
 
     ###########################
-    # TDD Engine Configuration
+    # TDD Engine Configuration: Name and TDD channel 
     ###########################
 
     TDD_TX_OFFLOAD_SYNC = 0
@@ -1558,27 +1558,21 @@ def tdd_init(dev,TXRX_Bit):
     TDD_ENABLE      = 2
     TDD_ADRV9009_RX_EN = 3
     TDD_ADRV9009_TX_EN = 4
-    TDD_ADSY2301_EN = 5
-    TDD_CHANNEL6     = 6  # PA_ON_0, PA_ON_1
-    TDD_CHANNEL7     = 7  # TR Pulse
+    # TDD_ADSY2301_EN = 5
+    TDD_PA_ON     = 6  # PA_ON_0, PA_ON_1, PA_ON_2, PA_ON_3
+    TDD_TR_PULSE     = 7  # TR Pulse
+    TDD_RX_LOAD = 12
+    TDD_TX_LOAD = 13
 
     # Configure TDD engine (disable during changes)
     tddn.enable = False
     tddn.frame_length_ms = frame_length_ms  # frame_length_ms = PRI_ms
 
     # --- Group 1: Always-on channels ---
-    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_CHANNEL6]:
+    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_PA_ON]:
         tddn.channel[chan].on_ms   = 0
         tddn.channel[chan].off_ms  = 0
         tddn.channel[chan].polarity = 1
-        tddn.channel[chan].enable   = True
-
-    # --- Group 1b: ADSY2301 phased-array enable (always on) ---
-
-    for chan in [TDD_ADSY2301_EN]:
-        tddn.channel[chan].on_ms   = 0
-        tddn.channel[chan].off_ms  = 0
-        tddn.channel[chan].polarity = TXRX_Bit
         tddn.channel[chan].enable   = True
 
     # --- Group 2: TX/RX offload sync (raw sample counts) ---
@@ -1589,7 +1583,7 @@ def tdd_init(dev,TXRX_Bit):
         tddn.channel[chan].enable   = True
 
     # --- Group 3: TR pulse ---
-    for chan in [TDD_CHANNEL7]:
+    for chan in [TDD_TR_PULSE]:
         tddn.channel[chan].on_ms   = 0
         tddn.channel[chan].off_ms  = 0.005  # 5 us TR pulse (5% duty cycle at 100 us PRI)
         tddn.channel[chan].polarity = 0      # polarity inverted
@@ -1727,4 +1721,5 @@ def tdd_init(dev,TXRX_Bit):
 
     # Trigger TDD synchronization
     tddn.sync_soft  = True
+    print("TDD Engine Started")
 

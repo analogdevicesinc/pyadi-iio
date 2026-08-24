@@ -15,12 +15,12 @@
 # ==========================================================================
 
 import os
-import adi
+import adi 
+from adi import adsy2301 as mr
 from adi.sshfs import sshfs
 import matplotlib.pyplot as plt
 import numpy as np
 import paramiko
-import adsy2301 as mr
 import subprocess
 import sys
 
