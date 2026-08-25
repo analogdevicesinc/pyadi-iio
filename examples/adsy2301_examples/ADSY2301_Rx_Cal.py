@@ -23,8 +23,9 @@ import numpy as np
 import paramiko
 import subprocess
 import sys
+import time
 
-ip_address = "10.75.161.151"
+ip_address = "10.75.161.152"
 uri = "ip:" + ip_address
   
 dev = mr.adsy2301(uri=uri)
@@ -66,15 +67,14 @@ dev.init_ADRV9009()
 dev.udc.RX_UDC_Band_0()
 dev.udc.adrf5030.RX_SW_Enable()
 dev.udc.admv8913.set_filter_widest()
-dev.udc.adf4382.altvolt0_frequency = int(15e9)
-dev.udc.adf4382.altvolt1_frequency = int(15e9)
+dev.udc.adf4382.altvolt0_frequency = int(14.9e9)
+dev.udc.adf4382.altvolt1_frequency = int(14.9e9)
  
 # ==========================================================================
 # STEP 1 — Configure ADRV9009 Transceiver
 # ==========================================================================
 mr.sdr_init(dev)
 mr.tdd_init(dev,TXRX_Bit=0)
- 
 # ==========================================================================
 # STEP 2 — Define Subarrays, Reference Channels, and ADC Maps
 # ==========================================================================
@@ -86,7 +86,7 @@ subarray = np.array([
     [37, 38, 39, 40, 45, 46, 47, 48, 53, 54, 55, 56, 61, 62, 63, 64],  # subarray 3
     [5, 6, 7, 8, 13, 14, 15, 16, 21, 22, 23, 24, 29, 30, 31, 32], # subarray 4
     ])
-subarray_ref = np.array([1, 33, 37, 5])   # One reference element per subarray
+subarray_ref = np.array([2, 34, 38, 6])   # One reference element per subarray
 adc_map      = np.array([0, 1, 2, 3])      # ADC channel index for each subarray
 adc_ref      = 0                            # ADC channel used as the phase reference
  
@@ -126,7 +126,7 @@ input("Make sure RF is on! Press Enter to continue...")
  
 # Enable subarray reference
 mr.enable_rx_channel(dev.BFC,subarray)
- 
+time.sleep(1)
 # Pre-calibration data capture
 no_cal_data = np.transpose(np.array(mr.data_capture(dev.ADRV9009)))
  

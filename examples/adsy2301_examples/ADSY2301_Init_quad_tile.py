@@ -24,7 +24,7 @@ import os
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
 # talise_ip = "10.75.161.115"
-talise_ip = "10.75.161.151"
+talise_ip = "10.75.161.152"
 talise_uri = "ip:" + talise_ip
 
 
@@ -81,8 +81,11 @@ dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 dev.udc.RX_UDC_Band_0()
 dev.udc.adrf5030.RX_SW_Enable()
 dev.udc.admv8913.set_filter_widest()
-dev.udc.adf4382.altvolt0_frequency = int(15e9)
-dev.udc.adf4382.altvolt1_frequency = int(15e9)
+dev.udc.adf4382.altvolt0_frequency = int(14.9e9)
+dev.udc.adf4382.altvolt1_frequency = int(14.9e9)
+
+mr.sdr_init(dev)
+mr.tdd_init(dev,TXRX_Bit=0)
 
 for device in dev.BFC.devices.values():
     device.mode = "rx"
@@ -103,3 +106,4 @@ for element in dev.BFC.elements.values():
 
 dev.BFC.latch_rx_settings()
 dev.BFC.latch_tx_settings()
+print(True)
