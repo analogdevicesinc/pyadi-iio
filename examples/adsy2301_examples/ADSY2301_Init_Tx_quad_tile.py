@@ -78,16 +78,26 @@ dev.init_ADRV9009()
 dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
 ## Set some default states
-dev.udc.RX_UDC_Band_0()
-dev.udc.adrf5030.RX_SW_Enable()
+dev.udc.TX_UDC_Band_0()
+dev.udc.adrf5030.TX_SW_Enable()
 dev.udc.admv8913.set_filter_widest()
-dev.udc.adf4382.altvolt0_frequency = int(15e9)
-dev.udc.adf4382.altvolt1_frequency = int(15e9)
+dev.udc.adf4382.altvolt0_frequency = int(14.9e9)
+dev.udc.adf4382.altvolt1_frequency = int(14.9e9)
+
+mr.sdr_init(dev)
+mr.tdd_init(dev,TXRX_Bit=1)
 
 for device in dev.BFC.devices.values():
-    device.mode = "rx"
-    device.tr_source = "spi"
+    device.tr_source = "spi" 
     device.bias_dac_mode = "on"
+    device.mode = "rx"
+
+# dev.BFC.latch_rx_settings()
+# dev.BFC.latch_tx_settings()
+
+# for device in dev.BFC.devices.values():
+#     device.mode = "rx"
+#     device.bias_dac_mode = "on"
 
 mr.disable_rx_channel(dev.BFC)
 mr.disable_tx_channel(dev.BFC)
@@ -101,12 +111,13 @@ for element in dev.BFC.elements.values():
     element.rx_phase = 0 # Set all phases to 0
     element.tx_phase = 0
 
-dev.latch_rx_settings()
-dev.latch_tx_settings()
+dev.BFC.latch_rx_settings()
+dev.BFC.latch_tx_settings()
 
 # Switch TR source to FPGA-controlled (external) and enable bias toggle
 # so the TDD engine gates the PA on/off each pulse.
-for device in dev.devices.values():
-        device.tr_source = "external"
-        device.bias_dac_mode = "toggle"
+for device in dev.BFC.devices.values():
+    device.bias_dac_mode = "toggle"
+    device.tr_source = "external"
+
 

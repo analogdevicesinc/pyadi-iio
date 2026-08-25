@@ -451,6 +451,52 @@ class adsy2301(adar1000_array,context_manager):
                 print(f"GPO_G:          {rx.direct_gpo_g}")
                 print(f"Bypass GPO_G:   {rx.bypass_gpo_g}")
 
+        def TX_UDC_Band_0(self):
+            print("\n=== Configuring for 3-13 GHz IF band ===")
+            for tx in self.admv1320:
+                # --- Configure for 3-10 GHz RF band with IF input ---
+                print("\n=== Configuring for 3-10 GHz band ===")
+                tx.rf_band = "3GHz_10GHz"
+                tx.if_band = "3GHz_12GHz"
+                tx.if_mode = "if"
+                tx.lo_sideband = "USB"
+                tx.lo_x3_filter = "11GHz_13GHz"
+
+                # Set DSA gains to 0 dB
+                tx.rf_direct_dsa1_gain = "0dB"
+                tx.rf_direct_dsa2_gain = "0dB"
+
+                # Set IF common mode voltage (64 * 50mV = 3.2V)
+                tx.if_vcm = 64
+
+                # Set LO phase
+                tx.lo_direct_i_phase_val = 15
+                tx.lo_direct_q_phase_val = 15
+
+                # --- Read back ---
+                print(f"RF Band:           {tx.rf_band}")
+                print(f"IF Band:           {tx.if_band}")
+                print(f"IF Mode:           {tx.if_mode}")
+                print(f"IF VCM:            {tx.if_vcm}")
+                print(f"LO Sideband:       {tx.lo_sideband}")
+                print(f"LO x3 Filter:     {tx.lo_x3_filter}")
+
+                # --- Device-level attributes ---
+                print(f"\n=== LUT and GPO Configuration ===")
+                print(f"Filter Table:             {tx.filter_table_en}")
+                print(f"Filter Load:              {tx.filter_load_en}")
+                print(f"Filter Sel:               {tx.filter_table_sel}")
+                print(f"Gain Table:               {tx.gain_table_en}")
+                print(f"Gain Load:                {tx.gain_load_en}")
+                print(f"Bypass Gain En:           {tx.bypass_gain_table_en}")
+                print(f"Mixer Bypass:             {tx.mixer_bypass_en}")
+                print(f"GPO_F:                    {tx.direct_gpo_f}")
+                print(f"GPO_F OE:                 {tx.gpo_f_oe}")
+                print(f"GPO_G:                    {tx.direct_gpo_g}")
+                print(f"GPO_G OE:                 {tx.gpo_g_oe}")
+                print(f"Bypass GPO_G:             {tx.bypass_gpo_g}")
+
+
     def init_BFC(self, chip_ids, device_map=None, element_map=None, device_element_map=None):
         try:
             self.BFC = self.BFC_Array(
