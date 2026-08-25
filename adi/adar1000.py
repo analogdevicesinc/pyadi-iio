@@ -1659,10 +1659,11 @@ class adar1000_array(context_manager):
             lna_on: float
                 Voltage to set the LNA_BIAS_ON values to during initialization
         """
+        print("Initializing ADAR1000")
         for device in self.devices.values():
+            print("Initializing:", device.chip_id)
             device.initialize(
-                pa_off=pa_off, pa_on=pa_on, lna_off=lna_off, lna_on=lna_on
-            )
+                pa_off=pa_off, pa_on=pa_on, lna_off=lna_off, lna_on=lna_on)
 
     def latch_rx_settings(self):
         """ Latch in new Gain/Phase settings for the Rx """
