@@ -102,15 +102,26 @@ class adsy2301(adar1000_array,context_manager):
                 device_element_map=device_element_map,
             )
             self._pwr_channels = {}
-            artix_control = self._ctx.find_device("mantaray_power_control")
-            labels = [
+            artix_control_1 = self._ctx.find_device("mantaray_pwr_control")
+            pwr_labels = [
                 "BF_PWR_EN_01", "BF_PWR_EN_02", "BF_PWR_EN_03", "BF_PWR_EN_04"
             ]
-            for channel in artix_control.channels:
+            for channel in artix_control_1.channels:
                 if "label" in channel.attrs:
                     label = channel.attrs["label"].value
-                    if label in labels:
-                        self._pwr_channels[label] = artix_control.find_channel(channel.id, True)
+                    if label in pwr_labels:
+                        self._pwr_channels[label] = artix_control_1.find_channel(channel.id, True)
+                        
+            self._pa_ctrl_channels = {}
+            artix_control_2 = self._ctx.find_device("mantaray_control")
+            pa_labels = [
+                "BF_PA_ON_01", "BF_PA_ON_02", "BF_PA_ON_03", "BF_PA_ON_04"
+            ]
+            for channel in artix_control_2.channels:
+                if "label" in channel.attrs:
+                    label = channel.attrs["label"].value
+                    if label in pa_labels:
+                        self._pa_ctrl_channels[label] = artix_control_2.find_channel(channel.id, True)
         @property
         def BF_PWR_EN_01(self):
             return int(self._pwr_channels["BF_PWR_EN_01"].attrs["raw"].value)
@@ -135,6 +146,31 @@ class adsy2301(adar1000_array,context_manager):
         @BF_PWR_EN_04.setter
         def BF_PWR_EN_04(self, value):
             self._pwr_channels["BF_PWR_EN_04"].attrs["raw"].value = str(value)
+
+        @property
+        def BF_PA_ON_01(self):
+            return int(self._pa_ctrl_channels["BF_PA_ON_01"].attrs["raw"].value)
+        @BF_PA_ON_01.setter
+        def BF_PA_ON_01(self, value):
+            self._pa_ctrl_channels["BF_PA_ON_01"].attrs["raw"].value = str(value)
+        @property
+        def BF_PA_ON_02(self):
+            return int(self._pa_ctrl_channels["BF_PA_ON_02"].attrs["raw"].value)
+        @BF_PA_ON_02.setter
+        def BF_PA_ON_02(self, value):
+            self._pa_ctrl_channels["BF_PA_ON_02"].attrs["raw"].value = str(value)
+        @property
+        def BF_PA_ON_03(self):
+            return int(self._pa_ctrl_channels["BF_PA_ON_03"].attrs["raw"].value)
+        @BF_PA_ON_03.setter
+        def BF_PA_ON_03(self, value):
+            self._pa_ctrl_channels["BF_PA_ON_03"].attrs["raw"].value = str(value)
+        @property
+        def BF_PA_ON_04(self):
+            return int(self._pa_ctrl_channels["BF_PA_ON_04"].attrs["raw"].value)
+        @BF_PA_ON_04.setter
+        def BF_PA_ON_04(self, value):
+            self._pa_ctrl_channels["BF_PA_ON_04"].attrs["raw"].value = str(value)
 
 
     class UDC():
@@ -356,7 +392,7 @@ class adsy2301(adar1000_array,context_manager):
             try:
                 self.admv1320 = [admv1320(uri=uri, device_name=name) for name in device_names]
                 self._available.append("ADMV130")
-                print(f"ADMV1320 initialized: {len(self.admv1320)} devices")
+                print(f"ADMV1320 context found: {len(self.admv1320)} devices")
             except Exception as e:
                 warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
 
@@ -371,7 +407,7 @@ class adsy2301(adar1000_array,context_manager):
             try:
                 self.admv1420 = [admv1420(uri=uri, device_name=name) for name in device_names]
                 self._available.append("ADMV1420")
-                print(f"ADMV1420 initialized: {len(self.admv1420)} devices")
+                print(f"ADMV1420 context found: {len(self.admv1420)} devices")
             except Exception as e:
                 warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
 
@@ -385,7 +421,7 @@ class adsy2301(adar1000_array,context_manager):
                 self._available.append("ADF4382")
                 self.adf4382.altvolt0_en = 1
                 self.adf4382.altvolt1_en = 1
-                print(f"ADF4382 initialized")
+                print(f"ADF4382 context found")
 
             except Exception as e:
                 warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
@@ -394,7 +430,7 @@ class adsy2301(adar1000_array,context_manager):
             try:
                 self.admv8913 = self.ADMV8913(self._ctx)
                 self._available.append("ADMV8913")
-                print("ADMV8913 initialized")
+                print("ADMV8913 context found")
             except Exception as e:
                 warnings.warn(f"ADMV8913: {e}", UserWarning)
                 self.admv8913 = None
@@ -403,7 +439,7 @@ class adsy2301(adar1000_array,context_manager):
             try:
                 self.adrf5030 = self.ADRF5030(self._ctx)
                 self._available.append("adrf5030")
-                print("ADRF5030 Switches initialized")
+                print("ADRF5030 Switches context found")
             except Exception as e:
                 warnings.warn(f"ADRF5030: {e}", UserWarning)
                 self.admv8913 = None
@@ -510,7 +546,7 @@ class adsy2301(adar1000_array,context_manager):
             )
             
             self._available.append("BFC")
-            print("BFC initialized")
+            print("BFC context found")
         except Exception as e:
             warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
             result = None
@@ -521,7 +557,7 @@ class adsy2301(adar1000_array,context_manager):
                 uri=self.uri,
             )
             self._available.append("ADRV9009")
-            print("ADRV9009 initialized")
+            print("ADRV9009 context found")
         except Exception as e:
             warnings.warn(f"Skipping: {e}", UserWarning, stacklevel=2)
             result = None
