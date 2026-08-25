@@ -92,13 +92,6 @@ for device in dev.BFC.devices.values():
     device.bias_dac_mode = "on"
     device.mode = "rx"
 
-# dev.BFC.latch_rx_settings()
-# dev.BFC.latch_tx_settings()
-
-# for device in dev.BFC.devices.values():
-#     device.mode = "rx"
-#     device.bias_dac_mode = "on"
-
 mr.disable_rx_channel(dev.BFC)
 mr.disable_tx_channel(dev.BFC)
 
