@@ -24,7 +24,7 @@ import paramiko
 import subprocess
 import sys
 
-ip_address = "10.75.161.151"
+ip_address = "10.75.161.152"
 uri = "ip:" + ip_address
   
 dev = mr.adsy2301(uri=uri)
@@ -66,8 +66,12 @@ dev.init_ADRV9009()
 dev.udc.RX_UDC_Band_0()
 dev.udc.adrf5030.RX_SW_Enable()
 dev.udc.admv8913.set_filter_widest()
-dev.udc.adf4382.altvolt0_frequency = int(15e9)
-dev.udc.adf4382.altvolt1_frequency = int(15e9)
+dev.udc.adf4382.altvolt0_frequency = int(14.89e9)
+dev.udc.adf4382.altvolt1_frequency = int(14.89e9)
+dev.udc.adf4382.altvolt0_en = 1
+dev.udc.adf4382.altvolt1_en = 1
+
+
  
 # ==========================================================================
 # STEP 1 — Configure ADRV9009 Transceiver
