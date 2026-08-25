@@ -336,6 +336,8 @@ class adsy2301(adar1000_array,context_manager):
                 #initialize the ADF4382 LO class
                 self.adf4382 = adf4382(uri=uri, device_name=device_name)
                 self._available.append("ADF4382")
+                self.adf4382.altvolt0_en = 1
+                self.adf4382.altvolt1_en = 1
                 print(f"ADF4382 initialized")
 
             except Exception as e:
