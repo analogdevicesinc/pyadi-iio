@@ -81,9 +81,8 @@ dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 dev.udc.RX_UDC_Band_0()
 dev.udc.adrf5030.RX_SW_Enable()
 dev.udc.admv8913.set_filter_widest()
-dev.udc.adf4382.altvolt0_frequency = int(14.9e9)
-dev.udc.adf4382.altvolt1_frequency = int(14.9e9)
-
+dev.udc.adf4382.altvolt0_frequency = int(14.89e9)
+dev.udc.adf4382.altvolt1_frequency = int(14.89e9)
 mr.sdr_init(dev)
 mr.tdd_init(dev,TXRX_Bit=0)
 
@@ -106,4 +105,4 @@ for element in dev.BFC.elements.values():
 
 dev.BFC.latch_rx_settings()
 dev.BFC.latch_tx_settings()
-print(True)
+mr.enable_rx_channel(dev.BFC)
