@@ -494,10 +494,10 @@ class adsy2301(adar1000_array,context_manager):
             for tx in self.admv1320:
                 # --- Configure for 3-10 GHz RF band with IF input ---
                 print("\n=== Configuring for 3-10 GHz band ===")
-                tx.rf_band = "3GHz_10GHz"
+                tx.rf_band = "6GHz_20GHz"
                 tx.if_band = "3GHz_12GHz"
                 tx.if_mode = "if"
-                tx.lo_sideband = "USB"
+                tx.lo_sideband = "LSB"
                 tx.lo_x3_filter = "11GHz_13GHz"
 
                 # Set DSA gains to 0 dB
@@ -1686,34 +1686,47 @@ def tdd_init(dev,TXRX_Bit):
     # TDD Engine Configuration: Name and TDD channel 
     ###########################
 
+    # TDD_TX_OFFLOAD_SYNC = 0
+    # TDD_RX_OFFLOAD_SYNC = 1
+    # TDD_ENABLE      = 2
+    # TDD_ADRV9009_RX_EN = 3
+    # TDD_ADRV9009_TX_EN = 4
+    # # TDD_ADSY2301_EN = 5
+    # TDD_PA_ON     = 6  # PA_ON_0, PA_ON_1, PA_ON_2, PA_ON_3
+    # TDD_TR_PULSE     = 7  # TR Pulse
+    # TDD_RX_LOAD = 12
+    # TDD_TX_LOAD = 13
+
     TDD_TX_OFFLOAD_SYNC = 0
     TDD_RX_OFFLOAD_SYNC = 1
-    TDD_ENABLE      = 2
-    TDD_ADRV9009_RX_EN = 3
-    TDD_ADRV9009_TX_EN = 4
-    # TDD_ADSY2301_EN = 5
-    TDD_PA_ON     = 6  # PA_ON_0, PA_ON_1, PA_ON_2, PA_ON_3
-    TDD_TR_PULSE     = 7  # TR Pulse
-    TDD_RX_LOAD = 12
-    TDD_TX_LOAD = 13
+    TDD_ENABLE      = 6
+    TDD_ADRV9009_RX_EN = 7
+    TDD_ADRV9009_TX_EN = 8
+    # TDD_ADSY2301_EN = 9
+    TDD_PA_ON     = 10  # PA_ON_0, PA_ON_1, PA_ON_2, PA_ON_3
+    TDD_TR_PULSE     = 11  # TR Pulse
+    TDD_RX_LOAD = 4
+    TDD_TX_LOAD = 5
+    
 
+    
     # Configure TDD engine (disable during changes)
     tddn.enable = False
     tddn.frame_length_ms = frame_length_ms  # frame_length_ms = PRI_ms
 
     # --- Group 1: Always-on channels ---
-    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_PA_ON]:
+    for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_PA_ON,TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
         tddn.channel[chan].on_ms   = 0
         tddn.channel[chan].off_ms  = frame_length_ms
         tddn.channel[chan].polarity = 0
         tddn.channel[chan].enable   = True
 
-    # --- Group 2: TX/RX offload sync (raw sample counts) ---
-    for chan in [TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
-        tddn.channel[chan].on_raw   = 0
-        tddn.channel[chan].off_raw  = 10 
-        tddn.channel[chan].polarity = 0
-        tddn.channel[chan].enable   = True
+    # # --- Group 2: TX/RX offload sync (raw sample counts) ---
+    # for chan in [TDD_TX_OFFLOAD_SYNC,TDD_RX_OFFLOAD_SYNC]:
+    #     tddn.channel[chan].on_raw   = 0
+    #     tddn.channel[chan].off_raw  = 10 
+    #     tddn.channel[chan].polarity = 0
+    #     tddn.channel[chan].enable   = True
 
     # --- Group 3: TR pulse ---
     for chan in [TDD_TR_PULSE]:

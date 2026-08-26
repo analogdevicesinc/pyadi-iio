@@ -68,6 +68,16 @@ dev.init_BFC(
     },
 )
 
+dev.BFC.BF_PA_ON_01 = 0
+dev.BFC.BF_PA_ON_02 = 0
+dev.BFC.BF_PA_ON_03 = 0
+dev.BFC.BF_PA_ON_04 = 0
+
+dev.BFC.BF_PWR_EN_01 = 0
+dev.BFC.BF_PWR_EN_02 = 0
+dev.BFC.BF_PWR_EN_03 = 0
+dev.BFC.BF_PWR_EN_04 = 0
+
 #Create Up/Down Coverter subclass instance
 dev.init_UDC()
 
@@ -85,7 +95,7 @@ dev.udc.adf4382.altvolt0_frequency = int(14.9e9)
 dev.udc.adf4382.altvolt1_frequency = int(14.9e9)
 
 mr.sdr_init(dev)
-mr.tdd_init(dev,TXRX_Bit=1)
+mr.tdd_init(dev,TXRX_Bit=0)
 
 for device in dev.BFC.devices.values():
     device.tr_source = "spi" 
@@ -113,4 +123,15 @@ for device in dev.BFC.devices.values():
     device.bias_dac_mode = "toggle"
     device.tr_source = "external"
 
+dev.BFC.BF_PA_ON_01 = 1
+dev.BFC.BF_PA_ON_02 = 1
+dev.BFC.BF_PA_ON_03 = 1
+dev.BFC.BF_PA_ON_04 = 1
+
+dev.BFC.BF_PWR_EN_01 = 1
+dev.BFC.BF_PWR_EN_02 = 1
+dev.BFC.BF_PWR_EN_03 = 1
+dev.BFC.BF_PWR_EN_04 = 1
+
+mr.enable_tx_channel(dev.BFC,33)
 

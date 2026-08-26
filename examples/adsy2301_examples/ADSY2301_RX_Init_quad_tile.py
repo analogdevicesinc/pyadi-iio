@@ -24,7 +24,7 @@ import os
 ## Step 1: Initialize ADAR1000 Array ##
 ##############################################
 # talise_ip = "10.75.161.115"
-talise_ip = "10.75.161.152"
+talise_ip = "10.75.161.151"
 talise_uri = "ip:" + talise_ip
 
 
@@ -73,7 +73,9 @@ dev.init_UDC()
 
 #Create Converter subclass instance
 dev.init_ADRV9009()
-
+mr.sdr_init(dev)
+mr.tdd_init(dev,TXRX_Bit=0)
+exit()
 # Initialize beamforming subclass into known default state
 dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
