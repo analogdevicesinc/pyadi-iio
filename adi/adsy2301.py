@@ -1673,6 +1673,7 @@ def sdr_init(dev):
 
 def tdd_init(dev,TXRX_Bit):
 
+    DAC = False
     tddn = adi.tddn(dev.uri)
 
     ## Pulse Parameters ##
@@ -1703,8 +1704,8 @@ def tdd_init(dev,TXRX_Bit):
     # --- Group 1: Always-on channels ---
     for chan in [TDD_ENABLE,TDD_ADRV9009_TX_EN,TDD_ADRV9009_RX_EN, TDD_PA_ON]:
         tddn.channel[chan].on_ms   = 0
-        tddn.channel[chan].off_ms  = 0
-        tddn.channel[chan].polarity = 1
+        tddn.channel[chan].off_ms  = frame_length_ms
+        tddn.channel[chan].polarity = 0
         tddn.channel[chan].enable   = True
 
     # --- Group 2: TX/RX offload sync (raw sample counts) ---
@@ -1725,133 +1726,135 @@ def tdd_init(dev,TXRX_Bit):
     tddn.enable = True
     tddn.sync_soft  = True
 
-    pulse_spacing_ms = 0.002        # 2 us spacing between pulse start times
-    pulse_start_buffer_ms = 0.00001 # 10 ns guard
-    pulse0_start_ms = pulse_start_buffer_ms
-    pulse0_stop_ms = DAC_duty_cycle * PRI_ms + pulse_start_buffer_ms
-    pulse1_start_ms = pulse0_stop_ms + pulse_spacing_ms
-    pulse1_stop_ms = pulse1_start_ms + DAC_duty_cycle * PRI_ms
-    pulse2_start_ms = pulse1_stop_ms + pulse_spacing_ms
-    pulse2_stop_ms = pulse2_start_ms + DAC_duty_cycle * PRI_ms
-    pulse3_start_ms = pulse2_stop_ms + pulse_spacing_ms
-    pulse3_stop_ms = pulse3_start_ms + DAC_duty_cycle * PRI_ms
+    if DAC:
 
-    # Prepare TX data
-    fs = int(dev.ADRV9009.tx_sample_rate)
-    frame_length_seconds = PRI_ms * 1e-3
-    # TX carrier frequency (Hz)
-    fc = 1000e3
-    # calculate N for full frame duration: N = fs * frame_length_seconds
-    N = int(fs * frame_length_seconds)
-    ts = 1 / float(fs)
-    frame_length_ms = PRI_ms
+        pulse_spacing_ms = 0.002        # 2 us spacing between pulse start times
+        pulse_start_buffer_ms = 0.00001 # 10 ns guard
+        pulse0_start_ms = pulse_start_buffer_ms
+        pulse0_stop_ms = DAC_duty_cycle * PRI_ms + pulse_start_buffer_ms
+        pulse1_start_ms = pulse0_stop_ms + pulse_spacing_ms
+        pulse1_stop_ms = pulse1_start_ms + DAC_duty_cycle * PRI_ms
+        pulse2_start_ms = pulse1_stop_ms + pulse_spacing_ms
+        pulse2_stop_ms = pulse2_start_ms + DAC_duty_cycle * PRI_ms
+        pulse3_start_ms = pulse2_stop_ms + pulse_spacing_ms
+        pulse3_stop_ms = pulse3_start_ms + DAC_duty_cycle * PRI_ms
 
-    #######################
-    ## Setup DAC outputs ##
-    #######################
-    # Calculate samples for TX pulse duration
-    pulse0_duration_ms = pulse0_stop_ms - pulse0_start_ms
-    pulse0_duration_seconds = pulse0_duration_ms * 1e-3
-    pulse0_samples = int(fs * pulse0_duration_seconds)
-    pulse0_start_sample = int(fs * pulse0_start_ms * 1e-3)
+        # Prepare TX data
+        fs = int(dev.ADRV9009.tx_sample_rate)
+        frame_length_seconds = PRI_ms * 1e-3
+        # TX carrier frequency (Hz)
+        fc = 1000e3
+        # calculate N for full frame duration: N = fs * frame_length_seconds
+        N = int(fs * frame_length_seconds)
+        ts = 1 / float(fs)
+        frame_length_ms = PRI_ms
 
-    pulse1_duration_ms = pulse1_stop_ms - pulse1_start_ms
-    pulse1_duration_seconds = pulse1_duration_ms * 1e-3
-    pulse1_samples = int(fs * pulse1_duration_seconds)
-    pulse1_start_sample = int(fs * pulse1_start_ms * 1e-3)
+        #######################
+        ## Setup DAC outputs ##
+        #######################
+        # Calculate samples for TX pulse duration
+        pulse0_duration_ms = pulse0_stop_ms - pulse0_start_ms
+        pulse0_duration_seconds = pulse0_duration_ms * 1e-3
+        pulse0_samples = int(fs * pulse0_duration_seconds)
+        pulse0_start_sample = int(fs * pulse0_start_ms * 1e-3)
 
-    pulse2_duration_ms = pulse2_stop_ms - pulse2_start_ms
-    pulse2_duration_seconds = pulse2_duration_ms * 1e-3
-    pulse2_samples = int(fs * pulse2_duration_seconds)
-    pulse2_start_sample = int(fs * pulse2_start_ms * 1e-3)
+        pulse1_duration_ms = pulse1_stop_ms - pulse1_start_ms
+        pulse1_duration_seconds = pulse1_duration_ms * 1e-3
+        pulse1_samples = int(fs * pulse1_duration_seconds)
+        pulse1_start_sample = int(fs * pulse1_start_ms * 1e-3)
 
-    pulse3_duration_ms = pulse3_stop_ms - pulse3_start_ms
-    pulse3_duration_seconds = pulse3_duration_ms * 1e-3
-    pulse3_samples = int(fs * pulse3_duration_seconds)
-    pulse3_start_sample = int(fs * pulse3_start_ms * 1e-3)
+        pulse2_duration_ms = pulse2_stop_ms - pulse2_start_ms
+        pulse2_duration_seconds = pulse2_duration_ms * 1e-3
+        pulse2_samples = int(fs * pulse2_duration_seconds)
+        pulse2_start_sample = int(fs * pulse2_start_ms * 1e-3)
 
-    # Create full frame with zeros
-    pulse0_i = np.zeros(N)
-    pulse0_q = np.zeros(N)
-    pulse1_i = np.zeros(N)
-    pulse1_q = np.zeros(N)
-    pulse2_i = np.zeros(N)
-    pulse2_q = np.zeros(N)
-    pulse3_i = np.zeros(N)
-    pulse3_q = np.zeros(N)
+        pulse3_duration_ms = pulse3_stop_ms - pulse3_start_ms
+        pulse3_duration_seconds = pulse3_duration_ms * 1e-3
+        pulse3_samples = int(fs * pulse3_duration_seconds)
+        pulse3_start_sample = int(fs * pulse3_start_ms * 1e-3)
 
-    for n in range(pulse0_start_sample, min(pulse0_start_sample + pulse0_samples, N)):
-        t_sample = n * ts
-        pulse0_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-        pulse0_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-    for n in range(pulse1_start_sample, min(pulse1_start_sample + pulse1_samples, N)):
-        t_sample = n * ts
-        pulse1_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-        pulse1_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-    for n in range(pulse2_start_sample, min(pulse2_start_sample + pulse2_samples, N)):
-        t_sample = n * ts
-        pulse2_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-        pulse2_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
-    for n in range(pulse3_start_sample, min(pulse3_start_sample + pulse3_samples, N)):
-        t_sample = n * ts
-        pulse3_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
-        pulse3_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        # Create full frame with zeros
+        pulse0_i = np.zeros(N)
+        pulse0_q = np.zeros(N)
+        pulse1_i = np.zeros(N)
+        pulse1_q = np.zeros(N)
+        pulse2_i = np.zeros(N)
+        pulse2_q = np.zeros(N)
+        pulse3_i = np.zeros(N)
+        pulse3_q = np.zeros(N)
 
-    pulse0_data = pulse0_i + 1j * pulse0_q
-    pulse1_data = pulse1_i + 1j * pulse1_q
-    pulse2_data = pulse2_i + 1j * pulse2_q
-    pulse3_data = pulse3_i + 1j * pulse3_q
+        for n in range(pulse0_start_sample, min(pulse0_start_sample + pulse0_samples, N)):
+            t_sample = n * ts
+            pulse0_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse0_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse1_start_sample, min(pulse1_start_sample + pulse1_samples, N)):
+            t_sample = n * ts
+            pulse1_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse1_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse2_start_sample, min(pulse2_start_sample + pulse2_samples, N)):
+            t_sample = n * ts
+            pulse2_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse2_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
+        for n in range(pulse3_start_sample, min(pulse3_start_sample + pulse3_samples, N)):
+            t_sample = n * ts
+            pulse3_i[n] = np.cos(2 * np.pi * fc * t_sample) * 1
+            pulse3_q[n] = np.sin(2 * np.pi * fc * t_sample) * 1
 
-    dev.ADRV9009.tx_destroy_buffer()
+        pulse0_data = pulse0_i + 1j * pulse0_q
+        pulse1_data = pulse1_i + 1j * pulse1_q
+        pulse2_data = pulse2_i + 1j * pulse2_q
+        pulse3_data = pulse3_i + 1j * pulse3_q
 
-    # scaling for 16-bit DAC
-    # use most of the dynamic range but avoid clipping
-    scale_factor = 2**15 - 1
-    pulse0_iq_real = np.int16(np.real(pulse0_data) * scale_factor)
-    pulse0_iq_imag = np.int16(np.imag(pulse0_data) * scale_factor)
-    pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
+        dev.ADRV9009.tx_destroy_buffer()
 
-    pulse1_iq_real = np.int16(np.real(pulse1_data) * scale_factor)
-    pulse1_iq_imag = np.int16(np.imag(pulse1_data) * scale_factor)
-    pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
+        # scaling for 16-bit DAC
+        # use most of the dynamic range but avoid clipping
+        scale_factor = 2**15 - 1
+        pulse0_iq_real = np.int16(np.real(pulse0_data) * scale_factor)
+        pulse0_iq_imag = np.int16(np.imag(pulse0_data) * scale_factor)
+        pulse0_iq = pulse0_iq_real + 1j * pulse0_iq_imag
 
-    pulse2_iq_real = np.int16(np.real(pulse2_data) * scale_factor)
-    pulse2_iq_imag = np.int16(np.imag(pulse2_data) * scale_factor)
-    pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
+        pulse1_iq_real = np.int16(np.real(pulse1_data) * scale_factor)
+        pulse1_iq_imag = np.int16(np.imag(pulse1_data) * scale_factor)
+        pulse1_iq = pulse1_iq_real + 1j * pulse1_iq_imag
 
-    pulse3_iq_real = np.int16(np.real(pulse3_data) * scale_factor)
-    pulse3_iq_imag = np.int16(np.imag(pulse3_data) * scale_factor)
-    pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
+        pulse2_iq_real = np.int16(np.real(pulse2_data) * scale_factor)
+        pulse2_iq_imag = np.int16(np.imag(pulse2_data) * scale_factor)
+        pulse2_iq = pulse2_iq_real + 1j * pulse2_iq_imag
 
-    # Configure TX data offload mode to cyclic
-    dev.ADRV9009._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
-    dev.ADRV9009.tx_cyclic_buffer = True
+        pulse3_iq_real = np.int16(np.real(pulse3_data) * scale_factor)
+        pulse3_iq_imag = np.int16(np.imag(pulse3_data) * scale_factor)
+        pulse3_iq = pulse3_iq_real + 1j * pulse3_iq_imag
 
-    # Calculate RX buffer size to match TX duration
-    rx_fs = int(dev.ADRV9009.rx_sample_rate)
+        # Configure TX data offload mode to cyclic
+        dev.ADRV9009._txdac.debug_attrs["pl_ddr_fifo_enable"].value = "1"
+        dev.ADRV9009.tx_cyclic_buffer = True
 
-    # Match RX buffer duration to TX duration
-    desired_rx_duration = frame_pulses_to_plot * len(pulse0_iq) / fs * 1000  # ms
-    rx_buffer_samples = int(rx_fs * (desired_rx_duration * 1e-3))
-    dev.ADRV9009.rx_buffer_size = rx_buffer_samples
+        # Calculate RX buffer size to match TX duration
+        rx_fs = int(dev.ADRV9009.rx_sample_rate)
 
-    ##############################################
-    ## Step 3: Send TX Data
-    ##############################################
+        # Match RX buffer duration to TX duration
+        desired_rx_duration = frame_pulses_to_plot * len(pulse0_iq) / fs * 1000  # ms
+        rx_buffer_samples = int(rx_fs * (desired_rx_duration * 1e-3))
+        dev.ADRV9009.rx_buffer_size = rx_buffer_samples
 
-    dev.ADRV9009.tx_destroy_buffer()
+        ##############################################
+        ## Step 3: Send TX Data
+        ##############################################
 
-    if TXRX_Bit == 1:
-        dev.ADRV9009.tx_enabled_channels = [0, 1, 2, 3]
-        dev.ADRV9009.tx([pulse0_iq, pulse0_iq, pulse0_iq, pulse0_iq])
- 
-    if TXRX_Bit == 0:
-        dev.ADRV9009.tx_enabled_channels = []
-        dev.ADRV9009.tx([])
+        dev.ADRV9009.tx_destroy_buffer()
 
-    dev.ADRV9009.tx_cyclic_buffer = True
+        if TXRX_Bit == 1:
+            dev.ADRV9009.tx_enabled_channels = [0, 1, 2, 3]
+            dev.ADRV9009.tx([pulse0_iq, pulse0_iq, pulse0_iq, pulse0_iq])
+    
+        if TXRX_Bit == 0:
+            dev.ADRV9009.tx_enabled_channels = []
+            dev.ADRV9009.tx([])
 
-    # Trigger TDD synchronization
-    tddn.sync_soft  = True
-    print("TDD Engine Started")
+        dev.ADRV9009.tx_cyclic_buffer = True
+
+        # Trigger TDD synchronization
+        tddn.sync_soft  = True
+        print("TDD Engine Started")
 
