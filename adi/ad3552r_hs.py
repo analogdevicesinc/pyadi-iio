@@ -25,6 +25,8 @@ class ad3552r_hs(tx, context_manager):
             "ad3551r",
             "ad3542r",
             "ad3541r",
+            "dac0",
+            "dac1",
         ]
 
         self._ctrl = None
@@ -69,11 +71,11 @@ class ad3552r_hs(tx, context_manager):
     @property
     def input_source(self):
         """Input source of the DAC"""
-        return self._get_iio_dev_attr_str("input_source", self._txdac)
+        return self._get_iio_debug_attr_str("data_source", self._txdac)
 
     @input_source.setter
     def input_source(self, value):
-        self._set_iio_dev_attr_str("input_source", value, self._txdac)
+        self._set_iio_debug_attr_str("data_source", value, self._txdac)
 
     @property
     def stream_status(self):
