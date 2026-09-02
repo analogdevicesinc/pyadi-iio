@@ -964,3 +964,12 @@ admt4000ard2z:
       - filename: admt4000ard2z.xml
       - data_devices:
           - iio:device1
+
+ad5933:
+  - ad5933
+  - pyadi_iio_class_support:
+      - ad5933
+  - emulate:
+      - filename: ad5933.xml
+      - data_devices:
+          - iio:device0
