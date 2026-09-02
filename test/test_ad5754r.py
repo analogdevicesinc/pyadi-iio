@@ -45,7 +45,7 @@ def test_ad5754r_global_attr(
 )
 def test_ad5754r_channel_attr(iio_uri, classname, channel, attr, val):
     dev = adi.ad5754r(iio_uri)
-    dev_chan = dev.channel[channel]
+    dev_chan = getattr(dev, f"voltage{channel}")
     for value in val:
         setattr(dev_chan, attr, value)
         val_read = getattr(dev_chan, attr)

@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2025 Analog Devices, Inc.
+# Copyright (C) 2019-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -8,7 +8,7 @@ from adi.rx_tx import rx_tx
 
 try:
     import ad9361 as libad9361
-except ImportError:
+except (ImportError, AttributeError):
     libad9361 = None
 
 

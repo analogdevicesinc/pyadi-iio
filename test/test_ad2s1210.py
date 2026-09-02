@@ -13,7 +13,7 @@ def test_ad2s1210_rx_data(test_dma_rx, iio_uri, classname, channel):
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [classname])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats",
@@ -36,7 +36,7 @@ def test_ad2s1210_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [classname])
 @pytest.mark.parametrize(
     "attr, value", [("hysteresis_enable", True), ("hysteresis_enable", False),],

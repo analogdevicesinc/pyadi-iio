@@ -20,9 +20,13 @@ Supported Devices
    adi.ad4170
    adi.ad4630
    adi.ad469x
+   adi.ad514x
+   adi.ad552xr
    adi.ad5592r
    adi.ad5627
    adi.ad5686
+   adi.ad5706r
+   adi.ad5710r
    adi.ad579x
    adi.ad5754r
    adi.ad5940
@@ -34,6 +38,7 @@ Supported Devices
    adi.ad719x
    adi.ad7291
    adi.ad738x
+   adi.ad7405
    adi.ad7490
    adi.ad7606
    adi.ad7689
@@ -65,6 +70,8 @@ Supported Devices
    adi.ad9680
    adi.ad4858
    adi.ad9739a
+   adi.ada4355
+   adi.ada4356_lidar
    adi.ada4961
    adi.adaq8092
    adi.adar1000
@@ -92,6 +99,9 @@ Supported Devices
    adi.adis16550
    adi.adl5240
    adi.adl5960
+   adi.adl8113
+   adi.admt4000
+   adi.admt4000ard1z
    adi.admv8818
    adi.adpd1080
    adi.adpd188
@@ -131,6 +141,7 @@ Supported Devices
    adi.jesd
    adi.lm75
    adi.ltc2314_14
+   adi.ltc2378
    adi.ltc2387
    adi.ltc2499
    adi.ltc2664
@@ -142,10 +153,12 @@ Supported Devices
    adi.max31855
    adi.max31865
    adi.max9611
+   adi.tmc5240
 
    adi.one_bit_adc_dac
    adi.tdd
    adi.tddn
+   adi.trigger
 
 -----
 

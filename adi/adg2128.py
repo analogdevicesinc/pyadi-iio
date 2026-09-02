@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2025 Analog Devices, Inc.
+# Copyright (C) 2021-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -27,7 +27,7 @@ class yline(object):
         self._line[y] = value
 
 
-class adg2128(attribute, context_manager):
+class adg2128(context_manager, attribute):
     """ADG2128 cross point switch."""
 
     def __init__(self, uri=""):

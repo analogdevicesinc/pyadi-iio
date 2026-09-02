@@ -2,7 +2,7 @@
 #
 # SPDX short identifier: ADIBSD
 
-import sys
+import argparse
 
 import adi
 
@@ -10,7 +10,22 @@ import adi
 # (URI stands for "Uniform Resource Identifier")
 # NOTE - when running directly on the Raspberry Pi, you CAN use "local",
 # but you must run as root (sudo) because we are writing as well as reading
-my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
+
+parser = argparse.ArgumentParser(
+    description="AD5593r Curve Tracer, see docs for connections"
+)
+parser.add_argument(
+    "-u",
+    default=["ip:analog.local"],
+    help="-u (arg) URI of target device's context, eg: 'ip:analog.local',\
+    'ip:192.168.2.1',\
+    'serial:COM4,115200,8n1n'",
+    action="store",
+    nargs="*",
+)
+args = parser.parse_args()
+my_uri = args.u[0]
+
 print("uri: " + str(my_uri))
 
 # Set up AD5592R/AD5593R

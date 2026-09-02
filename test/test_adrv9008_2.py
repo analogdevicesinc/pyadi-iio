@@ -3,7 +3,7 @@ from os.path import dirname, join, realpath
 
 import pytest
 
-hardware = "adrv9009"
+hardware = "adrv9008-2"
 classname = "adi.adrv9008_2"
 
 profile_path = dirname(realpath(__file__)) + "/adrv9009_profiles/"
@@ -164,6 +164,17 @@ def test_adrv9008_2_attr_singleval_depends_2(
     "files", test_profiles,
 )
 def test_adrv9008_2_profile_write(
-    test_attribute_write_only_str, iio_uri, classname, attr, files
+    test_attribute_write_profile, iio_uri, classname, attr, files
 ):
-    test_attribute_write_only_str(iio_uri, classname, attr, files)
+    # Same lane-rate / HDL constraint as test_adrv9009_p.py:
+    # test_adrv9009_profile_write — these profiles target HDL builds with
+    # 9.83 Gbps JESD204 RX, which the lab zc706 boards don't deliver.
+    import iio
+
+    carrier = (iio.Context(iio_uri).attrs.get("hw_carrier") or "").lower()
+    if "zc706" in carrier:
+        pytest.skip(
+            "ADRV9008-2 profile_write disabled on zc706: lab HDL can't deliver the "
+            "9.83 Gbps JESD204 lane rate the bundled profiles require"
+        )
+    test_attribute_write_profile(iio_uri, classname, files)

@@ -4,7 +4,7 @@ hardware = "ad3530r"
 classname = "adi.ad353xr"
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats, sub_channel",
@@ -31,7 +31,7 @@ def test_ad353xr_raw_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val",
@@ -47,7 +47,7 @@ def test_ad353xr_global_attr(
 
 
 #########################################
-@pytest.mark.iio_hardware(hardware)
+@pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("subchannel", ["voltage0", "voltage1", "voltage2", "voltage3"])
 @pytest.mark.parametrize(

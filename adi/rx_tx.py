@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2025 Analog Devices, Inc.
+# Copyright (C) 2019-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
@@ -301,6 +301,7 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
     # Set to True if complex data for TX only, overrides _complex_data
     _tx_complex_data = None
     _tx_data_type = None
+    _tx_input_type = "raw"
     _txbuf = None
     _output_byte_filename = "out.bin"
     _push_to_file = False
@@ -331,6 +332,17 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
         if self._tx_complex_data is None:
             return super()._complex_data
         return self._tx_complex_data
+
+    @property
+    def tx_input_type(self) -> str:
+        """tx_input_type: Set input data type for tx()"""
+        return self._tx_input_type
+
+    @tx_input_type.setter
+    def tx_input_type(self, value: str):
+        if value not in ["raw", "SI"]:
+            raise ValueError(f"Invalid tx_input_type: {value}. Must be raw or SI")
+        self._tx_input_type = value
 
     @property
     def tx_cyclic_buffer(self):
@@ -409,6 +421,60 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
         """tx_destroy_buffer: Clears TX buffer"""
         self._txbuf = None
 
+    def __get_tx_channel_scales(self):
+        tx_scale = []
+        for i in self.tx_enabled_channels:
+            chan_name = self._tx_channel_names[i]
+            v = self._txdac.find_channel(chan_name, True)
+            if "scale" in v.attrs:
+                scale = self._get_iio_attr(chan_name, "scale", True, self._txdac)
+            else:
+                scale = 1.0
+            tx_scale.append(scale)
+        return tx_scale
+
+    def __get_tx_channel_offsets(self):
+        tx_offset = []
+        for i in self.tx_enabled_channels:
+            chan_name = self._tx_channel_names[i]
+            v = self._txdac.find_channel(chan_name, True)
+            if "offset" in v.attrs:
+                offset = self._get_iio_attr(chan_name, "offset", True, self._txdac)
+            else:
+                offset = 0.0
+            tx_offset.append(offset)
+        return tx_offset
+
+    def __tx_raw_data(self, data_np):
+        if self._num_tx_channels_enabled == 1:
+            data_np = [data_np]
+
+        if len(data_np) != self._num_tx_channels_enabled:
+            raise Exception("Not enough data provided for channel mapping")
+
+        if self._tx_input_type == "SI":
+            tx_scale = self.__get_tx_channel_scales()
+            tx_offset = self.__get_tx_channel_offsets()
+            raw_data_np = []
+
+            for i, ch in enumerate(data_np):
+                chan_name = self._tx_channel_names[self.tx_enabled_channels[i]]
+                df = self._txdac.find_channel(chan_name, True).data_format
+                if df.is_signed:
+                    lo, hi = -(1 << (df.bits - 1)), (1 << (df.bits - 1)) - 1
+                else:
+                    lo, hi = 0, (1 << df.bits) - 1
+                raw = np.clip(
+                    np.asarray(ch) / tx_scale[i] - tx_offset[i], lo, hi
+                ).astype(self._tx_data_type)
+                raw_data_np.append(raw << df.shift)
+        elif self._tx_input_type == "raw":
+            raw_data_np = data_np
+        else:
+            raise Exception("invalid _tx_input_type")
+
+        return raw_data_np
+
     def tx(self, data_np=None):
         """Transmit data to hardware buffers for each channel index in
         tx_enabled_channels.
@@ -447,13 +513,8 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
                 "To push more data the tx buffer must be destroyed first."
             )
 
+        data_np = self.__tx_raw_data(data_np)
         if self._complex_data:
-            if self._num_tx_channels_enabled == 1:
-                data_np = [data_np]
-
-            if len(data_np) != self._num_tx_channels_enabled:
-                raise Exception("Not enough data provided for channel mapping")
-
             indx = 0
             stride = self._num_tx_channels_enabled * 2
             data = np.empty(stride * len(data_np[0]), dtype=self._tx_data_type)
@@ -464,12 +525,6 @@ class tx_core(dds, rx_tx_common, metaclass=ABCMeta):
                 data[indx + 1 :: stride] = q.astype(self._tx_data_type)
                 indx = indx + 2
         else:
-            if self._num_tx_channels_enabled == 1:
-                data_np = [data_np]
-
-            if len(data_np) != self._num_tx_channels_enabled:
-                raise Exception("Not enough data provided for channel mapping")
-
             indx = 0
             stride = self._num_tx_channels_enabled
             data = np.empty(stride * len(data_np[0]), dtype=self._tx_data_type)
@@ -611,31 +666,61 @@ class shared_def(context_manager, metaclass=ABCMeta):
                 if all(dev in devs for dev in required_devices):
                     self._ctx = iio.Context(c)
                     break
+            # Preserve context_manager's legacy fallback for environments where
+            # network discovery is unavailable but ip:analog is reachable.
+            if not self._ctx and self._uri_auto != "":
+                try:
+                    self._ctx = iio.Context(self._uri_auto)
+                except Exception:  # noqa: BLE001
+                    self._ctx = None
             if not self._ctx:
                 raise Exception("No context could be found for class")
 
         # Set up devices
         if self._control_device_name:
-            self._ctrl = self._ctx.find_device(self._control_device_name)
-            if not self._ctrl:
-                raise Exception(
-                    f"No device found with name {self._control_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._ctrl = None
+                for device in self._ctx.devices:
+                    if device.name == self._control_device_name:
+                        if index == self._device_index:
+                            self._ctrl = device
+                            break
+                        else:
+                            index += 1
+                if not self._ctrl:
+                    raise Exception(
+                        f"No device found with name {self._control_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._ctrl = self._ctx.find_device(self._control_device_name)
+                if not self._ctrl:
+                    raise Exception(
+                        f"No device found with name {self._control_device_name}"
+                    )
 
     def __post_init__(self):
         pass
 
+    def _resolve_trigger(self, trigger):
+        if isinstance(trigger, str):
+            trig = self._ctx.find_device(trigger)  # iio.Trigger
+            if not trig:
+                raise ValueError(f"Trigger device '{trigger}' not found")
+        elif hasattr(trigger, "_ctrl"):
+            # wrapper class instance is passed in instead of a raw iio trigger
+            trig = trigger._ctrl
+        else:
+            trig = trigger
 
-class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
-    """Template metaclass for rx only device specific interfaces."""
+        if trig is not None and not isinstance(trig, iio.Trigger):
+            raise ValueError(f"'{trig}' is not an IIO Trigger")
 
-    """Names of rx data channels.
-    List of strings with names of channels.
-    If not defined all channels with scan elements will
-    be populated as available channels.
-    """
-    _rx_channel_names = None
+        return trig
 
+
+class rx_def_no_buff(shared_def, rx, context_manager, metaclass=ABCMeta):
     @property
     @abstractmethod
     def _rx_data_device_name(self) -> None:
@@ -653,12 +738,46 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
         shared_def.__init__(self, *args, **kwargs)
 
         if self._rx_data_device_name:
-            self._rxadc = self._ctx.find_device(self._rx_data_device_name)
-            if not self._rxadc:
-                raise Exception(
-                    f"No device found with name {self._rx_data_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._rxadc = None
+                for device in self._ctx.devices:
+                    if device.name == self._rx_data_device_name:
+                        if index == self._device_index:
+                            self._rxadc = device
+                            break
+                        else:
+                            index += 1
+                if not self._rxadc:
+                    raise Exception(
+                        f"No device found with name {self._rx_data_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._rxadc = self._ctx.find_device(self._rx_data_device_name)
+                if not self._rxadc:
+                    raise Exception(
+                        f"No device found with name {self._rx_data_device_name}"
+                    )
 
+        if not self._rxadc:
+            raise Exception("RX device not found")
+
+
+class rx_def(rx_def_no_buff):
+    """Template metaclass for rx only device specific interfaces."""
+
+    """Names of rx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _rx_channel_names = None
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+        rx_def_no_buff.__init__(self, *args, **kwargs)
         # Set up channels
         if self._rxadc and self._rx_channel_names is None:
             self._rx_channel_names = [
@@ -668,22 +787,30 @@ class rx_def(shared_def, rx, context_manager, metaclass=ABCMeta):
             if not self._rx_channel_names:
                 raise Exception(f"No scan elements found for device {self._rxadc.name}")
 
+        if self._rx_channel_names is None:
+            raise AssertionError("RX channel names must be defined")
+
         rx.__init__(self)
 
         if self.__run_rx_post_init__:
             self.__post_init__()
 
+    def set_rx_trigger(self, trigger):
+        """Set the trigger for the RX ADC.
 
-class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
-    """Template metaclass for rx only device specific interfaces."""
+        This interface is typically used by devices with triggered buffer
+        support that does not have an internal/default trigger
 
-    """Names of tx data channels.
-    List of strings with names of channels.
-    If not defined all channels with scan elements will
-    be populated as available channels.
-    """
-    _tx_channel_names = None
+        Args:
+            trigger:
+                Can be Trigger device name or id, an iio.Trigger instance, or
+                wrapper class instance with _ctrl attribute pointing to an iio.Trigger.
+                Set to None to clear the trigger.
+        """
+        self._rxadc._set_trigger(self._resolve_trigger(trigger))
 
+
+class tx_def_no_buff(shared_def, tx, context_manager, metaclass=ABCMeta):
     @property
     @abstractmethod
     def _tx_data_device_name(self) -> None:
@@ -701,25 +828,76 @@ class tx_def(shared_def, tx, context_manager, metaclass=ABCMeta):
         shared_def.__init__(self, *args, **kwargs)
 
         if self._tx_data_device_name:
-            self._txdac = self._ctx.find_device(self._tx_data_device_name)
-            if not self._txdac:
-                raise Exception(
-                    f"No device found with name {self._tx_data_device_name}"
-                )
+            # Support device_index for multiple devices with same name
+            if hasattr(self, "_device_index") and self._device_index > 0:
+                index = 0
+                self._txdac = None
+                for device in self._ctx.devices:
+                    if device.name == self._tx_data_device_name:
+                        if index == self._device_index:
+                            self._txdac = device
+                            break
+                        else:
+                            index += 1
+                if not self._txdac:
+                    raise Exception(
+                        f"No device found with name {self._tx_data_device_name} at index {self._device_index}"
+                    )
+            else:
+                self._txdac = self._ctx.find_device(self._tx_data_device_name)
+                if not self._txdac:
+                    raise Exception(
+                        f"No device found with name {self._tx_data_device_name}"
+                    )
 
+        if not self._txdac:
+            raise Exception("TX device not found")
+
+
+class tx_def(tx_def_no_buff):
+    """Template metaclass for tx only device specific interfaces."""
+
+    """Names of tx data channels.
+    List of strings with names of channels.
+    If not defined all channels with scan elements will
+    be populated as available channels.
+    """
+    _tx_channel_names = None
+
+    def __init__(
+        self, *args: Union[str, iio.Context], **kwargs: Union[str, iio.Context]
+    ) -> None:
+        tx_def_no_buff.__init__(self, *args, **kwargs)
         # Set up channels
         if self._txdac and self._tx_channel_names is None:
             self._tx_channel_names = [
-                chan.id for chan in self._rxadc.channels if chan.scan_element
+                chan.id for chan in self._txdac.channels if chan.scan_element
             ]
 
             if not self._tx_channel_names:
-                raise Exception(f"No scan elements found for device {self._rxadc.name}")
+                raise Exception(f"No scan elements found for device {self._txdac.name}")
+
+        if self._tx_channel_names is None:
+            raise AssertionError("TX channel names must be defined")
 
         tx.__init__(self)
 
         if self.__run_tx_post_init__:
             self.__post_init__()
+
+    def set_tx_trigger(self, trigger):
+        """Set the trigger for the TX DAC.
+
+        This interface is typically used by devices with triggered buffer
+        support that does not have an internal/default trigger
+
+        Args:
+            trigger:
+                Can be Trigger device name or id, an iio.Trigger instance, or
+                wrapper class instance with _ctrl attribute pointing to an iio.Trigger.
+                Set to None to clear the trigger.
+        """
+        self._txdac._set_trigger(self._resolve_trigger(trigger))
 
 
 class rx_tx_def(tx_def, rx_def):

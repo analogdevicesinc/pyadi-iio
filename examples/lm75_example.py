@@ -40,7 +40,7 @@ print("Max hysteresis: " + str(my_temp_sensr.to_degrees(my_temp_sensr.max_hyst))
 
 print("\nSetting max threshold, hyst. to 30C, 25C...\n")
 
-my_temp_sensr.max = my_temp_sensr.to_millidegrees(30.0)
+my_temp_sensr.max = my_temp_sensr.to_millidegrees(20.0)
 my_temp_sensr.max_hyst = my_temp_sensr.to_millidegrees(25.0)
 
 print("New thresholds:")

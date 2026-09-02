@@ -1,131 +1,168 @@
-# Copyright (C) 2019-2025 Analog Devices, Inc.
+# Copyright (C) 2019-2026 Analog Devices, Inc.
 #
 # SPDX short identifier: ADIBSD
 
-import numpy as np
+from decimal import Decimal
+from enum import Enum
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
+from adi.device_base import tx_chan_comp
 
 
-class ad5686(context_manager, attribute):
+class ad5686_channel(attribute):
+    """AD5686 channel"""
+
+    def __init__(self, ctrl, channel_name):
+        self.name = channel_name
+        self._ctrl = ctrl
+        self._format = self._ctrl.find_channel(channel_name, True).data_format
+
+    @property
+    def raw(self):
+        """AD5686 channel raw value"""
+        return int(self._get_iio_attr_str(self.name, "raw", True, self._ctrl))
+
+    @raw.setter
+    def raw(self, value):
+        value = max(0, min(int(value), (2 ** self._format.bits) - 1))
+        self._set_iio_attr(self.name, "raw", True, value)
+
+    @property
+    def powerdown(self):
+        """AD5686 channel powerdown value"""
+        return self._get_iio_attr(self.name, "powerdown", True)
+
+    @powerdown.setter
+    def powerdown(self, val):
+        """AD5686 channel powerdown value"""
+        self._set_iio_attr(self.name, "powerdown", True, val)
+
+    @property
+    def powerdown_mode(self) -> "ad5686.powerdown_mode":
+        """AD5686 channel powerdown mode value"""
+        return ad5686.powerdown_mode(
+            self._get_iio_attr_str(self.name, "powerdown_mode", True)
+        )
+
+    @powerdown_mode.setter
+    def powerdown_mode(self, mode):
+        """AD5686 channel powerdown value"""
+        value = mode.value if isinstance(mode, ad5686.powerdown_mode) else mode
+        self._set_iio_attr(self.name, "powerdown_mode", True, value)
+
+    @property
+    def powerdown_mode_available(self):
+        """AD5686 channel available powerdown modes"""
+        modes_str = self._get_iio_attr_str(self.name, "powerdown_mode_available", True)
+        return [ad5686.powerdown_mode(m) for m in modes_str.split()]
+
+    @property
+    def scale(self) -> Decimal:
+        """AD5686 channel scale(gain)"""
+        return Decimal(self._get_iio_attr_str(self.name, "scale", True))
+
+    @scale.setter
+    def scale(self, value):
+        self._set_iio_attr(self.name, "scale", True, value)
+
+    @property
+    def scale_available(self):
+        """AD5686 channel available scale values"""
+        scale_str = self._get_iio_attr_str(self.name, "scale_available", True)
+        return [Decimal(s) for s in scale_str.split()]
+
+    @property
+    def voltage(self) -> float:
+        """AD5686 channel value in Volts"""
+        return float(self.raw * self.scale / 1000)
+
+    @voltage.setter
+    def voltage(self, val: float):
+        """AD5686 channel value in Volts"""
+        self.raw = int(1000 * Decimal(val) / self.scale)
+
+
+class ad5686(tx_chan_comp):
     """ AD5686 DAC """
 
+    class powerdown_mode(Enum):
+        """AD5686 Powerdown Mode Enumeration"""
+
+        PULLDOWN_1K = "1kohm_to_gnd"
+        PULLDOWN_100K = "100kohm_to_gnd"
+        TRISTATE = "three_state"
+
+    class gain(Enum):
+        """AD5686 Gain Mode Enumeration"""
+
+        NORMAL = 1
+        DOUBLE = 2
+
+    compatible_parts = [
+        "ad5686",
+        "ad5310r",
+        "ad5311r",
+        "ad5313r",
+        "ad5316r",
+        "ad5317r",
+        "ad5338r",
+        "ad5671r",
+        "ad5672r",
+        "ad5673r",
+        "ad5674",
+        "ad5674r",
+        "ad5675",
+        "ad5675r",
+        "ad5676",
+        "ad5676r",
+        "ad5677r",
+        "ad5679",
+        "ad5679r",
+        "ad5681r",
+        "ad5682r",
+        "ad5683",
+        "ad5683r",
+        "ad5684",
+        "ad5684r",
+        "ad5685r",
+        "ad5686r",
+        "ad5687",
+        "ad5687r",
+        "ad5689",
+        "ad5689r",
+        "ad5691r",
+        "ad5692r",
+        "ad5693",
+        "ad5693r",
+        "ad5694",
+        "ad5694r",
+        "ad5695r",
+        "ad5696",
+        "ad5696r",
+        "ad5697r",
+    ]
     _complex_data = False
-    channel = []  # type: ignore
+    _channel_def = ad5686_channel
     _device_name = ""
 
-    def __init__(self, uri="", device_index=0):
-        context_manager.__init__(self, uri, self._device_name)
-        # Dictionary with all compatible parts. The key of each entry is the device's id and it's value
-        # is the number of bits the device supports.
-        compatible_parts = [
-            "ad5310r",
-            "ad5311r",
-            "ad5671r",
-            "ad5672r",
-            "ad5673r",
-            "ad5674r",
-            "ad5675r",
-            "ad5676",
-            "ad5676r",
-            "ad5677r",
-            "ad5679r",
-            "ad5681r",
-            "ad5682r",
-            "ad5683",
-            "ad5683r",
-            "ad5684",
-            "ad5684r",
-            "ad5685r",
-            "ad5686",
-            "ad5686r",
-            "ad5691r",
-            "ad5692r",
-            "ad5693",
-            "ad5693r",
-            "ad5694",
-            "ad5694r",
-            "ad5695r",
-            "ad5696",
-            "ad5696r",
-        ]
+    def __init__(self, uri="", device_name="", device_index=0, trigger=None):
+        super().__init__(uri, device_name, device_index)
+        self._scales = self.channel[0].scale_available
+        if trigger:
+            self.set_tx_trigger(trigger)
 
-        self._ctrl = None
-        index = 0
-        # We are selecting the device_index-th device from the 5686 family as working device.
-        for device in self._ctx.devices:
-            if device.name in compatible_parts:
-                if index == device_index:
-                    self._ctrl = device
-                    break
-                else:
-                    index += 1
+    def set_gain(self, value: "ad5686.gain"):
+        """Set the DAC output gain.
 
-        self.channel = []
-        for ch in self._ctrl.channels:
-            name = ch.id
-            self.channel.append(self._channel(self._ctrl, name))
+        Args:
+            value:
+                :class:`ad5686.gain` member selecting the output gain
+                (``NORMAL`` or ``DOUBLE``). Only supported on devices that
+                expose two entries in ``scale_available``.
+        """
+        if len(self._scales) != 2:
+            raise ValueError("Cannot set gain on this device")
 
-        # sort device channels after the index of their index
-        self.channel.sort(key=lambda x: int(x.name[7:]))
-
-    class _channel(attribute):
-        """AD5686 channel"""
-
-        def __init__(self, ctrl, channel_name):
-            self.name = channel_name
-            self._ctrl = ctrl
-
-        @property
-        def raw(self):
-            """AD5686 channel raw value"""
-            return self._get_iio_attr(self.name, "raw", True, self._ctrl)
-
-        @raw.setter
-        def raw(self, value):
-            self._set_iio_attr(self.name, "raw", True, str(int(value)))
-
-        @property
-        def powerdown(self):
-            """AD5686 channel powerdown value"""
-            return self._get_iio_attr(self.name, "powerdown", True)
-
-        @powerdown.setter
-        def powerdown(self, val):
-            """AD5686 channel powerdown value"""
-            self._set_iio_attr(self.name, "powerdown", True, val)
-
-        @property
-        def powerdown_mode(self):
-            """AD5686 channel powerdown mode value"""
-            return self._get_iio_attr_str(self.name, "powerdown_mode", True)
-
-        @powerdown_mode.setter
-        def powerdown_mode(self, val):
-            """AD5686 channel powerdown value"""
-            self._set_iio_attr_str(self.name, "powerdown_mode", True, val)
-
-        @property
-        def powerdown_mode_available(self):
-            """Provides all available powerdown mode settings for the AD5686"""
-            return self._get_iio_attr_str(self.name, "powerdown_mode_available", True)
-
-        @property
-        def scale(self):
-            """AD5686 channel scale(gain)"""
-            return self._get_iio_attr(self.name, "scale", True)
-
-        def to_raw(self, val):
-            """Converts raw value to SI"""
-            return int(1000.0 * val / self.scale)
-
-        @property
-        def volts(self):
-            """AD5686 channel value in volts"""
-            return self.raw * self.scale
-
-        @volts.setter
-        def volts(self, val):
-            """AD5686 channel value in volts"""
-            self.raw = self.to_raw(val)
+        self.channel[0].scale = (
+            self._scales[1] if value == ad5686.gain.DOUBLE else self._scales[0]
+        )

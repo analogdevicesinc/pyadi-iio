@@ -22,7 +22,7 @@ adc.rx_buffer_size = 500
 adc.sample_rate = 2000000
 
 try:
-    adc.sample_averaging = 16
+    adc.chan0.oversampling_ratio = 16
 except:
     print("Sample average not supported in this mode")
 

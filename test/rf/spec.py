@@ -14,7 +14,12 @@ from numpy import (
     pi,
 )
 from numpy.fft import fft, fftfreq, fftshift
-from scipy import signal
+
+try:
+    from scipy.signal import kaiser
+except ImportError:
+    from scipy.signal.windows import kaiser
+
 from scipy.signal import find_peaks
 
 
@@ -24,7 +29,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False, useWindow=False):
 
     # Apply window
     if useWindow:
-        window = signal.kaiser(N, beta=8.6)
+        window = kaiser(N, beta=8.6)
         x = multiply(x, window)
 
     # Use FFT to get the amplitude of the spectrum

@@ -318,7 +318,15 @@ adrv9002:
           - iio:device2
           - iio:device4
 adrv9009:
+  # Full adrv9009 chip: PHY + main TX + main RX + RX observation.
+  # Listing all four lets pytest-libiio's lookup_hw_from_map score this
+  # entry highest for a real adrv9009 DUT — otherwise adrv9008-2 wins
+  # the tie since its entry has three drivers and an adrv9009 DUT has all
+  # of them (plus the extra axi-adrv9009-rx-hpc that distinguishes it).
   - adrv9009-phy
+  - axi-adrv9009-tx-hpc
+  - axi-adrv9009-rx-hpc
+  - axi-adrv9009-rx-obs-hpc
   - pyadi_iio_class_support:
       - adrv9009
 adrv9009-dual:
@@ -350,6 +358,8 @@ adrv9008-2:
           - iio:device5
 adrv9371:
   - ad9371-phy
+  - pyadi_iio_class_support:
+      - ad9371
   - emulate:
       - filename: ad9371.xml
       - data_devices:
@@ -438,6 +448,16 @@ ad9434:
       - filename: ad9434.xml
       - data_devices:
           - iio:device2
+ad9213:
+  - ad9213
+  - hmc7044
+  - adf4371
+  - pyadi_iio_class_support:
+      - ad9213
+  - emulate:
+      - filename: ad9213.xml
+      - data_devices:
+          - iio:device0
 ad9265:
   - axi-ad9265-core-lpc
   - ad9517-4
@@ -493,6 +513,14 @@ ad4020:
       - filename: ad4020.xml
       - data_devices:
           - iio:device0
+ad5529r:
+  - ad5529r
+  - pyadi_iio_class_support:
+      - ad552xr
+  - emulate:
+      - filename: ad5529r.xml
+      - data_devices:
+          - iio:device0
 adaq4224:
   - adaq4224
   - pyadi_iio_class_support:
@@ -520,6 +548,14 @@ adf4377:
       - data_devices:
           - iio:device0
 
+ltc2378-20:
+  - ltc2378
+  - pyadi_iio_class_support:
+      - ltc2378
+  - emulate:
+      - filename: ltc2378.xml
+      - data_devices:
+          - iio:device0
 
 ltc2387:
   - ltc2387
@@ -627,6 +663,15 @@ ad7768-4:
       - data_devices:
           - iio:device0
 
+ad514x:
+  - AD5144
+  - pyadi_iio_class_support:
+      - ad514x
+  - emulate:
+      - filename: ad514x.xml
+      - data_devices:
+          - iio:device0
+
 ad5592r:
   - ad5592r
   - pyadi_iio_class_support:
@@ -659,9 +704,27 @@ ad7291:
   - pyadi_iio_class_support:
       - ad7291
   - emulate:
-      - filename: cn0566.xml
+      - filename: ad7291.xml
       - data_devices:
-          - iio:device1
+          - iio:device0
+
+ltc2314-14:
+  - ltc2314-14
+  - pyadi_iio_class_support:
+      - ltc2314_14
+  - emulate:
+      - filename: ltc2314-14.xml
+      - data_devices:
+          - iio:device0
+
+ad5686:
+  - ad5686
+  - pyadi_iio_class_support:
+      - ad5686
+  - emulate:
+      - filename: ad5686.xml
+      - data_devices:
+          - iio:device0
 
 max31865:
   - max31865
@@ -728,6 +791,15 @@ adis16550:
   - pyadi_iio_class_support:
       - adis16550
 
+adis16507-3:
+  - adis16507-3
+  - emulate:
+      - filename: adis16507.xml
+      - data_devices:
+        - iio:device0
+  - pyadi_iio_class_support:
+      - adis16507
+
 ad7124-8:
   - ad7124
   - pyadi_iio_class_support:
@@ -775,6 +847,15 @@ ad4170:
      - data_devices:
          - iio:device0
 
+ad4692:
+ - ad4692
+ - pyadi_iio_class_support:
+     - ad469x
+ - emulate:
+     - filename: ad4692.xml
+     - data_devices:
+         - iio:device0
+
 ad738x:
   - ad738x
   - pyadi_iio_class_support:
@@ -819,6 +900,13 @@ ad4080:
      - data_devices:
          - iio:device2
 
+adl8113:
+  - adl8113
+  - pyadi_iio_class_support:
+      - adl8113
+  - emulate:
+      - filename: adl8113.xml
+
 ad7490:
   - ad7490
   - pyadi_iio_class_support:
@@ -827,3 +915,88 @@ ad7490:
       - filename: ad7490.xml
       - data_devices:
           - iio:device0
+ada4355:
+  - ada4355
+  - pyadi_iio_class_support:
+      - ada4355
+  - emulate:
+      - filename: ada4355.xml
+      - data_devices:
+          - iio:device2
+
+ada4356_lidar:
+  - ada4355
+  - axi-tdd
+  - pyadi_iio_class_support:
+      - ada4356_lidar
+  - emulate:
+      - filename: ada4356_lidar.xml
+      - data_devices:
+          - iio:device2
+
+ad5710r:
+  - ad5710r
+  - pyadi_iio_class_support:
+      - ad5710r
+  - emulate:
+      - filename: ad5710r.xml
+      - data_devices:
+          - iio:device0
+
+ad5706r:
+  - ad5706r
+  - pyadi_iio_class_support:
+      - ad5706r
+  - emulate:
+      - filename: ad5706r.xml
+      - data_devices:
+          - iio:device0
+ad7405:
+  - adum7701
+  - pyadi_iio_class_support:
+      - ad7405
+  - emulate:
+      - filename: ad7405.xml
+      - data_devices:
+          - iio:device0
+
+admt4000:
+  - admt4000
+  - pyadi_iio_class_support:
+      - admt4000
+  - emulate:
+      - filename: admt4000.xml
+      - data_devices:
+          - iio:device0
+
+tmc5240:
+  - tmc5240
+  - pyadi_iio_class_support:
+      - tmc5240
+  - emulate:
+      - filename: tmc5240.xml
+      - data_devices:
+          - iio:device0
+
+admt4000ard1z:
+  - admt4000
+  - tmc5240
+  - pyadi_iio_class_support:
+      - admt4000ard1z
+      - admt4000
+      - tmc5240
+  - emulate:
+      - filename: admt4000ard1z.xml
+      - data_devices:
+          - iio:device1
+          - iio:device2
+
+admt4000ard2z:
+  - admt4000
+  - pyadi_iio_class_support:
+      - admt4000ard2z
+      - admt4000
+  - emulate:
+      - filename: admt4000ard2z.xml
+      - data_devices:
+          - iio:device1
