@@ -165,5 +165,10 @@ try:
 except ImportError:
     pass
 
+try:
+    from adi.gt_debug_gpio import GtDebugGpio
+except ImportError:
+    pass
+
 __version__ = "0.0.22"
 name = "Analog Devices Hardware Interfaces"
