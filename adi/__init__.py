@@ -29,6 +29,7 @@ from adi.ad5686 import ad5686
 from adi.ad5706r import ad5706r
 from adi.ad5710r import ad5710r
 from adi.ad5754r import ad5754r
+from adi.ad5933 import ad5933
 from adi.ad5940 import ad5940
 from adi.ad6676 import ad6676
 from adi.ad7091rx import ad7091rx
