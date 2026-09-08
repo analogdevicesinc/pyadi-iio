@@ -62,7 +62,9 @@ class ad74413r(rx, context_manager):
     @property
     def sample_rate(self):
         """sample_rate: Sample rate in samples per second"""
-        return self._get_iio_attr(self._rx_channel_names[0], "sampling_frequency", False)
+        return self._get_iio_attr(
+            self._rx_channel_names[0], "sampling_frequency", False
+        )
 
     @sample_rate.setter
     def sample_rate(self, value):
@@ -88,7 +90,10 @@ class ad74413r(rx, context_manager):
         if any(np.max(np.abs(channel_data)) != 0 for channel_data in data_channels):
             return data
 
-        if not any(self._get_iio_attr(self._rx_channel_names[index], "raw", False) != 0 for index in self.rx_enabled_channels):
+        if not any(
+            self._get_iio_attr(self._rx_channel_names[index], "raw", False) != 0
+            for index in self.rx_enabled_channels
+        ):
             return data
 
         self._rxbuf = None
