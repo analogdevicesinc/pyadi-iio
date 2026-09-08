@@ -71,6 +71,7 @@ Supported Devices
    adi.ad9739a
    adi.ada4355
    adi.ada4356_lidar
+   adi.ada4356_quad
    adi.ada4961
    adi.adaq8092
    adi.adar1000
