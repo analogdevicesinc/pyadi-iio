@@ -29,7 +29,7 @@ talise_uri = "ip:" + talise_ip
 
 
 ## Initialization ## 
-
+print("Initializing ADSY2301 with IP address: " + talise_uri)
 #Create an ADSY2301 class instance
 dev = mr.adsy2301(uri=talise_uri)
 
@@ -75,7 +75,7 @@ dev.init_UDC()
 dev.init_ADRV9009()
 mr.sdr_init(dev)
 mr.tdd_init(dev,TXRX_Bit=0)
-exit()
+
 # Initialize beamforming subclass into known default state
 dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
@@ -93,9 +93,6 @@ for device in dev.BFC.devices.values():
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
-mr.disable_rx_channel(dev.BFC)
-mr.disable_tx_channel(dev.BFC)
-
 print("Setting all devices to rx mode")
 for element in dev.BFC.elements.values():
     element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
@@ -107,4 +104,12 @@ for element in dev.BFC.elements.values():
 
 dev.BFC.latch_rx_settings()
 dev.BFC.latch_tx_settings()
-mr.enable_rx_channel(dev.BFC)
+
+#Uncomment to enable all RX channels
+# mr.enable_rx_channel(dev.BFC)
+
+#Uncomment to enable specific Rx Channels
+# mr.enable_rx_channel(dev.BFC, [1, 2, 3])
+
+#Uncomment to disable all RX channels
+# mr.disable_rx_channel(dev.BFC)

@@ -45,7 +45,7 @@ dev.init_BFC(
 
     device_element_map={
         1:  [5, 6, 2, 1],     3:  [13, 14, 10, 9],
-        2:  [4, 4, 7, 16],  4:  [12, 11, 15, 16],
+        2:  [4, 3, 7, 8],  4:  [12, 11, 15, 16],
     },
 )
 
@@ -71,3 +71,4 @@ for element in dev.BFC.elements.values():
 
 dev.BFC.latch_rx_settings()
 dev.BFC.latch_tx_settings()
+
