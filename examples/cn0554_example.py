@@ -5,9 +5,8 @@
 import sys
 import time
 
-import numpy as np
-
 import adi
+import numpy as np
 
 # Optionally pass URI as command line argument,
 # else use default context manager search
@@ -50,16 +49,18 @@ for a in range(0, 4):
 
     # Request data from onboard ADC
     print("Capturing data....")
-    dat = my_cn0554.rx()
-    print("")
     print("")
 
-    # Print out average of measured values
-    for ind, sigs in enumerate(dat):
-        ch_in_range = str(my_cn0554.adc_in_channels[ind])
-        sigs = my_cn0554.convert_to_volts(sigs, ch_in_range)
+    # Get ADC scale factor using 2.5 V reference
+    adc_scale = my_cn0554.adc.scale_available[7]
+
+    for i in range(my_cn0554._in_channels):
+        raw = my_cn0554.adc.channel[i].raw # Get measured ADC raw value per channel
+        ch_in_range = str(my_cn0554.adc_in_channels[i])
         print("Expected difference measurements: " + str(expected_diff))
-        print("Average Values of " + ch_in_range + ": " + str(np.mean(sigs)))
+
+        # Print out converted ADC raw value using ADC scale factor and on-board resistor divider 
+        print(f"Value of {ch_in_range}: {((raw * adc_scale) / 1000) * my_cn0554.in_scale}")
         print("")
         print(
             "#######################################################################################"
@@ -67,3 +68,4 @@ for a in range(0, 4):
 
     # Small delay between iterations
     time.sleep(1)
+    
