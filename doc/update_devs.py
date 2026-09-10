@@ -110,17 +110,20 @@ def update_devs():
         txt = txt.replace(".. automodule:: adi.adi.", ".. automodule:: adi.")
         # Ensure jesd points to jesd_internal
         if bname == "adi.jesd.rst":
-            txt = txt.replace(".. automodule:: adi.jesd\n", ".. automodule:: adi.jesd_internal\n")
+            txt = txt.replace(
+                ".. automodule:: adi.jesd\n",
+                ".. automodule:: adi.jesd_internal\n",
+            )
 
         with open(dev, "w") as f:
             f.write(txt)
 
     # Generate index.rst
-    device_names = [
-        os.path.splitext(os.path.basename(f))[0]
-        for f in sorted(glob.glob(os.path.join(source_devices, "adi.*.rst")))
-        if os.path.splitext(os.path.basename(f))[0][4:] not in to_skip
-    ]
+    device_names = []
+    for f in sorted(glob.glob(os.path.join(source_devices, "adi.*.rst"))):
+        name = os.path.splitext(os.path.basename(f))[0]
+        if name[4:] not in to_skip:
+            device_names.append(name)
 
     index_lines = [
         "Supported Devices",
