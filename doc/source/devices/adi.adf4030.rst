@@ -1,5 +1,5 @@
-adi.adf4030 module
-==================
+adf4030
+=======
 
 .. automodule:: adi.adf4030
    :members:
