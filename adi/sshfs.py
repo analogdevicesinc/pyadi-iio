@@ -51,3 +51,6 @@ class sshfs:
     def gettext(self, path, *kargs, **kwargs):
         stdout, _ = self._run(f"cat {path}")
         return stdout
+
+    def __del__(self):
+        self.ssh.close()

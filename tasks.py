@@ -182,6 +182,7 @@ def checkparts(c):
         "ad579x",
         "adaq42xx",
         "ad9213",
+        "adrv9002_multi",
     ]
     for c in dir(mod):
         if (
@@ -216,6 +217,7 @@ def checkemulation(c):
     mod = __import__("adi")
     parts = []
     ignored_parts = [
+        "adrv9002_multi",
         "adrv9009_zu11eg",
         "adrv9009_zu11eg_multi",
         "adrv9009_zu11eg_fmcomms8",
