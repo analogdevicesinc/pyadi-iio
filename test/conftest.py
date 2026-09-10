@@ -1,16 +1,12 @@
 import inspect
+import os
 import random
 import test.rf.spec as spec
 import time
 from test.attr_tests import *
-from test.common import (
-    dev_interface,
-    pytest_addoption,
-    pytest_collection_modifyitems,
-    pytest_configure,
-    pytest_generate_tests,
-    pytest_runtest_setup,
-)
+from test.common import dev_interface, pytest_addoption, pytest_collection_modifyitems
+from test.common import pytest_configure as _pytest_configure
+from test.common import pytest_generate_tests, pytest_runtest_setup
 from test.dma_tests import *
 from test.generics import iio_attribute_single_value
 from test.globals import *
@@ -21,6 +17,20 @@ import numpy as np
 import pytest
 
 import adi
+
+
+def pytest_configure(config):
+    # hw-request@v3 CI: `adi-lg request` boots the board out of band and
+    # exports IIO_URI / HW_DAUGHTER instead of passing CLI flags. Default
+    # the pytest-libiio options from them so the fixed CI pytest command
+    # (and a laptop run inside a reservation) work without flags.
+    # Explicit --uri/--hw always win.
+    if not config.getoption("--uri") and os.environ.get("IIO_URI"):
+        config.option.uri = os.environ["IIO_URI"]
+    if not config.getoption("--hw") and os.environ.get("HW_DAUGHTER"):
+        config.option.hw_select = os.environ["HW_DAUGHTER"]
+    _pytest_configure(config)
+
 
 try:
     from test.scpi import dcxo_calibrate
