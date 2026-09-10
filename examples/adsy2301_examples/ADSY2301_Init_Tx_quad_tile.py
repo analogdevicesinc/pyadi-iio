@@ -88,7 +88,7 @@ dev.init_ADRV9009()
 dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
 ## Set some default states
-dev.udc.TX_UDC_Band_0()
+
 dev.udc.adrf5030.TX_SW_Enable()
 dev.udc.admv8913.set_filter_widest()
 dev.udc.adf4382.altvolt0_frequency = int(14.9e9)
@@ -122,6 +122,11 @@ dev.BFC.latch_tx_settings()
 for device in dev.BFC.devices.values():
     device.bias_dac_mode = "toggle"
     device.tr_source = "external"
+
+dev.udc.TX_UDC_Band_0()
+
+
+
 
 dev.BFC.BF_PA_ON_01 = 1
 dev.BFC.BF_PA_ON_02 = 1

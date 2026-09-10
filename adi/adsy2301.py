@@ -498,18 +498,25 @@ class adsy2301(adar1000_array,context_manager):
                 tx.if_band = "3GHz_12GHz"
                 tx.if_mode = "if"
                 tx.lo_sideband = "LSB"
-                tx.lo_x3_filter = "11GHz_13GHz"
+                tx.lo_x3_filter = "8GHz_9GHz"
 
                 # Set DSA gains to 0 dB
                 tx.rf_direct_dsa1_gain = "0dB"
                 tx.rf_direct_dsa2_gain = "0dB"
 
+                tx.rf_bypass_dsa1_gain = "-5dB"
+                tx.rf_bypass_lpf_val = "15"
+
                 # Set IF common mode voltage (64 * 50mV = 3.2V)
-                tx.if_vcm = 64
+                tx.if_vcm = 0
 
                 # Set LO phase
-                tx.lo_direct_i_phase_val = 15
-                tx.lo_direct_q_phase_val = 15
+                tx.lo_direct_i_phase_val = 0
+                tx.lo_direct_q_phase_val = 0
+
+                tx.gpo_f_oe = 0
+                tx.gpo_g_oe = 0
+                tx.mixer_bypass_en = 0
 
                 # --- Read back ---
                 print(f"RF Band:           {tx.rf_band}")
