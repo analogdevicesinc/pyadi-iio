@@ -1,0 +1,13 @@
+# Bench thresholds for the prism_report L5 bench loop.
+# Edited, not coded — drop a board into a noisier RF environment without
+# touching test source.
+sfdr_min_dbc: 30      # most-relaxed across every parametrize() row
+artifacts_required:
+  - boot.log
+  - dmesg_pre.log
+  - dmesg_post.log
+  - iio_info.txt
+case_artifacts_required:
+  - spectrum.html
+  - iq.npz
+  - metrics.json
