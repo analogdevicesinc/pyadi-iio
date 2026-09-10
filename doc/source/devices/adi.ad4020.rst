@@ -42,4 +42,3 @@ Class API
    :members:
    :undoc-members:
    :show-inheritance:
-

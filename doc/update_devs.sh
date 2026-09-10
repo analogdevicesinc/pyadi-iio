@@ -6,4 +6,3 @@ cd "$DIR"
 
 python3 update_devs.py
 make html
-
