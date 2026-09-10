@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="160" viewBox="0 0 560 160" role="img" aria-label="XML parse error">
+<style>
+.bg { fill: #f7fafc; }
+.edge { stroke: #7a8aa1; stroke-width: 1.4; fill: none; }
+.node { stroke-width: 1.1; rx: 10; ry: 10; }
+.node-context { fill: #d7e9ff; stroke: #457b9d; }
+.node-device { fill: #d9f3e4; stroke: #2d6a4f; }
+.node-channel { fill: #fff1cf; stroke: #b08900; }
+.node-summary { fill: #efe8ff; stroke: #6c4dbf; }
+.node-error { fill: #ffd7d7; stroke: #b3261e; }
+.title { font: 700 13px "DejaVu Sans", "Arial", sans-serif; fill: #1f2a37; }
+.subtitle { font: 12px "DejaVu Sans Mono", "Consolas", monospace; fill: #3d4b60; }
+.legend-title { font: 700 12px "DejaVu Sans", "Arial", sans-serif; fill: #1f2a37; }
+.legend-text { font: 11px "DejaVu Sans", "Arial", sans-serif; fill: #3d4b60; }
+</style>
+<rect class="bg" x="0" y="0" width="560" height="160"/>
+<rect class="node node-error" x="30.0" y="40.0" width="500" height="56"/>
+<text class="title" x="42.0" y="62.0">Parse Error</text>
+<text class="subtitle" x="42.0" y="81.0">parse-error file=adrv9002_splitdma.xml message=Unable to pars...</text>
+</svg>
