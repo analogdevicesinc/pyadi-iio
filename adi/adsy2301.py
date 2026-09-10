@@ -32,6 +32,7 @@ import json
 import os
 from adi.attribute import attribute
 from adi.context_manager import context_manager
+import sys
 
 
 
@@ -1614,14 +1615,20 @@ def calc_array_pattern(theta_sweep=(-90, 90), sweep_step=0.5,f_op_GHz=10, elec_s
     
     return mechanical_sweep, elec_steer_angle, azim_results, elev_results,  # Return the mechanical sweep angles and the pattern for the boresight angle
 
-def change_duty_cycle(talise_uri, PRI_ms, off_ms):
+def change_duty_cycle(dev, duty_cycle):
 
-    tddn = adi.tddn(talise_uri)
-    tddn.frame_length_ms      = PRI_ms
+    tddn = adi.tddn(dev.uri)
+    frame = tddn.frame_length_ms
     tddn.enable = 0
     tddn.sync_soft  = 0
-    TDD_CHANNEL7     = 7  ## TR Pulse
-    for chan in [TDD_CHANNEL7]:
+
+    if duty_cycle < 0.0 or duty_cycle > 0.35:
+        raise ValueError("Halting TR signal, Duty cycle must be between 0.0 and 0.35")
+
+    off_ms = frame * (duty_cycle)
+
+    TDD_TR_PULSE     = 11
+    for chan in [TDD_TR_PULSE]:
         tddn.channel[chan].on_ms   = 0
         tddn.channel[chan].off_ms  = off_ms  # for example off_ms = 0.005 would make a 5% duty cycle when the PRI_ms = 0.1
         tddn.channel[chan].polarity = 0
