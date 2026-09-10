@@ -1,7 +1,7 @@
-cn0565
-======
+trigger
+=======
 
-.. automodule:: adi.cn0565
+.. automodule:: adi.trigger
    :members:
    :show-inheritance:
    :undoc-members:

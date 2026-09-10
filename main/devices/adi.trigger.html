@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta content="Bases: context_manager, attribute" name="description" />
 
-    <title>ad514x &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
+    <title>trigger &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
     <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=fb8972a4" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
@@ -14,8 +14,7 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ad552xr" href="adi.ad552xr.html" />
-    <link rel="prev" title="ad4858" href="adi.ad4858.html" />
+    <link rel="prev" title="tmc5240" href="adi.tmc5240.html" />
    
   
   
@@ -96,14 +95,15 @@
         </div>
         <nav>
           <ul>
-<li><a class="reference internal" href="#">ad514x</a><ul>
-<li><a class="reference internal" href="#adi.ad514x.ad514x"><code class="docutils literal notranslate"><span class="pre">ad514x</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad514x.ad514x.channel"><code class="docutils literal notranslate"><span class="pre">ad514x.channel</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad514x.ad514x.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad514x.compatible_parts</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad514x.ad514x.nvm_programming"><code class="docutils literal notranslate"><span class="pre">ad514x.nvm_programming</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad514x.ad514x.nvm_programming_avail"><code class="docutils literal notranslate"><span class="pre">ad514x.nvm_programming_avail</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad514x.ad514x.rdac_wp"><code class="docutils literal notranslate"><span class="pre">ad514x.rdac_wp</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad514x.ad514x.rdac_wp_avail"><code class="docutils literal notranslate"><span class="pre">ad514x.rdac_wp_avail</span></code></a></li>
+<li><a class="reference internal" href="#">trigger</a><ul>
+<li><a class="reference internal" href="#adi.trigger.hrtimer_trig"><code class="docutils literal notranslate"><span class="pre">hrtimer_trig</span></code></a><ul>
+<li><a class="reference internal" href="#adi.trigger.hrtimer_trig.name"><code class="docutils literal notranslate"><span class="pre">hrtimer_trig.name</span></code></a></li>
+<li><a class="reference internal" href="#adi.trigger.hrtimer_trig.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">hrtimer_trig.sampling_frequency</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.trigger.sysfs_trig"><code class="docutils literal notranslate"><span class="pre">sysfs_trig</span></code></a><ul>
+<li><a class="reference internal" href="#adi.trigger.sysfs_trig.name"><code class="docutils literal notranslate"><span class="pre">sysfs_trig.name</span></code></a></li>
+<li><a class="reference internal" href="#adi.trigger.sysfs_trig.trigger_now"><code class="docutils literal notranslate"><span class="pre">sysfs_trig.trigger_now()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -167,7 +167,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4630.html">ad4630</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad469x.html">ad469x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad4858.html">ad4858</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ad514x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adi.ad514x.html">ad514x</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad552xr.html">ad552xr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5592r.html">ad5592r</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.ad5627.html">ad5627</a></li>
@@ -302,7 +302,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="adi.tdd.html">tdd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tddn.html">tddn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adi.tmc5240.html">tmc5240</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adi.trigger.html">trigger</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">trigger</a></li>
 </ul>
 </li>
 </ul>
@@ -320,45 +320,69 @@ Content on this topic
 </div>
           <div class="body" role="main">
             
-  <section id="module-adi.ad514x">
-<span id="ad514x"></span><h1>ad514x<a class="headerlink" href="#module-adi.ad514x" title="Link to this heading"></a></h1>
+  <section id="module-adi.trigger">
+<span id="trigger"></span><h1>trigger<a class="headerlink" href="#module-adi.trigger" title="Link to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad514x.ad514x">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad514x.</span></span><span class="sig-name descname"><span class="pre">ad514x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad514x.ad514x" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="adi.trigger.hrtimer_trig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.trigger.</span></span><span class="sig-name descname"><span class="pre">hrtimer_trig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'trigger0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.trigger.hrtimer_trig" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
-<p>AD514x DigiPOTs</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad514x.ad514x.channel">
-<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.ad514x.ad514x.channel" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad514x.ad514x.compatible_parts">
-<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['AD5141',</span> <span class="pre">'AD5142',</span> <span class="pre">'AD5142A',</span> <span class="pre">'AD5143',</span> <span class="pre">'AD5144']</span></em><a class="headerlink" href="#adi.ad514x.ad514x.compatible_parts" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<p>High-Resolution Timer Trigger</p>
+<p>This class provides an interface for controlling an IIO hrtimer trigger.
+The trigger must be created first:</p>
+<ul class="simple">
+<li><p>Ensure the <code class="docutils literal notranslate"><span class="pre">iio-trig-hrtimer</span></code> kernel module is loaded or built-in into the kernel</p></li>
+<li><p>Ensure configfs is mounted</p></li>
+<li><dl class="simple">
+<dt>Create the a new trigger with:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">/config/iio/triggers/hrtimer/mytrig</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Restart iiod service if relying on a remote iio context</p></li>
+</ul>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad514x.ad514x.nvm_programming">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nvm_programming</span></span><a class="headerlink" href="#adi.ad514x.ad514x.nvm_programming" title="Link to this definition"></a></dt>
-<dd><p>Get nvm_programming value</p>
+<dt class="sig sig-object py" id="adi.trigger.hrtimer_trig.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#adi.trigger.hrtimer_trig.name" title="Link to this definition"></a></dt>
+<dd><p>Get the name of the trigger</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad514x.ad514x.nvm_programming_avail">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nvm_programming_avail</span></span><a class="headerlink" href="#adi.ad514x.ad514x.nvm_programming_avail" title="Link to this definition"></a></dt>
-<dd><p>Get nvm_programming options</p>
+<dt class="sig sig-object py" id="adi.trigger.hrtimer_trig.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.trigger.hrtimer_trig.sampling_frequency" title="Link to this definition"></a></dt>
+<dd><p>Get/Set sampling frequency of the trigger</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad514x.ad514x.rdac_wp">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rdac_wp</span></span><a class="headerlink" href="#adi.ad514x.ad514x.rdac_wp" title="Link to this definition"></a></dt>
-<dd><p>Get rdac_wp value</p>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.trigger.sysfs_trig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.trigger.</span></span><span class="sig-name descname"><span class="pre">sysfs_trig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sysfstrig0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.trigger.sysfs_trig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">context_manager</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>Sysfs Trigger</p>
+<p>This class provides an interface for controlling an IIO sysfs trigger.
+The trigger must be created first:</p>
+<ul class="simple">
+<li><p>Ensure the <code class="docutils literal notranslate"><span class="pre">iio-trig-sysfs</span></code> kernel module is loaded or built-in into the kernel</p></li>
+<li><dl class="simple">
+<dt>Create the a new trigger with:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">0</span> <span class="pre">&gt;</span> <span class="pre">/sys/bus/iio/devices/iio_sysfs_trigger/add_trigger</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Restart iiod service if relying on a remote iio context</p></li>
+</ul>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad514x.ad514x.rdac_wp_avail">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rdac_wp_avail</span></span><a class="headerlink" href="#adi.ad514x.ad514x.rdac_wp_avail" title="Link to this definition"></a></dt>
-<dd><p>Get rdac_wp options</p>
+<dt class="sig sig-object py" id="adi.trigger.sysfs_trig.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#adi.trigger.sysfs_trig.name" title="Link to this definition"></a></dt>
+<dd><p>Get the name of the trigger</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.trigger.sysfs_trig.trigger_now">
+<span class="sig-name descname"><span class="pre">trigger_now</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.trigger.sysfs_trig.trigger_now" title="Link to this definition"></a></dt>
+<dd><p>Trigger an immediate event</p>
 </dd></dl>
 
 </dd></dl>
@@ -369,8 +393,8 @@ Content on this topic
           </div>
               <div class="related">
                 &nbsp;
-    <a href="adi.ad4858.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">ad4858</a>
-    <a href="adi.ad552xr.html" title="Next document (Alt+Shift+RightArrow)" class="next">ad552xr</a>
+    <a href="adi.tmc5240.html" title="Previous document (Alt+Shift+LeftArrow)" class="prev">tmc5240</a>
+    <div></div>
               </div>
           
         </div>
