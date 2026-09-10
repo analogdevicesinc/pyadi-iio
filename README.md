@@ -57,38 +57,76 @@ data = sdr.rx()
 - [numpy](https://scipy.org/install.html)
 
 ### Installing from source
+
+Create and activate a virtual environment:
 ```
-tcollins@jeeves:~$ git clone https://github.com/analogdevicesinc/pyadi-iio.git
-tcollins@jeeves:~$ cd pyadi-iio
-tcollins@jeeves:~$ (sudo) pip install .
+$ python3 -m venv .venv
+$ source .venv/bin/activate
 ```
-### Installing from pip
+Fetch and install the main branch:
 ```
-tcollins@jeeves:~$ (sudo) pip install pyadi-iio
+$ pip install git+https://github.com/analogdevicesinc/pyadi-iio.git@main
 ```
 
-To get optional dependency for JESD debugging
+### Installing from [PyPI](https://pypi.org/project/pyadi-iio)
+
+Create and activate a virtual environment:
 ```
-tcollins@jeeves:~$ (sudo) pip install pyadi-iio[jesd]
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+```
+Install package:
+```
+$ pip install pyadi-iio
+```
+To get optional dependency for JESD debugging:
+```
+$ pip install pyadi-iio[jesd]
 ```
 
 ### Building doc
-Install necessary tools
+
+Clone the repository:
 ```
-tcollins@jeeves:~$ (sudo) pip install -r requirements_doc.txt
+$ git clone https://github.com/analogdevicesinc/pyadi-iio.git
+$ cd pyadi-iio
 ```
-Build actual doc with sphinx
+Create and activate a virtual environment:
 ```
-tcollins@jeeves:~$ cd doc
-tcollins@jeeves:~$ make html
+$ python3 -m venv .venv
+$ source .venv/bin/activate
 ```
-### Developing
-Install necessary tools
+Install necessary tools:
 ```
-tcollins@jeeves:~$ (sudo) pip install -r requirements_dev.txt
+$ pip install -r requirements_doc.txt
+```
+Build actual doc with sphinx:
+```
+$ (cd doc ; make html)
 ```
 
-Running pre-commit checks
+### Developing
+
+Clone the repo and start a new branch:
 ```
-tcollins@jeeves:~$ pre-commit run --all-files
+$ git clone https://github.com/analogdevicesinc/pyadi-iio.git
+$ cd pyadi-iio
+$ git checkout -b <my-feature-branch>
+```
+Create and activate a virtual environment:
+```
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+```
+Install development tools:
+```
+$ pip install -r requirements_dev.txt
+```
+Install pyadi-iio in editable mode
+```
+$ pip install -e .
+```
+Running pre-commit checks:
+```
+$ pre-commit run --all-files
 ```
