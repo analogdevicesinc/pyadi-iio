@@ -585,7 +585,7 @@ class adsy2301(adar1000_array,context_manager):
 
 def enable_rx_channel(obj, elements=None, man_input=False):
     """
-    Enables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Enables the specified ADSY2301 channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
         user_input = input("Enter a comma-separated list of channels to turn on (1-64): ")
@@ -632,7 +632,7 @@ def data_capture(adc):
 
 def disable_tx_channel(obj, elements=None):
     """
-    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified ADSY2301 channel based on the mode. If no elements are passed, ask for user input
     """
 
     if elements is None:
@@ -670,8 +670,10 @@ def disable_tx_channel(obj, elements=None):
  
 def enable_tx_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = -1.8):
     """
-    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified ADSY2301 channel based on the mode. If no elements are passed, ask for user input
     """
+    if gate_voltage_bias < -4.8 or gate_voltage_bias > -1.8:
+        raise ValueError("PA BIAS must be between -4.8 and -1.8 volts")
 
     if elements is None:
         print("No elements Specified, please provide element indicies to enable PAs")
@@ -679,7 +681,6 @@ def enable_tx_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = 
 
     elif PA_Bias_Dict is not None:
         elements = np.array(elements).flatten()
-        # --- optimized: build set for O(1) membership and iterate channels once ---
         elements_set = set(int(x) for x in elements)
 
         # perform operations per device, iterating channels only once
@@ -690,9 +691,11 @@ def enable_tx_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = 
                 tol = 0.1 * PA_Bias_Dict[value]
                 tries = 3
                 if value in elements_set:
-                    # disable TX and set bias
-                    channel.tx_enable = True
+                    if PA_Bias_Dict[value] < -4.8 or PA_Bias_Dict[value] > -1.8:
+                        raise ValueError("PA BIAS must be between -4.8 and -1.8 volts")
+
                     channel.pa_bias_on = PA_Bias_Dict[value]
+                    channel.tx_enable = True
                     obj.latch_tx_settings()
                     # verify setting within tolerance with short retries
                     for _ in range(tries):
@@ -704,22 +707,17 @@ def enable_tx_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = 
                         print(f"Element number {value}")
     else:
         elements = np.array(elements).flatten()
-
-        # --- optimized: build set for O(1) membership and iterate channels once ---
         elements_set = set(int(x) for x in elements)
 
-        # perform operations per device, iterating channels only once
         for device in obj.devices.values():
-            # gate_voltage_bias = -2.0
             tol = 0.1 * abs(gate_voltage_bias)
             tries = 3
             for channel in device.channels:
                 str_channel = str(channel)
                 value = int(strip_to_last_two_digits(str_channel))
                 if value in elements_set:
-                    # disable TX and set bias
-                    channel.tx_enable = True
                     channel.pa_bias_on = gate_voltage_bias
+                    channel.tx_enable = True
                     obj.latch_tx_settings()
                     # verify setting within tolerance with short retries
                     for _ in range(tries):
@@ -730,9 +728,9 @@ def enable_tx_channel(obj, elements=None,PA_Bias_Dict=None, gate_voltage_bias = 
                         print(f"Not set properly: channel.pa_bias_on={channel.pa_bias_on}")
                         print(f"Element number {value}")
 
-def manta_power_detector(obj, elements, man_input=False):
+def ADSY2301_power_detector(obj, elements, man_input=False):
     """
-    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified ADSY2301 channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
         user_input = input("Enter a comma-separated list of channels to turn off (1-64): ")
@@ -774,7 +772,7 @@ def manta_power_detector(obj, elements, man_input=False):
 
 def disable_rx_channel(obj, elements=None, man_input=False):
     """
-    Disables the specified Stingray channel based on the mode. If no elements are passed, ask for user input
+    Disables the specified ADSY2301 channel based on the mode. If no elements are passed, ask for user input
     """
     if elements is None and man_input:
         user_input = input("Enter a comma-separated list of channels to turn off (1-64): ")
@@ -862,7 +860,7 @@ def cal_data(data, phaseCAL):
 
 def gain_codes(obj, analog_mag_pre_cal, mode):
     """array.
-    gainCodes  Determines Rx/Tx analog VGA gain codes for Stingray
+    gainCodes  Determines Rx/Tx analog VGA gain codes for ADSY2301
     Help: returns calibrated gain codes and attenuation values.
     """
     atten = np.zeros(np.shape(analog_mag_pre_cal))
@@ -998,10 +996,10 @@ def calc_dbfs(data):
 
 def find_phase_delay_sliding_ref(obj, adc, subarray_ref, adc_map, delay_phases):
     """
-    Measures calibrated phase offsets for Stingray reference channels in units of degrees using sliding reference.
+    Measures calibrated phase offsets for ADSY2301 reference channels in units of degrees using sliding reference.
     """
 
-    # Enable the Stingray reference channels and capture data
+    # Enable the ADSY2301 reference channels and capture data
     enable_rx_channel(obj,subarray_ref)
     data = np.array(data_capture(adc))
 
@@ -1028,15 +1026,15 @@ def find_phase_delay_sliding_ref(obj, adc, subarray_ref, adc_map, delay_phases):
         null_val = np.min(peak_sum)
         null_index = np.where(peak_sum==null_val)
 
-    # Disable the Stingray reference channels
+    # Disable the ADSY2301 reference channels
     disable_rx_channel(obj,subarray_ref)
     return cal_ant
 
 def find_phase_delay_fixed_ref(obj, adc, subarray_ref, adc_ref, delay_phases):
     """
-    Measures calibrated phase offsets for Stingray reference channels in units of degrees using fixed reference.
+    Measures calibrated phase offsets for ADSY2301 reference channels in units of degrees using fixed reference.
     """
-    # Enable the Stingray reference channels and capture data
+    # Enable the ADSY2301 reference channels and capture data
     enable_rx_channel(obj,subarray_ref)
     data = np.array(data_capture(adc))
 
@@ -1070,68 +1068,7 @@ def find_phase_delay_fixed_ref(obj, adc, subarray_ref, adc_ref, delay_phases):
         cal_value = delay_phases[null_index]
         cal_ant.append(cal_value[0].item())
 
-    # Disable the Stingray reference channels
-    disable_rx_channel(obj,subarray_ref)
-    cal_ant = cal_ant[1:]
-    # Roll the calibration values to align with the reference antenna
-    # This is done because data[adc_ref] corresponds to subarray 4
-    #return np.roll(cal_ant, -1)
-    return cal_ant
-
-def find_phase_delay_fixed_ref_tx(obj, SpecAn, subarray_ref, adc_ref, delay_phases):
-    """
-    Measures calibrated phase offsets for Stingray reference channels in units of degrees using fixed reference.
-    """
-    import adsy2301 as mr
-    import paramiko
-    import time
-
-    # Enable the Stingray reference channels and capture data
-    print("Setting PA_ON to 1")
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname="192.168.1.1", port=22, username="root", password="analog")
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray0_control 'voltage0' 'raw' 0")
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("iio_attr -c stingray1_control 'voltage0' 'raw' 0")
-    time.sleep(1)
-    ssh.close()
-
-    mr.enable_tx_channel(obj, subarray_ref)
-    # enable_rx_channel(obj,subarray_ref)
-    # data = np.array(data_capture(adc))
-    data = np.array(SpecAn.iq_complex_data())
-
-    # Create a list to store the calibration values for each antenna
-    # Initialize the first antenna's calibration value to 0
-    cal_ant = []
-    cal_ant.append(0)
-
-    # Apply a zero phase delay to the reference antenna
-    first_ant = phase_delayer(data[adc_ref], cal_ant[0])
-
-    for i in range(len(data)):
-        peak_sum = []
-        for phase_delay in delay_phases:
-
-            # Apply the phase delay second antennas
-            second_ant = phase_delayer(data[i], phase_delay)
-
-            # Calculate the delayed sum of the two antennas
-            delayed_sum = calc_dbfs(first_ant - second_ant)
-
-            # Find the maximum value
-            peak_sum.append(np.max(delayed_sum))
-        
-        # Find the minimum value in the peak sum and its index
-        null_val = np.min(peak_sum)
-        null_index = np.where(np.abs(peak_sum)==np.abs(null_val))
-
-        # Get the phase delay value that corresponds to the minimum peak sum
-        # and append it to the calibration values list
-        cal_value = delay_phases[null_index]
-        cal_ant.append(cal_value[0].item())
-
-    # Disable the Stingray reference channels
+    # Disable the ADSY2301 reference channels
     disable_rx_channel(obj,subarray_ref)
     cal_ant = cal_ant[1:]
     # Roll the calibration values to align with the reference antenna
@@ -1166,12 +1103,12 @@ def phase_digital(obj, adc, adc_ref, subarray_ref):
 
 def get_gain_codes(obj,adc,subarray,adc_map, gain_dict, atten_dict):
     """
-    Applies pre-calculated gain and attenuation values to Stingray elements.
+    Applies pre-calculated gain and attenuation values to ADSY2301 elements.
     gain_dict and atten_dict should be passed from rx_gain function.
     """
     for element in obj.elements.values():
         """
-        Iterate through each element in the Stingray object
+        Iterate through each element in the ADSY2301 object
         Convert the element to a string and extract the last two digits
         This is used to map the element to its corresponding gain and attenuation values
         in the dictionaries created above
@@ -1190,8 +1127,8 @@ def get_gain_codes(obj,adc,subarray,adc_map, gain_dict, atten_dict):
 ## Original cal to minimum amplitude ##
 def rx_gain(obj, adc, subarray, adc_map, element_map):
     """
-    Measures analog magnitude for Stingray to equalize amplitudes across all elements.
-    Returns calibrated gain codes and magnitude in dBFS pre-calibration in an 8x8 matrix mapped to the Stingray elements.
+    Measures analog magnitude for ADSY2301 to equalize amplitudes across all elements.
+    Returns calibrated gain codes and magnitude in dBFS pre-calibration in an 8x8 matrix mapped to the ADSY2301 elements.
     """
     
     # Capture ADC data with initial gain, attenuation, and phase settings
@@ -1213,7 +1150,7 @@ def rx_gain(obj, adc, subarray, adc_map, element_map):
 
     for element in obj.elements.values():
         """
-        Iterate through each element in the Stingray object
+        Iterate through each element in the ADSY2301 object
         Convert the element to a string and extract the last two digits
         This is used to map the element to its corresponding gain and attenuation values
         in the dictionaries created above
