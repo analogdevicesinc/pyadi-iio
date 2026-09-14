@@ -159,6 +159,8 @@ class adar1000(attribute, context_manager):
         @pa_bias_off.setter
         def pa_bias_off(self, value):
             """ Get/Set PA_BIAS_OFF in voltage for the associated channel """
+            if value < -4.8 or value > -1.8:
+                raise ValueError("PA_BIAS_OFF must be between -4.8 and -1.8 volts")
             dac_code = int(value / self._BIAS_CODE_TO_VOLTAGE_SCALE)
             self.adar1000_parent._set_iio_attr(
                 f"voltage{self.adar1000_channel}", "pa_bias_off", True, dac_code
@@ -175,6 +177,8 @@ class adar1000(attribute, context_manager):
         @pa_bias_on.setter
         def pa_bias_on(self, value):
             """ Get/Set PA_BIAS_ON in voltage for the associated channel """
+            if value < -4.8 or value > -1.8:
+                raise ValueError("PA_BIAS_ON must be between -4.8 and -1.8 volts")
             dac_code = int(value / self._BIAS_CODE_TO_VOLTAGE_SCALE)
             self.adar1000_parent._set_iio_attr(
                 f"voltage{self.adar1000_channel}", "pa_bias_on", True, dac_code
@@ -1062,7 +1066,7 @@ class adar1000(attribute, context_manager):
         """ Generate CLK cycles before pulsing RX_LOAD or TX_LOAD """
         self._set_iio_dev_attr_str("gen_clk_cycles", "", self._ctrl)
 
-    def initialize(self, pa_off=-2.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
+    def initialize(self, pa_off=-4.8, pa_on=-4.8, lna_off=-4.8, lna_on=-4.8):
         """Suggested initialization routine after powerup
 
         parameters:
@@ -1646,7 +1650,7 @@ class adar1000_array(context_manager):
 
         return az_phi, el_phi
 
-    def initialize_devices(self, pa_off=-2.5, pa_on=-2.5, lna_off=-2, lna_on=-2):
+    def initialize_devices(self, pa_off=-4.8, pa_on=-4.8, lna_off=-4.8, lna_on=-4.8):
         """Suggested initialization routine after powerup
 
         parameters:
