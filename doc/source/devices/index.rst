@@ -40,6 +40,7 @@ Supported Devices
    adi.ad7291
    adi.ad738x
    adi.ad7405
+   adi.ad74413r
    adi.ad7490
    adi.ad7606
    adi.ad7689
@@ -149,10 +150,12 @@ Supported Devices
    adi.ltc2983
    adi.max11205
    adi.max14001
+   adi.max14906
    adi.max31855
    adi.max31865
    adi.max9611
    adi.one_bit_adc_dac
+   adi.swiot1l
    adi.tdd
    adi.tddn
    adi.tmc5240
