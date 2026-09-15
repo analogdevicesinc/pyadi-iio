@@ -2,10 +2,19 @@
 #
 # SPDX short identifier: ADIBSD
 
+import re
 from typing import List
 
 from adi.attribute import attribute
 from adi.context_manager import context_manager
+
+
+def _channel_index(channel_id: str) -> int:
+    """Trailing integer of an IIO channel id, e.g. 'channel10' -> 10."""
+    match = re.search(r"(\d+)$", channel_id)
+    if match is None:
+        raise ValueError(f"Cannot determine index of TDD channel '{channel_id}'")
+    return int(match.group(1))
 
 
 class tddn(context_manager, attribute):
@@ -22,7 +31,21 @@ class tddn(context_manager, attribute):
 
         for ch in self._ctrl.channels:
             name = ch._id
-            self.channel.append(self._channel(self._ctrl, name))
+            self.channel = [
+                self._channel(self._ctrl, ch._id)
+                for ch in sorted(self._ctrl.channels, key=lambda c: _channel_index(c._id))
+            ]
+
+
+
+
+        # DEBUG: list order is libiio's (strcmp on channel id), not numeric,
+        # so self.channel[N] is not necessarily hardware channel N.
+        # print(f"[tddn] {len(self.channel)} channels in self.channel order:")
+        # for idx, c in enumerate(self.channel):
+        #     print("[tddn]   index idx", idx)
+        #     print("channel name ", c.name)
+        #     print("----------------------------")
 
     @property
     def frame_length_ms(self) -> float:
