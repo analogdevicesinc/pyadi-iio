@@ -1,5 +1,5 @@
-CN0540 condition-based monitoring board
-=======================================
+cn0540
+======
 
 The :class:`adi.cn0540.cn0540` interface controls the CN0540
 condition-based monitoring data-acquisition board. It combines the AD7768-1
