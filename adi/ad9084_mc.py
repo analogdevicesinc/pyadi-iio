@@ -314,7 +314,7 @@ class ad9084_mc(ad9084):
             self._set_iio_dev_attr(attr, values[dev], self._ctx.find_device(dev))
 
 
-class Triton(ad9084_mc):
+class quadApollo(ad9084_mc):
     """Quad ad9084 Mixed-Signal Front End (MxFE) Development System
 
     parameters:

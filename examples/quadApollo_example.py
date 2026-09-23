@@ -56,7 +56,7 @@ def measure_and_adjust_phase_offset(chan0, chan1, phase_correction):
     return (sub_phases(phase_correction, [int(p * 1000)] * 4), s)
 
 
-dev = adi.Triton("ip:10.44.3.185", calibration_board_attached=False)
+dev = adi.quadApollo("ip:10.44.3.185", calibration_board_attached=False)
 
 print(dev.rx_channel_nco_frequencies["axi-ad9084-rx-hpc"])
 print(dev.rx_main_nco_frequencies["axi-ad9084-rx-hpc"])

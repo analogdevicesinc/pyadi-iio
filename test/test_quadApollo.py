@@ -27,7 +27,7 @@ logging.getLogger('matplotlib').setLevel(logging.INFO)
 
 # Hardware setup
 hardware = ["quadApollo"]
-classname = "adi.Triton"
+classname = "adi.quadApollo"
 iio_uri = "ip:192.168.2.1"
 
 # # Prompt user to enter serial number
@@ -179,7 +179,7 @@ def test_quadApollo_dds_loopback(
     
     for i in range(10):
         try:
-            dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
+            dev = adi.quadApollo("ip:192.168.2.1", calibration_board_attached=True)
             iio_uri = "ip:192.168.2.1"
             ## Set low pass and high pass filter values
             dev.hpf_ctrl = hpf_value
@@ -282,7 +282,7 @@ def test_quadApollo_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr
 
     for i in range(10):
         try:
-            dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
+            dev = adi.quadApollo("ip:192.168.2.1", calibration_board_attached=True)
             ## Set low pass and high pass filter values
             dev.hpf_ctrl = hpf_value
             dev.lpf_ctrl = lpf_value 
@@ -330,7 +330,7 @@ def test_quadApollo_NSD(test_nsd, iio_uri, classname, channel, param_set, nsd_mi
     for i in range(10):
         try:
             iio_uri = "ip:192.168.2.1"
-            dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
+            dev = adi.quadApollo("ip:192.168.2.1", calibration_board_attached=True)
             ## Set cal board loopback state
             dev.gpio_ctrl_ind = 0
             dev.gpio_5045_v1 = 1                     
@@ -338,7 +338,7 @@ def test_quadApollo_NSD(test_nsd, iio_uri, classname, channel, param_set, nsd_mi
             dev.gpio_ctrl_rx_combined = 0
             dev.dds_single_tone(frequency, scale=0, channel=channel)
             test_nsd(iio_uri, serialnumber, classname, channel, param_set, nsd_min, frequency)
-            dev = adi.Triton("ip:192.168.2.1", calibration_board_attached=True)
+            dev = adi.quadApollo("ip:192.168.2.1", calibration_board_attached=True)
             break
         except:
             print("retrying")
