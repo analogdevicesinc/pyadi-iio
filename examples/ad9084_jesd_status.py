@@ -10,7 +10,7 @@ and no chip setting is changed, so it is safe to run at any time, including
 while another script holds the board.
 
   python ad9084_jesd_status.py                     default URI
-  python ad9084_jesd_status.py --uri ip:10.48.65.144
+  python ad9084_jesd_status.py --uri ip:10.48.65.177
   python ad9084_jesd_status.py --recheck 10        watch error counters for 10 s
   python ad9084_jesd_status.py --raw               also dump the unparsed strings
 
@@ -37,7 +37,7 @@ import iio
 
 import adi
 
-DEFAULT_URI = "ip:10.48.65.210"
+DEFAULT_URI = "ip:10.48.65.177"
 
 # The chip's "status" debug attribute is around 1.2 kB with four links enabled,
 # and pylibiio reads every attribute into a fixed 1024 byte buffer, so going

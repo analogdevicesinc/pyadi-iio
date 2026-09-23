@@ -57,16 +57,15 @@ PLOT_SAMPLES = 256
 # this board the output the driver calls DAC1 is brought out as DACA3, and DAC1 on
 # side B as DACB3 -- so a channel 1 or 3 signal appears on the A3/B3 connector.
 # The waveform file is sent on every one of them, and each gets its own plot.
-CHANNELS = [0, 1, 2, 3]
-#CHANNELS = [0, 2]
-#CHANNELS = [0]
+CHANNELS_TX = [0, 1, 2, 3]
+CHANNELS_RX = [0, 1, 2, 3]
 
 # Defaults for the two on-board sources, used when their option is given without
 # a frequency. The DDS frequency has to stay below half the sample rate.
 DDS_FREQUENCY = 40320000
 DDS_SCALE = 0.5
 TEST_TONE_FREQUENCY = 30000000
-# DO NOT SET TEST_TONE_SCALE above 0.35, or you will see distorsions in the signal.
+# DO NOT SET TEST_TONE_SCALE above 0.35, or you will see distortions in the signal.
 TEST_TONE_SCALE = 0.35
 
 # Digital loopback inside the AD9084 selected by --loopback. It feeds transmit
@@ -288,7 +287,7 @@ args = parse_args()
 # --------------------------------
 # 1. Initial set-up
 # --------------------------------
-dev = adi.ad9084("ip:10.48.65.210")
+dev = adi.ad9084("ip:10.48.65.177")
 
 print("CHIP Version:", dev.chip_version)
 print("API  Version:", dev.api_version)
@@ -306,8 +305,8 @@ dev.tx_channel_nco_frequencies = [0] * 4
 dev.rx_main_nco_frequencies = [2000000000] * 4
 dev.tx_main_nco_frequencies = [2000000000] * 4
 
-dev.rx_enabled_channels = CHANNELS
-dev.tx_enabled_channels = CHANNELS
+dev.rx_enabled_channels = CHANNELS_RX
+dev.tx_enabled_channels = CHANNELS_TX
 dev.rx_nyquist_zone = ["odd"] * 4
 
 print("RX LOOPBACK:", set_rx_loopback(dev, LOOPBACK_MODE if args.loopback else "off"))
@@ -338,7 +337,7 @@ fs = int(dev.tx_sample_rate)
 # buffer length is fixed by the file length once pushed, so tx_destroy_buffer()
 # is required before pushing a different length.
 if args.dds is not None:
-    set_dds_tone(dev, args.dds, DDS_SCALE, CHANNELS)
+    set_dds_tone(dev, args.dds, DDS_SCALE, CHANNELS_TX)
     source = f"FPGA DDS, {args.dds / 1e6:g} MHz"
 elif args.file is None and args.test_tone is not None:
     # The chip generates the signal on its own, so the FPGA sends nothing.
@@ -362,7 +361,7 @@ else:
 
     # One array per enabled channel; tx() only accepts a bare array for a single
     # channel. Every channel sends the same waveform.
-    dev.tx(samples if len(CHANNELS) == 1 else [samples] * len(CHANNELS))
+    dev.tx(samples if len(CHANNELS_TX) == 1 else [samples] * len(CHANNELS_TX))
     source = f"{os.path.basename(tx_sample_file)}, {samples.size} samples"
 
 if args.loopback:
@@ -374,11 +373,11 @@ if args.loopback:
 # Collect data.plt.pause() already yields to the GUI event loop, so there is no
 # sleep here -- every extra millisecond between refills is time for the receive
 # DMA to run ahead of the host.
-ncols = 2 if len(CHANNELS) > 1 else 1
-nrows = -(-len(CHANNELS) // ncols)
+ncols = 2 if len(CHANNELS_RX) > 1 else 1
+nrows = -(-len(CHANNELS_RX) // ncols)
 fig, axes = plt.subplots(nrows, ncols, figsize=(11, 7), squeeze=False)
 axes = axes.ravel()
-for spare in axes[len(CHANNELS) :]:
+for spare in axes[len(CHANNELS_RX) :]:
     spare.set_visible(False)
 
 try:
@@ -390,7 +389,7 @@ try:
         if not isinstance(captures, list):
             captures = [captures]
 
-        for ax, channel, x in zip(axes, CHANNELS, captures):
+        for ax, channel, x in zip(axes, CHANNELS_RX, captures):
             n = x.size if PLOT_SAMPLES is None else min(PLOT_SAMPLES, x.size)
             t = np.arange(n) / fs * 1e6
 
@@ -416,6 +415,8 @@ finally:
     # finally block so a Ctrl+C out of the plot window cleans up too.
     dev.tx_destroy_buffer()
     dev.rx_destroy_buffer()
+    dev.disable_dds()
+    dev.tx_channel_nco_test_tone_en = [0] * 4
 
 # A second read shows whether the link accumulated errors during the captures,
 # which is the part that actually indicates trouble.
