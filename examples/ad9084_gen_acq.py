@@ -54,9 +54,10 @@ PLOT_SAMPLES = 256
 #   0 -> Side-A DAC0/ADC0    2 -> Side-B DAC0/ADC0
 #   1 -> Side-A DAC1/ADC1    3 -> Side-B DAC1/ADC1
 # The DAC number in those labels is the driver's own index, not the board's. On
-# this board the output the driver calls DAC1 is brought out as DACA3, and DAC1 on
-# side B as DACB3 -- so a channel 1 or 3 signal appears on the A3/B3 connector.
-# The waveform file is sent on every one of them, and each gets its own plot.
+# this board the output the driver calls DAC1 on side A is brought out as DACA3,
+# and DAC1 on side B as DACB3 -- so a channel 1 or 3 signal appears on the A3/B3
+# connector. The waveform file is sent on every one of them, and each gets its
+# own plot.
 CHANNELS_TX = [0, 1, 2, 3]
 CHANNELS_RX = [0, 1, 2, 3]
 
@@ -73,23 +74,10 @@ TEST_TONE_SCALE = 0.35
 # cable and the ADC. loopback3_jesd is the deepest tap, straight off the JESD204
 # deframer, so a capture shows exactly what the chip received from the FPGA. The
 # other modes the chip offers are off, loopback0, loopback1 and loopback2.
-#
-# The mode latches when the receive datapath is brought up rather than when it is
-# written, so --loopback reaches the captures on the *next* run of the script,
-# not this one.
-#
-# It also only taps the first channel of each side, and the JTX sample crossbar
-# (MUX3) decides which channels get to see that. On this board conv2/conv3 of each
-# link point at an FDDC other than FDDC0 -- which one is set by the profile and has
-# changed here already -- while the loopback data lands on FDDC0, so channels 0 and
-# 2 carry data through loopback3_jesd while 1 and 3 read exactly zero, even though
-# all four work over the analog path. Use --no-loopback to see channels 1 and 3,
-# or ad9084_sample_xbar.py to repoint them at FDDC0 -- there is no driver knob for
-# the crossbar, only direct register access.
 LOOPBACK_MODE = "loopback3_jesd"
-# loopback0, loopback1 and loopback2 are ADC-to-DAC, not TX-to-RX: they inject
-# receive data into the transmit datapath, so a capture is the wrong place to look
-# for them and comes back at noise level. Only loopback3_jesd runs TX to RX.
+# loopback0, loopback1 and loopback2 are ADC-to-DAC, not DAC-to-ADC: they inject
+# samples from the ADC side back into the DACs, bypassing received JESD204 data.
+# Only loopback3_jesd runs DAC to ADC.
 
 
 def parse_args():
