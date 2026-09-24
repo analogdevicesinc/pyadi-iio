@@ -21,7 +21,8 @@ from harmonic.graph import HmcPlot
 from harmonic.icons import HmcIcon, HmcLogoIcon
 from harmonic.theme import HmcTheme
 from harmonic.toggle import HmcToggleSwitch
-from PySide6.QtCore import QSize, Qt
+from harmonic.waterfall import HmcWaterfall
+from PySide6.QtCore import QSize, Qt, QTimer
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -1466,6 +1467,216 @@ class RAMTab(QWidget):
 
 
 # ---------------------------------------------------------------------------
+# Receive tab
+# ---------------------------------------------------------------------------
+
+
+class RxTab(QWidget):
+    """Live I/Q spectrum and waterfall from the EVALZ receive datapath.
+
+    The capture loop only reads ``fmcw.rx()``; the I and Q channels are taken
+    as one complex baseband stream so the spectrum keeps the sign of the beat
+    frequency. Detection and sweep-aware processing come later.
+    """
+
+    UPDATE_MS = 100
+    HISTORY = 200
+    AUTO_LEVEL_EVERY = 20
+
+    def __init__(self, theme: HmcTheme, fmcw=None):
+        super().__init__()
+        self._theme = theme
+        self._fmcw = fmcw if hasattr(fmcw, "rx_gain_dB") else None
+        self._fs = 0.0
+        self._window = None  # cached FFT window, keyed by length
+        self._frame = 0
+        self._timer = QTimer(self)
+        self._timer.setInterval(self.UPDATE_MS)
+        self._build_ui()
+        self._connect_signals()
+        self.refresh()
+
+    def _build_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(24, 24, 24, 24)
+        layout.setSpacing(16)
+
+        body = QHBoxLayout()
+        body.setSpacing(16)
+        layout.addLayout(body)
+
+        # --- Controls card ---
+        ctrl_layout = QVBoxLayout()
+        ctrl_layout.setSpacing(12)
+        ctrl_card = HmcCard(layout=ctrl_layout)
+        ctrl_card.setFixedWidth(300)
+
+        gain_lbl = QLabel("RX Gain")
+        gain_lbl.setProperty("class", "subheading")
+        ctrl_layout.addWidget(gain_lbl)
+
+        self.gain_spin = QDoubleSpinBox()
+        self.gain_spin.setRange(0.0, 50.0)
+        self.gain_spin.setDecimals(1)
+        self.gain_spin.setSingleStep(1.0)
+        self.gain_spin.setSuffix(" dB")
+        ctrl_layout.addWidget(self.gain_spin)
+
+        self.vgain_lbl = QLabel("VGA control: —")
+        self.vgain_lbl.setProperty("class", "caption")
+        ctrl_layout.addWidget(self.vgain_lbl)
+
+        trace_row = QHBoxLayout()
+        trace_lbl = QLabel("Spectrum trace")
+        trace_lbl.setProperty("class", "caption")
+        trace_row.addWidget(trace_lbl)
+        self.trace_toggle = HmcToggleSwitch("", self._theme)
+        self.trace_toggle.setChecked(True)
+        trace_row.addWidget(self.trace_toggle)
+        trace_row.addStretch()
+        ctrl_layout.addLayout(trace_row)
+
+        btn_row = QHBoxLayout()
+        self.btn_start = QPushButton("Start")
+        self.btn_start.setIcon(HmcIcon("mdi6.play", HmcTheme.Token.CONTENT_INVERSE))
+        self.btn_stop = QPushButton("Stop")
+        self.btn_stop.setProperty("class", "danger")
+        self.btn_stop.setIcon(HmcIcon("mdi6.stop", HmcTheme.Token.CONTENT_INVERSE))
+        btn_row.addWidget(self.btn_start)
+        btn_row.addWidget(self.btn_stop)
+        ctrl_layout.addLayout(btn_row)
+
+        self.info_lbl = QLabel()
+        self.info_lbl.setProperty("class", "caption")
+        self.info_lbl.setWordWrap(True)
+        ctrl_layout.addWidget(self.info_lbl)
+
+        ctrl_layout.addStretch()
+        body.addWidget(ctrl_card)
+
+        # --- Waterfall, with the spectrum as its side graph ---
+        wf_layout = QVBoxLayout()
+        self.waterfall = HmcWaterfall(
+            history=self.HISTORY,
+            orientation="vertical",
+            colormap="harmonic",
+            colorbar=False,
+            trace=True,
+            traceRatio=0.5,
+            frameInterval=self.UPDATE_MS / 1000.0,
+            theme=self._theme,
+        )
+        wf_layout.addWidget(self.waterfall)
+        body.addWidget(HmcCard(layout=wf_layout), 1)
+
+    def _connect_signals(self):
+        self.gain_spin.valueChanged.connect(self._on_gain_changed)
+        self.btn_start.clicked.connect(self._on_start)
+        self.btn_stop.clicked.connect(self._on_stop)
+        self.trace_toggle.toggled.connect(self.waterfall.setTraceVisible)
+        self._timer.timeout.connect(self._on_tick)
+
+    # -- controls -----------------------------------------------------------
+
+    def _on_gain_changed(self, value):
+        if not self._fmcw:
+            self._status(f"[dry-run] rx_gain_dB = {value} dB")
+            return
+        try:
+            self._fmcw.rx_gain_dB = value
+            self._update_vgain()
+            self._status(f"RX gain set to {value} dB")
+        except Exception as ex:
+            self._status(f"Error: {ex}")
+
+    def _on_start(self):
+        if not self._fmcw:
+            self._status("No RX datapath — an ADMFM8000-EVALZ is required")
+            return
+        self._timer.start()
+        self._status("RX streaming started")
+
+    def _on_stop(self):
+        self._timer.stop()
+        self._status("RX streaming stopped")
+
+    def hideEvent(self, event):
+        self._timer.stop()
+        super().hideEvent(event)
+
+    # -- capture -----------------------------------------------------------
+
+    def _on_tick(self):
+        try:
+            data = self._fmcw.rx()
+        except Exception as ex:
+            self._timer.stop()
+            self._status(f"RX error: {ex}")
+            return
+
+        freqs, mag = self._spectrum(data)
+        self.waterfall.setValueLabel("Magnitude", "dBFS")
+        self.waterfall.setDataRange(freqs[0], freqs[-1])
+        self.waterfall.pushRow(mag)
+
+        self._frame += 1
+        #if self._frame % self.AUTO_LEVEL_EVERY == 1:
+        #    self.waterfall.autoLevels()
+
+    def _spectrum(self, samples):
+        """FFT of the I/Q capture, returned as (frequencies, magnitude)."""
+        # rx() returns complex samples already normalized to full scale
+        n = samples.size
+        if self._window is None or self._window.size != n:
+            self._window = np.hanning(n)
+        # A Hann-windowed tone peaks at sum(window) times its amplitude.
+        spec = np.fft.fftshift(np.fft.fft(samples * self._window))
+        mag = 20 * np.log10(np.abs(spec) / self._window.sum() + 1e-12)
+
+        fs = self._fs or float(n)
+        freqs = np.fft.fftshift(np.fft.fftfreq(n, 1.0 / fs))
+        return freqs, mag
+
+    # -- state -------------------------------------------------------------
+
+    def _update_vgain(self):
+        try:
+            self.vgain_lbl.setText(
+                f"VGA control: {self._fmcw.rx_vgain_voltage:.3f} V"
+            )
+        except Exception:
+            self.vgain_lbl.setText("VGA control: —")
+
+    def refresh(self):
+        """Read the RX datapath back and populate the controls."""
+        if not self._fmcw:
+            self.info_lbl.setText("No RX datapath detected.")
+            return
+
+        try:
+            _set_value(self.gain_spin, self._fmcw.rx_gain_dB)
+            self._update_vgain()
+        except Exception as ex:
+            self._status(f"Error reading RX gain: {ex}")
+
+        try:
+            self._fs = float(self._fmcw.rx_sampling_frequency)
+        except Exception:
+            self._fs = 0.0
+
+        rate = f"{self._fs / 1e6:.3f} MSPS" if self._fs else "unknown rate"
+        self.info_lbl.setText(
+            f"rate: {rate}, "
+            f"{self._fmcw.rx_buffer_size} samples/buffer"
+        )
+
+    def _status(self, msg):
+        w = self.window()
+        if isinstance(w, QMainWindow):
+            w.statusBar().showMessage(msg, 5000)
+
+
+# ---------------------------------------------------------------------------
 # Register table widget (reused for DDS and PLL)
 # ---------------------------------------------------------------------------
 
@@ -1619,9 +1830,14 @@ class ADMFM8000Dashboard(HmcMainWindow):
         super().__init__(theme=theme)
         self._fmcw = fmcw
         if fmcw is None and uri is not None:
-            from adi.admfm8000 import admfm8000
+            from adi.admfm8000 import admfm8000, admfm8000_evalz
 
-            self._fmcw = admfm8000(uri=uri)
+            try:
+                self._fmcw = admfm8000_evalz(uri=uri)
+            except Exception:
+                self._fmcw = admfm8000(uri=uri)
+
+        self._evalz = hasattr(self._fmcw, "rx_gain_dB")
 
         self.setWindowTitle("ADMFM8000 Dashboard")
         self.resize(1280, 800)
@@ -1665,7 +1881,7 @@ class ADMFM8000Dashboard(HmcMainWindow):
 
         header_layout.addSpacing(16)
 
-        atten_lbl = QLabel("Attenuation:")
+        atten_lbl = QLabel("TX Attenuation:")
         atten_lbl.setProperty("class", "caption")
         header_layout.addWidget(atten_lbl)
         self.atten_spin = QDoubleSpinBox()
@@ -1701,6 +1917,11 @@ class ADMFM8000Dashboard(HmcMainWindow):
         self.tabs.addTab(self.parallel_port_tab, "Parallel Port")
         self.tabs.addTab(self.drg_tab, "Digital Ramp")
         self.tabs.addTab(self.ram_tab, "RAM Mode")
+        # RX only exists on the EVALZ; keep it in dry-run so the layout is
+        # still reachable without hardware.
+        if self._evalz or self._fmcw is None:
+            self.rx_tab = RxTab(self._theme, self._fmcw)
+            self.tabs.addTab(self.rx_tab, "RX")
         self.tabs.addTab(self.debug_tab, "Debug")
         main_layout.addWidget(self.tabs)
 
