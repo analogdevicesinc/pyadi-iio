@@ -179,6 +179,8 @@ class adsy2301(adar1000_array,context_manager):
             self.uri = uri
             self._ctx = ctx
             self._available = []
+            self._bfc = None
+
 
         class ADMV8913:
             def __init__(self, ctx):
@@ -552,6 +554,7 @@ class adsy2301(adar1000_array,context_manager):
                 element_map=element_map,
                 device_element_map=device_element_map,
             )
+            self.udc._bfc = self.BFC
             
             self._available.append("BFC")
             print("BFC context found")
@@ -1821,4 +1824,24 @@ def tdd_init(dev,TXRX_Bit):
         # Trigger TDD synchronization
         tddn.sync_soft  = True
         print("TDD Engine Started")
+
+
+def Vdd_PA_Power_Down(dev):
+    """Turn off the Vdd_PA rail and set all PAs to pinchoff bias."""
+    dev.BFC.BF_PWR_EN_04 = 0
+    print("Vdd_PA rail is OFF")
+    time.sleep(1)
+
+    for device in dev.BFC.devices.values():
+        for channel in device.channels:
+            channel.pa_bias_on = -4.8
+
+    print("Pinchoff mode activated for all PAs")
+
+
+def Vdd_PA_Power_Up(dev):
+    """Turn on the Vdd_PA rail."""
+    dev.BFC.BF_PWR_EN_04 = 1
+    time.sleep(1)
+    print("Vdd_PA rail is ON")
 
