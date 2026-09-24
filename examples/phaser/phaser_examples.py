@@ -58,7 +58,7 @@ from phaser_functions import (
 from scipy import signal
 
 from adi import ad9361
-from adi.cn0566 import CN0566
+from adi.cn0566 import cn0566
 
 try:
     import config_custom as config  # this has all the key parameters that the user would want to change (i.e. calibration phase and antenna element spacing)
@@ -114,14 +114,14 @@ def do_cal_phase():
 
 try:
     print("Attempting to connect to CN0566 via ip:localhost...")
-    my_phaser = CN0566(uri="ip:localhost")
+    my_phaser = cn0566(uri="ip:localhost")
     print("Found CN0566. Connecting to PlutoSDR via default IP address...")
     my_sdr = ad9361(uri="ip:192.168.2.1")
     print("PlutoSDR connected.")
 
 except:
     print("CN0566 on ip.localhost not found, connecting via ip:phaser.local...")
-    my_phaser = CN0566(uri="ip:phaser.local")
+    my_phaser = cn0566(uri="ip:phaser.local")
     print("Found CN0566. Connecting to PlutoSDR via shared context...")
     my_sdr = ad9361(uri="ip:phaser.local:50901")
     print("Found SDR on shared phaser.local.")
@@ -196,14 +196,13 @@ else:
 # my_phaser.frequency = (10492000000 + 2000000000) // 4 #6247500000//2
 
 # Onboard source w/ external Vivaldi
-my_phaser.frequency = (
+my_phaser.pll.frequency = (
     int(my_phaser.SignalFreq) + config.Rx_freq
 ) // 4  # PLL feedback via /4 VCO output
-my_phaser.freq_dev_step = 5690
-my_phaser.freq_dev_range = 0
-my_phaser.freq_dev_time = 0
-my_phaser.powerdown = 0
-my_phaser.ramp_mode = "disabled"
+my_phaser.pll.freq_dev_step = 5690
+my_phaser.pll.freq_dev_range = 0
+my_phaser.pll.freq_dev_time = 0
+my_phaser.pll.ramp_mode = "disabled"
 
 #  If you want to use previously calibrated values load_gain and load_phase values by passing path of previously
 #  stored values. If this is not done system will be working as uncalibrated system.
