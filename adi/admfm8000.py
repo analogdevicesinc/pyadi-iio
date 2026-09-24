@@ -4,6 +4,10 @@
 
 import warnings
 
+import numpy as np
+
+from adi.ad4080 import ad4080
+from adi.ad5686 import ad5686
 from adi.ad9910 import ad9910
 from adi.adf4151x import adf41513
 from adi.adrf5720 import adrf5720
@@ -34,7 +38,7 @@ class admfm8000(ad9910):
         ad9910.__init__(self, uri)
 
         self.pll = adf41513(uri)
-        self.dsa = adrf5720(uri, "adrf5730")
+        self.dsa = adrf5720(uri, "adrf5703")
         self.pll_N = self._pll_N
 
         for profile in self.st.profiles:
@@ -225,3 +229,87 @@ class admfm8000(ad9910):
             self.ram.frequency_load(frequency_np, output_bin)
 
         self.ram.enable = 1 if enable else 0
+
+
+class admfm8000_evalz(admfm8000):
+    """ADMFM8000-EVALZ FMCW Transceiver
+
+    This class extends the ADMFM8000 transmitter with the evaluation board
+    receive datapath. The RX chain consists of an AD4880 high speed SAR ADC,
+    which captures the downconverted I and Q baseband channels, and an AD5317R
+    nanoDAC, whose first two voltage channels drive the gain control input of
+    the I and Q VGAs.
+    """
+
+    def __init__(self, uri="", pll_refin_frequency=80e6):
+        """Initialize the ADMFM8000-EVALZ system
+
+        :param uri:s
+            URI string for connecting to the hardware
+        :param pll_refin_frequency:
+            Initial PLL reference input frequency in Hz (default: 80e6).
+            This should be set to the value configured in the device-tree.
+        """
+        admfm8000.__init__(self, uri, pll_refin_frequency)
+
+        self.sar_adc = ad4080(uri, "ad4880")
+        self.nano_dac = ad5686(uri, "ad5313r")
+        self.sar_adc.rx_enabled_channels = [0, 1]
+
+        # Full-scale code magnitude of the ADC, taken from the sample format.
+        # The AD4884 always reports two's complement samples.
+        bits = self.sar_adc._ctrl.channels[0].data_format.bits
+        self._rx_full_scale = float(2 ** (bits - 1))
+
+    @property
+    def rx_vgain_voltage(self):
+        """Get/Set the I/Q path VGA gain control voltage in Volts"""
+        return self.nano_dac.channel[0].voltage
+
+    @rx_vgain_voltage.setter
+    def rx_vgain_voltage(self, value):
+        # Clamp the voltage between 0 and 1.5 V
+        value = min(max(value, 0), 1.5)
+        self.nano_dac.channel[0].voltage = value
+        self.nano_dac.channel[1].voltage = value
+
+    @property
+    def rx_gain_dB(self):
+        """Get/Set the I/Q path VGA gain control voltage in dB.
+
+        It is assumed a gain scaling of 30 mV/dB.
+        """
+        return self.rx_vgain_voltage * 1000 / 30
+
+    @rx_gain_dB.setter
+    def rx_gain_dB(self, value):
+        self.rx_vgain_voltage = value * 30 / 1000
+
+    @property
+    def rx_sampling_frequency(self):
+        """Get the ADC sampling frequency in Hz"""
+        return self.sar_adc.channel[0].sampling_frequency
+
+    @property
+    def rx_buffer_size(self):
+        """Get/Set the ADC buffer size in samples"""
+        return self.sar_adc.rx_buffer_size
+
+    @rx_buffer_size.setter
+    def rx_buffer_size(self, value):
+        self.sar_adc.rx_buffer_size = value
+
+    def rx(self):
+        """Capture the baseband data from the SAR ADC
+
+        The I and Q channel codes are combined into complex samples and
+        normalized by the full-scale code magnitude, so both the real and
+        imaginary parts span the -1.0 to 1.0 full-scale range.
+
+        :return: Complex numpy array with the I/Q baseband data
+        """
+        data = self.sar_adc.rx()
+        samples = np.asarray(data[0], dtype=np.float64)
+        if len(data) > 1:
+            samples = samples + 1j * np.asarray(data[1], dtype=np.float64)
+        return samples / self._rx_full_scale
