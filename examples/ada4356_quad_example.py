@@ -222,6 +222,106 @@ for label, (a1, dc, nr, spur, spur_hz, harm, *_rest) in zip(labels, quality):
     )
     print(f"{label:>3}  {cells}   {20 * np.log10(spur / a1):>6.1f} dBc @ {spur_hz / 1e6:.3f} MHz")
 
+# =============================================================================
+# Residual autocorrelation — the one thing the spectrum cannot show you
+# -----------------------------------------------------------------------------
+# A residual with periodic structure reaches the FFT as nothing more than a
+# raised, featureless noise floor, so the spectrum can tell you the noise number
+# is bad but never why.  Splitting the residual into a white part and a
+# correlated part separates "this converter is noisy" from "this board has one
+# narrowband intruder on it", and those two have opposite fixes.
+# =============================================================================
+
+MAX_LAG = 64
+STRUCTURAL_LAGS = (1, 2, 4, 8, 16)
+
+
+def autocorrelation(r, max_lag=MAX_LAG):
+    """Normalised autocorrelation of the residual, via Wiener-Khinchin.
+
+    O(N log N).  The np.correlate(mode="full") that used to live in this file
+    was O(N^2) and hung for tens of minutes at N=65536.
+
+    This is NOT the cross-correlation that was deliberately deleted from the
+    skew section.  That one raced the FFT phase to answer the same question and
+    lost.  This one asks a question the FFT does not answer: after the tone and
+    its harmonics have been fitted out, is what remains actually white?
+    """
+    r = r - r.mean()
+    nfft = 1 << int(np.ceil(np.log2(2 * r.size)))
+    s = np.fft.rfft(r, nfft)
+    ac = np.fft.irfft(np.abs(s) ** 2, nfft)[: max_lag + 1]
+    return ac / ac[0]
+
+
+sig_bound = 3.0 / np.sqrt(N)
+acfs = [autocorrelation(f[3]) for f in fits]
+
+print("\n=== Residual autocorrelation — is the leftover noise white? ===")
+print(f"White noise gives |r| < {sig_bound:.4f} (3 sigma at N={N}) for every lag > 0")
+print(f"\n{'Ch':>3}  " + "  ".join(f"{'lag' + str(L):>8}" for L in STRUCTURAL_LAGS)
+      + "   other significant lags")
+for label, acf in zip(labels, acfs):
+    cells = "  ".join(f"{acf[L]:>8.4f}" for L in STRUCTURAL_LAGS)
+    other = [L for L in range(1, MAX_LAG + 1)
+             if abs(acf[L]) > sig_bound and L not in STRUCTURAL_LAGS]
+    tail = ", ".join(str(L) for L in other[:8]) + (" ..." if len(other) > 8 else "")
+    print(f"{label:>3}  {cells}   {tail if other else '-'}")
+
+print("""
+  lag 1 alone            -> band-limited noise; expected with FREQ_SEL=1, whose
+                            filter is worth 1.3 ENOB and is meant to be on
+  lag 4 and multiples    -> BUFR /4 divided-clock artefact
+  lag 8 and multiples    -> 8:1 SERDES word boundary
+  broad decaying tail    -> the residual is one narrowband thing, not noise;
+                            the table below says what and how much""")
+
+# A decaying ACF means the residual is dominated by something narrowband, and the
+# `noise` column in the signal-quality table is then mostly THAT, not converter
+# noise.  Split it: write resid = slow + white.  A component slow enough to be
+# correlated at lag 1 contributes ~acf[1] of the variance, so the white part is
+# var * (1 - acf[1]).  Its frequency follows from the ACF's first zero crossing,
+# which for a narrowband process sits at a quarter period.
+print(f"\n{'Ch':>3}  {'resid rms':>9}  {'white':>7}  {'correlated':>10}  "
+      f"{'dominant':>10}  what the 'noise' column is actually measuring")
+SMOOTH_ACF1 = 0.5
+acf_summary = []  # (zero-crossing lag, dominant Hz, correlated fraction) per channel
+for label, acf, (dc, amps, phase, resid, model) in zip(labels, acfs, fits):
+    tot = np.std(resid)
+    worst_lag = int(np.argmax(np.abs(acf[1:]))) + 1
+    dom = None
+    zc = None
+    if abs(acf[worst_lag]) < sig_bound:
+        white, verdict = tot, "white — the noise column is real converter noise"
+    elif acf[1] < SMOOTH_ACF1:
+        # Structured but not smooth: the lag-1 split assumes the correlated part
+        # is still correlated at lag 1, which is false here, so do not guess.
+        white, verdict = (float("nan"),
+                          f"structured at lag {worst_lag} (r={acf[worst_lag]:+.3f}) — "
+                          f"not smooth, so no split; see the lag table")
+    else:
+        white = min(tot * np.sqrt(max(1.0 - acf[1], 0.0)), tot)
+        neg = np.flatnonzero(acf[1:] < 0)
+        if neg.size == 0:
+            verdict = (f"one slow component below {fs / (4 * MAX_LAG) / 1e6:.2f} MHz; "
+                       "raise MAX_LAG to localise it")
+        else:
+            z = neg[0] + 1
+            zc = z - 1 + acf[z - 1] / (acf[z - 1] - acf[z])
+            dom = fs / (4 * zc)
+            verdict = ("f0 is mis-fitted — fix estimate_f0, not a board fault"
+                       if abs(dom - f0) < 0.2 * f0 else
+                       f"a spur near {dom / 1e6:.2f} MHz, not noise; true SNR/FS "
+                       f"{20 * np.log10(FULL_SCALE / np.sqrt(2) / white):.1f} dB")
+    corr = np.sqrt(max(tot ** 2 - white ** 2, 0.0)) if white == white else float("nan")
+    acf_summary.append((zc, dom, (corr / tot) ** 2 if corr == corr else float("nan")))
+    fmt = lambda v: f"{v:.2f}" if v == v else "—"
+    print(f"{label:>3}  {tot:>9.2f}  {fmt(white):>7}  {fmt(corr):>10}  "
+          f"{(f'{dom / 1e6:.3f} MHz' if dom else '—'):>10}  {verdict}")
+print("  The split assumes the correlated part is smooth at lag 1, which the"
+      "\n  decaying ACF itself establishes. Cross-check 'dominant' against the"
+      "\n  worst-spur column in the harmonic table — they should agree.")
+
 # --- Inter-channel skew ------------------------------------------------------
 # One sample is 360 * f0 / fs degrees.  If that is comparable to the run-to-run
 # phase scatter the sample column is meaningless — this is the trap that
@@ -303,6 +403,57 @@ for idx, (a, label, color) in enumerate(zip(ac, labels, colors)):
 
 plt.savefig("/tmp/ada4356_quad.png", dpi=150, bbox_inches="tight")
 print("\nPlot saved: /tmp/ada4356_quad.png")
+
+# --- Second figure: residual autocorrelation ---------------------------------
+# The title states the FINDING rather than the decision rule: once the residual
+# is dominated by a tone the white-noise band is ~1% of the axis and invisible,
+# so "anything outside the band is structure" is unreadable exactly when it
+# fires.  The zero crossing is the whole result, so it is drawn and labelled.
+fig2, ax = plt.subplots(figsize=(11, 6.5))
+
+for acf, label, color, (zc, dom, frac) in zip(acfs, labels, colors, acf_summary):
+    tag = f"Ch {label} — $r_1$={acf[1]:.3f}"
+    if frac == frac:
+        tag += f", {100 * frac:.0f}% correlated"
+    ax.plot(np.arange(1, MAX_LAG + 1), acf[1:], color=color, linewidth=1.0,
+            marker=".", markersize=3, label=tag)
+
+ax.axhspan(-sig_bound, sig_bound, color="gray", alpha=0.35,
+           label=f"white noise would live entirely inside this (±{sig_bound:.4f})")
+
+for L in (4, 8, 16, 32):
+    ax.axvline(L, color="gray", linestyle=":", linewidth=0.6)
+ax.annotate("lags 4/8/16/32 = clock-divider and SERDES-word\n"
+            "fault signatures; smooth here means the digital side is clean",
+            xy=(0.015, 0.03), xycoords="axes fraction", fontsize=8, color="gray")
+
+# Mark the zero crossing of whichever channel is worst affected: it is the same
+# tone on every channel, so one annotation carries the result for all of them.
+worst = max(range(len(acf_summary)),
+            key=lambda i: acf_summary[i][2] if acf_summary[i][2] == acf_summary[i][2] else -1)
+zc, dom, _frac = acf_summary[worst]
+if zc is not None and dom is not None:
+    ax.axvline(zc, color="k", linestyle="--", linewidth=0.9)
+    ax.axhline(0.0, color="k", linewidth=0.5)
+    ax.annotate(f"zero crossing at lag {zc:.1f}\n= quarter period\n"
+                f"$\\rightarrow$ {dom / 1e6:.2f} MHz",
+                xy=(zc, 0.0), xytext=(zc + 0.08 * MAX_LAG, 0.45),
+                fontsize=9,
+                arrowprops=dict(arrowstyle="->", color="k", linewidth=0.8),
+                bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.75))
+    headline = (f"Residual autocorrelation — the leftover is a {dom / 1e6:.2f} MHz tone, "
+                "not noise")
+else:
+    headline = "Residual autocorrelation — leftover is white, the noise column is real"
+
+ax.set_xlabel("Lag (samples)")
+ax.set_ylabel("Normalised autocorrelation")
+ax.set_title(headline)
+ax.legend(fontsize=8, loc="upper right")
+ax.grid(True, alpha=0.3)
+
+plt.savefig("/tmp/ada4356_quad_diag.png", dpi=150, bbox_inches="tight")
+print("Plot saved: /tmp/ada4356_quad_diag.png")
 
 for ch in dev.channels:
     ch.rx_destroy_buffer()
