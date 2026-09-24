@@ -21,7 +21,8 @@ from harmonic.graph import HmcPlot
 from harmonic.icons import HmcIcon, HmcLogoIcon
 from harmonic.theme import HmcTheme
 from harmonic.toggle import HmcToggleSwitch
-from PySide6.QtCore import QSize, Qt
+from harmonic.waterfall import HmcWaterfall
+from PySide6.QtCore import QSize, Qt, QTimer, Signal
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -47,6 +48,7 @@ FREQ_MIN_GHZ = 23.8
 FREQ_MAX_GHZ = 26.8
 NUM_PROFILES = 8
 DAC_FULL_SCALE_MA = 20.5
+SPEED_OF_LIGHT = 299_792_458.0  # m/s
 
 
 def _set_value(widget, value):
@@ -474,6 +476,9 @@ DRG_MODES = [
 
 
 class DigitalRampTab(QWidget):
+    # emitted once the DRG has been reconfigured on the device
+    applied = Signal()
+
     def __init__(self, theme: HmcTheme, fmcw=None):
         super().__init__()
         self._theme = theme
@@ -1106,6 +1111,7 @@ class DigitalRampTab(QWidget):
                     **kwargs,
                 )
                 self.refresh()
+                self.applied.emit()
                 f_min = self.freq_min_spin.value() * 1e9
                 f_max = self.freq_max_spin.value() * 1e9
                 self._status(
@@ -1124,6 +1130,7 @@ class DigitalRampTab(QWidget):
         if self._fmcw:
             try:
                 self._fmcw.digital_ramp_config(enable=False)
+                self.applied.emit()
                 self._status("DRG disabled")
             except Exception as ex:
                 self._status(f"Error: {ex}")
@@ -1466,6 +1473,432 @@ class RAMTab(QWidget):
 
 
 # ---------------------------------------------------------------------------
+# Receive tab
+# ---------------------------------------------------------------------------
+
+
+class RxTab(QWidget):
+    """Live spectrum and waterfall from the EVALZ receive datapath.
+
+    The capture loop only reads ``fmcw.rx()``. The I and Q channels are either
+    taken as one complex baseband stream, keeping the sign of the beat
+    frequency, or summed into one real signal with a one-sided spectrum
+    (0 to fs/2). While the capture is synchronized to DRCTL, the frequency
+    axis can be mapped to distance through the DRG ramp slope.
+    """
+
+    UPDATE_MS = 100
+    HISTORY = 200
+    AUTO_LEVEL_EVERY = 20
+
+    def __init__(self, theme: HmcTheme, fmcw=None):
+        super().__init__()
+        self._theme = theme
+        self._fmcw = fmcw if hasattr(fmcw, "rx_gain_dB") else None
+        self._fs = 0.0
+        self._slope = 0.0  # DRG slope of the synchronized chirp, Hz/s
+        self._window = None  # cached FFT window, keyed by length
+        self._frame = 0
+        self._timer = QTimer(self)
+        self._timer.setInterval(self.UPDATE_MS)
+        self._build_ui()
+        self._connect_signals()
+        self.refresh()
+
+    def _build_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(24, 24, 24, 24)
+        layout.setSpacing(16)
+
+        body = QHBoxLayout()
+        body.setSpacing(16)
+        layout.addLayout(body)
+
+        # --- Controls card ---
+        ctrl_layout = QVBoxLayout()
+        ctrl_layout.setSpacing(12)
+        ctrl_card = HmcCard(layout=ctrl_layout)
+        ctrl_card.setFixedWidth(300)
+
+        gain_lbl = QLabel("RX Gain")
+        gain_lbl.setProperty("class", "subheading")
+        ctrl_layout.addWidget(gain_lbl)
+
+        self.gain_spin = QDoubleSpinBox()
+        self.gain_spin.setRange(0.0, 50.0)
+        self.gain_spin.setDecimals(1)
+        self.gain_spin.setSingleStep(1.0)
+        self.gain_spin.setSuffix(" dB")
+        ctrl_layout.addWidget(self.gain_spin)
+
+        self.vgain_lbl = QLabel("VGA control: —")
+        self.vgain_lbl.setProperty("class", "caption")
+        ctrl_layout.addWidget(self.vgain_lbl)
+
+        ctrl_layout.addSpacing(8)
+        sync_lbl = QLabel("RX Sync")
+        sync_lbl.setProperty("class", "subheading")
+        ctrl_layout.addWidget(sync_lbl)
+
+        sync_row = QHBoxLayout()
+        sync_toggle_lbl = QLabel("Sync to DRCTL")
+        sync_toggle_lbl.setProperty("class", "caption")
+        sync_row.addWidget(sync_toggle_lbl)
+        self.sync_toggle = HmcToggleSwitch("", self._theme)
+        self.sync_toggle.setChecked(False)
+        sync_row.addWidget(self.sync_toggle)
+        sync_row.addStretch()
+        ctrl_layout.addLayout(sync_row)
+
+        def _dspin(suffix):
+            s = QDoubleSpinBox()
+            s.setRange(0.0, 100000.0)
+            s.setDecimals(3)
+            s.setSingleStep(1.0)
+            s.setSuffix(suffix)
+            s.setKeyboardTracking(False)
+            return s
+
+        self.burst_count_spin = QSpinBox()
+        self.burst_count_spin.setRange(0, 255)
+        self.burst_count_spin.setValue(1)
+        self.burst_count_spin.setKeyboardTracking(False)
+        self.burst_count_spin.setToolTip(
+            "Chirps captured per DRCTL sync, 0 never stops"
+        )
+        self.capture_delay_spin = _dspin(" us")
+        self.capture_delay_spin.setToolTip("TDD startup delay after the DRCTL sync")
+        self.window_offset_spin = _dspin(" us")
+        self.window_offset_spin.setToolTip("Capture window start within the chirp")
+        self.refr_index_spin = QDoubleSpinBox()
+        self.refr_index_spin.setRange(1.0, 10.0)
+        self.refr_index_spin.setDecimals(3)
+        self.refr_index_spin.setSingleStep(0.01)
+        self.refr_index_spin.setValue(1.0)
+        self.refr_index_spin.setToolTip(
+            "Refractive index of the medium, the signal travels at c / n"
+        )
+
+        sync_grid = QGridLayout()
+        sync_grid.setHorizontalSpacing(12)
+        sync_grid.setVerticalSpacing(6)
+        self._sync_widgets = []
+        for row, (text, widget) in enumerate(
+            [
+                ("Burst Count", self.burst_count_spin),
+                ("Capture Delay", self.capture_delay_spin),
+                ("Window Offset", self.window_offset_spin),
+            ]
+        ):
+            lbl = QLabel(text)
+            lbl.setProperty("class", "caption")
+            sync_grid.addWidget(lbl, row, 0)
+            sync_grid.addWidget(widget, row, 1)
+            self._sync_widgets.extend([lbl, widget])
+        ctrl_layout.addLayout(sync_grid)
+
+        range_row = QHBoxLayout()
+        range_lbl = QLabel("Distance axis")
+        range_lbl.setProperty("class", "caption")
+        range_row.addWidget(range_lbl)
+        self.range_toggle = HmcToggleSwitch("", self._theme)
+        self.range_toggle.setChecked(False)
+        self.range_toggle.setToolTip(
+            "Map the beat frequency to distance using the DRG ramp slope"
+        )
+        range_row.addWidget(self.range_toggle)
+        range_row.addStretch()
+        ctrl_layout.addLayout(range_row)
+        self._sync_widgets.extend([range_lbl, self.range_toggle])
+
+        refr_row = QHBoxLayout()
+        self.refr_index_lbl = QLabel("Refractive Index")
+        self.refr_index_lbl.setProperty("class", "caption")
+        refr_row.addWidget(self.refr_index_lbl)
+        refr_row.addWidget(self.refr_index_spin)
+        ctrl_layout.addLayout(refr_row)
+
+        self.sync_info_lbl = QLabel()
+        self.sync_info_lbl.setProperty("class", "caption")
+        self.sync_info_lbl.setWordWrap(True)
+        ctrl_layout.addWidget(self.sync_info_lbl)
+
+        ctrl_layout.addSpacing(8)
+        plotctl_lbl = QLabel("RX Plot")
+        plotctl_lbl.setProperty("class", "subheading")
+        ctrl_layout.addWidget(plotctl_lbl)
+        iq_row = QHBoxLayout()
+        self.iq_lbl = QLabel("Complex I/Q")
+        self.iq_lbl.setProperty("class", "caption")
+        iq_row.addWidget(self.iq_lbl)
+        self.complex_toggle = HmcToggleSwitch("", self._theme)
+        self.complex_toggle.setChecked(False)
+        self.complex_toggle.setToolTip(
+            "On: I + jQ, two-sided spectrum. Off: I + Q as a real signal."
+        )
+        iq_row.addWidget(self.complex_toggle)
+        iq_row.addStretch()
+        ctrl_layout.addLayout(iq_row)
+
+        trace_row = QHBoxLayout()
+        trace_lbl = QLabel("Spectrum trace")
+        trace_lbl.setProperty("class", "caption")
+        trace_row.addWidget(trace_lbl)
+        self.trace_toggle = HmcToggleSwitch("", self._theme)
+        self.trace_toggle.setChecked(True)
+        trace_row.addWidget(self.trace_toggle)
+        trace_row.addStretch()
+        ctrl_layout.addLayout(trace_row)
+
+        btn_row = QHBoxLayout()
+        self.btn_start = QPushButton("Start")
+        self.btn_start.setIcon(HmcIcon("mdi6.play", HmcTheme.Token.CONTENT_INVERSE))
+        self.btn_stop = QPushButton("Stop")
+        self.btn_stop.setProperty("class", "danger")
+        self.btn_stop.setIcon(HmcIcon("mdi6.stop", HmcTheme.Token.CONTENT_INVERSE))
+        btn_row.addWidget(self.btn_start)
+        btn_row.addWidget(self.btn_stop)
+        ctrl_layout.addLayout(btn_row)
+
+        self.info_lbl = QLabel()
+        self.info_lbl.setProperty("class", "caption")
+        self.info_lbl.setWordWrap(True)
+        ctrl_layout.addWidget(self.info_lbl)
+
+        ctrl_layout.addStretch()
+        body.addWidget(ctrl_card)
+
+        # --- Waterfall, with the spectrum as its side graph ---
+        wf_layout = QVBoxLayout()
+        self.waterfall = HmcWaterfall(
+            history=self.HISTORY,
+            orientation="vertical",
+            colormap="harmonic",
+            colorbar=False,
+            trace=True,
+            traceRatio=0.5,
+            frameInterval=self.UPDATE_MS / 1000.0,
+            theme=self._theme,
+        )
+        wf_layout.addWidget(self.waterfall)
+        body.addWidget(HmcCard(layout=wf_layout), 1)
+
+    def _connect_signals(self):
+        self.gain_spin.valueChanged.connect(self._on_gain_changed)
+        self.btn_start.clicked.connect(self._on_start)
+        self.btn_stop.clicked.connect(self._on_stop)
+        self.trace_toggle.toggled.connect(self.waterfall.setTraceVisible)
+        # The frequency axis changes between modes, so drop the old history.
+        self.complex_toggle.toggled.connect(lambda _: self.waterfall.clearData())
+        self.range_toggle.toggled.connect(self._on_range_toggled)
+        self.sync_toggle.toggled.connect(self.apply_sync)
+        self.burst_count_spin.valueChanged.connect(self.apply_sync)
+        self.capture_delay_spin.valueChanged.connect(self.apply_sync)
+        self.window_offset_spin.valueChanged.connect(self.apply_sync)
+        self._timer.timeout.connect(self._on_tick)
+
+    # -- controls -----------------------------------------------------------
+
+    def _on_gain_changed(self, value):
+        if not self._fmcw:
+            self._status(f"[dry-run] rx_gain_dB = {value} dB")
+            return
+        try:
+            self._fmcw.rx_gain_dB = value
+            self._update_vgain()
+            self._status(f"RX gain set to {value} dB")
+        except Exception as ex:
+            self._status(f"Error: {ex}")
+
+    def _distance_mode(self):
+        return self.sync_toggle.isChecked() and self.range_toggle.isChecked()
+
+    def _update_enables(self):
+        """Grey out the controls that do not apply to the current modes."""
+        for w in self._sync_widgets:
+            w.setEnabled(self.sync_toggle.isChecked())
+        distance = self._distance_mode()
+        self.refr_index_lbl.setEnabled(distance)
+        self.refr_index_spin.setEnabled(distance)
+        # There are no negative distances, so the spectrum is one-sided.
+        if distance:
+            self.complex_toggle.setChecked(False)
+        self.iq_lbl.setEnabled(not distance)
+        self.complex_toggle.setEnabled(not distance)
+
+    def _on_range_toggled(self, _):
+        self._update_enables()
+        self.waterfall.clearData()
+
+    def apply_sync(self, *_):
+        """Push the RX sync settings and re-derive the TDD from the DRG state.
+
+        Also called after the DRG is reconfigured, since the capture window
+        follows the ramp timing.
+        """
+        enabled = self.sync_toggle.isChecked()
+        self._update_enables()
+
+        burst = self.burst_count_spin.value()
+        delay = self.capture_delay_spin.value() * 1e-6
+        offset = self.window_offset_spin.value() * 1e-6
+        if not self._fmcw:
+            self._status(
+                f"[dry-run] rx_burst_count={burst}, rx_sync_startup_delay={delay}, "
+                f"rx_sync_on_offset={offset}, rx_sync(free_running={not enabled})"
+            )
+            return
+
+        try:
+            self._fmcw.rx_burst_count = burst
+            self._fmcw.rx_sync_startup_delay = delay
+            self._fmcw.rx_sync_on_offset = offset
+            synced = self._fmcw.rx_sync(free_running=not enabled)
+            self._slope = self._chirp_slope() if synced else 0.0
+            if synced:
+                self._status("RX capture synchronized to DRCTL")
+            elif enabled:
+                self._status("DRCTL is not toggling, RX capture left free running")
+            else:
+                self._status("RX capture free running")
+        except Exception as ex:
+            self._slope = 0.0
+            self._status(f"RX sync error: {ex}")
+        self._update_sync_info()
+
+    def _chirp_slope(self):
+        """DRG slope of the chirp the RX window is synchronized to, in Hz/s.
+
+        rx_sync() captures the ramp-up, except in ramp-down mode.
+        """
+        from adi.ad9910 import ad9910
+
+        ramp = self._fmcw.drg.frequency
+        if ramp.operating_mode == ad9910.digital_ramp_generator.mode.RAMP_DOWN:
+            return ramp.negative_slope
+        return ramp.positive_slope
+
+    def _on_start(self):
+        if not self._fmcw:
+            self._status("No RX datapath — an ADMFM8000-EVALZ is required")
+            return
+        self._timer.start()
+        self._status("RX streaming started")
+
+    def _on_stop(self):
+        self._timer.stop()
+        self._status("RX streaming stopped")
+
+    def hideEvent(self, event):
+        self._timer.stop()
+        super().hideEvent(event)
+
+    # -- capture -----------------------------------------------------------
+
+    def _on_tick(self):
+        try:
+            data = self._fmcw.rx()
+        except Exception as ex:
+            self._timer.stop()
+            self._status(f"RX error: {ex}")
+            return
+
+        freqs, mag = self._spectrum(data)
+        self.waterfall.setValueLabel("Magnitude", "dBFS")
+        if self._distance_mode() and self._slope > 0:
+            # distance = (c / n) * f_beat / (2 * slope)
+            k = SPEED_OF_LIGHT / (self.refr_index_spin.value() * 2 * self._slope)
+            self.waterfall.setDataRange(k * freqs[0], k * freqs[-1], "Distance", "m")
+        else:
+            self.waterfall.setDataRange(freqs[0], freqs[-1])
+        self.waterfall.pushRow(mag)
+
+        self._frame += 1
+        #if self._frame % self.AUTO_LEVEL_EVERY == 1:
+        #    self.waterfall.autoLevels()
+
+    def _spectrum(self, samples):
+        """FFT of the capture, returned as (frequencies, magnitude).
+
+        In complex mode the I/Q stream gives a two-sided spectrum; otherwise
+        I + Q is treated as a single real signal with a one-sided spectrum.
+        """
+        # rx() returns complex samples already normalized to full scale
+        n = samples.size
+        if self._window is None or self._window.size != n:
+            self._window = np.hanning(n)
+        fs = self._fs or float(n)
+
+        if self.complex_toggle.isChecked():
+            # A Hann-windowed tone peaks at sum(window) times its amplitude.
+            spec = np.fft.fftshift(np.fft.fft(samples * self._window))
+            mag = 20 * np.log10(np.abs(spec) / self._window.sum() + 1e-12)
+            freqs = np.fft.fftshift(np.fft.fftfreq(n, 1.0 / fs))
+        else:
+            # A real tone splits its energy across ±f, so it peaks at half that.
+            signal = samples.real + samples.imag
+            spec = np.fft.rfft(signal * self._window)
+            mag = 20 * np.log10(2 * np.abs(spec) / self._window.sum() + 1e-12)
+            freqs = np.fft.rfftfreq(n, 1.0 / fs)
+        return freqs, mag
+
+    # -- state -------------------------------------------------------------
+
+    def _update_vgain(self):
+        try:
+            self.vgain_lbl.setText(
+                f"VGA control: {self._fmcw.rx_vgain_voltage:.3f} V"
+            )
+        except Exception:
+            self.vgain_lbl.setText("VGA control: —")
+
+    def _update_sync_info(self):
+        if not self._fmcw:
+            self.sync_info_lbl.setText("Chirp samples: —\nBuffer size: —")
+            return
+        chirp = self._fmcw.rx_ramp_nsamples
+        chirp_txt = f"{chirp} samples" if chirp else "— (free running)"
+        self.sync_info_lbl.setText(
+            f"Chirp samples: {chirp_txt}\n"
+            f"Buffer size: {self._fmcw.rx_buffer_size} samples"
+        )
+
+    def refresh(self):
+        """Read the RX datapath back and populate the controls."""
+        self._update_enables()
+        self._update_sync_info()
+        if not self._fmcw:
+            self.info_lbl.setText("No RX datapath detected.")
+            return
+
+        _set_value(self.burst_count_spin, self._fmcw.rx_burst_count)
+        _set_value(self.capture_delay_spin, self._fmcw.rx_sync_startup_delay * 1e6)
+        _set_value(self.window_offset_spin, self._fmcw.rx_sync_on_offset * 1e6)
+
+        try:
+            _set_value(self.gain_spin, self._fmcw.rx_gain_dB)
+            self._update_vgain()
+        except Exception as ex:
+            self._status(f"Error reading RX gain: {ex}")
+
+        try:
+            self._fs = float(self._fmcw.rx_sampling_frequency)
+        except Exception:
+            self._fs = 0.0
+
+        rate = f"{self._fs / 1e6:.3f} MSPS" if self._fs else "unknown rate"
+        self.info_lbl.setText(
+            f"rate: {rate}, "
+            f"{self._fmcw.rx_buffer_size} samples/buffer"
+        )
+
+    def _status(self, msg):
+        w = self.window()
+        if isinstance(w, QMainWindow):
+            w.statusBar().showMessage(msg, 5000)
+
+
+# ---------------------------------------------------------------------------
 # Register table widget (reused for DDS and PLL)
 # ---------------------------------------------------------------------------
 
@@ -1619,9 +2052,14 @@ class ADMFM8000Dashboard(HmcMainWindow):
         super().__init__(theme=theme)
         self._fmcw = fmcw
         if fmcw is None and uri is not None:
-            from adi.admfm8000 import admfm8000
+            from adi.admfm8000 import admfm8000, admfm8000_evalz
 
-            self._fmcw = admfm8000(uri=uri)
+            try:
+                self._fmcw = admfm8000_evalz(uri=uri)
+            except Exception:
+                self._fmcw = admfm8000(uri=uri)
+
+        self._evalz = hasattr(self._fmcw, "rx_gain_dB")
 
         self.setWindowTitle("ADMFM8000 Dashboard")
         self.resize(1280, 800)
@@ -1665,7 +2103,7 @@ class ADMFM8000Dashboard(HmcMainWindow):
 
         header_layout.addSpacing(16)
 
-        atten_lbl = QLabel("Attenuation:")
+        atten_lbl = QLabel("TX Attenuation:")
         atten_lbl.setProperty("class", "caption")
         header_layout.addWidget(atten_lbl)
         self.atten_spin = QDoubleSpinBox()
@@ -1701,6 +2139,11 @@ class ADMFM8000Dashboard(HmcMainWindow):
         self.tabs.addTab(self.parallel_port_tab, "Parallel Port")
         self.tabs.addTab(self.drg_tab, "Digital Ramp")
         self.tabs.addTab(self.ram_tab, "RAM Mode")
+        # RX only exists on the EVALZ; keep it in dry-run so the layout is
+        # still reachable without hardware.
+        if self._evalz or self._fmcw is None:
+            self.rx_tab = RxTab(self._theme, self._fmcw)
+            self.tabs.addTab(self.rx_tab, "RX")
         self.tabs.addTab(self.debug_tab, "Debug")
         main_layout.addWidget(self.tabs)
 
@@ -1713,6 +2156,13 @@ class ADMFM8000Dashboard(HmcMainWindow):
     def _connect_signals(self):
         self.pll_n_spin.valueChanged.connect(self._on_pll_n_changed)
         self.atten_spin.valueChanged.connect(self._on_atten_changed)
+        if hasattr(self, "rx_tab"):
+            self.drg_tab.applied.connect(self._on_drg_applied)
+
+    def _on_drg_applied(self):
+        # the RX capture window follows the ramp timing
+        if self.rx_tab.sync_toggle.isChecked():
+            self.rx_tab.apply_sync()
 
     def _on_pll_n_changed(self, value):
         if self._fmcw:
