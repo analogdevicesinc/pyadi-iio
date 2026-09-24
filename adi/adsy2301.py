@@ -18,11 +18,12 @@
 import time
 import warnings
 import importlib
+from typing import List
 import adi
 from adi.adar1000 import adar1000_array
 from adi.adf4382 import adf4382
 from adi.admv1320 import admv1320
-from adi.admv1420 import admv1420
+from adi.admv1420 import admv1420 as ADMV1420
 from adi.adrv9009_zu11eg import adrv9009_zu11eg
 import matplotlib.pyplot as plt
 import numpy as np
@@ -175,6 +176,8 @@ class adsy2301(adar1000_array,context_manager):
 
 
     class UDC():
+        admv1420: List[ADMV1420]
+
         def __init__(self, uri, ctx):
             self.uri = uri
             self._ctx = ctx
@@ -406,7 +409,7 @@ class adsy2301(adar1000_array,context_manager):
                 "admv1420_rx_3",
             ]
             try:
-                self.admv1420 = [admv1420(uri=uri, device_name=name) for name in device_names]
+                self.admv1420 = [ADMV1420(uri=uri, device_name=name) for name in device_names]
                 self._available.append("ADMV1420")
                 print(f"ADMV1420 context found: {len(self.admv1420)} devices")
             except Exception as e:
@@ -1637,29 +1640,26 @@ def tdd_init(dev,TXRX_Bit):
     # TDD Engine Configuration: Name and TDD channel 
     ###########################
 
-    # TDD_TX_OFFLOAD_SYNC = 0
-    # TDD_RX_OFFLOAD_SYNC = 1
-    # TDD_ENABLE      = 2
-    # TDD_ADRV9009_RX_EN = 3
-    # TDD_ADRV9009_TX_EN = 4
-    # # TDD_ADSY2301_EN = 5
-    # TDD_PA_ON     = 6  # PA_ON_0, PA_ON_1, PA_ON_2, PA_ON_3
-    # TDD_TR_PULSE     = 7  # TR Pulse
-    # TDD_RX_LOAD = 12
-    # TDD_TX_LOAD = 13
-
     TDD_TX_OFFLOAD_SYNC = 0
     TDD_RX_OFFLOAD_SYNC = 1
-    TDD_ENABLE      = 6
-    TDD_ADRV9009_RX_EN = 7
-    TDD_ADRV9009_TX_EN = 8
-    # TDD_ADSY2301_EN = 9
-    TDD_PA_ON     = 10  # PA_ON_0, PA_ON_1, PA_ON_2, PA_ON_3
-    TDD_TR_PULSE     = 11  # TR Pulse
-    TDD_RX_LOAD = 4
-    TDD_TX_LOAD = 5
-    
+    TDD_ENABLE = 2
+    TDD_ADRV9009_RX_EN = 3
+    TDD_ADRV9009_TX_EN = 4
+    TDD_PA_ON = 6
+    TDD_TR_PULSE = 7
+    TDD_RX_LOAD = 12
+    TDD_TX_LOAD = 13
 
+    # TDD_TX_OFFLOAD_SYNC = 0
+    # TDD_RX_OFFLOAD_SYNC = 1
+    # TDD_ENABLE      = 6
+    # TDD_ADRV9009_RX_EN = 7
+    # TDD_ADRV9009_TX_EN = 8
+    # # TDD_ADSY2301_EN = 9
+    # TDD_PA_ON     = 10  # PA_ON_0, PA_ON_1, PA_ON_2, PA_ON_3
+    # TDD_TR_PULSE     = 11  # TR Pulse
+    # TDD_RX_LOAD = 4
+    # TDD_TX_LOAD = 5
     
     # Configure TDD engine (disable during changes)
     tddn.enable = False
