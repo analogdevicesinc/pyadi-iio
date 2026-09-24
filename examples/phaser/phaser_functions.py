@@ -53,7 +53,7 @@ from numpy import (
     pi,
 )
 from numpy.fft import fft, fftfreq, fftshift
-from scipy.signal.windows import kaiser, flattop
+from scipy.signal.windows import flattop, kaiser
 
 
 def to_sup(angle):
