@@ -36,6 +36,17 @@ from adi.context_manager import context_manager
 import sys
 
 
+def _find_channels_by_label(ctx, labels):
+    channels = {}
+    for device in ctx.devices:
+        for channel in device.channels:
+            if "label" in channel.attrs:
+                label = channel.attrs["label"].value
+                if label in labels:
+                    channels[label] = channel
+    return channels
+
+
 
 class adsy2301(adar1000_array,context_manager):
     """ADSY2301 Beamforming System Interface
@@ -104,26 +115,16 @@ class adsy2301(adar1000_array,context_manager):
                 device_element_map=device_element_map,
             )
             self._pwr_channels = {}
-            artix_control_1 = self._ctx.find_device("mantaray_pwr_control")
             pwr_labels = [
                 "BF_PWR_EN_01", "BF_PWR_EN_02", "BF_PWR_EN_03", "BF_PWR_EN_04"
             ]
-            for channel in artix_control_1.channels:
-                if "label" in channel.attrs:
-                    label = channel.attrs["label"].value
-                    if label in pwr_labels:
-                        self._pwr_channels[label] = artix_control_1.find_channel(channel.id, True)
+            self._pwr_channels = _find_channels_by_label(self._ctx, pwr_labels)
                         
             self._pa_ctrl_channels = {}
-            artix_control_2 = self._ctx.find_device("mantaray_control")
             pa_labels = [
                 "BF_PA_ON_01", "BF_PA_ON_02", "BF_PA_ON_03", "BF_PA_ON_04"
             ]
-            for channel in artix_control_2.channels:
-                if "label" in channel.attrs:
-                    label = channel.attrs["label"].value
-                    if label in pa_labels:
-                        self._pa_ctrl_channels[label] = artix_control_2.find_channel(channel.id, True)
+            self._pa_ctrl_channels = _find_channels_by_label(self._ctx, pa_labels)
         @property
         def BF_PWR_EN_01(self):
             return int(self._pwr_channels["BF_PWR_EN_01"].attrs["raw"].value)
@@ -188,15 +189,11 @@ class adsy2301(adar1000_array,context_manager):
         class ADMV8913:
             def __init__(self, ctx):
                 self._channels = {}
-                artix_control = ctx.find_device("mantaray_control")
                 labels = [
                     "RF_FL_HPF0", "RF_FL_HPF1", "RF_FL_HPF2", "RF_FL_HPF3",
                     "RF_FL_LPF0", "RF_FL_LPF1", "RF_FL_LPF2", "RF_FL_LPF3",
                 ]
-                for channel in artix_control.channels:
-                    label = channel.attrs["label"].value
-                    if label in labels:
-                        self._channels[label] = artix_control.find_channel(channel.id, True)
+                self._channels = _find_channels_by_label(ctx, labels)
 
             @property
             def RF_FL_HPF0(self):
@@ -302,15 +299,11 @@ class adsy2301(adar1000_array,context_manager):
         class ADRF5030:
             def __init__(self, ctx):
                 self._channels = {}
-                switch = ctx.find_device("mantaray_txrx_control")
                 labels = [
                     "ADRF5030_CTRL1", "ADRF5030_CTRL2", "ADRF5030_CTRL3", "ADRF5030_CTRL4",
                     "ADRF5030_EN1", "ADRF5030_EN2", "ADRF5030_EN3", "ADRF5030_EN4",
                 ]
-                for channel in switch.channels:
-                    label = channel.attrs["label"].value
-                    if label in labels:
-                        self._channels[label] = switch.find_channel(channel.id, True)
+                self._channels = _find_channels_by_label(ctx, labels)
 
             @property
             def ADRF5030_CTRL1(self):
