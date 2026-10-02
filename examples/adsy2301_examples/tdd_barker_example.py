@@ -12,16 +12,17 @@ import numpy as np
 talise_ip = "10.75.161.151"
 tx_enabled_channels = [0, 1]
 rx_enabled_channels = [0, 1]
-desired_rf_frequency_hz = 4500e6
-tx_hardware_gain_db = [-12, -12]
+desired_rf_frequency_hz = 3500e6
+tx_hardware_gain_db = [-3, -3]
 gain_control_mode = "slow_attack"
 
 # Capture and radar timing
 frame_pulses_to_plot = 2
-capture_range = 3
-frame_length_ms = 35e-3  # 0.001 ms = 1 us; hardware may enforce a larger minimum
+capture_range = 2
+frame_length_ms = 15e-3  # 0.001 ms = 1 us; hardware may enforce a larger minimum
 tr_duty_cycle = 0.05
-barker_code = np.array([1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1])
+# barker_code = np.array([1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1])
+barker_code = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
 # TDD timing
 tdd_sync_duty_cycle = 0.001
@@ -306,6 +307,8 @@ tx_plot = np.interp(
     np.arange(N) / fs,
     np.real(data),
 )
+axes[1].plot(plot_x, tx_plot)
+axes[1].set_title("TX Waveform")
 for capture in rx_ch0:
     axes[3].plot(plot_x, np.real(capture), "--", alpha=0.45)
 axes[2].plot(plot_x, tr_pulse_train, "m-")
@@ -315,6 +318,7 @@ axes[3].set_title("RX Data with Barker Correlation")
 for axis in axes:
     axis.set_xlim(plot_x[0], frame_pulses_to_plot * frame_length_seconds * 1e6)
     axis.set_xlabel("Time (us)")
+    axis.tick_params(axis="x", labelbottom=True)
     axis.grid(True)
 for boundary in range(1, frame_pulses_to_plot):
     for axis in axes:
