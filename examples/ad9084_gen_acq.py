@@ -37,6 +37,14 @@ import adi
 #   .bin .raw .iq   raw interleaved int16, I0 Q0 I1 Q1 ...
 TX_SAMPLE_FILE = "examples/sine.csv"
 
+# Silence pushed out at the end of the run, so the DAC stops driving the output
+# before the buffers are released. 256 samples of I/Q zeros -- a multiple of
+# TX_LENGTH_MULTIPLE, so the transmit path actually accepts the push.
+# This is to work around an issue in the driver which, at the beginning of the
+# next generation, it pushes data from the previous generation.
+_zeros = np.zeros((256, 2))
+TX_ZEROS = (_zeros[:, 0] + 1j * _zeros[:, 1]).astype(np.complex128)
+
 # The transmit path only accepts buffer lengths that are a multiple of this many
 # samples. A push of any other length silently does nothing at all, and whatever
 # was loaded before keeps replaying out of the offload FIFO -- which looks exactly
@@ -275,7 +283,7 @@ args = parse_args()
 # --------------------------------
 # 1. Initial set-up
 # --------------------------------
-dev = adi.ad9084("ip:10.48.65.177")
+dev = adi.ad9084("ip:192.168.2.1")
 
 print("CHIP Version:", dev.chip_version)
 print("API  Version:", dev.api_version)
@@ -347,6 +355,9 @@ else:
         f"TX buffer duration: {samples.size / fs * 1e6:.3f} us at {fs / 1e6:.1f} MSPS"
     )
 
+    # User prompt employed as breakpoint
+    # name = input("Enter your name: ")
+
     # One array per enabled channel; tx() only accepts a bare array for a single
     # channel. Every channel sends the same waveform.
     dev.tx(samples if len(CHANNELS_TX) == 1 else [samples] * len(CHANNELS_TX))
@@ -397,6 +408,15 @@ try:
 
     plt.show()
 finally:
+    # At the end of the acquisition, we push zeros on all the outputs, to
+    # work around an issue in the driver which, at the beginning of the next
+    # generation, it pushes data from the previous generation. Thus, it will
+    # push zeros for a short while, followed by the actual data for the
+    # current generation.
+    dev.tx_destroy_buffer()
+    samples = TX_ZEROS
+    dev.tx(samples if len(CHANNELS_TX) == 1 else [samples] * len(CHANNELS_TX))
+    
     # Release both buffers. Without this the DAC keeps replaying the waveform
     # after the script exits and the receive DMA stays running, which is what
     # leaves buffer allocation broken until the board is power cycled. In a

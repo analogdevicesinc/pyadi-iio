@@ -37,7 +37,7 @@ import iio
 
 import adi
 
-DEFAULT_URI = "ip:10.48.65.177"
+DEFAULT_URI = "ip:192.168.2.1"
 
 # The chip's "status" debug attribute is around 1.2 kB with four links enabled,
 # and pylibiio reads every attribute into a fixed 1024 byte buffer, so going
