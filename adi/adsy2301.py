@@ -441,10 +441,17 @@ class adsy2301(adar1000_array,context_manager):
                 print("ADRF5030 Switches context found")
             except Exception as e:
                 warnings.warn(f"ADRF5030: {e}", UserWarning)
-                self.admv8913 = None
+                self.adrf5030 = None
 
-        def RX_UDC_Band_0(self):
-            print("\n=== Configuring for 3-13 GHz IF band ===")
+        def RX_UDC_Band_1(self):
+            #Configure ADMV1420 for Mixing Mode 8-9GHz
+            #DSA5 set to -9dB per design requirements
+            print("Configuring RX UDC Band 1")
+            print("RF Band: 8-9GHz")
+            print("Setting UDC TRX Switch to RX")
+            print("ADMV1420 DSA5 set to -9dB")
+            print("LO 13.9GHz")
+
             for rx in self.admv1420:
                 # --- Configure for 3-13 GHz RF band with IF output ---
                 print(rx._device_name)
@@ -453,9 +460,11 @@ class adsy2301(adar1000_array,context_manager):
                 rx.if_mode = "if"
                 rx.lo_sideband = "LSB"
                 rx.lo_x3_filter = "14GHz_18GHz"
+                rx.bypass_gain_table_en = 1
 
                 # Set DSA gains to 0 dB (no attenuation)
                 rx.rf_direct_dsa1_gain = "0dB"
+                rx.rf_direct_dsa2_gain = "0dB"
                 rx.rf_direct_dsa3_gain = "0dB"
                 rx.if_direct_dsa4_gain = "0dB"
                 rx.if_direct_dsa5_gain = "0dB"
@@ -463,7 +472,15 @@ class adsy2301(adar1000_array,context_manager):
                 # Set DSA offsets
                 rx.rf_direct_dsa1_offset = 0
                 rx.rf_direct_dsa2_offset = 0
-                rx.rf_direct_dsa3_offset = 5
+                rx.rf_direct_dsa3_offset = 0
+                rx.if_direct_dsa4_offset = 0
+                rx.if_direct_dsa5_offset = 0
+
+                rx.rf_bypass_dsa1_gain = "0dB"
+                rx.rf_bypass_dsa2_gain = "0dB"
+                rx.rf_bypass_dsa3_gain = "0dB"
+                rx.if_bypass_dsa4_gain = "0dB"
+                rx.if_bypass_dsa5_gain = "-9dB"
 
                 # Set LO phase
                 rx.lo_direct_i_phase_val = 0
@@ -474,19 +491,225 @@ class adsy2301(adar1000_array,context_manager):
                 print(f"IF Band:        {rx.if_band}")
                 print(f"IF Mode:        {rx.if_mode}")
                 print(f"LO Sideband:    {rx.lo_sideband}")
-                print(f"LO x3 Filter:  {rx.lo_x3_filter}")  
+                print(f"LO x3 Filter:  {rx.lo_x3_filter}") 
+                print(f"Bypass DSA5:    {rx.if_bypass_dsa5_gain}") 
 
-                # --- Device-level attributes ---
-                print(f"\n=== LUT Configuration ===")
-                print(f"Filter Table:   {rx.filter_table_en}")
-                print(f"Filter Load:    {rx.filter_load_en}")
-                print(f"Filter Sel:     {rx.filter_table_sel}")
-                print(f"Gain Table:     {rx.gain_table_en}")
-                print(f"Gain Load:      {rx.gain_load_en}")
-                print(f"Bypass Gain En: {rx.bypass_gain_table_en}")
-                print(f"GPO_F:          {rx.direct_gpo_f}")
-                print(f"GPO_G:          {rx.direct_gpo_g}")
-                print(f"Bypass GPO_G:   {rx.bypass_gpo_g}")
+                # # --- Device-level attributes ---
+                # print(f"\n=== LUT Configuration ===")
+                # print(f"Filter Table:   {rx.filter_table_en}")
+                # print(f"Filter Load:    {rx.filter_load_en}")
+                # print(f"Filter Sel:     {rx.filter_table_sel}")
+                # print(f"Gain Table:     {rx.gain_table_en}")
+                # print(f"Gain Load:      {rx.gain_load_en}")
+                # print(f"Bypass Gain En: {rx.bypass_gain_table_en}")
+                # print(f"GPO_F:          {rx.direct_gpo_f}")
+                # print(f"GPO_G:          {rx.direct_gpo_g}")
+                # print(f"Bypass GPO_G:   {rx.bypass_gpo_g}")
+            
+            self.adf4382.altvolt0_frequency = int(13.9e9)
+            self.adf4382.altvolt1_frequency = int(13.9e9)
+            self.adrf5030.RX_SW_Enable()
+
+        def RX_UDC_Band_2(self):
+            #Configure ADMV1420 for Mixing Mode 9-10GHz
+            #DSA5 set to -9dB per design requirements
+            print("Configuring RX UDC Band 2")
+            print("RF Band: 9-10GHz")
+            print("Setting UDC TRX Switch to RX")
+            print("ADMV1420 DSA5 set to -9dB")
+            print("LO 13.4GHz")
+
+            for rx in self.admv1420:
+                # --- Configure for 3-13 GHz RF band with IF output ---
+                print(rx._device_name)
+                rx.rf_band = "6GHz_20GHz"
+                rx.if_band = "3GHz_13GHz"
+                rx.if_mode = "if"
+                rx.lo_sideband = "LSB"
+                rx.lo_x3_filter = "14GHz_18GHz"
+                rx.bypass_gain_table_en = 1
+
+                # Set DSA gains to 0 dB (no attenuation)
+                rx.rf_direct_dsa1_gain = "0dB"
+                rx.rf_direct_dsa2_gain = "0dB"
+                rx.rf_direct_dsa3_gain = "0dB"
+                rx.if_direct_dsa4_gain = "0dB"
+                rx.if_direct_dsa5_gain = "0dB"
+
+                # Set DSA offsets
+                rx.rf_direct_dsa1_offset = 0
+                rx.rf_direct_dsa2_offset = 0
+                rx.rf_direct_dsa3_offset = 0
+                rx.if_direct_dsa4_offset = 0
+                rx.if_direct_dsa5_offset = 0
+
+                rx.rf_bypass_dsa1_gain = "0dB"
+                rx.rf_bypass_dsa2_gain = "0dB"
+                rx.rf_bypass_dsa3_gain = "0dB"
+                rx.if_bypass_dsa4_gain = "0dB"
+                rx.if_bypass_dsa5_gain = "-9dB"
+
+                # Set LO phase
+                rx.lo_direct_i_phase_val = 0
+                rx.lo_direct_q_phase_val = 0
+
+                # --- Read back configuration ---
+                print(f"RF Band:        {rx.rf_band}")
+                print(f"IF Band:        {rx.if_band}")
+                print(f"IF Mode:        {rx.if_mode}")
+                print(f"LO Sideband:    {rx.lo_sideband}")
+                print(f"LO x3 Filter:  {rx.lo_x3_filter}") 
+                print(f"Bypass DSA5:    {rx.if_bypass_dsa5_gain}") 
+
+                # # --- Device-level attributes ---
+                # print(f"\n=== LUT Configuration ===")
+                # print(f"Filter Table:   {rx.filter_table_en}")
+                # print(f"Filter Load:    {rx.filter_load_en}")
+                # print(f"Filter Sel:     {rx.filter_table_sel}")
+                # print(f"Gain Table:     {rx.gain_table_en}")
+                # print(f"Gain Load:      {rx.gain_load_en}")
+                # print(f"Bypass Gain En: {rx.bypass_gain_table_en}")
+                # print(f"GPO_F:          {rx.direct_gpo_f}")
+                # print(f"GPO_G:          {rx.direct_gpo_g}")
+                # print(f"Bypass GPO_G:   {rx.bypass_gpo_g}")
+
+            self.adf4382.altvolt0_frequency = int(13.4e9)
+            self.adf4382.altvolt1_frequency = int(13.4e9)
+            self.adrf5030.RX_SW_Enable()
+
+        def RX_UDC_Band_3(self):
+            #Configure ADMV1420 for Mixing Mode 10-11GHz
+            #DSA5 set to -9dB per design requirements
+            print("Configuring RX UDC Band 3")
+            print("RF Band: 10-11GHz")
+            print("Setting UDC TRX Switch to RX")
+            print("ADMV1420 DSA5 set to -8dB")
+            print("LO 14.9GHz")
+
+            for rx in self.admv1420:
+                # --- Configure for 3-13 GHz RF band with IF output ---
+                print(rx._device_name)
+                rx.rf_band = "6GHz_20GHz"
+                rx.if_band = "3GHz_13GHz"
+                rx.if_mode = "if"
+                rx.lo_sideband = "LSB"
+                rx.lo_x3_filter = "14GHz_18GHz"
+                rx.bypass_gain_table_en = 1
+
+                # Set DSA gains to 0 dB (no attenuation)
+                rx.rf_direct_dsa1_gain = "0dB"
+                rx.rf_direct_dsa2_gain = "0dB"
+                rx.rf_direct_dsa3_gain = "0dB"
+                rx.if_direct_dsa4_gain = "0dB"
+                rx.if_direct_dsa5_gain = "0dB"
+
+                # Set DSA offsets
+                rx.rf_direct_dsa1_offset = 0
+                rx.rf_direct_dsa2_offset = 0
+                rx.rf_direct_dsa3_offset = 0
+                rx.if_direct_dsa4_offset = 0
+                rx.if_direct_dsa5_offset = 0
+
+                rx.rf_bypass_dsa1_gain = "0dB"
+                rx.rf_bypass_dsa2_gain = "0dB"
+                rx.rf_bypass_dsa3_gain = "0dB"
+                rx.if_bypass_dsa4_gain = "0dB"
+                rx.if_bypass_dsa5_gain = "-8dB"
+
+                # Set LO phase
+                rx.lo_direct_i_phase_val = 0
+                rx.lo_direct_q_phase_val = 0
+
+                # --- Read back configuration ---
+                print(f"RF Band:        {rx.rf_band}")
+                print(f"IF Band:        {rx.if_band}")
+                print(f"IF Mode:        {rx.if_mode}")
+                print(f"LO Sideband:    {rx.lo_sideband}")
+                print(f"LO x3 Filter:  {rx.lo_x3_filter}") 
+                print(f"Bypass DSA5:    {rx.if_bypass_dsa5_gain}") 
+
+                # # --- Device-level attributes ---
+                # print(f"\n=== LUT Configuration ===")
+                # print(f"Filter Table:   {rx.filter_table_en}")
+                # print(f"Filter Load:    {rx.filter_load_en}")
+                # print(f"Filter Sel:     {rx.filter_table_sel}")
+                # print(f"Gain Table:     {rx.gain_table_en}")
+                # print(f"Gain Load:      {rx.gain_load_en}")
+                # print(f"Bypass Gain En: {rx.bypass_gain_table_en}")
+                # print(f"GPO_F:          {rx.direct_gpo_f}")
+                # print(f"GPO_G:          {rx.direct_gpo_g}")
+                # print(f"Bypass GPO_G:   {rx.bypass_gpo_g}")
+
+            self.adf4382.altvolt0_frequency = int(14.9e9)
+            self.adf4382.altvolt1_frequency = int(14.9e9)
+            self.adrf5030.RX_SW_Enable()
+
+        def RX_UDC_Band_4(self):
+            #Configure ADMV1420 for Mixing Mode 11-12GHz
+            #DSA5 set to -9dB per design requirements
+            print("Configuring RX UDC Band 4")
+            print("RF Band: 11-12GHz")
+            print("Setting UDC TRX Switch to RX")
+            print("ADMV1420 DSA5 set to -7dB")
+            print("LO 16.4GHz")
+
+            for rx in self.admv1420:
+                # --- Configure for 3-13 GHz RF band with IF output ---
+                print(rx._device_name)
+                rx.rf_band = "6GHz_20GHz"
+                rx.if_band = "3GHz_13GHz"
+                rx.if_mode = "if"
+                rx.lo_sideband = "LSB"
+                rx.lo_x3_filter = "14GHz_18GHz"
+                rx.bypass_gain_table_en = 1
+
+                # Set DSA gains to 0 dB (no attenuation)
+                rx.rf_direct_dsa1_gain = "0dB"
+                rx.rf_direct_dsa2_gain = "0dB"
+                rx.rf_direct_dsa3_gain = "0dB"
+                rx.if_direct_dsa4_gain = "0dB"
+                rx.if_direct_dsa5_gain = "0dB"
+
+                # Set DSA offsets
+                rx.rf_direct_dsa1_offset = 0
+                rx.rf_direct_dsa2_offset = 0
+                rx.rf_direct_dsa3_offset = 0
+                rx.if_direct_dsa4_offset = 0
+                rx.if_direct_dsa5_offset = 0
+
+                rx.rf_bypass_dsa1_gain = "0dB"
+                rx.rf_bypass_dsa2_gain = "0dB"
+                rx.rf_bypass_dsa3_gain = "0dB"
+                rx.if_bypass_dsa4_gain = "0dB"
+                rx.if_bypass_dsa5_gain = "-7dB"
+
+                # Set LO phase
+                rx.lo_direct_i_phase_val = 0
+                rx.lo_direct_q_phase_val = 0
+
+                # --- Read back configuration ---
+                print(f"RF Band:        {rx.rf_band}")
+                print(f"IF Band:        {rx.if_band}")
+                print(f"IF Mode:        {rx.if_mode}")
+                print(f"LO Sideband:    {rx.lo_sideband}")
+                print(f"LO x3 Filter:  {rx.lo_x3_filter}") 
+                print(f"Bypass DSA5:    {rx.if_bypass_dsa5_gain}") 
+
+                # # --- Device-level attributes ---
+                # print(f"\n=== LUT Configuration ===")
+                # print(f"Filter Table:   {rx.filter_table_en}")
+                # print(f"Filter Load:    {rx.filter_load_en}")
+                # print(f"Filter Sel:     {rx.filter_table_sel}")
+                # print(f"Gain Table:     {rx.gain_table_en}")
+                # print(f"Gain Load:      {rx.gain_load_en}")
+                # print(f"Bypass Gain En: {rx.bypass_gain_table_en}")
+                # print(f"GPO_F:          {rx.direct_gpo_f}")
+                # print(f"GPO_G:          {rx.direct_gpo_g}")
+                # print(f"Bypass GPO_G:   {rx.bypass_gpo_g}")
+
+            self.adf4382.altvolt0_frequency = int(16.4e9)
+            self.adf4382.altvolt1_frequency = int(16.4e9)
+            self.adrf5030.RX_SW_Enable()
 
         def TX_UDC_Band_0(self):
             print("\n=== Configuring for 3-13 GHz IF band ===")
