@@ -79,14 +79,15 @@ mr.tdd_init(dev,TXRX_Bit=0)
 # Initialize beamforming subclass into known default state
 dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
 
-## Set some default states
-dev.udc.RX_UDC_Band_0()
-dev.udc.adrf5030.RX_SW_Enable()
-dev.udc.admv8913.set_filter_widest()
-dev.udc.adf4382.altvolt0_frequency = int(14.89e9)
-dev.udc.adf4382.altvolt1_frequency = int(14.89e9)
-mr.sdr_init(dev)
-mr.tdd_init(dev,TXRX_Bit=0)
+## Set some default states: The following are now baked into the RX_UDC_Band configuration
+# dev.udc.adrf5030.RX_SW_Enable()
+# dev.udc.admv8913.set_filter_widest()
+# dev.udc.adf4382.altvolt0_frequency = int(14.89e9)
+# dev.udc.adf4382.altvolt1_frequency = int(14.89e9)
+
+#Set to Band 2 to receive 10GHz
+dev.udc.RX_UDC_Band_3()
+
 
 for device in dev.BFC.devices.values():
     device.mode = "rx"
