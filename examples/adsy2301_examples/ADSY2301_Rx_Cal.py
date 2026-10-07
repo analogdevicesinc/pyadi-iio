@@ -25,7 +25,7 @@ import subprocess
 import sys
 import time
 
-ip_address = "10.75.161.152"
+ip_address = "10.75.161.151"
 uri = "ip:" + ip_address
   
 dev = mr.adsy2301(uri=uri)
@@ -64,13 +64,15 @@ dev.init_BFC(
 )
 dev.init_UDC()
 dev.init_ADRV9009()
-dev.udc.RX_UDC_Band_0()
-dev.udc.adrf5030.RX_SW_Enable()
-dev.udc.admv8913.set_filter_widest()
-dev.udc.adf4382.altvolt0_frequency = int(14.89e9)
-dev.udc.adf4382.altvolt1_frequency = int(14.89e9)
-dev.udc.adf4382.altvolt0_en = 1
-dev.udc.adf4382.altvolt1_en = 1
+dev.udc.RX_UDC_Band_3()
+
+#Functions not needed, baked into the RX_UDC_Band configuration
+# dev.udc.adrf5030.RX_SW_Enable()
+# dev.udc.admv8913.set_filter_widest()
+# dev.udc.adf4382.altvolt0_frequency = int(14.505e9)
+# dev.udc.adf4382.altvolt1_frequency = int(14.505e9)
+# dev.udc.adf4382.altvolt0_en = 1
+# dev.udc.adf4382.altvolt1_en = 1
 
 
  
@@ -79,11 +81,13 @@ dev.udc.adf4382.altvolt1_en = 1
 # ==========================================================================
 mr.sdr_init(dev)
 mr.tdd_init(dev,TXRX_Bit=0)
+
 # ==========================================================================
 # STEP 2 — Define Subarrays, Reference Channels, and ADC Maps
 # ==========================================================================
 # The 64 elements are divided into 4 subarrays of 16 elements each.
 # Each subarray feeds one ADC channel on the transceiver.
+
 subarray = np.array([
     [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28], # subarray 1
     [33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60], # subarray 2
@@ -129,7 +133,7 @@ cal_ant = mr.find_phase_delay_fixed_ref(dev.BFC, dev.ADRV9009, subarray_ref, adc
 input("Make sure RF is on! Press Enter to continue...")
  
 # Enable subarray reference
-mr.enable_rx_channel(dev.BFC,subarray)
+mr.enable_rx_channel(dev.BFC)
 time.sleep(1)
 # Pre-calibration data capture
 no_cal_data = np.transpose(np.array(mr.data_capture(dev.ADRV9009)))
@@ -162,18 +166,21 @@ axs[0].set_xlabel("Index")
 axs[0].set_ylabel("Value")
 axs[0].grid(visible=True)
 axs[0].set_xlim([100,600])
-axs[0].set_ylim([-28000,28000])
+# axs[0].set_ylim([-28000,28000])
  
 axs[1].plot(calibrated_data.real)
 axs[1].set_title('With Calibration')
 axs[1].set_xlabel("Index")
 axs[1].set_ylabel("Value")
 axs[1].grid(visible=True)
-axs[1].set_ylim([-28000,28000])
+# axs[1].set_ylim([-28000,28000])
 axs[1].set_xlim([100,600])
  
 plt.tight_layout()
 plt.savefig('ADSY2301_64Element_Electronic_Steering_Array_Calibration.png')
 print("Saved plot to ADSY2301_64Element_Electronic_Steering_Array_Calibration.png")
 plt.show()
+
+mr.enable_rx_channel(dev.BFC)
 input("Press Enter to exit...")
+mr.disable_rx_channel(dev.BFC)
