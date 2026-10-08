@@ -98,16 +98,28 @@
           <ul>
 <li><a class="reference internal" href="#">ad7124</a><ul>
 <li><a class="reference internal" href="#adi.ad7124.ad7124"><code class="docutils literal notranslate"><span class="pre">ad7124</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad7124.ad7124.compatible_parts"><code class="docutils literal notranslate"><span class="pre">ad7124.compatible_parts</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad7124.ad7124.sample_rate"><code class="docutils literal notranslate"><span class="pre">ad7124.sample_rate</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad7124.ad7124.scale_available"><code class="docutils literal notranslate"><span class="pre">ad7124.scale_available</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad7124.ad7124.to_volts"><code class="docutils literal notranslate"><span class="pre">ad7124.to_volts()</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124.ad7124.enable_single_cycle"><code class="docutils literal notranslate"><span class="pre">ad7124.enable_single_cycle</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#adi.ad7124.ad7124_channel"><code class="docutils literal notranslate"><span class="pre">ad7124_channel</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ad7124.ad7124_channel.offset"><code class="docutils literal notranslate"><span class="pre">ad7124_channel.offset</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad7124.ad7124_channel.raw"><code class="docutils literal notranslate"><span class="pre">ad7124_channel.raw</span></code></a></li>
-<li><a class="reference internal" href="#adi.ad7124.ad7124_channel.scale"><code class="docutils literal notranslate"><span class="pre">ad7124_channel.scale</span></code></a></li>
+<li><a class="reference internal" href="#dynamic-attributes">Dynamic Attributes</a><ul>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.filter_type"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.filter_type</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.filter_type_available"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.filter_type_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.offset"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.offset</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.raw"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.raw</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.sampling_frequency</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.scale"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.scale</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.scale_available"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.scale_available</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.sys_calibration"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.sys_calibration</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.sys_calibration_mode"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.sys_calibration_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._ad7124_channel.sys_calibration_mode_available"><code class="docutils literal notranslate"><span class="pre">_ad7124_channel.sys_calibration_mode_available</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adi.ad7124._temp_channel"><code class="docutils literal notranslate"><span class="pre">_temp_channel</span></code></a><ul>
+<li><a class="reference internal" href="#adi.ad7124._temp_channel.scale"><code class="docutils literal notranslate"><span class="pre">_temp_channel.scale</span></code></a></li>
+<li><a class="reference internal" href="#adi.ad7124._temp_channel.scale_available"><code class="docutils literal notranslate"><span class="pre">_temp_channel.scale_available</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -330,57 +342,134 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.ad7124.ad7124">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7124.</span></span><span class="sig-name descname"><span class="pre">ad7124</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
-<p>AD7124 ADC</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124.compatible_parts">
-<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ad7124-8',</span> <span class="pre">'ad7124-4']</span></em><a class="headerlink" href="#adi.ad7124.ad7124.compatible_parts" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<p>AD7124 4/8-channel, low-noise, low-power, 24-bit sigma-delta ADC.</p>
+<p>Analog input configuration (single-ended, differential, unipolar, bipolar) is set in
+the device tree. This class scans all channels and creates both a <code class="docutils literal notranslate"><span class="pre">channel[]</span></code> list
+attribute and individual channel attributes for channel IDs that are valid Python
+identifiers, for example:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">my_ad7124.temp</span></code> (temperature sensor)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">my_ad7124.voltage0</span></code> (single-ended voltage input)</p></li>
+</ul>
+<p>Differential channels such as <code class="docutils literal notranslate"><span class="pre">voltage0-voltage1</span></code> are available through
+<code class="docutils literal notranslate"><span class="pre">channel[]</span></code> or as <code class="docutils literal notranslate"><span class="pre">my_ad7124.voltage0_voltage1</span></code> (hyphens sanitized to
+underscores to form valid Python identifiers).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">enable_single_cycle</span></code> device attribute defaults to ‘Y’, and ensures that when
+multiple channels are enabled, output data is fully settled; intermediate, unsettled
+outputs from the digital filter are ignored.
+Setting to ‘N’ includes these unsettled samples, and is thus only valid when
+a single channel is valid. WARNING: Setting to ‘N’ when multiple channels are
+enabled will result in invalid data.</p>
+<p>Each voltage channel has the following sub-attributes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">raw</span></code> – Raw ADC code (read only)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scale</span></code> / <code class="docutils literal notranslate"><span class="pre">scale_available</span></code> – ADC scale (millivolts per LSB) and available scales</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filter_type</span></code> / <code class="docutils literal notranslate"><span class="pre">filter_type_available</span></code> – Digital filter type</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sampling_frequency</span></code> – Per-channel sampling frequency</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__call__()</span></code> – Returns reading in millivolts</p></li>
+</ul>
+<p>The temperature channel is the same, with these exceptions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scale</span></code> does not have a setter</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scale_available</span></code> does not apply (raises error)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__call__()</span></code> returns temperature in degrees Celsius</p></li>
+</ul>
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124.sample_rate">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.ad7124.ad7124.sample_rate" title="Link to this definition"></a></dt>
-<dd><p>Sets sampling frequency of the AD7124</p>
+<dt class="sig sig-object py" id="adi.ad7124.ad7124.enable_single_cycle">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_single_cycle</span></span><a class="headerlink" href="#adi.ad7124.ad7124.enable_single_cycle" title="Link to this definition"></a></dt>
+<dd><p>Get single-cycle mode for settled, no-latency conversions.</p>
+</dd></dl>
+
+</dd></dl>
+
+<section id="dynamic-attributes">
+<h2>Dynamic Attributes<a class="headerlink" href="#dynamic-attributes" title="Link to this heading"></a></h2>
+<p>The ad7124 class supports a variable number of channels depending on the hardware configuration. Channel property interfaces are dynamically generated using their IIO channel IDs and are available in <code class="docutils literal notranslate"><span class="pre">channel</span></code> and as named attributes (e.g. <code class="docutils literal notranslate"><span class="pre">temp</span></code> or <code class="docutils literal notranslate"><span class="pre">dev.voltage0_voltage1</span></code>). Voltage channels are instances of <code class="docutils literal notranslate"><span class="pre">_ad7124_channel</span></code> and temperature channels are instances of <code class="docutils literal notranslate"><span class="pre">_temp_channel</span></code>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7124.</span></span><span class="sig-name descname"><span class="pre">_ad7124_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124._ad7124_channel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
+<p>AD7124 channel</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.filter_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.filter_type" title="Link to this definition"></a></dt>
+<dd><p>Get the AD7124 channel filter type.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124.scale_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale_available</span></span><a class="headerlink" href="#adi.ad7124.ad7124.scale_available" title="Link to this definition"></a></dt>
-<dd><p>Provides all available scale(gain) settings for the AD7124 channels</p>
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.filter_type_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_type_available</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.filter_type_available" title="Link to this definition"></a></dt>
+<dd><p>Provide all available filter types for the selected channel.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124.to_volts">
-<span class="sig-name descname"><span class="pre">to_volts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124.to_volts" title="Link to this definition"></a></dt>
-<dd><p>Converts raw value to SI</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.offset" title="Link to this definition"></a></dt>
+<dd><p>AD7124 channel offset</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.raw" title="Link to this definition"></a></dt>
+<dd><p>AD7124 channel raw value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.sampling_frequency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.sampling_frequency" title="Link to this definition"></a></dt>
+<dd><p>Get the sampling frequency of the selected channel.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>AD7124 channel scale(gain)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.scale_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale_available</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.scale_available" title="Link to this definition"></a></dt>
+<dd><p>Provide all available scale settings for the selected channel.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.sys_calibration">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sys_calibration</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.sys_calibration" title="Link to this definition"></a></dt>
+<dd><p>Return the system calibration state.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.sys_calibration_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sys_calibration_mode</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.sys_calibration_mode" title="Link to this definition"></a></dt>
+<dd><p>Return the system calibration mode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._ad7124_channel.sys_calibration_mode_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sys_calibration_mode_available</span></span><a class="headerlink" href="#adi.ad7124._ad7124_channel.sys_calibration_mode_available" title="Link to this definition"></a></dt>
+<dd><p>Return the available system calibration modes.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124_channel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7124.</span></span><span class="sig-name descname"><span class="pre">ad7124_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124.ad7124_channel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code></p>
-<p>AD7124 channel</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124_channel.offset">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#adi.ad7124.ad7124_channel.offset" title="Link to this definition"></a></dt>
-<dd><p>AD7124 channel offset</p>
+<dt class="sig sig-object py" id="adi.ad7124._temp_channel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ad7124.</span></span><span class="sig-name descname"><span class="pre">_temp_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ad7124._temp_channel" title="Link to this definition"></a></dt>
+<dd><dl class="py property">
+<dt class="sig sig-object py" id="adi.ad7124._temp_channel.scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad7124._temp_channel.scale" title="Link to this definition"></a></dt>
+<dd><p>Get the AD7124 temperature scale.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124_channel.raw">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><a class="headerlink" href="#adi.ad7124.ad7124_channel.raw" title="Link to this definition"></a></dt>
-<dd><p>AD7124 channel raw value</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ad7124.ad7124_channel.scale">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#adi.ad7124.ad7124_channel.scale" title="Link to this definition"></a></dt>
-<dd><p>AD7124 channel scale(gain)</p>
+<dt class="sig sig-object py" id="adi.ad7124._temp_channel.scale_available">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale_available</span></span><a class="headerlink" href="#adi.ad7124._temp_channel.scale_available" title="Link to this definition"></a></dt>
+<dd><p>Provide all available scale settings for the selected channel.</p>
 </dd></dl>
 
 </dd></dl>
 
+</section>
 </section>
 
 
