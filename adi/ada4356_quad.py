@@ -234,6 +234,41 @@ class ada4356_quad:
     # ------------------------------------------------------------------
     # Channel alignment
     # ------------------------------------------------------------------
+    # Front-end transimpedance
+    # ------------------------------------------------------------------
+
+    @property
+    def gain_mode_available(self):
+        """Transimpedance settings the driver accepts, e.g. ['133k', '11k', '4k54']."""
+        return (
+            self.ch_a._get_iio_attr_str("voltage0", "gain_mode_available", False)
+            .strip()
+            .split()
+        )
+
+    @property
+    def gain_mode(self):
+        """Per-channel transimpedance, as a dict keyed by A..D."""
+        return {
+            label: ch._get_iio_attr_str("voltage0", "gain_mode", False).strip()
+            for label, ch in zip(CHANNEL_LABELS, self.channels)
+        }
+
+    @gain_mode.setter
+    def gain_mode(self, value):
+        available = self.gain_mode_available
+        if value not in available:
+            raise ValueError(f"gain_mode must be one of {available}, got {value!r}")
+
+        for ch in self.channels:
+            ch._set_iio_attr("voltage0", "gain_mode", False, value)
+
+        # Transimpedance sets the front-end propagation delay -- measured at 50 ns
+        # between 133k and 11k on one channel -- so any prior calibration is stale.
+        self._reset_alignment()
+        self._push_buffer_size()
+
+    # ------------------------------------------------------------------
 
     @property
     def alignment(self):
