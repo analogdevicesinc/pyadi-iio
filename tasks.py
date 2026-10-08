@@ -78,7 +78,7 @@ def setup(c):
 @task
 def builddoc(c):
     """Build sphinx doc"""
-    c.run("sphinx-build doc/source doc/build")
+    c.run("sphinx-build -b dirhtml doc/source doc/build")
 
 
 @task(builddoc)
