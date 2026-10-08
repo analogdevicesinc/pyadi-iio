@@ -18,11 +18,16 @@ once ('133k', '11k', '4k54'); omit it to leave the front end as the driver left
 it at probe.  Lowering the transimpedance raises the DC pedestal toward the rail
 instead of buying headroom, so re-check the max column against 8191 after it.
 
+The optional fifth argument sets the FREQ_SEL filter, named after the pin
+level: 'fsel1' is the default and the narrower filter, worth 1.3 ENOB; 'fsel0'
+is for characterising that filter, not for taking numbers.
+
 Usage:
   python3 ada4356_quad_example.py ip:192.168.2.1
   python3 ada4356_quad_example.py ip:192.168.2.1 65536
   python3 ada4356_quad_example.py ip:192.168.2.1 65536 1000000
   python3 ada4356_quad_example.py ip:192.168.2.1 65536 100000 11k
+  python3 ada4356_quad_example.py ip:192.168.2.1 65536 100000 11k fsel0
 """
 
 import sys
@@ -37,6 +42,7 @@ uri = sys.argv[1] if len(sys.argv) > 1 else "ip:192.168.2.1"
 buffer_samples = int(sys.argv[2]) if len(sys.argv) > 2 else 65536
 sine_freq_hz = float(sys.argv[3]) if len(sys.argv) > 3 else 1_000_000.0
 gain_mode = sys.argv[4] if len(sys.argv) > 4 else None
+filter_mode = sys.argv[5] if len(sys.argv) > 5 else None
 
 TDD_CLOCK_HZ = 125_000_000
 FULL_SCALE = 8192.0  # 14-bit signed, +-8192 codes = +-1 V
@@ -46,6 +52,8 @@ N_HARMONICS = 9  # harmonics 2..9 are fitted and removed from the noise estimate
 dev = adi.ada4356_quad(uri=uri)
 if gain_mode is not None:
     dev.gain_mode = gain_mode
+if filter_mode is not None:
+    dev.filter_mode = filter_mode
 dev.rx_buffer_size = buffer_samples
 fs = dev.sampling_frequency
 
@@ -163,8 +171,10 @@ fund_bin = int(round(f0 * N / fs))
 fits = [fit_at(x, f0) for x in raw]
 
 tz = dev.gain_mode
+filt = dev.filter_mode
 print(f"\nSampling frequency : {fs / 1e6:.3f} MHz")
 print(f"Transimpedance     : " + "  ".join(f"{k} {v}" for k, v in tz.items()))
+print(f"Front-end filter   : " + "  ".join(f"{k} {v}" for k, v in filt.items()))
 print(f"Buffer size        : {buffer_samples} samples ({buffer_samples / fs * 1e3:.3f} ms)")
 print(f"Requested tone     : {sine_freq_hz / 1e3:.3f} kHz")
 print(f"Fitted tone        : {f0 / 1e3:.6f} kHz  ({f0 * N / fs:.3f} bins, {f0 * N / fs:.2f} cycles)")

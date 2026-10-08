@@ -268,6 +268,37 @@ class ada4356_quad:
         self._reset_alignment()
         self._push_buffer_size()
 
+    @property
+    def filter_mode_available(self):
+        """FREQ_SEL settings the driver accepts, named after the pin level."""
+        return (
+            self.ch_a._get_iio_attr_str("voltage0", "filter_mode_available", False)
+            .strip()
+            .split()
+        )
+
+    @property
+    def filter_mode(self):
+        """Per-channel FREQ_SEL filter, as a dict keyed by A..D."""
+        return {
+            label: ch._get_iio_attr_str("voltage0", "filter_mode", False).strip()
+            for label, ch in zip(CHANNEL_LABELS, self.channels)
+        }
+
+    @filter_mode.setter
+    def filter_mode(self, value):
+        available = self.filter_mode_available
+        if value not in available:
+            raise ValueError(f"filter_mode must be one of {available}, got {value!r}")
+
+        for ch in self.channels:
+            ch._set_iio_attr("voltage0", "filter_mode", False, value)
+
+        # fsel0 costs 1.3 ENOB (measured).  Its effect on group delay has not
+        # been measured, so drop the calibration rather than assume it survives.
+        self._reset_alignment()
+        self._push_buffer_size()
+
     # ------------------------------------------------------------------
 
     @property
