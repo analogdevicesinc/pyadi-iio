@@ -235,29 +235,6 @@ def set_dds_tone(dev, frequency, scale, channels):
             ch.attrs["raw"].value = "1"
 
 
-def prime_tx(dev, channels):
-    """Bring the transmit buffer up on zeros, before the waveform is pushed.
-
-    The channel enables cannot be moved ahead of the data. dev.tx_enabled_channels
-    is only a Python list, and the hardware enables are the scan-element 'en'
-    files, which libiio writes from iio_device_create_buffer() -- over a network
-    context, that is iiod writing them on the board as the buffer is opened,
-    which is the same moment the DMA starts. Setting iio.Channel.enabled by hand
-    does not help: it calls iio_channel_enable(), which flips a bit in the client
-    library and is read back from the client, so it reports success while the
-    chip has seen nothing.
-
-    What is left is to control what the hardware is handed during that window.
-    This pushes zeros, so the channel mask is assembled and the datapath settles
-    on silence, and the waveform that follows enters a datapath whose interleave
-    is already established.
-    """
-    dev.tx_destroy_buffer()
-    dev.disable_dds()
-    dev.tx(TX_ZEROS if len(channels) == 1 else [TX_ZEROS] * len(channels))
-    dev.tx_destroy_buffer()
-
-
 def load_samples(path):
     """Load transmit samples from a file on the PC.
 
@@ -374,12 +351,6 @@ else:
 
     samples = load_samples(tx_sample_file)
     print(f"Loaded {samples.size} samples from {tx_sample_file}")
-
-    # Let the buffer come up on zeros, so the actually desired waveform is not what
-    # the datapath is handed while the channel mask is being applied. This ensures
-    # there is no data being erroneously sent to another channel during channel
-    # bring-up.
-    prime_tx(dev, CHANNELS_TX)
     print(
         f"TX buffer duration: {samples.size / fs * 1e6:.3f} us at {fs / 1e6:.1f} MSPS"
     )
@@ -437,12 +408,12 @@ try:
 
     plt.show()
 finally:
-    # At the end of the acquisition, we push zeros on all the outputs, to
-    # work around an issue in the driver which, at the beginning of the next
-    # generation, it pushes data from the previous generation. Thus, it will
-    # push zeros for a short while, followed by the actual data for the
-    # current generation.
+    # At the end of the acquisition, we disable the ciclic transmission of
+    # data and we push a set of zeros, so the disabling of cyclic
+    # transmission is taken into account by TX data_offload IP.
+    # Thus, TX data_offload will push a set of zeros and then stop.
     dev.tx_destroy_buffer()
+    dev.tx_cyclic_buffer = False
     samples = TX_ZEROS
     dev.tx(samples if len(CHANNELS_TX) == 1 else [samples] * len(CHANNELS_TX))
     
