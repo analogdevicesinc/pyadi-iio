@@ -1,39 +1,39 @@
 # ==========================================================================
-# ADSY2301 — Hardware Initialization (Standalone / Debug)
+# ADSY2301 — Quad Tile RX Initialization (64 Elements)
 # --------------------------------------------------------------------------
-# Initialises the ADAR1000 array, configures PA bias voltages, and loads
-# saved TX calibration values (phase, gain, attenuation) from a JSON file.
+# Initializes the full 64-element array (16 x ADAR1000) for RX operation:
+#   - ADAR1000 beamformers, Up/Down Converter (UDC) and ADRV9009 transceiver
+#   - SDR and TDD engine configuration (RX)
+#   - UDC RX Band 3 (RF 10-11 GHz, LO 14.9 GHz)
+#   - All elements set to max RX gain, no attenuation and 0 degree phase
+#
+# RX channels are left disabled. Uncomment the lines at the end of the
+# script to enable all or selected channels.
 #
 # This script is intended for interactive use — run it, then inspect or
-# modify `dev`, `mr`, `phase_dict`, `gain_dict`, `atten_dict`, etc. in
-# your debugger console.
+# modify `dev` and `mr` in your debugger console.
 #
-# No external instruments (Millibox, power supply, spectrum analyser) are
-# required.
+# No external instruments are required.
 #
 # Copyright (C) 2025 Analog Devices, Inc.
 # SPDX short identifier: ADIBSD
 # ==========================================================================
-import adi 
 from adi import adsy2301 as mr
 import numpy as np
-import json
-import os
 
 ##############################################
-## Step 1: Initialize ADAR1000 Array ##
+## Step 1: Connect to ADSY2301 ##
 ##############################################
 # talise_ip = "10.75.161.115"
 talise_ip = "10.75.161.151"
 talise_uri = "ip:" + talise_ip
 
-
-## Initialization ## 
 print("Initializing ADSY2301 with IP address: " + talise_uri)
-#Create an ADSY2301 class instance
 dev = mr.adsy2301(uri=talise_uri)
 
-#Create Beamforming tile subclass
+##############################################
+## Step 2: Initialize ADAR1000 Array (16 x ADAR1000) ##
+##############################################
 dev.init_BFC(
 
     chip_ids=[
@@ -68,49 +68,60 @@ dev.init_BFC(
     },
 )
 
-#Create Up/Down Coverter subclass instance
+##############################################
+## Step 3: Initialize UDC and ADRV9009 ##
+##############################################
+# Up/Down Converter: ADF4382 LO, ADMV1320, ADMV1420, ADMV8913, ADRF5030
 dev.init_UDC()
 
-#Create Converter subclass instance
+# ADRV9009 transceiver, SDR and TDD engine (TXRX_Bit=0 -> RX)
 dev.init_ADRV9009()
 mr.sdr_init(dev)
-mr.tdd_init(dev,TXRX_Bit=0)
+mr.tdd_init(dev, TXRX_Bit=0)
 
-# Initialize beamforming subclass into known default state
-dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+# Put all beamformers into a known default state
+dev.BFC.initialize_devices(pa_off=-4.8, pa_on=-4.8, lna_off=-4.8, lna_on=-4.8)
 
-## Set some default states: The following are now baked into the RX_UDC_Band configuration
+##############################################
+## Step 4: UDC RX Band Selection ##
+##############################################
+# Band 3: RF 10-11 GHz, LO 14.9 GHz. Includes the ADRF5030 RX switch,
+# ADMV8913 filter and ADF4382 LO settings, so the individual calls below
+# are not needed.
 # dev.udc.adrf5030.RX_SW_Enable()
 # dev.udc.admv8913.set_filter_widest()
 # dev.udc.adf4382.altvolt0_frequency = int(14.89e9)
 # dev.udc.adf4382.altvolt1_frequency = int(14.89e9)
-
-#Set to Band 2 to receive 10GHz
 dev.udc.RX_UDC_Band_3()
 
-
+##############################################
+## Step 5: Configure RX Mode ##
+##############################################
 for device in dev.BFC.devices.values():
     device.mode = "rx"
     device.tr_source = "spi"
     device.bias_dac_mode = "on"
 
-print("Setting all devices to rx mode")
+print("Setting all elements to default RX settings")
 for element in dev.BFC.elements.values():
-    element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
+    element.rx_attenuator = 0  # 1: Attenuation on; 0: Attenuation off
     element.tx_attenuator = 0
-    element.rx_gain = 127# 127: Highest gain; 0: Lowest gain
-    element.tx_gain = 0 #Lowest gain
-    element.rx_phase = 0 # Set all phases to 0
+    element.rx_gain = 127      # 127: Highest gain; 0: Lowest gain
+    element.tx_gain = 0        # Lowest gain
+    element.rx_phase = 0       # Set all phases to 0
     element.tx_phase = 0
 
 dev.BFC.latch_rx_settings()
 dev.BFC.latch_tx_settings()
 
-#Uncomment to enable all RX channels
+##############################################
+## OPTIONAL: Enable/Disable RX Channels ##
+##############################################
+# Uncomment to enable all RX channels
 # mr.enable_rx_channel(dev.BFC)
 
-#Uncomment to enable specific Rx Channels
+# Uncomment to enable specific RX channels
 # mr.enable_rx_channel(dev.BFC, [1, 2, 3])
 
-#Uncomment to disable all RX channels
+# Uncomment to disable all RX channels
 # mr.disable_rx_channel(dev.BFC)
