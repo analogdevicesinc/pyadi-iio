@@ -87,6 +87,7 @@ Sections
    support
    dev/index
    devices/index
+   emu_contexts/index
 
 Indices and tables
 ==================
