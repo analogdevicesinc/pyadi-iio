@@ -207,6 +207,42 @@ class ada4356_quad:
 
         return results
 
+    def rx_raw(self):
+        """One synchronized capture with no alignment applied.
+
+        Pair with apply_alignment() to get a corrected/uncorrected A/B from the
+        *same* acquisition.  Two separate rx() calls only compare if the
+        stimulus repeats shot to shot, which a free-running generator does not.
+        """
+        return self._rx_raw()
+
+    def apply_alignment(self, data, correct=True):
+        """Trim raw buffers to rx_buffer_size, optionally removing the draw.
+
+        With correct=False every channel is sliced at the same offset, so the
+        per-boot draw is left in and the channels stay comparable.
+        """
+        n = self._rx_buffer_size
+        edge = _FRAC_TAPS // 2
+
+        if self._align_delays is None:
+            return [np.asarray(x)[:n] for x in data]
+
+        if not correct:
+            return [np.asarray(x)[edge : edge + n] for x in data]
+
+        base = min(self._align_delays)
+        frac = self._align_frac or [0.0] * len(data)
+
+        out = []
+        for x, d, fr in zip(data, self._align_delays, frac):
+            x = np.asarray(x, dtype=np.float64)
+            if fr:
+                x = _frac_shift(x, -fr)
+            start = (d - base) + edge
+            out.append(x[start : start + n])
+        return out
+
     def rx(self):
         """Capture one synchronized buffer from all four channels.
 
@@ -214,22 +250,7 @@ class ada4356_quad:
         Once calibrate_alignment() has run, the per-boot offset is taken out
         here, so the four arrays share a sample index.
         """
-        data = self._rx_raw()
-        if self._align_delays is None:
-            return data
-
-        base = min(self._align_delays)
-        n = self._rx_buffer_size
-        frac = self._align_frac or [0.0] * len(data)
-        edge = _FRAC_TAPS // 2
-
-        out = []
-        for x, d, fr in zip(data, self._align_delays, frac):
-            if fr:
-                x = _frac_shift(x, -fr)
-            start = (d - base) + edge
-            out.append(x[start : start + n])
-        return out
+        return self.apply_alignment(self._rx_raw())
 
     # ------------------------------------------------------------------
     # Channel alignment
