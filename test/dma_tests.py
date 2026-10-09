@@ -418,10 +418,13 @@ def dds_two_tone(
         raise Exception(e)
     del sdr
     tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
-    indx = heapq.nlargest(2, range(len(tone_peaks)), tone_peaks.__getitem__)
-    s1 = "Peak 1: " + str(tone_peaks[indx[0]]) + " @ " + str(tone_freqs[indx[0]])
-    s2 = "Peak 2: " + str(tone_peaks[indx[1]]) + " @ " + str(tone_freqs[indx[1]])
+    indx1 = min(range(len(tone_freqs)), key=lambda i: abs(tone_freqs[i] - frequency1))
+    s1 = f"Peak 1: {tone_peaks[indx1]} @ {tone_freqs[indx1]}"
     print(s1)
+
+    # Find closest frequency match for frequency2
+    indx2 = min(range(len(tone_freqs)), key=lambda i: abs(tone_freqs[i] - frequency2))
+    s2 = f"Peak 2: {tone_peaks[indx2]} @ {tone_freqs[indx2]}"
     print(s2)
 
     if do_html_log:
@@ -435,28 +438,14 @@ def dds_two_tone(
             )
         }
 
-    if (abs(frequency1 - tone_freqs[indx[0]]) <= (frequency1 * 0.01)) and (
-        abs(frequency2 - tone_freqs[indx[1]]) <= (frequency2 * 0.01)
-    ):
-        diff1 = np.abs(tone_freqs[indx[0]] - frequency1)
-        diff2 = np.abs(tone_freqs[indx[1]] - frequency2)
-        # print(frequency1, frequency2)
-        # print(tone_freqs[indx[0]], tone_freqs[indx[1]])
-        # print(tone_peaks[indx[0]], tone_peaks[indx[1]])
-        # print(diff1, diff2)
-        assert (frequency1 * 0.01) > diff1
-        assert (frequency2 * 0.01) > diff2
-        assert tone_peaks[indx[0]] > peak_min1
-        assert tone_peaks[indx[1]] > peak_min2
-    elif (abs(frequency2 - tone_freqs[indx[0]]) <= (frequency2 * 0.01)) and (
-        abs(frequency1 - tone_freqs[indx[1]]) <= (frequency1 * 0.01)
-    ):
-        diff1 = np.abs(tone_freqs[indx[0]] - frequency2)
-        diff2 = np.abs(tone_freqs[indx[1]] - frequency1)
-        assert (frequency2 * 0.01) > diff1
-        assert (frequency1 * 0.01) > diff2
-        assert tone_peaks[indx[1]] > peak_min1
-        assert tone_peaks[indx[0]] > peak_min2
+    # Assertions
+    diff1 = abs(tone_freqs[indx1] - frequency1)
+    diff2 = abs(tone_freqs[indx2] - frequency2)
+
+    assert diff1 < (frequency1 * 0.01)
+    assert diff2 < (frequency2 * 0.01)
+    assert tone_peaks[indx1] > peak_min1
+    assert tone_peaks[indx2] > peak_min2
 
 
 def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
