@@ -12,14 +12,21 @@ from adi.adar1000 import adar1000_array
 from adi.adf4159 import adf4159
 
 
-class CN0566(adf4159, adar1000_array):
-    """CN0566 class inherits from adar1000_array and adf4159 and adds
-    operations for beamforming like default configuration,
-    calibration, set_beam_phase_diff, etc.
-    _gpios (as one-bit-adc-dac) are instantiated internally.
-    ad7291 temperature / voltage monitor instantiated internally.
-    CN0566.sdr property is an instance of a Pluto SDR with updated firmware,
-    and updated to 2t2r.
+class cn0566:
+    """CN0566 Phaser board driver.
+
+    Composition-based driver for the CN0566 phaser board. Sub-devices are
+    exposed as named attributes rather than via inheritance:
+        .pll      -- adf4159 PLL (ADF4159 synthesizer)
+        .array    -- adar1000_array beamformer (two ADAR1000s)
+        ._gpios   -- one_bit_adc_dac GPIO expander
+        ._monitor -- ad7291 voltage/temperature monitor
+        .sdr      -- externally assigned ad9361 (Pluto SDR)
+
+    The .lo property is a convenience wrapper on CN0566 itself: it gets/sets
+    the true RF output frequency in Hz, hiding the /4 prescaler on the board.
+    All other ADF4159 attributes are accessed via .pll (e.g. my_phaser.pll.freq_dev_range).
+    Beamformer attributes are accessed via .array (e.g. my_phaser.array.devices).
 
     parameters:
         uri: type=string
@@ -27,8 +34,6 @@ class CN0566(adf4159, adar1000_array):
         verbose: type=boolean
             Print extra debug information
     """
-
-    # MWT: Open question: Refactor to nest rather than inherit?
 
     num_elements = 8
     """Number of antenna elements"""
@@ -67,12 +72,12 @@ class CN0566(adf4159, adar1000_array):
         """ Set up devices, properties, helper methods, etc. """
         if verbose is True:
             print("attempting to open ADF4159, uri: ", str(uri))
-        adf4159.__init__(self, uri)
+        self.pll = adf4159(uri)
         if verbose is True:
             print("attempting to open ADAR1000 array, uri: ", str(uri))
         sleep(0.5)
-        adar1000_array.__init__(
-            self, uri, _chip_ids, _device_map, _element_map, _device_element_map
+        self.array = adar1000_array(
+            uri, _chip_ids, _device_map, _element_map, _device_element_map
         )
 
         if verbose is True:
@@ -108,27 +113,28 @@ class CN0566(adf4159, adar1000_array):
 
         BW = 500e6 / 4
         num_steps = 1000
-        self.freq_dev_range = int(
+        self.pll.freq_dev_range = int(
             BW
         )  # frequency deviation range in Hz.  This is the total freq deviation of the complete freq ramp
-        self.freq_dev_step = int(
+        self.pll.freq_dev_step = int(
             BW / num_steps
         )  # frequency deviation step in Hz.  This is fDEV, in Hz.  Can be positive or negative
-        self.freq_dev_time = int(
+        self.pll.freq_dev_time = int(
             1e3
         )  # total time (in us) of the complete frequency ramp
-        self.ramp_mode = "disabled"  # ramp_mode can be:  "disabled", "continuous_sawtooth", "continuous_triangular", "single_sawtooth_burst", "single_ramp_burst"
-        self.delay_word = 4095  # 12 bit delay word.  4095*PFD = 40.95 us.  For sawtooth ramps, this is also the length of the Ramp_complete signal
-        self.delay_clk = "PFD"  # can be 'PFD' or 'PFD*CLK1'
-        self.delay_start_en = 0  # delay start
-        self.ramp_delay_en = 0  # delay between ramps.
-        self.trig_delay_en = 0  # triangle delay
-        self.sing_ful_tri = 0  # full triangle enable/disable -- this is used with the single_ramp_burst mode
-        self.tx_trig_en = 0  # start a ramp with TXdata
+        self.pll.ramp_mode = "disabled"  # ramp_mode can be:  "disabled", "continuous_sawtooth", "continuous_triangular", "single_sawtooth_burst", "single_ramp_burst"
+        self.pll.delay_word = 4095  # 12 bit delay word.  4095*PFD = 40.95 us.  For sawtooth ramps, this is also the length of the Ramp_complete signal
+        self.pll.delay_clk = "PFD"  # can be 'PFD' or 'PFD*CLK1'
+        self.pll.delay_start_en = 0  # delay start
+        self.pll.ramp_delay_en = 0  # delay between ramps.
+        self.pll.trig_delay_en = 0  # triangle delay
+        self.pll.sing_ful_tri = 0  # full triangle enable/disable -- this is used with the single_ramp_burst mode
+        self.pll.tx_trig_en = 0  # start a ramp with TXdata
         # pll.clk1_value = 100
         # pll.phase_value = 3
-        self.powerdown = 0
-        self.enable = 0  # 0 = PLL enable.  Write this last to update all the registers
+        self.pll.enable = (
+            0  # 0 = PLL enable.  Write this last to update all the registers
+        )
 
         ### Initialize gpios / set outputs ###
         self._gpios.gpio_vctrl_1 = 1  # Onboard PLL/LO source
@@ -206,13 +212,13 @@ class CN0566(adf4159, adar1000_array):
 
     @property
     def lo(self):
-        """Get the VCO output frequency, accounting for the /4 ahead of the ADF4159 RFIN."""
-        return self.frequency * 4.0
+        """Get the VCO output frequency, accounting for the /4 prescaler on the CN0566 board."""
+        return self.pll.frequency * 4.0
 
     @lo.setter
     def lo(self, value):
-        """Set the VCO output frequency, accounting for the /4 ahead of the ADF4159 RFIN."""
-        self.frequency = int(value / 4)
+        """Set the VCO output frequency, accounting for the /4 prescaler on the CN0566 board."""
+        self.pll.frequency = int(value / 4)
 
     def configure(self, device_mode="rx"):
         """
@@ -224,7 +230,7 @@ class CN0566(adf4159, adar1000_array):
             ("rx", "tx", "disabled", default = "rx")
         """
         self.device_mode = device_mode
-        for device in self.devices.values():  # Configure ADAR1000s
+        for device in self.array.devices.values():  # Configure ADAR1000s
             device.sequencer_enable = False
             # False sets a bit high and SPI control
             device.beam_mem_enable = (
@@ -400,12 +406,12 @@ class CN0566(adf4159, adar1000_array):
         """
         for i in range(0, 8):
             if apply_cal is True:
-                self.elements.get(i + 1).rx_gain = int(value * self.gcal[i])
+                self.array.elements.get(i + 1).rx_gain = int(value * self.gcal[i])
             else:  # Don't apply gain calibration
-                self.elements.get(i + 1).rx_gain = value
+                self.array.elements.get(i + 1).rx_gain = value
             # Important if you're relying on elements being truly zero'd out
-            self.elements.get(i + 1).rx_attenuator = not bool(value)
-        self.latch_tx_settings()  # writes 0x01 to reg 0x28
+            self.array.elements.get(i + 1).rx_attenuator = not bool(value)
+        self.array.latch_tx_settings()  # writes 0x01 to reg 0x28
 
     def set_chan_gain(self, chan_no: int, gain_val, apply_cal=True):
         """ Setl gain of the individua channel/s.
@@ -429,8 +435,8 @@ class CN0566(adf4159, adar1000_array):
             #     ", ",
             #     self.gcal[chan_no],
             # )
-            self.elements.get(chan_no + 1).rx_gain = cval
-            # print("reading back: ", self.elements.get(chan_no + 1).rx_gain)
+            self.array.elements.get(chan_no + 1).rx_gain = cval
+            # print("reading back: ", self.array.elements.get(chan_no + 1).rx_gain)
         else:  # Don't apply gain calibration
             # print(
             #     "Cal = false, setting channel x to gain y: ",
@@ -438,10 +444,10 @@ class CN0566(adf4159, adar1000_array):
             #     ", ",
             #     int(gain_val),
             # )
-            self.elements.get(chan_no + 1).rx_gain = int(gain_val)
+            self.array.elements.get(chan_no + 1).rx_gain = int(gain_val)
         # Important if you're relying on elements being truly zero'd out
-        self.elements.get(chan_no + 1).rx_attenuator = not bool(gain_val)
-        self.latch_rx_settings()
+        self.array.elements.get(chan_no + 1).rx_attenuator = not bool(gain_val)
+        self.array.latch_rx_settings()
 
     def set_chan_phase(self, chan_no: int, phase_val, apply_cal=True):
         """ Setl phase of the individua channel/s.
@@ -463,16 +469,16 @@ class CN0566(adf4159, adar1000_array):
         i.e. index of 2nd device and (5 - 4*(5//4) = 1 i.e. index of channel
         """
 
-        # list(self.devices.values())[chan_no // 4].channels[(chan_no - (4 * (chan_no // 4)))].rx_phase = phase_val
-        # list(self.devices.values())[chan_no // 4].latch_rx_settings()
+        # list(self.array.devices.values())[chan_no // 4].channels[(chan_no - (4 * (chan_no // 4)))].rx_phase = phase_val
+        # list(self.array.devices.values())[chan_no // 4].latch_rx_settings()
         if apply_cal is True:
-            self.elements.get(chan_no + 1).rx_phase = (
+            self.array.elements.get(chan_no + 1).rx_phase = (
                 phase_val + self.pcal[chan_no]
             ) % 360.0
         else:  # Don't apply gain calibration
-            self.elements.get(chan_no + 1).rx_phase = (phase_val) % 360.0
+            self.array.elements.get(chan_no + 1).rx_phase = (phase_val) % 360.0
 
-        self.latch_rx_settings()
+        self.array.latch_rx_settings()
 
     def set_beam_phase_diff(self, Ph_Diff):
         """ Set phase difference between the adjacent channels of devices
@@ -493,7 +499,7 @@ class CN0566(adf4159, adar1000_array):
         """
 
         # j = 0  # j is index of device and device indicate the adar1000 on which operation is currently done
-        # for device in list(self.devices.values()):  # device in dict of all adar1000 connected
+        # for device in list(self.array.devices.values()):  # device in dict of all adar1000 connected
         #     channel_phase_value = []  # channel phase value to be written on ind channel
         #     for ind in range(0, 4):  # ind is index of current channel of current device
         #         channel_phase_value.append((((np.rint(Ph_Diff * ((j * 4) + ind) / self.phase_step_size)) *
@@ -513,12 +519,12 @@ class CN0566(adf4159, adar1000_array):
         #     # print(channel_phase_value)
 
         for ch in range(0, 8):
-            self.elements.get(ch + 1).rx_phase = (
+            self.array.elements.get(ch + 1).rx_phase = (
                 ((np.rint(Ph_Diff * ch / self.phase_step_size)) * self.phase_step_size)
                 + self.pcal[ch]
             ) % 360.0
 
-        self.latch_rx_settings()
+        self.array.latch_rx_settings()
 
     def SDR_init(self, SampleRate, TX_freq, RX_freq, Rx_gain, Tx_gain, buffer_size):
         """ Initialize Pluto rev C for operation with the phaser. This is a convenience
