@@ -148,3 +148,12 @@ class adf4371(attribute, context_manager):
     def temperature(self):
         """Get the temperature reading"""
         return self._get_iio_attr("temp0", "input", False)
+
+    def reg_read(self, reg):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", reg, self._ctrl)
+        return self._get_iio_debug_attr_str("direct_reg_access", self._ctrl)
+
+    def reg_write(self, reg, value):
+        """Direct Register Access via debugfs"""
+        self._set_iio_debug_attr_str("direct_reg_access", f"{reg} {value}", self._ctrl)
