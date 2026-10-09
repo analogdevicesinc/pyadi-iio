@@ -1,219 +1,143 @@
-# ADSY2301 — 64-Element Phased-Array Evaluation Scripts
+# ADSY2301 — 64-Element Phased-Array Example Scripts
 
-Python scripts for configuring, calibrating, and operating the **ADSY2301**
-64-element phased-array evaluation system built around the ADAR1000
-beamformer and ADRV9009-ZU11EG transceiver SoM.
+Python examples for configuring, calibrating, and operating the **ADSY2301**
+phased-array evaluation system. All scripts use the helper module
+[`adi/adsy2301.py`](../../adi/adsy2301.py), imported as:
+
+```python
+from adi import adsy2301 as mr
+```
 
 ## Hardware Overview
 
-| Component | Role |
-|---|---|
-| 16 × ADAR1000 | 4-channel beamformer ICs (64 elements total, 8 × 8 grid) |
-| ADRV9009-ZU11EG | Dual-transceiver System-on-Module (data conversion + digital back-end) |
-| ADXUD1AEBZ | Up/down-converter between IF and RF |
-| ADF4371 | On-board LO PLL for the up/down-converter |
-| TDDN engine | FPGA-based TDD timing controller |
+| Component | Role | Accessed via |
+|---|---|---|
+| 16 × ADAR1000 | 4-channel beamformers (64 elements, 8 × 8 grid) | `dev.BFC` |
+| ADRV9009-ZU11EG | Dual-transceiver SoM (data conversion + FPGA) | `dev.ADRV9009` |
+| ADMV1320 / ADMV1420 | TX up-converter / RX down-converter | `dev.udc.admv1320`, `dev.udc.admv1420` |
+| ADF4382 | Up/down-converter LO PLL | `dev.udc.adf4382` |
+| ADMV8913 | Switched filter bank | `dev.udc.admv8913` |
+| ADRF5030 | UDC TX/RX switch | `dev.udc.adrf5030` |
+| TDDN engine | FPGA TDD timing controller | `adi.tddn(uri)` |
 
-## File Descriptions
+## Example Scripts
 
 | File | Description |
 |---|---|
-| `ADSY2301.py` | Core helper module — channel enable/disable, gain & phase calibration, beam steering utilities, FFT analysis. Imported by the other scripts as `import adsy2301 as mr`. |
-| `ADSY2301_bootstrap_tiles.py` | SSH-based bootstrap: initialises the 16 ADAR1000 tiles on the SoM. **Run once after every power cycle.** |
-| `ADSY2301_Init.py` | Standalone hardware init for interactive debugging. Creates the array object, sets PA bias, and loads saved TX cal values from `tx_cal_values.json`. |
-| `ADSY2301_Rx_Cal.py` | End-to-end RX calibration script: gain equalization → phase alignment → before/after comparison plot. |
-| `ADSY2301_Rx_Steering_Example.py` | Demonstrates electronic beam steering — calibrates the array, captures at boresight, then steers to a user-defined angle and compares signal levels. |
-| `ADSY2301_Rx_Electronic_Sweep.py` | Sweeps the RX beam electronically from -60° to +60° (azimuth or elevation), plotting combined magnitude vs. steering angle in real time. Saves a .png plot and .mat data file. |
-| `ADSY2301_Tx_Cal.py` | End-to-end TX calibration script: per-element gain equalisation, optional DAC-channel digital phase alignment, and analog (ADAR1000) null-search phase calibration. Saves results to `tx_cal_values.json`. **Requires a spectrum analyser and power supplies** (see instrument notes in the script). |
-| `ADSY2301_Tx_Electronic_Sweep.py` | Sweeps the TX beam electronically from -60° to +60°, measuring radiated power with an external spectrum analyser at each angle. Saves a .png plot and .mat data file. **Requires a spectrum analyser and power supplies** (see instrument notes in the script). |
-| `ADSY2301_temp_checker.py` | Polls and displays all 16 ADAR1000 temperature sensors in a live table. |
-| `DAC_TDD_Config.py` | Configures the ADRV9009 transmit DACs and TDD timing engine (pulse timing, duty cycle, TR switching). |
-| `ADF4371_Internal_LO.py` | Programs the on-board ADF4371 LO PLL frequency. |
-| `requirements.txt` | Python dependencies for this folder. |
+| `ADSY2301_RX_Init_quad_tile.py` | Initializes the full 64-element (16 × ADAR1000) array for RX: BFC/UDC/ADRV9009 init, `sdr_init`, `tdd_init`, `RX_UDC_Band_3()`, all elements at max RX gain and 0° phase. Commented lines show how to enable all/selected RX channels. |
+| `ADSY2301_RX_Init_single_tile.py` | Beamformer-only RX init for a single 16-element tile (4 × ADAR1000): max RX gain, 0° phase. UDC (LO, ADMVs, filter, switch) and ADRV9009/TDD setup are included as commented-out OPTIONAL blocks the user can uncomment. |
+| `ADSY2301_Init_Tx_quad_tile.py` | Initializes the 64-element array for TX: PA/power rails off during setup, `TX_UDC_Band_0()`, LO at 14.9 GHz, TR source switched to FPGA (`external`) with bias toggle, then PA rails on and element 33 enabled. |
+| `ADSY2301_Rx_Cal.py` | End-to-end RX calibration: gain equalization (`rx_gain`) → phase alignment (`find_phase_delay_fixed_ref`, `phase_analog`) → before/after plot saved as `ADSY2301_64Element_Electronic_Steering_Array_Calibration.png`. Requires an RF source at boresight. |
+| `LO_Printout.py` | Reads back and prints the ADF4382 (`adf4382a`) LO settings: frequency, phase, enable, bleed polarity, auto-align, gain, and charge-pump currents for both channels. |
+| `tdd_example.py` | Standalone ADRV9009 + TDDN example: generates a pulsed CW tone, programs the TDD channels (frame length, TR pulse, offload syncs), transmits a cyclic buffer, and captures/plots synchronized RX frames. |
+
+## User-Configurable Parameters
+
+All scripts connect to the SoM via an IIO URI defined at the top of the file:
+
+```python
+talise_ip = "10.75.161.151"   # change to your SoM IP
+talise_uri = "ip:" + talise_ip
+```
+
+`tdd_example.py` / `tdd_barker_example.py` also expose a `USER CONFIGURABLE
+PARAMETERS` block (RF frequency, TX gain, frame length, duty cycle, capture
+count, waveform amplitude, etc.).
+
+## Typical Initialization Flow
+
+```python
+from adi import adsy2301 as mr
+
+dev = mr.adsy2301(uri="ip:10.75.161.151")
+dev.init_BFC(chip_ids=[...], device_map=[...],
+             element_map=..., device_element_map={...})
+dev.init_UDC()
+dev.init_ADRV9009()
+
+mr.sdr_init(dev)
+mr.tdd_init(dev, TXRX_Bit=0)
+dev.BFC.initialize_devices(pa_off=-4.8, pa_on=-4.8, lna_off=-4.8, lna_on=-4.8)
+dev.udc.RX_UDC_Band_3()          # or TX_UDC_Band_0() for transmit
+
+mr.enable_rx_channel(dev.BFC)    # all elements, or a list e.g. [1, 2, 3]
+```
+
+The `chip_ids`, `device_map`, `element_map`, and `device_element_map` for the
+quad-tile (64-element) and single-tile (16-element) layouts are given in the
+corresponding `*_Init_*` scripts.
+
+## `adi/adsy2301.py` API Reference
+
+### Class `adsy2301(uri)`
+
+| Member | Description |
+|---|---|
+| `init_BFC(chip_ids, device_map, element_map, device_element_map)` | Creates `dev.BFC` (an `adar1000_array` subclass). |
+| `init_UDC()` | Initializes ADMV8913, ADRF5030, ADF4382, ADMV1320, ADMV1420 under `dev.udc`. |
+| `init_ADRV9009()` | Creates `dev.ADRV9009` (`adrv9009_zu11eg`). |
+| `BFC.BF_PWR_EN_01..04` | Beamformer power-rail enables (GPIO). |
+| `BFC.BF_PA_ON_01..04` | PA-on control lines (GPIO). |
+
+### UDC (`dev.udc`)
+
+| Member | Description |
+|---|---|
+| `RX_UDC_Band_1()` | RX, RF 8–9 GHz, LO 13.9 GHz |
+| `RX_UDC_Band_2()` | RX, RF 9–10 GHz, LO 13.4 GHz  |
+| `RX_UDC_Band_3()` | RX, RF 10–11 GHz, LO 14.9 GHz |
+| `RX_UDC_Band_4()` | RX, RF 11–12 GHz, LO 16.4 GHz  |
+| `TX_UDC_Band_0()` | TX up-converter configuration (3–12 GHz IF). |
+| `admv8913.set_filter_settings(hp, lp)`, `set_filter_band1..4()`, `set_filter_widest()` | Filter bank control. |
+| `adrf5030.TX_SW_Enable()` / `RX_SW_Enable()` | Set UDC TX/RX switch. |
+
+The `RX_UDC_Band_*` / `TX_UDC_Band_0` methods include the switch, filter, and
+LO settings, so separate calls are not needed.
+
+### Module Functions
+
+| Category | Functions |
+|---|---|
+| Channel control | `enable_rx_channel(obj, elements=None)`, `disable_rx_channel(obj, elements=None)`, `enable_tx_channel(obj, elements=None, PA_Bias_Dict=None, gate_voltage_bias=-1.8)`, `disable_tx_channel(obj, elements=None)` |
+| Transceiver / timing | `sdr_init(dev)`, `tdd_init(dev, TXRX_Bit)`, `change_duty_cycle(dev, duty_cycle)` (0.0–0.35) |
+| PA power | `Vdd_PA_Power_Up(dev)`, `Vdd_PA_Power_Down(dev)` (rail off + PA pinch-off -4.8 V) |
+| Data capture | `data_capture(adc)`, `data_capture_cal(adc, cal_values)`, `rx_single_channel_data(...)`, `ADSY2301_power_detector(obj, elements)` |
+| RX calibration | `rx_gain(...)`, `gain_codes(...)`, `get_gain_codes(...)`, `find_phase_delay_fixed_ref(...)`, `find_phase_delay_sliding_ref(...)`, `phase_digital(...)`, `phase_analog(...)`, `cal_data(data, phaseCAL)`, `phase_delayer(data, delay)` |
+| TX calibration | `phase_analog_tx(adsy2301_obj, SpecAn_obj, ...)` |
+| Analysis | `fft(complex_data, combined_waveforms, tone_type)` (Genalyzer), `calc_dbfs(data)`, `get_analog_mag(data)`, `calc_array_pattern(...)`, `quantize_phase(phase, bits=8)` |
+| Utilities | `create_dict`, `strip_to_last_two_digits`, `wrap_to_360`, `ind2sub` |
 
 ## Prerequisites
 
-### Python Requirements
-
-**Python 3.12.10** is required. Download it from the official
-[Python 3.12 releases page](https://www.python.org/downloads/).
-
-> The commands below use a Windows command prompt as an example. For
-> development, it is recommended to use your preferred IDE (VSCode / PyCharm)
-> and set up its corresponding environment accordingly.
-
-### Software Prerequisites — Genalyzer
-
-[Genalyzer](https://github.com/analogdevicesinc/genalyzer) is a C++ library
-that facilitates the computation of commonly used data-converter RF
-performance metrics in a standards-compliant manner. It supports waveform
-generation for characterizing data-converters as well as computation of
-performance metrics from time- or frequency-domain data.
-
-Follow the
-[Genalyzer C++ download instructions](https://analogdevicesinc.github.io/genalyzer/main/quick_start.html)
-for your platform (Mac/Linux/Windows). Once the main C++ library is
-installed, the Python bindings are installed in the steps below.
-
----
-
-## Installing
-
-> **Note:** If you left *"Create venv and install python package dependencies
-> (recommended)"* checked during installation, steps 1–5 below will likely
-> have already been completed automatically. There is no harm in running them
-> again if you are unsure.
-
-### 1. Navigate to this package
-
-Open a command prompt and `cd` to the directory containing this file and
-`requirements.txt`. Your path may differ depending on where the package was
-installed.
-
-```cmd
-cd "C:\Analog Devices\cots-adsy2301-test"
-```
-
-### 2. Create & activate a virtual environment
-
-```cmd
-python3.12 -m venv adsy2301_python_venv
-.\adsy2301_python_venv\Scripts\activate
-```
-
-After activation you should see the venv name in the prompt:
-
-```
-(adsy2301_python_venv) C:\Analog Devices\cots-adsy2301-test>
-```
-
-### 3. Upgrade pip
-
-Make sure pip is at least version 24.0.0:
-
-```cmd
-python -m pip install --upgrade pip
-```
-
-> If this gives a permissions error, re-open the command prompt as an
-> administrator, reactivate the venv, and try again.
-
-### 4. Install Python dependencies
-
-```cmd
-pip install -r requirements.txt
-```
-
-### 5. Install Genalyzer Python bindings
+- Python 3.12
+- [pyadi-iio](https://github.com/analogdevicesinc/pyadi-iio) with ADSY2301 support (`adi.adsy2301`, `adi.adar1000`, `adi.adf4382`, `adi.admv1320`, `adi.admv1420`, `adi.adrv9009_zu11eg`, `adi.tddn`)
+- `numpy`, `matplotlib`
+- [Genalyzer](https://github.com/analogdevicesinc/genalyzer) C++ library and Python bindings (imported by `adsy2301.py`):
 
 ```cmd
 pip install "genalyzer @ git+https://github.com/analogdevicesinc/genalyzer.git#subdirectory=bindings/python"
 ```
 
-> In future versions this will be included in `requirements.txt`.
+Using a virtual environment is recommended:
 
-Installing dependencies may take a few minutes depending on your internet
-connection.
-
-### Notes
-
-- Packages installed within the venv do **not** affect your global Python
-  environment.
-- To exit the venv run `deactivate`. Reactivate it at any time with
-  `.\adsy2301_python_venv\Scripts\activate`.
-- All ADSY2301 scripts expect to be run from within the venv.
-- To verify installed packages run `pip list`.
-
-### VSCode setup (optional, recommended)
-
-1. Install the **Python** extension (by Microsoft) from the VSCode
-   marketplace.
-2. Press `Ctrl+Shift+P` → *"Python: Select Interpreter"* → choose the
-   interpreter labelled **Python (adsy2301_python_venv)**.
-3. You should now be able to run and debug the ADSY2301 examples directly
-   from VSCode.
-
----
+```cmd
+python3.12 -m venv adsy2301_python_venv
+adsy2301_python_venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install pyadi-iio numpy matplotlib
+```
 
 ## Quick Start
 
-### 1. Bootstrap the ADAR1000 Tiles
-
 ```bash
-python ADSY2301_bootstrap_tiles.py
+python ADSY2301_RX_Init_quad_tile.py   # RX bring-up
+python ADSY2301_Rx_Cal.py              # RX calibration (RF source at boresight)
+python ADSY2301_Init_Tx_quad_tile.py   # TX bring-up
+python LO_Printout.py                  # check LO state
+python tdd_example.py                  # TDD pulsed TX/RX demo
 ```
-
-This connects to the SoM via SSH and runs the ADAR1000 initialisation script
-(~4-5 minutes on first boot).
-
-### 2. Run RX Calibration
-
-```bash
-python ADSY2301_Rx_Cal.py
-```
-
-Place an RF source at boresight, press Enter when prompted, and the script
-will calibrate gain + phase across all 64 elements.
-
-### 3. Run Beam Steering Demo
-
-```bash
-python ADSY2301_Rx_Steering_Example.py
-```
-
-After calibration, the script steers the beam to a configurable angle
-(default: 30°) and prints the measured signal drop relative to boresight.
-
-### 4. Run RX Electronic Beam Sweep
-
-```bash
-python ADSY2301_Rx_Electronic_Sweep.py
-```
-
-Sweeps the receive beam from -60° to +60° in 5° steps (configurable).
-A live plot displays combined magnitude vs. steering angle. Results are
-saved as a `.png` image and `.mat` data file under the output directory.
-
-### 5. Run TX Calibration
-
-```bash
-python ADSY2301_Tx_Cal.py
-```
-
-Performs per-element gain equalisation and analog phase calibration on the
-transmit path.  A receive horn at boresight connected to a spectrum analyser
-is required.  Calibration results are saved to `tx_cal_values.json` and
-automatically loaded by the TX sweep script.
-
-> **Instrument note:** This script was developed with a Keysight N9000A (CXA)
-> spectrum analyser, E36233A power supply, and N6705B DC power analyser.
-> Search for `*** INSTRUMENT ***` in the script to find the sections that
-> need to be adapted for your own equipment.
-
-### 6. Run TX Electronic Beam Sweep
-
-```bash
-python ADSY2301_Tx_Electronic_Sweep.py
-```
-
-Sweeps the transmit beam from -60° to +60° in 1° steps (configurable),
-reading the measured power from an external spectrum analyser at each angle.
-Results are saved as a `.png` image and `.mat` data file.
-
-> **Instrument note:** Same instrument requirements as TX Calibration.
-> Search for `*** INSTRUMENT ***` in the script.
-
-## Configuration
-
-Most scripts connect to the SoM at `ip:192.168.1.1` by default. Edit the
-`url` or `talise_uri` variable at the top of each script if your network
-configuration differs.
-
-The TX scripts also require VISA addresses for the bench instruments
-(spectrum analyser, power supplies).  These are defined near the top of each
-script and marked with `*** INSTRUMENT ADDRESS ***`.
 
 ## License
 
-Copyright (C) 2025 Analog Devices, Inc.  
+Copyright (C) 2025 Analog Devices, Inc.
 SPDX short identifier: ADIBSD
