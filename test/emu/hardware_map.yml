@@ -717,6 +717,15 @@ max9611:
       - data_devices:
           - iio:device0
 
+maxm86161:
+  - maxm86161
+  - pyadi_iio_class_support:
+      - maxm86161
+  - emulate:
+      - filename: maxm86161.xml
+      - data_devices:
+          - iio:device0
+
 ad4858:
   - xadc
   - ad4858
