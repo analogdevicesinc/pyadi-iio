@@ -1,39 +1,39 @@
 # ==========================================================================
-# ADSY2301 — Hardware Initialization (Standalone / Debug)
+# ADSY2301 — Quad Tile TX Initialization (64 Elements)
 # --------------------------------------------------------------------------
-# Initialises the ADAR1000 array, configures PA bias voltages, and loads
-# saved TX calibration values (phase, gain, attenuation) from a JSON file.
+# Initializes the full 64-element array (16 x ADAR1000) for TX operation:
+#   - Beamformer PA and power rails held off during setup
+#   - ADAR1000 beamformers, Up/Down Converter (UDC) and ADRV9009 transceiver
+#   - SDR and TDD engine configuration
+#   - All elements set to max TX gain, no attenuation and 0 degree phase
+#   - TR source switched to FPGA (external) with PA bias toggle
+#   - UDC TX Band 0, then PA and power rails enabled
+#   - TX channel on element 33 enabled
 #
 # This script is intended for interactive use — run it, then inspect or
-# modify `dev`, `mr`, `phase_dict`, `gain_dict`, `atten_dict`, etc. in
-# your debugger console.
+# modify `dev` and `mr` in your debugger console.
 #
-# No external instruments (Millibox, power supply, spectrum analyser) are
-# required.
+# No external instruments are required.
 #
 # Copyright (C) 2025 Analog Devices, Inc.
 # SPDX short identifier: ADIBSD
 # ==========================================================================
-import adi 
 from adi import adsy2301 as mr
 import numpy as np
-import json
-import os
 
 ##############################################
-## Step 1: Initialize ADAR1000 Array ##
+## Step 1: Connect to ADSY2301 ##
 ##############################################
 # talise_ip = "10.75.161.115"
 talise_ip = "10.75.161.151"
 talise_uri = "ip:" + talise_ip
 
-
-## Initialization ## 
-
-#Create an ADSY2301 class instance
+print("Initializing ADSY2301 with IP address: " + talise_uri)
 dev = mr.adsy2301(uri=talise_uri)
 
-#Create Beamforming tile subclass
+##############################################
+## Step 2: Initialize ADAR1000 Array (16 x ADAR1000) ##
+##############################################
 dev.init_BFC(
 
     chip_ids=[
@@ -68,6 +68,7 @@ dev.init_BFC(
     },
 )
 
+# Hold beamformer PA and power rails off during setup
 dev.BFC.BF_PA_ON_01 = 0
 dev.BFC.BF_PA_ON_02 = 0
 dev.BFC.BF_PA_ON_03 = 0
@@ -78,56 +79,64 @@ dev.BFC.BF_PWR_EN_02 = 0
 dev.BFC.BF_PWR_EN_03 = 0
 dev.BFC.BF_PWR_EN_04 = 0
 
-#Create Up/Down Coverter subclass instance
+##############################################
+## Step 3: Initialize UDC and ADRV9009 ##
+##############################################
+# Up/Down Converter: ADF4382 LO, ADMV1320, ADMV1420, ADMV8913, ADRF5030
 dev.init_UDC()
 
-#Create Converter subclass instance
+# ADRV9009 transceiver
 dev.init_ADRV9009()
 
-# Initialize beamforming subclass into known default state
-dev.BFC.initialize_devices(pa_off=-4.8,pa_on=-4.8,lna_off=-4.8,lna_on=-4.8)
+# Put all beamformers into a known default state
+dev.BFC.initialize_devices(pa_off=-4.8, pa_on=-4.8, lna_off=-4.8, lna_on=-4.8)
 
-## Set some default states
-
+# UDC defaults: TX switch, widest filter, LO at 14.9 GHz
 dev.udc.adrf5030.TX_SW_Enable()
 dev.udc.admv8913.set_filter_widest()
 dev.udc.adf4382.altvolt0_frequency = int(14.9e9)
 dev.udc.adf4382.altvolt1_frequency = int(14.9e9)
 
+# SDR and TDD engine configuration
 mr.sdr_init(dev)
-mr.tdd_init(dev,TXRX_Bit=0)
+mr.tdd_init(dev, TXRX_Bit=0)
 
+##############################################
+## Step 4: Configure Beamformer Defaults ##
+##############################################
 for device in dev.BFC.devices.values():
-    device.tr_source = "spi" 
+    device.tr_source = "spi"
     device.bias_dac_mode = "on"
     device.mode = "rx"
 
 mr.disable_rx_channel(dev.BFC)
 mr.disable_tx_channel(dev.BFC)
 
-print("Setting all devices to rx mode")
+print("Setting all elements to default TX settings")
 for element in dev.BFC.elements.values():
-    element.rx_attenuator = 0 # 1: Attentuation on; 0: Attentuation off
+    element.rx_attenuator = 0  # 1: Attenuation on; 0: Attenuation off
     element.tx_attenuator = 0
-    element.rx_gain = 0
-    element.tx_gain = 127
-    element.rx_phase = 0 # Set all phases to 0
+    element.rx_gain = 0        # Lowest gain
+    element.tx_gain = 127      # 127: Highest gain; 0: Lowest gain
+    element.rx_phase = 0       # Set all phases to 0
     element.tx_phase = 0
 
 dev.BFC.latch_rx_settings()
 dev.BFC.latch_tx_settings()
 
+##############################################
+## Step 5: Enable TX ##
+##############################################
 # Switch TR source to FPGA-controlled (external) and enable bias toggle
 # so the TDD engine gates the PA on/off each pulse.
 for device in dev.BFC.devices.values():
     device.bias_dac_mode = "toggle"
     device.tr_source = "external"
 
+# UDC TX band configuration
 dev.udc.TX_UDC_Band_0()
 
-
-
-
+# Enable beamformer PA and power rails
 dev.BFC.BF_PA_ON_01 = 1
 dev.BFC.BF_PA_ON_02 = 1
 dev.BFC.BF_PA_ON_03 = 1
@@ -138,5 +147,6 @@ dev.BFC.BF_PWR_EN_02 = 1
 dev.BFC.BF_PWR_EN_03 = 1
 dev.BFC.BF_PWR_EN_04 = 1
 
-mr.enable_tx_channel(dev.BFC,33)
+# Enable TX on element 33
+mr.enable_tx_channel(dev.BFC, 33)
 
