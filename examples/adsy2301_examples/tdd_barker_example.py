@@ -6,9 +6,10 @@ import adi
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 # USER CONFIGURABLE PARAMETERS
 # Connection and radio settings
-talise_ip = "10.75.161.151"
+host_ip = "10.75.161.151"
 tx_enabled_channels = [0, 1]
 rx_enabled_channels = [0, 1]
 desired_rf_frequency_hz = 3500e6
@@ -39,13 +40,13 @@ capture_pause_seconds = 1
 # END USER CONFIGURABLE PARAMETERS
 
 
-talise_uri = "ip:" + talise_ip
+host_uri = "ip:" + host_ip
 
-dev = mr.adsy2301(uri=talise_uri)
+dev = mr.adsy2301(uri=host_uri)
 dev.init_ADRV9009()
 
-sdr = adi.adrv9009_zu11eg(talise_uri)
-tddn = adi.tddn(talise_uri)
+sdr = adi.adrv9009_zu11eg(host_uri)
+tddn = adi.tddn(host_uri)
 
 # Configure TX properties.
 sdr.tx_enabled_channels = tx_enabled_channels

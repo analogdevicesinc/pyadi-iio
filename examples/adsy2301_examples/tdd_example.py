@@ -7,7 +7,7 @@ import math
 
 
 # USER CONFIGURABLE PARAMETERS
-talise_ip = "10.75.161.151"
+host_ip = "10.75.161.151"
 tx_enabled_channels = [0, 1]
 rx_enabled_channels = [0, 1]
 desired_rf_frequency_hz = 4500e6
@@ -32,17 +32,17 @@ capture_pause_seconds = 1
 tdd_clock_hz = 250e6
 tdd_sync_duty_cycle = 0.0010
 
-talise_uri = "ip:" + talise_ip
+host_uri = "ip:" + host_ip
 
-dev = mr.adsy2301(uri=talise_uri)
+dev = mr.adsy2301(uri=host_uri)
 dev.init_ADRV9009()
 
 # mr.tdd_init(dev,TXRX_Bit=0)
 # mr.change_duty_cycle(dev,PRI_ms=0.1,off_ms=0.005)
 
 # Create radio
-sdr  = adi.adrv9009_zu11eg(talise_uri)
-tddn = adi.tddn(talise_uri)
+sdr  = adi.adrv9009_zu11eg(host_uri)
+tddn = adi.tddn(host_uri)
 
 # Configure TX properties
 sdr.tx_enabled_channels = tx_enabled_channels

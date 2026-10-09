@@ -24,12 +24,12 @@ import numpy as np
 ##############################################
 ## Step 1: Connect to ADSY2301 ##
 ##############################################
-# talise_ip = "10.75.161.115"
-talise_ip = "10.75.161.151"
-talise_uri = "ip:" + talise_ip
+# host_ip = "10.75.161.115"
+host_ip = "10.75.161.151"
+host_uri = "ip:" + host_ip
 
-print("Initializing ADSY2301 with IP address: " + talise_uri)
-dev = mr.adsy2301(uri=talise_uri)
+print("Initializing ADSY2301 with IP address: " + host_uri)
+dev = mr.adsy2301(uri=host_uri)
 
 ##############################################
 ## Step 2: Initialize ADAR1000 Array (16 x ADAR1000) ##

@@ -36,8 +36,8 @@ from adi import adsy2301 as mr
 All scripts connect to the SoM via an IIO URI defined at the top of the file:
 
 ```python
-talise_ip = "10.75.161.151"   # change to your SoM IP
-talise_uri = "ip:" + talise_ip
+host_ip = "10.75.161.151"   # change to your SoM IP
+host_uri = "ip:" + host_ip
 ```
 
 `tdd_example.py` / `tdd_barker_example.py` also expose a `USER CONFIGURABLE
@@ -87,12 +87,14 @@ corresponding `*_Init_*` scripts.
 | `RX_UDC_Band_2()` | RX, RF 9–10 GHz, LO 13.4 GHz  |
 | `RX_UDC_Band_3()` | RX, RF 10–11 GHz, LO 14.9 GHz |
 | `RX_UDC_Band_4()` | RX, RF 11–12 GHz, LO 16.4 GHz  |
-| `TX_UDC_Band_0()` | TX up-converter configuration (3–12 GHz IF). |
+| `TX_UDC_Band_0()` | Configures the ADMV1320 TX up-converters (3–12 GHz IF). Does not set the LO, switch or filter. |
 | `admv8913.set_filter_settings(hp, lp)`, `set_filter_band1..4()`, `set_filter_widest()` | Filter bank control. |
 | `adrf5030.TX_SW_Enable()` / `RX_SW_Enable()` | Set UDC TX/RX switch. |
 
-The `RX_UDC_Band_*` / `TX_UDC_Band_0` methods include the switch, filter, and
-LO settings, so separate calls are not needed.
+The `RX_UDC_Band_*` methods configure the ADMV1420s, set the ADF4382 LO and
+switch the ADRF5030 to RX; they do not change the ADMV8913 filter.
+`TX_UDC_Band_0` only configures the ADMV1320s, so the TX switch, filter and
+LO must be set separately (as in `ADSY2301_Init_Tx_quad_tile.py`).
 
 ### Module Functions
 
