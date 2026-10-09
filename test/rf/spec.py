@@ -1,26 +1,13 @@
 from __future__ import division
 
 import numpy as np
-from numpy import (
-    absolute,
-    argmax,
-    argsort,
-    cos,
-    exp,
-    floor,
-    linspace,
-    log10,
-    multiply,
-    pi,
-)
+from numpy import absolute, argmax, cos, exp, floor, linspace, log10, multiply, pi
 from numpy.fft import fft, fftfreq, fftshift
 
 try:
     from scipy.signal import kaiser
 except ImportError:
     from scipy.signal.windows import kaiser
-
-from scipy.signal import find_peaks
 
 
 def spec_est(x, fs, ref=2 ** 15, plot=False, useWindow=False):
@@ -136,42 +123,6 @@ def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.01):
             harmonics_vals.append(vals[indx])
             # print("Harmonic",freqs[indxs[indx]])
     return main, main_loc, harmonics_vals, harmonics_locs
-
-
-def sfdr(x, fs=1, ref=2 ** 15, plot=False):
-    amp, freqs = spec_est(x, fs=fs, ref=ref, plot=plot)
-    amp_org = amp
-    amp = fftshift(amp)
-    peak_indxs, _ = find_peaks(amp, distance=floor(len(x) * 0.1))
-
-    # Sort peaks
-    indxs = argsort(amp[peak_indxs])
-    indxs = indxs[::-1]
-    peak_indxs = peak_indxs[indxs]
-    peak_vals = amp[peak_indxs]
-
-    main = peak_vals[0]
-    next = peak_vals[1]
-    sfdr = absolute(main - next)
-
-    if plot:
-        import matplotlib.pyplot as plt
-
-        plt.subplot(2, 1, 1)
-        plt.plot(x, ".-")
-        plt.plot(1, 1, "r.")  # first sample of next chunk
-        plt.margins(0.1, 0.1)
-        plt.xlabel("Time [s]")
-        # Plot shifted data on a shifted axis
-        plt.subplot(2, 1, 2)
-        plt.plot(amp)
-        plt.plot(peak_indxs[0:3], amp[peak_indxs[0:3]], "x")
-        plt.margins(0.1, 0.1)
-        plt.xlabel("Frequency [Hz]")
-        plt.tight_layout()
-        plt.show()
-
-    return sfdr, amp_org, freqs
 
 
 def main():
