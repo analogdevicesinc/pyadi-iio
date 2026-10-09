@@ -6,7 +6,6 @@ import adi
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 # USER CONFIGURABLE PARAMETERS
 # Connection and radio settings
 talise_ip = "10.75.161.151"
