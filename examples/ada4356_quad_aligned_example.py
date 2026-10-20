@@ -21,10 +21,22 @@ clips against +8191 regardless of gain, and channel D clips first.  At GSEL=01
 -4 dBFS with room to spare; at GSEL=00 (133k) the old working point was about
 1.0 Vpp with +0.5 V offset.  Check the max column against 8191 after any change.
 
+The optional fourth argument sets the transimpedance on all four channels at
+once ('133k', '11k', '4k54').  It is applied before calibrate_alignment() on
+purpose: the transimpedance moves the front-end propagation delay, so a
+calibration taken at one setting does not describe another.  The optional fifth
+argument sets the FREQ_SEL filter, named after the pin level ('fsel0', 'fsel1'),
+and is applied at the same point for the same reason.  An optional sixth
+argument 'whole' removes whole samples only (no interpolation filter), leaving
+the sub-sample fraction in the data.
+
 Usage:
   python3 ada4356_quad_aligned_example.py ip:192.168.0.106
   python3 ada4356_quad_aligned_example.py ip:192.168.0.106 65536
   python3 ada4356_quad_aligned_example.py ip:192.168.0.106 65536 100000
+  python3 ada4356_quad_aligned_example.py ip:192.168.0.106 65536 100000 11k
+  python3 ada4356_quad_aligned_example.py ip:192.168.0.106 65536 100000 11k fsel0
+  python3 ada4356_quad_aligned_example.py ip:192.168.0.106 65536 100000 11k fsel1 whole
 """
 
 import sys
@@ -38,6 +50,9 @@ import adi
 uri = sys.argv[1] if len(sys.argv) > 1 else "ip:192.168.2.1"
 buffer_samples = int(sys.argv[2]) if len(sys.argv) > 2 else 65536
 sine_freq_hz = float(sys.argv[3]) if len(sys.argv) > 3 else 1_000_000.0
+gain_mode = sys.argv[4] if len(sys.argv) > 4 else None
+filter_mode = sys.argv[5] if len(sys.argv) > 5 else None
+whole_only = len(sys.argv) > 6 and sys.argv[6] == "whole"
 
 TDD_CLOCK_HZ = 125_000_000
 FULL_SCALE = 8192.0  # 14-bit signed, +-8192 codes = +-1 V
@@ -45,6 +60,10 @@ N_HARMONICS = 9  # harmonics 2..9 are fitted and removed from the noise estimate
 
 # Connect
 dev = adi.ada4356_quad(uri=uri)
+if gain_mode is not None:
+    dev.gain_mode = gain_mode
+if filter_mode is not None:
+    dev.filter_mode = filter_mode
 dev.rx_buffer_size = buffer_samples
 fs = dev.sampling_frequency
 
@@ -74,7 +93,7 @@ time.sleep(0.3)
 # The FPGA draws a fresh BUFR /4 phase per channel every time it is configured,
 # so B/C/D come up a whole number of samples behind A and the draw changes from
 # boot to boot.  Measure it once here; every dev.rx() below is corrected for it.
-dev.calibrate_alignment(sine_freq_hz)
+dev.calibrate_alignment(sine_freq_hz, subsample=not whole_only)
 
 # Synchronized capture — all four DMAs armed concurrently, start on same TDD pulse
 data = dev.rx()
@@ -166,7 +185,11 @@ fund_bin = int(round(f0 * N / fs))
 # --- Fit every channel at the SAME f0 so the phases are comparable -----------
 fits = [fit_at(x, f0) for x in raw]
 
+tz = dev.gain_mode
+filt = dev.filter_mode
 print(f"\nSampling frequency : {fs / 1e6:.3f} MHz")
+print(f"Transimpedance     : " + "  ".join(f"{k} {v}" for k, v in tz.items()))
+print(f"Front-end filter   : " + "  ".join(f"{k} {v}" for k, v in filt.items()))
 print(f"Buffer size        : {buffer_samples} samples ({buffer_samples / fs * 1e3:.3f} ms)")
 print(f"Requested tone     : {sine_freq_hz / 1e3:.3f} kHz")
 print(f"Fitted tone        : {f0 / 1e3:.6f} kHz  ({f0 * N / fs:.3f} bins, {f0 * N / fs:.2f} cycles)")
@@ -352,9 +375,14 @@ for label, (dc, amps, phase, resid, model) in zip(labels, fits):
         f"{skew_samples:>12.4f}  {skew_samples / fs * 1e9:>11.2f}"
     )
 
-print("\n  Both terms were removed by the alignment step: the integer draw by")
-print("  slicing, the sub-sample analog delay by interpolation. What is left is")
-print("  fit and interpolator error, so these numbers should sit near zero.")
+if whole_only:
+    print("\n  Whole samples only were removed (no interpolation). What is left is")
+    print("  each channel's sub-sample fraction plus fit error, so these numbers")
+    print("  should all sit within +-0.5 samples (+-4 ns).")
+else:
+    print("\n  Both terms were removed by the alignment step: the integer draw by")
+    print("  slicing, the sub-sample analog delay by interpolation. What is left is")
+    print("  fit and interpolator error, so these numbers should sit near zero.")
 print("  They say nothing about the next boot -- the draw is redrawn on every")
 print("  FPGA configuration, so calibrate_alignment() must run once per boot.")
 

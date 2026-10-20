@@ -62,6 +62,30 @@ _FRAC_TAPS = 32
 ALIGN_GUARD = 64
 MAX_DRAW_SPREAD = ALIGN_GUARD - _FRAC_TAPS
 
+# AD9517-4 clock tree, driven through the stock driver's debugfs register access
+# (each write is followed by an IO update). SDO readback is broken on this board
+# (reads 0xFF), so the state below is only what this object last wrote.
+AD9517_DEVICE = "ad9517-4"
+# OUT4..7 = ADC A..D (DTS clocks <&clk_ad9517 4..7>; A and D confirmed on hardware).
+_AD9517_OUT_INDEX = {"A": 0, "B": 1, "C": 2, "D": 3}
+_AD9517_DELAY_BYPASS = 0xA0  # + 3 * index; ramp at +1, fraction at +2
+# Divider 2 feeds OUT4/5 (A+B), divider 3 feeds OUT6/7 (C+D); PO[3:0] of the .1 stage.
+_AD9517_PHASE_REG = {"AB": 0x19A, "CD": 0x19F}
+_AD9517_SOFT_SYNC = 0x230
+AD9517_DEFAULT_RAMP = 0x39  # the only ramp characterised: 0.045-0.060 ns/LSB
+AD9517_MAX_FRACTION = 47
+# Datasheet estimate x1.42 (measured slope). A at ramp 0x39 froze the board at
+# fraction 44 and 47 (2026-10-13, twice); <= 36 ran. Do not raise without a new measurement.
+AD9517_DELAY_SAFE_PS = 2200
+
+
+def ad9517_delay_estimate_ps(ramp, fraction):
+    """Fine-delay estimate for an AD9517 output: datasheet formula x 1.42."""
+    caps = 4 - bin((ramp >> 3) & 0x7).count("1")
+    iramp_ua = 200 * ((ramp & 0x7) + 1)
+    range_ps = 265720 * (caps + 3) / iramp_ua
+    return range_ps * 1.42 * fraction / 63
+
 
 def _tone_phase(x, f_hz, fs):
     """Phase of the tone at f_hz, as in cos(2*pi*f_hz*n/fs + phase)."""
@@ -133,6 +157,7 @@ class ada4356_quad:
 
         self._align_delays = None
         self._align_frac = None
+        self._clk_delay = {}
         self._rx_buffer_size = int(self.ch_a.rx_buffer_size)
 
     # ------------------------------------------------------------------
@@ -319,6 +344,100 @@ class ada4356_quad:
         # been measured, so drop the calibration rather than assume it survives.
         self._reset_alignment()
         self._push_buffer_size()
+
+    # ------------------------------------------------------------------
+    # AD9517 per-ADC sample-clock delay / phase
+    # ------------------------------------------------------------------
+    # Moves the analog sampling instant and that ADC's FPGA capture clock together.
+    # A constant shift may also pin the per-boot whole-sample draw (untested).
+
+    def _ad9517(self):
+        dev = self.ch_a._ctx.find_device(AD9517_DEVICE)
+        if dev is None:
+            raise RuntimeError(f"{AD9517_DEVICE} not found in context")
+        return dev
+
+    def _ad9517_write(self, reg, val):
+        self._ad9517().reg_write(reg, val)
+
+    @property
+    def clock_delay(self):
+        """Fine delay last written per channel by this object (None = never written).
+
+        Each entry is {'enabled', 'ramp', 'fraction', 'estimate_ps'}. A reboot
+        restores the firmware state: all bypassed.
+        """
+        return {label: self._clk_delay.get(label) for label in CHANNEL_LABELS}
+
+    def set_clock_delay(self, channel, fraction, ramp=AD9517_DEFAULT_RAMP, enable=None):
+        """Delay one ADC's sample clock with the AD9517 fine delay (adds delay only).
+
+        enable defaults to fraction > 0; enable=True with fraction 0 routes the clock
+        through the delay block, which alone adds ~0.4-0.5 ns (measured 2026-10-19).
+        Raises ValueError above AD9517_DELAY_SAFE_PS.
+        A delayed channel's tone skew goes up (it reads earlier); its LiDAR
+        'd vs A' goes down.
+        """
+        label = channel.upper()
+        if label not in _AD9517_OUT_INDEX:
+            raise ValueError(f"channel must be one of {CHANNEL_LABELS}, got {channel!r}")
+        fraction, ramp = int(fraction), int(ramp)
+        if not 0 <= ramp <= 0x3F:
+            raise ValueError(f"ramp must be 0..0x3F, got {ramp:#x}")
+        if not 0 <= fraction <= AD9517_MAX_FRACTION:
+            raise ValueError(f"fraction must be 0..{AD9517_MAX_FRACTION}, got {fraction}")
+        est = ad9517_delay_estimate_ps(ramp, fraction)
+        if est > AD9517_DELAY_SAFE_PS:
+            raise ValueError(
+                f"ramp {ramp:#04x} fraction {fraction} ~{est:.0f} ps exceeds the "
+                f"{AD9517_DELAY_SAFE_PS} ps cap (fraction >= 44 froze the board)"
+            )
+
+        enable = bool(fraction) if enable is None else bool(enable)
+        base = _AD9517_DELAY_BYPASS + 3 * _AD9517_OUT_INDEX[label]
+        # Bypass first, so no intermediate ramp/fraction pair can exceed the cap.
+        self._ad9517_write(base, 1)
+        self._ad9517_write(base + 1, ramp)
+        self._ad9517_write(base + 2, fraction)
+        if enable:
+            self._ad9517_write(base, 0)
+
+        self._clk_delay[label] = {
+            "enabled": enable,
+            "ramp": ramp,
+            "fraction": fraction,
+            "estimate_ps": est if enable else 0.0,
+        }
+        self._reset_alignment()
+
+    def bypass_clock_delays(self):
+        """Put all four ADC clocks back on the undelayed path (firmware state)."""
+        for label in CHANNEL_LABELS:
+            self.set_clock_delay(label, 0)
+
+    def set_clock_phase(self, pair, offset, sync=True):
+        """Divider phase offset for a clock pair: 'AB' (OUT4/5) or 'CD' (OUT6/7).
+
+        One step = one 250 MHz divider-input cycle = 4 ns. Takes effect only on a
+        sync, which restarts all four ADC clocks -- check 'frame align:' in dmesg
+        afterwards.
+        """
+        pair = pair.upper()
+        if pair not in _AD9517_PHASE_REG:
+            raise ValueError(f"pair must be 'AB' or 'CD', got {pair!r}")
+        offset = int(offset)
+        if not 0 <= offset <= 15:
+            raise ValueError(f"offset must be 0..15, got {offset}")
+        # .2 stage is bypassed by the firmware, so its PO[7:4] stays 0.
+        self._ad9517_write(_AD9517_PHASE_REG[pair], offset)
+        if sync:
+            self.clock_sync()
+
+    def clock_sync(self):
+        """AD9517 soft sync: realigns every divider, briefly stopping all ADC clocks."""
+        self._ad9517_write(_AD9517_SOFT_SYNC, 1)
+        self._ad9517_write(_AD9517_SOFT_SYNC, 0)
+        self._reset_alignment()
 
     # ------------------------------------------------------------------
 
