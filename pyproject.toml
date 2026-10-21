@@ -72,7 +72,9 @@ ignore_missing_imports="true"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "--custom-hw-map=test/emu/hardware_map.yml --emu-xml-dir=test/emu/devices"
+# genalyzer ships a pytest reporter plugin which requires its optional
+# reporting dependencies. Only the analysis API is used here so it is disabled
+addopts = "--custom-hw-map=test/emu/hardware_map.yml --emu-xml-dir=test/emu/devices -p no:genalyzer"
 testpaths = [
     "test",
 ]
