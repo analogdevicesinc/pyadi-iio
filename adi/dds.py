@@ -96,7 +96,7 @@ class dds(attribute):
     def dds_enabled(self, value):
         self.__update_dds("raw", value)
 
-    def dds_single_tone(self, frequency, scale, channel=0):
+    def dds_single_tone(self, frequency, scale, channel=0, exclusive=True):
         """ Generate a single tone using the DDSs
             For complex data devices this will create a complex
             or single sided tone spectrally using two DDSs.
@@ -117,11 +117,18 @@ class dds(attribute):
                     of related converters. For non-complex devices this is
                     the index of the individual converters.
 
+                exclusive: type=bool
+                    When True (default) all other DDSs are zeroed first, so
+                    only this channel emits. When False the other DDSs are
+                    left untouched, allowing tones to be built up across
+                    several channels with repeated calls.
+
         """
-        chans = len(self.dds_scales)
-        self.dds_scales = [0] * chans
-        self.dds_phases = [0] * chans
-        self.dds_enabled = [1] * chans
+        if exclusive:
+            chans = len(self.dds_scales)
+            self.dds_scales = [0] * chans
+            self.dds_phases = [0] * chans
+            self.dds_enabled = [1] * chans
         # Set up tone
         if self._complex_data:
             if frequency < 0:
@@ -146,6 +153,8 @@ class dds(attribute):
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(90000)
             chan.attrs["scale"].value = str(scale)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + B + "_F1", True
             )
@@ -161,6 +170,8 @@ class dds(attribute):
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
         else:
             if frequency < 0:
                 Exception("Frequency must be positive")
@@ -168,8 +179,12 @@ class dds(attribute):
             chan.attrs["frequency"].value = str(frequency)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
 
-    def dds_dual_tone(self, frequency1, scale1, frequency2, scale2, channel=0):
+    def dds_dual_tone(
+        self, frequency1, scale1, frequency2, scale2, channel=0, exclusive=True
+    ):
         """ Generate two tones simultaneously using the DDSs
             For complex data devices this will create two complex
             or single sided tones spectrally using four DDSs.
@@ -198,11 +213,18 @@ class dds(attribute):
                     of related converters. For non-complex devices this is
                     the index of the individual converters.
 
+                exclusive: type=bool
+                    When True (default) all other DDSs are zeroed first, so
+                    only this channel emits. When False the other DDSs are
+                    left untouched, allowing tones to be built up across
+                    several channels with repeated calls.
+
         """
-        chans = len(self.dds_scales)
-        self.dds_scales = [0] * chans
-        self.dds_phases = [0] * chans
-        self.dds_enabled = [1] * chans
+        if exclusive:
+            chans = len(self.dds_scales)
+            self.dds_scales = [0] * chans
+            self.dds_phases = [0] * chans
+            self.dds_enabled = [1] * chans
         # Set up tone
         if self._complex_data:
             # Channel 1
@@ -228,6 +250,8 @@ class dds(attribute):
             chan.attrs["frequency"].value = str(frequency1)
             chan.attrs["phase"].value = str(90000)
             chan.attrs["scale"].value = str(scale1)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + B + "_F1", True
             )
@@ -243,6 +267,8 @@ class dds(attribute):
             chan.attrs["frequency"].value = str(frequency1)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale1)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
             # Channel 2
             if frequency2 < 0:
                 frequency2 = np.abs(frequency2)
@@ -266,6 +292,8 @@ class dds(attribute):
             chan.attrs["frequency"].value = str(frequency2)
             chan.attrs["phase"].value = str(90000)
             chan.attrs["scale"].value = str(scale2)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
             chan = self._txdac.find_channel(
                 "TX" + str(channel + 1) + "_" + B + "_F2", True
             )
@@ -281,6 +309,8 @@ class dds(attribute):
             chan.attrs["frequency"].value = str(frequency2)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale2)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
         else:
             if frequency1 < 0:
                 Exception("Frequency must be positive")
@@ -290,7 +320,11 @@ class dds(attribute):
             chan.attrs["frequency"].value = str(frequency1)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale1)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
             chan = self._txdac.find_channel(str(channel + 1) + "B", True)
             chan.attrs["frequency"].value = str(frequency2)
             chan.attrs["phase"].value = str(0)
             chan.attrs["scale"].value = str(scale2)
+            if not exclusive:
+                chan.attrs["raw"].value = "1"
