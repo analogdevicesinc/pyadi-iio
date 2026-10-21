@@ -1,0 +1,1110 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE context [
+        <!ELEMENT context (device | context-attribute)*>
+        <!ELEMENT context-attribute EMPTY>
+        <!ELEMENT device (channel | attribute | debug-attribute | buffer-attribute)*>
+        <!ELEMENT channel (scan-element?, attribute*)>
+        <!ELEMENT attribute EMPTY><!ELEMENT scan-element EMPTY>
+        <!ELEMENT debug-attribute EMPTY>
+        <!ELEMENT buffer-attribute EMPTY>
+        <!ATTLIST context version-git CDATA #IMPLIED name CDATA #IMPLIED version-minor CDATA #IMPLIED description CDATA #IMPLIED version-major CDATA #IMPLIED>
+        <!ATTLIST context-attribute name CDATA #REQUIRED value CDATA #REQUIRED>
+        <!ATTLIST device id CDATA #REQUIRED name CDATA #IMPLIED label CDATA #IMPLIED>
+        <!ATTLIST channel id CDATA #REQUIRED type (input|output) #REQUIRED name CDATA #IMPLIED>
+        <!ATTLIST scan-element index CDATA #REQUIRED format CDATA #REQUIRED scale CDATA #IMPLIED>
+        <!ATTLIST attribute name CDATA #REQUIRED filename CDATA #IMPLIED value CDATA #IMPLIED>
+        <!ATTLIST debug-attribute name CDATA #REQUIRED value CDATA #IMPLIED>
+        <!ATTLIST buffer-attribute name CDATA #REQUIRED value CDATA #IMPLIED>
+    ]>
+<context name="xml" version-major="0" version-minor="25" version-git="18df990" description="Linux xilinx-zcu102-20231 6.1.0-xilinx-v2023.1 #1 SMP Mon Mar 18 15:42:32 UTC 2024 aarch64">
+  <context-attribute name="local,kernel" value="6.1.0-xilinx-v2023.1"/>
+  <context-attribute name="uri" value="local:"/>
+  <device id="hwmon0" name="ina226" label="ina226-u76">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="962500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1139"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon1" name="ina226" label="ina226-u77">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="962500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1139"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon10" name="ina226" label="ina226-u79">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1162"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon11" name="ina226" label="ina226-u81">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1162"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon12" name="ina226" label="ina226-u80">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1162"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon13" name="ina226" label="ina226-u84">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1162"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon14" name="ina226" label="ina226-u16">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1161"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon15" name="ina226" label="ina226-u65">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1161"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon16" name="ina226" label="ina226-u74">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1161"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon17" name="ina226" label="ina226-u75">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1163"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon18" name="max20751">
+    <channel id="in2" type="input">
+      <attribute name="input" filename="in2_input" value="900"/>
+      <attribute name="label" filename="in2_label" value="vout1"/>
+      <attribute name="lcrit" filename="in2_lcrit" value="765"/>
+      <attribute name="lcrit_alarm" filename="in2_lcrit_alarm" value="0"/>
+      <attribute name="max" filename="in2_max" value="1000"/>
+      <attribute name="max_alarm" filename="in2_max_alarm" value="0"/>
+      <attribute name="min" filename="in2_min" value="855"/>
+      <attribute name="min_alarm" filename="in2_min_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="0"/>
+      <attribute name="label" filename="curr1_label" value="iout1"/>
+      <attribute name="max" filename="curr1_max" value="511500"/>
+      <attribute name="max_alarm" filename="curr1_max_alarm" value="0"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="alarm" filename="in1_alarm" value="0"/>
+      <attribute name="crit" filename="in1_crit" value="15000"/>
+      <attribute name="input" filename="in1_input" value="12125"/>
+      <attribute name="label" filename="in1_label" value="vin"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="4687"/>
+      <attribute name="max" filename="in1_max" value="14906"/>
+      <attribute name="min" filename="in1_min" value="4750"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="input" filename="power1_input" value="0"/>
+      <attribute name="label" filename="power1_label" value="pout1"/>
+    </channel>
+    <channel id="temp1" type="input">
+      <attribute name="crit" filename="temp1_crit" value="133000"/>
+      <attribute name="crit_alarm" filename="temp1_crit_alarm" value="0"/>
+      <attribute name="input" filename="temp1_input" value="43000"/>
+      <attribute name="max" filename="temp1_max" value="130000"/>
+      <attribute name="max_alarm" filename="temp1_max_alarm" value="0"/>
+      <attribute name="min" filename="temp1_min" value="-40000"/>
+      <attribute name="min_alarm" filename="temp1_min_alarm" value="0"/>
+    </channel>
+  </device>
+  <device id="hwmon19" name="max20751">
+    <channel id="in2" type="input">
+      <attribute name="input" filename="in2_input" value="900"/>
+      <attribute name="label" filename="in2_label" value="vout1"/>
+      <attribute name="lcrit" filename="in2_lcrit" value="765"/>
+      <attribute name="lcrit_alarm" filename="in2_lcrit_alarm" value="0"/>
+      <attribute name="max" filename="in2_max" value="1000"/>
+      <attribute name="max_alarm" filename="in2_max_alarm" value="0"/>
+      <attribute name="min" filename="in2_min" value="855"/>
+      <attribute name="min_alarm" filename="in2_min_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="0"/>
+      <attribute name="label" filename="curr1_label" value="iout1"/>
+      <attribute name="max" filename="curr1_max" value="511500"/>
+      <attribute name="max_alarm" filename="curr1_max_alarm" value="0"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="alarm" filename="in1_alarm" value="0"/>
+      <attribute name="crit" filename="in1_crit" value="15000"/>
+      <attribute name="input" filename="in1_input" value="12125"/>
+      <attribute name="label" filename="in1_label" value="vin"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="4687"/>
+      <attribute name="max" filename="in1_max" value="14906"/>
+      <attribute name="min" filename="in1_min" value="4750"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="input" filename="power1_input" value="0"/>
+      <attribute name="label" filename="power1_label" value="pout1"/>
+    </channel>
+    <channel id="temp1" type="input">
+      <attribute name="crit" filename="temp1_crit" value="133000"/>
+      <attribute name="crit_alarm" filename="temp1_crit_alarm" value="0"/>
+      <attribute name="input" filename="temp1_input" value="43000"/>
+      <attribute name="max" filename="temp1_max" value="130000"/>
+      <attribute name="max_alarm" filename="temp1_max_alarm" value="0"/>
+      <attribute name="min" filename="temp1_min" value="-40000"/>
+      <attribute name="min_alarm" filename="temp1_min_alarm" value="0"/>
+    </channel>
+  </device>
+  <device id="hwmon2" name="ina226" label="ina226-u78">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1159"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon3" name="ina226" label="ina226-u87">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1159"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon4" name="ina226" label="ina226-u85">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1161"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon5" name="ina226" label="ina226-u86">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1161"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon6" name="ina226" label="ina226-u93">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1159"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon7" name="ina226" label="ina226-u88">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="848"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1159"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon8" name="ina226" label="ina226-u15">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="846"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1154"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="hwmon9" name="ina226" label="ina226-u92">
+    <channel id="in0" type="input">
+      <attribute name="crit" filename="in0_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in0_crit_alarm" value="0"/>
+      <attribute name="input" filename="in0_input" value="6"/>
+      <attribute name="lcrit" filename="in0_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in0_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="power1" type="input">
+      <attribute name="crit" filename="power1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="power1_crit_alarm" value="0"/>
+      <attribute name="input" filename="power1_input" value="987500"/>
+    </channel>
+    <channel id="in1" type="input">
+      <attribute name="crit" filename="in1_crit" value="0"/>
+      <attribute name="crit_alarm" filename="in1_crit_alarm" value="0"/>
+      <attribute name="input" filename="in1_input" value="846"/>
+      <attribute name="lcrit" filename="in1_lcrit" value="0"/>
+      <attribute name="lcrit_alarm" filename="in1_lcrit_alarm" value="0"/>
+    </channel>
+    <channel id="curr1" type="input">
+      <attribute name="input" filename="curr1_input" value="1154"/>
+    </channel>
+    <attribute name="shunt_resistor" value="5000"/>
+    <attribute name="update_interval" value="35"/>
+  </device>
+  <device id="iio:device0" name="xilinx-ams">
+    <channel id="voltage9" type="input">
+      <attribute name="raw" filename="in_voltage9_raw" value="18537"/>
+      <attribute name="scale" filename="in_voltage9_scale" value="0.045776367"/>
+    </channel>
+    <channel id="temp20" type="input">
+      <attribute name="input" filename="in_temp20_input" value="36292"/>
+      <attribute name="offset" filename="in_temp20_offset" value="-36058"/>
+      <attribute name="raw" filename="in_temp20_raw" value="40628"/>
+      <attribute name="scale" filename="in_temp20_scale" value="7.771514892"/>
+    </channel>
+    <channel id="voltage11" type="input">
+      <attribute name="raw" filename="in_voltage11_raw" value="39747"/>
+      <attribute name="scale" filename="in_voltage11_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage23" type="input">
+      <attribute name="raw" filename="in_voltage23_raw" value="27294"/>
+      <attribute name="scale" filename="in_voltage23_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage15" type="input">
+      <attribute name="raw" filename="in_voltage15_raw" value="19465"/>
+      <attribute name="scale" filename="in_voltage15_scale" value="0.091552734"/>
+    </channel>
+    <channel id="voltage2" type="input">
+      <attribute name="raw" filename="in_voltage2_raw" value="18521"/>
+      <attribute name="scale" filename="in_voltage2_scale" value="0.045776367"/>
+    </channel>
+    <channel id="temp8" type="input">
+      <attribute name="input" filename="in_temp8_input" value="36961"/>
+      <attribute name="offset" filename="in_temp8_offset" value="-36058"/>
+      <attribute name="raw" filename="in_temp8_raw" value="40908"/>
+      <attribute name="scale" filename="in_temp8_scale" value="7.771514892"/>
+    </channel>
+    <channel id="voltage19" type="input">
+      <attribute name="raw" filename="in_voltage19_raw" value="39718"/>
+      <attribute name="scale" filename="in_voltage19_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage17" type="input">
+      <attribute name="raw" filename="in_voltage17_raw" value="18472"/>
+      <attribute name="scale" filename="in_voltage17_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage22" type="input">
+      <attribute name="raw" filename="in_voltage22_raw" value="39292"/>
+      <attribute name="scale" filename="in_voltage22_scale" value="0.045776367"/>
+    </channel>
+    <channel id="temp7" type="input">
+      <attribute name="input" filename="in_temp7_input" value="37256"/>
+      <attribute name="offset" filename="in_temp7_offset" value="-36058"/>
+      <attribute name="raw" filename="in_temp7_raw" value="40892"/>
+      <attribute name="scale" filename="in_temp7_scale" value="7.771514892"/>
+    </channel>
+    <channel id="voltage1" type="input">
+      <attribute name="raw" filename="in_voltage1_raw" value="38362"/>
+      <attribute name="scale" filename="in_voltage1_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage26" type="input">
+      <attribute name="raw" filename="in_voltage26_raw" value="18581"/>
+      <attribute name="scale" filename="in_voltage26_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage27" type="input">
+      <attribute name="raw" filename="in_voltage27_raw" value="18570"/>
+      <attribute name="scale" filename="in_voltage27_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage10" type="input">
+      <attribute name="raw" filename="in_voltage10_raw" value="18490"/>
+      <attribute name="scale" filename="in_voltage10_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage5" type="input">
+      <attribute name="raw" filename="in_voltage5_raw" value="39638"/>
+      <attribute name="scale" filename="in_voltage5_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage6" type="input">
+      <attribute name="raw" filename="in_voltage6_raw" value="18428"/>
+      <attribute name="scale" filename="in_voltage6_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage14" type="input">
+      <attribute name="raw" filename="in_voltage14_raw" value="19477"/>
+      <attribute name="scale" filename="in_voltage14_scale" value="0.091552734"/>
+    </channel>
+    <channel id="voltage12" type="input">
+      <attribute name="raw" filename="in_voltage12_raw" value="26019"/>
+      <attribute name="scale" filename="in_voltage12_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage16" type="input">
+      <attribute name="raw" filename="in_voltage16_raw" value="19466"/>
+      <attribute name="scale" filename="in_voltage16_scale" value="0.091552734"/>
+    </channel>
+    <channel id="voltage24" type="input">
+      <attribute name="raw" filename="in_voltage24_raw" value="0"/>
+      <attribute name="scale" filename="in_voltage24_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage3" type="input">
+      <attribute name="raw" filename="in_voltage3_raw" value="18561"/>
+      <attribute name="scale" filename="in_voltage3_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage18" type="input">
+      <attribute name="raw" filename="in_voltage18_raw" value="39666"/>
+      <attribute name="scale" filename="in_voltage18_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage28" type="input">
+      <attribute name="raw" filename="in_voltage28_raw" value="39802"/>
+      <attribute name="scale" filename="in_voltage28_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage21" type="input">
+      <attribute name="raw" filename="in_voltage21_raw" value="18466"/>
+      <attribute name="scale" filename="in_voltage21_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage0" type="input">
+      <attribute name="raw" filename="in_voltage0_raw" value="26161"/>
+      <attribute name="scale" filename="in_voltage0_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage13" type="input">
+      <attribute name="raw" filename="in_voltage13_raw" value="19675"/>
+      <attribute name="scale" filename="in_voltage13_scale" value="0.091552734"/>
+    </channel>
+    <channel id="voltage25" type="input">
+      <attribute name="raw" filename="in_voltage25_raw" value="18609"/>
+      <attribute name="scale" filename="in_voltage25_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage4" type="input">
+      <attribute name="raw" filename="in_voltage4_raw" value="39206"/>
+      <attribute name="scale" filename="in_voltage4_scale" value="0.045776367"/>
+    </channel>
+    <channel id="voltage29" type="input">
+      <attribute name="raw" filename="in_voltage29_raw" value="39224"/>
+      <attribute name="scale" filename="in_voltage29_scale" value="0.045776367"/>
+    </channel>
+    <attribute name="waiting_for_supplier" value="0"/>
+  </device>
+  <device id="iio:device1" name="ad9528-1">
+    <channel id="altvoltage0" name="DEV_SYSREF" type="output">
+      <attribute name="frequency" filename="out_altvoltage0_DEV_SYSREF_frequency" value="3840000"/>
+      <attribute name="label" filename="out_altvoltage0_DEV_SYSREF_label" value="DEV_SYSREF"/>
+      <attribute name="phase" filename="out_altvoltage0_DEV_SYSREF_phase" value="0.000000"/>
+      <attribute name="raw" filename="out_altvoltage0_DEV_SYSREF_raw" value="1"/>
+    </channel>
+    <channel id="altvoltage3" name="CORE_CLK" type="output">
+      <attribute name="frequency" filename="out_altvoltage3_CORE_CLK_frequency" value="245760000"/>
+      <attribute name="label" filename="out_altvoltage3_CORE_CLK_label" value="CORE_CLK"/>
+      <attribute name="phase" filename="out_altvoltage3_CORE_CLK_phase" value="0.000000"/>
+      <attribute name="raw" filename="out_altvoltage3_CORE_CLK_raw" value="1"/>
+    </channel>
+    <channel id="altvoltage1" name="DEV_CLK" type="output">
+      <attribute name="frequency" filename="out_altvoltage1_DEV_CLK_frequency" value="245760000"/>
+      <attribute name="label" filename="out_altvoltage1_DEV_CLK_label" value="DEV_CLK"/>
+      <attribute name="phase" filename="out_altvoltage1_DEV_CLK_phase" value="0.000000"/>
+      <attribute name="raw" filename="out_altvoltage1_DEV_CLK_raw" value="1"/>
+    </channel>
+    <channel id="altvoltage12" name="FMC_SYSREF" type="output">
+      <attribute name="frequency" filename="out_altvoltage12_FMC_SYSREF_frequency" value="3840000"/>
+      <attribute name="label" filename="out_altvoltage12_FMC_SYSREF_label" value="FMC_SYSREF"/>
+      <attribute name="phase" filename="out_altvoltage12_FMC_SYSREF_phase" value="0.000000"/>
+      <attribute name="raw" filename="out_altvoltage12_FMC_SYSREF_raw" value="1"/>
+    </channel>
+    <channel id="altvoltage13" name="FMC_CLK" type="output">
+      <attribute name="frequency" filename="out_altvoltage13_FMC_CLK_frequency" value="245760000"/>
+      <attribute name="label" filename="out_altvoltage13_FMC_CLK_label" value="FMC_CLK"/>
+      <attribute name="phase" filename="out_altvoltage13_FMC_CLK_phase" value="0.000000"/>
+      <attribute name="raw" filename="out_altvoltage13_FMC_CLK_raw" value="1"/>
+    </channel>
+    <attribute name="pll1_feedback_clk_present" value="1"/>
+    <attribute name="pll1_locked" value="0"/>
+    <attribute name="pll1_reference_clk_a_present" value="0"/>
+    <attribute name="pll1_reference_clk_ab_missing" value="1"/>
+    <attribute name="pll1_reference_clk_b_present" value="0"/>
+    <attribute name="pll2_feedback_clk_present" value="1"/>
+    <attribute name="pll2_locked" value="1"/>
+    <attribute name="sync_dividers" value="ERROR"/>
+    <attribute name="vcxo_clk_present" value="1"/>
+    <attribute name="waiting_for_supplier" value="0"/>
+    <debug-attribute name="direct_reg_access" value="0x18"/>
+  </device>
+  <device id="iio:device2" name="adrv9025-phy">
+    <channel id="voltage5" type="input">
+      <attribute name="bb_dc_offset_tracking_en" filename="in_voltage5_bb_dc_offset_tracking_en" value="0"/>
+      <attribute name="en" filename="in_voltage5_en" value="0"/>
+      <attribute name="hardwaregain" filename="in_voltage5_hardwaregain" value="-97.500000 dB"/>
+      <attribute name="quadrature_tracking_en" filename="in_voltage5_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="in_voltage5_rf_bandwidth" value="450000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage3" type="input">
+      <attribute name="bb_dc_offset_tracking_en" filename="in_voltage3_bb_dc_offset_tracking_en" value="1"/>
+      <attribute name="en" filename="in_voltage3_en" value="1"/>
+      <attribute name="gain_control_mode" filename="in_voltage3_gain_control_mode" value="manual"/>
+      <attribute name="gain_control_mode_available" filename="in_voltage3_gain_control_mode_available" value="manual fast_attack slow_loop hybrid"/>
+      <attribute name="hardwaregain" filename="in_voltage3_hardwaregain" value="30.000000 dB"/>
+      <attribute name="hd2_tracking_en" filename="in_voltage3_hd2_tracking_en" value="1"/>
+      <attribute name="quadrature_tracking_en" filename="in_voltage3_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="in_voltage3_rf_bandwidth" value="200000000"/>
+      <attribute name="rssi" filename="in_voltage3_rssi" value="58.250 dB"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage3" type="output">
+      <attribute name="en" filename="out_voltage3_en" value="1"/>
+      <attribute name="hardwaregain" filename="out_voltage3_hardwaregain" value="-10.000000 dB"/>
+      <attribute name="lo_leakage_tracking_en" filename="out_voltage3_lo_leakage_tracking_en" value="0"/>
+      <attribute name="quadrature_tracking_en" filename="out_voltage3_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="out_voltage3_rf_bandwidth" value="450000000"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage0" type="output">
+      <attribute name="en" filename="out_voltage0_en" value="1"/>
+      <attribute name="hardwaregain" filename="out_voltage0_hardwaregain" value="-10.000000 dB"/>
+      <attribute name="lo_leakage_tracking_en" filename="out_voltage0_lo_leakage_tracking_en" value="0"/>
+      <attribute name="quadrature_tracking_en" filename="out_voltage0_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="out_voltage0_rf_bandwidth" value="450000000"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage2" type="input">
+      <attribute name="bb_dc_offset_tracking_en" filename="in_voltage2_bb_dc_offset_tracking_en" value="1"/>
+      <attribute name="en" filename="in_voltage2_en" value="1"/>
+      <attribute name="gain_control_mode" filename="in_voltage2_gain_control_mode" value="manual"/>
+      <attribute name="gain_control_mode_available" filename="in_voltage2_gain_control_mode_available" value="manual fast_attack slow_loop hybrid"/>
+      <attribute name="hardwaregain" filename="in_voltage2_hardwaregain" value="30.000000 dB"/>
+      <attribute name="hd2_tracking_en" filename="in_voltage2_hd2_tracking_en" value="0"/>
+      <attribute name="quadrature_tracking_en" filename="in_voltage2_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="in_voltage2_rf_bandwidth" value="200000000"/>
+      <attribute name="rssi" filename="in_voltage2_rssi" value="58.250 dB"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage2" type="output">
+      <attribute name="en" filename="out_voltage2_en" value="1"/>
+      <attribute name="hardwaregain" filename="out_voltage2_hardwaregain" value="-10.000000 dB"/>
+      <attribute name="lo_leakage_tracking_en" filename="out_voltage2_lo_leakage_tracking_en" value="0"/>
+      <attribute name="quadrature_tracking_en" filename="out_voltage2_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="out_voltage2_rf_bandwidth" value="450000000"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage0" type="input">
+      <attribute name="bb_dc_offset_tracking_en" filename="in_voltage0_bb_dc_offset_tracking_en" value="1"/>
+      <attribute name="en" filename="in_voltage0_en" value="1"/>
+      <attribute name="gain_control_mode" filename="in_voltage0_gain_control_mode" value="slow_loop"/>
+      <attribute name="gain_control_mode_available" filename="in_voltage0_gain_control_mode_available" value="manual fast_attack slow_loop hybrid"/>
+      <attribute name="hardwaregain" filename="in_voltage0_hardwaregain" value="30.000000 dB"/>
+      <attribute name="hd2_tracking_en" filename="in_voltage0_hd2_tracking_en" value="0"/>
+      <attribute name="quadrature_tracking_en" filename="in_voltage0_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="in_voltage0_rf_bandwidth" value="200000000"/>
+      <attribute name="rssi" filename="in_voltage0_rssi" value="58.250 dB"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage1" type="input">
+      <attribute name="bb_dc_offset_tracking_en" filename="in_voltage1_bb_dc_offset_tracking_en" value="1"/>
+      <attribute name="en" filename="in_voltage1_en" value="1"/>
+      <attribute name="gain_control_mode" filename="in_voltage1_gain_control_mode" value="slow_loop"/>
+      <attribute name="gain_control_mode_available" filename="in_voltage1_gain_control_mode_available" value="manual fast_attack slow_loop hybrid"/>
+      <attribute name="hardwaregain" filename="in_voltage1_hardwaregain" value="30.000000 dB"/>
+      <attribute name="hd2_tracking_en" filename="in_voltage1_hd2_tracking_en" value="0"/>
+      <attribute name="quadrature_tracking_en" filename="in_voltage1_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="in_voltage1_rf_bandwidth" value="200000000"/>
+      <attribute name="rssi" filename="in_voltage1_rssi" value="58.250 dB"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="altvoltage2" name="AUX_LO" type="output">
+      <attribute name="frequency" filename="out_altvoltage2_AUX_LO_frequency" value="3605000000"/>
+      <attribute name="label" filename="out_altvoltage2_AUX_LO_label" value="AUX_LO"/>
+    </channel>
+    <channel id="altvoltage1" name="LO2" type="output">
+      <attribute name="frequency" filename="out_altvoltage1_LO2_frequency" value="3550000000"/>
+      <attribute name="label" filename="out_altvoltage1_LO2_label" value="LO2"/>
+    </channel>
+    <channel id="voltage4" type="input">
+      <attribute name="bb_dc_offset_tracking_en" filename="in_voltage4_bb_dc_offset_tracking_en" value="0"/>
+      <attribute name="en" filename="in_voltage4_en" value="0"/>
+      <attribute name="hardwaregain" filename="in_voltage4_hardwaregain" value="-97.500000 dB"/>
+      <attribute name="quadrature_tracking_en" filename="in_voltage4_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="in_voltage4_rf_bandwidth" value="450000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage1" type="output">
+      <attribute name="en" filename="out_voltage1_en" value="1"/>
+      <attribute name="hardwaregain" filename="out_voltage1_hardwaregain" value="-10.000000 dB"/>
+      <attribute name="lo_leakage_tracking_en" filename="out_voltage1_lo_leakage_tracking_en" value="0"/>
+      <attribute name="quadrature_tracking_en" filename="out_voltage1_quadrature_tracking_en" value="0"/>
+      <attribute name="rf_bandwidth" filename="out_voltage1_rf_bandwidth" value="450000000"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="altvoltage0" name="LO1" type="output">
+      <attribute name="frequency" filename="out_altvoltage0_LO1_frequency" value="1000000000"/>
+      <attribute name="label" filename="out_altvoltage0_LO1_label" value="LO1"/>
+    </channel>
+    <channel id="temp0" type="input">
+      <attribute name="input" filename="in_temp0_input" value="63000"/>
+    </channel>
+    <attribute name="calibrate" value="ERROR"/>
+    <attribute name="calibrate_rx_qec_en" value="0"/>
+    <attribute name="calibrate_tx_lol_en" value="0"/>
+    <attribute name="calibrate_tx_lol_ext_en" value="0"/>
+    <attribute name="calibrate_tx_qec_en" value="0"/>
+    <attribute name="jesd204_fsm_ctrl" value="1"/>
+    <attribute name="jesd204_fsm_error" value="0"/>
+    <attribute name="jesd204_fsm_paused" value="0"/>
+    <attribute name="jesd204_fsm_resume" value="ERROR"/>
+    <attribute name="jesd204_fsm_state" value="opt_post_running_stage"/>
+    <attribute name="waiting_for_supplier" value="0"/>
+    <debug-attribute name="bist_tone" value="0"/>
+    <debug-attribute name="bist_framer_loopback" value="0"/>
+    <debug-attribute name="bist_framer_0_prbs" value="0"/>
+    <debug-attribute name="direct_reg_access" value="0x3C"/>
+  </device>
+  <device id="iio:device3" name="axi-adrv9025-rx-hpc">
+    <channel id="voltage0_i" type="input">
+      <scan-element index="0" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="calibbias" filename="in_voltage0_i_calibbias" value="0"/>
+      <attribute name="calibphase" filename="in_voltage0_i_calibphase" value="0.000000"/>
+      <attribute name="calibscale" filename="in_voltage0_i_calibscale" value="0.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage0_q" type="input">
+      <scan-element index="1" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="calibbias" filename="in_voltage0_q_calibbias" value="0"/>
+      <attribute name="calibphase" filename="in_voltage0_q_calibphase" value="0.000000"/>
+      <attribute name="calibscale" filename="in_voltage0_q_calibscale" value="0.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage1_i" type="input">
+      <scan-element index="2" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="calibbias" filename="in_voltage1_i_calibbias" value="0"/>
+      <attribute name="calibphase" filename="in_voltage1_i_calibphase" value="0.000000"/>
+      <attribute name="calibscale" filename="in_voltage1_i_calibscale" value="0.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage1_q" type="input">
+      <scan-element index="3" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="calibbias" filename="in_voltage1_q_calibbias" value="0"/>
+      <attribute name="calibphase" filename="in_voltage1_q_calibphase" value="0.000000"/>
+      <attribute name="calibscale" filename="in_voltage1_q_calibscale" value="0.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage2_i" type="input">
+      <scan-element index="4" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="calibbias" filename="in_voltage2_i_calibbias" value="0"/>
+      <attribute name="calibphase" filename="in_voltage2_i_calibphase" value="0.000000"/>
+      <attribute name="calibscale" filename="in_voltage2_i_calibscale" value="0.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage2_q" type="input">
+      <scan-element index="5" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="calibbias" filename="in_voltage2_q_calibbias" value="0"/>
+      <attribute name="calibphase" filename="in_voltage2_q_calibphase" value="0.000000"/>
+      <attribute name="calibscale" filename="in_voltage2_q_calibscale" value="0.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage3_i" type="input">
+      <scan-element index="6" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="calibbias" filename="in_voltage3_i_calibbias" value="0"/>
+      <attribute name="calibphase" filename="in_voltage3_i_calibphase" value="0.000000"/>
+      <attribute name="calibscale" filename="in_voltage3_i_calibscale" value="0.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage3_q" type="input">
+      <scan-element index="7" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="calibbias" filename="in_voltage3_q_calibbias" value="0"/>
+      <attribute name="calibphase" filename="in_voltage3_q_calibphase" value="0.000000"/>
+      <attribute name="calibscale" filename="in_voltage3_q_calibscale" value="0.000000"/>
+      <attribute name="sampling_frequency" filename="in_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <attribute name="sync_start_enable" value="disarm"/>
+    <attribute name="sync_start_enable_available" value="arm"/>
+    <attribute name="waiting_for_supplier" value="0"/>
+    <buffer-attribute name="data_available" value="0"/>
+    <buffer-attribute name="direction" value="in"/>
+    <buffer-attribute name="length_align_bytes" value="16"/>
+    <debug-attribute name="pseudorandom_err_check" value="CH0 : PN9 : Out of Sync : PN Error&#10;CH1 : PN9 : Out of Sync : PN Error&#10;CH2 : PN9 : Out of Sync : PN Error&#10;CH3 : PN9 : Out of Sync : PN Error&#10;CH4 : PN9 : Out of Sync : PN Error&#10;CH5 : PN9 : Out of Sync : PN Error&#10;CH6 : PN9 : Out of Sync : PN Error&#10;CH7 : PN9 : Out of Sync : PN Error"/>
+    <debug-attribute name="direct_reg_access" value="0x0"/>
+  </device>
+  <device id="iio:device4" name="axi-adrv9025-tx-hpc">
+    <channel id="voltage0_i" type="output">
+      <scan-element index="0" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage0_q" type="output">
+      <scan-element index="1" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage1_i" type="output">
+      <scan-element index="2" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage1_q" type="output">
+      <scan-element index="3" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage2_i" type="output">
+      <scan-element index="4" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage2_q" type="output">
+      <scan-element index="5" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage3_i" type="output">
+      <scan-element index="6" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="voltage3_q" type="output">
+      <scan-element index="7" format="le:S16/16&gt;&gt;0"/>
+      <attribute name="sampling_frequency" filename="out_voltage_sampling_frequency" value="245760000"/>
+    </channel>
+    <channel id="altvoltage11" name="TX3_Q_F2" type="output">
+      <attribute name="frequency" filename="out_altvoltage11_TX3_Q_F2_frequency" value="40001860"/>
+      <attribute name="label" filename="out_altvoltage11_TX3_Q_F2_label" value="TX3_Q_F2"/>
+      <attribute name="phase" filename="out_altvoltage11_TX3_Q_F2_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage11_TX3_Q_F2_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage11_TX3_Q_F2_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage3" name="TX1_Q_F2" type="output">
+      <attribute name="frequency" filename="out_altvoltage3_TX1_Q_F2_frequency" value="3750"/>
+      <attribute name="label" filename="out_altvoltage3_TX1_Q_F2_label" value="TX1_Q_F2"/>
+      <attribute name="phase" filename="out_altvoltage3_TX1_Q_F2_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage3_TX1_Q_F2_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage3_TX1_Q_F2_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage9" name="TX3_I_F2" type="output">
+      <attribute name="frequency" filename="out_altvoltage9_TX3_I_F2_frequency" value="40001860"/>
+      <attribute name="label" filename="out_altvoltage9_TX3_I_F2_label" value="TX3_I_F2"/>
+      <attribute name="phase" filename="out_altvoltage9_TX3_I_F2_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage9_TX3_I_F2_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage9_TX3_I_F2_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage5" name="TX2_I_F2" type="output">
+      <attribute name="frequency" filename="out_altvoltage5_TX2_I_F2_frequency" value="3750"/>
+      <attribute name="label" filename="out_altvoltage5_TX2_I_F2_label" value="TX2_I_F2"/>
+      <attribute name="phase" filename="out_altvoltage5_TX2_I_F2_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage5_TX2_I_F2_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage5_TX2_I_F2_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage2" name="TX1_Q_F1" type="output">
+      <attribute name="frequency" filename="out_altvoltage2_TX1_Q_F1_frequency" value="100002775"/>
+      <attribute name="label" filename="out_altvoltage2_TX1_Q_F1_label" value="TX1_Q_F1"/>
+      <attribute name="phase" filename="out_altvoltage2_TX1_Q_F1_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage2_TX1_Q_F1_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage2_TX1_Q_F1_scale" value="1.000000"/>
+    </channel>
+    <channel id="altvoltage8" name="TX3_I_F1" type="output">
+      <attribute name="frequency" filename="out_altvoltage8_TX3_I_F1_frequency" value="40001860"/>
+      <attribute name="label" filename="out_altvoltage8_TX3_I_F1_label" value="TX3_I_F1"/>
+      <attribute name="phase" filename="out_altvoltage8_TX3_I_F1_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage8_TX3_I_F1_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage8_TX3_I_F1_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage12" name="TX4_I_F1" type="output">
+      <attribute name="frequency" filename="out_altvoltage12_TX4_I_F1_frequency" value="40001860"/>
+      <attribute name="label" filename="out_altvoltage12_TX4_I_F1_label" value="TX4_I_F1"/>
+      <attribute name="phase" filename="out_altvoltage12_TX4_I_F1_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage12_TX4_I_F1_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage12_TX4_I_F1_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage1" name="TX1_I_F2" type="output">
+      <attribute name="frequency" filename="out_altvoltage1_TX1_I_F2_frequency" value="3750"/>
+      <attribute name="label" filename="out_altvoltage1_TX1_I_F2_label" value="TX1_I_F2"/>
+      <attribute name="phase" filename="out_altvoltage1_TX1_I_F2_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage1_TX1_I_F2_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage1_TX1_I_F2_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage7" name="TX2_Q_F2" type="output">
+      <attribute name="frequency" filename="out_altvoltage7_TX2_Q_F2_frequency" value="3750"/>
+      <attribute name="label" filename="out_altvoltage7_TX2_Q_F2_label" value="TX2_Q_F2"/>
+      <attribute name="phase" filename="out_altvoltage7_TX2_Q_F2_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage7_TX2_Q_F2_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage7_TX2_Q_F2_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage4" name="TX2_I_F1" type="output">
+      <attribute name="frequency" filename="out_altvoltage4_TX2_I_F1_frequency" value="1998780"/>
+      <attribute name="label" filename="out_altvoltage4_TX2_I_F1_label" value="TX2_I_F1"/>
+      <attribute name="phase" filename="out_altvoltage4_TX2_I_F1_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage4_TX2_I_F1_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage4_TX2_I_F1_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage14" name="TX4_Q_F1" type="output">
+      <attribute name="frequency" filename="out_altvoltage14_TX4_Q_F1_frequency" value="40001860"/>
+      <attribute name="label" filename="out_altvoltage14_TX4_Q_F1_label" value="TX4_Q_F1"/>
+      <attribute name="phase" filename="out_altvoltage14_TX4_Q_F1_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage14_TX4_Q_F1_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage14_TX4_Q_F1_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage13" name="TX4_I_F2" type="output">
+      <attribute name="frequency" filename="out_altvoltage13_TX4_I_F2_frequency" value="40001860"/>
+      <attribute name="label" filename="out_altvoltage13_TX4_I_F2_label" value="TX4_I_F2"/>
+      <attribute name="phase" filename="out_altvoltage13_TX4_I_F2_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage13_TX4_I_F2_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage13_TX4_I_F2_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage0" name="TX1_I_F1" type="output">
+      <attribute name="frequency" filename="out_altvoltage0_TX1_I_F1_frequency" value="100002775"/>
+      <attribute name="label" filename="out_altvoltage0_TX1_I_F1_label" value="TX1_I_F1"/>
+      <attribute name="phase" filename="out_altvoltage0_TX1_I_F1_phase" value="90000"/>
+      <attribute name="raw" filename="out_altvoltage0_TX1_I_F1_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage0_TX1_I_F1_scale" value="1.000000"/>
+    </channel>
+    <channel id="altvoltage10" name="TX3_Q_F1" type="output">
+      <attribute name="frequency" filename="out_altvoltage10_TX3_Q_F1_frequency" value="40001860"/>
+      <attribute name="label" filename="out_altvoltage10_TX3_Q_F1_label" value="TX3_Q_F1"/>
+      <attribute name="phase" filename="out_altvoltage10_TX3_Q_F1_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage10_TX3_Q_F1_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage10_TX3_Q_F1_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage6" name="TX2_Q_F1" type="output">
+      <attribute name="frequency" filename="out_altvoltage6_TX2_Q_F1_frequency" value="1998780"/>
+      <attribute name="label" filename="out_altvoltage6_TX2_Q_F1_label" value="TX2_Q_F1"/>
+      <attribute name="phase" filename="out_altvoltage6_TX2_Q_F1_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage6_TX2_Q_F1_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage6_TX2_Q_F1_scale" value="0.000000"/>
+    </channel>
+    <channel id="altvoltage15" name="TX4_Q_F2" type="output">
+      <attribute name="frequency" filename="out_altvoltage15_TX4_Q_F2_frequency" value="40001860"/>
+      <attribute name="label" filename="out_altvoltage15_TX4_Q_F2_label" value="TX4_Q_F2"/>
+      <attribute name="phase" filename="out_altvoltage15_TX4_Q_F2_phase" value="0"/>
+      <attribute name="raw" filename="out_altvoltage15_TX4_Q_F2_raw" value="1"/>
+      <attribute name="sampling_frequency" filename="out_altvoltage_sampling_frequency" value="245760000"/>
+      <attribute name="scale" filename="out_altvoltage15_TX4_Q_F2_scale" value="0.000000"/>
+    </channel>
+    <attribute name="sync_start_enable" value="disarm"/>
+    <attribute name="sync_start_enable_available" value="arm"/>
+    <attribute name="waiting_for_supplier" value="0"/>
+    <buffer-attribute name="data_available" value="0"/>
+    <buffer-attribute name="direction" value="out"/>
+    <buffer-attribute name="length_align_bytes" value="16"/>
+    <debug-attribute name="pl_ddr_fifo_enable" value="0"/>
+    <debug-attribute name="direct_reg_access" value="0x90262"/>
+  </device>
+  <device id="iio_sysfs_trigger">
+    <attribute name="add_trigger" value="ERROR"/>
+    <attribute name="remove_trigger" value="ERROR"/>
+  </device>
+</context>
