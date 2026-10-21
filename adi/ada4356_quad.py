@@ -72,19 +72,23 @@ _AD9517_DELAY_BYPASS = 0xA0  # + 3 * index; ramp at +1, fraction at +2
 # Divider 2 feeds OUT4/5 (A+B), divider 3 feeds OUT6/7 (C+D); PO[3:0] of the .1 stage.
 _AD9517_PHASE_REG = {"AB": 0x19A, "CD": 0x19F}
 _AD9517_SOFT_SYNC = 0x230
-AD9517_DEFAULT_RAMP = 0x39  # the only ramp characterised: 0.045-0.060 ns/LSB
+AD9517_DEFAULT_RAMP = 0x39  # the only ramp characterised: 0.040-0.043 ns/LSB
 AD9517_MAX_FRACTION = 47
-# Datasheet estimate x1.42 (measured slope). A at ramp 0x39 froze the board at
-# fraction 44 and 47 (2026-10-13, twice); <= 36 ran. Do not raise without a new measurement.
+# Datasheet formula (AD9517-4 Rev. E p.47, verified 2026-10-21): Delay(ps) =
+# Range_ps * fraction/63 + Offset_ps. A at ramp 0x39 froze the board at fraction
+# 44 (real ~2316 ps) and 47 (real ~2442 ps); both stay excluded by this cap, so
+# fixing the estimate does not re-admit either freeze point. Do not raise the
+# ps cap itself without a new measurement above fraction 41.
 AD9517_DELAY_SAFE_PS = 2200
+AD9517_DELAY_OFFSET_PS = 460  # measured insertion ~380-410 ps; datasheet gives ~460
 
 
 def ad9517_delay_estimate_ps(ramp, fraction):
-    """Fine-delay estimate for an AD9517 output: datasheet formula x 1.42."""
+    """Fine-delay estimate for an AD9517 output, from the datasheet formula."""
     caps = 4 - bin((ramp >> 3) & 0x7).count("1")
     iramp_ua = 200 * ((ramp & 0x7) + 1)
     range_ps = 265720 * (caps + 3) / iramp_ua
-    return range_ps * 1.42 * fraction / 63
+    return range_ps * fraction / 63 + AD9517_DELAY_OFFSET_PS
 
 
 def _tone_phase(x, f_hz, fs):
