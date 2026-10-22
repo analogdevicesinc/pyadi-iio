@@ -30,9 +30,12 @@ Usage:
   python3 ada4356_quad_lidar_example.py ip:192.168.0.106 --distance 50 --samples 16384
   python3 ada4356_quad_lidar_example.py ip:192.168.0.106 --gain 11k --filter fsel1
   python3 ada4356_quad_lidar_example.py ip:192.168.0.106 --echo sine --burst-us 100
+  python3 ada4356_quad_lidar_example.py ip:192.168.0.106 --repeat 20 --csv ~/ada4356_lidar_log.csv
 """
 
 import argparse
+import csv
+import os
 import sys
 import time
 
@@ -105,6 +108,16 @@ def parse_args():
     # 1 s for this reason; the single-channel LiDAR example can use a short
     # frame only because it has one DMA and no arming race.
     ap.add_argument("--frame-ms", type=float, default=1000.0, help="TDD frame")
+    # A triggered M2K idles near 0 V until TI fires, which clamps the TIA at
+    # 200R; recovering to the --offset level took ~80 us (measured 2026-10-16).
+    # The echo sits this far after the trigger and the lead is subtracted from ToF.
+    ap.add_argument("--lead-us", type=float, default=100.0,
+                    help="fixed M2K pre-roll before the echo, us")
+    ap.add_argument("--repeat", type=int, default=1,
+                    help="shots in one M2K session, one per TDD frame")
+    ap.add_argument("--csv", default="",
+                    help="append one row per shot, e.g. ~/ada4356_lidar_log.csv")
+    ap.add_argument("--tag", default="", help="free text stored in the CSV")
     return ap.parse_args()
 
 
@@ -133,8 +146,9 @@ def configure_tdd(dev, frame_length, gate_on):
 
 
 def m2k_echo(aout, echo_delay_us, amplitude_v, offset_v, frame_us,
-             kind="pulse", pulse_ns=1000.0, burst_us=100.0, burst_khz=100.0):
-    """Flat baseline with the echo buried delay_samples in.
+             kind="pulse", pulse_ns=1000.0, burst_us=100.0, burst_khz=100.0,
+             lead_us=0.0):
+    """Flat baseline with the echo buried lead + delay_samples in.
 
     "pulse" is a rectangular step: the fastest edge the front end can produce,
     so the best timing reference.  "sine" is the tone burst the single-channel
@@ -143,7 +157,8 @@ def m2k_echo(aout, echo_delay_us, amplitude_v, offset_v, frame_us,
     """
     rate = aout.getSampleRate(0)
     n = int(frame_us * rate / 1e6)
-    delay_samples = int(echo_delay_us * rate / 1e6)
+    lead_samples = int(round(lead_us * rate / 1e6))
+    delay_samples = lead_samples + int(echo_delay_us * rate / 1e6)
 
     wave = np.full(n, offset_v)
     if kind == "sine":
@@ -157,16 +172,38 @@ def m2k_echo(aout, echo_delay_us, amplitude_v, offset_v, frame_us,
 
     aout.setCyclic(True)
     aout.push(0, wave.tolist())
-    return delay_samples / rate * 1e6, end - delay_samples
+    return (lead_samples / rate * 1e6,
+            (delay_samples - lead_samples) / rate * 1e6, end - delay_samples)
 
 
-def find_edge(x, fs):
+def arm_m2k_trigger(aout, trig):
+    """Replay the echo once per TI rising edge; False if the firmware cannot."""
+    # libm2k implements the AnalogOut trigger only for M2K firmware >= v0.33;
+    # older firmware throws "not configurable on the current board".
+    try:
+        trig.setAnalogOutTriggerSource(libm2k.TRIGGER_TI)
+        trig.setAnalogOutTriggerCondition(libm2k.RISING_EDGE_OUT)
+        trig.setAnalogOutTriggerStatus(libm2k.START)
+        # Cyclic + rearm = the whole buffer once per trigger, then wait.
+        aout.setBufferRearmOnTrigger(True)
+    except Exception as exc:
+        print(f"M2K trigger        : NOT armed, echo free-runs (needs firmware "
+              f">= v0.33): {exc}")
+        return False
+    print("M2K trigger        : TI rising edge -> one echo per laser shot")
+    return True
+
+
+def find_edge(x, fs, start=0):
     """Sub-sample index of the echo's rising edge, at half of its peak.
 
     One sample is 8 ns = 1.2 m of range, so the linear interpolation between
     the two straddling samples is not a refinement -- without it every edge is
     quantised to 1.2 m and the four channels cannot be compared.
     """
+    # Before `start` the TIA is still recovering from the M2K idle level, a
+    # bigger excursion than the echo (measured: C locked onto it at t=0).
+    x = x[start:]
     # The TIA inverts and parks near the top of the range.
     y = -(x.astype(np.float64) - np.median(x))
 
@@ -182,11 +219,11 @@ def find_edge(x, fs):
     above = np.flatnonzero(y >= half)
     i = int(above[0])
     if i == 0:
-        return float(i), peak, noise
+        return float(start), peak, noise
 
     y0, y1 = y[i - 1], y[i]
     frac = (half - y0) / (y1 - y0) if y1 != y0 else 0.0
-    return (i - 1) + float(frac), peak, noise
+    return start + (i - 1) + float(frac), peak, noise
 
 
 def spread_ns(edges, fs):
@@ -194,30 +231,34 @@ def spread_ns(edges, fs):
     return (v.max() - v.min()) / fs * 1e9 if v.size >= 2 else float("nan")
 
 
-def report(title, data, fs):
+def report(title, data, fs, triggered=False, start=0, lead_us=0.0):
     """Per-channel echo arrival, referenced to A.
 
-    Absolute range is deliberately absent: it is only meaningful if the echo
-    replays on the laser edge, and on firmware that cannot trigger the
-    generator the echo lands wherever it likes.  The delay BETWEEN channels is
-    unaffected -- all four see the same echo at the same instant.
+    Absolute ToF/range is printed only when the echo replays on the laser
+    edge; a free-running generator puts it wherever it likes.  The delay
+    BETWEEN channels is valid either way -- all four see the same echo.
     """
     print(f"\n=== {title} ===")
+    abs_hdr = f"  {'ToF (ns)':>10}  {'range (m)':>10}" if triggered else ""
+    abs_pad = " " * len(abs_hdr)
     print(f"{'Ch':>3}  {'edge (samp)':>12}  {'d vs A (ns)':>12}  {'d vs A (m)':>11}"
-          f"  {'peak':>7}  {'SNR':>7}")
+          f"{abs_hdr}  {'peak':>7}  {'SNR':>7}")
 
-    rows = [(label, *find_edge(x, fs)) for label, x in zip(CHANNEL_LABELS, data)]
+    rows = [(label, *find_edge(x, fs, start)) for label, x in zip(CHANNEL_LABELS, data)]
     edges = {label: e for label, e, _, _ in rows if e is not None}
     ref = edges.get("A")
 
     for label, edge, peak, noise in rows:
         if edge is None:
-            print(f"{label:>3}  {'no echo':>12}  {'':>12}  {'':>11}"
+            print(f"{label:>3}  {'no echo':>12}  {'':>12}  {'':>11}{abs_pad}"
                   f"  {peak:7.1f}  {peak / max(noise, 1e-9):7.1f}")
             continue
         d_ns = (edge - ref) / fs * 1e9 if ref is not None else float("nan")
+        tof_s = edge / fs - lead_us * 1e-6
+        abs_col = (f"  {tof_s * 1e9:10.1f}  {tof_s * SPEED_OF_LIGHT / 2:10.3f}"
+                   if triggered else "")
         print(f"{label:>3}  {edge:12.3f}  {d_ns:12.2f}  "
-              f"{d_ns * 1e-9 * SPEED_OF_LIGHT / 2:11.3f}"
+              f"{d_ns * 1e-9 * SPEED_OF_LIGHT / 2:11.3f}{abs_col}"
               f"  {peak:7.1f}  {peak / max(noise, 1e-9):7.1f}")
 
     if len(edges) >= 2:
@@ -229,6 +270,77 @@ def report(title, data, fs):
 
 PREFLIGHT_PNG = "/tmp/ada4356_quad_lidar_preflight.png"
 LIDAR_PNG = "/tmp/ada4356_quad_lidar.png"
+CLAMP_CODES = -6400  # TIA clamp sits at ~-6650, inside the ADC rails
+
+
+def repeat_report(shots, fs, start, lead_us, triggered, csv_path, meta):
+    """One line per shot plus mean/sd; optionally one CSV row per shot."""
+    print(f"\n=== {len(shots)} shots, one M2K session ===")
+    print(f"{'shot':>4}  {'A edge':>10}  {'B-A ns':>7}  {'C-A ns':>7}  "
+          f"{'D-A ns':>7}  {'spread':>7}  {'minSNR':>6}  flags")
+
+    rows, a_edges, rel, spreads = [], [], [], []
+    for i, data in enumerate(shots):
+        st = []
+        for x in data:
+            x = np.asarray(x)
+            edge, peak, noise = find_edge(x, fs, start)
+            w = x[start:]
+            st.append((edge, float(np.median(w)), float(w.min()), float(w.max()),
+                       peak, peak / max(noise, 1e-9)))
+        flags = []
+        if any(s[3] >= 8150 or s[2] <= -8150 for s in st):
+            flags.append("RAIL")
+        if any(s[2] <= CLAMP_CODES for s in st):
+            flags.append("CLAMP")
+        if any(s[0] is None for s in st):
+            flags.append("NO-ECHO")
+        rows.append((i, st, flags))
+
+        if "NO-ECHO" in flags:
+            print(f"{i:4d}  {'no echo':>10}{'':>36}  {min(s[5] for s in st):6.1f}  "
+                  + " ".join(flags))
+            continue
+        e = [s[0] for s in st]
+        d = [(v - e[0]) / fs * 1e9 for v in e[1:]]
+        sp = (max(e) - min(e)) / fs * 1e9
+        print(f"{i:4d}  {e[0]:10.3f}  {d[0]:7.2f}  {d[1]:7.2f}  {d[2]:7.2f}  "
+              f"{sp:7.2f}  {min(s[5] for s in st):6.1f}  " + " ".join(flags))
+        if not flags:
+            a_edges.append(e[0])
+            rel.append(d)
+            spreads.append(sp)
+
+    n = len(a_edges)
+    print(f"\n  clean shots        : {n} of {len(shots)}")
+    if n:
+        sd = lambda v: float(np.std(v, ddof=1)) if len(v) > 1 else float("nan")
+        a = np.array(a_edges)
+        print(f"  A edge             : {a.mean():.3f} samp, sd {sd(a):.3f} "
+              f"({sd(a) / fs * 1e9:.2f} ns)")
+        if triggered:
+            tof = a.mean() / fs - lead_us * 1e-6
+            print(f"  A ToF (uncal.)     : {tof * 1e9:.1f} ns -> "
+                  f"{tof * SPEED_OF_LIGHT / 2:.3f} m")
+        r = np.array(rel)
+        for k, col in zip("BCD", r.T):
+            print(f"  {k} vs A             : {col.mean():+.2f} ns, sd {sd(col):.2f}")
+        print(f"  spread             : {np.mean(spreads):.2f} ns, sd {sd(spreads):.2f}")
+
+    if csv_path:
+        path = os.path.expanduser(csv_path)
+        new = not os.path.exists(path)
+        with open(path, "a", newline="") as f:
+            w = csv.writer(f)
+            if new:
+                w.writerow(list(meta) + ["shot", "flags"] + [
+                    f"{k}_{c}" for c in CHANNEL_LABELS
+                    for k in ("edge", "ped", "min", "max", "peak", "snr")])
+            for i, st, flags in rows:
+                w.writerow(list(meta.values()) + [i, " ".join(flags)] + [
+                    "" if v is None else round(v, 4) for s in st for v in s])
+        print(f"\n  {len(rows)} rows appended to {path}")
+    return rows
 
 
 def plot_preflight(probe, fs, path=PREFLIGHT_PNG):
@@ -264,7 +376,8 @@ def plot_preflight(probe, fs, path=PREFLIGHT_PNG):
     return path
 
 
-def plot_lidar(data, fs, edges, frame_us, zoom_us=10.0, path=LIDAR_PNG):
+def plot_lidar(data, fs, edges, frame_us, zoom_us=10.0, path=LIDAR_PNG,
+               triggered=False, lead_us=0.0):
     """Laser fires -> flight time -> echo arrives, in three panels.
 
     The laser edge is never in the captured data (it goes to the M2K, not an
@@ -332,12 +445,17 @@ def plot_lidar(data, fs, edges, frame_us, zoom_us=10.0, path=LIDAR_PNG):
             "laser fires (TDD ch0)\nDMA gate opens -> t=0",
             color="tab:orange", fontsize=8, fontweight="bold", va="top")
 
+    if lead_us > 0:
+        ax.axvline(lead_us, color="0.4", ls="--", lw=1.2)
+        ax.text(lead_us, ylo * 0.75, f" lead {lead_us:.0f} us", color="0.3",
+                fontsize=8, fontweight="bold", va="bottom")
     if edges:
         a_us = float(np.mean(list(edges.values()))) / fs * 1e6
         ax.axvline(a_us, color="tab:red", lw=1.5)
-        ax.annotate("", xy=(a_us, yhi * 0.42), xytext=(0, yhi * 0.42),
+        ax.annotate("", xy=(a_us, yhi * 0.42), xytext=(lead_us, yhi * 0.42),
                     arrowprops=dict(arrowstyle="<->", color="tab:red", lw=1.3))
-        ax.text(a_us / 2, yhi * 0.46, f"time of flight {a_us:.2f} us",
+        ax.text((a_us + lead_us) / 2, yhi * 0.46,
+                f"time of flight {a_us - lead_us:.2f} us",
                 color="tab:red", fontsize=8, fontweight="bold", ha="center")
         ax.text(a_us, yhi * 0.22, " echo returns", color="tab:red",
                 fontsize=8, fontweight="bold", va="top")
@@ -367,9 +485,11 @@ def plot_lidar(data, fs, edges, frame_us, zoom_us=10.0, path=LIDAR_PNG):
     ax.grid(alpha=0.3)
     ax.legend(loc="upper right", fontsize=8)
     if edges:
+        note = ("uncalibrated: includes M2K/cable/front-end latency" if triggered
+                else "NOT a range: the generator free-runs")
         ax.set_title(
-            f"Echo detail -- arrival {a / fs * 1e6:.3f} us after the trigger\n"
-            f"(NOT a range: the generator free-runs)",
+            f"Echo detail -- arrival {a / fs * 1e6 - lead_us:.3f} us after the "
+            f"trigger + {lead_us:.0f} us lead\n({note})",
             fontsize=10, fontweight="bold")
 
     axz = fig.add_subplot(gs3[1])
@@ -401,16 +521,18 @@ def plot_lidar(data, fs, edges, frame_us, zoom_us=10.0, path=LIDAR_PNG):
     return path
 
 
-def level_check(data, amplitude_v, offset_v, fs):
+def level_check(data, amplitude_v, offset_v, fs, start=0):
     """Reject a capture whose levels make the edge timing meaningless.
 
     The echo is a flat baseline plus a short pulse, so the symmetry test that
     suits a sine does not apply here; what matters is that no channel touches a
-    rail and the TIA is not pinned by DC.
+    rail and the TIA is not pinned by DC.  Stats start after the lead, where
+    the M2K idle-level clamp is expected and not part of the echo.
     """
     print(f"{'Ch':>3}  {'pedestal':>9}  {'min':>7}  {'max':>7}  {'pulse':>8}")
     clipped = 0
     for label, x in zip(CHANNEL_LABELS, data):
+        x = x[start:]
         lo, hi = float(x.min()), float(x.max())
         base = float(np.median(x))
         # The TIA inverts, so the echo drives codes down from the baseline.
@@ -418,7 +540,7 @@ def level_check(data, amplitude_v, offset_v, fs):
         if hi >= 8150 or lo <= -8150:
             clipped += 1
 
-    pedestal = float(np.mean([np.median(x) for x in data]))
+    pedestal = float(np.mean([np.median(x[start:]) for x in data]))
     plot_preflight(data, fs)
 
     if clipped:
@@ -428,7 +550,8 @@ def level_check(data, amplitude_v, offset_v, fs):
     if pedestal < -1000:
         print(f"\n  Pedestal {pedestal:.0f} codes, expected positive. It is"
               f"\n  Q - TZ*I_dc, so a negative one means too much DC current:"
-              f"\n  lower --offset (now {offset_v:.3f} V), roughly in proportion.")
+              f"\n  move --offset (now {offset_v:.3f} V) toward the zero-current"
+              f"\n  point -- find it with --amplitude 0 (at 200R it sat at -0.25 V).")
         return False
     return True
 
@@ -475,6 +598,7 @@ def main():
               + (f" at {args.m2k_uri}" if args.m2k_uri else " (USB auto-detect)"))
         return 1
 
+    triggered = False
     try:
         # calibrateDAC() measures W1 with the M2K's own ADC, so the ADC has to
         # be calibrated first or the DAC offset it computes is meaningless.
@@ -492,34 +616,49 @@ def main():
             fw = "unknown"
         print(f"M2K firmware       : {fw}")
 
-        # setAnalogOutTriggerSource() is rejected by this M2K's firmware
-        # ("not configurable on the current board"), so the generator cannot be
-        # hardware-triggered here and the echo replays free-running.  These are
-        # the calls the working single-channel and ZCU102 scripts use.
-        trig.setAnalogSource(libm2k.TRIGGER_TI)
-        trig.setAnalogCondition(0, libm2k.RISING_EDGE_ANALOG)
-        trig.setAnalogDelay(0)
+        # Must precede the push, or the buffer starts free-running.  (The old
+        # trig.setAnalogSource(TRIGGER_TI) configured the M2K scope, not W1.)
+        triggered = arm_m2k_trigger(aout, trig)
 
-        actual_delay_us, echo_samples = m2k_echo(
+        lead_us, actual_delay_us, echo_samples = m2k_echo(
             aout, echo_delay_us, args.amplitude, args.offset, capture_us,
             kind=args.echo, pulse_ns=args.pulse_ns,
-            burst_us=args.burst_us, burst_khz=args.burst_khz
+            burst_us=args.burst_us, burst_khz=args.burst_khz,
+            lead_us=args.lead_us
         )
         shape = (f"{args.burst_khz:.0f} kHz burst, {args.burst_us:.0f} us"
                  if args.echo == "sine" else f"{args.pulse_ns:.0f} ns pulse")
-        print(f"\nM2K echo at {actual_delay_us:.3f} us -- {shape} "
-              f"({echo_samples} samples at {M2K_SAMPLE_RATE / 1e6:.0f} MSPS)")
+        print(f"\nM2K echo at {lead_us:.3f} us lead + {actual_delay_us:.3f} us "
+              f"-- {shape} ({echo_samples} samples at "
+              f"{M2K_SAMPLE_RATE / 1e6:.0f} MSPS)")
+        if triggered:
+            print(f"Expected edge      : sample "
+                  f"{(lead_us + actual_delay_us) * fs / 1e6:.1f} "
+                  f"+ fixed M2K/cable/front-end latency")
         time.sleep(0.3)
 
-        data = [x.astype(np.float64) for x in dev.rx()]
+        shots = []
+        for i in range(max(1, args.repeat)):
+            if i:
+                # Fresh buffers: a reused one can hand back blocks queued after
+                # the gate instead of waiting for the next frame's sync.
+                dev.rx_buffer_size = args.samples
+            shots.append(dev.rx())
+        data = [x.astype(np.float64) for x in shots[0]]
     finally:
         try:
             aout.stop()
+            if triggered:
+                # Shared DAC attribute; left on, the next free-running user hangs.
+                aout.setBufferRearmOnTrigger(False)
         except Exception:
             pass
         libm2k.contextClose(m2k)
 
-    ok = level_check(data, args.amplitude, args.offset, fs)
+    # 10 % margin before the lead: the echo cannot arrive earlier, and the
+    # idle-level recovery is over by then.
+    start = int(0.9 * lead_us * fs / 1e6)
+    ok = level_check(data, args.amplitude, args.offset, fs, start)
 
     # --amplitude 0 leaves a flat baseline, which is the DC probe used to find
     # where the pedestal sits with no drive.
@@ -534,16 +673,39 @@ def main():
         print(f"\nPlot saved: {PREFLIGHT_PNG}")
         return 1
 
-    edges = report("Echo arrival", data, fs)
+    edges = report("Echo arrival", data, fs, triggered, start, lead_us)
 
-    print("\n  No absolute range is reported. The echo only encodes time of"
-          "\n  flight if the generator replays on the laser edge; where it"
-          "\n  free-runs it sits at an arbitrary index that changes every run."
-          "\n  The delays BETWEEN channels are unaffected -- all four see the"
-          "\n  same echo at the same instant -- and are what this measures.")
+    if len(shots) > 1 or args.csv:
+        meta = {
+            "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "tag": args.tag,
+            "uri": args.uri,
+            "gain": "/".join(tz.values()),
+            "filter": "/".join(filt.values()),
+            "echo": args.echo,
+            "pulse_ns": args.pulse_ns,
+            "amplitude_v": args.amplitude,
+            "offset_v": args.offset,
+            "distance_m": args.distance,
+            "lead_us": lead_us,
+            "triggered": int(triggered),
+        }
+        repeat_report(shots, fs, start, lead_us, triggered, args.csv, meta)
+
+    if triggered:
+        print("\n  ToF/range are uncalibrated: they include the M2K trigger-to-output"
+              "\n  latency, cables and front-end delay. Calibrate that offset with a"
+              "\n  --distance sweep; range must then track --distance with slope 1.")
+    else:
+        print("\n  No absolute range is reported. The echo only encodes time of"
+              "\n  flight if the generator replays on the laser edge; where it"
+              "\n  free-runs it sits at an arbitrary index that changes every run."
+              "\n  The delays BETWEEN channels are unaffected -- all four see the"
+              "\n  same echo at the same instant -- and are what this measures.")
 
     zoom = args.zoom_us or (args.burst_us * 1.5 if args.echo == "sine" else 10.0)
-    plot_lidar(data, fs, edges, frame_us, zoom_us=zoom)
+    plot_lidar(data, fs, edges, frame_us, zoom_us=zoom, triggered=triggered,
+               lead_us=lead_us)
     print(f"\nPlot saved: {PREFLIGHT_PNG}")
     print(f"Plot saved: {LIDAR_PNG}")
 
