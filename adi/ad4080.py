@@ -72,6 +72,7 @@ class ad4080(rx_chan_comp):
         "ad4883",
         "ad4884",
         "ad4885",
+        "ad4886",
     ]
     _device_name = ""
     _complex_data = False
