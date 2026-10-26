@@ -23,8 +23,8 @@ jobs:
       hardware_names: ${{ steps.detect.outputs.hardware_names }}
       new_classes: ${{ steps.detect.outputs.new_classes }}
     steps:
-      # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
       # allow-unsafe-pr-checkout relies on the `external-pr` required-reviewers rule
+      # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -58,8 +58,8 @@ jobs:
     environment:
       name: ${{ github.event.pull_request.head.repo.fork && 'external-pr' || 'internal-pr' }}
     steps:
-      # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
       # allow-unsafe-pr-checkout relies on the `external-pr` required-reviewers rule
+      # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
