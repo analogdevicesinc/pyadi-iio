@@ -23,14 +23,19 @@ jobs:
       hardware_names: ${{ steps.detect.outputs.hardware_names }}
       new_classes: ${{ steps.detect.outputs.new_classes }}
     steps:
+      # allow-unsafe-pr-checkout relies on the `external-pr` required-reviewers rule
       # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 0
+          persist-credentials: false
+          allow-unsafe-pr-checkout: true
+      # origin is the PR head repo (possibly a fork), so fetch the base branch
+      # from this repository into the ref detect_new_classes.py reads
       - name: Fetch base branch
-        run: git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
+        run: git fetch --no-tags https://github.com/${{ github.repository }}.git +refs/heads/${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
@@ -53,11 +58,14 @@ jobs:
     environment:
       name: ${{ github.event.pull_request.head.repo.fork && 'external-pr' || 'internal-pr' }}
     steps:
+      # allow-unsafe-pr-checkout relies on the `external-pr` required-reviewers rule
       # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
+          persist-credentials: false
+          allow-unsafe-pr-checkout: true
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
