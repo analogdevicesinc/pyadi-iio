@@ -8,7 +8,7 @@
 
     <title>FPGA Features &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=b1d7a81a" />
+    <link rel="stylesheet" type="text/css" href="../_static/app.min.css?v=a3ee7af8" />
     <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=632a43e7" />
     <script async="async" src="../_static/app.umd.js?v=048c1170"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -679,6 +679,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31855/">max31855</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.max31865/">max31865</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.max9611/">max9611</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/adi.maxm86161/">maxm86161</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.one_bit_adc_dac/">one_bit_adc_dac</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.tdd/">tdd</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../devices/adi.tddn/">tddn</a></li>
@@ -741,7 +742,7 @@ Content on this topic
 this allows for two complex tones to be generated per complex channel.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_dual_tone">
-<span class="sig-name descname"><span class="pre">dds_dual_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dds_dual_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclusive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_dual_tone" title="Link to this definition"></a></dt>
 <dd><p>Generate two tones simultaneously using the DDSs
 For complex data devices this will create two complex
 or single sided tones spectrally using four DDSs.
@@ -764,6 +765,11 @@ At 1 the tone will be full-scale.</p>
 and for complex devices this index relates to the pair
 of related converters. For non-complex devices this is
 the index of the individual converters.</p>
+</dd>
+<dt>exclusive: type=bool</dt><dd><p>When True (default) all other DDSs are zeroed first, so
+only this channel emits. When False the other DDSs are
+left untouched, allowing tones to be built up across
+several channels with repeated calls.</p>
 </dd>
 </dl>
 </dd>
@@ -798,7 +804,7 @@ Ranges [0,1]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.dds.dds.dds_single_tone">
-<span class="sig-name descname"><span class="pre">dds_single_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dds_single_tone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclusive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.dds.dds.dds_single_tone" title="Link to this definition"></a></dt>
 <dd><p>Generate a single tone using the DDSs
 For complex data devices this will create a complex
 or single sided tone spectrally using two DDSs.
@@ -815,6 +821,11 @@ will be full-scale.</p>
 and for complex devices this index relates to the pair
 of related converters. For non-complex devices this is
 the index of the individual converters.</p>
+</dd>
+<dt>exclusive: type=bool</dt><dd><p>When True (default) all other DDSs are zeroed first, so
+only this channel emits. When False the other DDSs are
+left untouched, allowing tones to be built up across
+several channels with repeated calls.</p>
 </dd>
 </dl>
 </dd>

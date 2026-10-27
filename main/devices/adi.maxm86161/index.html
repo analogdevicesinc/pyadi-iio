@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Bases: rx_chan_comp" name="description" />
+
+    <title>maxm86161 &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8e8a900e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/app.min.css?v=a3ee7af8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=632a43e7" />
+    <script async="async" src="../../_static/app.umd.js?v=048c1170"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="one_bit_adc_dac" href="../adi.one_bit_adc_dac/" />
+    <link rel="prev" title="max9611" href="../adi.max9611/" />
+   
+  
+  
+  
+  <meta name="repository" content="pyadi-iio">
+  <meta name="version" content="0.0.22">
+  
+    <meta name="page_source_suffix" content=".rst">
+  
+  
+  
+
+
+<style>
+  body {
+    
+  }
+
+  body.dark {
+    
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body:not(.light) {
+      
+    }
+  }
+</style>
+  </head>
+  
+    <body>
+  
+  <input type="checkbox" id="input-show-toc">
+  <input type="checkbox" id="input-show-localtoc">
+  <input type="checkbox" id="input-show-repotoc">
+
+  
+  <div class="search-area">
+    <form action="" method="get">
+      <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="search" placeholder="Search"/>
+      <button class="icon"></button>
+    </form>
+  </div>
+  
+
+  <header>
+    <div id="left">
+      <label id="show-sidebar" class="icon" for="input-show-toc" title="Show/hide index"></label>
+    </div>
+    <div id="right">
+      <span>
+        <a id="logo-org" href="https://developer.analog.com/" aria-label="Analog Devices Inc. landing page"></a>
+        <div class="vertical-divider"></div>
+        
+        <label id="show-repotoc" for="input-show-repotoc" title="Show/hide docs">Documentation</label>
+        
+        <a id="logo" href="../../">
+          <div>pyadi-iio</div>
+        </a>
+      </span>
+      <span class="reverse">
+        <label id="show-localtoc" class="icon" for="input-show-localtoc" title="Show/hide contents"></label>
+      </span>
+    </div>
+  </header>
+
+
+  <div class="repotoc-tree overlay">
+    <root>
+  <a href="../../index.html" class="current">pyadi-iio</a>
+</root>
+
+  </div>
+    <div class="localtoc">
+      <div class="tocwrapper">
+        <div class="header localtoc-header">
+          <a id="scroll-up" href="#top-anchor" title="Back to top"></a>
+        </div>
+        <nav>
+          <ul>
+<li><a class="reference internal" href="#">maxm86161</a><ul>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161"><code class="docutils literal notranslate"><span class="pre">maxm86161</span></code></a><ul>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.adc_range"><code class="docutils literal notranslate"><span class="pre">maxm86161.adc_range</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.add_offset"><code class="docutils literal notranslate"><span class="pre">maxm86161.add_offset</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.alc_disable"><code class="docutils literal notranslate"><span class="pre">maxm86161.alc_disable</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.buffer_enable"><code class="docutils literal notranslate"><span class="pre">maxm86161.buffer_enable</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.burst_enable"><code class="docutils literal notranslate"><span class="pre">maxm86161.burst_enable</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.burst_rate"><code class="docutils literal notranslate"><span class="pre">maxm86161.burst_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.channel"><code class="docutils literal notranslate"><span class="pre">maxm86161.channel</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.compatible_parts"><code class="docutils literal notranslate"><span class="pre">maxm86161.compatible_parts</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.die_temperature"><code class="docutils literal notranslate"><span class="pre">maxm86161.die_temperature</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.dig_filter"><code class="docutils literal notranslate"><span class="pre">maxm86161.dig_filter</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.fifo_a_full_type"><code class="docutils literal notranslate"><span class="pre">maxm86161.fifo_a_full_type</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.fifo_count"><code class="docutils literal notranslate"><span class="pre">maxm86161.fifo_count</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.fifo_overflow_count"><code class="docutils literal notranslate"><span class="pre">maxm86161.fifo_overflow_count</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.fifo_rollover"><code class="docutils literal notranslate"><span class="pre">maxm86161.fifo_rollover</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.fifo_watermark"><code class="docutils literal notranslate"><span class="pre">maxm86161.fifo_watermark</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.get_led_pa"><code class="docutils literal notranslate"><span class="pre">maxm86161.get_led_pa()</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.get_led_range"><code class="docutils literal notranslate"><span class="pre">maxm86161.get_led_range()</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.get_led_sequence"><code class="docutils literal notranslate"><span class="pre">maxm86161.get_led_sequence()</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.integration_time"><code class="docutils literal notranslate"><span class="pre">maxm86161.integration_time</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.interrupt_status"><code class="docutils literal notranslate"><span class="pre">maxm86161.interrupt_status</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.led_pilot_pa"><code class="docutils literal notranslate"><span class="pre">maxm86161.led_pilot_pa</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.led_settling"><code class="docutils literal notranslate"><span class="pre">maxm86161.led_settling</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.low_power_mode"><code class="docutils literal notranslate"><span class="pre">maxm86161.low_power_mode</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.part_id"><code class="docutils literal notranslate"><span class="pre">maxm86161.part_id</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.pd_bias"><code class="docutils literal notranslate"><span class="pre">maxm86161.pd_bias</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.picket_fence_enable"><code class="docutils literal notranslate"><span class="pre">maxm86161.picket_fence_enable</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.picket_fence_iir_init"><code class="docutils literal notranslate"><span class="pre">maxm86161.picket_fence_iir_init</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.picket_fence_iir_tc"><code class="docutils literal notranslate"><span class="pre">maxm86161.picket_fence_iir_tc</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.picket_fence_order"><code class="docutils literal notranslate"><span class="pre">maxm86161.picket_fence_order</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.picket_fence_threshold_sigma"><code class="docutils literal notranslate"><span class="pre">maxm86161.picket_fence_threshold_sigma</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.prox_threshold"><code class="docutils literal notranslate"><span class="pre">maxm86161.prox_threshold</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.rev_id"><code class="docutils literal notranslate"><span class="pre">maxm86161.rev_id</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.sample_averaging"><code class="docutils literal notranslate"><span class="pre">maxm86161.sample_averaging</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.sample_rate"><code class="docutils literal notranslate"><span class="pre">maxm86161.sample_rate</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.set_led_pa"><code class="docutils literal notranslate"><span class="pre">maxm86161.set_led_pa()</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.set_led_range"><code class="docutils literal notranslate"><span class="pre">maxm86161.set_led_range()</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.set_led_sequence"><code class="docutils literal notranslate"><span class="pre">maxm86161.set_led_sequence()</span></code></a></li>
+<li><a class="reference internal" href="#adi.maxm86161.maxm86161.shutdown"><code class="docutils literal notranslate"><span class="pre">maxm86161.shutdown</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </nav>
+      </div>
+    </div>
+
+  
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+    <a id="logo" href="../../">
+      <img class="only-light" src="../../_static/logos/PyADI-IIO_Logo_300_cropped.png"/>
+      <img class="only-dark" src="../../_static/logos/PyADI-IIO_Logo_w_300_cropped.png"/>
+    </a><input id="input-switch-toc" type="checkbox">
+<label id="show-repotoc" for="input-switch-toc">
+All content
+</label>
+<label id="show-toc" for="input-switch-toc">
+Content on this topic
+</label>
+<div class="repotoc-tree">
+  <root>
+  <a href="../../index.html" class="current">pyadi-iio</a>
+</root>
+
+</div>
+<div class="toc-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../guides/quick/">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../attr/">Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/examples/">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/connectivity/">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../buffers/">Buffers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fpga/">FPGA Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mcp/">MCP Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../libiio/">libiio Direct Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../support/">Support</a></li>
+<li class="toctree-l1"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-1" id="toctree-collapse-1"/><div class="collapse"><a class="reference internal" href="../../dev/">Developers</a><label for="toctree-collapse-1"><div class="icon"></div></label></div><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dev/test_attr/">Attribute Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dev/test_dma/">DMA Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dev/test_generics/">Generic Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dev/test_jesd/">JESD204 Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dev/device_base/">Device Base Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><input class="toctree-collapse" type="checkbox" name="toctree-collapse-2" id="toctree-collapse-2" checked=""/><div class="collapse"><a class="reference internal" href="../">Supported Devices</a><label for="toctree-collapse-2"><div class="icon"></div></label></div><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../adi.QuadMxFE_multi/">QuadMxFE_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad2s1210/">ad2s1210</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad353xr/">ad353xr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad3552r/">ad3552r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad3552r_hs/">ad3552r_hs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad4020/">ad4020</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad405x/">ad405x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad4080/">ad4080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad4110/">ad4110</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad4130/">ad4130</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad4170/">ad4170</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad4630/">ad4630</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad469x/">ad469x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad4858/">ad4858</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad514x/">ad514x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad552xr/">ad552xr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad5592r/">ad5592r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad5627/">ad5627</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad5686/">ad5686</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad5706r/">ad5706r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad5710r/">ad5710r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad5754r/">ad5754r</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad579x/">ad579x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad5940/">ad5940</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad6676/">ad6676</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7091rx/">ad7091rx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7124/">ad7124</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7134/">ad7134</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad717x/">ad717x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad719x/">ad719x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7291/">ad7291</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad738x/">ad738x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7405/">ad7405</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7490/">ad7490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7606/">ad7606</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7689/">ad7689</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7746/">ad7746</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7768/">ad7768</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad777x/">ad777x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad7799/">ad7799</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9081/">ad9081</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9081_mc/">ad9081_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9083/">ad9083</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9084/">ad9084</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9084_mc/">ad9084_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9094/">ad9094</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9136/">ad9136</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9144/">ad9144</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9152/">ad9152</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9162/">ad9162</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9166/">ad9166</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9172/">ad9172</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9213/">ad9213</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9250/">ad9250</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9265/">ad9265</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad936x/">ad936x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad937x/">ad937x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9434/">ad9434</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9467/">ad9467</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9625/">ad9625</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9680/">ad9680</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9739a/">ad9739a</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ada4355/">ada4355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ada4356_lidar/">ada4356_lidar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ada4961/">ada4961</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adaq8092/">adaq8092</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adar1000/">adar1000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adf4030/">adf4030</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adf4159/">adf4159</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adf4355/">adf4355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adf4371/">adf4371</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adf4377/">adf4377</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adf4382/">adf4382</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adf5610/">adf5610</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adf5611/">adf5611</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adg2128/">adg2128</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16375/">adis16375</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16460/">adis16460</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16475/">adis16475</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16480/">adis16480</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16485/">adis16485</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16488/">adis16488</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16490/">adis16490</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16495/">adis16495</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16497/">adis16497</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16507/">adis16507</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16545/">adis16545</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16547/">adis16547</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adis16550/">adis16550</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adl5240/">adl5240</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adl5960/">adl5960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adl8113/">adl8113</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.admt4000/">admt4000</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.admt4000ard1z/">admt4000ard1z</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.admv8818/">admv8818</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adpd1080/">adpd1080</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adpd188/">adpd188</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adpd410x/">adpd410x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adrf5720/">adrf5720</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adrv9002/">adrv9002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adrv9009/">adrv9009</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adrv9009_zu11eg/">adrv9009_zu11eg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adrv9009_zu11eg_fmcomms8/">adrv9009_zu11eg_fmcomms8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adrv9009_zu11eg_multi/">adrv9009_zu11eg_multi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adt7420/">adt7420</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adxl313/">adxl313</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adxl345/">adxl345</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adxl355/">adxl355</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adxl380/">adxl380</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.adxrs290/">adxrs290</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.axi_aion_trig/">axi_aion_trig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0511/">cn0511</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0532/">cn0532</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0540/">cn0540</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0554/">cn0554</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0556/">cn0556</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0565/">cn0565</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0566/">cn0566</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0575/">cn0575</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.cn0579/">cn0579</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.daq2/">daq2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.daq3/">daq3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.fmc_vna/">fmc_vna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.fmcadc3/">fmcadc3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.fmcjesdadc1/">fmcjesdadc1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.fmclidar1/">fmclidar1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.fmcomms11/">fmcomms11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.fmcomms5/">fmcomms5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.gen_mux/">gen_mux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.hmc7044/">hmc7044</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.jesd/">jesd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.lm75/">lm75</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ltc2314_14/">ltc2314_14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ltc2378/">ltc2378</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ltc2387/">ltc2387</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ltc2499/">ltc2499</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ltc2664/">ltc2664</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ltc2672/">ltc2672</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ltc2688/">ltc2688</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ltc2983/">ltc2983</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.max11205/">max11205</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.max14001/">max14001</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.max31855/">max31855</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.max31865/">max31865</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.max9611/">max9611</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">maxm86161</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.one_bit_adc_dac/">one_bit_adc_dac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.tdd/">tdd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.tddn/">tddn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.tmc5240/">tmc5240</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.trigger/">trigger</a></li>
+</ul>
+</li>
+</ul>
+
+
+</div>
+        </div>
+      </div>
+
+  <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper" id="top-anchor">
+          <div class="body-header">
+  <nav class="breadcrumb"><ol><li><a href="../">Supported Devices</a></li></ol></nav>
+</div>
+          <div class="body" role="main">
+            
+  <section id="module-adi.maxm86161">
+<span id="maxm86161"></span><h1>maxm86161<a class="headerlink" href="#module-adi.maxm86161" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.maxm86161.</span></span><span class="sig-name descname"><span class="pre">maxm86161</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.maxm86161.maxm86161" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rx_chan_comp</span></code></p>
+<p>MAXM86161 Integrated Optical Data Acquisition System (PPG AFE)</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>uri:</dt><dd><p>URI of the IIO context (e.g. <code class="docutils literal notranslate"><span class="pre">serial:/dev/ttyACM0,115200,8n1</span></code>
+or <code class="docutils literal notranslate"><span class="pre">serial:COM149,115200,8n1</span></code> for Windows).</p>
+</dd>
+<dt>device_name:</dt><dd><p>Name of the IIO device (default: <code class="docutils literal notranslate"><span class="pre">maxm86161</span></code>).</p>
+</dd>
+<dt>device_index:</dt><dd><p>Index of the device when multiple devices share the same name.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.adc_range">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adc_range</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.adc_range" title="Link to this definition"></a></dt>
+<dd><p>Get/set PPG ADC full-scale range selection.</p>
+<p>0=4uA, 1=8uA, 2=16uA, 3=32uA.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.add_offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_offset</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.add_offset" title="Link to this definition"></a></dt>
+<dd><p>Get/set ADC add-offset enable flag.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.alc_disable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alc_disable</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.alc_disable" title="Link to this definition"></a></dt>
+<dd><p>Get/set ambient-light cancellation disable flag (0=ALC on).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.buffer_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buffer_enable</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.buffer_enable" title="Link to this definition"></a></dt>
+<dd><p>Get/set data capture (exit/enter shutdown and reset buffer).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.burst_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">burst_enable</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.burst_enable" title="Link to this definition"></a></dt>
+<dd><p>Get/set burst-sampling enable flag.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.burst_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">burst_rate</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.burst_rate" title="Link to this definition"></a></dt>
+<dd><p>Get/set burst-sampling rate selection.</p>
+<p>0=8Hz, 1=32Hz, 2=84Hz, 3=256Hz.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.channel">
+<span class="sig-name descname"><span class="pre">channel</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#adi.maxm86161.maxm86161.channel" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.compatible_parts">
+<span class="sig-name descname"><span class="pre">compatible_parts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['maxm86161']</span></em><a class="headerlink" href="#adi.maxm86161.maxm86161.compatible_parts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.die_temperature">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">die_temperature</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.die_temperature" title="Link to this definition"></a></dt>
+<dd><p>Get die temperature in micro-degrees Celsius (read-only).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.dig_filter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dig_filter</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.dig_filter" title="Link to this definition"></a></dt>
+<dd><p>Get/set PPG digital-filter selection (0=CDM, 1=FDM).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.fifo_a_full_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fifo_a_full_type</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.fifo_a_full_type" title="Link to this definition"></a></dt>
+<dd><p>Get/set FIFO almost-full interrupt assertion behavior.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.fifo_count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fifo_count</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.fifo_count" title="Link to this definition"></a></dt>
+<dd><p>Get number of samples currently in the FIFO (read-only).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.fifo_overflow_count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fifo_overflow_count</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.fifo_overflow_count" title="Link to this definition"></a></dt>
+<dd><p>Get number of samples lost to FIFO overflow (read-only).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.fifo_rollover">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fifo_rollover</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.fifo_rollover" title="Link to this definition"></a></dt>
+<dd><p>Get/set FIFO roll-over-on-full enable (0=stop, 1=overwrite).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.fifo_watermark">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fifo_watermark</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.fifo_watermark" title="Link to this definition"></a></dt>
+<dd><p>Get/set FIFO almost-full watermark threshold.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.get_led_pa">
+<span class="sig-name descname"><span class="pre">get_led_pa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">led</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.maxm86161.maxm86161.get_led_pa" title="Link to this definition"></a></dt>
+<dd><p>Get the pulse amplitude (drive current code) of an LED.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>led:</dt><dd><p>LED number (1=green, 2=IR, 3=red).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.get_led_range">
+<span class="sig-name descname"><span class="pre">get_led_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">led</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.maxm86161.maxm86161.get_led_range" title="Link to this definition"></a></dt>
+<dd><p>Get the full-scale current range of an LED driver.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>led:</dt><dd><p>LED number (1=green, 2=IR, 3=red).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.get_led_sequence">
+<span class="sig-name descname"><span class="pre">get_led_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.maxm86161.maxm86161.get_led_sequence" title="Link to this definition"></a></dt>
+<dd><p>Get the LED/measurement source for a sequence slot.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>slot:</dt><dd><p>Sequence slot number (1-6).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Source codes: 0=none, 1=green, 2=IR, 3=red,
+8=pilot green, 9=direct ambient.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.integration_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">integration_time</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.integration_time" title="Link to this definition"></a></dt>
+<dd><p>Get/set PPG ADC integration-time selection.</p>
+<p>0=14.8us, 1=29.4us, 2=58.7us, 3=117.3us.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.interrupt_status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">interrupt_status</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.interrupt_status" title="Link to this definition"></a></dt>
+<dd><p>Get combined 16-bit interrupt status (read-only, hex string).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.led_pilot_pa">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">led_pilot_pa</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.led_pilot_pa" title="Link to this definition"></a></dt>
+<dd><p>Get/set pilot LED pulse amplitude used in proximity mode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.led_settling">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">led_settling</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.led_settling" title="Link to this definition"></a></dt>
+<dd><p>Get/set LED settling-time selection.</p>
+<p>0=4us, 1=6us, 2=8us, 3=12us.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.low_power_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">low_power_mode</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.low_power_mode" title="Link to this definition"></a></dt>
+<dd><p>Get/set low-power-mode enable flag (for &lt;=256 sps).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.part_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">part_id</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.part_id" title="Link to this definition"></a></dt>
+<dd><p>Get device part ID (read-only, hex string, expected 0x36).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.pd_bias">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pd_bias</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.pd_bias" title="Link to this definition"></a></dt>
+<dd><p>Get/set photodiode bias selection.</p>
+<p>1=0-65pF, 5=65-130pF, 6=130-260pF, 7=260-520pF.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.picket_fence_enable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">picket_fence_enable</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.picket_fence_enable" title="Link to this definition"></a></dt>
+<dd><p>Get/set picket-fence detect-and-replace enable flag.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.picket_fence_iir_init">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">picket_fence_iir_init</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.picket_fence_iir_init" title="Link to this definition"></a></dt>
+<dd><p>Get/set picket-fence IIR initialization value.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.picket_fence_iir_tc">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">picket_fence_iir_tc</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.picket_fence_iir_tc" title="Link to this definition"></a></dt>
+<dd><p>Get/set picket-fence IIR time-constant selection.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.picket_fence_order">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">picket_fence_order</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.picket_fence_order" title="Link to this definition"></a></dt>
+<dd><p>Get/set picket-fence ordering flag.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.picket_fence_threshold_sigma">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">picket_fence_threshold_sigma</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.picket_fence_threshold_sigma" title="Link to this definition"></a></dt>
+<dd><p>Get/set picket-fence threshold sigma multiplier.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.prox_threshold">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prox_threshold</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.prox_threshold" title="Link to this definition"></a></dt>
+<dd><p>Get/set proximity-mode entry threshold.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.rev_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rev_id</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.rev_id" title="Link to this definition"></a></dt>
+<dd><p>Get device revision ID (read-only, hex string).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.sample_averaging">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_averaging</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.sample_averaging" title="Link to this definition"></a></dt>
+<dd><p>Get/set number of samples averaged per FIFO data point.</p>
+<p>0=1, 1=2, 2=4, 3=8, 4=16, 5=32, 6=64, 7=128.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.sample_rate">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_rate</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.sample_rate" title="Link to this definition"></a></dt>
+<dd><p>Get/set PPG sample-rate selection code.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.set_led_pa">
+<span class="sig-name descname"><span class="pre">set_led_pa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">led</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.maxm86161.maxm86161.set_led_pa" title="Link to this definition"></a></dt>
+<dd><p>Set the pulse amplitude (drive current code) of an LED.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>led:</dt><dd><p>LED number (1=green, 2=IR, 3=red).</p>
+</dd>
+<dt>value:</dt><dd><p>8-bit pulse-amplitude code (0-255).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.set_led_range">
+<span class="sig-name descname"><span class="pre">set_led_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">led</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.maxm86161.maxm86161.set_led_range" title="Link to this definition"></a></dt>
+<dd><p>Set the full-scale current range of an LED driver.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>led:</dt><dd><p>LED number (1=green, 2=IR, 3=red).</p>
+</dd>
+<dt>value:</dt><dd><p>Range code (0=31mA, 1=62mA, 2=93mA, 3=124mA).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.set_led_sequence">
+<span class="sig-name descname"><span class="pre">set_led_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.maxm86161.maxm86161.set_led_sequence" title="Link to this definition"></a></dt>
+<dd><p>Set the LED/measurement source for a sequence slot.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>slot:</dt><dd><p>Sequence slot number (1-6).</p>
+</dd>
+<dt>value:</dt><dd><p>LED source code (0=none, 1=green, 2=IR, 3=red,
+8=pilot green, 9=direct ambient).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="adi.maxm86161.maxm86161.shutdown">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shutdown</span></span><a class="headerlink" href="#adi.maxm86161.maxm86161.shutdown" title="Link to this definition"></a></dt>
+<dd><p>Get/set device shutdown (power-down) state.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+              <div class="related">
+                &nbsp;
+    <a href="../adi.max9611/" title="Previous document (Alt+Shift+LeftArrow)" class="prev">max9611</a>
+    <a href="../adi.one_bit_adc_dac/" title="Next document (Alt+Shift+RightArrow)" class="next">one_bit_adc_dac</a>
+              </div>
+          
+        </div>
+      </div>
+  </div>
+
+  <label id="cancel-area-show-toc" for="input-show-toc"></label>
+  <label id="cancel-area-show-localtoc" for="input-show-localtoc"></label>
+    <footer>
+      &#169;2019-2026, Analog Devices, Inc
+      
+      |
+      Made with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+      &amp; <a href="https://github.com/analogdevicesinc/doctools">Doctools</a>
+      
+    </footer>
+  </body>
+</html>
