@@ -1,5 +1,5 @@
-adi.hmc7044 module
-==================
+hmc7044
+=======
 
 .. automodule:: adi.hmc7044
    :members:
