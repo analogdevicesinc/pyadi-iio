@@ -24,8 +24,8 @@ class adrv9009_zu11eg_multi(object):
             JESD object associated with primary ADRV9009-ZU11EG
         secondary_jesds: type=list[adi.jesd]
             JESD object(s) associated with secondary ADRV9009-ZU11EG(s)
-        fmcomms8: type=boolean
-            Boolean flag to idenify is FMComms8(s) are attached to SOMs
+        fmcomms8: type=boolean or list[boolean]
+            Boolean flag or list of boolean flags to identify is FMComms8(s) are attached to SOMs
     """
 
     __rx_buffer_size_multi = 2 ** 14
@@ -52,6 +52,16 @@ class adrv9009_zu11eg_multi(object):
         if not isinstance(secondary_jesds, list):
             Exception("secondary_jesds must be a list")
 
+        if isinstance(fmcomms8, list):
+            if len(fmcomms8) != len(secondary_uris) + 1:
+                raise Exception(
+                    "fmcomms8 must be a boolean or list of booleans with the same length as secondary_uris + 1 (primary)"
+                )
+        elif not all(isinstance(x, bool) for x in fmcomms8):
+            raise Exception("fmcomms8 must be a boolean or list of booleans")
+        else:
+            fmcomms8 = [fmcomms8] * (len(secondary_uris) + 1)
+
         self._dma_show_arming = False
         self._jesd_show_status = False
         self._jesd_fsm_show_status = False
@@ -60,7 +70,7 @@ class adrv9009_zu11eg_multi(object):
         self._rx_initialized = False
         self._request_sysref_carrier = False
         self.fmcomms8 = fmcomms8
-        if fmcomms8:
+        if fmcomms8[0]:
             self.primary = adrv9009_zu11eg_fmcomms8(
                 uri=primary_uri, jesd_monitor=True, jesd=primary_jesd
             )
@@ -72,7 +82,7 @@ class adrv9009_zu11eg_multi(object):
         self.samples_primary = []
         self.samples_secondary = []
         for i, uri in enumerate(secondary_uris):
-            if fmcomms8:
+            if fmcomms8[i + 1]:
                 self.secondaries.append(
                     adrv9009_zu11eg_fmcomms8(
                         uri=uri, jesd_monitor=True, jesd=secondary_jesds[i]
