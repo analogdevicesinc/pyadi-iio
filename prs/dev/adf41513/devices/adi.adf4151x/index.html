@@ -98,12 +98,6 @@
           <ul>
 <li><a class="reference internal" href="#">adf4151x</a><ul>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x"><code class="docutils literal notranslate"><span class="pre">adf4151x</span></code></a><ul>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.mode"><code class="docutils literal notranslate"><span class="pre">adf4151x.mode</span></code></a><ul>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.mode.INTEGER_N"><code class="docutils literal notranslate"><span class="pre">adf4151x.mode.INTEGER_N</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.mode.FIXED_MODULUS"><code class="docutils literal notranslate"><span class="pre">adf4151x.mode.FIXED_MODULUS</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.mode.VARIABLE_MODULUS"><code class="docutils literal notranslate"><span class="pre">adf4151x.mode.VARIABLE_MODULUS</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.reg"><code class="docutils literal notranslate"><span class="pre">adf4151x.reg</span></code></a><ul>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.reg.R0"><code class="docutils literal notranslate"><span class="pre">adf4151x.reg.R0</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.reg.R1"><code class="docutils literal notranslate"><span class="pre">adf4151x.reg.R1</span></code></a></li>
@@ -240,6 +234,7 @@ Content on this topic
 <li class="toctree-l2"><a class="reference internal" href="../adi.ad9083/">ad9083</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../adi.ad9084/">ad9084</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../adi.ad9084_mc/">ad9084_mc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../adi.ad9088/">ad9088</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../adi.ad9094/">ad9094</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../adi.ad9136/">ad9136</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../adi.ad9144/">ad9144</a></li>
@@ -370,34 +365,12 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf4151x.</span></span><span class="sig-name descname"><span class="pre">adf4151x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">device_base</span></code></p>
-<p>Driver for ADF41513 26.5 GHz Integer-N/Fractional-N PLL Frequency Synthesizer</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.mode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.mode" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>ADF41513 Mode Enumeration</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.mode.INTEGER_N">
-<span class="sig-name descname"><span class="pre">INTEGER_N</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.mode.INTEGER_N" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.mode.FIXED_MODULUS">
-<span class="sig-name descname"><span class="pre">FIXED_MODULUS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.mode.FIXED_MODULUS" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.mode.VARIABLE_MODULUS">
-<span class="sig-name descname"><span class="pre">VARIABLE_MODULUS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.mode.VARIABLE_MODULUS" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<p>Driver for ADF4151x Integer-N/Fractional-N PLL Frequency Synthesizer</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>ADF41513 Register Enumeration</p>
+<p>ADF4151x Register Enumeration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R0">
 <span class="sig-name descname"><span class="pre">R0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R0" title="Link to this definition"></a></dt>
@@ -474,7 +447,7 @@ Content on this topic
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">muxout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>ADF41513 MUXOUT Pin Function Enumeration</p>
+<p>ADF4151x MUXOUT Pin Function Enumeration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.TRISTATE">
 <span class="sig-name descname"><span class="pre">TRISTATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.TRISTATE" title="Link to this definition"></a></dt>
@@ -535,7 +508,7 @@ Content on this topic
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.frequency">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frequency</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.frequency" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the output frequency value in Hz</p>
+<dd><p>Get/Set the output frequency value in Hz.</p>
 <p>This value represents the output frequency of the external VCO with
 respect to the input frequency reference.</p>
 </dd></dl>
@@ -543,7 +516,7 @@ respect to the input frequency reference.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.frequency_resolution">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frequency_resolution</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.frequency_resolution" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the output frequency resolution value in Hz</p>
+<dd><p>Get/Set the output frequency resolution value in Hz.</p>
 <p>This value represents the desired frequency resolution of the output
 frequency, used to derive modulus and fraction values for fractional-N
 operation.</p>
@@ -552,7 +525,7 @@ operation.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.phase">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phase</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.phase" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the phase adjust value in radians</p>
+<dd><p>Get/Set the phase adjust value in radians.</p>
 <p>Phase adjust increases the phase of the output relative to the current
 phase.</p>
 </dd></dl>
@@ -560,19 +533,19 @@ phase.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.powerdown">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.powerdown" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the powerdown state</p>
+<dd><p>Get/Set the powerdown state.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.locked">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locked</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.locked" title="Link to this definition"></a></dt>
-<dd><p>Get the PLL lock status</p>
+<dd><p>Get the PLL lock status.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout_select">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">muxout_select</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#adi.adf4151x.adf4151x.muxout" title="adi.adf4151x.adf4151x.muxout"><span class="pre">muxout</span></a></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout_select" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the MUXOUT pin function</p>
+<dd><p>Get/Set the MUXOUT pin function.</p>
 <p>This property uses register access, so it is mostly intended for
 debugging and testing purposes.</p>
 </dd></dl>
@@ -580,7 +553,7 @@ debugging and testing purposes.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.charge_pump_index">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">charge_pump_index</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.charge_pump_index" title="Link to this definition"></a></dt>
-<dd><p>Get/Set the charge pump current index value</p>
+<dd><p>Get/Set the charge pump current index value.</p>
 <p>This property uses register access, so it is mostly intended for
 debugging and testing purposes. The charge pump current value depends on
 the R_SET resistor value and the charge pump index value. The current
@@ -591,13 +564,13 @@ production use-cases.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg_read">
 <span class="sig-name descname"><span class="pre">reg_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#adi.adf4151x.adf4151x.reg" title="adi.adf4151x.adf4151x.reg"><span class="pre">reg</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg_read" title="Link to this definition"></a></dt>
-<dd><p>Direct Register Access via debugfs</p>
+<dd><p>Direct Register Access via debugfs.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg_write">
 <span class="sig-name descname"><span class="pre">reg_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#adi.adf4151x.adf4151x.reg" title="adi.adf4151x.adf4151x.reg"><span class="pre">reg</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg_write" title="Link to this definition"></a></dt>
-<dd><p>Direct Register Access via debugfs</p>
+<dd><p>Direct Register Access via debugfs.</p>
 </dd></dl>
 
 </dd></dl>
