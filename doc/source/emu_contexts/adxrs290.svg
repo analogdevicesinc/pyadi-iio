@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1415" height="2996" viewBox="0 0 1415 2996" role="img" aria-label="Emulation XML tree diagram">
+<style>
+.bg { fill: #f7fafc; }
+.edge { stroke: #7a8aa1; stroke-width: 1.4; fill: none; }
+.node { stroke-width: 1.1; rx: 10; ry: 10; }
+.node-context { fill: #d7e9ff; stroke: #457b9d; }
+.node-device { fill: #d9f3e4; stroke: #2d6a4f; }
+.node-channel { fill: #fff1cf; stroke: #b08900; }
+.node-summary { fill: #efe8ff; stroke: #6c4dbf; }
+.node-error { fill: #ffd7d7; stroke: #b3261e; }
+.title { font: 700 13px "DejaVu Sans", "Arial", sans-serif; fill: #1f2a37; }
+.subtitle { font: 12px "DejaVu Sans Mono", "Consolas", monospace; fill: #3d4b60; }
+.legend-title { font: 700 12px "DejaVu Sans", "Arial", sans-serif; fill: #1f2a37; }
+.legend-text { font: 11px "DejaVu Sans", "Arial", sans-serif; fill: #3d4b60; }
+</style>
+<rect class="bg" x="0" y="0" width="1415" height="2996"/>
+<path class="edge" d="M 265.0 1498.0 C 287.5 1498.0, 287.5 58.0, 310.0 58.0"/>
+<path class="edge" d="M 265.0 1498.0 C 287.5 1498.0, 287.5 148.0, 310.0 148.0"/>
+<path class="edge" d="M 545.0 148.0 C 567.5 148.0, 567.5 148.0, 590.0 148.0"/>
+<path class="edge" d="M 825.0 148.0 C 847.5 148.0, 847.5 148.0, 870.0 148.0"/>
+<path class="edge" d="M 265.0 1498.0 C 287.5 1498.0, 287.5 1025.5, 310.0 1025.5"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 283.0, 590.0 283.0"/>
+<path class="edge" d="M 825.0 283.0 C 847.5 283.0, 847.5 238.0, 870.0 238.0"/>
+<path class="edge" d="M 825.0 283.0 C 847.5 283.0, 847.5 328.0, 870.0 328.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 463.0, 590.0 463.0"/>
+<path class="edge" d="M 825.0 463.0 C 847.5 463.0, 847.5 418.0, 870.0 418.0"/>
+<path class="edge" d="M 825.0 463.0 C 847.5 463.0, 847.5 508.0, 870.0 508.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 643.0, 590.0 643.0"/>
+<path class="edge" d="M 825.0 643.0 C 847.5 643.0, 847.5 598.0, 870.0 598.0"/>
+<path class="edge" d="M 825.0 643.0 C 847.5 643.0, 847.5 688.0, 870.0 688.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 823.0, 590.0 823.0"/>
+<path class="edge" d="M 825.0 823.0 C 847.5 823.0, 847.5 778.0, 870.0 778.0"/>
+<path class="edge" d="M 825.0 823.0 C 847.5 823.0, 847.5 868.0, 870.0 868.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 1003.0, 590.0 1003.0"/>
+<path class="edge" d="M 825.0 1003.0 C 847.5 1003.0, 847.5 958.0, 870.0 958.0"/>
+<path class="edge" d="M 825.0 1003.0 C 847.5 1003.0, 847.5 1048.0, 870.0 1048.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 1183.0, 590.0 1183.0"/>
+<path class="edge" d="M 825.0 1183.0 C 847.5 1183.0, 847.5 1138.0, 870.0 1138.0"/>
+<path class="edge" d="M 825.0 1183.0 C 847.5 1183.0, 847.5 1228.0, 870.0 1228.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 1363.0, 590.0 1363.0"/>
+<path class="edge" d="M 825.0 1363.0 C 847.5 1363.0, 847.5 1318.0, 870.0 1318.0"/>
+<path class="edge" d="M 825.0 1363.0 C 847.5 1363.0, 847.5 1408.0, 870.0 1408.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 1543.0, 590.0 1543.0"/>
+<path class="edge" d="M 825.0 1543.0 C 847.5 1543.0, 847.5 1498.0, 870.0 1498.0"/>
+<path class="edge" d="M 825.0 1543.0 C 847.5 1543.0, 847.5 1588.0, 870.0 1588.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 1678.0, 590.0 1678.0"/>
+<path class="edge" d="M 545.0 1025.5 C 567.5 1025.5, 567.5 1768.0, 590.0 1768.0"/>
+<path class="edge" d="M 265.0 1498.0 C 287.5 1498.0, 287.5 2285.5, 310.0 2285.5"/>
+<path class="edge" d="M 545.0 2285.5 C 567.5 2285.5, 567.5 1903.0, 590.0 1903.0"/>
+<path class="edge" d="M 825.0 1903.0 C 847.5 1903.0, 847.5 1858.0, 870.0 1858.0"/>
+<path class="edge" d="M 825.0 1903.0 C 847.5 1903.0, 847.5 1948.0, 870.0 1948.0"/>
+<path class="edge" d="M 545.0 2285.5 C 567.5 2285.5, 567.5 2083.0, 590.0 2083.0"/>
+<path class="edge" d="M 825.0 2083.0 C 847.5 2083.0, 847.5 2038.0, 870.0 2038.0"/>
+<path class="edge" d="M 825.0 2083.0 C 847.5 2083.0, 847.5 2128.0, 870.0 2128.0"/>
+<path class="edge" d="M 545.0 2285.5 C 567.5 2285.5, 567.5 2263.0, 590.0 2263.0"/>
+<path class="edge" d="M 825.0 2263.0 C 847.5 2263.0, 847.5 2218.0, 870.0 2218.0"/>
+<path class="edge" d="M 825.0 2263.0 C 847.5 2263.0, 847.5 2308.0, 870.0 2308.0"/>
+<path class="edge" d="M 545.0 2285.5 C 567.5 2285.5, 567.5 2398.0, 590.0 2398.0"/>
+<path class="edge" d="M 825.0 2398.0 C 847.5 2398.0, 847.5 2398.0, 870.0 2398.0"/>
+<path class="edge" d="M 545.0 2285.5 C 567.5 2285.5, 567.5 2488.0, 590.0 2488.0"/>
+<path class="edge" d="M 545.0 2285.5 C 567.5 2285.5, 567.5 2578.0, 590.0 2578.0"/>
+<path class="edge" d="M 545.0 2285.5 C 567.5 2285.5, 567.5 2668.0, 590.0 2668.0"/>
+<path class="edge" d="M 265.0 1498.0 C 287.5 1498.0, 287.5 2758.0, 310.0 2758.0"/>
+<path class="edge" d="M 545.0 2758.0 C 567.5 2758.0, 567.5 2758.0, 590.0 2758.0"/>
+<path class="edge" d="M 265.0 1498.0 C 287.5 1498.0, 287.5 2848.0, 310.0 2848.0"/>
+<path class="edge" d="M 265.0 1498.0 C 287.5 1498.0, 287.5 2938.0, 310.0 2938.0"/>
+<rect class="node node-context" x="30.0" y="1470.0" width="235.0" height="56.0"/>
+<text class="title" x="42.0" y="1492.0">Context</text>
+<text class="subtitle" x="42.0" y="1511.0">network | 192.168.10.151 Linux analog 5...</text>
+<rect class="node node-summary" x="310.0" y="30.0" width="235.0" height="56.0"/>
+<text class="title" x="322.0" y="52.0">Context Attributes</text>
+<text class="subtitle" x="322.0" y="71.0">5 entries</text>
+<rect class="node node-device" x="310.0" y="120.0" width="235.0" height="56.0"/>
+<text class="title" x="322.0" y="142.0">Device</text>
+<text class="subtitle" x="322.0" y="161.0">hwmon0 | rpi_volt</text>
+<rect class="node node-channel" x="590.0" y="120.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="142.0">Channel</text>
+<text class="subtitle" x="602.0" y="161.0">in0 | input</text>
+<rect class="node node-summary" x="870.0" y="120.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="142.0">Attributes</text>
+<text class="subtitle" x="882.0" y="161.0">1 entry</text>
+<rect class="node node-device" x="310.0" y="997.5" width="235.0" height="56.0"/>
+<text class="title" x="322.0" y="1019.5">Device</text>
+<text class="subtitle" x="322.0" y="1038.5">iio:device0 | ad7124-8</text>
+<rect class="node node-channel" x="590.0" y="255.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="277.0">Channel</text>
+<text class="subtitle" x="602.0" y="296.0">voltage0-voltage1 | input</text>
+<rect class="node node-summary" x="870.0" y="210.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="232.0">Attributes</text>
+<text class="subtitle" x="882.0" y="251.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="300.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="322.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="341.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="435.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="457.0">Channel</text>
+<text class="subtitle" x="602.0" y="476.0">voltage10-voltage11 | input</text>
+<rect class="node node-summary" x="870.0" y="390.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="412.0">Attributes</text>
+<text class="subtitle" x="882.0" y="431.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="480.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="502.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="521.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="615.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="637.0">Channel</text>
+<text class="subtitle" x="602.0" y="656.0">voltage12-voltage13 | input</text>
+<rect class="node node-summary" x="870.0" y="570.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="592.0">Attributes</text>
+<text class="subtitle" x="882.0" y="611.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="660.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="682.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="701.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="795.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="817.0">Channel</text>
+<text class="subtitle" x="602.0" y="836.0">voltage14-voltage15 | input</text>
+<rect class="node node-summary" x="870.0" y="750.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="772.0">Attributes</text>
+<text class="subtitle" x="882.0" y="791.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="840.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="862.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="881.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="975.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="997.0">Channel</text>
+<text class="subtitle" x="602.0" y="1016.0">voltage2-voltage3 | input</text>
+<rect class="node node-summary" x="870.0" y="930.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="952.0">Attributes</text>
+<text class="subtitle" x="882.0" y="971.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="1020.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1042.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="1061.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="1155.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="1177.0">Channel</text>
+<text class="subtitle" x="602.0" y="1196.0">voltage4-voltage5 | input</text>
+<rect class="node node-summary" x="870.0" y="1110.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1132.0">Attributes</text>
+<text class="subtitle" x="882.0" y="1151.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="1200.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1222.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="1241.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="1335.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="1357.0">Channel</text>
+<text class="subtitle" x="602.0" y="1376.0">voltage6-voltage7 | input</text>
+<rect class="node node-summary" x="870.0" y="1290.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1312.0">Attributes</text>
+<text class="subtitle" x="882.0" y="1331.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="1380.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1402.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="1421.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="1515.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="1537.0">Channel</text>
+<text class="subtitle" x="602.0" y="1556.0">voltage8-voltage9 | input</text>
+<rect class="node node-summary" x="870.0" y="1470.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1492.0">Attributes</text>
+<text class="subtitle" x="882.0" y="1511.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="1560.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1582.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="1601.0">1 entry</text>
+<rect class="node node-summary" x="590.0" y="1650.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="1672.0">Debug Attributes</text>
+<text class="subtitle" x="602.0" y="1691.0">1 entry</text>
+<rect class="node node-summary" x="590.0" y="1740.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="1762.0">Buffer Attributes</text>
+<text class="subtitle" x="602.0" y="1781.0">1 entry</text>
+<rect class="node node-device" x="310.0" y="2257.5" width="235.0" height="56.0"/>
+<text class="title" x="322.0" y="2279.5">Device</text>
+<text class="subtitle" x="322.0" y="2298.5">iio:device1 | adxrs290</text>
+<rect class="node node-channel" x="590.0" y="1875.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="1897.0">Channel</text>
+<text class="subtitle" x="602.0" y="1916.0">anglvel_x | input</text>
+<rect class="node node-summary" x="870.0" y="1830.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1852.0">Attributes</text>
+<text class="subtitle" x="882.0" y="1871.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="1920.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="1942.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="1961.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="2055.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="2077.0">Channel</text>
+<text class="subtitle" x="602.0" y="2096.0">anglvel_y | input</text>
+<rect class="node node-summary" x="870.0" y="2010.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="2032.0">Attributes</text>
+<text class="subtitle" x="882.0" y="2051.0">6 entries</text>
+<rect class="node node-summary" x="870.0" y="2100.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="2122.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="2141.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="2235.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="2257.0">Channel</text>
+<text class="subtitle" x="602.0" y="2276.0">temp | input</text>
+<rect class="node node-summary" x="870.0" y="2190.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="2212.0">Attributes</text>
+<text class="subtitle" x="882.0" y="2231.0">2 entries</text>
+<rect class="node node-summary" x="870.0" y="2280.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="2302.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="2321.0">1 entry</text>
+<rect class="node node-channel" x="590.0" y="2370.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="2392.0">Channel</text>
+<text class="subtitle" x="602.0" y="2411.0">timestamp | input</text>
+<rect class="node node-summary" x="870.0" y="2370.0" width="235.0" height="56.0"/>
+<text class="title" x="882.0" y="2392.0">Scan Elements</text>
+<text class="subtitle" x="882.0" y="2411.0">1 entry</text>
+<rect class="node node-summary" x="590.0" y="2460.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="2482.0">Attributes</text>
+<text class="subtitle" x="602.0" y="2501.0">1 entry</text>
+<rect class="node node-summary" x="590.0" y="2550.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="2572.0">Debug Attributes</text>
+<text class="subtitle" x="602.0" y="2591.0">1 entry</text>
+<rect class="node node-summary" x="590.0" y="2640.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="2662.0">Buffer Attributes</text>
+<text class="subtitle" x="602.0" y="2681.0">1 entry</text>
+<rect class="node node-device" x="310.0" y="2730.0" width="235.0" height="56.0"/>
+<text class="title" x="322.0" y="2752.0">Device</text>
+<text class="subtitle" x="322.0" y="2771.0">iio_sysfs_trigger</text>
+<rect class="node node-summary" x="590.0" y="2730.0" width="235.0" height="56.0"/>
+<text class="title" x="602.0" y="2752.0">Attributes</text>
+<text class="subtitle" x="602.0" y="2771.0">2 entries</text>
+<rect class="node node-device" x="310.0" y="2820.0" width="235.0" height="56.0"/>
+<text class="title" x="322.0" y="2842.0">Device</text>
+<text class="subtitle" x="322.0" y="2861.0">trigger0 | ad7124-8-dev0</text>
+<rect class="node node-device" x="310.0" y="2910.0" width="235.0" height="56.0"/>
+<text class="title" x="322.0" y="2932.0">Device</text>
+<text class="subtitle" x="322.0" y="2951.0">trigger1 | adxrs290-dev1</text>
+<rect x="1160" y="16" width="230" height="92" fill="#ffffff" stroke="#c6cfdb" rx="8" ry="8"/>
+<text class="legend-title" x="1172" y="36">Node Types</text>
+<rect class="node node-context" x="1172" y="41" width="14" height="10" rx="2" ry="2"/>
+<text class="legend-text" x="1192" y="50">Context</text>
+<rect class="node node-device" x="1172" y="55" width="14" height="10" rx="2" ry="2"/>
+<text class="legend-text" x="1192" y="64">Device</text>
+<rect class="node node-channel" x="1172" y="69" width="14" height="10" rx="2" ry="2"/>
+<text class="legend-text" x="1192" y="78">Channel</text>
+<rect class="node node-summary" x="1172" y="83" width="14" height="10" rx="2" ry="2"/>
+<text class="legend-text" x="1192" y="92">Grouped Attributes</text>
+</svg>
