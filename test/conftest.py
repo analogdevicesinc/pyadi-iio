@@ -45,9 +45,12 @@ def pytest_runtest_makereport(item, call):
 
         for fixture in item.fixturenames:
             if "test_" in fixture:  # Get fixtures in conftest.py
-                fixture_defs = item.session._fixturemanager._arg2fixturedefs.get(
-                    fixture, []
-                )
+                fixture_manager = item.session._fixturemanager
+                try:
+                    fixture_defs = fixture_manager.getfixturedefs(fixture, item)
+                except (TypeError, AttributeError):
+                    # pytest < 8.1 expects a nodeid string instead of a node
+                    fixture_defs = fixture_manager.getfixturedefs(fixture, item.nodeid)
                 if fixture_defs:
                     # Get the fixture definition
                     for fix_func in fixture_defs:

@@ -147,6 +147,11 @@ ad9084:
       - data_devices:
           - iio:device13
           - iio:device14
+ad9088:
+  - axi-ad9088-tx-hpc
+  - axi-ad9088-rx-hpc
+  - pyadi_iio_class_support:
+      - ad9088
 ad9172:
   - axi-ad9172-hpc,2
   - hmc7044
