@@ -52,21 +52,21 @@ import numpy as np
 from phaser_functions import load_hb100_cal, spec_est
 
 from adi import ad9361
-from adi.cn0566 import CN0566
+from adi.cn0566 import cn0566
 
 # First try to connect to a locally connected CN0566. On success, connect,
 # on failure, connect to remote CN0566
 
 try:
     print("Attempting to connect to CN0566 via ip:localhost...")
-    my_phaser = CN0566(uri="ip:localhost")
+    my_phaser = cn0566(uri="ip:localhost")
     print("Found CN0566. Connecting to PlutoSDR via default IP address...")
     my_sdr = ad9361(uri="ip:192.168.2.1")
     print("PlutoSDR connected.")
 
 except:
     print("CN0566 on ip.localhost not found, connecting via ip:phaser.local...")
-    my_phaser = CN0566(uri="ip:phaser.local")
+    my_phaser = cn0566(uri="ip:phaser.local")
     print("Found CN0566. Connecting to PlutoSDR via shared context...")
     my_sdr = ad9361(uri="ip:phaser.local:50901")
     print("Found SDR on shared phaser.local.")
@@ -151,7 +151,7 @@ my_sdr.filter = "LTE20_MHz.ftr"  # Handy filter for fairly widdeband measurement
 # in an IF at 2.201 GHz.
 
 offset = 1000000  # add a small offset
-my_phaser.frequency = (
+my_phaser.pll.frequency = (
     int(my_phaser.SignalFreq + my_sdr.rx_lo - offset)
 ) // 4  # PLL feedback is from the VCO's /4 output
 
