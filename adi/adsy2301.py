@@ -52,6 +52,7 @@ import genalyzer as gn
 import re
 import json
 import os
+import datetime
 from adi.attribute import attribute
 from adi.context_manager import context_manager
 import sys
@@ -2297,6 +2298,62 @@ def create_dict(new_keys, array):
             result_dict[reshaped_keys[i][j]] = reshaped_array[i][j]
     print("Dictionary created successfully of size:", array_shape)
     return result_dict
+
+
+def save_rx_cal_json(uri, subarray, subarray_ref, adc_map, adc_ref, element_map,
+                     gain_dict, atten_dict, mag_pre_cal,
+                     mag_post_cal, cal_ant, analog_phase, analog_phase_dict,
+                     script_name=None, filename=None):
+    """
+    Store the RX gain and phase calibration state, with header information,
+    to a JSON file. Dict keys (element numbers) are written as strings.
+    If filename is None, ADSY2301_Rx_Cal_<YYYYMMDD_HHMMSS>.json is created
+    in the current directory. Returns the filename written.
+    """
+    def to_py(obj):
+        # Recursively convert numpy types/containers to JSON-serializable types
+        if isinstance(obj, dict):
+            return {str(k): to_py(v) for k, v in obj.items()}
+        if isinstance(obj, (list, tuple, np.ndarray)):
+            return [to_py(v) for v in obj]
+        if isinstance(obj, np.generic):
+            return obj.item()
+        return obj
+
+    if filename is None:
+        filename = "ADSY2301_Rx_Cal_" + time.strftime("%Y%m%d_%H%M%S") + ".json"
+
+    cal_state = {
+        "header": {
+            "device": "ADSY2301",
+            "calibration_type": "RX gain + phase",
+            "timestamp": datetime.datetime.now().astimezone().isoformat(),
+            "uri": uri,
+            "script": script_name,
+        },
+        "layout": {
+            "subarray": subarray,
+            "subarray_ref": subarray_ref,
+            "adc_map": adc_map,
+            "adc_ref": adc_ref,
+            "element_map": element_map,
+        },
+        "gain_calibration": {
+            "gain_codes": gain_dict,
+            "attenuator": atten_dict,
+            "magnitude_pre_cal_dbfs": mag_pre_cal,
+            "magnitude_post_cal_dbfs": mag_post_cal,
+        },
+        "phase_calibration": {
+            "adc_phase_offsets_deg": cal_ant,
+            "analog_phase_deg": analog_phase_dict,
+            "analog_phase_flat": analog_phase,
+        },
+    }
+    with open(filename, "w") as f:
+        json.dump(to_py(cal_state), f, indent=2)
+    print("Saved calibration state to", filename)
+    return filename
 
 
 def wrap_to_360(angle):
