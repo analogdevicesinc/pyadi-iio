@@ -26,15 +26,8 @@ import os
 
 import ddr_layout
 import pytest
-from talise_hw import (
-    HELPER_PATH,
-    HELPER_SRC,
-    STOCK_BACKUP,
-    TaliseBoard,
-    _log_dir,
-    _out,
-    _sha256,
-)
+from talise_hw import (HELPER_PATH, HELPER_SRC, STOCK_BACKUP, TaliseBoard,
+                       _log_dir, _out, _sha256)
 
 
 def pytest_configure(config):
@@ -53,6 +46,9 @@ def talise_config():
             f"TALISE_CONFIG must be one of {sorted(ddr_layout.CONFIG_MAPS)}, got {config!r}"
         )
     return config
+
+
+_MISSING = object()
 
 
 def _boot_file_drivers():
@@ -102,22 +98,32 @@ def talise_board(talise_config, record_testsuite_property):
     import adi_lg_plugins  # noqa: F401  (registers the ADI drivers and strategies)
     from labgrid import Environment
 
-    # BootFPGASoCSSH collects the Kuiper release boot files when the target is
-    # built, which can download a full image to this host. Only BOOT.BIN is
-    # replaced here (the card keeps its kernel and devicetree): skip that lookup.
+    # BootFPGASoCSSH activates its Kuiper/Cloudsmith download driver and
+    # collects the release boot files when the target is built. Activation
+    # starts an agent on the exporter over SSH and the lookup can download a
+    # full image; neither is needed (only BOOT.BIN is replaced, the card keeps
+    # its kernel and devicetree), and the CI runner has no SSH access to the
+    # exporter. Make both no-ops while the target is built.
+    stubs = {
+        "get_boot_files_from_release": lambda self, get_all_files=False: self._boot_files,
+        "on_activate": lambda self: None,
+        "on_deactivate": lambda self: None,
+    }
     patched = []
     for cls in _boot_file_drivers():
-        patched.append((cls, cls.get_boot_files_from_release))
-        cls.get_boot_files_from_release = (
-            lambda self, get_all_files=False: self._boot_files
-        )
+        for name, stub in stubs.items():
+            patched.append((cls, name, cls.__dict__.get(name, _MISSING)))
+            setattr(cls, name, stub)
     try:
         env = Environment(env_path)
         target = env.get_target("main")
         strategy = target.get_driver("BootFPGASoCSSH")
     finally:
-        for cls, orig in patched:
-            cls.get_boot_files_from_release = orig
+        for cls, name, orig in reversed(patched):
+            if orig is _MISSING:
+                delattr(cls, name)
+            else:
+                setattr(cls, name, orig)
     if strategy.kuiper is None:
         pytest.fail(
             "the place's env has no KuiperDLDriver; BootFPGASoCSSH cannot upload BOOT.BIN"
