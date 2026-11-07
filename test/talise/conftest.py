@@ -55,6 +55,24 @@ def talise_config():
     return config
 
 
+def _boot_file_drivers():
+    """Driver classes BootFPGASoCSSH may bind as ``kuiper`` (both collect files at init)."""
+    import importlib
+
+    classes = []
+    for mod, name in (
+        ("adi_lg_plugins.drivers.kuiperdldriver", "KuiperDLDriver"),
+        ("adi_lg_plugins.drivers.cloudsmithdldriver", "CloudsmithDLDriver"),
+    ):
+        try:
+            cls = getattr(importlib.import_module(mod), name)
+        except (ImportError, AttributeError):
+            continue
+        if hasattr(cls, "get_boot_files_from_release"):
+            classes.append(cls)
+    return classes
+
+
 def _power_off(target, strategy):
     """Power off even when @never_retry has marked the strategy broken."""
     try:
@@ -84,9 +102,22 @@ def talise_board(talise_config, record_testsuite_property):
     import adi_lg_plugins  # noqa: F401  (registers the ADI drivers and strategies)
     from labgrid import Environment
 
-    env = Environment(env_path)
-    target = env.get_target("main")
-    strategy = target.get_driver("BootFPGASoCSSH")
+    # BootFPGASoCSSH collects the Kuiper release boot files when the target is
+    # built, which can download a full image to this host. Only BOOT.BIN is
+    # replaced here (the card keeps its kernel and devicetree): skip that lookup.
+    patched = []
+    for cls in _boot_file_drivers():
+        patched.append((cls, cls.get_boot_files_from_release))
+        cls.get_boot_files_from_release = (
+            lambda self, get_all_files=False: self._boot_files
+        )
+    try:
+        env = Environment(env_path)
+        target = env.get_target("main")
+        strategy = target.get_driver("BootFPGASoCSSH")
+    finally:
+        for cls, orig in patched:
+            cls.get_boot_files_from_release = orig
     if strategy.kuiper is None:
         pytest.fail(
             "the place's env has no KuiperDLDriver; BootFPGASoCSSH cannot upload BOOT.BIN"
