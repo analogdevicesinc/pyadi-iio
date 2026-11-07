@@ -14,7 +14,7 @@ The place must be SD strapped and use the `BootFPGASoCSSH` strategy. Run inside 
 
 ```
 TALISE_HW=1 TALISE_CONFIG=ddr_lo TALISE_BOOT_BIN=/path/to/BOOT.BIN \
-adi-lg request --part adrv9009zu11eg --carrier adrv2crr-fmc --mode reserve --wait 1800 \
+adi-lg request --part adrv9009zu11eg --carrier adrv2crrfmc --mode reserve --wait 1800 \
   --run 'python -m pytest test/talise --confcutdir=test/talise -o addopts= -v'
 ```
 

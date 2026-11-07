@@ -3,7 +3,7 @@
 The board must be strapped for SD boot and its labgrid place driven by the
 ``BootFPGASoCSSH`` strategy. The suite is launched inside a reservation, e.g.::
 
-    adi-lg request --part adrv9009zu11eg --carrier adrv2crr-fmc --mode reserve \\
+    adi-lg request --part adrv9009zu11eg --carrier adrv2crrfmc --mode reserve \\
         --run 'python -m pytest test/talise'
 
 which exports ``LG_ENV``. The fixture then
