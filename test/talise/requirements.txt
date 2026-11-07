@@ -1,0 +1,1 @@
+labgrid-plugins[kuiper] @ git+https://github.com/tfcollins/labgrid-plugins.git@v6
