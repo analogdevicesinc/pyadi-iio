@@ -10,16 +10,21 @@ part, so a failure points at a single part.
 | `ddr_lo`        | U30       | U41       |
 | `ddr_hi`        | U31       | U42       |
 
-The place must be SD strapped and use the `BootFPGASoCSSH` strategy. Run inside a reservation:
+The board boots its own SD card image; only the PL is replaced at runtime, so the card is
+never modified and a power cycle restores the stock design. The place uses the
+`BootFPGASoCSSH` strategy (power, serial shell, SSH). Run inside a reservation:
 
 ```
-TALISE_HW=1 TALISE_CONFIG=ddr_lo TALISE_BOOT_BIN=/path/to/BOOT.BIN \
-adi-lg request --part adrv9009zu11eg --carrier adrv2crrfmc --mode reserve --wait 1800 \
+TALISE_HW=1 TALISE_CONFIG=ddr_lo TALISE_PL_BIN=/path/to/system_top.bit.bin \
+adi-lg request --part adrv9009zu11eg --mode reserve --wait 1800 \
   --run 'python -m pytest test/talise --confcutdir=test/talise -o addopts= -v'
 ```
 
-The fixture keeps the card's BOOT.BIN as `/boot/BOOT.BIN.stock-ci`, boots the image under
-test, and restores the stock BOOT.BIN on teardown.
+`TALISE_PL_BIN` is the bitstream converted for fpga_manager
+(`bootgen -arch zynqmp -process_bitstream bin`). The fixture uploads it over SSH to
+/lib/firmware, does a full PL reconfiguration (fpga_manager `firmware`, or the
+`talise_pl.dtbo` overlay on /fpga-full), and sets M_AXI_HPM0_FPD to the 128 bits the
+production design uses (FPD_SLCR.AFI_FS), since a runtime load does not rerun psu_init.
 
 Tests:
 

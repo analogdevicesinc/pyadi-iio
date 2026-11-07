@@ -1,0 +1,17 @@
+/*
+ * Full PL reconfiguration for the talise PL DDR4 tests, used only when the
+ * fpga_manager sysfs "firmware" attribute is not available. Loads
+ * /lib/firmware/talise_pl.bit.bin into the fpga-full region. It adds no
+ * nodes: the PL DDR tests use /dev/mem only.
+ */
+/dts-v1/;
+/plugin/;
+
+/ {
+	fragment@0 {
+		target-path = "/fpga-full";
+		__overlay__ {
+			firmware-name = "talise_pl.bit.bin";
+		};
+	};
+};

@@ -1,23 +1,26 @@
 """Labgrid fixtures for the ADRV9009-ZU11EG (ADRV2CRR-FMC) production PL DDR4 tests.
 
-The board must be strapped for SD boot and its labgrid place driven by the
-``BootFPGASoCSSH`` strategy. The suite is launched inside a reservation, e.g.::
+The board boots its own (stock) SD card image; only the PL is replaced, at
+runtime, so the card is never modified and a power cycle always brings the
+board back. Its labgrid place is driven by ``BootFPGASoCSSH`` (power, serial
+shell, SSH). The suite is launched inside a reservation, e.g.::
 
-    adi-lg request --part adrv9009zu11eg --carrier adrv2crrfmc --mode reserve \\
+    adi-lg request --part adrv9009zu11eg --mode reserve \\
         --run 'python -m pytest test/talise'
 
 which exports ``LG_ENV``. The fixture then
 
-1. boots the image already on the card and saves its ``/boot/BOOT.BIN`` once
-   as ``/boot/BOOT.BIN.stock-ci``,
-2. uploads ``TALISE_BOOT_BIN`` over SSH as ``/boot/BOOT.BIN`` and
-   power-cycles into it (BootFPGASoCSSH),
-3. on teardown, restores the stock ``BOOT.BIN`` and powers the board off.
+1. powers the board on and logs in to the stock Linux,
+2. uploads ``TALISE_PL_BIN`` (bootgen ``-process_bitstream bin`` output) over
+   SSH to /lib/firmware and does a full PL reconfiguration through
+   fpga_manager (or a /fpga-full overlay),
+3. sets the HPM0_FPD port width the production design expects,
+4. on teardown, removes the firmware file and powers the board off.
 
 Environment:
     TALISE_HW=1            enable the hardware tests (skipped otherwise)
     TALISE_CONFIG          full | ddr_lo | ddr_hi (selects the chip mapping)
-    TALISE_BOOT_BIN        path to the BOOT.BIN under test
+    TALISE_PL_BIN          path to the .bit.bin of the build under test
     LG_ENV                 labgrid env of the reserved place
     TALISE_LOG_DIR         where boot/console logs go (default: ./boot_logs)
 """
@@ -26,8 +29,18 @@ import os
 
 import ddr_layout
 import pytest
-from talise_hw import (HELPER_PATH, HELPER_SRC, STOCK_BACKUP, TaliseBoard,
-                       _log_dir, _out, _sha256)
+from talise_hw import (
+    FIRMWARE_PATH,
+    HELPER_PATH,
+    HELPER_SRC,
+    OVERLAY_NAME,
+    OVERLAY_SRC,
+    TaliseBoard,
+    _log_dir,
+    _sha256,
+    load_pl,
+    set_hpm0_fpd_width,
+)
 
 
 def pytest_configure(config):
@@ -86,13 +99,13 @@ def talise_board(talise_config, record_testsuite_property):
             "set TALISE_HW=1 inside an adi-lg reservation to run the hardware tests"
         )
     env_path = os.environ.get("LG_ENV")
-    boot_bin = os.environ.get("TALISE_BOOT_BIN")
-    if not env_path or not boot_bin or not os.path.isfile(boot_bin):
-        pytest.fail("LG_ENV and an existing TALISE_BOOT_BIN are required")
-    boot_bin = os.path.abspath(boot_bin)
-    boot_bin_sha = _sha256(boot_bin)
+    pl_bin = os.environ.get("TALISE_PL_BIN")
+    if not env_path or not pl_bin or not os.path.isfile(pl_bin):
+        pytest.fail("LG_ENV and an existing TALISE_PL_BIN are required")
+    pl_bin = os.path.abspath(pl_bin)
+    pl_bin_sha = _sha256(pl_bin)
     record_testsuite_property("talise_config", talise_config)
-    record_testsuite_property("boot_bin_sha256", boot_bin_sha)
+    record_testsuite_property("pl_bin_sha256", pl_bin_sha)
     record_testsuite_property("lg_place", os.environ.get("LG_PLACE", ""))
 
     import adi_lg_plugins  # noqa: F401  (registers the ADI drivers and strategies)
@@ -101,8 +114,8 @@ def talise_board(talise_config, record_testsuite_property):
     # BootFPGASoCSSH activates its Kuiper/Cloudsmith download driver and
     # collects the release boot files when the target is built. Activation
     # starts an agent on the exporter over SSH and the lookup can download a
-    # full image; neither is needed (only BOOT.BIN is replaced, the card keeps
-    # its kernel and devicetree), and the CI runner has no SSH access to the
+    # full image; neither is needed (the card's own image is booted as is and
+    # only the PL is replaced), and the CI runner has no SSH access to the
     # exporter. Make both no-ops while the target is built.
     stubs = {
         "get_boot_files_from_release": lambda self, get_all_files=False: self._boot_files,
@@ -130,73 +143,83 @@ def talise_board(talise_config, record_testsuite_property):
         )
     shell = strategy.shell
     logs = _log_dir()
-    restore_needed = False
-    stock_sha = None
+    loaded = False
     try:
-        # 1. Boot whatever is on the card and keep its BOOT.BIN once
+        # 1. Boot the card's own image and log in on the serial console
         strategy.transition("booted")
         target.activate(shell)
-        _, _, code = shell.run(f"test -f {STOCK_BACKUP}")
-        if code != 0:
-            shell.run_check(f"cp /boot/BOOT.BIN {STOCK_BACKUP} && sync")
-        stock_sha = _out(shell.run_check(f"sha256sum {STOCK_BACKUP} | cut -d' ' -f1"))
-        record_testsuite_property("stock_boot_bin_sha256", stock_sha)
-        target.deactivate(shell)
-
-        # 2. Upload only the BOOT.BIN under test (the strategy also collected the
-        #    Kuiper release files at init; the card already has those)
-        strategy.kuiper._boot_files = [boot_bin]
-        restore_needed = True
-        strategy.transition("shell")
-        (logs / f"boot_{talise_config}.log").write_text(strategy.boot_log or "")
-
-        board = TaliseBoard(target, strategy, shell, talise_config, boot_bin_sha)
+        board = TaliseBoard(target, strategy, shell, talise_config, pl_bin_sha)
         board.check("dmesg -n 1")  # keep printk off the console
-        on_card = board.check("sha256sum /boot/BOOT.BIN | cut -d' ' -f1")
-        if on_card != boot_bin_sha:
-            pytest.fail(f"/boot/BOOT.BIN is {on_card}, expected {boot_bin_sha}")
+        stock = board.check("sha256sum /boot/BOOT.BIN | cut -d' ' -f1")
+        record_testsuite_property("card_boot_bin_sha256", stock)
+        board.props["design_before"] = _sysid_strings(board)
+
+        # 2. Upload the bitstream over SSH (15 MB; the serial line is too slow)
+        ip = _ipv4(board, strategy.eth_interface)
+        strategy._override_networkservice_address(strategy.ssh.networkservice, ip)
+        target.activate(strategy.ssh)
+        board.check("mkdir -p /lib/firmware")
+        strategy.ssh.put(pl_bin, FIRMWARE_PATH)
+        strategy.ssh.put(str(OVERLAY_SRC), f"/tmp/{OVERLAY_NAME}.dtbo")
+        target.deactivate(strategy.ssh)
+        on_target = board.check(f"sha256sum {FIRMWARE_PATH} | cut -d' ' -f1")
+        if on_target != pl_bin_sha:
+            pytest.fail(f"{FIRMWARE_PATH} is {on_target}, expected {pl_bin_sha}")
+
+        # 3. Quiesce userspace that polls PL IP, then reconfigure the PL. The
+        #    stock design's kernel drivers stay bound to addresses the
+        #    production design mostly shares; the tests use /dev/mem only.
+        board.run("systemctl stop iiod 2>/dev/null; true")
+        loaded = True
+        method = load_pl(board)
+        record_testsuite_property("pl_load_method", method)
+        old, new = set_hpm0_fpd_width(board)
+        record_testsuite_property("afi_fs_fpd", f"{old:#x}->{new:#x}")
+        (logs / f"boot_{talise_config}.log").write_text(strategy.boot_log or "")
         yield board
     finally:
-        if restore_needed and stock_sha:
+        if loaded:
             try:
                 target.activate(shell)
-                shell.run_check(f"cp {STOCK_BACKUP} /boot/BOOT.BIN && sync")
-                restored = _out(
-                    shell.run_check("sha256sum /boot/BOOT.BIN | cut -d' ' -f1")
-                )
-                if restored != stock_sha:
-                    print(
-                        f"WARNING: restored BOOT.BIN is {restored}, stock was {stock_sha}"
-                    )
+                shell.run(f"rm -f {FIRMWARE_PATH} /tmp/{OVERLAY_NAME}.dtbo; sync")
             except Exception as e:  # noqa: BLE001
-                print(
-                    f"ERROR: board left on the test BOOT.BIN, restore {STOCK_BACKUP} manually: {e}"
-                )
-                (logs / "RESTORE_FAILED").write_text(
-                    f"{e}\nplace={os.environ.get('LG_PLACE', '')}\n"
-                )
+                print(f"cleanup of {FIRMWARE_PATH} failed (harmless): {e}")
         _power_off(target, strategy)
+
+
+def _ipv4(board, iface, timeout=60.0):
+    """The board's IPv4 on ``iface`` (DHCP can lag the login prompt)."""
+    import ipaddress
+    import time
+
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        addrs = board.shell.get_ip_addresses(iface) or []
+        v4 = [str(a.ip) for a in addrs if isinstance(a.ip, ipaddress.IPv4Address)]
+        if v4:
+            return v4[0]
+        time.sleep(3)
+    pytest.fail(f"no IPv4 address on {iface} after {timeout:.0f} s")
+
+
+_SYSID_CMD = (
+    "python3 -c \"import mmap,os,re;f=os.open('/dev/mem',os.O_RDONLY|os.O_SYNC);"
+    "m=mmap.mmap(f,0x1000,mmap.MAP_SHARED,mmap.PROT_READ,offset=0x45000000);"
+    "w=memoryview(m).cast('I');b=b''.join(w[i].to_bytes(4,'little') for i in range(0x200,0x400));"
+    "print(' '.join(s.decode() for s in re.findall(rb'[ -~]{4,}',b)))\""
+)
+
+
+def _sysid_strings(board):
+    """Strings in the axi_sysid ROM (0x45000800 in every ADI ZynqMP design)."""
+    out, _ = board.run(_SYSID_CMD, timeout=30)
+    return out
 
 
 @pytest.fixture(scope="session")
 def design_identity(talise_board):
-    """Proof that the production PL design (not the stock one) is running.
-
-    Reads the strings in the axi_sysid ROM (0x45000800, present at the same
-    address in every ADI ZynqMP design, so it is safe to read on any image)
-    and adds the kernel's sysid log lines.
-    """
-    rom = (
-        "python3 -c \"import mmap,os,re;f=os.open('/dev/mem',os.O_RDONLY|os.O_SYNC);"
-        "m=mmap.mmap(f,0x1000,mmap.MAP_SHARED,mmap.PROT_READ,offset=0x45000000);"
-        "w=memoryview(m).cast('I');b=b''.join(w[i].to_bytes(4,'little') for i in range(0x200,0x400));"
-        "print(' '.join(s.decode() for s in re.findall(rb'[ -~]{4,}',b)))\""
-    )
-    rom_out, _ = talise_board.run(rom, timeout=30)
-    log_out, _ = talise_board.run(
-        "dmesg | grep -i 'sysid\\|System ID' | head -5 || true"
-    )
-    return f"{rom_out}\n{log_out}".strip()
+    """Proof that the production PL design (not the stock one) is running."""
+    return _sysid_strings(talise_board)
 
 
 @pytest.fixture(scope="session")
