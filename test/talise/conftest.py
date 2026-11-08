@@ -40,6 +40,7 @@ from talise_hw import (
     _log_dir,
     _sha256,
     load_pl,
+    release_region,
     set_hpm0_fpd_width,
 )
 
@@ -225,6 +226,11 @@ def _boot_stock(kind, target, strategy):
         )
     strategy.bitstream_path = bit
     strategy.psu_init_tcl = psu
+    # labgrid-plugins lowered the post-handoff U-Boot prompt wait from 120 s to
+    # 60 s (2026-11-07); tron's stock chain needs longer. Keep the longer of the two.
+    timeout = int(os.environ.get("TALISE_JTAG_PROMPT_TIMEOUT", "120"))
+    if getattr(strategy, "production_prompt_timeout", 0) < timeout:
+        strategy.production_prompt_timeout = timeout
     strategy.transition("shell")
     return target.get_driver("ADIShellDriver")
 
@@ -246,14 +252,15 @@ def _ipv4(board, iface, timeout=60.0):
 
 _SYSID_CMD = (
     "python3 -c \"import mmap,os,re;f=os.open('/dev/mem',os.O_RDONLY|os.O_SYNC);"
-    "m=mmap.mmap(f,0x1000,mmap.MAP_SHARED,mmap.PROT_READ,offset=0x45000000);"
+    "m=mmap.mmap(f,0x1000,mmap.MAP_SHARED,mmap.PROT_READ,offset=0x85000000);"
     "w=memoryview(m).cast('I');b=b''.join(w[i].to_bytes(4,'little') for i in range(0x200,0x400));"
     "print(' '.join(s.decode() for s in re.findall(rb'[ -~]{4,}',b)))\""
 )
 
 
 def _sysid_strings(board):
-    """Strings in the axi_sysid ROM (0x45000800 in every ADI ZynqMP design)."""
+    """Strings in the axi_sysid ROM (0x85000800 for the PS in ADI ZynqMP designs)."""
+    release_region(board, ddr_layout.SYSID_ADDR)
     out, _ = board.run(_SYSID_CMD, timeout=30)
     return out
 
@@ -272,6 +279,7 @@ def calib(talise_board, design_identity):
             f"production design not identified from axi_sysid ({design_identity!r}); "
             "not touching PL addresses of an unknown design"
         )
+    release_region(talise_board, ddr_layout.CALIB_GPIO_ADDR)
     value = talise_board.devmem32(ddr_layout.CALIB_GPIO_ADDR)
     return {0: bool(value & 1), 1: bool(value & 2), "raw": value}
 

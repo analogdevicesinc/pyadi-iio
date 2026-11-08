@@ -99,6 +99,24 @@ class TaliseBoard:
         )
 
 
+def release_region(board, address):
+    """Unbind the platform driver bound at ``address``, if any.
+
+    This kernel refuses /dev/mem mappings of a range a driver has claimed
+    (IO_STRICT_DEVMEM). After the PL is replaced, the stock design's drivers
+    at shared addresses (e.g. axi-sysid at 0x85000000) are stale; release them
+    so the test can read the production design's registers. The board is
+    power-cycled afterwards.
+    """
+    key = f"{address:x}"
+    out, _ = board.run(
+        f"for d in /sys/bus/platform/devices/{key}.*; do "
+        f'[ -e "$d/driver" ] || continue; n=$(basename "$d"); '
+        f'echo "$n" > "$d/driver/unbind" && echo "unbound $n"; done; true'
+    )
+    return out
+
+
 def run_memtest(board, helper, test, mig=0, timeout=300, **kw):
     """Run one helper test on MIG ``mig``; returns the parsed JSON result."""
     if mig != 0:
@@ -116,6 +134,7 @@ def run_memtest(board, helper, test, mig=0, timeout=300, **kw):
     ]
     for k, v in kw.items():
         args += [f"--{k.replace('_', '-')}", str(v)]
+    release_region(board, ddr_layout.MIG0_BASE)
     cmd = f"timeout {timeout} python3 " + " ".join(shlex.quote(a) for a in args)
     try:
         out, code = board.run(cmd, timeout=timeout + 30)

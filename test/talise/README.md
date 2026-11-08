@@ -29,7 +29,8 @@ production design uses (FPD_SLCR.AFI_FS), since a runtime load does not rerun ps
 Tests:
 
 * `test_production_design_loaded`: the axi_sysid ROM names the production project.
-* `test_pl_ddr_calibration[mig0|mig1]`: `ddr_calib_gpio` (0x43A00000) bit 0 / bit 1.
+* `test_pl_ddr_calibration[mig0|mig1]`: `ddr_calib_gpio` (0x83A00000 for the PS; nominal
+  0x43A00000 plus the ZynqMP HPM0_LPD offset) bit 0 / bit 1.
 * `test_mig0_memory[data_bus|address_bus|pattern]`: `pl_ddr_memtest.py` on the target over
   `/dev/mem` at 0x4_0000_0000. Errors are reported per byte lane and mapped to the part.
   Skipped if MIG 0 did not calibrate: an access to an uncalibrated MIG can hang the CPU.

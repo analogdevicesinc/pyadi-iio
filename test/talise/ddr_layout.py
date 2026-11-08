@@ -27,8 +27,12 @@ CONFIG_MAPS = {
 # MIG 0 is reachable by the PS through M_AXI_HPM0_FPD at this address
 MIG0_BASE = 0x4_0000_0000
 
-# ddr_calib_gpio: bit 0 = MIG 0 init_calib_complete, bit 1 = MIG 1
-CALIB_GPIO_ADDR = 0x43A0_0000
+# ddr_calib_gpio: bit 0 = MIG 0 init_calib_complete, bit 1 = MIG 1. On ZynqMP the
+# ADI CPU interconnect sits on M_AXI_HPM0_LPD, so the nominal 0x43A0_0000 is
+# 0x83A0_0000 for the PS (ad_cpu_interconnect adds 0x4000_0000).
+CALIB_GPIO_ADDR = 0x83A0_0000
+# axi_sysid (nominal 0x4500_0000), same offset
+SYSID_ADDR = 0x8500_0000
 
 # Project names written in the axi_sysid ROM (the field is truncated to 21
 # characters, so ddr_lo and ddr_hi cannot be told apart from it).
