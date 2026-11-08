@@ -26,6 +26,12 @@ adi-lg request --part adrv9009zu11eg --mode reserve --wait 1800 \
 `talise_pl.dtbo` overlay on /fpga-full), and sets M_AXI_HPM0_FPD to the 128 bits the
 production design uses (FPD_SLCR.AFI_FS), since a runtime load does not rerun psu_init.
 
+On a JTAG-only place (`BootZynqMPJTAG`), set `TALISE_BOOT_MODE=sd1-ls`: the board is powered
+on, its boot mode is overridden over JTAG and it boots its own SD card, whatever the switches
+say (labgrid-plugins with `BootZynqMPJTAG.boot_mode`, 2026-11-07 or later). Without it the
+fixture JTAG-loads the stock PL and psu_init from `TALISE_STOCK_BITSTREAM_REMOTE` /
+`TALISE_STOCK_PSU_INIT_REMOTE` instead.
+
 Tests:
 
 * `test_production_design_loaded`: the axi_sysid ROM names the production project.

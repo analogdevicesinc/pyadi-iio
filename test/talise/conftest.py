@@ -214,6 +214,24 @@ def _boot_stock(kind, target, strategy):
         strategy.transition("booted")
         target.activate(strategy.shell)
         return strategy.shell
+    # JTAG place, boot-mode override (TALISE_BOOT_MODE, e.g. "sd1-ls"): power
+    # on, override BOOT_MODE_USER over JTAG and system-reset, so the board
+    # boots its own card regardless of the switches. Needs labgrid-plugins
+    # with BootZynqMPJTAG.boot_mode (2026-11-07 or later).
+    mode = os.environ.get("TALISE_BOOT_MODE", "").strip()
+    if mode:
+        if not hasattr(strategy, "boot_mode"):
+            pytest.fail(
+                "TALISE_BOOT_MODE is set but this labgrid-plugins BootZynqMPJTAG has no boot_mode"
+            )
+        from adi_lg_plugins.strategies._bootmode import normalize_boot_mode
+
+        # attrs converters do not run on assignment, so normalize explicitly
+        strategy.boot_mode = normalize_boot_mode(mode)
+        if strategy.boot_mode in (None, "jtag"):
+            pytest.fail(f"TALISE_BOOT_MODE must name a boot device, got {mode!r}")
+        strategy.transition("shell")
+        return target.get_driver("ADIShellDriver")
     # JTAG boot: the stock PL and psu_init (paths on the exporter, as used by
     # the place's other users) are loaded over JTAG, then U-Boot boots the
     # card's stock kernel. The bitstream under test is loaded later, at runtime.
