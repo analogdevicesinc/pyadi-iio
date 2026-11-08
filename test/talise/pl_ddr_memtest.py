@@ -40,28 +40,74 @@ def lanes_of_bits(word_offset, xor_bits, bus_bytes):
 
 
 class Window:
-    def __init__(self, base, size):
-        self.fd = os.open("/dev/mem", os.O_RDWR | os.O_SYNC)
-        self.mm = mmap.mmap(
-            self.fd,
-            size,
-            mmap.MAP_SHARED,
-            mmap.PROT_READ | mmap.PROT_WRITE,
-            offset=base,
-        )
-        self.q = memoryview(self.mm).cast("Q")
+    """/dev/mem view of [base, base + size), mapped in CHUNK-sized pieces.
+
+    Kuiper's userspace is 32-bit (armhf) even on ZynqMP: a single 1-2 GB
+    mapping does not fit the address space (and overflows ssize_t), so map
+    aligned chunks on demand and keep a few of them.
+    """
+
+    CHUNK = 16 << 20
+    KEEP = 4
+
+    def __init__(self, base, size, path="/dev/mem"):
+        if base % self.CHUNK:
+            raise ValueError(f"base {base:#x} is not {self.CHUNK:#x} aligned")
+        self.fd = os.open(path, os.O_RDWR | os.O_SYNC)
+        self.base = base
         self.size = size
+        self._maps = {}  # chunk index -> (mmap, memoryview 'Q'), insertion = LRU order
+        self._chunk(0)  # fail early (OSError) if the window cannot be mapped at all
+
+    def _chunk(self, idx):
+        hit = self._maps.pop(idx, None)
+        if hit is None:
+            length = min(self.CHUNK, self.size - idx * self.CHUNK)
+            mm = mmap.mmap(
+                self.fd,
+                length,
+                mmap.MAP_SHARED,
+                mmap.PROT_READ | mmap.PROT_WRITE,
+                offset=self.base + idx * self.CHUNK,
+            )
+            hit = (mm, memoryview(mm).cast("Q"))
+            while len(self._maps) >= self.KEEP:
+                old = next(iter(self._maps))
+                mm_old, q_old = self._maps.pop(old)
+                q_old.release()
+                mm_old.close()
+        self._maps[idx] = hit
+        return hit
 
     def close(self):
-        self.q.release()
-        self.mm.close()
+        for mm, q in self._maps.values():
+            q.release()
+            mm.close()
+        self._maps.clear()
         os.close(self.fd)
 
     def wr(self, off, val):
-        self.q[off // 8] = val & MASK64
+        _, q = self._chunk(off // self.CHUNK)
+        q[(off % self.CHUNK) // 8] = val & MASK64
 
     def rd(self, off):
-        return self.q[off // 8]
+        _, q = self._chunk(off // self.CHUNK)
+        return q[(off % self.CHUNK) // 8]
+
+    def write_block(self, off, data):
+        """Write ``data`` at ``off``; the block must not cross a chunk."""
+        mm, _ = self._chunk(off // self.CHUNK)
+        start = off % self.CHUNK
+        if start + len(data) > self.CHUNK:
+            raise ValueError("block crosses a chunk boundary")
+        mm[start : start + len(data)] = data
+
+    def read_block(self, off, n):
+        mm, _ = self._chunk(off // self.CHUNK)
+        start = off % self.CHUNK
+        if start + n > self.CHUNK:
+            raise ValueError("block crosses a chunk boundary")
+        return mm[start : start + n]
 
 
 def test_data_bus(w, bus_bytes, **_):
@@ -136,17 +182,26 @@ def test_pattern(w, bus_bytes, blocks=64, block_size=1 << 20, **_):
     lane_errors = {}
     first_errors = []
     span = w.size - block_size
-    starts = sorted({(span * i // max(blocks - 1, 1)) & ~0xFFF for i in range(blocks)})
+    # Blocks are aligned to their size, which must divide the mapping chunk,
+    # so no block crosses a chunk
+    if Window.CHUNK % block_size:
+        raise ValueError(f"block_size {block_size:#x} must divide {Window.CHUNK:#x}")
+    starts = sorted(
+        {
+            (span * i // max(blocks - 1, 1)) // block_size * block_size
+            for i in range(blocks)
+        }
+    )
     kinds = list(range(len(PATTERNS_64))) + ["addr", "naddr"]
     t0 = time.time()
     for kind in kinds:
         expected = {}
         for off in starts:
             buf = _block_bytes(kind, off, block_size)
-            w.mm[off : off + block_size] = buf
+            w.write_block(off, buf)
             expected[off] = buf
         for off in starts:
-            got = w.mm[off : off + block_size]
+            got = w.read_block(off, block_size)
             exp = expected[off]
             if got == exp:
                 continue
@@ -203,6 +258,11 @@ def main(argv=None):
         w = Window(a.base, a.size)
     except OSError as e:
         result.update(status="no_access", error=f"{type(e).__name__}: {e}")
+        print(json.dumps(result))
+        return 0
+    except (OverflowError, ValueError) as e:
+        # e.g. a 32-bit Python without large-file mmap offsets
+        result.update(status="map_error", error=f"{type(e).__name__}: {e}")
         print(json.dumps(result))
         return 0
     try:

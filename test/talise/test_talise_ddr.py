@@ -76,6 +76,8 @@ def test_mig0_memory(talise_board, calib, memtest_helper, test, record_property)
         )
     if result.get("first_errors"):
         msg.append(f"first errors: {result['first_errors'][:4]}")
+    if result.get("status") == "map_error":
+        msg.append(f"could not map the MIG window: {result.get('error')}")
     assert result.get("status") == "pass", f"{where} {test} failed: " + "; ".join(msg)
 
 

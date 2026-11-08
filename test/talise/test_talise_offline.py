@@ -51,6 +51,12 @@ class FakeWindow(mt.Window):
     def close(self):
         pass
 
+    def write_block(self, off, data):
+        self.mm[off : off + len(data)] = data
+
+    def read_block(self, off, n):
+        return self.mm[off : off + n]
+
     def wr(self, off, val):
         self.q[(off & ~self.alias) // 8] = val & mt.MASK64
 
@@ -115,3 +121,35 @@ def test_pattern_clean_and_stuck():
 )
 def test_is_production_design(strings, expected):
     assert ddr_layout.is_production_design(strings) is expected
+
+
+def test_real_window_chunks(tmp_path):
+    """The chunked /dev/mem Window over a file: eviction, chunk edges, all tests clean."""
+    size = 4 * mt.Window.CHUNK + mt.Window.CHUNK  # 5 chunks > KEEP
+    f = tmp_path / "mem"
+    with open(f, "wb") as fh:
+        fh.truncate(size)
+    w = mt.Window(0, size, path=str(f))
+    try:
+        edges = [0, mt.Window.CHUNK - 8, mt.Window.CHUNK, size - 8]
+        for i, off in enumerate(edges):
+            w.wr(off, 0x1111111111111111 * (i + 1))
+        for off in range(
+            0, size, mt.Window.CHUNK
+        ):  # touch every chunk: evicts the first ones
+            w.rd(off)
+        assert [w.rd(off) for off in edges] == [
+            0x1111111111111111 * (i + 1) for i in range(4)
+        ]
+        assert len(w._maps) <= mt.Window.KEEP
+        assert mt.test_data_bus(w, 4)["lane_errors"] == {}
+        assert mt.test_address_bus(w, 4)["failing_address_bits"] == []
+        res = mt.test_pattern(w, 4, blocks=12, block_size=1 << 20)
+        assert res["lane_errors"] == {} and res["blocks"] >= 10
+    finally:
+        w.close()
+
+
+def test_pattern_block_must_divide_chunk(tmp_path):
+    with pytest.raises(ValueError):
+        mt.test_pattern(FakeWindow(8 << 20), 4, blocks=2, block_size=3 << 20)
