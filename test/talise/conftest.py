@@ -26,6 +26,7 @@ Environment:
 """
 
 import os
+import shlex
 
 import ddr_layout
 import pytest
@@ -130,38 +131,43 @@ def talise_board(talise_config, record_testsuite_property):
     try:
         env = Environment(env_path)
         target = env.get_target("main")
-        strategy = target.get_driver("BootFPGASoCSSH")
+        kind, strategy = _strategy(target)
     finally:
         for cls, name, orig in reversed(patched):
             if orig is _MISSING:
                 delattr(cls, name)
             else:
                 setattr(cls, name, orig)
-    if strategy.kuiper is None:
-        pytest.fail(
-            "the place's env has no KuiperDLDriver; BootFPGASoCSSH cannot upload BOOT.BIN"
-        )
-    shell = strategy.shell
+    record_testsuite_property("boot_strategy", kind)
     logs = _log_dir()
     loaded = False
+    shell = None
     try:
-        # 1. Boot the card's own image and log in on the serial console
-        strategy.transition("booted")
-        target.activate(shell)
+        # 1. Boot the board's stock image and log in on the serial console
+        shell = _boot_stock(kind, target, strategy)
         board = TaliseBoard(target, strategy, shell, talise_config, pl_bin_sha)
         board.check("dmesg -n 1")  # keep printk off the console
         stock = board.check("sha256sum /boot/BOOT.BIN | cut -d' ' -f1")
         record_testsuite_property("card_boot_bin_sha256", stock)
         board.props["design_before"] = _sysid_strings(board)
 
-        # 2. Upload the bitstream over SSH (15 MB; the serial line is too slow)
-        ip = _ipv4(board, strategy.eth_interface)
-        strategy._override_networkservice_address(strategy.ssh.networkservice, ip)
-        target.activate(strategy.ssh)
+        # 2. Upload the bitstream (15 MB; the serial line is too slow): pulled
+        #    by the board from TALISE_PL_URL when set, else pushed over SSH
         board.check("mkdir -p /lib/firmware")
-        strategy.ssh.put(pl_bin, FIRMWARE_PATH)
-        strategy.ssh.put(str(OVERLAY_SRC), f"/tmp/{OVERLAY_NAME}.dtbo")
-        target.deactivate(strategy.ssh)
+        url = os.environ.get("TALISE_PL_URL")
+        if url:
+            record_testsuite_property("pl_upload", "http")
+            board.check(f"wget -q -O {FIRMWARE_PATH} {shlex.quote(url)}", timeout=300)
+            board.push_file(OVERLAY_SRC, f"/tmp/{OVERLAY_NAME}.dtbo")
+        else:
+            record_testsuite_property("pl_upload", "ssh")
+            ssh = strategy.ssh
+            ip = _ipv4(board, getattr(strategy, "eth_interface", "eth0"))
+            strategy._override_networkservice_address(ssh.networkservice, ip)
+            target.activate(ssh)
+            ssh.put(pl_bin, FIRMWARE_PATH)
+            ssh.put(str(OVERLAY_SRC), f"/tmp/{OVERLAY_NAME}.dtbo")
+            target.deactivate(ssh)
         on_target = board.check(f"sha256sum {FIRMWARE_PATH} | cut -d' ' -f1")
         if on_target != pl_bin_sha:
             pytest.fail(f"{FIRMWARE_PATH} is {on_target}, expected {pl_bin_sha}")
@@ -175,16 +181,52 @@ def talise_board(talise_config, record_testsuite_property):
         record_testsuite_property("pl_load_method", method)
         old, new = set_hpm0_fpd_width(board)
         record_testsuite_property("afi_fs_fpd", f"{old:#x}->{new:#x}")
-        (logs / f"boot_{talise_config}.log").write_text(strategy.boot_log or "")
+        (logs / f"boot_{talise_config}.log").write_text(
+            getattr(strategy, "boot_log", "") or ""
+        )
         yield board
     finally:
-        if loaded:
+        if loaded and shell is not None:
             try:
                 target.activate(shell)
                 shell.run(f"rm -f {FIRMWARE_PATH} /tmp/{OVERLAY_NAME}.dtbo; sync")
             except Exception as e:  # noqa: BLE001
                 print(f"cleanup of {FIRMWARE_PATH} failed (harmless): {e}")
         _power_off(target, strategy)
+
+
+def _strategy(target):
+    """The place's boot strategy: BootFPGASoCSSH (SD) or BootZynqMPJTAG (JTAG)."""
+    for kind in ("BootFPGASoCSSH", "BootZynqMPJTAG"):
+        try:
+            return kind, target.get_driver(kind)
+        except Exception:  # noqa: BLE001  (labgrid NoDriverFoundError)
+            continue
+    pytest.fail(
+        "the place's env has neither a BootFPGASoCSSH nor a BootZynqMPJTAG strategy"
+    )
+
+
+def _boot_stock(kind, target, strategy):
+    """Boot the board's stock image to a logged-in serial shell; nothing is written."""
+    if kind == "BootFPGASoCSSH":
+        strategy.transition("booted")
+        target.activate(strategy.shell)
+        return strategy.shell
+    # JTAG boot: the stock PL and psu_init (paths on the exporter, as used by
+    # the place's other users) are loaded over JTAG, then U-Boot boots the
+    # card's stock kernel. The bitstream under test is loaded later, at runtime.
+    bit = os.environ.get("TALISE_STOCK_BITSTREAM_REMOTE")
+    psu = os.environ.get("TALISE_STOCK_PSU_INIT_REMOTE")
+    if not bit or not psu:
+        pytest.fail(
+            "BootZynqMPJTAG needs TALISE_STOCK_BITSTREAM_REMOTE and "
+            "TALISE_STOCK_PSU_INIT_REMOTE (stock PL and psu_init.tcl on the exporter)"
+        )
+    strategy.bitstream_path = bit
+    strategy.psu_init_tcl = psu
+    strategy.transition("shell")
+    return target.get_driver("ADIShellDriver")
 
 
 def _ipv4(board, iface, timeout=60.0):
