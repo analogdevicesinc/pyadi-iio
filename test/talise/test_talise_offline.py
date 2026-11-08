@@ -99,3 +99,19 @@ def test_pattern_clean_and_stuck():
     res = mt.test_pattern(w, 4, blocks=4, block_size=1 << 16)
     assert set(res["lane_errors"]) == {2}
     assert ddr_layout.lane_part("full", 0, 2) == "U31"
+
+
+@pytest.mark.parametrize(
+    "strings,expected",
+    [
+        (
+            "ctalise_prod_ddr_parts 9b57cc3a8a134f8c vadj1793824817 adrv2crr_fmc prod",
+            True,
+        ),
+        ("ctalise_prod_ddr_parts 9b57cc3a8 vadj17 adrv2crr_fmc_prod_ddr", True),
+        ("cmain 085a6ed747a5f2fc vadj1781005315 adrv9009zu11eg", False),
+        ("Traceback ... PermissionError", False),
+    ],
+)
+def test_is_production_design(strings, expected):
+    assert ddr_layout.is_production_design(strings) is expected

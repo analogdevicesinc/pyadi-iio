@@ -34,8 +34,8 @@ def test_production_design_loaded(talise_board, design_identity, record_property
     record_property(
         "axi_sysid_before_load", talise_board.props.get("design_before", "")
     )
-    assert (
-        ddr_layout.SYSID_PROJECT_PREFIX in design_identity
+    assert ddr_layout.is_production_design(
+        design_identity
     ), f"axi_sysid does not report {ddr_layout.SYSID_PROJECT_PREFIX}: {design_identity!r}"
 
 

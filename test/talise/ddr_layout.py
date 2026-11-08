@@ -39,6 +39,18 @@ SYSID_ADDR = 0x8500_0000
 SYSID_PROJECT_PREFIX = "adrv2crr_fmc_prod"
 
 
+def is_production_design(sysid_strings):
+    """True if the axi_sysid ROM strings name the production project.
+
+    The ROM fields are split on non-printable bytes when read back (e.g.
+    "adrv2crr_fmc prod"), so compare with separators removed.
+    """
+    import re
+
+    flat = re.sub(r"[^a-z0-9]", "", (sysid_strings or "").lower())
+    return re.sub(r"[^a-z0-9]", "", SYSID_PROJECT_PREFIX) in flat
+
+
 def mig_map(config, mig):
     """Map value (0/1/2) of ``mig`` in build ``config``."""
     try:

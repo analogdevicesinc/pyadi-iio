@@ -274,7 +274,7 @@ def design_identity(talise_board):
 @pytest.fixture(scope="session")
 def calib(talise_board, design_identity):
     """ddr_calib_gpio, read once before anything touches PL DDR."""
-    if ddr_layout.SYSID_PROJECT_PREFIX not in design_identity:
+    if not ddr_layout.is_production_design(design_identity):
         pytest.fail(
             f"production design not identified from axi_sysid ({design_identity!r}); "
             "not touching PL addresses of an unknown design"
