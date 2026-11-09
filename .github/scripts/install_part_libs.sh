@@ -44,4 +44,4 @@ sudo ldconfig
 cd ..
 rm -rf libad9166-iio
 
-pip install pylibiio>=0.23.1
+pip install "pylibiio>=0.23.1,<1.0"
