@@ -2,6 +2,8 @@ import argparse
 import fnmatch
 import os
 import re
+import sys
+import time
 import pytest
 import iio
 
@@ -52,7 +54,25 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture(scope="session")
+def _wait_for_iiod_ready(uri: str, timeout: float = 30.0) -> None:
+    """Poll until iiod accepts a libiio context."""
+    if uri.startswith("xml:"):
+        return
+    t0 = time.time()
+    last_err = None
+    while time.time() - t0 < timeout:
+        try:
+            ctx = iio.Context(uri)
+            _ = ctx.name
+            del ctx
+            return
+        except Exception as exc:
+            last_err = exc
+            time.sleep(1.0)
+    print(f"[conftest] Warning: iiod at {uri} not ready after {timeout:.0f}s: {last_err}")
+
+
+@pytest.fixture(scope="module")
 def resolved_iio_uri(request):
     """Determine the effective IIO URI across overrides, args, labgrid, and mock XML."""
     # 1. Direct CLI / env override
@@ -60,6 +80,7 @@ def resolved_iio_uri(request):
         "IIO_URI_OVERRIDE"
     )
     if override:
+        _wait_for_iiod_ready(override, timeout=30.0)
         return override
 
     # 2. --uri option (from pytest-libiio or conftest)
@@ -68,31 +89,35 @@ def resolved_iio_uri(request):
     except (ValueError, KeyError):
         uri = ""
     if uri:
+        _wait_for_iiod_ready(uri, timeout=30.0)
         return uri
 
-    # 3. Labgrid environment (if available)
-    lg_env = os.environ.get("LG_ENV")
-    if lg_env:
+    # 3. If labgrid environment is configured, query IP via shell
+    lg_env_val = getattr(getattr(request.config, "option", None), "lg_env", None) or os.environ.get("LG_ENV")
+    if lg_env_val:
         try:
-            from labgrid.environment import Environment
-            from labgrid.strategy import Strategy
-
-            env = Environment(lg_env)
-            target = env.get_target("main")
-            strategy = target.get_driver(Strategy)
+            target = request.getfixturevalue("target")
+            strategy = request.getfixturevalue("strategy")
             strategy.transition("shell")
             try:
                 shell = target.get_driver("ADIShellDriver")
             except Exception:
                 shell = target.get_driver("ShellDriver")
 
-            out, _err, rc = shell.run(
-                "ip -4 -o addr show eth0 2>/dev/null | awk '{print $4}' | cut -d/ -f1"
-            )
-            if rc == 0 and out and out[0].strip():
-                return f"ip:{out[0].strip()}"
+            for _ in range(30):
+                out = shell.run_check(
+                    "ip -4 -o addr show eth0 2>/dev/null | awk '{print $4}' | cut -d/ -f1"
+                )
+                if isinstance(out, list):
+                    out = "\n".join(out)
+                ip = str(out).strip()
+                if ip and "." in ip:
+                    uri = f"ip:{ip}"
+                    _wait_for_iiod_ready(uri, timeout=30.0)
+                    return uri
+                time.sleep(1.0)
         except Exception as e:
-            print(f"[conftest] Labgrid IP discovery failed: {e}")
+            print(f"[conftest] Labgrid discovery failed: {e}")
 
     # 4. Fallback to mock XML if available
     mock_xml = request.config.getoption("--iio-mock-xml")
@@ -102,7 +127,7 @@ def resolved_iio_uri(request):
     return ""
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def iio_context(resolved_iio_uri):
     """Create and yield an iio.Context from the resolved URI."""
     if not resolved_iio_uri:
@@ -121,7 +146,7 @@ def iio_context(resolved_iio_uri):
     del ctx
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def iio_filter_config(request):
     """Parse filtering and skip rules from pytest options."""
     category = request.config.getoption("--iio-attr-category") or "all"
