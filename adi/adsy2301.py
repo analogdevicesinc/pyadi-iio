@@ -917,10 +917,10 @@ def sdr_init(dev):
     print("Side B TX hardware gain for channel 1 set to ", dev.ADRV9009.tx_hardwaregain_chan1_chip_b)
 
     # RX gain (0 dB) and manual gain control
-    dev.ADRV9009.rx_hardwaregain_chan0 = 0
-    dev.ADRV9009.rx_hardwaregain_chan1 = 0
-    dev.ADRV9009.rx_hardwaregain_chan0_chip_b= 0
-    dev.ADRV9009.rx_hardwaregain_chan1_chip_b = 0
+    dev.ADRV9009.rx_hardwaregain_chan0 = 6
+    dev.ADRV9009.rx_hardwaregain_chan1 = 6
+    dev.ADRV9009.rx_hardwaregain_chan0_chip_b = 6
+    dev.ADRV9009.rx_hardwaregain_chan1_chip_b = 6
     print("Side A RX hardware gain for channel 0 set to ", dev.ADRV9009.rx_hardwaregain_chan0)
     print("Side A RX hardware gain for channel 1 set to ", dev.ADRV9009.rx_hardwaregain_chan1)
     print("Side B RX hardware gain for channel 0 set to ", dev.ADRV9009.rx_hardwaregain_chan0_chip_b)
@@ -934,6 +934,35 @@ def sdr_init(dev):
     print("Side A Gain control mode for channel 1 set to ", dev.ADRV9009.gain_control_mode_chan1)
     print("Side B Gain control mode for channel 0 set to ", dev.ADRV9009.gain_control_mode_chan0_chip_b)
     print("Side B Gain control mode for channel 1 set to ", dev.ADRV9009.gain_control_mode_chan1_chip_b)
+
+    # Enable all tracking calibrations (quadrature tracking on RX1/RX2, ORX,
+    # TX1/TX2) on both chips
+    dev.ADRV9009.rx_quadrature_tracking_en_chan0 = 1
+    dev.ADRV9009.rx_quadrature_tracking_en_chan1 = 1
+
+    dev.ADRV9009.tx_quadrature_tracking_en_chan0 = 1
+    dev.ADRV9009.tx_quadrature_tracking_en_chan1 = 1
+    
+    for chan, output in [("voltage0", False), ("voltage1", False),
+                         ("voltage2", False), ("voltage0", True),
+                         ("voltage1", True)]:
+        dev.ADRV9009._set_iio_attr(chan, "quadrature_tracking_en", output, 1,
+                                   dev.ADRV9009._ctrl_b)
+    print("Tracking calibrations enabled on both chips")
+
+    # Enable RX/TX QEC and RX phase correction calibrations (both chips)
+    dev.ADRV9009.calibrate_rx_qec_en = 1
+    dev.ADRV9009.calibrate_tx_qec_en = 1
+    dev.ADRV9009.calibrate_rx_phase_correction_en = 1
+    dev.ADRV9009.calibrate_rx_qec_en_chip_b = 1
+    dev.ADRV9009.calibrate_tx_qec_en_chip_b = 1
+    dev.ADRV9009.calibrate_rx_phase_correction_en_chip_b = 1
+    print("RX/TX QEC and RX phase correction calibrations enabled on both chips")
+
+    # Trigger calibration run on both chips
+    dev.ADRV9009.calibrate = 1
+    dev.ADRV9009.calibrate_chip_b = 1
+    print("Calibration triggered on both chips")
 
     # RX buffer configuration
     dev.ADRV9009._rxadc.set_kernel_buffers_count(1)
@@ -1852,7 +1881,7 @@ def gain_codes(obj, analog_mag_pre_cal, mode):
     # bad_val_thresh = np.average(analog_mag_pre_cal) - 3
     # bad_val_thresh = np.average(analog_mag_pre_cal) - 2.5
 
-    bad_val_thresh = np.average(analog_mag_pre_cal) - 6
+    bad_val_thresh = np.average(analog_mag_pre_cal) - 3
     for i in range(np.size(analog_mag_pre_cal)):
         if analog_mag_pre_cal[i] < bad_val_thresh:
             print("Bad Value: ", analog_mag_pre_cal[i])
