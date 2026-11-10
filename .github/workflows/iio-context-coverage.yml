@@ -36,10 +36,10 @@ jobs:
       # from this repository into the ref detect_new_classes.py reads
       - name: Fetch base branch
         run: git fetch --no-tags https://github.com/${{ github.repository }}.git +refs/heads/${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
-      - name: Set up Python 3.10
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       - name: Install PyYAML
         run: pip install pyyaml
       - name: Detect new device classes
@@ -66,10 +66,10 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           persist-credentials: false
           allow-unsafe-pr-checkout: true
-      - name: Set up Python 3.10
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       - name: Install dependencies
         run: |
           bash ./.github/scripts/install_pydeps.sh
