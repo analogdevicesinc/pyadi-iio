@@ -102,7 +102,8 @@ def _parse_measurement(raw: str) -> Measurement:
 
 
 def inject_measurements(junit_bytes: bytes, measurements: list[Measurement]) -> bytes:
-    """Add measurement <property> entries to the JUnit's single testcase.
+    """
+    Add measurement <property> entries to the JUnit's single testcase.
 
     Measurements attach to a test case in Prism, so this requires the JUnit to
     contain exactly one <testcase> (the canonical one-suite-one-case shape).
