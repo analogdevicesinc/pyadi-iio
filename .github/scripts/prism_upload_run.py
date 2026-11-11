@@ -102,14 +102,11 @@ def _parse_measurement(raw: str) -> Measurement:
 
 
 def inject_measurements(junit_bytes: bytes, measurements: list[Measurement]) -> bytes:
-    """
-    Add measurement <property> entries to the JUnit's single testcase.
-
-    Measurements attach to a test case in Prism, so this requires the JUnit to
-    contain exactly one <testcase> (the canonical one-suite-one-case shape).
-    With zero or several cases it raises ValueError — emit the measurements from
-    your test instead (pytest's record_property / pytest-prism record_measurement).
-    """
+    """Add measurement <property> entries to the JUnit's single testcase."""
+    # Measurements attach to a test case in Prism, so this requires the JUnit to
+    # contain exactly one <testcase> (the canonical one-suite-one-case shape).
+    # With zero or several cases it raises ValueError — emit the measurements from
+    # your test instead (pytest's record_property / pytest-prism record_measurement).
     import xml.etree.ElementTree as ET
 
     # junit_bytes is the caller's own local JUnit file (their test output), not
