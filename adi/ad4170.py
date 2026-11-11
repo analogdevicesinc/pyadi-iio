@@ -45,7 +45,7 @@ class ad4170(rx_chan_comp):
     """AD4170 ADC"""
 
     channel = []  # type: ignore
-    compatible_parts = ["ad4170", "ad4190"]
+    compatible_parts = ["ad4170", "ad4190", "ad4171-8"]
     _device_name = ""
     _complex_data = False
     _channel_def = ad4170_channel
