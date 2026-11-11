@@ -35,7 +35,8 @@ def resolve_job_url(
         matches = [
             job.get("html_url")
             for job in jobs
-            if job.get("runner_name") == runner_name and job.get("status") == "in_progress"
+            if job.get("runner_name") == runner_name
+            and job.get("status") == "in_progress"
         ]
     return str(matches[0]) if len(matches) == 1 and matches[0] else None
 
@@ -48,7 +49,9 @@ def detect_ci(*, job_url: str | None = None) -> dict[str, Any] | None:
             explicit_ci = (
                 json.loads(explicit)
                 if explicit.lstrip().startswith("{")
-                else json.loads(Path(explicit.removeprefix("@")).read_text(encoding="utf-8"))
+                else json.loads(
+                    Path(explicit.removeprefix("@")).read_text(encoding="utf-8")
+                )
             )
             if not isinstance(explicit_ci, dict):
                 raise ValueError("expected an object")
@@ -56,7 +59,11 @@ def detect_ci(*, job_url: str | None = None) -> dict[str, Any] | None:
                 explicit_ci["job_url"] = job_url
             return explicit_ci
         except (OSError, ValueError):
-            return {"collection_errors": ["PRISM_CI_JSON could not be read as a JSON object"]}
+            return {
+                "collection_errors": [
+                    "PRISM_CI_JSON could not be read as a JSON object"
+                ]
+            }
     if os.getenv("GITHUB_ACTIONS", "").lower() != "true":
         return {"job_url": job_url} if job_url else None
     repository = os.getenv("GITHUB_REPOSITORY", "")
@@ -74,7 +81,9 @@ def detect_ci(*, job_url: str | None = None) -> dict[str, Any] | None:
     errors: list[str] = []
     if repository and run_id:
         server = os.getenv("GITHUB_SERVER_URL", "https://github.com").rstrip("/")
-        ci["run_url"] = f"{server}/{repository}/actions/runs/{run_id}/attempts/{attempt}"
+        ci[
+            "run_url"
+        ] = f"{server}/{repository}/actions/runs/{run_id}/attempts/{attempt}"
     raw_matrix = os.getenv("PRISM_CI_MATRIX")
     if raw_matrix:
         try:
@@ -84,7 +93,9 @@ def detect_ci(*, job_url: str | None = None) -> dict[str, Any] | None:
             ci["matrix"] = matrix
         except (ValueError, TypeError):
             errors.append("PRISM_CI_MATRIX is not a JSON object")
-    explicit_url = job_url or os.getenv("PRISM_CI_JOB_URL") or os.getenv("GITHUB_JOB_URL")
+    explicit_url = (
+        job_url or os.getenv("PRISM_CI_JOB_URL") or os.getenv("GITHUB_JOB_URL")
+    )
     if explicit_url:
         ci["job_url"] = explicit_url
     else:
@@ -108,7 +119,9 @@ def detect_ci(*, job_url: str | None = None) -> dict[str, Any] | None:
                             "Accept": "application/vnd.github+json",
                         },
                     )
-                    with urllib.request.urlopen(req, timeout=5) as response:  # noqa: S310
+                    with urllib.request.urlopen(
+                        req, timeout=5
+                    ) as response:  # noqa: S310
                         batch = json.load(response).get("jobs", [])
                     jobs.extend(batch)
                     if len(batch) < 100:
@@ -128,10 +141,7 @@ def detect_ci(*, job_url: str | None = None) -> dict[str, Any] | None:
 
 class PrismClient:
     def __init__(
-        self,
-        base_url: str,
-        token: str | None = None,
-        insecure: bool = False,
+        self, base_url: str, token: str | None = None, insecure: bool = False,
     ) -> None:
         # Reject non-http(s) schemes up front so the noqa: S310 below is true.
         # urllib's default opener handles file://, ftp://, data://, etc., which
@@ -141,7 +151,9 @@ class PrismClient:
         # the vendoring source for pyadi-iio's prism-report plugin.
         scheme = urllib.parse.urlsplit(base_url).scheme.lower()
         if scheme not in ("http", "https"):
-            raise ValueError(f"PrismClient base_url must be http or https; got scheme {scheme!r}")
+            raise ValueError(
+                f"PrismClient base_url must be http or https; got scheme {scheme!r}"
+            )
         self.base_url = base_url.rstrip("/")
         # When set, authenticate every request with a bearer API token instead
         # of the cookie session (no login + no CSRF needed; the server skips
@@ -151,7 +163,9 @@ class PrismClient:
             insecure = os.getenv("PRISM_INSECURE", "").lower() in ("1", "true", "yes")
         self.insecure = insecure
         self.jar = http.cookiejar.CookieJar()
-        handlers: list[urllib.request.BaseHandler] = [urllib.request.HTTPCookieProcessor(self.jar)]
+        handlers: list[urllib.request.BaseHandler] = [
+            urllib.request.HTTPCookieProcessor(self.jar)
+        ]
         if self.insecure:
             ctx = ssl.create_default_context()
             ctx.check_hostname = False
@@ -218,9 +232,9 @@ class PrismClient:
 
     def ensure_project(self, slug: str, name: str, description: str = "") -> None:
         """Create the project if it doesn't exist. 409 (already exists) is fine."""
-        payload = json.dumps({"slug": slug, "name": name, "description": description}).encode(
-            "utf-8"
-        )
+        payload = json.dumps(
+            {"slug": slug, "name": name, "description": description}
+        ).encode("utf-8")
         code, body = self._request(
             "POST",
             "/api/v1/projects",
@@ -252,7 +266,9 @@ class PrismClient:
         Admin-only (`DELETE /api/v1/admin/projects/{slug}`). A 404 is treated as
         success so `--reset` is a no-op when the project doesn't exist yet.
         """
-        code, body = self._request("DELETE", f"/api/v1/admin/projects/{urllib.parse.quote(slug)}")
+        code, body = self._request(
+            "DELETE", f"/api/v1/admin/projects/{urllib.parse.quote(slug)}"
+        )
         if code not in (200, 204, 404):
             raise RuntimeError(f"delete project failed: HTTP {code} {body!r}")
 
@@ -298,11 +314,15 @@ class PrismClient:
 
         def _add_field(name: str, value: str) -> None:
             parts.append(f"--{boundary}\r\n".encode())
-            parts.append(f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode())
+            parts.append(
+                f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode()
+            )
             parts.append(value.encode("utf-8"))
             parts.append(b"\r\n")
 
-        def _add_file(name: str, filename: str, content_type: str, content: bytes) -> None:
+        def _add_file(
+            name: str, filename: str, content_type: str, content: bytes
+        ) -> None:
             parts.append(f"--{boundary}\r\n".encode())
             parts.append(
                 f'Content-Disposition: form-data; name="{name}"; filename="{filename}"\r\n'.encode()
@@ -327,7 +347,9 @@ class PrismClient:
         parts.append(f"--{boundary}--\r\n".encode())
         body = b"".join(parts)
         headers = {"Content-Type": f"multipart/form-data; boundary={boundary}"}
-        code, resp_body = self._request("POST", "/api/v1/runs", body=body, headers=headers)
+        code, resp_body = self._request(
+            "POST", "/api/v1/runs", body=body, headers=headers
+        )
         if code != 201:
             raise RuntimeError(f"upload {run_name!r} failed: HTTP {code} {resp_body!r}")
         result: dict[str, object] = json.loads(resp_body)

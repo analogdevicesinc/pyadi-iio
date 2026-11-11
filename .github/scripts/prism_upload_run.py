@@ -40,7 +40,7 @@ from typing import Any, NamedTuple
 # The shared client lives next to this file; use a path-relative import so the
 # script works when invoked from anywhere (e.g. `python3 /repo/scripts/...`).
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _prism_client import PrismClient
+from _prism_client import PrismClient  # noqa: E402
 
 EXIT_OK = 0
 EXIT_BAD_INPUT = 2
@@ -72,7 +72,9 @@ class Measurement(NamedTuple):
 def _parse_measurement(raw: str) -> Measurement:
     """Parse ``name=value[:unit[:min[:max]]]`` (empty trailing fields allowed)."""
     if "=" not in raw:
-        raise argparse.ArgumentTypeError(f"--measurement expects name=value, got {raw!r}")
+        raise argparse.ArgumentTypeError(
+            f"--measurement expects name=value, got {raw!r}"
+        )
     name, _, rest = raw.partition("=")
     name = name.strip()
     if not name:
@@ -128,9 +130,13 @@ def inject_measurements(junit_bytes: bytes, measurements: list[Measurement]) -> 
         if m.unit is not None:
             ET.SubElement(props, "property", name=f"{m.name}__unit", value=m.unit)
         if m.spec_min is not None:
-            ET.SubElement(props, "property", name=f"{m.name}__min", value=repr(m.spec_min))
+            ET.SubElement(
+                props, "property", name=f"{m.name}__min", value=repr(m.spec_min)
+            )
         if m.spec_max is not None:
-            ET.SubElement(props, "property", name=f"{m.name}__max", value=repr(m.spec_max))
+            ET.SubElement(
+                props, "property", name=f"{m.name}__max", value=repr(m.spec_max)
+            )
     # ET.tostring is typed as returning Any in the stdlib stubs; with
     # encoding="utf-8" it returns bytes. Bind to a typed local so mypy's
     # no-any-return is satisfied without a cast or ignore.
@@ -183,7 +189,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=_env("PRISM_URL", "http://localhost:8000"),
         help="Prism API base URL (env: PRISM_URL).",
     )
-    p.add_argument("--email", default=_env("PRISM_EMAIL"), help="Login email (env: PRISM_EMAIL).")
+    p.add_argument(
+        "--email", default=_env("PRISM_EMAIL"), help="Login email (env: PRISM_EMAIL)."
+    )
     p.add_argument(
         "--password",
         default=_env("PRISM_PASSWORD"),
@@ -219,13 +227,17 @@ def build_parser() -> argparse.ArgumentParser:
         default=_env("PRISM_ARCHIVE"),
         help="Optional .zip of measurement artifacts to upload alongside the JUnit.",
     )
-    p.add_argument("--ci-json", default=_env("PRISM_CI_JSON"), help="CI JSON object or file path.")
+    p.add_argument(
+        "--ci-json", default=_env("PRISM_CI_JSON"), help="CI JSON object or file path."
+    )
     p.add_argument(
         "--hardware-json",
         default=_env("PRISM_HARDWARE_JSON"),
         help="Reserved-hardware JSON object or file path.",
     )
-    p.add_argument("--job-url", default=_env("PRISM_CI_JOB_URL"), help="Exact CI job URL.")
+    p.add_argument(
+        "--job-url", default=_env("PRISM_CI_JOB_URL"), help="Exact CI job URL."
+    )
     p.add_argument(
         "--pytest-log",
         type=Path,
@@ -261,7 +273,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--insecure",
         "-k",
         action="store_true",
-        default=(_env("PRISM_INSECURE", "false") or "false").lower() in ("1", "true", "yes"),
+        default=(_env("PRISM_INSECURE", "false") or "false").lower()
+        in ("1", "true", "yes"),
         help="Disable SSL/TLS certificate verification for HTTPS (env: PRISM_INSECURE).",
     )
     verbosity = p.add_mutually_exclusive_group()
@@ -312,7 +325,9 @@ def main(argv: list[str] | None = None) -> int:
     if not args.junit.exists() or not args.junit.is_file():
         print(f"error: JUnit file not found: {args.junit}", file=sys.stderr)
         return EXIT_BAD_INPUT
-    if args.archive is not None and (not args.archive.exists() or not args.archive.is_file()):
+    if args.archive is not None and (
+        not args.archive.exists() or not args.archive.is_file()
+    ):
         print(f"error: archive file not found: {args.archive}", file=sys.stderr)
         return EXIT_BAD_INPUT
     try:
@@ -320,7 +335,9 @@ def main(argv: list[str] | None = None) -> int:
         hardware = _metadata_object(args.hardware_json)
         archive_bytes = args.archive.read_bytes() if args.archive is not None else None
         if args.pytest_log is not None:
-            archive_bytes = _with_transcript(archive_bytes, args.pytest_log.read_bytes())
+            archive_bytes = _with_transcript(
+                archive_bytes, args.pytest_log.read_bytes()
+            )
     except (OSError, ValueError, zipfile.BadZipFile) as exc:
         print(f"error: invalid metadata or logs — {exc}", file=sys.stderr)
         return EXIT_BAD_INPUT
@@ -379,7 +396,11 @@ def main(argv: list[str] | None = None) -> int:
         say(
             f"→ uploading {args.junit.name} ({len(junit_bytes)} bytes) "
             f"as run {args.run_name!r} in project {args.project!r}"
-            + (f" with artifacts ({len(archive_bytes or b'')} bytes)" if archive_bytes else "")
+            + (
+                f" with artifacts ({len(archive_bytes or b'')} bytes)"
+                if archive_bytes
+                else ""
+            )
         )
 
     # --- Upload ----------------------------------------------------------- #
