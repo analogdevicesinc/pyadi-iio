@@ -99,10 +99,7 @@
 <li><a class="reference internal" href="#">ada4356_quad</a><ul>
 <li><a class="reference internal" href="#adi.ada4356_quad.ad9517_delay_estimate_ps"><code class="docutils literal notranslate"><span class="pre">ad9517_delay_estimate_ps()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad"><code class="docutils literal notranslate"><span class="pre">ada4356_quad</span></code></a><ul>
-<li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.alignment"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.alignment</span></code></a></li>
-<li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.apply_alignment"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.apply_alignment()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.bypass_clock_delays"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.bypass_clock_delays()</span></code></a></li>
-<li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.calibrate_alignment"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.calibrate_alignment()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.clock_delay"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.clock_delay</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.clock_sync"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.clock_sync()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.filter_mode"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.filter_mode</span></code></a></li>
@@ -113,7 +110,6 @@
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.rx_buffer_size"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.rx_buffer_size</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.rx_raw"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.rx_raw()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.sampling_frequency"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.sampling_frequency</span></code></a></li>
-<li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.set_alignment"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.set_alignment()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.set_clock_delay"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.set_clock_delay()</span></code></a></li>
 <li><a class="reference internal" href="#adi.ada4356_quad.ada4356_quad.set_clock_phase"><code class="docutils literal notranslate"><span class="pre">ada4356_quad.set_clock_phase()</span></code></a></li>
 </ul>
@@ -347,7 +343,7 @@ Content on this topic
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">adi.ada4356_quad.</span></span><span class="sig-name descname"><span class="pre">ada4356_quad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ada4356_alignment</span></code></p>
 <p>Quad ADA4356 with TDD-synchronized DMA capture.</p>
 <dl class="simple">
 <dt>TDD channel mapping (set at block-design level):</dt><dd><p>ch0  → trig_fmc_out  (external laser / trigger output)
@@ -359,47 +355,10 @@ ch4  → DMA-D sync</p>
 </dl>
 <p>All four DMAs start capturing on the same TDD frame cycle so the
 sample streams are aligned to within one adc_clk period (8 ns).</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.alignment">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">alignment</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.alignment" title="Link to this definition"></a></dt>
-<dd><p>Integer sample offsets being removed, or None if not calibrated.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.apply_alignment">
-<span class="sig-name descname"><span class="pre">apply_alignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.apply_alignment" title="Link to this definition"></a></dt>
-<dd><p>Trim raw buffers to rx_buffer_size, optionally removing the draw.</p>
-<p>With correct=False every channel is sliced at the same offset, so the
-per-boot draw is left in and the channels stay comparable.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.bypass_clock_delays">
 <span class="sig-name descname"><span class="pre">bypass_clock_delays</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.bypass_clock_delays" title="Link to this definition"></a></dt>
 <dd><p>Put all four ADC clocks back on the undelayed path (firmware state).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.calibrate_alignment">
-<span class="sig-name descname"><span class="pre">calibrate_alignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tone_hz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.calibrate_alignment" title="Link to this definition"></a></dt>
-<dd><p>Lock the four channels onto a common sample index, for this boot.</p>
-<p>Needs the same tone on all four inputs; J11 already feeds all of them.</p>
-<p>The FPGA re-draws each channel’s BUFR /4 divider phase every time it is
-configured, so B/C/D come up a whole number of samples behind A and the
-draw is different on every boot.  TDD only lines the DMA starts up to
-one adc_clk period, so it cannot see this, and re-pulsing the shared
-SERDES reset was measured to leave 8.8-16.8 ns of spread.  Measuring the
-draw once and shifting the buffers is deterministic instead.</p>
-<p>With subsample=True the fixed analog delay is taken out as well, by
-interpolating the buffer (the windowed-sinc FIR in _frac_shift()).  That
-also makes the result independent of how the measured delay splits into
-integer and fraction, which matters when a channel lands near a half
-sample: at 4.54k/200R channel C sits at +0.49, so integer-only rounding
-can flip between boots and swing the corrected skew by a whole 8 ns
-sample.  Pass subsample=False to shift by whole samples only, leaving the
-data untouched by any filtering.</p>
-<p>Call this once per boot, after the TDD is enabled and the tone is
-applied.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -468,16 +427,6 @@ stimulus repeats shot to shot, which a free-running generator does not.</p>
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.sampling_frequency">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.sampling_frequency" title="Link to this definition"></a></dt>
 <dd><p>ADC sample rate (Hz), read from channel A.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.set_alignment">
-<span class="sig-name descname"><span class="pre">set_alignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offsets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.set_alignment" title="Link to this definition"></a></dt>
-<dd><p>Apply a previously measured alignment without re-measuring.</p>
-<p>Exists so a calibration taken under one set of conditions can be checked
-against a capture taken under another – a different tone, say.  Verifying
-with the same tone the correction was fitted to cannot fail, so it proves
-very little on its own.</p>
 </dd></dl>
 
 <dl class="py method">
