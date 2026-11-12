@@ -912,6 +912,23 @@ ada4356_lidar:
       - data_devices:
           - iio:device2
 
+ada4356_quad:
+  - ada4356-a
+  - ada4356-b
+  - ada4356-c
+  - ada4356-d
+  - adi-iio-fakedev
+  - ad9517-4
+  - pyadi_iio_class_support:
+      - ada4356_quad
+  - emulate:
+      - filename: ada4356_quad.xml
+      - data_devices:
+          - iio:device8
+          - iio:device9
+          - iio:device10
+          - iio:device11
+
 ad5710r:
   - ad5710r
   - pyadi_iio_class_support:
