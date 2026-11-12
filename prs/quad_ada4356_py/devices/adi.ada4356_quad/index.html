@@ -346,7 +346,7 @@ Content on this topic
 
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.ada4356_quad.</span></span><span class="sig-name descname"><span class="pre">ada4356_quad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">adi.ada4356_quad.</span></span><span class="sig-name descname"><span class="pre">ada4356_quad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Quad ADA4356 with TDD-synchronized DMA capture.</p>
 <dl class="simple">
@@ -361,7 +361,7 @@ ch4  → DMA-D sync</p>
 sample streams are aligned to within one adc_clk period (8 ns).</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.alignment">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alignment</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.alignment" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">alignment</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.alignment" title="Link to this definition"></a></dt>
 <dd><p>Integer sample offsets being removed, or None if not calibrated.</p>
 </dd></dl>
 
@@ -404,7 +404,7 @@ applied.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.clock_delay">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clock_delay</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.clock_delay" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">clock_delay</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.clock_delay" title="Link to this definition"></a></dt>
 <dd><p>Fine delay last written per channel by this object (None = never written).</p>
 <p>Each entry is {‘enabled’, ‘ramp’, ‘fraction’, ‘estimate_ps’}. A reboot
 restores the firmware state: all bypassed.</p>
@@ -418,25 +418,25 @@ restores the firmware state: all bypassed.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.filter_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_mode</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.filter_mode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">filter_mode</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.filter_mode" title="Link to this definition"></a></dt>
 <dd><p>Per-channel FREQ_SEL filter, as a dict keyed by A..D.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.filter_mode_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_mode_available</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.filter_mode_available" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">filter_mode_available</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.filter_mode_available" title="Link to this definition"></a></dt>
 <dd><p>FREQ_SEL settings the driver accepts, named after the pin level.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.gain_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_mode</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.gain_mode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">gain_mode</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.gain_mode" title="Link to this definition"></a></dt>
 <dd><p>Per-channel transimpedance, as a dict keyed by A..D.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.gain_mode_available">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gain_mode_available</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.gain_mode_available" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">gain_mode_available</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.gain_mode_available" title="Link to this definition"></a></dt>
 <dd><p>Transimpedance settings the driver accepts, e.g. [‘133k’, ‘11k’, ‘4k54’].</p>
 </dd></dl>
 
@@ -451,7 +451,7 @@ here, so the four arrays share a sample index.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.rx_buffer_size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.rx_buffer_size" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">rx_buffer_size</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.rx_buffer_size" title="Link to this definition"></a></dt>
 <dd><p>Number of samples per capture per channel.</p>
 </dd></dl>
 
@@ -466,7 +466,7 @@ stimulus repeats shot to shot, which a free-running generator does not.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.sampling_frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.sampling_frequency" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sampling_frequency</span></span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.sampling_frequency" title="Link to this definition"></a></dt>
 <dd><p>ADC sample rate (Hz), read from channel A.</p>
 </dd></dl>
 
