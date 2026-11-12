@@ -16,7 +16,15 @@ from adi.tddn import tddn
 
 class _tddn_quad(tddn):
     """tddn subclass that finds the TDD device by the name the
-    adi,iio-fake-platform-device driver actually registers: 'adi-iio-fakedev'."""
+    adi,iio-fake-platform-device driver actually registers: 'adi-iio-fakedev'.
+
+    parameters:
+        uri: type=string
+            URI of the IIO context with the TDD controller.
+
+    Raises:
+        Exception: If 'adi-iio-fakedev' is not found in the IIO context.
+    """
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, "")
@@ -86,6 +94,10 @@ class ada4356_quad(_ada4356_alignment):
 
     All four DMAs start capturing on the same TDD frame cycle so the
     sample streams are aligned to within one adc_clk period (8 ns).
+
+    parameters:
+        uri: type=string
+            Optional parameter for the URI of IIO context with the Quad ADA4356.
     """
 
     def __init__(self, uri=""):
@@ -140,10 +152,14 @@ class ada4356_quad(_ada4356_alignment):
 
         Arms all four DMAs in parallel threads then waits for completion.
         The TDD controller gates each DMA via ch1..ch4, so all four start
-        on the same clock edge.  Returns a list [A, B, C, D] of numpy arrays.
+        on the same clock edge.
 
         The TDD must already be configured and enabled before calling
         this method.
+
+        returns: type=list of numpy.array
+            One array per channel, [A, B, C, D], rx_buffer_size long plus the
+            alignment guard once a calibration is active.
 
         Raises:
             ExceptionGroup: one sub-exception per channel whose rx() failed,
@@ -189,15 +205,27 @@ class ada4356_quad(_ada4356_alignment):
         Pair with apply_alignment() to get a corrected/uncorrected A/B from the
         *same* acquisition.  Two separate rx() calls only compare if the
         stimulus repeats shot to shot, which a free-running generator does not.
+
+        returns: type=list of numpy.array
+            One raw array per channel, [A, B, C, D], as passed to
+            apply_alignment().
+
+        Raises:
+            ExceptionGroup: If the capture failed on one or more channels.
         """
         return self._rx_raw()
 
     def rx(self):
         """Capture one synchronized buffer from all four channels.
 
-        Returns a list [A, B, C, D] of numpy arrays, each rx_buffer_size long.
         Once calibrate_alignment() has run, the per-boot offset is taken out
         here, so the four arrays share a sample index.
+
+        returns: type=list of numpy.array
+            One array per channel, [A, B, C, D], each rx_buffer_size long.
+
+        Raises:
+            ExceptionGroup: If the capture failed on one or more channels.
         """
         return self.apply_alignment(self._rx_raw())
 

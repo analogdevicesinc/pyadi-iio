@@ -21,7 +21,18 @@ MAX_DRAW_SPREAD = ALIGN_GUARD - _FRAC_TAPS
 
 
 def _tone_phase(x, f_hz, fs):
-    """Phase of the tone at f_hz, as in cos(2*pi*f_hz*n/fs + phase)."""
+    """Phase of the tone at f_hz, as in cos(2*pi*f_hz*n/fs + phase).
+
+    parameters:
+        x: type=numpy.array
+            Samples of one channel.
+        f_hz: type=float
+            Tone frequency in Hz.
+        fs: type=float
+            Sample rate in Hz.
+    returns: type=float
+        Phase in radians, -pi..pi.
+    """
     n = np.arange(x.size)
     return np.angle(np.dot(x - x.mean(), np.exp(-2j * np.pi * f_hz * n / fs)))
 
@@ -34,6 +45,14 @@ def _frac_shift(x, samples):
     step discontinuity and shifting it rings at ~180 codes against ~6 codes of
     noise.  This is local instead, so the damage is confined to _FRAC_TAPS // 2
     samples at each end, which the guard region absorbs.
+
+    parameters:
+        x: type=numpy.array
+            Samples of one channel.
+        samples: type=float
+            Delay in samples; negative advances.
+    returns: type=numpy.array
+        The shifted samples, same length as x.
     """
     half = _FRAC_TAPS // 2
     m = np.arange(-half, half + 1) - samples
@@ -47,6 +66,16 @@ def _estimate_tone_hz(x, f_req, fs):
 
     Bounded to +-2 bins on purpose: an unconstrained peak search locks onto the
     ~0.89 MHz board spur and returns a stable, completely wrong answer.
+
+    parameters:
+        x: type=numpy.array
+            Samples of one channel.
+        f_req: type=float
+            Frequency the generator was set to, in Hz.
+        fs: type=float
+            Sample rate in Hz.
+    returns: type=float
+        Refined tone frequency in Hz.
     """
     n = np.arange(x.size)
     xw = (x - x.mean()) * np.hanning(x.size)
@@ -78,6 +107,14 @@ class _ada4356_alignment:
 
         With correct=False every channel is sliced at the same offset, so the
         per-boot draw is left in and the channels stay comparable.
+
+        parameters:
+            data: type=list of numpy.array
+                Raw capture, [A, B, C, D], as returned by rx_raw().
+            correct: type=bool
+                Remove the measured offsets; False only trims.
+        returns: type=list of numpy.array
+            One array per channel, each rx_buffer_size long.
         """
         n = self._rx_buffer_size
         edge = _FRAC_TAPS // 2
@@ -114,6 +151,18 @@ class _ada4356_alignment:
         against a capture taken under another -- a different tone, say.  Verifying
         with the same tone the correction was fitted to cannot fail, so it proves
         very little on its own.
+
+        parameters:
+            offsets: type=list[int]
+                Whole-sample offsets for A..D, e.g. the 'removed_samples'
+                values from calibrate_alignment().
+            frac: type=list[float]
+                Optional fractional residuals for A..D, e.g. the
+                'residual_samples' values.  None shifts by whole samples only.
+
+        Raises:
+            ValueError: If the lists have the wrong length, or the offsets
+                span more than MAX_DRAW_SPREAD samples.
         """
         offsets = [int(v) for v in offsets]
         if len(offsets) != len(self.channels):
@@ -156,6 +205,23 @@ class _ada4356_alignment:
 
         Call this once per boot, after the TDD is enabled and the tone is
         applied.
+
+        parameters:
+            tone_hz: type=float
+                Frequency of the tone on all four inputs, in Hz; refined from
+                the capture within +-2 FFT bins.
+            subsample: type=bool
+                Also interpolate out the fractional delay.  False shifts by
+                whole samples only.
+        returns: type=dict
+            'tone_hz' (refined frequency), 'delay_samples',
+            'removed_samples' and 'residual_samples' (each a dict keyed
+            A..D), and 'subsample'.
+
+        Raises:
+            RuntimeError: If a channel carries no tone, or the channels span
+                more than MAX_DRAW_SPREAD samples.
+            ExceptionGroup: If the capture failed on one or more channels.
         """
         self._align_delays = [0] * len(self.channels)
         self._push_buffer_size()
@@ -214,6 +280,7 @@ class _ada4356_alignment:
         }
 
     def _reset_alignment(self):
+        """Drop the calibration and shrink the buffers back to rx_buffer_size."""
         self._align_delays = None
         self._align_frac = None
         self._push_buffer_size()
