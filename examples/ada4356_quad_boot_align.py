@@ -165,7 +165,7 @@ def clock_trim(dev, before, args, fs):
 
 def align(dev, tone):
     """Whole-sample shift on every channel; the data values are not touched."""
-    cal = dev.calibrate_alignment(tone, verbose=False, subsample=False)
+    cal = dev.calibrate_alignment(tone, subsample=False)
     return [cal["removed_samples"][c] for c in CHANNEL_LABELS]
 
 

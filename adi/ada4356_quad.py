@@ -4,6 +4,7 @@
 
 """Quad ADA4356 synchronized capture with AXI TDD controller."""
 
+import logging
 from threading import Thread
 
 import numpy as np
@@ -11,6 +12,8 @@ import numpy as np
 from adi.ada4355 import ada4355
 from adi.context_manager import context_manager
 from adi.tddn import tddn
+
+logger = logging.getLogger(__name__)
 
 
 class _tddn_quad(tddn):
@@ -479,7 +482,7 @@ class ada4356_quad:
         self._align_frac = frac
         self._push_buffer_size()
 
-    def calibrate_alignment(self, tone_hz, verbose=True, subsample=True):
+    def calibrate_alignment(self, tone_hz, subsample=True):
         """Lock the four channels onto a common sample index, for this boot.
 
         Needs the same tone on all four inputs; J11 already feeds all of them.
@@ -544,8 +547,12 @@ class ada4356_quad:
         self._align_frac = residual if subsample else None
         self._push_buffer_size()
 
-        if verbose:
-            self._print_alignment(f0, fs, delays, offsets, residual, subsample)
+        if not subsample and max(abs(r) for r in residual) > 0.4:
+            # Integer rounding near half a sample can flip between boots: 8 ns.
+            logger.warning(
+                "a channel sits near half a sample, so whole-sample alignment can "
+                "move by 8 ns between boots; use subsample=True to avoid this"
+            )
 
         return {
             "tone_hz": f0,
@@ -559,38 +566,6 @@ class ada4356_quad:
         self._align_delays = None
         self._align_frac = None
         self._push_buffer_size()
-
-    @staticmethod
-    def _print_alignment(f0, fs, delays, offsets, residual, subsample):
-        print(f"\n=== Channel alignment (tone {f0 / 1e3:.3f} kHz) ===")
-        print(
-            f"{'Ch':>3}  {'measured':>10}  {'whole':>7}  {'frac':>8}  "
-            f"{'left over':>10}"
-        )
-        print(f"{'':>3}  {'(samp)':>10}  {'(samp)':>7}  {'(samp)':>8}  {'(ns)':>10}")
-        for label, v, k, r in zip(CHANNEL_LABELS, delays, offsets, residual):
-            left = 0.0 if subsample else r
-            print(
-                f"{label:>3}  {v:>10.4f}  {k:>7d}  {r:>8.4f}  "
-                f"{left / fs * 1e9:>10.2f}"
-            )
-
-        if subsample:
-            print("  whole samples sliced out, fraction interpolated out")
-            print("  -> channels share a time base; the split above does not matter")
-        else:
-            floor = max(residual) - min(residual)
-            print(
-                f"  integer draw removed; {floor:.4f} samp "
-                f"({floor / fs * 1e9:.2f} ns) of analog skew is left"
-            )
-            if max(abs(r) for r in residual) > 0.4:
-                print(
-                    "  *** a channel sits near half a sample, so the rounding can"
-                    "\n  *** flip between boots and move the result by 8 ns."
-                    "\n  *** use subsample=True to make this irrelevant"
-                )
-        print("  this holds until the FPGA is reconfigured or the driver re-probes")
 
     # ------------------------------------------------------------------
     # Sampling frequency
