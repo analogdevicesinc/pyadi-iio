@@ -196,6 +196,10 @@ class ada4356_quad:
 
         The TDD must already be configured and enabled before calling
         this method.
+
+        Raises:
+            ExceptionGroup: one sub-exception per channel whose rx() failed,
+                each with its original type (e.g. TimeoutError).
         """
         # Unarmed DMAs start independently: hundreds of samples of skew.
         for ch in self.channels:
@@ -218,9 +222,16 @@ class ada4356_quad:
         for t in threads:
             t.join()
 
-        for e in errors:
-            if e:
-                raise e
+        failed = [
+            (label, e) for label, e in zip(CHANNEL_LABELS, errors) if e is not None
+        ]
+        if failed:
+            # Raise them all: the first alone would hide that, say, B and D both
+            # timed out on the same missing TDD pulse.
+            raise ExceptionGroup(
+                "rx failed on channel " + ", ".join(label for label, _ in failed),
+                [e for _, e in failed],
+            )
 
         return results
 
@@ -495,8 +506,13 @@ class ada4356_quad:
         self._align_delays = [0] * len(self.channels)
         self._push_buffer_size()
 
-        raw = [x.astype(np.float64) for x in self._rx_raw()]
-        fs = self.sampling_frequency
+        try:
+            raw = [x.astype(np.float64) for x in self._rx_raw()]
+            fs = self.sampling_frequency
+        except Exception:
+            # Otherwise the zero placeholder above passes for a calibration.
+            self._reset_alignment()
+            raise
         f0 = _estimate_tone_hz(raw[0], float(tone_hz), fs)
         samples_per_cycle = fs / f0
 
