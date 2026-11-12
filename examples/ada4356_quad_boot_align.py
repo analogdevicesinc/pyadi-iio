@@ -33,7 +33,6 @@ import adi
 from adi.ada4356_quad import (
     AD9517_DELAY_SAFE_PS,
     CHANNEL_LABELS,
-    _estimate_tone_hz,
     ad9517_delay_estimate_ps,
 )
 
@@ -43,6 +42,29 @@ N_HARMONICS = 9
 RAMP = 0x39
 # ns per fraction LSB at ramp 0x39, measured on A and D.
 SLOPE_NS = 0.040
+
+
+def estimate_tone_hz(x, f_req, fs):
+    """Refine the generator frequency near f_req by maximising the windowed DFT.
+
+    Bounded to +-2 bins on purpose: an unconstrained peak search locks onto the
+    ~0.89 MHz board spur and returns a stable, completely wrong answer.
+    """
+    n = np.arange(x.size)
+    xw = (x - x.mean()) * np.hanning(x.size)
+    bin_hz = fs / x.size
+    lo, hi = f_req - 2 * bin_hz, f_req + 2 * bin_hz
+
+    grid = np.array([float(f_req)])
+    idx = 0
+    for _ in range(3):
+        grid = np.linspace(max(lo, bin_hz), hi, 41)
+        mag = [abs(np.dot(xw, np.exp(-2j * np.pi * f * n / fs))) for f in grid]
+        idx = int(np.argmax(mag))
+        step = grid[1] - grid[0]
+        lo, hi = grid[idx] - step, grid[idx] + step
+
+    return float(grid[idx])
 
 
 def setup(dev, args):
@@ -79,7 +101,7 @@ def measure(dev, tone):
     """Skew of B/C/D vs A in samples, from one capture."""
     data = [np.asarray(x, dtype=np.float64) for x in dev.rx()]
     fs = dev.sampling_frequency
-    f0 = _estimate_tone_hz(data[0], tone, fs)
+    f0 = estimate_tone_hz(data[0], tone, fs)
     ph = [sine_fit(x, f0, fs)[1] for x in data]
     # Negative = channel lags A.
     return [
@@ -298,7 +320,7 @@ def main():
             print("  aborted: clock delays restored to bypass")
         raise
 
-    f0 = _estimate_tone_hz(data[0], args.tone, fs)
+    f0 = estimate_tone_hz(data[0], args.tone, fs)
     q = [quality(x, f0, fs) for x in data]
     before = np.concatenate(([0.0], before))
     after = np.concatenate(([0.0], after))

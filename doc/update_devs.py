@@ -62,6 +62,7 @@ def update_devs():
         "compat",
         "device_base",
         "mcp_server",
+        "ada4356_align",
     ]
     for s in to_skip:
         skip_path = os.path.join(source_devices, f"adi.{s}.rst")
