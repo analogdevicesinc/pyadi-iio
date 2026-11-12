@@ -355,6 +355,13 @@ ch4  → DMA-D sync</p>
 </dl>
 <p>All four DMAs start capturing on the same TDD frame cycle so the
 sample streams are aligned to within one adc_clk period (8 ns).</p>
+<dl class="simple">
+<dt>parameters:</dt><dd><dl class="simple">
+<dt>uri: type=string</dt><dd><p>Optional parameter for the URI of IIO context with the Quad ADA4356.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.bypass_clock_delays">
 <span class="sig-name descname"><span class="pre">bypass_clock_delays</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.bypass_clock_delays" title="Link to this definition"></a></dt>
@@ -403,9 +410,14 @@ restores the firmware state: all bypassed.</p>
 <dt class="sig sig-object py" id="adi.ada4356_quad.ada4356_quad.rx">
 <span class="sig-name descname"><span class="pre">rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#adi.ada4356_quad.ada4356_quad.rx" title="Link to this definition"></a></dt>
 <dd><p>Capture one synchronized buffer from all four channels.</p>
-<p>Returns a list [A, B, C, D] of numpy arrays, each rx_buffer_size long.
-Once calibrate_alignment() has run, the per-boot offset is taken out
+<p>Once calibrate_alignment() has run, the per-boot offset is taken out
 here, so the four arrays share a sample index.</p>
+<dl class="simple">
+<dt>returns: type=list of numpy.array</dt><dd><p>One array per channel, [A, B, C, D], each rx_buffer_size long.</p>
+</dd>
+<dt>Raises:</dt><dd><p>ExceptionGroup: If the capture failed on one or more channels.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -421,6 +433,13 @@ here, so the four arrays share a sample index.</p>
 <p>Pair with apply_alignment() to get a corrected/uncorrected A/B from the
 <em>same</em> acquisition.  Two separate rx() calls only compare if the
 stimulus repeats shot to shot, which a free-running generator does not.</p>
+<dl class="simple">
+<dt>returns: type=list of numpy.array</dt><dd><p>One raw array per channel, [A, B, C, D], as passed to
+apply_alignment().</p>
+</dd>
+<dt>Raises:</dt><dd><p>ExceptionGroup: If the capture failed on one or more channels.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
