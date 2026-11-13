@@ -12,13 +12,25 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from pyqtgraph.Qt import QtCore, QtGui
 
-import adi
+from adi import ad9361
+from adi.cn0566 import cn0566
 
-# Instantiate all the Devices
-rpi_ip = "ip:phaser.local"  # IP address of the Raspberry Pi
-sdr_ip = "ip:192.168.2.1"  # "192.168.2.1, or pluto.local"  # IP address of the Transceiver Block
-my_sdr = adi.ad9361(uri=sdr_ip)
-my_phaser = adi.CN0566(uri=rpi_ip, sdr=my_sdr)
+# First try to connect to a locally connected CN0566. On success, connect,
+# on failure, connect to remote CN0566
+
+try:
+    print("Attempting to connect to CN0566 via ip:localhost...")
+    my_phaser = cn0566(uri="ip:localhost")
+    print("Found CN0566. Connecting to PlutoSDR via default IP address...")
+    my_sdr = ad9361(uri="ip:192.168.2.1")
+    print("PlutoSDR connected.")
+
+except:
+    print("CN0566 on ip.localhost not found, connecting via ip:phaser.local...")
+    my_phaser = cn0566(uri="ip:phaser.local")
+    print("Found CN0566. Connecting to PlutoSDR via shared context...")
+    my_sdr = ad9361(uri="ip:phaser.local:50901")
+    print("Found SDR on shared phaser.local.")
 
 # Initialize both ADAR1000s, set gains to max, and all phases to 0
 my_phaser.configure(device_mode="rx")
@@ -74,29 +86,29 @@ BW = 500e6
 num_steps = 1000
 ramp_time = 1.2e3  # us
 ramp_time_s = ramp_time / 1e6
-my_phaser.frequency = int(output_freq / 4)  # Output frequency divided by 4
-my_phaser.freq_dev_range = int(
+my_phaser.pll.frequency = int(output_freq / 4)  # Output frequency divided by 4
+my_phaser.pll.freq_dev_range = int(
     BW / 4
 )  # frequency deviation range in Hz.  This is the total freq deviation of the complete freq ramp
-my_phaser.freq_dev_step = int(
+my_phaser.pll.freq_dev_step = int(
     (BW / 4) / num_steps
 )  # frequency deviation step in Hz.  This is fDEV, in Hz.  Can be positive or negative
-my_phaser.freq_dev_time = int(
+my_phaser.pll.freq_dev_time = int(
     ramp_time
 )  # total time (in us) of the complete frequency ramp
 print("requested freq dev time = ", ramp_time)
-print("actual freq dev time = ", my_phaser.freq_dev_time)
-my_phaser.delay_word = 4095  # 12 bit delay word.  4095*PFD = 40.95 us.  For sawtooth ramps, this is also the length of the Ramp_complete signal
-my_phaser.delay_clk = "PFD"  # can be 'PFD' or 'PFD*CLK1'
-my_phaser.delay_start_en = 0  # delay start
-my_phaser.ramp_delay_en = 0  # delay between ramps.
-my_phaser.trig_delay_en = 0  # triangle delay
-my_phaser.ramp_mode = "continuous_triangular"  # ramp_mode can be:  "disabled", "continuous_sawtooth", "continuous_triangular", "single_sawtooth_burst", "single_ramp_burst"
-my_phaser.sing_ful_tri = (
+print("actual freq dev time = ", my_phaser.pll.freq_dev_time)
+my_phaser.pll.delay_word = 4095  # 12 bit delay word.  4095*PFD = 40.95 us.  For sawtooth ramps, this is also the length of the Ramp_complete signal
+my_phaser.pll.delay_clk = "PFD"  # can be 'PFD' or 'PFD*CLK1'
+my_phaser.pll.delay_start_en = 0  # delay start
+my_phaser.pll.ramp_delay_en = 0  # delay between ramps.
+my_phaser.pll.trig_delay_en = 0  # triangle delay
+my_phaser.pll.ramp_mode = "continuous_triangular"  # ramp_mode can be:  "disabled", "continuous_sawtooth", "continuous_triangular", "single_sawtooth_burst", "single_ramp_burst"
+my_phaser.pll.sing_ful_tri = (
     0  # full triangle enable/disable -- this is used with the single_ramp_burst mode
 )
-my_phaser.tx_trig_en = 0  # start a ramp with TXdata
-my_phaser.enable = 0  # 0 = PLL enable.  Write this last to update all the registers
+my_phaser.pll.tx_trig_en = 0  # start a ramp with TXdata
+my_phaser.pll.enable = 0  # 0 = PLL enable.  Write this last to update all the registers
 
 # Print config
 print(
@@ -384,8 +396,8 @@ class Window(QMainWindow):
             print("Frequency axis")
             plot_dist = False
             self.fft_plot.setXRange(100e3, 140e3)
-        my_phaser.freq_dev_range = int(bw / 4)  # frequency deviation range in Hz
-        my_phaser.enable = 0
+        my_phaser.pll.freq_dev_range = int(bw / 4)  # frequency deviation range in Hz
+        my_phaser.pll.enable = 0
 
     def end_program(self):
         """ Gracefully shutsdown the program and Pluto

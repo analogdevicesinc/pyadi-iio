@@ -53,7 +53,7 @@ from numpy import (
     pi,
 )
 from numpy.fft import fft, fftfreq, fftshift
-from scipy import signal
+from scipy.signal.windows import flattop, kaiser
 
 
 def to_sup(angle):
@@ -321,7 +321,7 @@ def measure_channel_gains(
                         Peak bin to examine around for amplitude
     """
     width = 10  # Bins around fundamental to sum
-    win = signal.windows.flattop(cn0566.sdr.rx_buffer_size)
+    win = flattop(cn0566.sdr.rx_buffer_size)
     win /= np.average(np.abs(win))  # Normalize to unity gain
     plot_data = []
     channel_level = []
@@ -398,7 +398,7 @@ def measure_element_gain(
         print("measuring element: ", cal)
     total_sum = 0
     # win = np.blackman(cn0566.sdr.rx_buffer_size)
-    win = signal.windows.flattop(cn0566.sdr.rx_buffer_size)
+    win = flattop(cn0566.sdr.rx_buffer_size)
     win /= np.average(np.abs(win))  # Normalize to unity gain
     spectrum = np.zeros(cn0566.sdr.rx_buffer_size)
 
@@ -442,7 +442,7 @@ def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
 
     cn0566.set_chan_phase(ref, 0.0, apply_cal=False)  # Reference element
     # win = np.blackman(cn0566.sdr.rx_buffer_size)
-    win = signal.windows.flattop(cn0566.sdr.rx_buffer_size)  # Super important!
+    win = flattop(cn0566.sdr.rx_buffer_size)  # Super important!
     win /= np.average(np.abs(win))  # Normalize to unity gain
     width = 10  # Bins around fundamental to sum
     sweep_angle = 180
@@ -547,7 +547,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
     N = len(x)
 
     # Apply window
-    window = signal.kaiser(N, beta=38)
+    window = kaiser(N, beta=38)
     window /= np.average(window)
     x = multiply(x, window)
 
