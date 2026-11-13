@@ -86,8 +86,10 @@ class ad4630(rx, context_manager, attribute):
         else:
             for idx, ch_data in enumerate(data):
                 nbits = self._ctrl.channels[idx].data_format.bits
+                shift = self._ctrl.channels[idx].data_format.shift
+                ch_data = (ch_data >> shift) & _bitmask(nbits)
                 temp.append(np.vectorize(_sign_extend)(ch_data, nbits))
-            data = np.vectorize(_sign_extend)(data, nbits)
+            data = temp
 
         return data
 
