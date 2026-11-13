@@ -19,7 +19,7 @@ class ada4961(context_manager, attribute):
         self._ctrl = self._ctx.find_device("ada4961")
 
         if not self._ctrl:
-            raise Exception("ADF4159 device not found")
+            raise Exception("ADA4961 device not found")
 
     @property
     def hardwaregain(self):
