@@ -65,6 +65,7 @@ class ltc2378(rx_chan_comp):
         "ltc2378-18",
         "ltc2379-18",
         "ltc2380-16",
+        "adaq23875"
     ]
 
     @property
