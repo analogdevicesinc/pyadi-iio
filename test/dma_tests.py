@@ -332,13 +332,13 @@ def dds_loopback(
 
     if do_html_log:
         pytest.data_log = {
-            "html": gen_line_plot_html(
-                tone_freqs,
-                tone_peaks,
-                "Frequency (Hz)",
-                "Amplitude (dBFS)",
-                "{} ({})".format(s, classname),
-            )
+            "iq": data,
+            "fs": RXFS,
+            "domain": "complex",
+            "expected_tones": [frequency],
+            "metrics": {"peak_min": peak_min},
+            "params": param_set,
+            "classname": classname,
         }
 
     assert (frequency * 0.01) > diff
@@ -426,13 +426,13 @@ def dds_two_tone(
 
     if do_html_log:
         pytest.data_log = {
-            "html": gen_line_plot_html(
-                tone_freqs,
-                tone_peaks,
-                "Frequency (Hz)",
-                "Amplitude (dBFS)",
-                "{}\n{} ({})".format(s1, s2, classname),
-            )
+            "iq": data,
+            "fs": RXFS,
+            "domain": "complex",
+            "expected_tones": [frequency1, frequency2],
+            "metrics": {"peak_min1": peak_min1, "peak_min2": peak_min2},
+            "params": param_set,
+            "classname": classname,
         }
 
     if (abs(frequency1 - tone_freqs[indx[0]]) <= (frequency1 * 0.01)) and (
@@ -518,13 +518,13 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     print(s)
     if do_html_log:
         pytest.data_log = {
-            "html": gen_line_plot_html(
-                tone_freqs,
-                tone_peaks,
-                "Frequency (Hz)",
-                "Amplitude (dBFS)",
-                "{} ({})".format(s, classname),
-            )
+            "iq": data,
+            "fs": RXFS,
+            "domain": "complex",
+            "expected_tones": [frequency],
+            "metrics": {"peak_min": peak_min},
+            "params": param_set,
+            "classname": classname,
         }
 
     assert (frequency * 0.01) > diff
@@ -640,13 +640,13 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
 
     if do_html_log:
         pytest.data_log = {
-            "html": gen_line_plot_html(
-                tone_freqs,
-                tone_peaks,
-                "Frequency (Hz)",
-                "Amplitude (dBFS)",
-                "{} ({})".format(s, classname),
-            )
+            "iq": data,
+            "fs": RXFS,
+            "domain": "complex",
+            "expected_tones": [fc],
+            "metrics": {},  # cw_loopback's pass/fail isn't dB-numeric
+            "params": param_set,
+            "classname": classname,
         }
 
     assert (fc * 0.01) > diff
@@ -725,13 +725,13 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     val, amp, freqs = spec.sfdr(data, fs=RXFS, plot=False)
     if do_html_log:
         pytest.data_log = {
-            "html": gen_line_plot_html(
-                freqs,
-                amp,
-                "Frequency (Hz)",
-                "Amplitude (dBFS)",
-                "SDFR {} dBc ({})".format(val, classname),
-            )
+            "iq": data,
+            "fs": RXFS,
+            "domain": "complex",
+            "expected_tones": [fc],
+            "metrics": {"sfdr_dbc": val, "sfdr_min": sfdr_min},
+            "params": param_set,
+            "classname": classname,
         }
     print("SFDR:", val, "dB")
     assert val > sfdr_min
