@@ -34,7 +34,7 @@
 from adi.ltc2672 import ltc2672
 
 # Set up LTC2672
-ltc2672_dev = ltc2672(uri="serial:COM5,230400,8n1")
+ltc2672_dev = ltc2672(uri="serial:COM34,230400,8n1", device_name="ltc2672-16")
 
 # Set all channels span to 50mA
 ltc2672_dev.all_chns_span = "50mA"
@@ -45,14 +45,14 @@ ltc2672_chan = ltc2672_dev.channel[chn_num]
 ltc2672_chan.raw = 25000
 
 # Get the current value of channel 0 in mA for the corresponding raw value set
-current_val_ma = ltc2672_chan.current
+current_val_ma = ltc2672_chan.input_register_and_update
 print(f"Channel{chn_num} current in mA: {current_val_ma}")
 
 # Set current value for channel 0 in mA
-ltc2672_chan.current = 45
+ltc2672_chan.input_register_and_update = 45
 
 # Set mux value to "iout0" to monitor iout0 value on the mux_out pin
 ltc2672_dev.mux = "iout0"
 
 # Powerdown all the channels of the DAC
-ltc2672_dev.all_chns_powerdown = "powerdown"
+ltc2672_dev.powerdown_chip = "powerdown"
