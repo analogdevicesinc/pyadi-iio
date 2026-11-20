@@ -380,8 +380,8 @@ for spare in axes[len(CHANNELS_RX) :]:
     spare.set_visible(False)
 
 try:
-    # 10 consecutive data captures
-    for r in range(10):
+    # 100 consecutive data captures
+    for r in range(100):
         # rx() returns a list of arrays once more than one channel is enabled,
         # and a bare array for a single channel.
         captures = dev.rx()
