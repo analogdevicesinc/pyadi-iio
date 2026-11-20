@@ -1,7 +1,7 @@
-admt4000
-=================
+admt4000ard1z
+=============
 
 .. automodule:: adi.admt4000ard1z
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

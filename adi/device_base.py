@@ -54,7 +54,13 @@ class device_base(shared_def):
         return device_name
 
     def _add_channel_instances(self):
-        """Initiate channel objects for each channel in the device."""
+        """Initiate channel objects and register them as device attributes.
+
+        Each channel is registered as a named attribute using its IIO channel
+        ID, with hyphens replaced by underscores (e.g. ``voltage0-voltage1``
+        becomes ``dev.voltage0_voltage1``). The original IIO name is preserved
+        in ``channel.name`` for use with libiio calls.
+        """
         self.channel = []  # type: ignore
         if self._channel_def:
             if isinstance(self._channel_def, dict):
@@ -68,8 +74,11 @@ class device_base(shared_def):
                                 "Channel definition must be a callable class"
                             )
                         if ch_id in ch.id:
-                            setattr(self, ch.id, ch_def(self._ctrl, ch.id))
-                            self.channel.append(getattr(self, ch.id))
+                            # Sanitize '-' in channel IDs to '_' for valid Python identifiers
+                            attr_name = ch.id.replace("-", "_")
+                            instance = ch_def(self._ctrl, ch.id)
+                            setattr(self, attr_name, instance)
+                            self.channel.append(instance)
                             break
             else:
                 if not callable(self._channel_def):
@@ -77,8 +86,10 @@ class device_base(shared_def):
                 for ch in self._ctrl.channels:
                     if ch.id in self._ignore_channels:
                         continue
-                    setattr(self, ch.id, self._channel_def(self._ctrl, ch.id))
-                    self.channel.append(getattr(self, ch.id))
+                    attr_name = ch.id.replace("-", "_")
+                    instance = self._channel_def(self._ctrl, ch.id)
+                    setattr(self, attr_name, instance)
+                    self.channel.append(instance)
 
 
 class tx_chan_comp(tx_def, device_base):

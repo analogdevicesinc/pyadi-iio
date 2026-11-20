@@ -47,6 +47,7 @@ from adi.ad9081_mc import QuadMxFE, ad9081_mc
 from adi.ad9083 import ad9083
 from adi.ad9084 import ad9084
 from adi.ad9084_mc import Triton, ad9084_mc
+from adi.ad9088 import ad9088
 from adi.ad9094 import ad9094
 from adi.ad9136 import ad9136
 from adi.ad9144 import ad9144
@@ -144,6 +145,7 @@ from adi.max11205 import max11205
 from adi.max14001 import max14001
 from adi.max31855 import max31855
 from adi.max31865 import max31865
+from adi.maxm86161 import maxm86161
 from adi.one_bit_adc_dac import one_bit_adc_dac
 from adi.QuadMxFE_multi import QuadMxFE_multi
 from adi.tdd import tdd

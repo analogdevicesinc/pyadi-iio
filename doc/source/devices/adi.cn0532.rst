@@ -1,5 +1,5 @@
-CN0532 vibration sensor board
-=============================
+cn0532
+======
 
 The :class:`adi.cn0532.cn0532` interface extends the CN0540 data-acquisition
 interface for the CN0532 vibration sensor board and its ADXL1002 accelerometer.

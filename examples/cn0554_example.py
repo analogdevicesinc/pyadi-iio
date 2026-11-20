@@ -51,6 +51,7 @@ for a in range(0, 4):
     # Request data from onboard ADC
     print("Capturing data....")
     dat = my_cn0554.rx()
+    my_cn0554.adc.rx_destroy_buffer()
     print("")
     print("")
 

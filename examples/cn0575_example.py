@@ -8,9 +8,8 @@ from time import sleep
 import adi
 
 # Optionally pass URI as command line argument,
-# else use default context manager search
-my_uri = sys.argv[1] if len(sys.argv) >= 2 else None
-print("uri: " + str(my_uri))
+# else use default ip:analog.local
+my_uri = sys.argv[1] if len(sys.argv) >= 2 else "ip:analog.local"
 
 # Connect to CN0575
 my_cn0575 = adi.cn0575(uri=my_uri)

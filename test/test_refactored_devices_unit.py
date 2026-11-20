@@ -754,13 +754,15 @@ def channel_definitions(device_class, iio_uri):
             #     ch, "raw"
             # ), f"{device_class} channel {ch.name} missing raw property"
             assert hasattr(
-                ch, "scale"
+                type(ch), "scale"
             ), f"{device_class} channel {ch.name} missing scale property"
             # device_base exposes each channel as a named attribute on the
-            # device (the documented ``device.<channel>.<attr>`` contract).
-            assert getattr(dev, ch.name, None) is ch, (
+            # device; hyphens in IIO channel ids (e.g. voltage0-voltage1) are
+            # sanitized to underscores to form valid Python identifiers.
+            attr_name = ch.name.replace("-", "_")
+            assert getattr(dev, attr_name, None) is ch, (
                 f"{device_class} channel {ch.name} not accessible as a named "
-                "attribute on the device"
+                f"attribute '{attr_name}' on the device"
             )
 
 

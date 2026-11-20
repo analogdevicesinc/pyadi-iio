@@ -1,5 +1,5 @@
 adis16480
-====================
+=========
 
 .. autoclass:: adi.adis16480
    :members:
