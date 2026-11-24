@@ -25,7 +25,7 @@ jobs:
     steps:
       # allow-unsafe-pr-checkout relies on the `external-pr` required-reviewers rule
       # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
@@ -37,7 +37,7 @@ jobs:
       - name: Fetch base branch
         run: git fetch --no-tags https://github.com/${{ github.repository }}.git +refs/heads/${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install PyYAML
@@ -60,14 +60,14 @@ jobs:
     steps:
       # allow-unsafe-pr-checkout relies on the `external-pr` required-reviewers rule
       # codeql[actions/unsafe-checkout] manual review required via `external-pr` environment approval gate
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           persist-credentials: false
           allow-unsafe-pr-checkout: true
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install dependencies
@@ -94,7 +94,7 @@ jobs:
         # Always post the report, even when the coverage threshold check fails,
         # so reviewers can see which attributes are untested.
         if: always() && hashFiles('coverage_pr_comment.md') != ''
-        uses: mshick/add-pr-comment@v2
+        uses: mshick/add-pr-comment@v3
         with:
           message-id: iio-context-coverage
           message-path: coverage_pr_comment.md
