@@ -1,12 +1,12 @@
 exclude: '^test\/emu'
 repos:
 -   repo: https://github.com/codespell-project/codespell
-    rev: v2.2.2
+    rev: v2.4.3
     hooks:
     -   id: codespell
         entry: codespell --ignore-words=.codespell-whitelist --exclude-file=examples/cn0549/ml_fan_example.ipynb --skip="*.pyc,*.xml"
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v6.0.0
     hooks:
     -   id: check-yaml
     -   id: end-of-file-fixer
@@ -14,15 +14,18 @@ repos:
     -   id: check-merge-conflict
     -   id: debug-statements
     -   id: check-docstring-first
+-   repo: https://github.com/PyCQA/flake8
+    rev: 7.5.0
+    hooks:
     -   id: flake8
 -   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.5
+    rev: v0.17.6
     hooks:
-    - id: ruff
+    - id: ruff-check
       args: [ --fix ]
     - id: ruff-format
 -   repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.1
+    rev: v1.5.6
     hooks:
     -   id: insert-license
         files: adi\/.*\.py$
