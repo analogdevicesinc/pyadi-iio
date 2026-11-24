@@ -34,9 +34,15 @@ production design uses (FPD_SLCR.AFI_FS), since a runtime load does not rerun ps
 
 On a JTAG-only place (`BootZynqMPJTAG`), set `TALISE_BOOT_MODE=sd1-ls`: the board is powered
 on, its boot mode is overridden over JTAG and it boots its own SD card, whatever the switches
-say (labgrid-plugins with `BootZynqMPJTAG.boot_mode`, 2026-11-07 or later). Without it the
-fixture JTAG-loads the stock PL and psu_init from `TALISE_STOCK_BITSTREAM_REMOTE` /
-`TALISE_STOCK_PSU_INIT_REMOTE` instead.
+say. Without it the fixture JTAG-loads the stock PL and psu_init from
+`TALISE_STOCK_BITSTREAM_REMOTE` / `TALISE_STOCK_PSU_INIT_REMOTE` instead. Either JTAG path
+needs a newer labgrid-plugins than the `v6` tag in `requirements.txt` (which is enough for the
+`BootFPGASoCSSH` places CI uses): `BootZynqMPJTAG.boot_mode` came with #186 and the exporter
+payload paths with #189, so install main at 7ddcb06 or later after the requirements:
+
+```
+pip install "labgrid-plugins @ git+https://github.com/tfcollins/labgrid-plugins.git@7ddcb064d449ce891464b1123b898ee771a9983c"
+```
 
 | Variable | Meaning |
 |----------|---------|
