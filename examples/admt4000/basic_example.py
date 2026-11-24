@@ -78,7 +78,10 @@ if __name__ == "__main__":
             ax1.set_ylim([-10, 60])
             ax1.plot(turns, label="Turns", linewidth=2.0, color="orange")
             ax1.text(
-                0.02, 0.95, f"Turns: {turns[-1]}", transform=ax1.transAxes,
+                0.02,
+                0.95,
+                f"Turns: {turns[-1]}",
+                transform=ax1.transAxes,
             )
             ax1.set_title("Turns")
             ax1.set_ylabel("Value")
@@ -89,7 +92,10 @@ if __name__ == "__main__":
             ax2.set_ylim([0, 400])
             ax2.plot(angle, label="Angle", linewidth=2.0)
             ax2.text(
-                0.02, 0.95, f"Angle: {angle[-1]:.4f} °", transform=ax2.transAxes,
+                0.02,
+                0.95,
+                f"Angle: {angle[-1]:.4f} °",
+                transform=ax2.transAxes,
             )
             ax2.set_title("Angle")
             ax2.set_ylabel("Value")

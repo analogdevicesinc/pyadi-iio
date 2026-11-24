@@ -6,7 +6,8 @@ classname = "adi.adis16460"
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize(
-    "classname, attr, max_pow, tol", [(classname, "sample_rate", 12, 0)],
+    "classname, attr, max_pow, tol",
+    [(classname, "sample_rate", 12, 0)],
 )
 def test_adis16460_sample_rate(
     test_attribute_single_value_pow2, iio_uri, classname, attr, max_pow, tol

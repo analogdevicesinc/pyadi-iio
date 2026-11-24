@@ -18,7 +18,7 @@ SECONDARY_URI = "ip:10.132.14.134"
 
 
 NUM_RUNS = 100
-BUFFER_SIZE = 2 ** 12
+BUFFER_SIZE = 2**12
 PLOT_RESULTS = True
 USE_DMA = True
 USE_AION_TRIGGER = True
@@ -140,8 +140,8 @@ def generate_tone(freq: float, sample_rate: float, num_samples: int) -> np.ndarr
     freq = int(freq / (sample_rate / N)) * (sample_rate / N)
     ts = 1 / float(sample_rate)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * freq) * 2 ** 15
-    q = np.sin(2 * np.pi * t * freq) * 2 ** 15
+    i = np.cos(2 * np.pi * t * freq) * 2**15
+    q = np.sin(2 * np.pi * t * freq) * 2**15
     Xn = i + 1j * q
     Xn = np.pad(Xn, (0, int(num_samples - N)), "constant")
     return Xn
@@ -361,7 +361,6 @@ def main():
 
     try:
         for run_idx in range(NUM_RUNS):
-
             # Step 1: Destroy old buffers
             primary.tx_destroy_buffer()
             primary.rx_destroy_buffer()
@@ -522,7 +521,7 @@ def main():
 
     if PLOT_RESULTS:
         if USE_DMA:
-            plt.plot(2 ** 11 / 2 ** 15 * np.real(tx_wave), label="TX wave", alpha=0.1)
+            plt.plot(2**11 / 2**15 * np.real(tx_wave), label="TX wave", alpha=0.1)
         plt.legend()
         plt.show()
 

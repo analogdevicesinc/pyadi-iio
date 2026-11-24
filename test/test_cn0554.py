@@ -35,7 +35,10 @@ def test_cn0554_attr(
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, max_pow, tol", [("rx_buffer_size", 12, 10),],
+    "attr, max_pow, tol",
+    [
+        ("rx_buffer_size", 12, 10),
+    ],
 )
 def test_cn0554_attr_pow2(
     test_attribute_single_value_pow2, iio_uri, classname, attr, max_pow, tol

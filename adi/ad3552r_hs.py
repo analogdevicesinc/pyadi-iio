@@ -29,7 +29,7 @@ class ad3552r_hs_channel(attribute):
     @property
     def raw(self):
         """Get channel raw value
-            DAC code in the range 0-65535"""
+        DAC code in the range 0-65535"""
         return self._get_iio_attr(self.name, "raw", True)
 
     @raw.setter

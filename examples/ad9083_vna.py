@@ -26,7 +26,7 @@ from scipy.signal import find_peaks
 import adi
 
 
-def spec_est(x, fs, ref=2 ** 15, plot=False, title=""):
+def spec_est(x, fs, ref=2**15, plot=False, title=""):
 
     N = len(x)
 
@@ -36,7 +36,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False, title=""):
 
     # Use FFT to get the amplitude of the spectrum
     ampl = 1 / N * absolute(fft(x))
-    ampl = 20 * log10(ampl / ref + 10 ** -20)
+    ampl = 20 * log10(ampl / ref + 10**-20)
 
     # FFT frequency bins
     freqs = fftfreq(N, 1 / fs)
@@ -72,7 +72,7 @@ print("--Setting up chip")
 
 # Capture all 32 channels
 vna.rx_enabled_channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-vna.rx_buffer_size = 2 ** 12
+vna.rx_buffer_size = 2**12
 fs = int(vna.rx_sample_rate)
 
 # ADRF5720

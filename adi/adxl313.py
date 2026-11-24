@@ -10,7 +10,6 @@ from adi.device_base import rx_chan_comp
 
 
 class adxl313(rx_chan_comp, attribute):
-
     """ADXL313 3-axis accelerometer"""
 
     _complex_data = False
@@ -38,7 +37,6 @@ class adxl313(rx_chan_comp, attribute):
         super().__init__(uri=self._ctx, device_name=device_name)
 
     class _channel(attribute):
-
         """ADXL313 acceleration channel"""
 
         def __init__(self, ctrl, channel_name):

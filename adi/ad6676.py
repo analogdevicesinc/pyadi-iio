@@ -6,7 +6,7 @@ from adi.device_base import rx_def
 
 
 class ad6676(rx_def):
-    """ AD6676 Wideband IF Receiver Subsystem """
+    """AD6676 Wideband IF Receiver Subsystem"""
 
     _complex_data = True
     _rx_channel_names = ["voltage0", "voltage1"]

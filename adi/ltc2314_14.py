@@ -15,12 +15,12 @@ class ltc2314_14_channel(attribute):
 
     @property
     def lsb_mv(self):
-        """ Get the LSB in millivolts """
+        """Get the LSB in millivolts"""
         return self._get_iio_attr("voltage0", "scale", False, self._ctrl)
 
     @property
     def voltage(self):
-        """ Get the voltage reading from the ADC """
+        """Get the voltage reading from the ADC"""
         code = self._get_iio_attr("voltage0", "raw", False, self._ctrl)
         return code * self.lsb_mv / 1000
 

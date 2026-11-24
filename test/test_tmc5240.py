@@ -24,7 +24,11 @@ classname = "adi.tmc5240"
     ],
 )
 def test_tmc5240_ch_attr(
-    test_attribute_single_value_channel_readonly, iio_uri, classname, channel, attr,
+    test_attribute_single_value_channel_readonly,
+    iio_uri,
+    classname,
+    channel,
+    attr,
 ):
     test_attribute_single_value_channel_readonly(iio_uri, classname, channel, attr)
 
@@ -35,17 +39,17 @@ def test_tmc5240_ch_attr(
 @pytest.mark.parametrize(
     "attr, depends, start, stop",
     [
-        ("amax", [], 0, 2 ** 18 - 1),
-        ("dmax", [], 0, 2 ** 18 - 1),
-        ("vmax", [], 0, 2 ** 23 - 512),
-        ("a1", [], 0, 2 ** 18 - 1),
-        ("a2", [], 0, 2 ** 18 - 1),
-        ("d1", [], 0, 2 ** 18 - 1),
-        ("d2", [], 0, 2 ** 18 - 1),
-        ("v1", [], 0, 2 ** 20 - 1),
-        ("v2", [], 0, 2 ** 20 - 1),
-        ("vstart", [], 0, 2 ** 18 - 1),
-        ("vstop", [], 0, 2 ** 18 - 1),
+        ("amax", [], 0, 2**18 - 1),
+        ("dmax", [], 0, 2**18 - 1),
+        ("vmax", [], 0, 2**23 - 512),
+        ("a1", [], 0, 2**18 - 1),
+        ("a2", [], 0, 2**18 - 1),
+        ("d1", [], 0, 2**18 - 1),
+        ("d2", [], 0, 2**18 - 1),
+        ("v1", [], 0, 2**20 - 1),
+        ("v2", [], 0, 2**20 - 1),
+        ("vstart", [], 0, 2**18 - 1),
+        ("vstop", [], 0, 2**18 - 1),
         ("direction", [], -1, 1),
     ],
 )

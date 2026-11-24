@@ -38,9 +38,14 @@ def test_adf5611_attrs(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, value", [("en_rfoutdiv", 0), ("en_rfoutdiv", 1)],
+    "attr, value",
+    [("en_rfoutdiv", 0), ("en_rfoutdiv", 1)],
 )
 def test_adf5611_attrs_bool(
-    test_attribute_single_value_boolean, iio_uri, classname, attr, value,
+    test_attribute_single_value_boolean,
+    iio_uri,
+    classname,
+    attr,
+    value,
 ):
     test_attribute_single_value_boolean(iio_uri, classname, attr, value)

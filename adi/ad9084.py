@@ -190,7 +190,7 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
         if not single_link:
             sync_start_b.__init__(self)
 
-        self.rx_buffer_size = 2 ** 16
+        self.rx_buffer_size = 2**16
 
     def _get_iio_attr_str_single(self, channel_name, attr, output):
         # This is overridden by subclasses
@@ -278,7 +278,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @rx_channel_nco_phases.setter
     def rx_channel_nco_phases(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_fine_ddc_channel_names, "channel_nco_phase", False, value,
+            self._rx_fine_ddc_channel_names,
+            "channel_nco_phase",
+            False,
+            value,
         )
 
     @property
@@ -291,7 +294,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @rx_main_nco_frequencies.setter
     def rx_main_nco_frequencies(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_nco_frequency", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_nco_frequency",
+            False,
+            value,
         )
 
     @property
@@ -304,7 +310,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @rx_main_nco_phases.setter
     def rx_main_nco_phases(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_nco_phase", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_nco_phase",
+            False,
+            value,
         )
 
     @property
@@ -331,7 +340,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @rx_test_mode.setter
     def rx_test_mode(self, value):
         self._set_iio_attr_single(
-            "voltage0_i", "test_mode", False, value,
+            "voltage0_i",
+            "test_mode",
+            False,
+            value,
         )
 
     @property
@@ -344,7 +356,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @rx_nyquist_zone.setter
     def rx_nyquist_zone(self, value):
         self._set_iio_attr_str_vec(
-            self._rx_coarse_ddc_channel_names, "nyquist_zone", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "nyquist_zone",
+            False,
+            value,
         )
 
     @property
@@ -370,7 +385,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @tx_channel_nco_phases.setter
     def tx_channel_nco_phases(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_fine_duc_channel_names, "channel_nco_phase", True, value,
+            self._tx_fine_duc_channel_names,
+            "channel_nco_phase",
+            True,
+            value,
         )
 
     @property
@@ -383,7 +401,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @tx_channel_nco_test_tone_en.setter
     def tx_channel_nco_test_tone_en(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "channel_nco_test_tone_en", True, value,
+            self._tx_coarse_duc_channel_names,
+            "channel_nco_test_tone_en",
+            True,
+            value,
         )
 
     @property
@@ -412,7 +433,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @tx_channel_nco_gain_scales.setter
     def tx_channel_nco_gain_scales(self, value):
         self._set_iio_attr_float_vec(
-            self._tx_coarse_duc_channel_names, "channel_nco_gain_scale", True, value,
+            self._tx_coarse_duc_channel_names,
+            "channel_nco_gain_scale",
+            True,
+            value,
         )
 
     @property
@@ -425,7 +449,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @tx_main_nco_frequencies.setter
     def tx_main_nco_frequencies(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_frequency", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_frequency",
+            True,
+            value,
         )
 
     @property
@@ -438,7 +465,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @tx_main_nco_phases.setter
     def tx_main_nco_phases(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_phase", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_phase",
+            True,
+            value,
         )
 
     @property
@@ -451,7 +481,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @tx_main_nco_test_tone_en.setter
     def tx_main_nco_test_tone_en(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_test_tone_en", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_test_tone_en",
+            True,
+            value,
         )
 
     @property
@@ -464,7 +497,10 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @tx_main_nco_test_tone_scales.setter
     def tx_main_nco_test_tone_scales(self, value):
         self._set_iio_attr_float_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_test_tone_scale", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_test_tone_scale",
+            True,
+            value,
         )
 
     @property
@@ -483,7 +519,8 @@ class ad9084(rx_tx, context_manager, sync_start, sync_start_b):
     @loopback_mode.setter
     def loopback_mode(self, value):
         self._set_iio_dev_attr_single(
-            "loopback_mode", value,
+            "loopback_mode",
+            value,
         )
 
     @property

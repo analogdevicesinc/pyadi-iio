@@ -10,7 +10,6 @@ from adi.device_base import rx_chan_comp
 
 
 class ltc2499(rx_chan_comp):
-
     channel: OrderedDict = None
     _complex_data = False
     _device_name = "ltc2499"

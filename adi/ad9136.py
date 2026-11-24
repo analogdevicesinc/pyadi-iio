@@ -9,7 +9,7 @@ from adi.sync_start import sync_start
 
 
 class ad9136(tx, context_manager, sync_start):
-    """ AD9136 High-Speed DAC """
+    """AD9136 High-Speed DAC"""
 
     _complex_data = False
     _tx_channel_names = ["voltage0", "voltage1"]

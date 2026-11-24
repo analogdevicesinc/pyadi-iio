@@ -28,7 +28,7 @@ class ad7091rx_channel(attribute):
 
 class ad7091rx(rx_chan_comp_no_buff):
     """AD7091R-2/AD7091R-4/AD7091R-8 SPI interface,
-       2-/4-/8-channel, 12-bit SAR ADC"""
+    2-/4-/8-channel, 12-bit SAR ADC"""
 
     compatible_parts = ["ad7091r-8", "ad7091r-4", "ad7091r-2"]
     _complex_data = False

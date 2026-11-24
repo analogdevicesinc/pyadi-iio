@@ -42,7 +42,7 @@ class ad7291_temp_channel(ad7291_channel):  # attribute):
 
 
 class ad7291(rx_chan_comp_no_buff):
-    """ AD7291 ADC """
+    """AD7291 ADC"""
 
     compatible_parts = ["ad7291"]
     _device_name = ""

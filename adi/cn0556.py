@@ -5,7 +5,6 @@ import adi
 
 
 class cn0556(adi.cn0554):
-
     """The CN0556 class inherits features from the CN0554 (providing full
     control and monitoring of the input and output voltages and currents)
     and the one_bit_adc_dac (sets the mode of the regulator to either Buck
@@ -24,7 +23,7 @@ class cn0556(adi.cn0554):
             "offset": 11.345,
             "min": 0.07,
             "max": 10.0,
-            "unit": "A"
+            "unit": "A",
             # I1P = 11.345-1.1274*ISET1P_CTL
         },
         "buck_output_current_limit": {
@@ -32,7 +31,7 @@ class cn0556(adi.cn0554):
             "offset": 39.623,
             "min": 0.0,
             "max": 35.0,
-            "unit": "A"
+            "unit": "A",
             # I2P = 39.623-4.0108*ISET2P_CTL
         },
         "buck_input_undervoltage": {
@@ -40,7 +39,7 @@ class cn0556(adi.cn0554):
             "offset": 60.415,
             "min": 12.0,
             "max": 54.0,
-            "unit": "V"
+            "unit": "V",
             # VUV1 = 60.415-5.1281*UV1_CTL
         },
         "buck_target_output_voltage": {
@@ -48,7 +47,7 @@ class cn0556(adi.cn0554):
             "offset": 15.685,
             "min": 2.0,
             "max": 14.0,
-            "unit": "V"
+            "unit": "V",
             # V2D = 15.685-1.4666*FB2_CTL
         },
         "boost_input_current_limit": {
@@ -56,7 +55,7 @@ class cn0556(adi.cn0554):
             "offset": 39.623,
             "min": 0.0,
             "max": 35.0,
-            "unit": "A"
+            "unit": "A",
             # I2N = 39.623-4.0108*ISET2N_CTL
         },
         "boost_output_current_limit": {
@@ -64,7 +63,7 @@ class cn0556(adi.cn0554):
             "offset": 11.345,
             "min": 0.07,
             "max": 10.0,
-            "unit": "A"
+            "unit": "A",
             # I1N = 11.345-1.1274*ISET1N_CTL
         },
         "boost_input_undervoltage": {
@@ -72,7 +71,7 @@ class cn0556(adi.cn0554):
             "offset": 13.386,
             "min": 8.0,
             "max": 12.0,
-            "unit": "V"
+            "unit": "V",
             # VUV2 = 13.386-1.2195*UV2_CTL
         },
         "boost_target_output_voltage": {
@@ -80,7 +79,7 @@ class cn0556(adi.cn0554):
             "offset": 61.995,
             "min": 14.0,
             "max": 56.0,
-            "unit": "V"
+            "unit": "V",
             # V2D = 61.995-4.859*FB1_CTL
         },
         # Measurements

@@ -21,7 +21,11 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-v", "--verbose", default=False, help="Enable verbose output", action="store_true",
+    "-v",
+    "--verbose",
+    default=False,
+    help="Enable verbose output",
+    action="store_true",
 )
 
 args = parser.parse_args()

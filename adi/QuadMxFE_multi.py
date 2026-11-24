@@ -23,7 +23,7 @@ class QuadMxFE_multi(object):
             JESD object(s) associated with secondary ADQUADMXFExEBZ(s)
     """
 
-    __rx_buffer_size_multi = 2 ** 14
+    __rx_buffer_size_multi = 2**14
     secondaries: List[QuadMxFE] = []
 
     def __init__(
@@ -59,7 +59,7 @@ class QuadMxFE_multi(object):
         self.primary._clock_chip_ext = self.primary._ctx.find_device("hmc7044-ext")
 
     def reinitialize(self):
-        """ reinitialize: reinitialize all transceivers """
+        """reinitialize: reinitialize all transceivers"""
         for dev in self.secondaries + [self.primary]:
             property_names = [p for p in dir(dev) if "reinitialize" in p]
             for p in property_names:
@@ -262,7 +262,7 @@ class QuadMxFE_multi(object):
             dev.tx_sync_start = "arm"
 
     def sysref_request(self):
-        """ sysref_request: Sysref request for parent HMC7044 """
+        """sysref_request: Sysref request for parent HMC7044"""
         self.primary._clock_chip_ext.attrs["sysref_request"].value = "1"
 
     def __refill_samples(self, dev, is_primary):

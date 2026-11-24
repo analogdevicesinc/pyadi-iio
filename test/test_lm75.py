@@ -3,6 +3,7 @@ import pytest
 hardware = "lm75"
 classname = "adi.lm75"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])

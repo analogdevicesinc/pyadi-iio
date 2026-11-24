@@ -25,7 +25,7 @@ trx.tx_enabled_channels = [0]
 
 trx.rx_nyquist_zone = ["odd"] * 4
 
-N_rx = 2 ** 15
+N_rx = 2**15
 trx.rx_buffer_size = N_rx
 trx.tx_cyclic_buffer = True
 
@@ -36,10 +36,10 @@ trx.tx_cyclic_buffer = True
 
 fs = int(trx.tx_sample_rate)
 
-A = 0.5 * 2 ** 14  # -6 dBFS
+A = 0.5 * 2**14  # -6 dBFS
 
 B = fs / 2.5  # 100 MHz wide pulse @ 250 MS/s; 200 MHz @ 500 MS/s
-N = 2 ** 14
+N = 2**14
 T = N / fs
 
 t = np.linspace(-T / 2, T / 2, N, endpoint=False)

@@ -3,6 +3,7 @@ import pytest
 hardware = "ad3530r"
 classname = "adi.ad353xr"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -36,8 +37,14 @@ def test_ad353xr_raw_attr(
 @pytest.mark.parametrize(
     "attr, val",
     [
-        ("reference_select", ["external_ref", "internal_ref"],),
-        ("range", ["0_to_VREF", "0_to_2VREF"],),
+        (
+            "reference_select",
+            ["external_ref", "internal_ref"],
+        ),
+        (
+            "range",
+            ["0_to_VREF", "0_to_2VREF"],
+        ),
     ],
 )
 def test_ad353xr_global_attr(

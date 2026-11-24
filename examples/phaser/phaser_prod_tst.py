@@ -225,7 +225,7 @@ while attempts < max_attempts and not success:
         my_sdr.rx_buffer_size = rx_buffer_size
 
         my_sdr.tx_cyclic_buffer = True
-        my_sdr.tx_buffer_size = int(2 ** 16)
+        my_sdr.tx_buffer_size = int(2**16)
 
         if use_tx is True:
             # To disable rx, set attenuation to a high value and set frequency far from rx.
@@ -352,7 +352,6 @@ do_plot = (
 )
 
 while do_plot == True:
-
     start = time.time()
     my_phaser.set_beam_phase_diff(0.0)
     time.sleep(0.25)

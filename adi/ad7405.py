@@ -29,8 +29,7 @@ class ad7405_channel(attribute):
 
 
 class ad7405(rx_chan_comp):
-
-    """ AD7405 ADC """
+    """AD7405 ADC"""
 
     compatible_parts = ["adum7701", "adum7702", "adum7703", "ad7405"]
     _complex_data = False

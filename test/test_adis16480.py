@@ -6,6 +6,7 @@ hardware = "adis16480"
 classname = "adi.adis16480"
 device_name = "adis16480"
 
+
 ########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -77,7 +78,13 @@ def test_adis16480_attr(
     ],
 )
 def test_adis16480_attr_multiple_val(
-    test_attribute_multiple_values, iio_uri, classname, attr, values, tol, repeats,
+    test_attribute_multiple_values,
+    iio_uri,
+    classname,
+    attr,
+    values,
+    tol,
+    repeats,
 ):
     test_attribute_multiple_values(iio_uri, classname, attr, values, tol, repeats)
 

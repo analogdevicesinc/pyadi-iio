@@ -44,7 +44,6 @@ print("\nData using unbuffered rx(), raw:")
 print(mygyro.rx())
 
 if enable_plot:
-
     # Create figure for plotting
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)

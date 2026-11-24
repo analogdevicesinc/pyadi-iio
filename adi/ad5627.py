@@ -7,7 +7,7 @@ from adi.rx_tx import tx
 
 
 class ad5627(tx, context_manager):
-    """ AD5627 Low Power Dual nanoDAC """
+    """AD5627 Low Power Dual nanoDAC"""
 
     _complex_data = False
     _tx_channel_names = ["voltage0", "voltage1"]

@@ -103,7 +103,7 @@ dev.rx_enabled_channels = [0, 1]
 dev.tx_enabled_channels = [0]
 dev.rx_nyquist_zone = ["odd"] * NM_RX
 
-dev.rx_buffer_size = 2 ** 12
+dev.rx_buffer_size = 2**12
 dev.tx_cyclic_buffer = True
 
 fs = int(dev.tx_sample_rate)

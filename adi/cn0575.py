@@ -6,7 +6,7 @@ import adi
 
 
 class cn0575:
-    """ CN0575 class, exposing onboard temperature sensor, pushbutton,
+    """CN0575 class, exposing onboard temperature sensor, pushbutton,
     and LED. Also reads the platform CPU's temperature, which under
     most operating conditions should be higher than the onboard sensor.
     """

@@ -442,7 +442,7 @@ if __name__ == "__main__":
                 log_str = (
                     f"Step {i}"
                     f"(expected turn/absangle:"
-                    f" {new_angle/360}/{new_angle}):"
+                    f" {new_angle / 360}/{new_angle}):"
                     f" ADMT4000 - Turns: {curr_turns:.2f},"
                     f" Angle: {curr_angle:.2f}°,"
                     f" Absolute: {curr_abs_angle:.2f}°,"
@@ -521,7 +521,7 @@ if __name__ == "__main__":
             if expected_qturn != actual_qturn:
                 print(
                     f"*** ERROR: Mismatch in CW"
-                    f" quarter-turns at step {i+1}:"
+                    f" quarter-turns at step {i + 1}:"
                     f" expected {expected_qturn},"
                     f" got {actual_qturn} ***"
                 )

@@ -12,7 +12,7 @@ from adi.device_base import rx_chan_comp
 
 
 class ad5940(rx_chan_comp):
-    """ ad5940 CDC """
+    """ad5940 CDC"""
 
     _complex_data = False
     channel = []  # type: ignore
@@ -47,7 +47,10 @@ class ad5940(rx_chan_comp):
     def _add_channel_instances(self):
         """Preserve the public BIA-only OrderedDict channel container."""
         self.channel = OrderedDict(
-            (ch.id, self._bia_channel(self, self._ctrl, ch.id),)
+            (
+                ch.id,
+                self._bia_channel(self, self._ctrl, ch.id),
+            )
             for ch in self._ctrl.channels
             if ch.name == "bia"
         )

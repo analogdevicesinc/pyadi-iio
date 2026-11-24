@@ -111,7 +111,8 @@ def update_devs():
         # Ensure jesd points to jesd_internal
         if bname == "adi.jesd.rst":
             txt = txt.replace(
-                ".. automodule:: adi.jesd\n", ".. automodule:: adi.jesd_internal\n",
+                ".. automodule:: adi.jesd\n",
+                ".. automodule:: adi.jesd_internal\n",
             )
 
         with open(dev, "w") as f:

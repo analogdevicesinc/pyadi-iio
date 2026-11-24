@@ -1,8 +1,8 @@
-from test.rf.phase import *
-
 # import matplotlib.pyplot as plt
 import pytest
 from numpy import abs, exp, linspace, pi, real
+
+from test.rf.phase import *
 
 
 def test_measure_phase():
@@ -26,7 +26,7 @@ def test_measure_phase():
 
 def test_measure_phase_and_delay_delay():
     buff_size = 1024
-    B = 2 ** 15 * 0.8
+    B = 2**15 * 0.8
     a = np.random.uniform(-B, B, buff_size * 4)
     b = a * exp(1j * (-pi / 4))
     a = a[1:]
@@ -41,7 +41,7 @@ def test_measure_phase_and_delay_delay():
 
 def test_measure_phase_and_delay_phase():
     buff_size = 1024
-    B = 2 ** 15 * 0.8
+    B = 2**15 * 0.8
     a = np.random.uniform(-B, B, buff_size * 4)
     b = a * exp(1j * (-pi / 4))
     # plt.plot(t, np.real(a))

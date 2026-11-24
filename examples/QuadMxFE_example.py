@@ -108,7 +108,7 @@ dev.rx_enabled_channels = RX_CHAN_EN
 dev.tx_enabled_channels = [*range(N_TX)]
 dev.rx_nyquist_zone = ["even"] * NM_TX
 
-dev.rx_buffer_size = 2 ** 12
+dev.rx_buffer_size = 2**12
 dev.tx_cyclic_buffer = True
 
 fs = int(dev.tx_sample_rate["axi-ad9081-rx-3"])

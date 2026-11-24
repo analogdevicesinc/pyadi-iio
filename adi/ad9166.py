@@ -7,7 +7,7 @@ from adi.context_manager import context_manager
 
 
 class ad9166(attribute, context_manager):
-    """ AD9166 Vector Signal Generator """
+    """AD9166 Vector Signal Generator"""
 
     _complex_data = False
     channel = []  # type: ignore
@@ -26,7 +26,7 @@ class ad9166(attribute, context_manager):
 
     @property
     def sample_rate(self):
-        """ sample_rate: Sets sampling frequency of the AD916x """
+        """sample_rate: Sets sampling frequency of the AD916x"""
         return self._get_iio_dev_attr("sampling_frequency")
 
     @sample_rate.setter
@@ -39,7 +39,7 @@ class ad9166(attribute, context_manager):
 
     @property
     def temperature(self):
-        """ temperature: Returns the AD916x Chip Temperature in Celsius """
+        """temperature: Returns the AD916x Chip Temperature in Celsius"""
         temp = 0
         if self.temperature_enable:
             try:
@@ -57,19 +57,19 @@ class ad9166(attribute, context_manager):
 
     @property
     def temperature_code(self):
-        """ temperature_code: Returns the AD916x Chip Temperature ADC code """
+        """temperature_code: Returns the AD916x Chip Temperature ADC code"""
         return self._get_iio_attr(self._temp_sensor_name, "raw", False)
 
     @property
     def temperature_enable(self):
-        """ temperature_enable: AD9166 Chip Temperature Measurement Enable
+        """temperature_enable: AD9166 Chip Temperature Measurement Enable
 
-            Options:
-                True: Temperature measurement is enabled
-                False: Temperature measurement is disabled
+        Options:
+            True: Temperature measurement is enabled
+            False: Temperature measurement is disabled
         """
         reg = self._ctrl.reg_read(0x135)
-        return ((reg and 0x01)) == 0x01
+        return (reg and 0x01) == 0x01
 
     @temperature_enable.setter
     def temperature_enable(self, value=True):
@@ -80,7 +80,7 @@ class ad9166(attribute, context_manager):
 
     @property
     def temperature_cal(self):
-        """ temperature_cal: AD9166 Chip Temperature single point calibration value.
+        """temperature_cal: AD9166 Chip Temperature single point calibration value.
         Enter the ambient temperature in degree Celsius.
         """
         return None
@@ -95,11 +95,11 @@ class ad9166(attribute, context_manager):
 
     @property
     def nco_enable(self):
-        """ nco_enable: AD9166 NCO Modulation Enable:
+        """nco_enable: AD9166 NCO Modulation Enable:
 
-            Options:
-                True: NCO Modulation is enabled
-                False: NCO Modulation is disabled
+        Options:
+            True: NCO Modulation is enabled
+            False: NCO Modulation is disabled
         """
         tmp_reg = self._ctrl.reg_read(0x111) & 0x40
         return tmp_reg != 0
@@ -117,11 +117,11 @@ class ad9166(attribute, context_manager):
 
     @property
     def FIR85_enable(self):
-        """ FIR85_enable: AD9166 FIR85 Filter Enable:
+        """FIR85_enable: AD9166 FIR85 Filter Enable:
 
-            Options:
-                True: FIR85 Filter is enabled
-                False: FIR85 Filter is disabled
+        Options:
+            True: FIR85 Filter is enabled
+            False: FIR85 Filter is disabled
         """
         tmp_reg = self._ctrl.reg_read(0x111) & 0x01
         return tmp_reg != 0
@@ -138,11 +138,11 @@ class ad9166(attribute, context_manager):
 
     @property
     def tx_enable(self):
-        """ tx_enable: AD9166 TX Enable
+        """tx_enable: AD9166 TX Enable
 
-            Options:
-                True: TX is enabled (Datapath is connected to DAC)
-                False: TX is disabled or  (DAC input is zeroed)
+        Options:
+            True: TX is enabled (Datapath is connected to DAC)
+            False: TX is disabled or  (DAC input is zeroed)
         """
         tmp_reg = self._ctrl.reg_read(0x03F) & 0x80
         return tmp_reg != 0
@@ -162,7 +162,7 @@ class ad9166(attribute, context_manager):
 
     @property
     def frequency(self):
-        """ frequency: AD916x channel nco frequency value in hz."""
+        """frequency: AD916x channel nco frequency value in hz."""
         return self._get_iio_attr(self._dac0_name, "nco_frequency", True)
 
     @frequency.setter
@@ -171,7 +171,7 @@ class ad9166(attribute, context_manager):
 
     @property
     def raw(self):
-        """ raw: AD916x channel raw value. Integer range 0-32767. """
+        """raw: AD916x channel raw value. Integer range 0-32767."""
         return self._get_iio_attr(self._dac0_name, "raw", True)
 
     @raw.setter

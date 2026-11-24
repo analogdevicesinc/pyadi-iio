@@ -10,7 +10,7 @@ from adi.rx_tx import phy
 
 
 class fmclidar1(ad5627, ad9094, phy):
-    """ LiDAR """
+    """LiDAR"""
 
     _device_name = "LiDAR"
 

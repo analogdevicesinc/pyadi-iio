@@ -14,7 +14,7 @@ Tx_gain = -10
 Averages = 1
 
 # these Rx_cal phase adjustments get added to the phase_cal_val.pkl (if present)
-# use them to tweak the auto cal adjusments
+# use them to tweak the auto cal adjustments
 # or delete phase_cal_val.pkl and use whatever phase adjustments you want here
 Rx1_cal = 0
 Rx2_cal = 0

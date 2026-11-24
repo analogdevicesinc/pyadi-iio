@@ -85,7 +85,7 @@ def print_cal_plots(
 def calculate_angle_error(angles):
     # convert and scale the angle in radians
     # in Rad - specific for MT4000 part
-    angle_scale_factor_rad = 2 * np.pi / (2 ** 16)
+    angle_scale_factor_rad = 2 * np.pi / (2**16)
     angle_raw = angles * angle_scale_factor_rad
 
     angles = np.unwrap(angle_raw)
@@ -134,7 +134,7 @@ def harmonic_calibration(
         primary_angles = np.roll(primary_angles, shift_index)
         ref_angles = np.roll(ref_angles, shift_index)
 
-    resolution = 360 / (2 ** 16)
+    resolution = 360 / (2**16)
     angle_error, _ = calculate_angle_error(primary_angles / resolution)
 
     angle_error_len = len(angle_error)

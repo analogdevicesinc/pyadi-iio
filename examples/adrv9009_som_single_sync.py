@@ -68,7 +68,7 @@ multi._jesd_fsm_show_status = True
 multi._clk_chip_show_cap_bank_sel = True
 multi._resync_tx = True
 multi._request_sysref_carrier = True
-multi.rx_buffer_size = 2 ** 10
+multi.rx_buffer_size = 2**10
 
 # multi.hmc7044_ext_output_delay(5, 4, 0)
 # multi.hmc7044_ext_output_delay(6, 4, 0)

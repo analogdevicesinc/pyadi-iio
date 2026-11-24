@@ -3,12 +3,16 @@ import pytest
 hardware = "AD5144"
 classname = "adi.ad514x"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val",
-    [("nvm_programming", ["disable", "enable"]), ("rdac_wp", ["enable", "disable"]),],
+    [
+        ("nvm_programming", ["disable", "enable"]),
+        ("rdac_wp", ["enable", "disable"]),
+    ],
 )
 def test_ad514x_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
     test_attribute_multiple_values(iio_uri, classname, attr, val, 1)

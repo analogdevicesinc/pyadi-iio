@@ -6,7 +6,7 @@ from adi.adrv9009 import adrv9009
 
 
 class adrv9009_zu11eg(adrv9009):
-    """ ADRV9009-ZU11EG System-On-Module
+    """ADRV9009-ZU11EG System-On-Module
 
     parameters:
         uri: type=string
@@ -50,7 +50,7 @@ class adrv9009_zu11eg(adrv9009):
         self._clock_chip_ext = self._ctx.find_device("hmc7044-ext")
 
     def mcs_chips(self):
-        """mcs_chips: MCS Synchronize both transceivers """
+        """mcs_chips: MCS Synchronize both transceivers"""
         try:
             _ = self.jesd204_fsm_ctrl
             # We're JESD204-fsm enabled - do nothing

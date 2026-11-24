@@ -9,7 +9,7 @@ from adi.sync_start import sync_start
 
 
 class ad9162(tx, context_manager, sync_start):
-    """ AD9162 16-Bit, 12 GSPS, RF DAC """
+    """AD9162 16-Bit, 12 GSPS, RF DAC"""
 
     _complex_data = False
     # _complex_data = True

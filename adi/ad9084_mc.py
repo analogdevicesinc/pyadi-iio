@@ -191,7 +191,7 @@ class ad9084_mc(ad9084):
         # Bring up DMA and DDS interfaces
         rx_tx.__init__(self)
         sync_start.__init__(self)
-        self.rx_buffer_size = 2 ** 16
+        self.rx_buffer_size = 2**16
 
     def _map_unique(self, paths):
         self._rx_fine_ddc_channel_names = {}
@@ -258,7 +258,11 @@ class ad9084_mc(ad9084):
     def _get_iio_attr_vec(self, channel_names_dict, attr, output):
         return {
             dev: ad9084._get_iio_attr_vec(
-                self, channel_names_dict[dev], attr, output, self._ctx.find_device(dev),
+                self,
+                channel_names_dict[dev],
+                attr,
+                output,
+                self._ctx.find_device(dev),
             )
             for dev in channel_names_dict
         }

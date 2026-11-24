@@ -20,7 +20,14 @@ classname = "adi.ad4003"
     ],
 )
 def test_ad4003_attr(
-    test_attribute_multiple_values, iio_uri, classname, attr, val, tol, repeats, sleep,
+    test_attribute_multiple_values,
+    iio_uri,
+    classname,
+    attr,
+    val,
+    tol,
+    repeats,
+    sleep,
 ):
     test_attribute_multiple_values(iio_uri, classname, attr, val, 1, repeats, sleep)
 
@@ -30,4 +37,4 @@ def test_ad4003_attr(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0])
 def test_ad4003_rx_data(test_dma_rx, iio_uri, classname, channel):
-    test_dma_rx(iio_uri, classname, channel, buffer_size=2 ** 15)
+    test_dma_rx(iio_uri, classname, channel, buffer_size=2**15)

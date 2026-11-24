@@ -41,7 +41,6 @@ import time
 import adi
 
 try:
-
     import tkinter as tk
     import tkinter.scrolledtext as tkscrolled
     from tkinter import filedialog
@@ -69,6 +68,7 @@ try:
     )
 except ImportError:
     print("Please install matplotlib")
+
 
 # Setup device - get device data
 def read_device():

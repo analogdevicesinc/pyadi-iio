@@ -6,7 +6,6 @@ from adi.device_base import rx_def
 
 
 class ad9265(rx_def):
-
     """AD9265 High-Speed ADC"""
 
     compatible_parts = ["axi-ad9265-core-lpc"]

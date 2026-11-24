@@ -1,11 +1,11 @@
 import random
-from test.attr_tests import floor_step_size
 
 import pytest
 
 import adi
 from adi.cn0540 import cn0540
 from adi.device_base import rx_def
+from test.attr_tests import floor_step_size
 
 hardware = "cn0540"
 classname = "adi.cn0540.cn0540"
@@ -58,7 +58,22 @@ def test_cn0540_rx_data(test_dma_rx, iio_uri, classname, channel):
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val",
-    [("sample_rate", [256000, 128000, 64000, 32000, 16000, 8000, 4000, 2000, 1000,],),],
+    [
+        (
+            "sample_rate",
+            [
+                256000,
+                128000,
+                64000,
+                32000,
+                16000,
+                8000,
+                4000,
+                2000,
+                1000,
+            ],
+        ),
+    ],
 )
 def test_cn0540_attr_multiple(
     test_attribute_multiple_values, iio_uri, classname, attr, val
@@ -94,7 +109,10 @@ def test_cn0540_attr_boolean(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr", [("sw_ff_status"),],
+    "attr",
+    [
+        ("sw_ff_status"),
+    ],
 )
 def test_cn0540_attr_boolean_readonly(
     test_attribute_single_value_boolean_readonly, iio_uri, classname, attr
@@ -106,7 +124,10 @@ def test_cn0540_attr_boolean_readonly(
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, start, stop, step, repeats ", [("shift_voltage", 0, 65535, 1, 2),],
+    "attr, start, stop, step, repeats ",
+    [
+        ("shift_voltage", 0, 65535, 1, 2),
+    ],
 )
 def test_cn0540_shift_voltage(iio_uri, classname, attr, start, stop, step, repeats):
     device = cn0540(uri=iio_uri)

@@ -64,7 +64,7 @@ class CN0566(adf4159, adar1000_array):
         },
         verbose=False,
     ):
-        """ Set up devices, properties, helper methods, etc. """
+        """Set up devices, properties, helper methods, etc."""
         if verbose is True:
             print("attempting to open ADF4159, uri: ", str(uri))
         adf4159.__init__(self, uri)
@@ -149,9 +149,9 @@ class CN0566(adf4159, adar1000_array):
         )  # PLL MUXOUT, assign to PLL lock in the future
 
     def set_tx_sw_div(self, div_ratio):
-        """ Set TX switch toggle divide ratio. Possible values are:
-                0 (direct TX_OUT control via gpio_tx_sw)
-                divide by 2, 4, 8, 16, 32, 64, 128"""
+        """Set TX switch toggle divide ratio. Possible values are:
+        0 (direct TX_OUT control via gpio_tx_sw)
+        divide by 2, 4, 8, 16, 32, 64, 128"""
         div_pin_map = {0: 0, 2: 1, 4: 2, 8: 3, 16: 4, 32: 5, 64: 6, 128: 7}
         if div_pin_map.__contains__(div_ratio):
             self._gpios.gpio_div_s0 = 0b001 & div_pin_map[div_ratio]
@@ -164,7 +164,7 @@ class CN0566(adf4159, adar1000_array):
             )
 
     def read_monitor(self, verbose=False):
-        """ Read all voltage / temperature monitor channels.
+        """Read all voltage / temperature monitor channels.
 
         Parameters
         ----------
@@ -307,19 +307,19 @@ class CN0566(adf4159, adar1000_array):
                 device.latch_tx_settings()  # writes 0x02 to reg 0x28.
 
     def save_channel_cal(self, filename="channel_cal_val.pkl"):
-        """ Saves channel calibration file."""
+        """Saves channel calibration file."""
         with open(filename, "wb") as file1:
             pickle.dump(self.ccal, file1)  # save calibrated gain value to a file
             file1.close()
 
     def save_gain_cal(self, filename="gain_cal_val.pkl"):
-        """ Saves gain calibration file."""
+        """Saves gain calibration file."""
         with open(filename, "wb") as file1:
             pickle.dump(self.gcal, file1)  # save calibrated gain value to a file
             file1.close()
 
     def save_phase_cal(self, filename="phase_cal_val.pkl"):
-        """ Saves phase calibration file."""
+        """Saves phase calibration file."""
         with open(filename, "wb") as file:
             pickle.dump(self.pcal, file)  # save calibrated phase value to a file
             file.close()
@@ -371,7 +371,7 @@ class CN0566(adf4159, adar1000_array):
             self.pcal = [0.0] * 8
 
     def set_rx_hardwaregain(self, gain, apply_cal=True):
-        """ Set Pluto channel gains
+        """Set Pluto channel gains
 
         Parameters
         ----------
@@ -389,7 +389,7 @@ class CN0566(adf4159, adar1000_array):
             self.sdr.rx_hardwaregain_chan1 = int(gain)
 
     def set_all_gain(self, value=127, apply_cal=True):
-        """ Set all channel gains to a single value
+        """Set all channel gains to a single value
 
         Parameters
         ----------
@@ -408,7 +408,7 @@ class CN0566(adf4159, adar1000_array):
         self.latch_tx_settings()  # writes 0x01 to reg 0x28
 
     def set_chan_gain(self, chan_no: int, gain_val, apply_cal=True):
-        """ Setl gain of the individua channel/s.
+        """Setl gain of the individua channel/s.
 
         Parameters
         ----------
@@ -444,7 +444,7 @@ class CN0566(adf4159, adar1000_array):
         self.latch_rx_settings()
 
     def set_chan_phase(self, chan_no: int, phase_val, apply_cal=True):
-        """ Setl phase of the individua channel/s.
+        """Setl phase of the individua channel/s.
 
         Parameters
         ----------
@@ -475,7 +475,7 @@ class CN0566(adf4159, adar1000_array):
         self.latch_rx_settings()
 
     def set_beam_phase_diff(self, Ph_Diff):
-        """ Set phase difference between the adjacent channels of devices
+        """Set phase difference between the adjacent channels of devices
 
         Parameters
         ----------
@@ -521,7 +521,7 @@ class CN0566(adf4159, adar1000_array):
         self.latch_rx_settings()
 
     def SDR_init(self, SampleRate, TX_freq, RX_freq, Rx_gain, Tx_gain, buffer_size):
-        """ Initialize Pluto rev C for operation with the phaser. This is a convenience
+        """Initialize Pluto rev C for operation with the phaser. This is a convenience
             method that sets several default values, and provides a handle for a few
             other CN0566 methods that need access (i.e. set_rx_hardwaregain())
 
@@ -578,9 +578,7 @@ class CN0566(adf4159, adar1000_array):
         # sdr.rx_rf_bandwidth = int(SampleRate*2)
         # sdr.tx_rf_bandwidth = int(SampleRate*2)
         signal_freq = int(SampleRate / 8)
-        if (
-            True
-        ):  # use either DDS or sdr.tx(iq) to generate the Tx waveform.  But don't do both!
+        if True:  # use either DDS or sdr.tx(iq) to generate the Tx waveform.  But don't do both!
             self.sdr.dds_enabled = [
                 1,
                 1,
@@ -617,7 +615,7 @@ class CN0566(adf4159, adar1000_array):
             fc = int(signal_freq / (fs / N)) * (fs / N)
             ts = 1 / float(fs)
             t = np.arange(0, N * ts, ts)
-            i = np.cos(2 * np.pi * t * fc) * 2 ** 15
-            q = np.sin(2 * np.pi * t * fc) * 2 ** 15
+            i = np.cos(2 * np.pi * t * fc) * 2**15
+            q = np.sin(2 * np.pi * t * fc) * 2**15
             iq = 0.9 * (i + 1j * q)
             self.sdr.tx([iq, iq])

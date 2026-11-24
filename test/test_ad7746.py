@@ -13,6 +13,7 @@ CIN1_DIFF = "capacitance0-capacitance2"
 CIN2 = "capacitance1"
 CIN2_DIFF = "capacitance1-capacitance3"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])

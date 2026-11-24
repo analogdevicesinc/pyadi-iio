@@ -7,7 +7,7 @@ from adi.ad9680 import ad9680
 
 
 class DAQ3(ad9152, ad9680):
-    """ DAQ3 High-Speed Data Aquistion Device """
+    """DAQ3 High-Speed Data Aquistion Device"""
 
     def __init__(self, uri=""):
 

@@ -24,8 +24,7 @@ def _bitmask(nbits):
 
 
 class ad4630(rx, context_manager, attribute):
-
-    """ AD4630 is low power precision SAR ADC family supporting 16-bit, 20-bit, and 24-bit variants """
+    """AD4630 is low power precision SAR ADC family supporting 16-bit, 20-bit, and 24-bit variants"""
 
     _compatible_parts = [
         "ad4630-24",
@@ -177,7 +176,11 @@ class ad4630(rx, context_manager, attribute):
             """Set the oversampling ratio. Only available in 30bit averaged mode."""
             if str(n_sample) in str(self.oversampling_ratio_avail):
                 self._set_iio_attr(
-                    self.name, "oversampling_ratio", False, str(n_sample), self._ctrl,
+                    self.name,
+                    "oversampling_ratio",
+                    False,
+                    str(n_sample),
+                    self._ctrl,
                 )
             else:
                 raise ValueError(
@@ -187,8 +190,7 @@ class ad4630(rx, context_manager, attribute):
 
 
 class adaq42xx(ad4630):
-
-    """ ADAQ4224 is a 24-bit precision SAR ADC data acquisition module """
+    """ADAQ4224 is a 24-bit precision SAR ADC data acquisition module"""
 
     _compatible_parts = ["adaq4224", "adaq4216", "adaq4220"]
 

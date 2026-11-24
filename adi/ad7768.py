@@ -8,8 +8,7 @@ from adi.device_base import rx_def
 
 
 class ad7768(rx_def):
-
-    """ AD7768 8-channel, Simultaneous Sampling Sigma-Delta ADC """
+    """AD7768 8-channel, Simultaneous Sampling Sigma-Delta ADC"""
 
     compatible_parts = ["ad7768", "cf_axi_adc"]
     _rx_data_type = np.int32
@@ -82,8 +81,7 @@ class ad7768(rx_def):
 
 
 class ad7768_4(ad7768):
-
-    """ AD7768 4-channel, Simultaneous Sampling Sigma-Delta ADC """
+    """AD7768 4-channel, Simultaneous Sampling Sigma-Delta ADC"""
 
     _control_device_name = "cf_axi_adc"
     _rx_data_device_name = "cf_axi_adc"

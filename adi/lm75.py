@@ -7,8 +7,7 @@ from adi.context_manager import context_manager
 
 
 class lm75(context_manager, attribute):
-
-    """ LM75 Temperature Sensor
+    """LM75 Temperature Sensor
 
     Parameters
     ----------

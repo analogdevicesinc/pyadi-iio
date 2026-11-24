@@ -104,8 +104,8 @@ def SDR_init(sdr_address, SampleRate, TX_freq, RX_freq, Rx_gain, Tx_gain, buffer
         fc = int(signal_freq / (fs / N)) * (fs / N)
         ts = 1 / float(fs)
         t = np.arange(0, N * ts, ts)
-        i = np.cos(2 * np.pi * t * fc) * 2 ** 15
-        q = np.sin(2 * np.pi * t * fc) * 2 ** 15
+        i = np.cos(2 * np.pi * t * fc) * 2**15
+        q = np.sin(2 * np.pi * t * fc) * 2**15
         iq = 0.9 * (i + 1j * q)
         sdr.tx([iq, iq])
     return sdr
@@ -132,10 +132,10 @@ def SDR_TxBuffer_Destroy(sdr):
 
 
 def load_channel_cal(filename="channel_cal_val.pkl"):
-    """ Load Pluto Rx1 and Rx2 calibrated value, if not calibrated set all channel gain correction to 0.
-        parameters:
-            filename: type=string
-                      Provide path of phase calibration file
+    """Load Pluto Rx1 and Rx2 calibrated value, if not calibrated set all channel gain correction to 0.
+    parameters:
+        filename: type=string
+                  Provide path of phase calibration file
     """
 
     try:

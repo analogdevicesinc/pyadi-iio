@@ -78,7 +78,10 @@ class adxl380_channel(attribute):
     @filter_low_pass_3db_frequency.setter
     def filter_low_pass_3db_frequency(self, value):
         self._set_iio_attr(
-            self.name, "filter_low_pass_3db_frequency", False, str(Decimal(value).real),
+            self.name,
+            "filter_low_pass_3db_frequency",
+            False,
+            str(Decimal(value).real),
         )
 
     @property
@@ -101,7 +104,10 @@ class adxl380_channel(attribute):
     @scale.setter
     def scale(self, value):
         self._set_iio_attr(
-            self.name, "scale", False, str(Decimal(value).real),
+            self.name,
+            "scale",
+            False,
+            str(Decimal(value).real),
         )
 
     @property
@@ -111,7 +117,7 @@ class adxl380_channel(attribute):
 
 
 class adxl380(rx_chan_comp):
-    """ adxl380 3-axis accelerometer """
+    """adxl380 3-axis accelerometer"""
 
     _device_name = "adxl380"
     _rx_unbuffered_data = True

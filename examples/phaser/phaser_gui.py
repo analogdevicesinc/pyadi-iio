@@ -1550,7 +1550,7 @@ class App:
         """ Add Lab Selection box """
 
         def Lab_mode_select(value):
-            """ Reset all GUI values to default """
+            """Reset all GUI values to default"""
             print("Resetting all GUI values...")
             cntrl_tabs.select(frame1)  # Config tab
             self.plot_tabs.select(self.frame11)  # select rectangular plot
@@ -1911,8 +1911,8 @@ class App:
                 [np.abs(sum_chan[max_index]), 10 ** (-15)]
             )  # make sure this gives something >0, otherwise the log10 function will give an error
             s_mag_delta = np.max([np.abs(delta_chan[max_index]), 10 ** (-15)])
-            s_dbfs_sum = 20 * np.log10(s_mag_sum / (2 ** 11))
-            s_dbfs_delta = 20 * np.log10(s_mag_delta / (2 ** 11))
+            s_dbfs_sum = 20 * np.log10(s_mag_sum / (2**11))
+            s_dbfs_delta = 20 * np.log10(s_mag_delta / (2**11))
             total_beam_phase = total_beam_phase + (
                 np.angle(sum_chan[max_index]) - np.angle(delta_chan[max_index])
             )
@@ -2015,13 +2015,13 @@ class App:
                 e1 = 360
             else:
                 e1 = 0
-            e2 = ((np.rint(PhaseValues[0] * 1 / step_size) * step_size)) % 360
-            e3 = ((np.rint(PhaseValues[0] * 2 / step_size) * step_size)) % 360
-            e4 = ((np.rint(PhaseValues[0] * 3 / step_size) * step_size)) % 360
-            e5 = ((np.rint(PhaseValues[0] * 4 / step_size) * step_size)) % 360
-            e6 = ((np.rint(PhaseValues[0] * 5 / step_size) * step_size)) % 360
-            e7 = ((np.rint(PhaseValues[0] * 6 / step_size) * step_size)) % 360
-            e8 = ((np.rint(PhaseValues[0] * 7 / step_size) * step_size)) % 360
+            e2 = (np.rint(PhaseValues[0] * 1 / step_size) * step_size) % 360
+            e3 = (np.rint(PhaseValues[0] * 2 / step_size) * step_size) % 360
+            e4 = (np.rint(PhaseValues[0] * 3 / step_size) * step_size) % 360
+            e5 = (np.rint(PhaseValues[0] * 4 / step_size) * step_size) % 360
+            e6 = (np.rint(PhaseValues[0] * 5 / step_size) * step_size) % 360
+            e7 = (np.rint(PhaseValues[0] * 6 / step_size) * step_size) % 360
+            e8 = (np.rint(PhaseValues[0] * 7 / step_size) * step_size) % 360
             self.PhaseVal_text.set(
                 str(int(e1))
                 + ", "
@@ -2117,7 +2117,7 @@ class App:
         )  # Scale FFT by window and /2 since we are using half the FFT spectrum
         s_mag = np.maximum(s_mag, 10 ** (-15))
         self.max_gain = 20 * np.log10(
-            s_mag / (2 ** 11)
+            s_mag / (2**11)
         )  # Pluto is a 12 bit ADC, but we're only looking at positive #'s, so use 2**11
         ts = 1 / float(self.SampleRate)
         self.xf = np.fft.fftfreq(NumSamples, ts)

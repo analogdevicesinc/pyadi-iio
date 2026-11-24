@@ -7,8 +7,7 @@ from adi.context_manager import context_manager
 
 
 class ada4961(context_manager, attribute):
-
-    """ Low Distortion, 3.2 GHz, RF DGA """
+    """Low Distortion, 3.2 GHz, RF DGA"""
 
     _device_name = ""
 

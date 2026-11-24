@@ -66,13 +66,13 @@ class cn0540(rx_def):
 
             e = int(dac_voltage * dac_scale)
 
-            if int(dac_voltage) > 2 ** 16 - 1:
+            if int(dac_voltage) > 2**16 - 1:
                 print(
                     "Warning: DAC voltage at upper limit, "
                     + f"calibration may not converge (Error: {e - (2**16 - 1)} codes).\n"
                     + "Make sure sensor is connected."
                 )
-                dac_voltage = 2 ** 16 - 1
+                dac_voltage = 2**16 - 1
             elif int(dac_voltage) < 0:
                 print(
                     "Warning: DAC voltage at lower limit, "

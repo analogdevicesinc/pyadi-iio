@@ -63,7 +63,7 @@ class ad353xr_channel(attribute):
 
 
 class ad353xr(tx_chan_comp):
-    """ AD353xr DAC """
+    """AD353xr DAC"""
 
     channel = []  # type: ignore
     compatible_parts = ["ad3530r", "ad3531r", "ad3532r"]

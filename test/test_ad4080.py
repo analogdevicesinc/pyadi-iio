@@ -3,11 +3,18 @@ import pytest
 hardware = "ad4080"
 classname = "adi.ad4080"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, val", [("filter_type", ["none", "sinc1", "sinc5", "sinc5+pf1"],),],
+    "attr, val",
+    [
+        (
+            "filter_type",
+            ["none", "sinc1", "sinc5", "sinc5+pf1"],
+        ),
+    ],
 )
 def test_ad4080_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
     test_attribute_multiple_values(iio_uri, classname, attr, val, 0)

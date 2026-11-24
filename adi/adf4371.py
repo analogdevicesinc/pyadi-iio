@@ -51,7 +51,7 @@ class adf4371(attribute, context_manager):
         # Check that the value is valid
         if value.lower().strip() not in self._muxout_options:
             raise ValueError(
-                f"muxout_mode of \"{value}\" is invalid. Valid options: {', '.join(self._muxout_options)}"
+                f'muxout_mode of "{value}" is invalid. Valid options: {", ".join(self._muxout_options)}'
             )
 
         self._set_iio_dev_attr("muxout_mode", value, self._ctrl)

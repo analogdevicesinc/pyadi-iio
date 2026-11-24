@@ -3,12 +3,13 @@ import pytest
 hardware = "adxl355"
 classname = "adi.adxl355"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [0, 1, 2])
 def test_adxl355_rx_data(test_dma_rx, iio_uri, classname, channel):
-    test_dma_rx(iio_uri, classname, channel, buffer_size=2 ** 5)
+    test_dma_rx(iio_uri, classname, channel, buffer_size=2**5)
 
 
 #########################################

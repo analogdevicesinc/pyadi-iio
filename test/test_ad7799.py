@@ -8,7 +8,10 @@ classname = "adi.ad7799"
 @pytest.mark.iio_hardware("ad7799")
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, start, stop, step, tol", [("gain", 0, 7, 1, 0),],
+    "attr, start, stop, step, tol",
+    [
+        ("gain", 0, 7, 1, 0),
+    ],
 )
 def test_ad7799_attr(
     test_attribute_single_value, iio_uri, classname, attr, start, step, stop, tol

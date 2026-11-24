@@ -1,7 +1,12 @@
 import inspect
 import random
-import test.rf.spec as spec
 import time
+
+import numpy as np
+import pytest
+
+import adi
+import test.rf.spec as spec
 from test.attr_tests import *
 from test.common import (
     dev_interface,
@@ -16,11 +21,6 @@ from test.generics import iio_attribute_single_value
 from test.globals import *
 from test.html import pytest_html_report_title, pytest_runtest_makereport
 from test.jesd_tests import *
-
-import numpy as np
-import pytest
-
-import adi
 
 try:
     from test.scpi import dcxo_calibrate
@@ -81,8 +81,8 @@ def pytest_runtest_makereport(item, call):
 
 def pytest_make_parametrize_id(val, argname):
     """pytest_make_parametrize_id:
-        This pytest hook is used to return the test parameters as name=parameter value in the test report
-        """
+    This pytest hook is used to return the test parameters as name=parameter value in the test report
+    """
     return f"{argname}={val}"
 
 

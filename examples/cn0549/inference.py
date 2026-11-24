@@ -32,7 +32,7 @@ if not simulate:
 
     # initialization
     xl = adi.cn0532()
-    xl.rx_buffer_size = 2 ** 12
+    xl.rx_buffer_size = 2**12
     xl.sample_rate = fs
 
     loops = 1024
@@ -51,7 +51,6 @@ labels = ["Sleep", "General", "Allergen"]
 
 
 for it in range(loops):
-
     # print(mode3_x[k,:])
 
     # Collect data

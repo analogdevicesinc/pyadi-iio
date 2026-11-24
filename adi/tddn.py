@@ -9,7 +9,6 @@ from adi.context_manager import context_manager
 
 
 class tddn(context_manager, attribute):
-
     """TDDN Controller"""
 
     channel = []  # type: ignore
@@ -142,7 +141,6 @@ class tddn(context_manager, attribute):
         self._set_iio_dev_attr("state", value)
 
     class _channel(attribute):
-
         """TDDN channel"""
 
         def __init__(self, ctrl, channel_name):

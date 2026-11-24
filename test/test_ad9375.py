@@ -376,7 +376,8 @@ def test_ad9375_sfdr(test_sfdr, iio_uri, classname, channel, param_set, sfdr_min
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
-    "files", test_profiles,
+    "files",
+    test_profiles,
 )
 def test_ad9375_profile_write(
     test_attribute_write_only_str, iio_uri, classname, attr, files
@@ -515,7 +516,11 @@ def test_ad9375_attr_boolean(
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, value", [("tx_dpd_reset_en_chan0", 1), ("tx_dpd_reset_en_chan1", 1),],
+    "attr, value",
+    [
+        ("tx_dpd_reset_en_chan0", 1),
+        ("tx_dpd_reset_en_chan1", 1),
+    ],
 )
 def test_ad9375_attr_write_only(
     test_attribute_write_only_str, iio_uri, classname, attr, value

@@ -65,10 +65,10 @@ def ADAR_set_Phase(array, PhDelta, phase_step_size, phaseList):
 
 
 def load_gain_cal(filename="gain_cal_val.pkl"):
-    """ Load gain calibrated value, if not calibrated set all channel gain to maximum.
-        parameters:
-            filename: type=string
-                      Provide path of gain calibration file
+    """Load gain calibrated value, if not calibrated set all channel gain to maximum.
+    parameters:
+        filename: type=string
+                  Provide path of gain calibration file
     """
     try:
         with open(filename, "rb") as file1:
@@ -79,10 +79,10 @@ def load_gain_cal(filename="gain_cal_val.pkl"):
 
 
 def load_phase_cal(filename="phase_cal_val.pkl"):
-    """ Load phase calibrated value, if not calibrated set all channel phase correction to 0.
-        parameters:
-            filename: type=string
-                      Provide path of phase calibration file
+    """Load phase calibrated value, if not calibrated set all channel phase correction to 0.
+    parameters:
+        filename: type=string
+                  Provide path of phase calibration file
     """
 
     try:

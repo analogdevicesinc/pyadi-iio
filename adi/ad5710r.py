@@ -7,7 +7,7 @@ from adi.device_base import tx_chan_comp
 
 
 class ad5710r(tx_chan_comp):
-    """ AD5710r DAC """
+    """AD5710r DAC"""
 
     _complex_data = False
     _device_name = ""

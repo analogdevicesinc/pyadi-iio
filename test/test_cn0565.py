@@ -5,6 +5,7 @@ import adi
 hardware = ["cn0565"]
 classname = "adi.cn0565"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])

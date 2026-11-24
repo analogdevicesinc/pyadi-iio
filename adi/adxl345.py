@@ -38,7 +38,7 @@ class adxl345_channel(attribute):
 
 
 class adxl345(rx_chan_comp):
-    """ ADXL345 3-axis accelerometer """
+    """ADXL345 3-axis accelerometer"""
 
     compatible_parts = ["adxl345"]
     _rx_data_type = np.int32

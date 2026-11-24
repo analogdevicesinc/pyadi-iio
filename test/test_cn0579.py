@@ -3,6 +3,7 @@ import pytest
 hardware = "cn0579"
 classname = "adi.cn0579"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -29,9 +30,18 @@ def test_cn0579_rx_data(test_dma_rx, iio_uri, classname, channel):
                 32000,
             ],  # End on a rate compatible with all power modes
         ),
-        ("filter_type", ["WIDEBAND", "SINC5"],),
-        ("power_mode", ["MEDIAN_MODE", "FAST_MODE"],),
-        ("sync_start_enable", ["arm"],),
+        (
+            "filter_type",
+            ["WIDEBAND", "SINC5"],
+        ),
+        (
+            "power_mode",
+            ["MEDIAN_MODE", "FAST_MODE"],
+        ),
+        (
+            "sync_start_enable",
+            ["arm"],
+        ),
     ],
 )
 def test_cn0579_attr_multiple(

@@ -57,7 +57,7 @@ class CN0565_Worker(QThread):
         print("Worker Created")
 
     def plot(self, figure, mesh_obj, ds):
-        """ Setup display"""
+        """Setup display"""
         axis_size = [-1.2, 1.2, -1.2, 1.2]
         self.figure.clear()
         self.ax = figure.add_subplot()
@@ -134,7 +134,7 @@ class CN0565_Worker(QThread):
             elif self.value_type == "im":
                 current_data = voltages[:, 1]
             else:
-                current_data = np.sqrt((voltages ** 2).sum(axis=1))
+                current_data = np.sqrt((voltages**2).sum(axis=1))
 
             if self.set_baseline:
                 v0 = current_data

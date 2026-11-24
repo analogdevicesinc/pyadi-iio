@@ -79,12 +79,18 @@ def test_adrv9002_float_attr(
         (
             "rx_hardwaregain_chan0",
             random_values_in_range(0, 34, 0.5, 10),
-            dict(gain_control_mode_chan0="spi", rx_ensm_mode_chan0="rf_enabled",),
+            dict(
+                gain_control_mode_chan0="spi",
+                rx_ensm_mode_chan0="rf_enabled",
+            ),
         ),
         (
             "rx_hardwaregain_chan0",
             random_values_in_range(0, 34, 0.5, 10),
-            dict(gain_control_mode_chan1="spi", rx_ensm_mode_chan1="rf_enabled",),
+            dict(
+                gain_control_mode_chan1="spi",
+                rx_ensm_mode_chan1="rf_enabled",
+            ),
         ),
         (
             "tx_hardwaregain_chan0",
@@ -190,14 +196,16 @@ def test_adrv9002_str_attr(
             "interface_gain_chan0",
             ["0dB", "6dB", "12dB", "18dB"],
             dict(
-                digital_gain_control_mode_chan0="spi", rx_ensm_mode_chan0="rf_enabled",
+                digital_gain_control_mode_chan0="spi",
+                rx_ensm_mode_chan0="rf_enabled",
             ),
         ),
         (
             "interface_gain_chan1",
             ["0dB", "6dB", "12dB", "18dB"],
             dict(
-                digital_gain_control_mode_chan1="spi", rx_ensm_mode_chan1="rf_enabled",
+                digital_gain_control_mode_chan1="spi",
+                rx_ensm_mode_chan1="rf_enabled",
             ),
         ),
     ],

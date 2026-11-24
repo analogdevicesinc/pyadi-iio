@@ -8,7 +8,6 @@ from adi.device_base import rx_def
 
 
 class adaq8092(rx_def):
-
     """ADAQ8092 14-Bit, 105MSPS, Dual-Channel uModule Data Acquisition Solution"""
 
     compatible_parts = ["adaq8092", "cf_axi_adc"]

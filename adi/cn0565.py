@@ -11,7 +11,6 @@ from adi.context_manager import context_manager
 
 
 class cn0565(ad5940, adg2128):
-
     """The CN0565 class inherits features from both the AD5940 (providing high
     precision in impedance and electrochemical frontend) and the ADG2128
     (enabling arbitrary assignment of force and sense electrodes). '
@@ -67,8 +66,8 @@ class cn0565(ad5940, adg2128):
     @property
     def switch_sequence(self):
         """switch_sequence: type=np.array
-            Sequence of combinations of forcing electrodes and sensing electrodes in the form of
-            f+, s+, s-, s+
+        Sequence of combinations of forcing electrodes and sensing electrodes in the form of
+        f+, s+, s-, s+
         """
         seq = 0
         ret = []
@@ -90,7 +89,7 @@ class cn0565(ad5940, adg2128):
     @property
     def all_voltages(self):
         """all_voltages: type=np.array
-            Voltage readings from different electrode combinations
+        Voltage readings from different electrode combinations
         """
         if self._switch_sequence is None:
             self._switch_sequence = self.switch_sequence
@@ -116,6 +115,6 @@ class cn0565(ad5940, adg2128):
     @property
     def electrode_count_available(self):
         """electrode_count_available: type=np.array
-            Supported Electrode Counts
+        Supported Electrode Counts
         """
         return np.array([8, 16, 32])

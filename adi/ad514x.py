@@ -7,7 +7,7 @@ from adi.context_manager import context_manager
 
 
 class ad514x(context_manager, attribute):
-    """ AD514x DigiPOTs  """
+    """AD514x DigiPOTs"""
 
     compatible_parts = ["AD5141", "AD5142", "AD5142A", "AD5143", "AD5144"]
     _complex_data = False

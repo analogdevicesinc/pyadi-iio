@@ -33,6 +33,7 @@ electrode_name = [
     "R7_C39_C41",
 ]  # Electrode 15
 
+
 # Function to export impedance measurements in excel file
 def create_file(freq, frequency, amplitude, baudrate, real_impedance, imag_impedance):
     create = ""
@@ -167,9 +168,7 @@ def main():
     imag_impedance = []
 
     for neg_e in range(1, 16):  # setting neg_e = Electrode 1 to Electrode 15
-
         for pos_e in range(0, neg_e):  # setting pos_e = Electrode 0 to neg_e
-
             if pos_e == neg_e:
                 print("Forcing electrodes are shorted in the given assignments.")
                 return False

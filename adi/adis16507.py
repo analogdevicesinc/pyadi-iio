@@ -8,7 +8,7 @@ from adi.device_base import rx_def
 
 
 class adis16507(rx_def):
-    """ ADIS16507 Precision, Miniature MEMS IMU """
+    """ADIS16507 Precision, Miniature MEMS IMU"""
 
     _complex_data = False
     _rx_channel_names = [

@@ -13,7 +13,7 @@ except (ImportError, AttributeError):
 
 
 class FMComms5(ad9361):
-    """ FMComms5 Dual Transceiver Evaluation Board """
+    """FMComms5 Dual Transceiver Evaluation Board"""
 
     _complex_data = True
     _split_cores = True
@@ -147,7 +147,7 @@ class FMComms5(ad9361):
     @property
     def rx_rf_bandwidth_chip_b(self):
         """rx_rf_bandwidth_chip_b: Bandwidth of front-end analog filter of RX path
-         of second transceiver"""
+        of second transceiver"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", False, self._ctrl_b)
 
     @rx_rf_bandwidth_chip_b.setter
@@ -157,7 +157,7 @@ class FMComms5(ad9361):
     @property
     def tx_rf_bandwidth_chip_b(self):
         """tx_rf_bandwidth_chip_b: Bandwidth of front-end analog filter of TX path
-         of second transceiver"""
+        of second transceiver"""
         return self._get_iio_attr("voltage0", "rf_bandwidth", True, self._ctrl_b)
 
     @tx_rf_bandwidth_chip_b.setter

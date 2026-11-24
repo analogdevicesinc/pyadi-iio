@@ -76,7 +76,13 @@ def test_adis16550_attr(
     ],
 )
 def test_adis16550_attr_multiple_val(
-    test_attribute_multiple_values, iio_uri, classname, attr, values, tol, repeats,
+    test_attribute_multiple_values,
+    iio_uri,
+    classname,
+    attr,
+    values,
+    tol,
+    repeats,
 ):
     do_mock()
     test_attribute_multiple_values(iio_uri, classname, attr, values, tol, repeats)

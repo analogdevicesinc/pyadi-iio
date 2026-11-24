@@ -3,11 +3,16 @@ import pytest
 hardware = "adxrs290"
 classname = "adi.adxrs290"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr", [("hpf_3db_frequency_available"), ("lpf_3db_frequency_available"),],
+    "attr",
+    [
+        ("hpf_3db_frequency_available"),
+        ("lpf_3db_frequency_available"),
+    ],
 )
 def test_adxrs290_attr_readonly(
     test_attribute_multiple_values_available_readonly, iio_uri, classname, attr

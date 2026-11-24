@@ -6,8 +6,7 @@ from adi.device_base import rx_def
 
 
 class ad9467(rx_def):
-
-    """ AD9467 High-Speed ADC """
+    """AD9467 High-Speed ADC"""
 
     compatible_parts = ["cf-ad9467-core-lpc"]
     _complex_data = False

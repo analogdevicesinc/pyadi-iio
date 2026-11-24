@@ -23,7 +23,7 @@ except ImportError:
 from scipy.signal import find_peaks
 
 
-def spec_est(x, fs, ref=2 ** 15, plot=False, useWindow=False):
+def spec_est(x, fs, ref=2**15, plot=False, useWindow=False):
 
     N = len(x)
 
@@ -34,7 +34,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False, useWindow=False):
 
     # Use FFT to get the amplitude of the spectrum
     ampl = 1 / N * absolute(fft(x))
-    ampl = 20 * log10(ampl / ref + 10 ** -20)
+    ampl = 20 * log10(ampl / ref + 10**-20)
 
     # FFT frequency bins
     freqs = fftfreq(N, 1 / fs)
@@ -138,7 +138,7 @@ def find_harmonics(x, freqs, num_harmonics=6, tolerance=0.01):
     return main, main_loc, harmonics_vals, harmonics_locs
 
 
-def sfdr(x, fs=1, ref=2 ** 15, plot=False):
+def sfdr(x, fs=1, ref=2**15, plot=False):
     amp, freqs = spec_est(x, fs=fs, ref=ref, plot=plot)
     amp_org = amp
     amp = fftshift(amp)
@@ -199,9 +199,9 @@ def main():
     # Generate a sinusoid at frequency f
     f = 10  # Hz
     # a = cos(2 * pi * f * t) * 2 ** 15
-    a = exp(1j * 2 * pi * f * t) * 2 ** 15
+    a = exp(1j * 2 * pi * f * t) * 2**15
 
-    amp, freqs = spec_est(a, fs, ref=2 ** 15, plot=True)
+    amp, freqs = spec_est(a, fs, ref=2**15, plot=True)
     _, ml, vals, locs = find_harmonics(fftshift(amp), fftshift(freqs))
     freqs_s = fftshift(freqs)
     amp_s = fftshift(amp)

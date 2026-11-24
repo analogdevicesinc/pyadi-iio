@@ -13,7 +13,8 @@ classname = "adi.ad5686"
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", ["voltage0", "voltage1", "voltage2", "voltage3"])
 @pytest.mark.parametrize(
-    "attr, start, stop, step, tol, repeats", [("raw", 0, 65535, 10000, 0, 3)],
+    "attr, start, stop, step, tol, repeats",
+    [("raw", 0, 65535, 10000, 0, 3)],
 )
 def test_ad5686_raw_attr(
     test_attribute_single_value,

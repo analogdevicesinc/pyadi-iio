@@ -126,7 +126,7 @@ class ltc2672(context_manager, attribute):
             self._set_iio_dev_attr_str("mux", value)
         else:
             raise ValueError(
-                "Error: mux setting not supported \nUse one of: " "str(self.mux_avail)"
+                "Error: mux setting not supported \nUse one of: str(self.mux_avail)"
             )
 
     @property

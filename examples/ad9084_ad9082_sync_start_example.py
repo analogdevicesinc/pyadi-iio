@@ -17,7 +17,7 @@ AD9084_URI = "ip:10.44.3.52"
 AD9082_URI = "ip:10.44.3.54"
 SYNCHRONA_URI = "ip:10.44.3.68"
 NUM_RUNS = 10
-BUFFER_SIZE = 2 ** 14
+BUFFER_SIZE = 2**14
 PLOT_RESULTS = True
 USE_DMA = True
 USE_AION_TRIGGER = True
@@ -105,8 +105,8 @@ def generate_tone(freq: float, sample_rate: float, num_samples: int) -> np.ndarr
     freq = int(freq / (sample_rate / N)) * (sample_rate / N)
     ts = 1 / float(sample_rate)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * freq) * 2 ** 15
-    q = np.sin(2 * np.pi * t * freq) * 2 ** 15
+    i = np.cos(2 * np.pi * t * freq) * 2**15
+    q = np.sin(2 * np.pi * t * freq) * 2**15
     Xn = i + 1j * q
     Xn = np.pad(Xn, (0, int(num_samples - N)), "constant")
     return Xn
@@ -376,7 +376,7 @@ def main():
         print(pd.DataFrame(phase_offsets_diff).describe())
 
     if PLOT_RESULTS:
-        plt.plot(2 ** 11 / 2 ** 15 * np.real(tx_wave), label="TX wave", alpha=0.1)
+        plt.plot(2**11 / 2**15 * np.real(tx_wave), label="TX wave", alpha=0.1)
         plt.legend()
         plt.show()
 

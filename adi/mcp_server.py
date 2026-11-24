@@ -116,7 +116,11 @@ class ConnectionManager:
         self.connections: Dict[str, dict] = {}
 
     def create(
-        self, uri, device, device_class_name, capabilities,
+        self,
+        uri,
+        device,
+        device_class_name,
+        capabilities,
     ):
         """Register a device connection and return its UUID."""
         connection_id = str(uuid.uuid4())
@@ -199,7 +203,9 @@ async def list_device_classes(filter_text: Optional[str] = None) -> str:
 
 @mcp.tool()
 async def connect_device(
-    device_class: str, uri: str, kwargs: Optional[str] = None,
+    device_class: str,
+    uri: str,
+    kwargs: Optional[str] = None,
 ) -> str:
     """Create a connection to any pyadi-iio device.
 
@@ -260,7 +266,8 @@ async def disconnect_device(connection_id: str) -> str:
 
 @mcp.tool()
 async def discover_device_capabilities(
-    connection_id: str, filter_text: Optional[str] = None,
+    connection_id: str,
+    filter_text: Optional[str] = None,
 ) -> str:
     """Discover what a connected device supports.
 
@@ -323,13 +330,20 @@ async def get_property(connection_id: str, property_name: str) -> str:
             return getattr(device, property_name)
 
         value = await asyncio.to_thread(_read)
-        return _success(property=property_name, value=_serialize_value(value),)
+        return _success(
+            property=property_name,
+            value=_serialize_value(value),
+        )
     except Exception as e:
         return _error(str(e))
 
 
 @mcp.tool()
-async def set_property(connection_id: str, property_name: str, value: str,) -> str:
+async def set_property(
+    connection_id: str,
+    property_name: str,
+    value: str,
+) -> str:
     """Set a property on a connected device.
 
     :param connection_id: UUID of an active connection.
@@ -426,7 +440,10 @@ async def capture_rx_data(
 
 @mcp.tool()
 async def configure_dds(
-    connection_id: str, frequency: int = 10000000, scale: float = 0.9, channel: int = 0,
+    connection_id: str,
+    frequency: int = 10000000,
+    scale: float = 0.9,
+    channel: int = 0,
 ) -> str:
     """Configure the DDS (Digital Direct Synthesis) to generate a single tone.
 

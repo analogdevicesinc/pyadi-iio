@@ -165,8 +165,8 @@ if mode == "single":
         2 * np.pi * sine_freq_burst * t_burst
     )
     print(
-        f"M2K: {frame_samples_m2k:,} samples at {actual_rate/1e6:.0f} MSPS, "
-        f"sine burst: {sine_freq_burst/1000:.0f} kHz x {burst_duration_us} us"
+        f"M2K: {frame_samples_m2k:,} samples at {actual_rate / 1e6:.0f} MSPS, "
+        f"sine burst: {sine_freq_burst / 1000:.0f} kHz x {burst_duration_us} us"
     )
 elif mode == "fft":
     # Continuous sinewave: one cycle repeated cyclically
@@ -274,13 +274,13 @@ if mode == "fft":
     spur_freq = freq_axis[spur_bin]
     sfdr_db = 20 * np.log10(fund_amplitude / (spur_amplitude + 1e-20))
 
-    signal_power = fund_amplitude ** 2
+    signal_power = fund_amplitude**2
     noise_magnitude = fft_magnitude.copy()
     noise_magnitude[
         max(1, fund_bin - exclude_half_width) : fund_bin + exclude_half_width + 1
     ] = 0
     noise_magnitude[0] = 0
-    noise_power = np.sum(noise_magnitude ** 2)
+    noise_power = np.sum(noise_magnitude**2)
     snr_db = 10 * np.log10(signal_power / (noise_power + 1e-20))
 
     print(f"\n--- FFT Analysis ---")
@@ -900,8 +900,7 @@ else:
         expected_echo_us = trigger_on_us + echo_delay_us
         m2k_latency_us = first_pulse_us - expected_echo_us
         ax2.annotate(
-            f"M2K latency: {m2k_latency_us:.1f} \u00b5s\n"
-            f"(trigger \u2192 analog out)",
+            f"M2K latency: {m2k_latency_us:.1f} \u00b5s\n(trigger \u2192 analog out)",
             xy=(first_pulse_us, data[pulses[0][0]]),
             xytext=(first_pulse_us + 10, max(data[:zoom_samples]) * 0.6),
             fontsize=7,

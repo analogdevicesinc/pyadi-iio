@@ -5,6 +5,7 @@ import adi
 hardware = ["ltc2499"]
 classname = "adi.ltc2499"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])

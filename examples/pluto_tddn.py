@@ -31,7 +31,7 @@ tddn = adi.tddn(sdr_ip)
 
 # If you want repeatable alignment between transmit and receive then the rx_lo, tx_lo and sample_rate can only be set once after power up
 # But if you don't care about this, then program sample_rate and LO's as much as you want
-# So after bootup, check if the default sample_rate and LOs are being used, if so then program new ones!
+# So after boot-up, check if the default sample_rate and LOs are being used, if so then program new ones!
 if (
     30719990 < my_sdr.sample_rate < 30720009
     and 2399999990 < my_sdr.rx_lo < 2400000009
@@ -99,8 +99,8 @@ N = int(my_sdr.rx_buffer_size)
 fc = signal_freq
 ts = 1 / float(sample_rate)
 t = np.arange(0, N * ts, ts)
-i = np.cos(2 * np.pi * t * fc) * 2 ** 11
-q = np.sin(2 * np.pi * t * fc) * 2 ** 11
+i = np.cos(2 * np.pi * t * fc) * 2**11
+q = np.sin(2 * np.pi * t * fc) * 2**11
 iq = i + 1j * q
 
 # Send data

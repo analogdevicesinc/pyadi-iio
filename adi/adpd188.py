@@ -8,7 +8,6 @@ from adi.device_base import rx_chan_comp
 
 
 class adpd188(rx_chan_comp):
-
     """ADPD188 photo-electronic device."""
 
     channel = []  # type: ignore
@@ -59,7 +58,6 @@ class adpd188(rx_chan_comp):
         self._set_iio_attr(self.channel[0].name, "sampling_frequency", False, value)
 
     class _channel(attribute):
-
         """ADPD188 channel."""
 
         def __init__(self, ctrl, channel_name):

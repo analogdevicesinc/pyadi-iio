@@ -20,6 +20,7 @@ amax = 131072
 dmax = int(amax / 2)
 vmax = 127438 * 2
 
+
 ################################################################################
 def run_motor_and_capture_angles(
     cal_kit, usteps_per_sample, sampling_delay, samples_size

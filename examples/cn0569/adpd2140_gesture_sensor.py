@@ -239,7 +239,6 @@ class adpd2140_gesture_sensor(adi.adpd1080):
 
 
 if __name__ == "__main__":
-
     adpd1080 = adpd2140_gesture_sensor(uri="serial:COM4")
     adpd1080.rx_buffer_size = 8
     # adpd1080.sample_rate = 512

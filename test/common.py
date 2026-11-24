@@ -1,12 +1,12 @@
 import sys
 import time
-from test.globals import *
 
 import iio
 import numpy as np
 import pytest
 
 import adi
+from test.globals import *
 
 
 def pytest_configure(config):
@@ -94,7 +94,9 @@ def pytest_addoption(parser):
         ),
     )
     parser.addoption(
-        "--production-tests", action="store_true", help="Run production tests",
+        "--production-tests",
+        action="store_true",
+        help="Run production tests",
     )
     parser.addoption(
         "--obs-enable",
@@ -102,19 +104,29 @@ def pytest_addoption(parser):
         help="Run tests that use observation data paths",
     )
     parser.addoption(
-        "--no-os", action="store_true", help="Run tests for No-OS",
+        "--no-os",
+        action="store_true",
+        help="Run tests for No-OS",
     )
     parser.addoption(
-        "--lvds", action="store_true", help="Run tests for LVDS",
+        "--lvds",
+        action="store_true",
+        help="Run tests for LVDS",
     )
     parser.addoption(
-        "--cmos", action="store_true", help="Run tests for CMOS",
+        "--cmos",
+        action="store_true",
+        help="Run tests for CMOS",
     )
     parser.addoption(
-        "--username", default="root", help="SSH login username",
+        "--username",
+        default="root",
+        help="SSH login username",
     )
     parser.addoption(
-        "--password", default="analog", help="SSH login password",
+        "--password",
+        default="analog",
+        help="SSH login password",
     )
 
 
@@ -204,7 +216,14 @@ def dev_interface(
 
 
 def dev_interface_sub_channel(
-    uri, classname, sub_channel, val, attr, tol, readonly=False, sleep=0,
+    uri,
+    classname,
+    sub_channel,
+    val,
+    attr,
+    tol,
+    readonly=False,
+    sleep=0,
 ):
     with eval(classname + "(uri='" + uri + "')") as sdr:
         # Check hardware

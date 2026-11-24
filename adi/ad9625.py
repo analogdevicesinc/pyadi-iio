@@ -11,8 +11,7 @@ from adi.sync_start import sync_start
 
 
 class ad9625(rx, context_manager, sync_start):
-
-    """ AD9625 High-Speed ADC """
+    """AD9625 High-Speed ADC"""
 
     _complex_data = False
     _rx_channel_names = ["voltage0"]

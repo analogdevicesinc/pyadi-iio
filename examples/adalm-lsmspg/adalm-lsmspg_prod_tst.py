@@ -43,7 +43,11 @@ parser.add_argument(
     nargs="*",
 )
 parser.add_argument(
-    "-v", "--verbose", help="Enable verbose output", action="store_true", default=False,
+    "-v",
+    "--verbose",
+    help="Enable verbose output",
+    action="store_true",
+    default=False,
 )
 args = parser.parse_args()
 my_uri = args.u[0]
@@ -59,15 +63,15 @@ print("uri: " + str(my_uri))
 
 def get_closest_index_numpy(float_list, target_number):
     """
-  Finds the index of the float in a list that is closest to a target number.
+    Finds the index of the float in a list that is closest to a target number.
 
-  Args:
-    float_list: A list or array of floats.
-    target_number: The number to compare against.
+    Args:
+      float_list: A list or array of floats.
+      target_number: The number to compare against.
 
-  Returns:
-    The index of the closest float.
-  """
+    Returns:
+      The index of the closest float.
+    """
     # Calculate the absolute difference between each element and the target
     difference_array = np.abs(np.array(float_list) - target_number)
     # Find the index of the minimum difference

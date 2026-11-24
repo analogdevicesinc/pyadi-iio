@@ -12,7 +12,7 @@ from adi.device_base import rx_chan_comp
 
 
 class ltc2983(rx_chan_comp):
-    """ LTC2983 Multi-Sensor Temperature Measurement System """
+    """LTC2983 Multi-Sensor Temperature Measurement System"""
 
     channel: OrderedDict = None
     _complex_data = False
@@ -37,7 +37,7 @@ class ltc2983(rx_chan_comp):
         )
 
     class _channel(attribute):
-        """ LTC2983 channel """
+        """LTC2983 channel"""
 
         def __init__(self, ctrl, channel_name):
             """Initialize an LTC2983 channel wrapper."""

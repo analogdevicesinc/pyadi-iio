@@ -605,7 +605,8 @@ def test_ad9371_sfdr_for_obs(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
-    "files", test_profiles,
+    "files",
+    test_profiles,
 )
 def test_ad9371_profile_write(
     test_attribute_write_only_str, iio_uri, classname, attr, files

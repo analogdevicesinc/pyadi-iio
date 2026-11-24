@@ -62,12 +62,21 @@ def test_ad4630_channel_attrs(
 hardware = ["adaq4224"]
 classname = "adi.adaq42xx"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, avail_attr, tol, repeats, sub_channel",
-    [("scale", "scale_available", 0, 1, "chan0",),],
+    [
+        (
+            "scale",
+            "scale_available",
+            0,
+            1,
+            "chan0",
+        ),
+    ],
 )
 def test_adaq42xx_scale_attr(
     test_attribute_multiple_values,
