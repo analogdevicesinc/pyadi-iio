@@ -62,7 +62,7 @@ jobs:
       group: hw-place-${{ vars.ADI_LG_COORDINATOR }}-${{ inputs.place }}
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup uv venv
         uses: tfcollins/labgrid-plugins/.github/actions/setup-uv-venv@main
