@@ -12,9 +12,15 @@ part, so a failure points at a single part.
 
 The board boots its own SD card image; only the PL is replaced at runtime, so the card is
 never modified and a power cycle restores the stock design. The place uses the
-`BootFPGASoCSSH` strategy (power, serial shell, SSH). Run inside a reservation:
+`BootFPGASoCSSH` strategy (power, serial shell, SSH).
+
+The images under test are the prebuilt `system_top.bit.bin` files in
+adi-innersource/cse-bsps, branch `dev/talise-prod-ddr-hw-test`,
+`talise/prebuilt/{full,ddr_lo,ddr_hi}/` (Git LFS; that folder's README also has the manual,
+shell-only load and the HDL sources). Install, then run inside a reservation:
 
 ```
+pip install -e . -r test/talise/requirements.txt
 TALISE_HW=1 TALISE_CONFIG=ddr_lo TALISE_PL_BIN=/path/to/system_top.bit.bin \
 adi-lg request --part adrv9009zu11eg --mode reserve --wait 1800 \
   --run 'python -m pytest test/talise --confcutdir=test/talise -o addopts= -v'
@@ -31,6 +37,21 @@ on, its boot mode is overridden over JTAG and it boots its own SD card, whatever
 say (labgrid-plugins with `BootZynqMPJTAG.boot_mode`, 2026-11-07 or later). Without it the
 fixture JTAG-loads the stock PL and psu_init from `TALISE_STOCK_BITSTREAM_REMOTE` /
 `TALISE_STOCK_PSU_INIT_REMOTE` instead.
+
+| Variable | Meaning |
+|----------|---------|
+| `TALISE_HW=1` | enable the hardware tests (skipped otherwise) |
+| `TALISE_CONFIG` | `full`, `ddr_lo` or `ddr_hi`: the build under test (selects the part mapping) |
+| `TALISE_PL_BIN` | local path of that build's `system_top.bit.bin` (its sha256 is checked on the target) |
+| `TALISE_PL_URL` | optional: HTTP URL the board downloads the same `.bit.bin` from (`wget`), instead of an SSH upload; e.g. serve the prebuilt folder with `python3 -m http.server` on a host the board can reach |
+| `TALISE_BOOT_MODE` | optional, JTAG places: boot mode to force (e.g. `sd1-ls`) |
+| `TALISE_STOCK_BITSTREAM_REMOTE`, `TALISE_STOCK_PSU_INIT_REMOTE` | JTAG places without `TALISE_BOOT_MODE`: stock bitstream / psu_init.tcl paths on the exporter |
+| `TALISE_JTAG_PROMPT_TIMEOUT` | seconds to wait for the U-Boot prompt after a JTAG boot (default 120) |
+| `TALISE_MIG1_DATAPATH=1` | enable the MIG 1 DAC FIFO loopback test |
+| `TALISE_LOG_DIR` | where boot / console logs go (default `./boot_logs`) |
+| `LG_ENV` | labgrid env of the reserved place (exported by `adi-lg request`) |
+
+Without hardware: `python -m pytest test/talise/test_talise_offline.py --confcutdir=test/talise -o addopts=`.
 
 Tests:
 

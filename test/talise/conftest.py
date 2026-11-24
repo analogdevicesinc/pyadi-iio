@@ -23,6 +23,8 @@ Environment:
     TALISE_PL_BIN          path to the .bit.bin of the build under test
     LG_ENV                 labgrid env of the reserved place
     TALISE_LOG_DIR         where boot/console logs go (default: ./boot_logs)
+
+See README.md for the optional variables (TALISE_PL_URL, TALISE_BOOT_MODE, ...).
 """
 
 import os
