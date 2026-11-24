@@ -1,0 +1,164 @@
+name: LLM Agent
+run-name: LLM run ${{ inputs.ref }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "The branch, tag, PR number, or SHA to checkout"
+        required: false
+        type: string
+      prompt:
+        description: "Prompt to use, overwrites the default"
+        required: false
+        type: string
+        default: ""
+      prompt-extra:
+        description: "Extra prompt to concatenate"
+        required: false
+        type: string
+        default: ""
+      model:
+        description: "Model size"
+        type: choice
+        default: "medium"
+        options:
+        - small
+        - medium
+        - large
+  workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
+        default: ${{ github.ref }}
+      prompt:
+        required: false
+        type: string
+        default: ""
+      prompt-extra:
+        required: false
+        type: string
+        default: ""
+      model:
+        required: false
+        type: string
+        default: "medium"
+    secrets:
+      PORTKEY_API_KEY:
+        required: true
+
+jobs:
+  llm:
+    runs-on: ${{ vars.RUNNER != '' && fromJSON(vars.RUNNER) || 'ubuntu-latest' }}
+    permissions:
+      contents: read
+      checks: read
+      pull-requests: read
+
+    outputs:
+      pr: ${{ steps.llm.outputs.pr }}
+      comment: ${{ steps.llm.outputs.comment }}
+
+    steps:
+      - name: Prepare prompt
+        run: |
+          prompt_file=$(mktemp --suffix=.md)
+          echo "prompt_file=$prompt_file" >> "$GITHUB_ENV"
+
+          cat <<'EOF' > "$prompt_file"
+          ${{ inputs.prompt }}
+          EOF
+
+          grep -q '[^[:space:]]' "$prompt_file" || \
+          cat <<'EOF' > "$prompt_file"
+          # Run a deep pyadi-iio review.
+
+          Your review should be based on the current documentation at ./doc,
+          in particular the developer guide at ./doc/source/dev.
+
+          Look for functional defects and regressions in the device classes and the
+          shared base classes they inherit from (adi/device_base.py, adi/rx_tx.py,
+          adi/context_manager.py). For base-class changes, check every existing
+          subclass, not only the ones touched by the series.
+
+          Check against the Linux IIO driver of each affected part, at
+          https://github.com/analogdevicesinc/linux: device and channel names,
+          direction, attribute names, units, quantization of written values, and
+          error codes. Wrapper behaviour must follow what the driver actually does.
+
+          You **must** check the appropriate datasheets for devices drivers.
+          Pre-converted (with docling), are available at the git tree:
+          ```
+          # Search
+          $ git -C "$docling_dir" ls-tree -r --name-only @ | grep -i sc84
+             media/en/dsp-documentation/processor-manuals/adsp-2184x-adsp-sc84x-hrm.md
+             media/en/technical-documentation/data-sheets/adsp-2184x-adsp-sc84x.md
+          # View
+          $ git -C "$docling_dir" --no-pager show @:media/en/technical-documentation/data-sheets/adsp-2184x-adsp-sc84x.md
+          ```
+          Do not try to fetch the from analog.com domain directly, due to bot protection
+          guards in place.
+
+          New device classes must list every part in compatible_parts and in
+          supported_parts.md (invoke checkparts), have a doc page linked from
+          doc/source/devices/index.rst, and have tests against an emulation
+          context under test/emu/ referenced from test/emu/hardware_map.yml.
+          Run tests with `pytest --emu --skip-scan test/test_<part>.py`. Emulation
+          only replays attribute values, so it does not validate driver semantics.
+
+          A finding states the triggering scenario and the observable consequence.
+          Leave out remarks that only describe what the code does.
+          EOF
+
+          cat <<'EOF' >> "$prompt_file"
+          ${{ inputs.prompt-extra }}
+          EOF
+
+      - name: Setup docling
+        run: |
+          docling_dir="$(mktemp -dt docling.XXX)"
+          echo "docling_dir=$docling_dir" >> "$GITHUB_ENV"
+          git clone --filter=blob:none --no-checkout --branch docling \
+              https://github.com/analogdevicesinc/doctools.git "$docling_dir"
+
+      - name: Prepare tools
+        shell: bash
+        run: |
+          py_venv="$(mktemp -d)"
+          echo "py_venv=$py_venv" >> "$GITHUB_ENV"
+
+          python3 -m venv "$py_venv"
+          source "$py_venv/bin/activate"
+          python3 -m ensurepip --upgrade
+
+      - uses: analogdevicesinc/doctools/llm@action
+        id: llm
+        with:
+          ref: ${{ inputs.ref }}
+          model: ${{ inputs.model }}
+          prompt-file: ${{ env.prompt_file }}
+          api-key: ${{ secrets.PORTKEY_API_KEY }}
+          py-venv: ${{ env.py_venv }}
+          sh-source: ${{ env.sh_source }}
+
+      - name: Clean-up
+        if: always()
+        run: |
+          rm -f "$prompt_file"
+          rm -rf "$prompt_dir"
+          rm -rf "$docling_dir"
+          rm -rf "$py_venv"
+
+  pr-comment:
+    runs-on: ubuntu-slim
+    needs: llm
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: analogdevicesinc/doctools/gh-pr-comment@action
+        with:
+          pr: ${{ needs.llm.outputs.pr }}
+          body: ${{ needs.llm.outputs.comment }}
+
