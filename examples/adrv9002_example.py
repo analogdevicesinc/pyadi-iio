@@ -34,7 +34,7 @@ sdr.dds_single_tone(-3000000, 0.9, channel=0)
 # # Send data
 # sdr.tx(iq)
 
-sdr.rx_buffer_size = 2 ** 18
+sdr.rx_buffer_size = 2**18
 
 # Collect data
 for r in range(20):

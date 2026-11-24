@@ -59,7 +59,7 @@ class ad579x_channel(attribute):
 
 
 class ad579x(tx_chan_comp):
-    """ AD579x DAC """
+    """AD579x DAC"""
 
     channel = []  # type: ignore
     compatible_parts = [

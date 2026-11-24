@@ -98,7 +98,7 @@ class adxl355_channel(attribute):
 
 
 class adxl355(rx_chan_comp):
-    """ ADXL355 3-axis accelerometer """
+    """ADXL355 3-axis accelerometer"""
 
     compatible_parts = ["adxl355"]
     _rx_unbuffered_data = True

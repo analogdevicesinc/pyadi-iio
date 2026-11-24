@@ -1,5 +1,4 @@
 import time
-from test.eeprom import load_from_eeprom, save_to_eeprom
 from tkinter.font import BOLD
 from weakref import finalize
 
@@ -11,6 +10,7 @@ import pyvisa
 from pyvisa import constants
 
 import adi
+from test.eeprom import load_from_eeprom, save_to_eeprom
 
 supported_instruments = ["HAMEG Instruments,HM8123,5.12"]
 

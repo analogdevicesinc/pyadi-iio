@@ -8,8 +8,8 @@ from adi.attribute import attribute
 
 
 class dds(attribute):
-    """ DDS Signal generators: Each reference design contains two DDSs per channel.
-        this allows for two complex tones to be generated per complex channel.
+    """DDS Signal generators: Each reference design contains two DDSs per channel.
+    this allows for two complex tones to be generated per complex channel.
     """
 
     # Set to True if there are multiple DDS drivers (FMComms5)
@@ -58,7 +58,7 @@ class dds(attribute):
 
     @property
     def dds_frequencies(self):
-        """ Frequencies of DDSs in Hz"""
+        """Frequencies of DDSs in Hz"""
         return self._read_dds("frequency")
 
     @dds_frequencies.setter
@@ -67,8 +67,8 @@ class dds(attribute):
 
     @property
     def dds_scales(self):
-        """ Scale of DDS signal generators
-            Ranges [0,1]
+        """Scale of DDS signal generators
+        Ranges [0,1]
         """
         return self._read_dds("scale")
 
@@ -78,8 +78,8 @@ class dds(attribute):
 
     @property
     def dds_phases(self):
-        """ Phases of DDS signal generators.
-            Range in millidegrees [0,360000]
+        """Phases of DDS signal generators.
+        Range in millidegrees [0,360000]
         """
         return self._read_dds("phase")
 
@@ -89,7 +89,7 @@ class dds(attribute):
 
     @property
     def dds_enabled(self):
-        """ DDS generator enable state """
+        """DDS generator enable state"""
         return self._read_dds("raw")
 
     @dds_enabled.setter
@@ -97,31 +97,31 @@ class dds(attribute):
         self.__update_dds("raw", value)
 
     def dds_single_tone(self, frequency, scale, channel=0, exclusive=True):
-        """ Generate a single tone using the DDSs
-            For complex data devices this will create a complex
-            or single sided tone spectrally using two DDSs.
-            For non-complex devices the tone will use a single DDS.
+        """Generate a single tone using the DDSs
+        For complex data devices this will create a complex
+        or single sided tone spectrally using two DDSs.
+        For non-complex devices the tone will use a single DDS.
 
-            parameters:
-                frequency: type=integer
-                    Frequency in hertz of the generated tone. This must be
-                    less than 1/2 the sample rate.
+        parameters:
+            frequency: type=integer
+                Frequency in hertz of the generated tone. This must be
+                less than 1/2 the sample rate.
 
-                scale: type=float
-                    Scale of the generated tone in range [0,1]. At 1 the tone
-                    will be full-scale.
+            scale: type=float
+                Scale of the generated tone in range [0,1]. At 1 the tone
+                will be full-scale.
 
-                channel: type=integer
-                    Channel index to generate tone from. This is zero based
-                    and for complex devices this index relates to the pair
-                    of related converters. For non-complex devices this is
-                    the index of the individual converters.
+            channel: type=integer
+                Channel index to generate tone from. This is zero based
+                and for complex devices this index relates to the pair
+                of related converters. For non-complex devices this is
+                the index of the individual converters.
 
-                exclusive: type=bool
-                    When True (default) all other DDSs are zeroed first, so
-                    only this channel emits. When False the other DDSs are
-                    left untouched, allowing tones to be built up across
-                    several channels with repeated calls.
+            exclusive: type=bool
+                When True (default) all other DDSs are zeroed first, so
+                only this channel emits. When False the other DDSs are
+                left untouched, allowing tones to be built up across
+                several channels with repeated calls.
 
         """
         if exclusive:
@@ -185,39 +185,39 @@ class dds(attribute):
     def dds_dual_tone(
         self, frequency1, scale1, frequency2, scale2, channel=0, exclusive=True
     ):
-        """ Generate two tones simultaneously using the DDSs
-            For complex data devices this will create two complex
-            or single sided tones spectrally using four DDSs.
-            For non-complex devices the tone will use two DDSs.
+        """Generate two tones simultaneously using the DDSs
+        For complex data devices this will create two complex
+        or single sided tones spectrally using four DDSs.
+        For non-complex devices the tone will use two DDSs.
 
-            parameters:
-                frequency1: type=integer
-                    Frequency of first tone in hertz of the generated tone.
-                    This must be less than 1/2 the sample rate.
+        parameters:
+            frequency1: type=integer
+                Frequency of first tone in hertz of the generated tone.
+                This must be less than 1/2 the sample rate.
 
-                scale1: type=float
-                    Scale of the first tone generated tone in range [0,1].
-                    At 1 the tone will be full-scale.
+            scale1: type=float
+                Scale of the first tone generated tone in range [0,1].
+                At 1 the tone will be full-scale.
 
-                frequency2: type=integer
-                    Frequency of second tone in hertz of the generated tone.
-                    This must be less than 1/2 the sample rate.
+            frequency2: type=integer
+                Frequency of second tone in hertz of the generated tone.
+                This must be less than 1/2 the sample rate.
 
-                scale2: type=float
-                    Scale of the second tone generated tone in range [0,1].
-                    At 1 the tone will be full-scale.
+            scale2: type=float
+                Scale of the second tone generated tone in range [0,1].
+                At 1 the tone will be full-scale.
 
-                channel: type=integer
-                    Channel index to generate tone from. This is zero based
-                    and for complex devices this index relates to the pair
-                    of related converters. For non-complex devices this is
-                    the index of the individual converters.
+            channel: type=integer
+                Channel index to generate tone from. This is zero based
+                and for complex devices this index relates to the pair
+                of related converters. For non-complex devices this is
+                the index of the individual converters.
 
-                exclusive: type=bool
-                    When True (default) all other DDSs are zeroed first, so
-                    only this channel emits. When False the other DDSs are
-                    left untouched, allowing tones to be built up across
-                    several channels with repeated calls.
+            exclusive: type=bool
+                When True (default) all other DDSs are zeroed first, so
+                only this channel emits. When False the other DDSs are
+                left untouched, allowing tones to be built up across
+                several channels with repeated calls.
 
         """
         if exclusive:

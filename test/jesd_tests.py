@@ -38,9 +38,9 @@ def verify_links(iio_uri: str, classname: str):
             print(f"Checking {driver}/{lane}")
             data = status[driver][lane]
             pprint(data)
-            assert (
-                data["CGS state"] == "DATA"
-            ), f"Link {driver}/{lane} is not in DATA mode"
+            assert data["CGS state"] == "DATA", (
+                f"Link {driver}/{lane} is not in DATA mode"
+            )
 
 
 def verify_links_errors_stable(iio_uri: str, classname: str):
@@ -83,6 +83,6 @@ def verify_links_errors_stable(iio_uri: str, classname: str):
 
     # Check that all links have not increased in errors
     for link in pre_link_errors:
-        assert (
-            pre_link_errors[link] == post_link_errors[link]
-        ), f"Link {link} has increased in errors"
+        assert pre_link_errors[link] == post_link_errors[link], (
+            f"Link {link} has increased in errors"
+        )

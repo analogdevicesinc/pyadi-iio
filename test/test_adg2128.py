@@ -8,7 +8,10 @@ classname = "adi.adg2128"
 
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize(
-    "addr1, addr2", [(0x71, 0x70),],
+    "addr1, addr2",
+    [
+        (0x71, 0x70),
+    ],
 )
 def test_adg2128(context_desc, addr1, addr2):
     cps = None

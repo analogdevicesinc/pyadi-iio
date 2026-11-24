@@ -7,7 +7,7 @@ from adi.device_base import rx_chan_comp_no_buff
 
 
 class adpd410x(rx_chan_comp_no_buff):
-    """ adpd410x Multimodal Sensor Front End """
+    """adpd410x Multimodal Sensor Front End"""
 
     _complex_data = False
     channel = []  # type: ignore
@@ -64,7 +64,7 @@ class adpd410x(rx_chan_comp_no_buff):
 
         @property
         def raw(self):
-            """ adpd410x channel raw value"""
+            """adpd410x channel raw value"""
             return self._get_iio_attr(self.name, "raw", False, self._ctrl)
 
     _channel_def = _channel

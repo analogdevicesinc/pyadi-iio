@@ -41,13 +41,13 @@ fs = int(sdr.tx_sample_rate)
 fc = 40000000
 ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)
-i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+i = np.cos(2 * np.pi * t * fc) * 2**14
+q = np.sin(2 * np.pi * t * fc) * 2**14
 iq = i + 1j * q
 
 fc = -30000000
-i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+i = np.cos(2 * np.pi * t * fc) * 2**14
+q = np.sin(2 * np.pi * t * fc) * 2**14
 iq2 = i + 1j * q
 
 # Send data

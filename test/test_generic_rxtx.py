@@ -6,6 +6,7 @@ import adi
 hardware = ["pluto", "adrv9361", "fmcomms2"]
 classname = ""
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware, True)
 def test_generic_rx(iio_uri):

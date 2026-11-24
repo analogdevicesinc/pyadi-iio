@@ -38,8 +38,7 @@ class ltc2378_channel(attribute):
 
 
 class ltc2378(rx_chan_comp):
-
-    """ LTC2378 ADC """
+    """LTC2378 ADC"""
 
     _complex_data = False
     _device_name = ""

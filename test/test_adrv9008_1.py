@@ -9,6 +9,7 @@ classname = "adi.adrv9008_1"
 profile_path = dirname(realpath(__file__)) + "/adrv9009_profiles/"
 test_profiles = [join(profile_path, f) for f in listdir(profile_path)]
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -45,7 +46,11 @@ def test_adrv9008_1_attr_boolean(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr", [("rx_rf_bandwidth"), ("rx_sample_rate"),],
+    "attr",
+    [
+        ("rx_rf_bandwidth"),
+        ("rx_sample_rate"),
+    ],
 )
 def test_adrv9008_1_attr_boolean_readonly(
     test_attribute_single_value_boolean_readonly, iio_uri, classname, attr
@@ -57,7 +62,10 @@ def test_adrv9008_1_attr_boolean_readonly(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, value", [("calibrate", 1),],
+    "attr, value",
+    [
+        ("calibrate", 1),
+    ],
 )
 def test_adrv9008_1_attribute_write_only_str(
     test_attribute_write_only_str, iio_uri, classname, attr, value
@@ -69,7 +77,10 @@ def test_adrv9008_1_attribute_write_only_str(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, start, stop, step, tol", [("trx_lo", 70000000, 6000000000, 1000, 0),],
+    "attr, start, stop, step, tol",
+    [
+        ("trx_lo", 70000000, 6000000000, 1000, 0),
+    ],
 )
 def test_adrv9008_1_attr(
     test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol
@@ -134,7 +145,8 @@ def test_adrv9008_1_attr_singleval_depends(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
-    "files", test_profiles,
+    "files",
+    test_profiles,
 )
 def test_adrv9008_1_profile_write(
     test_attribute_write_only_str, iio_uri, classname, attr, files

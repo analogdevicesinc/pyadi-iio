@@ -25,7 +25,7 @@ def noise_analysis(samples):
     print("max =", max)
     print("min =", np.min(mag))
     print("mean =", np.mean(mag))
-    rms_of_mag = np.sqrt(np.mean(mag ** 2))
+    rms_of_mag = np.sqrt(np.mean(mag**2))
     print("RMS(mag) =", rms_of_mag)
     print("Peak-to-RMS =", 20 * np.log10(max / rms_of_mag), "dB")
     print("")

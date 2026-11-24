@@ -6,7 +6,7 @@ from adi.adrv9009_zu11eg import adrv9009_zu11eg
 
 
 class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
-    """ ADRV9009-ZU11EG System-On-Module + FMCOMMS8
+    """ADRV9009-ZU11EG System-On-Module + FMCOMMS8
 
     parameters:
         uri: type=string
@@ -63,7 +63,7 @@ class adrv9009_zu11eg_fmcomms8(adrv9009_zu11eg):
         self._clock_chip_fmc = self._ctx.find_device("hmc7044-fmc")
 
     def mcs_chips(self):
-        """mcs_chips: MCS Synchronize all four transceivers """
+        """mcs_chips: MCS Synchronize all four transceivers"""
         try:
             _ = self.jesd204_fsm_ctrl
             # We're JESD204-fsm enabled - do nothing

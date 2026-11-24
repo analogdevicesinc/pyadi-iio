@@ -22,6 +22,7 @@ JTX_PAGE = 0x1A
 PAGEINDX_DAC_MAINDP_DAC = 0x1B
 PAGEINDX_DAC_CHAN = 0x1C
 
+
 # Paging helpers
 def set_bit(val, index, bit):
     # print('{:b}'.format(val))

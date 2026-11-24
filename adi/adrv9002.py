@@ -12,27 +12,27 @@ from adi.rx_tx import rx_tx
 
 
 def rx1(self):
-    """rx1: Receive data on channel 0 (Same as rx() method) """
+    """rx1: Receive data on channel 0 (Same as rx() method)"""
     return self.rx()
 
 
 def rx2(self):
-    """rx2: Receive data on channel 1 """
+    """rx2: Receive data on channel 1"""
     return self._rx2.rx()
 
 
 def tx1(self, data):
-    """tx1: Transmit data on channel 0 (Same as tx() method) """
+    """tx1: Transmit data on channel 0 (Same as tx() method)"""
     self.tx(data)
 
 
 def tx2(self, data):
-    """tx2: Transmit data on channel 1 """
+    """tx2: Transmit data on channel 1"""
     self._tx2.tx(data)
 
 
 class adrv9002(rx_tx, context_manager):
-    """ ADRV9002 Transceiver """
+    """ADRV9002 Transceiver"""
 
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q"]
@@ -102,8 +102,8 @@ class adrv9002(rx_tx, context_manager):
 
     def write_profile(self, value):
         """Load a new profile on the device
-            Stream related to profile should be loaded first.
-            Please see driver documentation about profile generation.
+        Stream related to profile should be loaded first.
+        Please see driver documentation about profile generation.
         """
         with open(value, "r") as file:
             data = file.read()
@@ -111,8 +111,8 @@ class adrv9002(rx_tx, context_manager):
 
     def write_stream(self, value):
         """Load a new stream on the device
-            Stream becomes active once accompanying profile is loaded
-            Please see driver documentation about stream generation.
+        Stream becomes active once accompanying profile is loaded
+        Please see driver documentation about stream generation.
         """
         with open(value, "rb") as file:
             data = file.read()
@@ -131,20 +131,20 @@ class adrv9002(rx_tx, context_manager):
     @property
     def rx_dma_mode(self):
         """rx_dma_mode: DMA configuration for RX path. Options are:
-            combined: RX1 and RX2 share the same rx method
-            split: RX1 and RX2 have separate rx methods rx1 and rx2. Typically
-            used when they are at different rates. In this case the standard rx
-            method has the same effect as the rx1 method.
+        combined: RX1 and RX2 share the same rx method
+        split: RX1 and RX2 have separate rx methods rx1 and rx2. Typically
+        used when they are at different rates. In this case the standard rx
+        method has the same effect as the rx1 method.
         """
         return self._rx_dma_mode
 
     @property
     def tx_dma_mode(self):
         """tx_dma_mode: DMA configuration for TX path. Options are:
-                combined: TX1 and TX2 share the same tx method
-                split: TX1 and TX2 have separate tx methods tx1 and tx2.
-                Typically used when they are at different rates. In this case
-                the standard tx method has the same effect as the tx1 method.
+        combined: TX1 and TX2 share the same tx method
+        split: TX1 and TX2 have separate tx methods tx1 and tx2.
+        Typically used when they are at different rates. In this case
+        the standard tx method has the same effect as the tx1 method.
         """
         return self._tx_dma_mode
 
@@ -261,7 +261,7 @@ class adrv9002(rx_tx, context_manager):
     @property
     def interface_gain_chan0(self):
         """interface_gain_chan0: Fixed input gain stage for channel 0.
-        Options are: 18dB 12dB 6dB 0dB -6dB -12dB -18dB -24dB -30dB -36dB """
+        Options are: 18dB 12dB 6dB 0dB -6dB -12dB -18dB -24dB -30dB -36dB"""
         return self._get_iio_attr_str("voltage0", "interface_gain", False)
 
     @interface_gain_chan0.setter
@@ -274,7 +274,7 @@ class adrv9002(rx_tx, context_manager):
     @property
     def interface_gain_chan1(self):
         """interface_gain_chan0: Fixed input gain stage for channel 0.
-        Options are: 18dB 12dB 6dB 0dB -6dB -12dB -18dB -24dB -30dB -36dB """
+        Options are: 18dB 12dB 6dB 0dB -6dB -12dB -18dB -24dB -30dB -36dB"""
         return self._get_iio_attr_str("voltage1", "interface_gain", False)
 
     @interface_gain_chan1.setter
@@ -295,7 +295,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def bbdc_rejection_tracking_en_chan0(self):
-        """"Enable Baseband DC rejection on the fly tracking calibration for RX1"""
+        """ "Enable Baseband DC rejection on the fly tracking calibration for RX1"""
         return self._get_iio_attr("voltage0", "bbdc_rejection_tracking_en", False)
 
     @bbdc_rejection_tracking_en_chan0.setter
@@ -304,7 +304,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def hd_tracking_en_chan0(self):
-        """"Enable Harmonic Distortion on the fly tracking calibration for RX1"""
+        """ "Enable Harmonic Distortion on the fly tracking calibration for RX1"""
         return self._get_iio_attr("voltage0", "hd_tracking_en", False)
 
     @hd_tracking_en_chan0.setter
@@ -333,7 +333,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def rfdc_tracking_en_chan0(self):
-        """"Enable RF DC on the fly tracking calibration for RX1"""
+        """ "Enable RF DC on the fly tracking calibration for RX1"""
         return self._get_iio_attr("voltage0", "rfdc_tracking_en", False)
 
     @rfdc_tracking_en_chan0.setter
@@ -342,7 +342,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def rssi_tracking_en_chan0(self):
-        """"Enable RSSI on the fly tracking calibration for RX1"""
+        """ "Enable RSSI on the fly tracking calibration for RX1"""
         return self._get_iio_attr("voltage0", "rssi_tracking_en", False)
 
     @rssi_tracking_en_chan0.setter
@@ -360,7 +360,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def bbdc_rejection_tracking_en_chan1(self):
-        """"Enable Baseband DC rejection on the fly tracking calibration for RX2"""
+        """ "Enable Baseband DC rejection on the fly tracking calibration for RX2"""
         return self._get_iio_attr("voltage1", "bbdc_rejection_tracking_en", False)
 
     @bbdc_rejection_tracking_en_chan1.setter
@@ -369,7 +369,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def hd_tracking_en_chan1(self):
-        """"Enable Harmonic Distortion on the fly tracking calibration for RX2"""
+        """ "Enable Harmonic Distortion on the fly tracking calibration for RX2"""
         return self._get_iio_attr("voltage1", "hd_tracking_en", False)
 
     @hd_tracking_en_chan1.setter
@@ -398,7 +398,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def rfdc_tracking_en_chan1(self):
-        """"Enable RF DC on the fly tracking calibration for RX2"""
+        """ "Enable RF DC on the fly tracking calibration for RX2"""
         return self._get_iio_attr("voltage1", "rfdc_tracking_en", False)
 
     @rfdc_tracking_en_chan1.setter
@@ -407,7 +407,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def rssi_tracking_en_chan1(self):
-        """"Enable RSSI on the fly tracking calibration for RX2"""
+        """ "Enable RSSI on the fly tracking calibration for RX2"""
         return self._get_iio_attr("voltage1", "rssi_tracking_en", False)
 
     @rssi_tracking_en_chan1.setter
@@ -515,7 +515,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def digital_gain_control_mode_chan1(self):
-        """ Digital gain control mode for RX2. Option are: automatic spi."""
+        """Digital gain control mode for RX2. Option are: automatic spi."""
         return self._get_iio_attr_str("voltage1", "digital_gain_control_mode", False)
 
     @digital_gain_control_mode_chan1.setter
@@ -569,7 +569,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def tx0_en(self):
-        """"Control TX1 Power state"""
+        """ "Control TX1 Power state"""
         return self._get_iio_attr("voltage0", "en", True)
 
     @tx0_en.setter
@@ -578,7 +578,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def rx1_en(self):
-        """"Control RX2 Power state"""
+        """ "Control RX2 Power state"""
         return self._get_iio_attr("voltage1", "en", False)
 
     @rx1_en.setter
@@ -587,7 +587,7 @@ class adrv9002(rx_tx, context_manager):
 
     @property
     def tx1_en(self):
-        """"Control TX2 Power state"""
+        """ "Control TX2 Power state"""
         return self._get_iio_attr("voltage1", "en", True)
 
     @tx1_en.setter

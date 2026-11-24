@@ -19,7 +19,12 @@ def do_mock():
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr", [("shutdown_pulse"), ("power_enable"), ("coil_reset"),],
+    "attr",
+    [
+        ("shutdown_pulse"),
+        ("power_enable"),
+        ("coil_reset"),
+    ],
 )
 def test_admt4000ard2z_attr_boolean_readonly(
     test_attribute_single_value_boolean_readonly, iio_uri, classname, attr

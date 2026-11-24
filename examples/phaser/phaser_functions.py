@@ -57,15 +57,15 @@ from scipy import signal
 
 
 def to_sup(angle):
-    """ Return suplimentary angle if greater than 180 degrees. """
+    """Return suplimentary angle if greater than 180 degrees."""
     if angle > 180.0:
         angle -= 360.0
     return angle
 
 
 def find_peak_bin(cn0566, verbose=False):
-    """ Simple function to find the peak frequency bin of the incoming signal.
-        sets nomial phases and gains first."""
+    """Simple function to find the peak frequency bin of the incoming signal.
+    sets nomial phases and gains first."""
     win = np.blackman(cn0566.sdr.rx_buffer_size)
     # First, locate fundamental.
     cn0566.set_all_gain(127)
@@ -77,26 +77,24 @@ def find_peak_bin(cn0566, verbose=False):
 
 
 def calculate_plot(cn0566, gcal_element=0, cal_element=0):
-    """ Calculate all the values required to do different antenna pattern plots.
-        parameters:
-            cn0566: Handle to CN0566 instance
-        returns:
-            gain: Antenna gain data
-            angle: Antenna angles (calculated from phases sent to array)
-            delta: Delta between sub-arrays (for monopulse tracking)
-            diff_error:
-            beam_phase:
-            xf:
-            max_gain:
-            PhaseValues: Actual phase values sent to array
+    """Calculate all the values required to do different antenna pattern plots.
+    parameters:
+        cn0566: Handle to CN0566 instance
+    returns:
+        gain: Antenna gain data
+        angle: Antenna angles (calculated from phases sent to array)
+        delta: Delta between sub-arrays (for monopulse tracking)
+        diff_error:
+        beam_phase:
+        xf:
+        max_gain:
+        PhaseValues: Actual phase values sent to array
     """
 
     sweep_angle = 180  # This swweps from -70 deg to +70
     # These are all the phase deltas (i.e. phase difference between Rx1 and Rx2, then Rx2 and Rx3, etc.) we'll sweep
     PhaseValues = np.arange(-(sweep_angle), (sweep_angle), cn0566.phase_step_size)
-    max_signal = (
-        -100000
-    )  # Reset max_signal.  We'll keep track of the maximum signal we get as we do this 140 loop.
+    max_signal = -100000  # Reset max_signal.  We'll keep track of the maximum signal we get as we do this 140 loop.
     max_angle = -90  # Reset max_angle. This is the angle where we saw the max signal.
     gain, delta, beam_phase, angle, diff_error = (
         [],
@@ -168,9 +166,9 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
                 np.abs(s_delta[np.argmax(s_sum)]) * 2 / np.sum(win), 10 ** (-15)
             )
             total_sum = total_sum + (
-                20 * np.log10(s_mag_sum / (2 ** 12))
+                20 * np.log10(s_mag_sum / (2**12))
             )  # sum up all the loops, then we'll avg
-            total_delta = total_delta + (20 * np.log10(s_mag_delta / (2 ** 12)))
+            total_delta = total_delta + (20 * np.log10(s_mag_delta / (2**12)))
 
         PeakValue_sum = total_sum / cn0566.Averages
         PeakValue_delta = total_delta / cn0566.Averages
@@ -216,7 +214,7 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
     )  # Scale FFT by window and /2 since we are using half the FFT spectrum
     s_mag = np.maximum(s_mag, 10 ** (-15))
     max_gain = 20 * np.log10(
-        s_mag / (2 ** 12)
+        s_mag / (2**12)
     )  # Pluto is a 12 bit ADC, so use that to convert to dBFS
     ts = 1 / float(cn0566.sdr.sample_rate)
     xf = np.fft.fftfreq(NumSamples, ts)
@@ -227,7 +225,7 @@ def calculate_plot(cn0566, gcal_element=0, cal_element=0):
 
 
 def get_signal_levels(cn0566, verbose=False):
-    """" Measure signal levels. Without a decent signal, all bets are off. """
+    """ " Measure signal levels. Without a decent signal, all bets are off."""
     peak_bin = find_peak_bin(cn0566)
     #    channel_levels, plot_data = measure_channel_gains(cn0566, peak_bin, verbose=False)
     #    return channel_levels
@@ -249,10 +247,10 @@ def get_signal_levels(cn0566, verbose=False):
 
 
 def channel_calibration(cn0566, verbose=False):
-    """" Do this BEFORE gain_calibration.
-         Performs calibration between the two ADAR1000 channels. Accounts for all
-         sources of mismatch between the two channels: ADAR1000s, mixers, and
-         the SDR (Pluto) inputs. """
+    """ " Do this BEFORE gain_calibration.
+    Performs calibration between the two ADAR1000 channels. Accounts for all
+    sources of mismatch between the two channels: ADAR1000s, mixers, and
+    the SDR (Pluto) inputs."""
     peak_bin = find_peak_bin(cn0566)
     channel_levels, plot_data = measure_channel_gains(cn0566, peak_bin, verbose=False)
     ch_mismatch = 20.0 * np.log10(channel_levels[0] / channel_levels[1])
@@ -266,7 +264,7 @@ def channel_calibration(cn0566, verbose=False):
 
 
 def gain_calibration(cn0566, verbose=False):
-    """ Perform the Gain Calibration routine."""
+    """Perform the Gain Calibration routine."""
 
     """Set the gain calibration flag and create an empty gcal list. Looping through all the possibility i.e. setting
         gain of one of the channel to max and all other to 0 create a zero-list where number of 0's depend on total
@@ -308,17 +306,17 @@ def gain_calibration(cn0566, verbose=False):
 def measure_channel_gains(
     cn0566, peak_bin, verbose=False
 ):  # Default to central element
-    """ Calculate all the values required to do different plots. It method calls set_beam_phase_diff and
-        sets the Phases of all channel. All the math is done here.
-        parameters:
-            gcal_element: type=int
-                        If gain calibration is taking place, it indicates element number whose gain calibration is
-                        is currently taking place
-            cal_element: type=int
-                        If Phase calibration is taking place, it indicates element number whose phase calibration is
-                        is currently taking place
-            peak_bin: type=int
-                        Peak bin to examine around for amplitude
+    """Calculate all the values required to do different plots. It method calls set_beam_phase_diff and
+    sets the Phases of all channel. All the math is done here.
+    parameters:
+        gcal_element: type=int
+                    If gain calibration is taking place, it indicates element number whose gain calibration is
+                    is currently taking place
+        cal_element: type=int
+                    If Phase calibration is taking place, it indicates element number whose phase calibration is
+                    is currently taking place
+        peak_bin: type=int
+                    Peak bin to examine around for amplitude
     """
     width = 10  # Bins around fundamental to sum
     win = signal.windows.flattop(cn0566.sdr.rx_buffer_size)
@@ -377,17 +375,17 @@ def measure_channel_gains(
 def measure_element_gain(
     cn0566, cal, peak_bin, verbose=False
 ):  # Default to central element
-    """ Calculate all the values required to do different plots. It method calls set_beam_phase_diff and
-        sets the Phases of all channel. All the math is done here.
-        parameters:
-            gcal_element: type=int
-                        If gain calibration is taking place, it indicates element number whose gain calibration is
-                        is currently taking place
-            cal_element: type=int
-                        If Phase calibration is taking place, it indicates element number whose phase calibration is
-                        is currently taking place
-            peak_bin: type=int
-                        Peak bin to examine around for amplitude
+    """Calculate all the values required to do different plots. It method calls set_beam_phase_diff and
+    sets the Phases of all channel. All the math is done here.
+    parameters:
+        gcal_element: type=int
+                    If gain calibration is taking place, it indicates element number whose gain calibration is
+                    is currently taking place
+        cal_element: type=int
+                    If Phase calibration is taking place, it indicates element number whose phase calibration is
+                    is currently taking place
+        peak_bin: type=int
+                    Peak bin to examine around for amplitude
     """
     width = 10  # Bins around fundamental to sum
     cn0566.set_rx_hardwaregain(6)  # Channel calibration defaults to True
@@ -421,18 +419,18 @@ def measure_element_gain(
 
 
 def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
-    """ Calculate all the values required to do different plots. It method
-        calls set_beam_phase_diff and sets the Phases of all channel.
-        parameters:
-            gcal_element: type=int
-                        If gain calibration is taking place, it indicates element number whose gain calibration is
-                        is currently taking place
-            cal_element: type=int
-                        If Phase calibration is taking place, it indicates element number whose phase calibration is
-                        is currently taking place
-            peak_bin: type=int
-                        Which bin the fundamental is in.
-                        This prevents detecting other spurs when deep in a null.
+    """Calculate all the values required to do different plots. It method
+    calls set_beam_phase_diff and sets the Phases of all channel.
+    parameters:
+        gcal_element: type=int
+                    If gain calibration is taking place, it indicates element number whose gain calibration is
+                    is currently taking place
+        cal_element: type=int
+                    If Phase calibration is taking place, it indicates element number whose phase calibration is
+                    is currently taking place
+        peak_bin: type=int
+                    Which bin the fundamental is in.
+                    This prevents detecting other spurs when deep in a null.
     """
 
     cn0566.set_all_gain(0)  # Reset all elements to zero
@@ -483,7 +481,7 @@ def phase_cal_sweep(cn0566, peak_bin, ref=0, cal=1):
 
 
 def phase_calibration(cn0566, verbose=False):
-    """ Perform the Phase Calibration routine."""
+    """Perform the Phase Calibration routine."""
 
     """ Set the phase calibration flag and create an empty pcal list. Looping through all the possibility
         i.e. setting gain of two adjacent channels to gain calibrated values and all other to 0 create a zero-list
@@ -504,9 +502,10 @@ def phase_calibration(cn0566, verbose=False):
         if verbose is True:
             print("Calibrating Element " + str(cal_element))
 
-        PhaseValues, gain, = phase_cal_sweep(
-            cn0566, peak_bin, cal_element, cal_element + 1
-        )
+        (
+            PhaseValues,
+            gain,
+        ) = phase_cal_sweep(cn0566, peak_bin, cal_element, cal_element + 1)
 
         ph_delta = to_sup((180 - PhaseValues[gain.index(min(gain))]) % 360.0)
         if verbose is True:
@@ -522,17 +521,17 @@ def phase_calibration(cn0566, verbose=False):
 
 
 def save_hb100_cal(freq, filename="hb100_freq_val.pkl"):
-    """ Saves measured frequency calibration file."""
+    """Saves measured frequency calibration file."""
     with open(filename, "wb") as file1:
         pickle.dump(freq, file1)  # save calibrated gain value to a file
         file1.close()
 
 
 def load_hb100_cal(filename="hb100_freq_val.pkl"):
-    """ Load frequency measurement value, set to 10.5GHz if no
-        parameters:
-            filename: type=string
-                      Provide path of gain calibration file
+    """Load frequency measurement value, set to 10.5GHz if no
+    parameters:
+        filename: type=string
+                  Provide path of gain calibration file
     """
     try:
         with open(filename, "rb") as file1:
@@ -542,7 +541,7 @@ def load_hb100_cal(filename="hb100_freq_val.pkl"):
     return freq
 
 
-def spec_est(x, fs, ref=2 ** 15, plot=False):
+def spec_est(x, fs, ref=2**15, plot=False):
 
     N = len(x)
 
@@ -553,7 +552,7 @@ def spec_est(x, fs, ref=2 ** 15, plot=False):
 
     # Use FFT to get the amplitude of the spectrum
     ampl = 1 / N * fftshift(absolute(fft(x)))
-    ampl = 20 * log10(ampl / ref + 10 ** -20)
+    ampl = 20 * log10(ampl / ref + 10**-20)
 
     # FFT frequency bins
     freqs = fftshift(fftfreq(N, 1 / fs))

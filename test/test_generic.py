@@ -1,7 +1,7 @@
-from test.generics import compare_states, get_states, iio_buffer_check
-
 import iio
 import pytest
+
+from test.generics import compare_states, get_states, iio_buffer_check
 
 hardware = ["pluto", "adrv9361", "fmcomms2"]
 classname = ""
@@ -27,6 +27,7 @@ def test_iio_attr(
         attr,start,stop,step,tol,repeats,
     )
 # fmt: on
+
 
 #########################################
 @pytest.mark.iio_hardware(hardware, True)

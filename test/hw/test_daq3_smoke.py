@@ -35,7 +35,7 @@ def test_rx_buffer(iio_uri):
     """Capture one small RX buffer end-to-end."""
     sdr = adi.DAQ3(uri=iio_uri)
     try:
-        sdr.rx_buffer_size = 2 ** 12
+        sdr.rx_buffer_size = 2**12
         data = sdr.rx()
         assert data is not None
         # ad9680 RX is multi-channel real data: list of np arrays.
@@ -53,7 +53,7 @@ def test_dds_loopback_tone(iio_uri):
         # ad9680 RX rate: read the ADC channel's sampling_frequency directly.
         # ad9680 exposes no rx_sample_rate property, so go through _rxadc.
         fs = int(sdr._get_iio_attr("voltage0", "sampling_frequency", False, sdr._rxadc))
-        sdr.rx_buffer_size = 2 ** 14
+        sdr.rx_buffer_size = 2**14
         sdr.rx_enabled_channels = [0]
 
         # Tone at ~fs/8, well inside the first Nyquist zone, mid scale.

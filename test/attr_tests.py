@@ -1,5 +1,10 @@
 import random
 from decimal import Decimal
+
+import numpy as np
+import pytest
+
+import adi
 from test.common import (
     dev_interface,
     dev_interface_device_name_channel,
@@ -8,20 +13,15 @@ from test.common import (
     pytest_configure,
 )
 
-import numpy as np
-import pytest
-
-import adi
-
 
 def floor_step_size(quantity, step_size):
     """Quantize to specific stepsize
 
     parameters:
-        quanity: type=float
+        quantity: type=float
             Value to be quantized
         step_size: type=str
-            Step size to quantize quanity to
+            Step size to quantize quantity to
     """
     step_size_dec = Decimal(str(step_size))
     return float(int(Decimal(str(quantity)) / step_size_dec) * step_size_dec)
@@ -140,7 +140,6 @@ def attribute_single_value_readonly(
     """
 
     for _ in range(repeats):
-
         val = (upper + lower) / 2  # center point
         tol = (upper - lower) / 2  # half the range
         # print("subchannel: ", sub_channel)
@@ -177,7 +176,7 @@ def attribute_single_value_pow2(uri, classname, attr, max_pow, tol, repeats=1):
             Number of random values to tests. Generated from uniform distribution
     """
     # Pick random number in operational range
-    nums = [2 ** k for k in range(max_pow)]
+    nums = [2**k for k in range(max_pow)]
     for _ in range(repeats):
         ind = random.randint(0, len(nums) - 1)
         val = nums[ind]
@@ -687,18 +686,18 @@ def attribute_multiple_values_available_readonly(uri, classname, attr):
 
 def attribute_single_value_channel_readonly(uri, classname, channel, attr):
     """attribute_single_value:
-        Read only class property where the channel name is specified.
+    Read only class property where the channel name is specified.
 
-        parameters:
-            uri: type=string
-                URI of IIO context of target board/system
-            classname: type=string
-                Name of pyadi interface class which contain attribute
-            channel: type=string
-                Channel name of the target board/system
-            attr: type=string
-                Attribute name to be written. Must be property of classname
-        """
+    parameters:
+        uri: type=string
+            URI of IIO context of target board/system
+        classname: type=string
+            Name of pyadi interface class which contain attribute
+        channel: type=string
+            Channel name of the target board/system
+        attr: type=string
+            Attribute name to be written. Must be property of classname
+    """
     sdr = eval(classname + "(uri='" + uri + "')." + channel + "")
     try:
         if not hasattr(sdr, attr):

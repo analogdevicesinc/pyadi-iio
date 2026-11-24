@@ -56,7 +56,6 @@ time.sleep(0.25)
 print("Current sample frequency: " + str(myacc.accel_x.sampling_frequency))
 
 if my_dev != "ADXL314":
-
     print("\nSetting scale to max value...")
     myacc.accel_x.scale = sa[0]
     time.sleep(0.25)
@@ -73,7 +72,6 @@ print("\nData using buffered rx(), raw:")
 print(myacc.rx())
 
 if my_dev != "ADXL314":
-
     print("\nSetting scale to min value...")
     myacc.accel_x.scale = sa[1]
     time.sleep(0.25)

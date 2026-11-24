@@ -10,7 +10,6 @@ from adi.device_base import rx_chan_comp
 
 
 class max14001_channel(attribute):
-
     """MAX14001 channel"""
 
     def __init__(self, ctrl, channel_name):
@@ -35,7 +34,6 @@ class max14001_channel(attribute):
 
 
 class max14001(rx_chan_comp):
-
     """MAX14001 ADC"""
 
     _complex_data = False

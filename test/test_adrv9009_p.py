@@ -859,7 +859,8 @@ def test_adrv9009_iq_loopback(test_iq_loopback, iio_uri, classname, channel, par
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
-    "files", test_profiles,
+    "files",
+    test_profiles,
 )
 def test_adrv9009_profile_write(
     test_attribute_write_profile, iio_uri, classname, attr, files

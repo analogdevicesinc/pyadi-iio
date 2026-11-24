@@ -140,7 +140,10 @@ def test_max31855_common_parent_preserves_aliases_and_order(monkeypatch):
 def test_ltc2983_common_parent_preserves_ordered_all_channel_api(monkeypatch):
     """LTC2983 retains OrderedDict access and includes non-scan channels."""
     _mock_context(
-        monkeypatch, "ltc2983", ["voltage0", "temp1", "status"], [True, True, False],
+        monkeypatch,
+        "ltc2983",
+        ["voltage0", "temp1", "status"],
+        [True, True, False],
     )
 
     with adi.ltc2983(uri="local:") as dev:
@@ -205,7 +208,8 @@ def _mock_indexed_context(monkeypatch, device_name, channel_names):
 
 
 @pytest.mark.parametrize(
-    "device_class,device_name", [(adi.adpd188, "adpd188"), (adi.adpd1080, "adpd1080")],
+    "device_class,device_name",
+    [(adi.adpd188, "adpd188"), (adi.adpd1080, "adpd1080")],
 )
 def test_adpd_common_parent_preserves_index_and_private_channel_order(
     monkeypatch, device_class, device_name
@@ -224,7 +228,8 @@ def test_adpd_common_parent_preserves_index_and_private_channel_order(
 
 
 @pytest.mark.parametrize(
-    "device_class,device_name", [(adi.adpd188, "adpd188"), (adi.adpd1080, "adpd1080")],
+    "device_class,device_name",
+    [(adi.adpd188, "adpd188"), (adi.adpd1080, "adpd1080")],
 )
 def test_adpd_common_parent_rejects_missing_device_index(
     monkeypatch, device_class, device_name
@@ -275,7 +280,10 @@ def test_adpd410x_preserves_device_and_channel_attribute_forwarding():
 def test_ad5940_common_parent_preserves_bia_ordered_mapping(monkeypatch):
     """AD5940 keeps all RX names but exposes only BIA wrappers in its mapping."""
     device = _mock_context(
-        monkeypatch, "ad5940", ["voltage0", "timestamp"], scan_elements=[False, False],
+        monkeypatch,
+        "ad5940",
+        ["voltage0", "timestamp"],
+        scan_elements=[False, False],
     )
     device.channels[0].name = "bia"
     device.channels[1].name = "timestamp"
@@ -333,7 +341,10 @@ def test_ad9680_common_parent_keeps_composite_mro(composite):
 
 @pytest.mark.parametrize(
     "device_class,device_name",
-    [(adi.ad9144, "axi-ad9144-hpc"), (adi.ad9152, "axi-ad9152-hpc"),],
+    [
+        (adi.ad9144, "axi-ad9144-hpc"),
+        (adi.ad9152, "axi-ad9152-hpc"),
+    ],
 )
 def test_daq_dac_classes_use_inherited_tx_initialization(
     monkeypatch, device_class, device_name
@@ -352,7 +363,11 @@ def test_daq_dac_classes_use_inherited_tx_initialization(
 
 
 @pytest.mark.parametrize(
-    "composite,tx_name", [(adi.DAQ2, "axi-ad9144-hpc"), (adi.DAQ3, "axi-ad9152-hpc"),],
+    "composite,tx_name",
+    [
+        (adi.DAQ2, "axi-ad9144-hpc"),
+        (adi.DAQ3, "axi-ad9152-hpc"),
+    ],
 )
 def test_daq_composites_preserve_both_converter_devices(
     monkeypatch, composite, tx_name
@@ -593,7 +608,10 @@ def test_adxl313_rejects_context_without_compatible_device(monkeypatch):
 
 @pytest.mark.parametrize(
     "device_class,requested_device",
-    [(adi.adxl380, "adxl380"), (adi.adis16475, "adis16505-2"),],
+    [
+        (adi.adxl380, "adxl380"),
+        (adi.adis16475, "adis16505-2"),
+    ],
 )
 def test_compatible_device_fallback(monkeypatch, device_class, requested_device):
     """Classes that historically probed compatible parts must keep doing so."""
@@ -691,7 +709,10 @@ def test_channel_def_dict_uses_first_matching_key():
 
 def test_channel_def_dict_skips_unmatched_channels():
     """Channels with no matching key are left out of the channel list."""
-    dev = _channel_def_device(["voltage0", "current0"], {"voltage": _RecordingChannel},)
+    dev = _channel_def_device(
+        ["voltage0", "current0"],
+        {"voltage": _RecordingChannel},
+    )
 
     dev._add_channel_instances()
 
@@ -724,7 +745,9 @@ def test_channel_def_dict_rejects_non_callable_value():
 def test_channel_def_callable_preserves_legacy_behavior():
     """A single callable _channel_def still builds every non-ignored channel."""
     dev = _channel_def_device(
-        ["voltage0", "voltage1", "temp0"], _RecordingChannel, ignore_channels=["temp0"],
+        ["voltage0", "voltage1", "temp0"],
+        _RecordingChannel,
+        ignore_channels=["temp0"],
     )
 
     dev._add_channel_instances()
@@ -745,17 +768,17 @@ def test_channel_def_callable_rejects_non_callable_value():
 def channel_definitions(device_class, iio_uri):
     with eval(f"adi.{device_class}(uri=iio_uri)") as dev:
         assert hasattr(dev, "channel"), f"{device_class} missing channel attribute"
-        assert isinstance(
-            dev.channel, list
-        ), f"{device_class} channel attribute is not a list"
+        assert isinstance(dev.channel, list), (
+            f"{device_class} channel attribute is not a list"
+        )
         assert len(dev.channel) > 0, f"{device_class} has no channels defined"
         for ch in dev.channel:
             # assert hasattr(
             #     ch, "raw"
             # ), f"{device_class} channel {ch.name} missing raw property"
-            assert hasattr(
-                type(ch), "scale"
-            ), f"{device_class} channel {ch.name} missing scale property"
+            assert hasattr(type(ch), "scale"), (
+                f"{device_class} channel {ch.name} missing scale property"
+            )
             # device_base exposes each channel as a named attribute on the
             # device; hyphens in IIO channel ids (e.g. voltage0-voltage1) are
             # sanitized to underscores to form valid Python identifiers.

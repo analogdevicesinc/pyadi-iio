@@ -23,7 +23,7 @@ def do_mock():
 @pytest.mark.parametrize("channel", [0, 1, 2, 3, 4, 5, [0, 1, 2]])
 def test_admt4000_rx_data(test_dma_rx, iio_uri, classname, channel):
     do_mock()
-    test_dma_rx(iio_uri, classname, channel, buffer_size=2 ** 5)
+    test_dma_rx(iio_uri, classname, channel, buffer_size=2**5)
 
 
 #########################################
@@ -89,7 +89,11 @@ def test_admt4000_attr_single_str(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr", [("conv_sync_mode_available"), ("h8_corr_src_available"),],
+    "attr",
+    [
+        ("conv_sync_mode_available"),
+        ("h8_corr_src_available"),
+    ],
 )
 def test_admt4000_attr_multiple_values_readonly(
     test_attribute_multiple_values_available_readonly, iio_uri, classname, attr

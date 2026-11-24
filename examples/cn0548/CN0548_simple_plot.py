@@ -421,7 +421,6 @@ elif error > 0:
 # ----- New Session -----
 
 if new_session == 1:
-
     print(
         "\nA jumper map graphic will be generated upon answering the succeeding prompts. This will help you setup the jumper configuration of the CN0548 board.\n\n"
     )

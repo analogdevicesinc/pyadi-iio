@@ -2,7 +2,7 @@
 #
 # SPDX short identifier: ADIBSD
 
-""" Example of how to use the adar1000_array class """
+"""Example of how to use the adar1000_array class"""
 
 import adi
 

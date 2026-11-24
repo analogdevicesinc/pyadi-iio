@@ -7,7 +7,7 @@ from adi.context_manager import context_manager
 
 
 class adrf5720(attribute, context_manager):
-    """ ADRF5720 Digital Attenuator """
+    """ADRF5720 Digital Attenuator"""
 
     _complex_data = False
     channel = "voltage0"

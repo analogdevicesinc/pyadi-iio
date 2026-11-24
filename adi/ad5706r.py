@@ -221,7 +221,7 @@ class ad5706r_channel(attribute):
 
 
 class ad5706r(tx_chan_comp):
-    """ ad5706r DAC """
+    """ad5706r DAC"""
 
     _complex_data = False
     _device_name = ""

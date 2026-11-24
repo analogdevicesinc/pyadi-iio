@@ -7,8 +7,7 @@ from adi.ada4961 import ada4961
 
 
 class fmcadc3(ad9625, ada4961):
-
-    """ FMCADC3 High-Speed Data Aquistion Device """
+    """FMCADC3 High-Speed Data Aquistion Device"""
 
     def __init__(self, uri=""):
 

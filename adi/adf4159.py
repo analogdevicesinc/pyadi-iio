@@ -8,8 +8,7 @@ from adi.context_manager import context_manager
 
 
 class adf4159(context_manager, attribute):
-
-    """ ADF4159 is a 13 GHz Fractional-N Frequency Synthesizer """
+    """ADF4159 is a 13 GHz Fractional-N Frequency Synthesizer"""
 
     _device_name = "adf4159"
 
@@ -35,7 +34,6 @@ class adf4159(context_manager, attribute):
             "altvoltage0", "ramp_mode_available", True, self._ctrl
         )
         if value not in valid:
-
             raise ValueError(
                 f'ramp_mode of "{value}" is invalid. Valid options: "{valid}"'
             )

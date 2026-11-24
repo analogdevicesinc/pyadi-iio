@@ -3,6 +3,7 @@ import pytest
 hardware = "cn0575"
 classname = "adi.cn0575"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -34,7 +35,13 @@ def test_adt75_attr(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, val", [("led", [1, 0],),],
+    "attr, val",
+    [
+        (
+            "led",
+            [1, 0],
+        ),
+    ],
 )
 def test_led_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):
     test_attribute_multiple_values(iio_uri, classname, attr, val, 0, repeats=10)

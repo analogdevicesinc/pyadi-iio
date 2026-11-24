@@ -135,7 +135,9 @@ def create_model_cnn(x_train, y_train, x_test, y_test, n_outputs):
     # Compile
     opt = keras.optimizers.Adam()
     model.compile(
-        loss=losses.categorical_crossentropy, optimizer=opt, metrics=["accuracy"],
+        loss=losses.categorical_crossentropy,
+        optimizer=opt,
+        metrics=["accuracy"],
     )
     print(model.summary())
     # Train and test

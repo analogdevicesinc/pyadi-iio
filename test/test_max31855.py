@@ -5,6 +5,7 @@ import adi
 hardware = ["MAX31855"]
 classname = "adi.max31855"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])

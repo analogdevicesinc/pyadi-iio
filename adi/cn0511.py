@@ -13,7 +13,7 @@ except (ImportError, AttributeError):
 
 
 class cn0511(ad9166_adi):
-    """ CN0511 Raspberry Pi Hat Signal Generator """
+    """CN0511 Raspberry Pi Hat Signal Generator"""
 
     def __init__(self, uri=""):
         context_manager.__init__(self, uri, self._device_name)
@@ -33,7 +33,7 @@ class cn0511(ad9166_adi):
 
     @property
     def trim_frequency_raw(self):
-        """ trim_frequency_raw: modify output frequency of cn0511 in small steps"""
+        """trim_frequency_raw: modify output frequency of cn0511 in small steps"""
         return self._get_iio_attr(self._trim_dac_ch, "raw", True, self._trim_dac)
 
     @trim_frequency_raw.setter
@@ -42,7 +42,7 @@ class cn0511(ad9166_adi):
 
     @property
     def amp_enable(self):
-        """ amp_enable: Enable or Disable the CN0511 ad9166 amplifier """
+        """amp_enable: Enable or Disable the CN0511 ad9166 amplifier"""
         return True if (self._get_iio_dev_attr("en", _ctrl=self._amp) == 1) else False
 
     @amp_enable.setter
@@ -57,9 +57,9 @@ class cn0511(ad9166_adi):
     def amplitude_cal(self):
         """amplitude_cal: CN0511 amplitude calibration
 
-           Options:
-               True: If you set this to true, the output is calibrated.
-               False: Nothing happens.
+        Options:
+            True: If you set this to true, the output is calibrated.
+            False: Nothing happens.
         """
         return None
 
@@ -77,7 +77,7 @@ class cn0511(ad9166_adi):
     def calibrated_output(self):
         """calibrated_output: ["desired_output_amplitude_in_dbm", "desired_output_frequency_in_Hz"]]"""
         if libad9166:
-            return [int(20 * np.log10(self.raw / (2 ** 15))), self.frequency]
+            return [int(20 * np.log10(self.raw / (2**15))), self.frequency]
         print("Warning: Missing libad9166, calibration failed.")
 
     @calibrated_output.setter
@@ -93,7 +93,7 @@ class cn0511(ad9166_adi):
 
     @property
     def board_calibrated(self):
-        """ board_calibrated: 1 if board was calibrated in production, 0 if board was not calibrated in production"""
+        """board_calibrated: 1 if board was calibrated in production, 0 if board was not calibrated in production"""
         if libad9166:
             return libad9166.device_is_calibrated(self.__calibration_data)
         print("Warning: Missing libad9166, calibration failed.")

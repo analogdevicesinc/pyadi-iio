@@ -5,12 +5,16 @@ import pytest
 hardware = ["adf4377"]
 classname = "adi.adf4377"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats",
-    [("volt0_output_power", 1, 11, 1, 0, 3), ("volt1_output_power", 1, 11, 1, 0, 3),],
+    [
+        ("volt0_output_power", 1, 11, 1, 0, 3),
+        ("volt1_output_power", 1, 11, 1, 0, 3),
+    ],
 )
 def test_adf4377_attrs(
     test_attribute_single_value,
@@ -33,10 +37,19 @@ def test_adf4377_attrs(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, value",
-    [("volt0_en", 0), ("volt0_en", 1), ("volt1_en", 0), ("volt1_en", 1),],
+    [
+        ("volt0_en", 0),
+        ("volt0_en", 1),
+        ("volt1_en", 0),
+        ("volt1_en", 1),
+    ],
 )
 def test_adf4377_attrs_bool(
-    test_attribute_single_value_boolean, iio_uri, classname, attr, value,
+    test_attribute_single_value_boolean,
+    iio_uri,
+    classname,
+    attr,
+    value,
 ):
     test_attribute_single_value_boolean(iio_uri, classname, attr, value)
 
@@ -85,6 +98,10 @@ def test_adf4377_attrs_no_os(
     ],
 )
 def test_adf4382_attrs_bool_no_os(
-    test_attribute_single_value_boolean, iio_uri, classname, attr, value,
+    test_attribute_single_value_boolean,
+    iio_uri,
+    classname,
+    attr,
+    value,
 ):
     test_attribute_single_value_boolean(iio_uri, classname, attr, value)

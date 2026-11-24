@@ -9,7 +9,6 @@ from adi.rx_tx import rx
 
 
 class fmcjesdadc1(ad9250):
-
     """FMCJESDADC1 Four-Channel High Speed Data Acquisition FMC Board"""
 
     _split_cores = True

@@ -64,7 +64,6 @@ theremin_args0 = [norm_c4, norm_d4, norm_e4, norm_f4, norm_g4]
 theremin_args1 = [norm_c5, norm_d5, norm_e5, norm_f5, norm_g5]
 
 if __name__ == "__main__":
-
     adpd2140_pmod = adpd2140_gesture_sensor.adpd2140_gesture_sensor(uri="serial:COM4")
     adpd2140_pmod.rx_buffer_size = 8
     # adpd2140_pmod.sample_rate = 512

@@ -6,7 +6,7 @@ uri = "ip:analog"
 # Connect to the device
 xl = adi.cn0532(uri)
 # Set number of samples to capture
-xl.rx_buffer_size = 2 ** 12
+xl.rx_buffer_size = 2**12
 # Pull rx_buffer_size samples back from the device
 data = xl.rx()
 # Print data shape

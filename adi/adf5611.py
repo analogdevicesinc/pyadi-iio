@@ -103,7 +103,7 @@ class adf5611(attribute, context_manager):
         # Check that the value is valid
         if value.lower().strip() not in self._charge_pump_options:
             raise ValueError(
-                f"charge_pump_current of \"{value}\" is invalid. Valid options: {', '.join(self._charge_pump_options)}"
+                f'charge_pump_current of "{value}" is invalid. Valid options: {", ".join(self._charge_pump_options)}'
             )
 
         self._set_iio_dev_attr("charge_pump_current", value, self._ctrl)
@@ -125,7 +125,7 @@ class adf5611(attribute, context_manager):
         # Check that the divider value is valid
         if value.lower().strip() not in self._rfoutdiv_divider_options:
             raise ValueError(
-                f"rfoutdiv_divider of \"{value}\" is invalid. Valid options: {', '.join(self._rfoutdiv_divider_options)}"
+                f'rfoutdiv_divider of "{value}" is invalid. Valid options: {", ".join(self._rfoutdiv_divider_options)}'
             )
 
         self._set_iio_dev_attr("rfoutdiv_divider", value, self._ctrl)

@@ -3,6 +3,7 @@ import pytest
 hardware = ["ad7768-4"]
 classname = "adi.ad7768_4"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -21,9 +22,18 @@ classname = "adi.ad7768_4"
                 32000,
             ],  # End on a rate compatible with all power modes
         ),
-        ("filter_type", ["WIDEBAND", "SINC5"],),
-        ("power_mode", ["LOW_POWER_MODE", "MEDIAN_MODE", "FAST_MODE"],),
-        ("sync_start_enable", ["arm"],),
+        (
+            "filter_type",
+            ["WIDEBAND", "SINC5"],
+        ),
+        (
+            "power_mode",
+            ["LOW_POWER_MODE", "MEDIAN_MODE", "FAST_MODE"],
+        ),
+        (
+            "sync_start_enable",
+            ["arm"],
+        ),
     ],
 )
 def test_ad7768_4_attr(test_attribute_multiple_values, iio_uri, classname, attr, val):

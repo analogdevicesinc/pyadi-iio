@@ -6,7 +6,7 @@ from adi.rx_tx import tx_def
 
 
 class ad9739a(tx_def):
-    """ AD9739A 14-Bit, 2.5 GSPS, RF Digital-to-Analog Converter """
+    """AD9739A 14-Bit, 2.5 GSPS, RF Digital-to-Analog Converter"""
 
     compatible_parts = ["ad9739a"]
     _tx_data_device_name = "axi-ad9739a-hpc"

@@ -35,9 +35,9 @@ t = np.arange(0, N * ts, ts)
 # Sine generation
 samples = np.sin(2 * np.pi * t * fc)
 # Amplitude (full_scale / 2)
-samples *= (2 ** 15) - 1
+samples *= (2**15) - 1
 # Offset (full_scale / 2)
-samples += 2 ** 15
+samples += 2**15
 # conversion to unsigned int and offset binary
 samples = np.uint16(samples)
 

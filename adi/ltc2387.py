@@ -8,7 +8,6 @@ from adi.device_base import rx_def
 
 
 class ltc2387(rx_def):
-
     """LTC2387 family devices"""
 
     compatible_parts = [

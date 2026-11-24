@@ -86,7 +86,7 @@ In order to maintain pyadi-iio, for all new drivers the development team will re
 Test Functions and Fixtures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links belows to the different test categories:
+pyadi-iio has a large set of parameterizable fixtures for testing different device specific class interfaces. See the links below to the different test categories:
 
 .. toctree::
    :maxdepth: 4

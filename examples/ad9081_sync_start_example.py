@@ -44,8 +44,8 @@ def gen_tone(fc, fs, NN):
     fc = int(fc / (fs / N)) * (fs / N)
     ts = 1 / float(fs)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 15
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 15
+    i = np.cos(2 * np.pi * t * fc) * 2**15
+    q = np.sin(2 * np.pi * t * fc) * 2**15
     Xn = i + 1j * q
     # Xn = np.pad(Xn, int(NN - N))
     Xn = np.pad(Xn, (0, int(NN - N)), "constant")
@@ -93,7 +93,7 @@ tx_use_dma = True
 do_powerdowns = False
 
 RUNS = 5000
-N = 2 ** 12
+N = 2**12
 
 dev.rx_buffer_size = N
 dev.tx_cyclic_buffer = False
@@ -124,7 +124,6 @@ po = []
 
 # Collect data
 for r in range(RUNS):
-
     if do_powerdowns:
         dev.powerdown = 1
         dev.powerdown = 0

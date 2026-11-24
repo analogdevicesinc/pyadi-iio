@@ -355,7 +355,13 @@ def test_ad9081_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
 )
 @pytest.mark.parametrize("peak_min", [-30])
 def test_ad9081_nco_loopback(
-    test_tone_loopback, iio_uri, classname, param_set, channel, frequency, peak_min,
+    test_tone_loopback,
+    iio_uri,
+    classname,
+    param_set,
+    channel,
+    frequency,
+    peak_min,
 ):
     param_set = scale_field(param_set, iio_uri)
     test_tone_loopback(iio_uri, classname, param_set, channel, frequency, peak_min)

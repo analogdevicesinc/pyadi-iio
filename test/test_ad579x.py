@@ -3,6 +3,7 @@ import pytest
 hardware = "ad5780"
 classname = "adi.ad579x"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware, True)
 @pytest.mark.parametrize("classname", [(classname)])

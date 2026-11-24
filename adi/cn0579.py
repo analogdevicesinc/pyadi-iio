@@ -6,11 +6,11 @@ from adi.ad7768 import ad7768_4
 
 
 class cn0579(ad7768_4):
-
-    """ CN0579 - Multichannel IEPE DAQ for CbM """
+    """CN0579 - Multichannel IEPE DAQ for CbM"""
 
     def __init__(
-        self, uri="ip:analog.local",
+        self,
+        uri="ip:analog.local",
     ):
 
         ad7768_4.__init__(self, uri)

@@ -9,6 +9,7 @@ classname = "adi.adrv9008_2"
 profile_path = dirname(realpath(__file__)) + "/adrv9009_profiles/"
 test_profiles = [join(profile_path, f) for f in listdir(profile_path)]
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
@@ -41,7 +42,12 @@ def test_adrv9008_2_attr_boolean(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr", [("tx_rf_bandwidth"), ("tx_sample_rate"), ("orx_sample_rate"),],
+    "attr",
+    [
+        ("tx_rf_bandwidth"),
+        ("tx_sample_rate"),
+        ("orx_sample_rate"),
+    ],
 )
 def test_adrv9008_2_attr_boolean_readonly(
     test_attribute_single_value_boolean_readonly, iio_uri, classname, attr
@@ -53,7 +59,10 @@ def test_adrv9008_2_attr_boolean_readonly(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, value", [("calibrate", 1),],
+    "attr, value",
+    [
+        ("calibrate", 1),
+    ],
 )
 def test_adrv9008_2_attribute_write_only_str(
     test_attribute_write_only_str, iio_uri, classname, attr, value
@@ -85,7 +94,10 @@ def test_adrv9008_2_attr(
     [
         (
             "tx_hardwaregain_chan0",
-            dict(frequency_hopping_mode_en=0, ensm_mode="radio_on",),
+            dict(
+                frequency_hopping_mode_en=0,
+                ensm_mode="radio_on",
+            ),
             -41.95,
             0.0,
             0.05,
@@ -94,7 +106,10 @@ def test_adrv9008_2_attr(
         ),
         (
             "tx_hardwaregain_chan1",
-            dict(frequency_hopping_mode_en=0, ensm_mode="radio_on",),
+            dict(
+                frequency_hopping_mode_en=0,
+                ensm_mode="radio_on",
+            ),
             -41.95,
             0.0,
             0.05,
@@ -129,7 +144,9 @@ def test_adrv9008_2_attr_singleval_depends(
         (
             "obs_hardwaregain",
             dict(
-                frequency_hopping_mode_en=0, ensm_mode="radio_on", obs_powerdown_en=0,
+                frequency_hopping_mode_en=0,
+                ensm_mode="radio_on",
+                obs_powerdown_en=0,
             ),
             0.0,
             30.0,
@@ -161,7 +178,8 @@ def test_adrv9008_2_attr_singleval_depends_2(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("attr", ["profile"])
 @pytest.mark.parametrize(
-    "files", test_profiles,
+    "files",
+    test_profiles,
 )
 def test_adrv9008_2_profile_write(
     test_attribute_write_profile, iio_uri, classname, attr, files

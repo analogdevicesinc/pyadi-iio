@@ -5,15 +5,25 @@ import adi
 hardware = "ad5754r"
 classname = "adi.ad5754r"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, val",
     [
-        ("int_ref_powerup", ["powerdown", "powerup"],),
-        ("clear_setting", ["0v", "midscale_code"],),
-        ("sdo_disable", ["enable", "disable"],),
+        (
+            "int_ref_powerup",
+            ["powerdown", "powerup"],
+        ),
+        (
+            "clear_setting",
+            ["0v", "midscale_code"],
+        ),
+        (
+            "sdo_disable",
+            ["enable", "disable"],
+        ),
     ],
 )
 def test_ad5754r_global_attr(
@@ -29,7 +39,10 @@ def test_ad5754r_global_attr(
 @pytest.mark.parametrize(
     "attr, val",
     [
-        ("powerup", ["powerdown", "powerup"],),
+        (
+            "powerup",
+            ["powerdown", "powerup"],
+        ),
         (
             "range",
             [

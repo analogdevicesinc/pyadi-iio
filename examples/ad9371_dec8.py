@@ -40,17 +40,17 @@ fs = int(sdr.tx_sample_rate)
 print("RX LO %s" % (sdr.rx_lo))
 
 # Create a sinewave waveform
-N = 2 ** 15
+N = 2**15
 fc = 6000000
 ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)
-i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+i = np.cos(2 * np.pi * t * fc) * 2**14
+q = np.sin(2 * np.pi * t * fc) * 2**14
 iq = i + 1j * q
 
 fc = -3000000
-i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+i = np.cos(2 * np.pi * t * fc) * 2**14
+q = np.sin(2 * np.pi * t * fc) * 2**14
 iq2 = i + 1j * q
 
 # Send data

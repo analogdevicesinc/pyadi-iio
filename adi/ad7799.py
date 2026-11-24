@@ -20,7 +20,7 @@ class ad7799_channel(attribute):
 
 
 class ad7799(rx_chan_comp):
-    """ AD7799 ADC """
+    """AD7799 ADC"""
 
     compatible_parts = ["AD7799"]
     _rx_channel_names = ["channel0", "channel1", "channel2"]

@@ -9,13 +9,13 @@ from adi.attribute import attribute
 
 
 class sync_start(attribute):
-    """ Synchronization Control: This class allows for synchronous transfers
-        between transmit and receive data movement or captures.
+    """Synchronization Control: This class allows for synchronous transfers
+    between transmit and receive data movement or captures.
     """
 
     @property
     def tx_sync_start(self):
-        """ tx_sync_start: Issue a synchronisation request
+        """tx_sync_start: Issue a synchronisation request
 
         Possible values are:
             - **arm**: Writing this key will arm the trigger mechanism sensitive to an
@@ -49,7 +49,7 @@ class sync_start(attribute):
 
     @property
     def tx_sync_start_available(self):
-        """ tx_sync_start_available: Returns a list of possible keys used for tx_sync_start """
+        """tx_sync_start_available: Returns a list of possible keys used for tx_sync_start"""
         if "sync_start_enable_available" in self._txdac.attrs:
             return self._get_iio_dev_attr_str(
                 "sync_start_enable_available", _ctrl=self._txdac
@@ -59,7 +59,7 @@ class sync_start(attribute):
 
     @property
     def rx_sync_start(self):
-        """ rx_sync_start: Issue a synchronisation request
+        """rx_sync_start: Issue a synchronisation request
 
         Possible values are:
             - **arm**: Writing this key will arm the trigger mechanism sensitive to an
@@ -97,7 +97,7 @@ class sync_start(attribute):
 
     @property
     def rx_sync_start_available(self):
-        """ rx_sync_start_available: Returns a list of possible keys used for rx_sync_start """
+        """rx_sync_start_available: Returns a list of possible keys used for rx_sync_start"""
         if "sync_start_enable_available" in self._rxadc.attrs:
             return self._get_iio_dev_attr_str(
                 "sync_start_enable_available", _ctrl=self._rxadc
@@ -107,13 +107,13 @@ class sync_start(attribute):
 
 
 class sync_start_b(attribute):
-    """ Synchronization Control: This class allows for synchronous transfers
-        between transmit and receive data movement or captures.
+    """Synchronization Control: This class allows for synchronous transfers
+    between transmit and receive data movement or captures.
     """
 
     @property
     def tx_b_sync_start(self):
-        """ tx_b_sync_start: Issue a synchronisation request
+        """tx_b_sync_start: Issue a synchronisation request
 
         Possible values are:
             - **arm**: Writing this key will arm the trigger mechanism sensitive to an
@@ -147,7 +147,7 @@ class sync_start_b(attribute):
 
     @property
     def tx_b_sync_start_available(self):
-        """ tx_sync_start_available: Returns a list of possible keys used for tx_sync_start """
+        """tx_sync_start_available: Returns a list of possible keys used for tx_sync_start"""
         if "sync_start_enable_available" in self._txdac2.attrs:
             return self._get_iio_dev_attr_str(
                 "sync_start_enable_available", _ctrl=self._txdac2
@@ -157,7 +157,7 @@ class sync_start_b(attribute):
 
     @property
     def rx_b_sync_start(self):
-        """ rx_b_sync_start: Issue a synchronisation request
+        """rx_b_sync_start: Issue a synchronisation request
 
         Possible values are:
             - **arm**: Writing this key will arm the trigger mechanism sensitive to an
@@ -195,7 +195,7 @@ class sync_start_b(attribute):
 
     @property
     def rx_b_sync_start_available(self):
-        """ rx_sync_start_available: Returns a list of possible keys used for rx_sync_start """
+        """rx_sync_start_available: Returns a list of possible keys used for rx_sync_start"""
         if "sync_start_enable_available" in self._rxadc2.attrs:
             return self._get_iio_dev_attr_str(
                 "sync_start_enable_available", _ctrl=self._rxadc2

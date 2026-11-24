@@ -298,7 +298,13 @@ def test_ad9084_iq_loopback(test_iq_loopback, iio_uri, classname, channel, param
 )
 @pytest.mark.parametrize("peak_min", [-30])
 def test_ad9084_nco_loopback(
-    test_tone_loopback, iio_uri, classname, param_set, channel, frequency, peak_min,
+    test_tone_loopback,
+    iio_uri,
+    classname,
+    param_set,
+    channel,
+    frequency,
+    peak_min,
 ):
     param_set = scale_field(param_set, iio_uri)
     test_tone_loopback(iio_uri, classname, param_set, channel, frequency, peak_min)
@@ -310,7 +316,7 @@ def test_split_rx_buffers(iio_uri):
     import adi
 
     dev = adi.ad9084(uri=iio_uri)
-    dev.rx_buffer_size = 2 ** 10
+    dev.rx_buffer_size = 2**10
 
     d = dev.rx()
     d1 = dev.rx1()

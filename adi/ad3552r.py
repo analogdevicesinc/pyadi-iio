@@ -19,7 +19,7 @@ class ad3552r_channel(attribute):
     @property
     def raw(self):
         """Get channel raw value
-            DAC code in the range 0-65535"""
+        DAC code in the range 0-65535"""
         return self._get_iio_attr(self.name, "raw", True)
 
     @raw.setter
@@ -49,7 +49,7 @@ class ad3552r_channel(attribute):
 
 
 class ad3552r(tx_chan_comp):
-    """ AD3552R DAC """
+    """AD3552R DAC"""
 
     compatible_parts = ["ad3552r", "ad3542r"]
     _complex_data = False

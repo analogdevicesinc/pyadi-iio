@@ -87,7 +87,7 @@ def main():
     raw = int(ad3530r_chan.raw)
     scale = float(ad3530r_chan.scale)
     offset = int(ad3530r_chan.offset)
-    print(f"Channel{chn_num} voltage in Volts: {(raw + offset) * scale/1000}")
+    print(f"Channel{chn_num} voltage in Volts: {(raw + offset) * scale / 1000}")
 
 
 if __name__ == "__main__":

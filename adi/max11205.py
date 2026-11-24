@@ -10,7 +10,6 @@ from adi.device_base import rx_chan_comp
 
 
 class max11205(rx_chan_comp):
-
     """MAX11205 ADC"""
 
     _complex_data = False
@@ -36,7 +35,6 @@ class max11205(rx_chan_comp):
             setattr(self, name, wrapper)
 
     class _channel(attribute):
-
         """MAX11205 channel"""
 
         def __init__(self, ctrl, channel_name):

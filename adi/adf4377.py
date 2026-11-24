@@ -152,7 +152,7 @@ class adf4377(attribute, context_manager):
         # Check that the value is valid
         if value.lower().strip() not in self._charge_pump_options:
             raise ValueError(
-                f"charge_pump_current of \"{value}\" is invalid. Valid options: {', '.join(self._charge_pump_options)}"
+                f'charge_pump_current of "{value}" is invalid. Valid options: {", ".join(self._charge_pump_options)}'
             )
         self._set_iio_dev_attr("charge_pump_current", value, self._ctrl)
 
@@ -175,7 +175,7 @@ class adf4377(attribute, context_manager):
         # Check that the divider value is valid
         if value.lower().strip() not in self._rfout_div_options:
             raise ValueError(
-                f"rfout_divider of \"{value}\" is invalid. Valid options: {', '.join(self._rfout_div_options)}"
+                f'rfout_divider of "{value}" is invalid. Valid options: {", ".join(self._rfout_div_options)}'
             )
 
         self._set_iio_dev_attr("rfout_divider", value, self._ctrl)

@@ -1,5 +1,4 @@
 import heapq
-import test.rf.spec as spec
 import time
 
 import numpy as np
@@ -8,6 +7,7 @@ from numpy.fft import fft, fftfreq, fftshift
 from scipy import signal
 
 import adi
+import test.rf.spec as spec
 
 try:
     from .plot_logger import gen_line_plot_html
@@ -22,7 +22,7 @@ def dma_rx(
     classname,
     channel,
     use_rx2=False,
-    buffer_size=2 ** 15,
+    buffer_size=2**15,
     annotated=False,
     param_set=None,
 ):
@@ -100,11 +100,11 @@ def dma_tx(uri, classname, channel, use_tx2=False):
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     TXFS = 1000
-    N = 2 ** 15
+    N = 2**15
     ts = 1 / float(TXFS)
     t = np.arange(0, N * ts, ts)
     fc = 10000
-    d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+    d = np.cos(2 * np.pi * t * fc) * 2**15 * 0.5
 
     if use_tx2:
         if not isinstance(channel, list):
@@ -155,7 +155,7 @@ def dma_dac_zeros(uri, classname, channel):
     # Create a ramp signal with different values for I and Q
     sdr.tx_enabled_channels = None
     sdr.rx_enabled_channels = [channel]
-    sdr.rx_buffer_size = 2 ** 11 * 2 * len(sdr.rx_enabled_channels)
+    sdr.rx_buffer_size = 2**11 * 2 * len(sdr.rx_enabled_channels)
     try:
         sdr.tx()
         # Flush buffers
@@ -198,7 +198,7 @@ def dma_loopback(uri, classname, channel):
     sdr.tx_cyclic_buffer = True
     # Create a ramp signal with different values for I and Q
     start = 0
-    tx_data = np.array(range(start, 2 ** 11), dtype=np.int16)
+    tx_data = np.array(range(start, 2**11), dtype=np.int16)
     tx_data = tx_data << 4
     tx_data = tx_data + 1j * (tx_data * -1 - 1)
     sdr.tx_enabled_channels = [channel]
@@ -291,7 +291,7 @@ def dds_loopback(
         setattr(sdr, p, param_set[p])
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
-    N = 2 ** 14
+    N = 2**14
 
     if use_obs and use_rx2:
         raise Exception("Both RX2 and OBS are selected. Select one at a time.")
@@ -323,7 +323,7 @@ def dds_loopback(
         raise Exception(e)
     del sdr
     tone_peaks, tone_freqs = spec.spec_est(
-        data, fs=RXFS, ref=2 ** 15, plot=False, useWindow=useWindow
+        data, fs=RXFS, ref=2**15, plot=False, useWindow=useWindow
     )
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - frequency)
@@ -398,7 +398,7 @@ def dds_two_tone(
         setattr(sdr, p, param_set[p])
     # Set common buffer settings
     sdr.tx_cyclic_buffer = True
-    N = 2 ** 14
+    N = 2**14
     # Create a sinewave waveform
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
@@ -417,7 +417,7 @@ def dds_two_tone(
         del sdr
         raise Exception(e)
     del sdr
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2**15)
     indx = heapq.nlargest(2, range(len(tone_peaks)), tone_peaks.__getitem__)
     s1 = "Peak 1: " + str(tone_peaks[indx[0]]) + " @ " + str(tone_freqs[indx[0]])
     s2 = "Peak 2: " + str(tone_peaks[indx[1]]) + " @ " + str(tone_freqs[indx[1]])
@@ -489,7 +489,7 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
     for p in param_set.keys():
         setattr(sdr, p, param_set[p])
 
-    N = 2 ** 14
+    N = 2**14
     sdr.rx_enabled_channels = [channel]
     sdr.rx_buffer_size = N * 2 * len(sdr.rx_enabled_channels)
     # Create a sinewave waveform
@@ -511,7 +511,7 @@ def nco_loopback(uri, classname, param_set, channel, frequency, peak_min):
         del sdr
         raise Exception(e)
     del sdr
-    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2 ** 15)
+    tone_peaks, tone_freqs = spec.spec_est(data, fs=RXFS, ref=2**15)
     indx = np.argmax(tone_peaks)
     diff = np.abs(tone_freqs[indx] - frequency)
     s = "Peak: " + str(tone_peaks[indx]) + "@" + str(tone_freqs[indx])
@@ -570,7 +570,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
                 < 4
             )
     # Set common buffer settings
-    N = 2 ** 14
+    N = 2**14
     if use_tx2:
         sdr.tx2_cyclic_buffer = True
         sdr.tx2_enabled_channels = [channel]
@@ -598,7 +598,7 @@ def cw_loopback(uri, classname, channel, param_set, use_tx2=False, use_rx2=False
         attr = "rx" + str(channel) + "_sample_rate"
         RXFS = int(getattr(sdr, attr))
 
-    A = 2 ** 15
+    A = 2**15
     if hasattr(sdr, "tx_sample_rate"):
         FS = int(sdr.tx_sample_rate)
     else:
@@ -682,7 +682,7 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
         setattr(sdr, p, param_set[p])
     time.sleep(5)  # Wait for QEC to kick in
     # Set common buffer settings
-    N = 2 ** 14
+    N = 2**14
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
     sdr.tx_buffer_size = N * 2 * len(sdr.tx_enabled_channels)
@@ -709,8 +709,8 @@ def t_sfdr(uri, classname, channel, param_set, sfdr_min, use_obs=False, full_sca
     fc = int(fc / (FS / N)) * (FS / N)
     ts = 1 / float(FS)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 15 * full_scale
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 15 * full_scale
+    i = np.cos(2 * np.pi * t * fc) * 2**15 * full_scale
+    q = np.sin(2 * np.pi * t * fc) * 2**15 * full_scale
     iq = i + 1j * q
     # Pass through SDR
     try:
@@ -868,14 +868,14 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
 
     time.sleep(3)
 
-    N = 2 ** 15
+    N = 2**15
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
     sdr.tx_buffer_size = N * len(sdr.tx_enabled_channels)
     sdr.rx_enabled_channels = [channel]
     sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
 
-    ref = 2 ** 12
+    ref = 2**12
 
     if hasattr(sdr, "sample_rate"):
         RXFS = int(sdr.sample_rate)
@@ -906,7 +906,7 @@ def harmonic_vals(classname, uri, channel, param_set, low, high, plot=False):
     L = len(data)
 
     ampl = 1 / L * np.absolute(fft(data))
-    ampl = 20 * np.log10(ampl / ref + 10 ** -20)
+    ampl = 20 * np.log10(ampl / ref + 10**-20)
 
     freqs = fftfreq(L, 1 / RXFS)
 
@@ -974,8 +974,8 @@ def cyclic_buffer(uri, classname, channel, param_set):
     fc = int(fc / (fs / N)) * (fs / N)
     ts = 1 / float(fs)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+    i = np.cos(2 * np.pi * t * fc) * 2**14
+    q = np.sin(2 * np.pi * t * fc) * 2**14
     iq = i + 1j * q
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
@@ -1032,8 +1032,8 @@ def cyclic_buffer_exception(uri, classname, channel, param_set):
     fc = int(fc / (fs / N)) * (fs / N)
     ts = 1 / float(fs)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+    i = np.cos(2 * np.pi * t * fc) * 2**14
+    q = np.sin(2 * np.pi * t * fc) * 2**14
     iq = i + 1j * q
     sdr.tx_cyclic_buffer = True
     sdr.tx_enabled_channels = [channel]
@@ -1079,7 +1079,7 @@ def stress_context_creation(uri, classname, channel, repeats):
     for _ in range(repeats):
         # bi = BoardInterface(classname, devicename)
         sdr = eval(classname + "(uri='" + uri + "')")
-        N = 2 ** 15
+        N = 2**15
         sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
         sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
         try:
@@ -1148,7 +1148,7 @@ def stress_rx_buffer_creation(uri, classname, channel, repeats):
             Number of times to re-create contexts
     """
     sdr = eval(classname + "(uri='" + uri + "')")
-    N = 2 ** 15
+    N = 2**15
     sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
     sdr.rx_buffer_size = N * len(sdr.rx_enabled_channels)
     try:
@@ -1183,11 +1183,11 @@ def stress_tx_buffer_creation(uri, classname, channel, repeats):
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     TXFS = 1000
-    N = 2 ** 15
+    N = 2**15
     ts = 1 / float(TXFS)
     t = np.arange(0, N * ts, ts)
     fc = 10000
-    d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+    d = np.cos(2 * np.pi * t * fc) * 2**15 * 0.5
 
     if not isinstance(channel, list):
         sdr.tx_enabled_channels = [channel]
@@ -1229,7 +1229,7 @@ def verify_underflow(uri, classname, channel, buffer_size, sample_rate):
     ts = 1 / float(TXFS)
     t = np.arange(0, N * ts, ts)
     fc = 10000
-    d = np.cos(2 * np.pi * t * fc) * 2 ** 15 * 0.5
+    d = np.cos(2 * np.pi * t * fc) * 2**15 * 0.5
 
     if not isinstance(channel, list):
         sdr.tx_enabled_channels = [channel]
@@ -1290,7 +1290,7 @@ def verify_overflow(uri, classname, channel, buffer_size, sample_rate):
     """
     sdr = eval(classname + "(uri='" + uri + "')")
     sdr.rx_enabled_channels = channel if isinstance(channel, list) else [channel]
-    sdr.rx_buffer_size = 2 ** 20
+    sdr.rx_buffer_size = 2**20
 
     # Set low rate so we can keep up
     sdr.sample_rate = sample_rate

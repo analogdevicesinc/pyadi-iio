@@ -45,8 +45,9 @@ def get_data():
         imagelist.append(mymap(dat, min_pow, max_pow, 0, 255))
     image.append(
         imagelist[
-            round(len(imagelist) / 2)
-            - round(len(imagelist) / 8) : round(len(imagelist) / 2)
+            round(len(imagelist) / 2) - round(len(imagelist) / 8) : round(
+                len(imagelist) / 2
+            )
             + round(len(imagelist) / 8)
         ]
     )
@@ -69,7 +70,6 @@ background.fill((0, 0, 0))
 game_quit = False
 
 while not game_quit:
-
     gameDisplay.blit(background, (0, 0))
 
     for event in pygame.event.get():

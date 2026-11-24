@@ -70,9 +70,9 @@ def _github_identity() -> dict[str, Any]:
     }
     if repository and run_id:
         server = os.getenv("GITHUB_SERVER_URL", "https://github.com").rstrip("/")
-        ci[
-            "run_url"
-        ] = f"{server}/{repository}/actions/runs/{run_id}/attempts/{attempt}"
+        ci["run_url"] = (
+            f"{server}/{repository}/actions/runs/{run_id}/attempts/{attempt}"
+        )
     raw_matrix = os.getenv("PRISM_CI_MATRIX")
     if raw_matrix:
         try:
@@ -159,7 +159,10 @@ def detect_ci(*, job_url: str | None = None) -> dict[str, Any] | None:
 
 class PrismClient:
     def __init__(
-        self, base_url: str, token: str | None = None, insecure: bool = False,
+        self,
+        base_url: str,
+        token: str | None = None,
+        insecure: bool = False,
     ) -> None:
         """Initialize authentication and the HTTP transport."""
         # Reject non-http(s) schemes up front so the noqa: S310 below is true.

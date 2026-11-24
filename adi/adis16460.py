@@ -8,7 +8,7 @@ from adi.device_base import rx_def
 
 
 class adis16460(rx_def):
-    """ ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor """
+    """ADIS16460 Compact, Precision, Six Degrees of Freedom Inertial Sensor"""
 
     _complex_data = False
     _rx_channel_names = [

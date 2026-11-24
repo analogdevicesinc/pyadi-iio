@@ -26,9 +26,9 @@ def _sortconv(chans_names, noq=False, dds=False, complex=False):
     tmpI = filter(lambda k: "_i" in k, chans_names)
     tmpQ = filter(lambda k: "_q" in k, chans_names)
 
-    assert not (
-        dds and complex
-    ), "DDS channels cannot have complex names (voltageX_i, voltageX_q)"
+    assert not (dds and complex), (
+        "DDS channels cannot have complex names (voltageX_i, voltageX_q)"
+    )
 
     def ignoreadc(w):
         return int(w[len("voltage") : w.find("_")])
@@ -151,7 +151,7 @@ class ad9081(rx_tx, context_manager, sync_start):
 
         rx_tx.__init__(self)
         sync_start.__init__(self)
-        self.rx_buffer_size = 2 ** 16
+        self.rx_buffer_size = 2**16
 
     def _get_iio_attr_str_single(self, channel_name, attr, output):
         # This is overridden by subclasses
@@ -235,7 +235,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_channel_nco_phases.setter
     def rx_channel_nco_phases(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_fine_ddc_channel_names, "channel_nco_phase", False, value,
+            self._rx_fine_ddc_channel_names,
+            "channel_nco_phase",
+            False,
+            value,
         )
 
     @property
@@ -248,7 +251,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_main_nco_frequencies.setter
     def rx_main_nco_frequencies(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_nco_frequency", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_nco_frequency",
+            False,
+            value,
         )
 
     @property
@@ -261,7 +267,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_main_nco_phases.setter
     def rx_main_nco_phases(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_nco_phase", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_nco_phase",
+            False,
+            value,
         )
 
     @property
@@ -274,7 +283,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_test_mode.setter
     def rx_test_mode(self, value):
         self._set_iio_attr_single(
-            self._rx_coarse_ddc_channel_names, "test_mode", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "test_mode",
+            False,
+            value,
         )
 
     @property
@@ -287,7 +299,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_nyquist_zone.setter
     def rx_nyquist_zone(self, value):
         self._set_iio_attr_str_vec(
-            self._rx_coarse_ddc_channel_names, "nyquist_zone", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "nyquist_zone",
+            False,
+            value,
         )
 
     @property
@@ -300,7 +315,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_main_6dB_digital_gains.setter
     def rx_main_6dB_digital_gains(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_6db_digital_gain_en", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_6db_digital_gain_en",
+            False,
+            value,
         )
 
     @property
@@ -329,7 +347,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_main_nco_ffh_index.setter
     def rx_main_nco_ffh_index(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_nco_ffh_index", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_nco_ffh_index",
+            False,
+            value,
         )
 
     @property
@@ -342,7 +363,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_main_nco_ffh_select.setter
     def rx_main_nco_ffh_select(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_nco_ffh_select", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_nco_ffh_select",
+            False,
+            value,
         )
 
     @property
@@ -358,7 +382,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_main_ffh_mode.setter
     def rx_main_ffh_mode(self, value):
         self._set_iio_attr_str_vec(
-            self._rx_coarse_ddc_channel_names, "main_ffh_mode", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_ffh_mode",
+            False,
+            value,
         )
 
     @property
@@ -371,7 +398,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_main_ffh_trig_hop_en.setter
     def rx_main_ffh_trig_hop_en(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_ffh_trig_hop_en", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_ffh_trig_hop_en",
+            False,
+            value,
         )
 
     @property
@@ -384,7 +414,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @rx_main_ffh_gpio_mode_enable.setter
     def rx_main_ffh_gpio_mode_enable(self, value):
         self._set_iio_attr_int_vec(
-            self._rx_coarse_ddc_channel_names, "main_ffh_gpio_mode_en", False, value,
+            self._rx_coarse_ddc_channel_names,
+            "main_ffh_gpio_mode_en",
+            False,
+            value,
         )
 
     @property
@@ -410,7 +443,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_channel_nco_phases.setter
     def tx_channel_nco_phases(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_fine_duc_channel_names, "channel_nco_phase", True, value,
+            self._tx_fine_duc_channel_names,
+            "channel_nco_phase",
+            True,
+            value,
         )
 
     @property
@@ -423,7 +459,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_channel_nco_test_tone_en.setter
     def tx_channel_nco_test_tone_en(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "channel_nco_test_tone_en", True, value,
+            self._tx_coarse_duc_channel_names,
+            "channel_nco_test_tone_en",
+            True,
+            value,
         )
 
     @property
@@ -452,7 +491,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_channel_nco_gain_scales.setter
     def tx_channel_nco_gain_scales(self, value):
         self._set_iio_attr_float_vec(
-            self._tx_coarse_duc_channel_names, "channel_nco_gain_scale", True, value,
+            self._tx_coarse_duc_channel_names,
+            "channel_nco_gain_scale",
+            True,
+            value,
         )
 
     @property
@@ -465,7 +507,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_nco_frequencies.setter
     def tx_main_nco_frequencies(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_frequency", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_frequency",
+            True,
+            value,
         )
 
     @property
@@ -478,7 +523,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_nco_phases.setter
     def tx_main_nco_phases(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_phase", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_phase",
+            True,
+            value,
         )
 
     @property
@@ -491,7 +539,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_nco_test_tone_en.setter
     def tx_main_nco_test_tone_en(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_test_tone_en", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_test_tone_en",
+            True,
+            value,
         )
 
     @property
@@ -504,7 +555,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_nco_test_tone_scales.setter
     def tx_main_nco_test_tone_scales(self, value):
         self._set_iio_attr_float_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_test_tone_scale", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_test_tone_scale",
+            True,
+            value,
         )
 
     @property
@@ -519,7 +573,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_ffh_frequency.setter
     def tx_main_ffh_frequency(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_ffh_frequency", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_ffh_frequency",
+            True,
+            value,
         )
 
     @property
@@ -532,7 +589,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_ffh_index.setter
     def tx_main_ffh_index(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_ffh_index", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_ffh_index",
+            True,
+            value,
         )
 
     @property
@@ -545,7 +605,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_nco_ffh_select.setter
     def tx_main_nco_ffh_select(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "main_nco_ffh_select", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_nco_ffh_select",
+            True,
+            value,
         )
 
     @property
@@ -560,7 +623,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_ffh_mode.setter
     def tx_main_ffh_mode(self, value):
         self._set_iio_attr_str_vec(
-            self._tx_coarse_duc_channel_names, "main_ffh_mode", True, value,
+            self._tx_coarse_duc_channel_names,
+            "main_ffh_mode",
+            True,
+            value,
         )
 
     @property
@@ -571,7 +637,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_main_ffh_gpio_mode_enable.setter
     def tx_main_ffh_gpio_mode_enable(self, value):
         self._set_iio_attr_single(
-            "voltage0_i", "main_ffh_gpio_mode_en", True, value,
+            "voltage0_i",
+            "main_ffh_gpio_mode_en",
+            True,
+            value,
         )
 
     @property
@@ -582,7 +651,10 @@ class ad9081(rx_tx, context_manager, sync_start):
     @tx_dac_en.setter
     def tx_dac_en(self, value):
         self._set_iio_attr_int_vec(
-            self._tx_coarse_duc_channel_names, "en", True, value,
+            self._tx_coarse_duc_channel_names,
+            "en",
+            True,
+            value,
         )
 
     def set_tx_dac_full_scale_current(self, value):
@@ -610,7 +682,8 @@ class ad9081(rx_tx, context_manager, sync_start):
     @powerdown.setter
     def powerdown(self, value):
         self._set_iio_dev_attr_single(
-            "powerdown", value,
+            "powerdown",
+            value,
         )
 
     @property
@@ -629,7 +702,8 @@ class ad9081(rx_tx, context_manager, sync_start):
     @loopback_mode.setter
     def loopback_mode(self, value):
         self._set_iio_dev_attr_single(
-            "loopback_mode", value,
+            "loopback_mode",
+            value,
         )
 
     @property
@@ -665,7 +739,9 @@ class ad9081(rx_tx, context_manager, sync_start):
     def tx_sample_rate(self):
         """tx_sampling_frequency: Sample rate before interpolation"""
         return self._get_iio_attr_single(
-            self._tx_coarse_duc_channel_names, "sampling_frequency", True,
+            self._tx_coarse_duc_channel_names,
+            "sampling_frequency",
+            True,
         )
 
     @property

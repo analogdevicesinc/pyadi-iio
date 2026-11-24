@@ -10,7 +10,6 @@ from adi.rx_tx import rx
 
 
 class adis16XXX(rx, context_manager, ABC):
-
     _complex_data = False
 
     _rx_channel_names = [

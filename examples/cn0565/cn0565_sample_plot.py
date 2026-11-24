@@ -41,7 +41,7 @@ if value_type == "re":
 elif value_type == "im":
     current_data = voltages[:, 1]
 else:
-    current_data = np.sqrt((voltages ** 2).sum(axis=1))
+    current_data = np.sqrt((voltages**2).sum(axis=1))
 
 # Resistor array board is fixed. Use this to get absolute impedance
 v0 = np.full_like(current_data, 1)

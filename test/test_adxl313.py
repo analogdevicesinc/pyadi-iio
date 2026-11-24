@@ -5,12 +5,13 @@ import adi
 hardware = ["ADXL312", "ADXL313", "ADXL314"]
 classname = "adi.adxl313"
 
+
 #########################################
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize("channel", [2])
 def test_adxl313_rx_data(test_dma_rx, iio_uri, classname, channel):
-    test_dma_rx(iio_uri, classname, channel, buffer_size=2 ** 5)
+    test_dma_rx(iio_uri, classname, channel, buffer_size=2**5)
 
 
 #########################################
@@ -130,7 +131,9 @@ def test_adxl313_range_attr(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol, repeats, sub_channel",
-    [("scale", 0.009576806, 0.076614453, 0.067037647, 1, 3, "accel_x"),],
+    [
+        ("scale", 0.009576806, 0.076614453, 0.067037647, 1, 3, "accel_x"),
+    ],
 )
 def test_adxl313_scale_attr(
     test_attribute_single_value,

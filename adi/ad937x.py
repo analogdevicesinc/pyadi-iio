@@ -10,7 +10,7 @@ from adi.sync_start import sync_start
 
 
 class ad9371(rx_tx, context_manager, sync_start):
-    """ AD9371 Transceiver """
+    """AD9371 Transceiver"""
 
     _complex_data = True
     _rx_channel_names = ["voltage0_i", "voltage0_q", "voltage1_i", "voltage1_q"]
@@ -105,7 +105,7 @@ class ad9371(rx_tx, context_manager, sync_start):
 
     @property
     def rx_temp_comp_gain_chan0(self):
-        """rx_temp_comp_gain_chan0: """
+        """rx_temp_comp_gain_chan0:"""
         return self._get_iio_attr("voltage0", "temp_comp_gain", False)
 
     @rx_temp_comp_gain_chan0.setter
@@ -114,7 +114,7 @@ class ad9371(rx_tx, context_manager, sync_start):
 
     @property
     def rx_temp_comp_gain_chan1(self):
-        """rx_temp_comp_gain_chan1: """
+        """rx_temp_comp_gain_chan1:"""
         return self._get_iio_attr("voltage1", "temp_comp_gain", False)
 
     @rx_temp_comp_gain_chan1.setter
@@ -236,7 +236,7 @@ class ad9371(rx_tx, context_manager, sync_start):
     @property
     def rx_sample_rate(self):
         """rx_sample_rate: Sample rate RX path in samples per second
-            This value will reflect the correct value when 8x decimator is enabled
+        This value will reflect the correct value when 8x decimator is enabled
         """
         dec = 8 if self.rx_enable_dec8 else 1
         return self._get_iio_attr("voltage0", "sampling_frequency", False) / dec
@@ -244,7 +244,7 @@ class ad9371(rx_tx, context_manager, sync_start):
     @property
     def orx_sample_rate(self):
         """orx_sample_rate: Sample rate ORX path in samples per second
-            This value will reflect the correct value when 8x decimator is enabled
+        This value will reflect the correct value when 8x decimator is enabled
         """
         dec = 8 if self.rx_enable_dec8 else 1
         return self._get_iio_attr("voltage2", "sampling_frequency", False) / dec
@@ -252,7 +252,7 @@ class ad9371(rx_tx, context_manager, sync_start):
     @property
     def tx_sample_rate(self):
         """tx_sample_rate: Sample rate TX path in samples per second
-            This value will reflect the correct value when 8x interpolator is enabled
+        This value will reflect the correct value when 8x interpolator is enabled
         """
         dec = 8 if self.tx_enable_int8 else 1
         return self._get_iio_attr("voltage0", "sampling_frequency", True) / dec
@@ -307,7 +307,7 @@ class ad9371(rx_tx, context_manager, sync_start):
 
     @property
     def obs_temp_comp_gain(self):
-        """obs_temp_comp_gain: """
+        """obs_temp_comp_gain:"""
         return self._get_iio_attr("voltage2", "temp_comp_gain", False)
 
     @obs_temp_comp_gain.setter
@@ -362,7 +362,7 @@ class ad9371(rx_tx, context_manager, sync_start):
 
 
 class ad9375(ad9371):
-    """ AD9375 Transceiver """
+    """AD9375 Transceiver"""
 
     @property
     def tx_clgc_tracking_en_chan0(self):
@@ -692,7 +692,7 @@ class ad9375(ad9371):
     @property
     def tx_vswr_forward_tx_chan0(self):
         """tx_vswr_forward_tx: RMS Tx digital sample power measured at DPD block for ORx data in the forward measurement mode
-       with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB"""
+        with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan0 == 1:
             return (self._get_iio_attr("voltage0", "vswr_forward_tx", True) / 100) + 21
         return
@@ -700,7 +700,7 @@ class ad9375(ad9371):
     @property
     def tx_vswr_forward_tx_chan1(self):
         """tx_vswr_forward_tx: RMS Tx digital sample power measured at DPD block for ORx data in the forward measurement mode
-       with measurement resolution of 0.01 dB and 21 dB offset for channel 1. Prms dBFS = txRms/100 + 21 dB"""
+        with measurement resolution of 0.01 dB and 21 dB offset for channel 1. Prms dBFS = txRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan1 == 1:
             return (self._get_iio_attr("voltage1", "vswr_forward_tx", True) / 100) + 21
         return
@@ -758,7 +758,7 @@ class ad9375(ad9371):
     @property
     def tx_vswr_reflected_orx_chan0(self):
         """tx_vswr_reflected_orx: RMS ORx digital sample power measured at DPD block for the ORx data in the reverse measurement mode
-       with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = orxRms/100 + 21 dB"""
+        with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = orxRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan0 == 1:
             return (
                 self._get_iio_attr("voltage0", "vswr_reflected_orx", True) / 100
@@ -768,7 +768,7 @@ class ad9375(ad9371):
     @property
     def tx_vswr_reflected_tx_chan0(self):
         """tx_vswr_reflected_tx: RMS Tx digital sample power measured at DPD actuator for the reverse measurement
-       with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB"""
+        with measurement resolution of 0.01 dB and 21 dB offset for channel 0. Prms dBFS = txRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan0 == 1:
             return (
                 self._get_iio_attr("voltage0", "vswr_reflected_tx", True) / 100
@@ -778,7 +778,7 @@ class ad9375(ad9371):
     @property
     def tx_vswr_reflected_tx_chan1(self):
         """tx_vswr_reflected_tx: RMS Tx digital sample power measured at DPD actuator for the reverse measurement
-       with measurement resolution of 0.01 dB and 21 dB offset for channel 1. Prms dBFS = txRms/100 + 21 dB"""
+        with measurement resolution of 0.01 dB and 21 dB offset for channel 1. Prms dBFS = txRms/100 + 21 dB"""
         if self.tx_vswr_tracking_en_chan1 == 1:
             return (
                 self._get_iio_attr("voltage1", "vswr_reflected_tx", True) / 100

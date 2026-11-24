@@ -37,6 +37,13 @@ classname = "adi.cn0556"
     ],
 )
 def test_cn0556_attr(
-    test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol,
+    test_attribute_single_value,
+    iio_uri,
+    classname,
+    attr,
+    start,
+    stop,
+    step,
+    tol,
 ):
     test_attribute_single_value(iio_uri, classname, attr, start, stop, step, tol)

@@ -11,7 +11,7 @@ from adi.device_base import rx_chan_comp
 
 
 class ad7746(rx_chan_comp):
-    """ AD7746 CDC """
+    """AD7746 CDC"""
 
     _complex_data = False
     channel = []  # type: ignore

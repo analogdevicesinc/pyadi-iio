@@ -5,7 +5,7 @@ import adi
 
 uri = "ip:analog"
 captures = 100
-samples_per_capture = 2 ** 12
+samples_per_capture = 2**12
 fan_mode = 1
 
 xl = adi.cn0532(uri)

@@ -44,7 +44,6 @@ def main():
     intf = EIT_Interface(port, baudrate, bIIO)
 
     with open("cn0565_test.csv", "w", newline="") as csvfile:
-
         z_writer = csv.writer(
             csvfile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL
         )
@@ -54,7 +53,6 @@ def main():
         std_array = []
 
         for i in range(1):
-
             z_val = []
             Z_sum = []
 
@@ -62,7 +60,6 @@ def main():
             # pos_e = positive electrode
 
             for neg_e in range(1, 16):
-
                 z_sub = []
                 # z_sub.append(neg_e)
 

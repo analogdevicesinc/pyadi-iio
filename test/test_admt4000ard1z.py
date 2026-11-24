@@ -19,7 +19,12 @@ def do_mock():
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr", [("shutdown_pulse"), ("power_enable"), ("coil_reset"),],
+    "attr",
+    [
+        ("shutdown_pulse"),
+        ("power_enable"),
+        ("coil_reset"),
+    ],
 )
 def test_admt4000ard1z_attr_boolean_readonly(
     test_attribute_single_value_boolean_readonly, iio_uri, classname, attr
@@ -32,10 +37,18 @@ def test_admt4000ard1z_attr_boolean_readonly(
 @pytest.mark.iio_hardware(hardware)
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
-    "attr, value", [("magnetic_reset", 1), ("motor_sensor_alignment", 1),],
+    "attr, value",
+    [
+        ("magnetic_reset", 1),
+        ("motor_sensor_alignment", 1),
+    ],
 )
 def test_admt4000ard1z_attr_write_only(
-    test_attribute_write_only_str, iio_uri, classname, attr, value,
+    test_attribute_write_only_str,
+    iio_uri,
+    classname,
+    attr,
+    value,
 ):
     do_mock()
     test_attribute_write_only_str(iio_uri, classname, attr, value)
@@ -206,6 +219,10 @@ def test_admt4000ard1z_attr_write_only_with_depends(
     ],
 )
 def test_admt4000ard1z_motor_readonly_attr(
-    test_attribute_single_value_channel_readonly, iio_uri, classname, channel, attr,
+    test_attribute_single_value_channel_readonly,
+    iio_uri,
+    classname,
+    channel,
+    attr,
 ):
     test_attribute_single_value_channel_readonly(iio_uri, classname, channel, attr)

@@ -24,7 +24,7 @@ class ad5686_channel(attribute):
 
     @raw.setter
     def raw(self, value):
-        value = max(0, min(int(value), (2 ** self._format.bits) - 1))
+        value = max(0, min(int(value), (2**self._format.bits) - 1))
         self._set_iio_attr(self.name, "raw", True, value)
 
     @property
@@ -83,7 +83,7 @@ class ad5686_channel(attribute):
 
 
 class ad5686(tx_chan_comp):
-    """ AD5686 DAC """
+    """AD5686 DAC"""
 
     class powerdown_mode(Enum):
         """AD5686 Powerdown Mode Enumeration"""

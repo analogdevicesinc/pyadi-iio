@@ -7,7 +7,7 @@ from adi.sync_start import sync_start
 
 
 class ad9152(tx_def, sync_start):
-    """ AD9152 High-Speed DAC """
+    """AD9152 High-Speed DAC"""
 
     _complex_data = False
     _tx_channel_names = ["voltage0", "voltage1"]

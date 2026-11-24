@@ -17,9 +17,9 @@ def test_ad7124_8_channels(iio_uri):
     assert n_channels > 0
 
     for name in dev.rx_channel_names:
-        assert re.match(
-            r"^(voltage\d+(-voltage\d+)?|temp)$", name
-        ), f"Unexpected channel name: {name}"
+        assert re.match(r"^(voltage\d+(-voltage\d+)?|temp)$", name), (
+            f"Unexpected channel name: {name}"
+        )
 
     voltage_channels = [n for n in dev.rx_channel_names if n.startswith("voltage")]
     is_differential = "-" in voltage_channels[0] if voltage_channels else False

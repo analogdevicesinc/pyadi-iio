@@ -101,7 +101,6 @@ multi.hmc7044_ext_output_delay(10, 1, 0)
 multi.hmc7044_car_output_delay(9, 1, 0)
 
 for dev in multi.secondaries + [multi.primary]:
-
     # Number of MxFE Devices
     D = len(dev.rx_test_mode)
 
@@ -153,7 +152,7 @@ for dev in multi.secondaries + [multi.primary]:
     dev.tx_enabled_channels = [*range(N_TX)]
     dev.rx_nyquist_zone = ["even"] * NM_TX
 
-    dev.rx_buffer_size = 2 ** 12
+    dev.rx_buffer_size = 2**12
     dev.tx_cyclic_buffer = True
 
     fs = int(dev.tx_sample_rate["axi-ad9081-rx-3"])
@@ -351,7 +350,6 @@ for i in range(captures):
                 multi.secondaries[0].rx_channel_nco_phases = rx_nco_phases_s
 
 if True:
-
     i = 0
     fig, axs = plt.subplots(2, 4)
 

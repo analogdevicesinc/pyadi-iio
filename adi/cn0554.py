@@ -6,7 +6,7 @@ import adi
 
 
 class cn0554:
-    """ CN0554 Mixed Signal Raspberry Pi Hat """
+    """CN0554 Mixed Signal Raspberry Pi Hat"""
 
     _in_range_available = ["+/-13.75", "+27.5", "+2.5"]
     _out_reference_available = [4.096, 2.5]

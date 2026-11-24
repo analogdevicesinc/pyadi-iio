@@ -35,7 +35,11 @@ def test_fmcomms5_attr(
 @pytest.mark.parametrize("classname", [(classname)])
 @pytest.mark.parametrize(
     "attr, start, stop, step, tol",
-    [("loopback", 2, 2, 1, 0), ("loopback", 1, 1, 1, 0), ("loopback", 0, 0, 1, 0),],
+    [
+        ("loopback", 2, 2, 1, 0),
+        ("loopback", 1, 1, 1, 0),
+        ("loopback", 0, 0, 1, 0),
+    ],
 )
 def test_fmcomms5_loopback_attr(
     test_attribute_single_value, iio_uri, classname, attr, start, stop, step, tol

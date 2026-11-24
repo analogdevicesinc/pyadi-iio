@@ -19,7 +19,7 @@ class _property_remap:
 
 
 def remap(object_source, old, new, classname):
-    """ Remap methods to new names to different object """
+    """Remap methods to new names to different object"""
 
     method_list = [
         func
@@ -31,12 +31,14 @@ def remap(object_source, old, new, classname):
             continue
         new_method = method.replace(old, new)
         setattr(
-            classname, new_method, _property_remap(method, object_source),
+            classname,
+            new_method,
+            _property_remap(method, object_source),
         )
 
 
 class obs(rx):
-    """ Buffer handling for observation devices """
+    """Buffer handling for observation devices"""
 
     def __init__(self, ctx, obs_dev, channel_names, complex_data=True):
         self._ctx = ctx
@@ -50,7 +52,7 @@ class obs(rx):
 
 
 class tx_two(tx):
-    """ Buffer Handling for secondary transmit channels """
+    """Buffer Handling for secondary transmit channels"""
 
     def __init__(self, ctx, obs_dev, channel_names, complex_data=True):
         self._ctx = ctx

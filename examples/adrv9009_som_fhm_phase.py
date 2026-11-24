@@ -37,7 +37,7 @@ sdr.gain_control_mode_chan0 = "slow_attack"
 sdr.gain_control_mode_chan1 = "slow_attack"
 sdr.gain_control_mode_chan0_chip_b = "slow_attack"
 sdr.gain_control_mode_chan1_chip_b = "slow_attack"
-sdr.rx_buffer_size = 2 ** 17
+sdr.rx_buffer_size = 2**17
 
 # Setup FHM
 print("setting up FHM Chip A")

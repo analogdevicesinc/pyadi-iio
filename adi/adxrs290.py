@@ -28,7 +28,7 @@ class adxrs290_channel(attribute):
 
 
 class adxrs290(rx_chan_comp):
-    """ ADI ADXRS290 Gyroscope """
+    """ADI ADXRS290 Gyroscope"""
 
     _device_name = "ADXRS290"
     _rx_data_type = np.int16

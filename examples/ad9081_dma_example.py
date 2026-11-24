@@ -13,8 +13,8 @@ def gen_tone(fc, fs, N):
     fc = int(fc / (fs / N)) * (fs / N)
     ts = 1 / float(fs)
     t = np.arange(0, N * ts, ts)
-    i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-    q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+    i = np.cos(2 * np.pi * t * fc) * 2**14
+    q = np.sin(2 * np.pi * t * fc) * 2**14
     return i + 1j * q
 
 
@@ -34,7 +34,7 @@ dev.rx_enabled_channels = [0]
 dev.tx_enabled_channels = [0]
 dev.rx_nyquist_zone = ["odd"] * 4
 
-dev.rx_buffer_size = 2 ** 16
+dev.rx_buffer_size = 2**16
 dev.tx_cyclic_buffer = True
 
 fs = int(dev.tx_sample_rate)

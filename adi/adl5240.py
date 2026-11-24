@@ -7,7 +7,7 @@ from adi.context_manager import context_manager
 
 
 class adl5240(attribute, context_manager):
-    """ ADL5240 100 MHz TO 4000 MHz RF/IF Digitally Controlled VGA """
+    """ADL5240 100 MHz TO 4000 MHz RF/IF Digitally Controlled VGA"""
 
     _device_name = "adl5240"
 

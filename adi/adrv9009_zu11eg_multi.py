@@ -25,10 +25,10 @@ class adrv9009_zu11eg_multi(object):
         secondary_jesds: type=list[adi.jesd]
             JESD object(s) associated with secondary ADRV9009-ZU11EG(s)
         fmcomms8: type=boolean
-            Boolean flag to idenify is FMComms8(s) are attached to SOMs
+            Boolean flag to identify if FMComms8(s) are attached to SOMs
     """
 
-    __rx_buffer_size_multi = 2 ** 14
+    __rx_buffer_size_multi = 2**14
     secondaries: List[adrv9009_zu11eg] = []
 
     def __init__(
@@ -356,8 +356,7 @@ class adrv9009_zu11eg_multi(object):
                 )
 
     def set_trx_framer_a_loopback(self, enable):
-        """set_trx_framer_a_loopback: Set bist_framer_a_loopback
-        """
+        """set_trx_framer_a_loopback: Set bist_framer_a_loopback"""
         for dev in self.secondaries + [self.primary]:
             dev._set_iio_debug_attr_str("bist_framer_a_loopback", enable, dev._ctrl)
             dev._set_iio_debug_attr_str("bist_framer_a_loopback", enable, dev._ctrl_b)

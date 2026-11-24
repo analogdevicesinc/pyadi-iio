@@ -9,7 +9,6 @@ from adi.context_manager import context_manager
 
 
 class tdd(context_manager, attribute):
-
     """TDD Controller"""
 
     _device_name: str = ""

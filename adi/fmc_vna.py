@@ -14,7 +14,7 @@ from adi.one_bit_adc_dac import one_bit_adc_dac
 
 
 class fmcvna(adrf5720, ad9083, admv8818, genmux, adf5610, adl5960):
-    """ FMCVNA Scalable 8-port Vector Network Analyzer Board """
+    """FMCVNA Scalable 8-port Vector Network Analyzer Board"""
 
     frontend = [0] * 8
 

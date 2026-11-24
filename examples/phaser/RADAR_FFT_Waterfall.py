@@ -125,8 +125,8 @@ N = int(my_sdr.rx_buffer_size)
 fc = int(signal_freq / (fs / N)) * (fs / N)
 ts = 1 / float(fs)
 t = np.arange(0, N * ts, ts)
-i = np.cos(2 * np.pi * t * fc) * 2 ** 14
-q = np.sin(2 * np.pi * t * fc) * 2 ** 14
+i = np.cos(2 * np.pi * t * fc) * 2**14
+q = np.sin(2 * np.pi * t * fc) * 2**14
 iq = 1 * (i + 1j * q)
 
 # Send data
@@ -328,10 +328,10 @@ class Window(QMainWindow):
         self.setCentralWidget(widget)
 
     def get_range_res(self):
-        """ Updates the slider bar label with RF bandwidth and range resolution
-		Returns:
-			None
-		"""
+        """Updates the slider bar label with RF bandwidth and range resolution
+        Returns:
+                None
+        """
         bw = self.bw_slider.value() * 1e6
         range_res = c / (2 * bw)
         self.range_res_label.setText(
@@ -340,20 +340,20 @@ class Window(QMainWindow):
         )
 
     def get_water_levels(self):
-        """ Updates the waterfall intensity levels
-		Returns:
-			None
-		"""
+        """Updates the waterfall intensity levels
+        Returns:
+                None
+        """
         if self.low_slider.value() > self.high_slider.value():
             self.low_slider.setValue(self.high_slider.value())
         self.low_label.setText("LOW LEVEL: %0.0f" % (self.low_slider.value()))
         self.high_label.setText("HIGH LEVEL: %0.0f" % (self.high_slider.value()))
 
     def get_steer_angle(self):
-        """ Updates the steering angle readout
-		Returns:
-			None
-		"""
+        """Updates the steering angle readout
+        Returns:
+                None
+        """
         self.steer_label.setText("%0.0f DEG" % (self.steer_slider.value()))
         phase_delta = (
             2
@@ -366,10 +366,10 @@ class Window(QMainWindow):
         my_phaser.set_beam_phase_diff(np.degrees(phase_delta))
 
     def set_range_res(self):
-        """ Sets the RF bandwidth
-		Returns:
-			None
-		"""
+        """Sets the RF bandwidth
+        Returns:
+                None
+        """
         global dist, slope
         bw = self.bw_slider.value() * 1e6
         slope = bw / ramp_time_s
@@ -388,20 +388,20 @@ class Window(QMainWindow):
         my_phaser.enable = 0
 
     def end_program(self):
-        """ Gracefully shutsdown the program and Pluto
-		Returns:
-			None
-		"""
+        """Gracefully shutsdown the program and Pluto
+        Returns:
+                None
+        """
         my_sdr.tx_destroy_buffer()
         self.close()
 
     def change_x_axis(self, state):
-        """ Toggles between showing frequency and range for the x-axis
-		Args:
-			state (QtCore.Qt.Checked) : State of check box
-		Returns:
-			None
-		"""
+        """Toggles between showing frequency and range for the x-axis
+        Args:
+                state (QtCore.Qt.Checked) : State of check box
+        Returns:
+                None
+        """
         global plot_dist, slope
         plot_state = win.fft_plot.getViewBox().state
         if state == QtCore.Qt.Checked:
@@ -424,10 +424,10 @@ index = 0
 
 
 def update():
-    """ Updates the FFT in the window
-	Returns:
-		None
-	"""
+    """Updates the FFT in the window
+    Returns:
+            None
+    """
     global index, plot_dist, freq, dist
     label_style = {"color": "#FFF", "font-size": "14pt"}
 
@@ -439,7 +439,7 @@ def update():
     sp = np.fft.fftshift(sp)
     s_mag = np.abs(sp) / np.sum(win_funct)
     s_mag = np.maximum(s_mag, 10 ** (-15))
-    s_dbfs = 20 * np.log10(s_mag / (2 ** 11))
+    s_dbfs = 20 * np.log10(s_mag / (2**11))
 
     if plot_dist:
         win.fft_curve.setData(dist, s_dbfs)

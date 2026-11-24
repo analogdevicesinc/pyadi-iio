@@ -28,7 +28,10 @@ classname = "adi.ltc2672"
                 "300mA",
             ],
         ),
-        ("all_chns_powerdown", ["powerdown"],),
+        (
+            "all_chns_powerdown",
+            ["powerdown"],
+        ),
     ],
 )
 def test_ltc2672_global_attr(
@@ -59,7 +62,10 @@ def test_ltc2672_global_attr(
                 "300mA",
             ],
         ),
-        ("powerdown", ["powerdown"],),
+        (
+            "powerdown",
+            ["powerdown"],
+        ),
     ],
 )
 def test_ltc2672_channel_attr(iio_uri, classname, channel, attr, val):

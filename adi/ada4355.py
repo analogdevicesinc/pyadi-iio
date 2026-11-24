@@ -9,8 +9,7 @@ from adi.device_base import rx_chan_comp
 
 
 class ada4355_channel(attribute):
-
-    """ ada4355 channel """
+    """ada4355 channel"""
 
     def __init__(self, ctrl, channel_name):
         """Initialize an ADA4355 channel."""
@@ -34,8 +33,7 @@ class ada4355_channel(attribute):
 
 
 class ada4355(rx_chan_comp):
-
-    """ ADA4355 ADC """
+    """ADA4355 ADC"""
 
     _complex_data = False
     _device_name = "ada4355"

@@ -75,7 +75,7 @@ if __name__ == "__main__":
     raw = int(ad552xr_chan.raw)
     scale = float(ad552xr_chan.scale)
     offset = int(ad552xr_chan.offset)
-    print(f"Channel{chn_num} voltage in Volts: {(raw + offset) * scale / 1E3}")
+    print(f"Channel{chn_num} voltage in Volts: {(raw + offset) * scale / 1e3}")
 
     ######################################
 
