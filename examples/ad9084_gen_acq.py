@@ -30,6 +30,8 @@ import numpy as np
 
 import adi
 
+BOARD_URI = "ip:192.168.2.1"
+
 # Waveform file used when none is named on the command line. The format is
 # picked from the file extension:
 #   .npy            numpy array, complex (I + jQ) or real
@@ -283,7 +285,7 @@ args = parse_args()
 # --------------------------------
 # 1. Initial set-up
 # --------------------------------
-dev = adi.ad9084("ip:192.168.2.1")
+dev = adi.ad9084(BOARD_URI)
 
 print("CHIP Version:", dev.chip_version)
 print("API  Version:", dev.api_version)
