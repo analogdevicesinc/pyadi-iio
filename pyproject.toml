@@ -59,8 +59,10 @@ repository = "https://github.com/analogdevicesinc/pyadi-iio"
 
 [tool.ruff]
 exclude = [
-    "test/imu"
+    "test/emu",
+    "*.ipynb",
 ]
+force-exclude = true
 line-length = 88
 
 [tool.ruff.format]
@@ -72,6 +74,10 @@ docstring-code-format = true
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]
+ignore = ["F401", "F403"]
+
+[tool.ruff.lint.per-file-ignores]
+"{test,examples,doc,images}/**" = ["E", "F"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["iio"]
