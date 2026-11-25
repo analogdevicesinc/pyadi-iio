@@ -8,9 +8,9 @@
 
     <title>adf4151x &#8212; Analog Devices Hardware Python Interfaces 0.0.22 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8e8a900e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/app.min.css?v=a3ee7af8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/app.min.css?v=7db40558" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=632a43e7" />
-    <script async="async" src="../../_static/app.umd.js?v=048c1170"></script>
+    <script async="async" src="../../_static/app.umd.js?v=2fe15c61"></script>
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex/" />
     <link rel="search" title="Search" href="../../search/" />
@@ -133,7 +133,6 @@
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.frequency_resolution"><code class="docutils literal notranslate"><span class="pre">adf4151x.frequency_resolution</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.phase"><code class="docutils literal notranslate"><span class="pre">adf4151x.phase</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.powerdown"><code class="docutils literal notranslate"><span class="pre">adf4151x.powerdown</span></code></a></li>
-<li><a class="reference internal" href="#adi.adf4151x.adf4151x.locked"><code class="docutils literal notranslate"><span class="pre">adf4151x.locked</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.muxout_select"><code class="docutils literal notranslate"><span class="pre">adf4151x.muxout_select</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.charge_pump_index"><code class="docutils literal notranslate"><span class="pre">adf4151x.charge_pump_index</span></code></a></li>
 <li><a class="reference internal" href="#adi.adf4151x.adf4151x.reg_read"><code class="docutils literal notranslate"><span class="pre">adf4151x.reg_read()</span></code></a></li>
@@ -363,151 +362,151 @@ Content on this topic
 <span id="adf4151x"></span><h1>adf4151x<a class="headerlink" href="#module-adi.adf4151x" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf4151x.</span></span><span class="sig-name descname"><span class="pre">adf4151x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">adi.adf4151x.</span></span><span class="sig-name descname"><span class="pre">adf4151x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">attribute</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">device_base</span></code></p>
 <p>Driver for ADF4151x Integer-N/Fractional-N PLL Frequency Synthesizer.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>ADF4151x Register Enumeration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R0">
-<span class="sig-name descname"><span class="pre">R0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R0" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R0</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R0" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R1">
-<span class="sig-name descname"><span class="pre">R1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R1" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R1</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R1" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R2">
-<span class="sig-name descname"><span class="pre">R2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R2" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R2" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R3">
-<span class="sig-name descname"><span class="pre">R3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R3" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R3" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R4">
-<span class="sig-name descname"><span class="pre">R4</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R4" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R4</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R4" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R5">
-<span class="sig-name descname"><span class="pre">R5</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R5" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R5</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R5" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R6">
-<span class="sig-name descname"><span class="pre">R6</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R6" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R6</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R6" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R7">
-<span class="sig-name descname"><span class="pre">R7</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R7" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R7</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R7" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R8">
-<span class="sig-name descname"><span class="pre">R8</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R8" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R8</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R8" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R9">
-<span class="sig-name descname"><span class="pre">R9</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R9" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R9</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R9" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R10">
-<span class="sig-name descname"><span class="pre">R10</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R10" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R10</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R10" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R11">
-<span class="sig-name descname"><span class="pre">R11</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R11" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R11</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R11" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R12">
-<span class="sig-name descname"><span class="pre">R12</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R12" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R12</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R12" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.reg.R13">
-<span class="sig-name descname"><span class="pre">R13</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R13" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R13</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.reg.R13" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">muxout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">muxout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>ADF4151x MUXOUT Pin Function Enumeration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.TRISTATE">
-<span class="sig-name descname"><span class="pre">TRISTATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.TRISTATE" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TRISTATE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.TRISTATE" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.DVDD">
-<span class="sig-name descname"><span class="pre">DVDD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.DVDD" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DVDD</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.DVDD" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.DGND">
-<span class="sig-name descname"><span class="pre">DGND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.DGND" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DGND</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.DGND" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.R_DIV">
-<span class="sig-name descname"><span class="pre">R_DIV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.R_DIV" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R_DIV</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.R_DIV" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.N_DIV">
-<span class="sig-name descname"><span class="pre">N_DIV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.N_DIV" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">N_DIV</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.N_DIV" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.DIG_LD">
-<span class="sig-name descname"><span class="pre">DIG_LD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.DIG_LD" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DIG_LD</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.DIG_LD" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.SDO">
-<span class="sig-name descname"><span class="pre">SDO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.SDO" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SDO</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.SDO" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.READBACK">
-<span class="sig-name descname"><span class="pre">READBACK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.READBACK" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">READBACK</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.READBACK" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.CLK1_DIV">
-<span class="sig-name descname"><span class="pre">CLK1_DIV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.CLK1_DIV" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">CLK1_DIV</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.CLK1_DIV" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.R_DIV2">
-<span class="sig-name descname"><span class="pre">R_DIV2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.R_DIV2" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">R_DIV2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.R_DIV2" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout.N_DIV2">
-<span class="sig-name descname"><span class="pre">N_DIV2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14</span></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.N_DIV2" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">N_DIV2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout.N_DIV2" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.frequency">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frequency</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.frequency" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">frequency</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.frequency" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the output frequency value in Hz.</p>
 <p>This value represents the output frequency of the external VCO with
 respect to the input frequency reference.</p>
@@ -515,7 +514,7 @@ respect to the input frequency reference.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.frequency_resolution">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frequency_resolution</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.frequency_resolution" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">frequency_resolution</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.frequency_resolution" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the output frequency resolution value in Hz.</p>
 <p>This value represents the desired frequency resolution of the output
 frequency, used to derive modulus and fraction values for fractional-N
@@ -524,7 +523,7 @@ operation.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.phase">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phase</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.phase" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">phase</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.phase" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the phase adjust value in radians.</p>
 <p>Phase adjust increases the phase of the output relative to the current
 phase.</p>
@@ -532,19 +531,13 @@ phase.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.powerdown">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">powerdown</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.powerdown" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">powerdown</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.powerdown" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the powerdown state.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="adi.adf4151x.adf4151x.locked">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locked</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.locked" title="Link to this definition"></a></dt>
-<dd><p>Get the PLL lock status.</p>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.muxout_select">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">muxout_select</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#adi.adf4151x.adf4151x.muxout" title="adi.adf4151x.adf4151x.muxout"><span class="pre">muxout</span></a></em><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout_select" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">muxout_select</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#adi.adf4151x.adf4151x.muxout" title="adi.adf4151x.adf4151x.muxout"><span class="pre">muxout</span></a></span><a class="headerlink" href="#adi.adf4151x.adf4151x.muxout_select" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the MUXOUT pin function.</p>
 <p>This property uses register access, so it is mostly intended for
 debugging and testing purposes.</p>
@@ -552,7 +545,7 @@ debugging and testing purposes.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="adi.adf4151x.adf4151x.charge_pump_index">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">charge_pump_index</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.charge_pump_index" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">charge_pump_index</span></span><a class="headerlink" href="#adi.adf4151x.adf4151x.charge_pump_index" title="Link to this definition"></a></dt>
 <dd><p>Get/Set the charge pump current index value.</p>
 <p>This property uses register access, so it is mostly intended for
 debugging and testing purposes. The charge pump current value depends on
@@ -577,13 +570,13 @@ production use-cases.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adf4151x.adf41510">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf4151x.</span></span><span class="sig-name descname"><span class="pre">adf41510</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf41510" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">adi.adf4151x.</span></span><span class="sig-name descname"><span class="pre">adf41510</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf41510" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.adf4151x.adf4151x" title="adi.adf4151x.adf4151x"><code class="xref py py-class docutils literal notranslate"><span class="pre">adf4151x</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="adi.adf4151x.adf41513">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adi.adf4151x.</span></span><span class="sig-name descname"><span class="pre">adf41513</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf41513" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">adi.adf4151x.</span></span><span class="sig-name descname"><span class="pre">adf41513</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#adi.adf4151x.adf41513" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#adi.adf4151x.adf4151x" title="adi.adf4151x.adf4151x"><code class="xref py py-class docutils literal notranslate"><span class="pre">adf4151x</span></code></a></p>
 </dd></dl>
 
