@@ -3,35 +3,22 @@
 # SPDX short identifier: ADIBSD
 
 from adi.attribute import attribute
-from adi.context_manager import context_manager
+from adi.device_base import device_base
 
 
-class adrf5720(attribute, context_manager):
+class adrf5720(attribute, device_base):
     """ ADRF5720 Digital Attenuator """
 
-    _complex_data = False
-    channel = "voltage0"
-    _device_name = ""
+    compatible_parts = [
+        "adrf5702",
+        "adrf5703",
+        "adrf5720",
+        "adrf5730",
+        "adrf5731",
+    ]
 
     def __init__(self, uri="", device_name=""):
-        context_manager.__init__(self, uri, self._device_name)
-
-        compatible_parts = [
-            "adrf5720",
-            "adrf5730",
-            "adrf5731",
-        ]
-
-        self._ctrl = None
-
-        for device in self._ctx.devices:
-            if device.name in [device_name] + compatible_parts:
-                self._ctrl = device
-                break
-
-        # Raise an exception if the device isn't found
-        if not self._ctrl:
-            raise Exception("ADRF5720 device not found")
+        device_base.__init__(self, device_name=device_name, uri=uri)
 
     @property
     def attenuation(self):
